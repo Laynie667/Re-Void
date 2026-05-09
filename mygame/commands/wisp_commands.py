@@ -1609,7 +1609,7 @@ class CmdWispLook(MuxCommand):
     """
 
     key = "look"
-    aliases = ["l"]
+    aliases = ["l", "wlook"]
     locks = "cmd:all()"
     help_category = "Wisp"
 
@@ -1628,7 +1628,22 @@ class CmdWispLook(MuxCommand):
 
         # Look at a specific target in the room
         if self.args:
-            target_name = self.args.strip()
+            target_name = self.args.strip().lower()
+
+            # "me" / "self" — look at own character in the room
+            if target_name in ("me", "self", "myself"):
+                # Find the account's character(s) in this room
+                my_chars = [
+                    obj for obj in room.contents
+                    if hasattr(obj, 'account') and obj.account == account
+                ]
+                if my_chars:
+                    obj = my_chars[0]
+                    self.msg(obj.return_appearance(account))
+                else:
+                    self.msg("|xYour character isn't here right now.|n")
+                return
+
             from evennia import search_object
             results = [obj for obj in search_object(target_name)
                        if obj.location == room]
