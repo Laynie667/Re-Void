@@ -1,0 +1,123 @@
+# world/data/pools/wisp/base.yaml
+# Base pools for wisp descriptions by mood
+
+states:
+  
+  mood_uncertain:
+    look:
+      - "A wisp — flickering in a way that seems less like instability 
+         and more like deliberation. The light shifts between warmer 
+         and cooler as if it's trying different things."
+      - "Something luminous that hasn't committed to a temperature yet. 
+         The edges of the light are soft, which might be a choice 
+         or might just be where it is right now."
+    presence_line:
+      - "a flickering wisp, still forming"
+      - "a wisp — considering, not yet arrived"
+    ambient_contribution:
+      - "The wisp flickers — not dangerously, just thoughtfully."
+      - "The light shifts, considers, settles into something 
+         close to what it was."
+
+  mood_curious:
+    look:
+      - "A wisp — shapeless in the comfortable way of things that 
+         haven't needed a shape yet. The light it gives off is warm 
+         and slightly restless, moving toward things before it 
+         remembers it has nowhere in particular to go."
+      - "Something luminous with a warmth that leans toward whatever 
+         is interesting without quite committing to it."
+    presence_line:
+      - "a curious wisp, still forming"
+      - "a wisp — alert, not yet arrived"
+    ambient_contribution:
+      - "The wisp drifts slightly in the direction of something 
+         that caught its attention."
+      - "The light the wisp gives off brightens briefly, then settles."
+
+  mood_melancholy:
+    look:
+      - "A wisp — dim tonight, or perhaps always this dim and only 
+         now visible. The light it gives off is cooler than you'd 
+         expect, with an occasional flicker that might be breath, 
+         if it breathed."
+      - "Something luminous and quiet, its edges slightly less defined 
+         than they might be. The light doesn't quite reach as far 
+         as wisps usually reach."
+    presence_line:
+      - "a dim wisp, still forming"
+      - "a wisp — quiet, not yet arrived"
+    ambient_contribution:
+      - "The wisp dims slightly and recovers."
+      - "The light the wisp gives off is very still."
+
+  mood_bold:
+    look:
+      - "A wisp — brighter than average, which it seems to be aware of. 
+         The light pushes outward with a confidence that is slightly 
+         disproportionate to having no form yet."
+      - "Something luminous with opinions about its own luminosity. 
+         The light it gives off is warm and consistent and not 
+         especially interested in being subtle."
+    presence_line:
+      - "a bright wisp, still forming"
+      - "a wisp — certain of itself, not yet arrived"
+    ambient_contribution:
+      - "The wisp gives off a steady, confident light."
+      - "The wisp moves through the space without particular hesitation."
+
+  mood_playful:
+    look:
+      - "A wisp — moving more than wisps typically move, which is 
+         either charming or alarming depending on how much space 
+         it's taking up near you. The light has a warmth to it 
+         that seems slightly performative in a good way."
+      - "Something luminous with energy it doesn't entirely know 
+         what to do with yet. The light skips slightly at the edges."
+    presence_line:
+      - "an energetic wisp, still forming"
+      - "a wisp — lively, not yet arrived"
+    ambient_contribution:
+      - "The wisp moves through the space with more enthusiasm 
+         than direction."
+      - "The light the wisp gives off brightens for a moment 
+         for no apparent reason."
+
+  mood_serene:
+    look:
+      - "A wisp — very still, very steady. The light is soft green-white, 
+         the kind that makes spaces feel like they have more 
+         time in them."
+      - "Something luminous and unhurried, its edges clean and 
+         its center calm. It doesn't move unless it decides to."
+    presence_line:
+      - "a calm wisp, still forming"
+      - "a wisp — still, not yet arrived"
+    ambient_contribution:
+      - "The wisp is entirely still. This seems deliberate."
+      - "The soft light the wisp gives off doesn't vary."
+
+  mood_intense:
+    look:
+      - "A wisp — deep violet, concentrated, with a quality of 
+         pressure to it. The shadows around it are darker than 
+         they should be."
+      - "Something luminous but not gentle about it. The light 
+         pushes outward against something, the color deep 
+         and concentrated at the center."
+    presence_line:
+      - "a deep violet wisp, still forming"
+      - "a wisp — focused, not yet arrived"
+    ambient_contribution:
+      - "The violet wisp is very focused on something."
+      - "The shadows near the wisp are slightly deeper than usual."
+
+# Fallback for unrecognized moods
+mood_neutral:
+  look:
+    - "A wisp — luminous, shapeless, present. 
+       It hasn't decided what it is yet."
+  presence_line:
+    - "a wisp, still forming"
+  ambient_contribution:
+    - "The wisp drifts."
