@@ -48,6 +48,10 @@ from evennia.commands.default.muxcommand import MuxCommand
 
 EDITOR_TARGETS = {}
 
+# In-memory store for setter callables that can't be pickled (e.g. closures).
+# Keyed by caller dbref string. Cleared when the editor saves or cancels.
+_PENDING_SETTERS = {}
+
 
 def register_target(name, getter, setter):
     """
@@ -605,6 +609,13 @@ def _enter_editor(caller, target_display, setter_key, initial_lines=None,
     caller.db._editor_buffer = list(initial_lines or [])
     caller.db._editor_target = target_display
     caller.db._editor_setter_key = setter_key
+
+    # Closures can't be pickled — extract any callable setter and keep it
+    # in the module-level _PENDING_SETTERS dict instead.
+    if extra and callable(extra.get("setter")):
+        _PENDING_SETTERS[str(caller.dbref)] = extra["setter"]
+        extra = {k: v for k, v in extra.items() if k != "setter"}
+
     caller.db._editor_extra = extra
 
     caller.cmdset.add(EditorCmdSet, persistent=True)
@@ -692,6 +703,16 @@ def _apply_setter(caller, setter_key, target_display, lines):
     if extra and callable(extra.get("setter")):
         try:
             extra["setter"](caller, lines)
+            return True
+        except Exception as e:
+            caller.msg(f"|rError saving: {e}|n")
+            return False
+
+    # --- In-memory setter fallback (closures stored before pickling) ---
+    setter_fn = _PENDING_SETTERS.pop(str(caller.dbref), None)
+    if setter_fn:
+        try:
+            setter_fn(caller, lines)
             return True
         except Exception as e:
             caller.msg(f"|rError saving: {e}|n")
