@@ -1630,7 +1630,8 @@ class CmdWispLook(MuxCommand):
         if self.args:
             target_name = self.args.strip()
             from evennia import search_object
-            results = search_object(target_name, location=room)
+            results = [obj for obj in search_object(target_name)
+                       if obj.location == room]
             if results:
                 obj = results[0]
                 if hasattr(obj, 'return_appearance'):
