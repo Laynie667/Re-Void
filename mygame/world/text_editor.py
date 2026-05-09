@@ -229,214 +229,141 @@ class EditorCmdSet(CmdSet):
     Replaces normal command access with editor-specific commands.
     """
     key = "EditorCmdSet"
-    priority = 200   # higher than CharacterCmdSet (101) to override
+    priority = 200
     mergetype = "Replace"
+    no_exits = True
+    no_objs = True
 
     def at_cmdset_creation(self):
-        self.add(CmdEditorLine())
+        self.add(CmdEditorCmd())
+        self.add(CmdEditorDefault())
 
 
 # -------------------------------------------------------------------
 # Editor commands (active inside the editor)
 # -------------------------------------------------------------------
 
-class CmdEditorLine(Command):
+class CmdEditorCmd(Command):
     """
-    The catch-all command for editor input.
-
-    Lines starting with ':' are editor commands.
-    All other lines are treated as content to add.
-
-    Editor commands:
-        :add <text>          — add a line
-        :insert <#> <text>   — insert before line #
-        :erase <#>           — remove line #
-        :replace <#> <text>  — replace line #
-        :show                — preview buffer
-        :clear               — clear buffer
-        :done                — save and exit
-        :cancel              — discard and exit
+    All editor : commands in one place.
+    Each :subcommand is registered as an explicit alias so Evennia
+    can always match them reliably.
     """
-    key = "_default"
-    aliases = []
+    key = ":done"
+    aliases = [
+        ":save",
+        ":cancel",
+        ":show",
+        ":add", ":a",
+        ":insert", ":i",
+        ":erase", ":e", ":delete", ":del",
+        ":replace", ":r",
+        ":clear",
+        ":help", ":?", ":h",
+    ]
     locks = "cmd:all()"
-    arg_regex = None
-
-    def parse(self):
-        self.raw_line = self.raw_string.strip()
 
     def func(self):
+        sub = self.cmdstring.lstrip(":").lower()
+        rest = (self.args or "").strip()
         caller = self.caller
-        raw = self.raw_line
 
-        if not raw:
-            return
+        if sub == "done":
+            buf = caller.db._editor_buffer or []
+            _apply_setter(caller, caller.db._editor_setter_key or "",
+                          caller.db._editor_target or "", buf)
+            caller.msg("|x[Saved. Exiting editor.]|n")
+            _exit_editor(caller)
 
-        if raw.startswith(":"):
-            self._handle_editor_command(raw[1:].strip())
-        else:
-            # Bare input — treat as :add
-            self._add_line(caller, raw)
+        elif sub == "save":
+            buf = caller.db._editor_buffer or []
+            success = _apply_setter(caller, caller.db._editor_setter_key or "",
+                                    caller.db._editor_target or "", buf)
+            if success:
+                caller.msg("|x[Saved. Still in editor — type :done to exit.]|n")
 
-    def _handle_editor_command(self, cmd_text):
-        caller = self.caller
-        if not cmd_text:
-            return
-
-        parts = cmd_text.split(None, 1)
-        sub = parts[0].lower()
-        rest = parts[1] if len(parts) > 1 else ""
-
-        if sub in ("add", "a"):
-            if not rest:
-                caller.msg("|xAdd what?|n")
-                return
-            self._add_line(caller, rest)
-
-        elif sub in ("insert", "i"):
-            self._insert_line(caller, rest)
-
-        elif sub in ("erase", "e", "delete", "del"):
-            self._erase_line(caller, rest)
-
-        elif sub in ("replace", "r"):
-            self._replace_line(caller, rest)
+        elif sub == "cancel":
+            caller.msg("|x[Changes discarded. Exiting editor.]|n")
+            _exit_editor(caller)
 
         elif sub == "show":
-            self._show_buffer(caller)
+            buf = caller.db._editor_buffer or []
+            target_key = caller.db._editor_target or "unknown"
+            sep = f"|w{'─' * 44}|n"
+            if not buf:
+                caller.msg(f"\n{sep}\n|wEditing: {target_key}|n\n{sep}\n|x(empty buffer)|n\n{sep}")
+                return
+            lines = [f"\n{sep}", f"|wEditing: {target_key}|n", sep]
+            for i, line in enumerate(buf, 1):
+                lines.append(f"  |x{i:>2}.|n {line}")
+            lines.append(sep)
+            caller.msg("\n".join(lines))
+
+        elif sub in ("add", "a"):
+            if not rest:
+                caller.msg("|xUsage: :add <text>|n")
+                return
+            buf = caller.db._editor_buffer or []
+            buf.append(rest)
+            caller.db._editor_buffer = buf
+            caller.msg(f"|x[Line {len(buf)} added.]|n")
+
+        elif sub in ("insert", "i"):
+            parts = rest.split(None, 1)
+            if len(parts) < 2:
+                caller.msg("|xUsage: :insert <#> <text>|n")
+                return
+            try:
+                idx = int(parts[0]) - 1
+            except ValueError:
+                caller.msg("|xLine number must be a number.|n")
+                return
+            buf = caller.db._editor_buffer or []
+            if idx < 0 or idx > len(buf):
+                caller.msg(f"|xCan't insert at {idx + 1}. Buffer has {len(buf)} lines.|n")
+                return
+            buf.insert(idx, parts[1])
+            caller.db._editor_buffer = buf
+            caller.msg(f"|x[Inserted at line {idx + 1}.]|n")
+
+        elif sub in ("erase", "e", "delete", "del"):
+            try:
+                idx = int(rest) - 1
+            except ValueError:
+                caller.msg("|xUsage: :erase <#>|n")
+                return
+            buf = caller.db._editor_buffer or []
+            if idx < 0 or idx >= len(buf):
+                caller.msg(f"|xNo line {idx + 1}. Buffer has {len(buf)} lines.|n")
+                return
+            removed = buf.pop(idx)
+            caller.db._editor_buffer = buf
+            caller.msg(f"|x[Line {idx + 1} removed: {removed}]|n")
+
+        elif sub in ("replace", "r"):
+            parts = rest.split(None, 1)
+            if len(parts) < 2:
+                caller.msg("|xUsage: :replace <#> <text>|n")
+                return
+            try:
+                idx = int(parts[0]) - 1
+            except ValueError:
+                caller.msg("|xLine number must be a number.|n")
+                return
+            buf = caller.db._editor_buffer or []
+            if idx < 0 or idx >= len(buf):
+                caller.msg(f"|xNo line {idx + 1}. Buffer has {len(buf)} lines.|n")
+                return
+            buf[idx] = parts[1]
+            caller.db._editor_buffer = buf
+            caller.msg(f"|x[Line {idx + 1} replaced.]|n")
 
         elif sub == "clear":
             caller.db._editor_buffer = []
             caller.msg("|x[Buffer cleared.]|n")
 
-        elif sub == "save":
-            self._save_only(caller)
-
-        elif sub == "done":
-            self._save_and_exit(caller)
-
-        elif sub == "cancel":
-            self._cancel(caller)
-
         elif sub in ("help", "?", "h"):
             self._show_help(caller)
-
-        else:
-            caller.msg(
-                f"|xUnknown editor command ':{sub}'.\n"
-                f"Type |w:help|n or |w:?|n to see all commands.|n"
-            )
-
-    def _add_line(self, caller, text):
-        buf = caller.db._editor_buffer or []
-        buf.append(text)
-        caller.db._editor_buffer = buf
-        caller.msg(f"|x[Line {len(buf)} added.]|n")
-
-    def _insert_line(self, caller, rest):
-        parts = rest.split(None, 1)
-        if len(parts) < 2:
-            caller.msg("|xUsage: :insert <#> <text>|n")
-            return
-        try:
-            idx = int(parts[0]) - 1
-        except ValueError:
-            caller.msg("|xLine number must be a number.|n")
-            return
-        buf = caller.db._editor_buffer or []
-        if idx < 0 or idx > len(buf):
-            caller.msg(
-                f"|xCan't insert at {idx + 1}. "
-                f"Buffer has {len(buf)} lines.|n"
-            )
-            return
-        buf.insert(idx, parts[1])
-        caller.db._editor_buffer = buf
-        caller.msg(f"|x[Inserted at line {idx + 1}.]|n")
-
-    def _erase_line(self, caller, rest):
-        try:
-            idx = int(rest.strip()) - 1
-        except ValueError:
-            caller.msg("|xUsage: :erase <#>|n")
-            return
-        buf = caller.db._editor_buffer or []
-        if idx < 0 or idx >= len(buf):
-            caller.msg(
-                f"|xNo line {idx + 1}. Buffer has {len(buf)} lines.|n"
-            )
-            return
-        removed = buf.pop(idx)
-        caller.db._editor_buffer = buf
-        caller.msg(f"|x[Line {idx + 1} removed: {removed}]|n")
-
-    def _replace_line(self, caller, rest):
-        parts = rest.split(None, 1)
-        if len(parts) < 2:
-            caller.msg("|xUsage: :replace <#> <text>|n")
-            return
-        try:
-            idx = int(parts[0]) - 1
-        except ValueError:
-            caller.msg("|xLine number must be a number.|n")
-            return
-        buf = caller.db._editor_buffer or []
-        if idx < 0 or idx >= len(buf):
-            caller.msg(
-                f"|xNo line {idx + 1}. Buffer has {len(buf)} lines.|n"
-            )
-            return
-        buf[idx] = parts[1]
-        caller.db._editor_buffer = buf
-        caller.msg(f"|x[Line {idx + 1} replaced.]|n")
-
-    def _show_buffer(self, caller):
-        buf = caller.db._editor_buffer or []
-        target_key = caller.db._editor_target or "unknown"
-        sep = f"|w{'─' * 44}|n"
-        if not buf:
-            caller.msg(
-                f"\n{sep}\n|wEditing: {target_key}|n\n"
-                f"{sep}\n|x(empty buffer)|n\n{sep}"
-            )
-            return
-        lines = [
-            f"\n{sep}",
-            f"|wEditing: {target_key}|n",
-            sep,
-        ]
-        for i, line in enumerate(buf, 1):
-            lines.append(f"  |x{i:>2}.|n {line}")
-        lines.append(sep)
-        caller.msg("\n".join(lines))
-
-    def _save_and_exit(self, caller):
-        buf = caller.db._editor_buffer or []
-        target_key = caller.db._editor_target or ""
-        setter = caller.db._editor_setter_key or ""
-
-        # Resolve and call the setter
-        success = _apply_setter(caller, setter, target_key, buf)
-        if success:
-            caller.msg(
-                f"|x[Saved. Exiting editor.]|n\n"
-                f"|wType ':show' won't work now — "
-                f"editor closed.|n"
-            )
-        _exit_editor(caller)
-
-    def _cancel(self, caller):
-        caller.msg("|x[Changes discarded. Exiting editor.]|n")
-        _exit_editor(caller)
-
-    def _save_only(self, caller):
-        """Save the buffer without exiting the editor."""
-        buf = caller.db._editor_buffer or []
-        target_key = caller.db._editor_target or ""
-        setter = caller.db._editor_setter_key or ""
-        success = _apply_setter(caller, setter, target_key, buf)
-        if success:
-            caller.msg("|x[Saved. Still in editor — type :done to exit.]|n")
 
     def _show_help(self, caller):
         sep = f"|w{'─' * 44}|n"
@@ -471,104 +398,24 @@ class CmdEditorLine(Command):
         )
 
 
-class CmdEditorDone(Command):
-    """Save and exit the editor. Shorthand for :done."""
-    key = ":done"
+
+
+class CmdEditorDefault(Command):
+    """
+    Catches plain text input (anything that doesn't start with ':')
+    and appends it as a new line in the buffer.
+    """
+    key = "_default"
     locks = "cmd:all()"
 
     def func(self):
-        buf = self.caller.db._editor_buffer or []
-        target_key = self.caller.db._editor_target or ""
-        setter = self.caller.db._editor_setter_key or ""
-        _apply_setter(self.caller, setter, target_key, buf)
-        self.msg("|x[Saved. Exiting editor.]|n")
-        _exit_editor(self.caller)
-
-
-class CmdEditorCancel(Command):
-    """Discard changes and exit the editor. Shorthand for :cancel."""
-    key = ":cancel"
-    locks = "cmd:all()"
-
-    def func(self):
-        self.msg("|x[Changes discarded. Exiting editor.]|n")
-        _exit_editor(self.caller)
-
-
-class CmdEditorShow(Command):
-    """Preview buffer. Shorthand for :show."""
-    key = ":show"
-    locks = "cmd:all()"
-
-    def func(self):
-        buf = self.caller.db._editor_buffer or []
-        target_key = self.caller.db._editor_target or "unknown"
-        sep = f"|w{'─' * 44}|n"
-        if not buf:
-            self.msg(
-                f"\n{sep}\n|wEditing: {target_key}|n\n"
-                f"{sep}\n|x(empty buffer)|n\n{sep}"
-            )
+        raw = self.raw_string.strip()
+        if not raw:
             return
-        lines = [f"\n{sep}", f"|wEditing: {target_key}|n", sep]
-        for i, line in enumerate(buf, 1):
-            lines.append(f"  |x{i:>2}.|n {line}")
-        lines.append(sep)
-        self.msg("\n".join(lines))
-
-
-class CmdEditorSave(Command):
-    """Save current buffer without exiting. Shorthand for :save."""
-    key = ":save"
-    locks = "cmd:all()"
-
-    def func(self):
-        caller = self.caller
-        buf = caller.db._editor_buffer or []
-        target_key = caller.db._editor_target or ""
-        setter = caller.db._editor_setter_key or ""
-        success = _apply_setter(caller, setter, target_key, buf)
-        if success:
-            self.msg("|x[Saved. Still in editor — type :done to exit.]|n")
-
-
-class CmdEditorHelp(Command):
-    """Show editor help. Shorthand for :help or :?"""
-    key = ":help"
-    aliases = [":?", ":h"]
-    locks = "cmd:all()"
-
-    def func(self):
-        sep = f"|w{'─' * 44}|n"
-        self.msg(
-            f"\n{sep}\n"
-            f"|wEditor commands|n\n"
-            f"{sep}\n"
-            f"  |w:add <text>|n          — append a line\n"
-            f"  |w:insert <#> <text>|n   — insert before line number\n"
-            f"  |w:erase <#>|n           — delete a line\n"
-            f"  |w:replace <#> <text>|n  — replace a line\n"
-            f"  |w:show|n                — preview the buffer\n"
-            f"  |w:clear|n               — erase everything\n"
-            f"  |w:save|n                — save without exiting\n"
-            f"  |w:done|n                — save and exit\n"
-            f"  |w:cancel|n              — exit without saving\n"
-            f"  |w:help|n  |w:?|n            — this help\n"
-            f"{sep}\n"
-            f"|wColor codes (Evennia markup):|n\n"
-            f"  |r|r red|n   |g|g green|n   |b|b blue|n   |y|y yellow|n\n"
-            f"  |m|m magenta|n   |c|c cyan|n   |w|w white|n   |x|x dark gray|n\n"
-            f"  |n (reset — end any color block)\n"
-            f"  |w|500|n → xterm256 foreground code (100 shades of color)\n"
-            f"  |w|[500|n → xterm256 background\n"
-            f"{sep}\n"
-            f"|wTips:|n\n"
-            f"  Typing without ':' adds a line directly.\n"
-            f"  Paste multiple lines — each arrives as a separate entry.\n"
-            f"  Newlines in descriptions display as paragraph breaks.\n"
-            f"  Always end colored text with |w|n|n to reset.\n"
-            f"{sep}\n"
-        )
+        buf = self.caller.db._editor_buffer or []
+        buf.append(raw)
+        self.caller.db._editor_buffer = buf
+        self.caller.msg(f"|x[Line {len(buf)} added.]|n")
 
 
 # -------------------------------------------------------------------
