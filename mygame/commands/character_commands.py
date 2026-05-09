@@ -332,12 +332,17 @@ class CmdSetDesc(MuxCommand):
     Shown on standard look.
 
     Usage:
-        setdesc <text>
-        setdesc             — see current description
-        setdesc/clear       — clear description
+        setdesc                 — open the text editor
+        setdesc = <text>        — set inline
+        setdesc/show            — preview current description
+        setdesc/clear           — clear description
+
+    The editor supports multi-line text and zone tokens
+    like {zone:hair} that pull in zone descriptions inline.
+    Type :done to save, :help for editor commands.
 
     Example:
-        setdesc Tall and angular, with the particular
+        setdesc = Tall and angular, with the particular
         stillness of someone who has learned to take up
         exactly as much space as they intend to.
     """
@@ -354,25 +359,56 @@ class CmdSetDesc(MuxCommand):
             self.msg("Physical description cleared.")
             return
 
-        if not self.args:
-            current = char.db.physical_desc or "Not set."
+        if "show" in self.switches:
+            current = char.db.physical_desc or "|x(not set)|n"
+            sep = f"|w{'─' * 44}|n"
             self.msg(
-                f"Your physical description:\n\n{current}"
+                f"\n{sep}\n|wPhysical Description — {char.db.rp_name or char.key}|n\n"
+                f"{sep}\n{current}\n{sep}"
             )
             return
 
-        new_desc = self.args.strip()
-        if len(new_desc) > 4000:
+        # Inline set: setdesc = <text>
+        if self.args and "=" in self.args:
+            new_desc = self.args.split("=", 1)[1].strip()
+            if not new_desc:
+                self.msg("|xNo text provided.|n")
+                return
+            if len(new_desc) > 4000:
+                self.msg(
+                    f"Description too long ({len(new_desc)} chars). "
+                    f"Keep it under 4000."
+                )
+                return
+            char.db.physical_desc = new_desc
             self.msg(
-                f"Description too long ({len(new_desc)} chars). "
-                f"Keep it under 4000."
+                "Physical description set.\n"
+                "Type 'look me' to see how it appears."
             )
             return
 
-        char.db.physical_desc = new_desc
-        self.msg(
-            "Physical description set.\n"
-            "Type 'look me' to see how it appears."
+        # No args — open editor
+        from world.text_editor import _enter_editor, _PENDING_SETTERS
+
+        current = char.db.physical_desc or ""
+        initial = [l for l in current.split("\n") if l] if current else []
+
+        def _setter(c, lines):
+            char.db.physical_desc = "\n".join(lines)
+            c.msg(
+                f"|x[Physical description saved for "
+                f"'{char.db.rp_name or char.key}'.]|n\n"
+                f"|xType 'look me' to preview.|n"
+            )
+
+        _PENDING_SETTERS[str(self.caller.dbref)] = _setter
+
+        _enter_editor(
+            self.caller,
+            target_display=f"{char.db.rp_name or char.key} — Physical Description",
+            setter_key="_room_field",
+            initial_lines=initial,
+            extra=None,
         )
 
 
@@ -893,7 +929,8 @@ class CmdZone(MuxCommand):
     Usage:
         zone list                           — list all zones
         zone show <name>                    — zone detail
-        zone set <name> = <description>     — set nude desc
+        zone set <name>                     — open editor for nude desc
+        zone set <name> = <description>     — set nude desc inline
         zone add <name>                     — add freeform zone
         zone add <name> type=<type>         — add with type
         zone remove <name>                  — remove freeform zone
@@ -1199,21 +1236,41 @@ class CmdZone(MuxCommand):
         self.msg("\n".join(lines))
 
     def _zone_set(self, char, args):
-        """Set nude description for a zone."""
-        if "=" not in args:
+        """Set nude description for a zone — inline or via editor."""
+        if not args:
             self.msg(
-                "Usage: zone set <name> = <description>"
+                "Usage: zone set <name> = <description>\n"
+                "       zone set <name>   (opens editor)"
             )
             return
 
-        zone_name, _, desc = args.partition("=")
-        zone_name = zone_name.strip().lower().replace(" ", "_")
-        desc = desc.strip()
+        # Inline: zone set <name> = <desc>
+        if "=" in args:
+            zone_name, _, desc = args.partition("=")
+            zone_name = zone_name.strip().lower().replace(" ", "_")
+            desc = desc.strip()
 
-        if not desc:
-            self.msg("Description cannot be empty.")
+            if not desc:
+                self.msg("Description cannot be empty.")
+                return
+
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(
+                    f"No zone named '{zone_name}'. "
+                    f"Type 'zone list' to see all zones."
+                )
+                return
+
+            result = char.set_zone_desc(zone_name, desc)
+            if result:
+                self.msg(f"Zone |w{zone_name}|n description set.")
+            else:
+                self.msg("Could not set zone description.")
             return
 
+        # No = — open editor for this zone
+        zone_name = args.strip().lower().replace(" ", "_")
         zones = char._get_zones()
         if zone_name not in zones:
             self.msg(
@@ -1222,13 +1279,26 @@ class CmdZone(MuxCommand):
             )
             return
 
-        result = char.set_zone_desc(zone_name, desc)
-        if result:
-            self.msg(
-                f"Zone |w{zone_name}|n description set."
+        from world.text_editor import _enter_editor, _PENDING_SETTERS
+
+        current = zones[zone_name].get("nude", "") or ""
+        initial = [l for l in current.split("\n") if l] if current else []
+
+        def _setter(c, lines):
+            char.set_zone_desc(zone_name, "\n".join(lines))
+            c.msg(
+                f"|x[Zone |w{zone_name}|x description saved.]|n"
             )
-        else:
-            self.msg("Could not set zone description.")
+
+        _PENDING_SETTERS[str(self.caller.dbref)] = _setter
+
+        _enter_editor(
+            self.caller,
+            target_display=f"{char.db.rp_name or char.key} — zone: {zone_name}",
+            setter_key="_room_field",
+            initial_lines=initial,
+            extra=None,
+        )
 
     def _zone_add(self, char, args):
         """Add a freeform zone."""
