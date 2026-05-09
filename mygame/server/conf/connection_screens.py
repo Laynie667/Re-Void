@@ -25,16 +25,25 @@ from django.conf import settings
 from evennia import utils
 
 CONNECTION_SCREEN = """
-|b==============================================================|n
- Welcome to |g{}|n, version {}!
+|m  ================================================================|n
 
- If you have an existing account, connect to it by typing:
-      |wconnect <username> <password>|n
- If you need to create an account, type (without the <>'s):
-      |wcreate <username> <password>|n
+  |M ██████╗ ███████╗  ║  ██╗   ██╗ ██████╗ ██╗██████╗|n
+  |M ██╔══██╗██╔════╝  ║  ██║   ██║██╔═══██╗██║██╔══██╗|n
+  |M ██████╔╝█████╗    ║  ╚██╗ ██╔╝██║   ██║██║██║  ██║|n
+  |M ██╔══██╗██╔══╝    ║   ╚████╔╝ ██║   ██║██║██║  ██║|n
+  |M ██║  ██║███████╗  ║    ╚██╔╝  ╚██████╔╝██║██████╔╝|n
+  |M ╚═╝  ╚═╝╚══════╝  ║     ╚═╝    ╚═════╝ ╚═╝╚═════╝|n
 
- If you have spaces in your username, enclose it in quotes.
- Enter |whelp|n for more info. |wlook|n will re-show this screen.
-|b==============================================================|n""".format(
-    settings.SERVERNAME, utils.get_evennia_version("short")
-)
+  |m · · · · · R e s h a p i n g   t h e   V o i d · · · · ·|n
+
+|m  ================================================================|n
+
+   |wconnect <username> <password>|n  —  return to the Void
+   |wcreate  <username> <password>|n  —  step into existence
+
+   |xType |whelp|x for commands.  |wlook|x re-shows this screen.|n
+
+   |xYour character persists in the world after you disconnect.
+   Use |wquit|x to fully log out.|n
+
+|m  ================================================================|n"""
