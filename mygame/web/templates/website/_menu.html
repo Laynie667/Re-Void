@@ -1,0 +1,50 @@
+{% load static %}
+<nav class="rv-nav">
+
+  {% if webclient_enabled %}
+  <a href="{% url 'webclient:index' %}">Enter</a>
+  {% endif %}
+
+  <a href="/lore/">Lore</a>
+  <a href="/factions/">Factions</a>
+  <a href="{% url 'characters' %}">Characters</a>
+  <a href="/forums/">Forums</a>
+  <a href="/wiki/">Wiki</a>
+
+  {% if user.is_staff %}
+  <a href="{% url 'admin:index' %}">Admin</a>
+  {% if rest_api_enabled %}
+  <a href="/api">API</a>
+  {% endif %}
+  {% endif %}
+
+  {% if account %}
+  <div class="nav-user-dropdown">
+    <a href="#">
+      {% if puppet %}{{ puppet }} ({{ account.username }}){% else %}{{ account.username }}{% endif %} ▾
+    </a>
+    <div class="nav-dropdown-menu">
+      <a href="{% url 'character-create' %}">Create Character</a>
+      <a href="{% url 'character-manage' %}">Manage Characters</a>
+      <div class="nav-dropdown-divider"></div>
+      {% for character in account.characters|slice:"10" %}
+      <a href="{{ character.web_get_puppet_url }}?next={{ request.path }}">{{ character }}</a>
+      {% empty %}
+      <a style="opacity:0.5;pointer-events:none;">No characters yet</a>
+      {% endfor %}
+      <div class="nav-dropdown-divider"></div>
+      <a href="{% url 'password_change' %}">Change Password</a>
+      <form method="post" action="{% url 'logout' %}" style="margin:0;">
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <a href="{% url 'login' %}">Log In</a>
+  {% if register_enabled %}
+  <a href="{% url 'register' %}">Register</a>
+  {% endif %}
+  {% endif %}
+
+</nav>
