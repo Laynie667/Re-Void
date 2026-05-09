@@ -1,0 +1,2564 @@
+2026-04-29 20:36:14 [..] Loaded.
+2026-04-29 20:36:14 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 20:36:14 [..] Loaded.
+2026-04-29 20:36:14 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 20:36:14 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 20:36:15 [..] Webserver starting on 4005
+2026-04-29 20:36:15 [..] Initial setup: Creating objects (Account #1 and Limbo room) ...
+2026-04-29 20:36:15 [SS] Character Created: Witch (Caller: Witch(account 1), IP: None).
+2026-04-29 20:36:15 [..] Initial setup: Running at_initial_setup() hook.
+2026-04-29 20:36:15 [..] Initial setup: Gathering static resources using 'collectstatic'
+None2026-04-29 20:36:15 [..] 0 static files copied to '/home/laynie/ReVoid/mygame/server/.static', 207 unmodified.
+2026-04-29 20:36:15 [..] Initial setup complete. Restarting Server once.
+2026-04-29 20:36:15 [..] Evennia Server successfully started.
+2026-04-29 20:36:16 [..] Server disconnected from the portal.
+2026-04-29 20:36:16 [..] Main loop terminated.
+2026-04-29 20:36:16 [..] Server Shut Down.
+2026-04-29 20:36:17 [..] Loaded.
+2026-04-29 20:36:16 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 20:36:17 [..] Loaded.
+2026-04-29 20:36:17 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 20:36:17 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 20:36:17 [..] Webserver starting on 4005
+2026-04-29 20:36:17 [..] Evennia Server successfully restarted in 'reset' mode.
+2026-04-29 20:36:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-04-29 20:36:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-04-29 20:36:45 [SS] Authentication Success: Witch(account 1) (IP: 127.0.0.1).
+2026-04-29 20:36:45 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 20:38:12 [..] Server disconnected from the portal.
+2026-04-29 20:38:12 [..] Main loop terminated.
+2026-04-29 20:38:12 [..] Server Shut Down.
+2026-04-29 21:09:58 [..] Loaded.
+2026-04-29 21:09:57 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:09:58 [..] Loaded.
+2026-04-29 21:09:58 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:09:58 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:09:58 [EE] Traceback (most recent call last):
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1358, in startListening
+2026-04-29 21:09:58 [EE]     skt.bind(addr)
+2026-04-29 21:09:58 [EE] OSError: [Errno 98] Address already in use
+None2026-04-29 21:09:58 [EE] During handling of the above exception, another exception occurred:
+None2026-04-29 21:09:58 [EE] Traceback (most recent call last):
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/bin/twistd", line 8, in <module>
+2026-04-29 21:09:58 [EE]     sys.exit(run())
+2026-04-29 21:09:58 [EE]              ^^^^^
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 35, in run
+2026-04-29 21:09:58 [EE]     app.run(runApp, ServerOptions)
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 673, in run
+2026-04-29 21:09:58 [EE]     runApp(config)
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 29, in runApp
+2026-04-29 21:09:58 [EE]     runner.run()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 374, in run
+2026-04-29 21:09:58 [EE]     self.postApplication()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 254, in postApplication
+2026-04-29 21:09:58 [EE]     self.startApplication(self.application)
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 444, in startApplication
+2026-04-29 21:09:58 [EE]     service.IService(application).privilegedStartService()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:09:58 [EE]     service.privilegedStartService()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 186, in privilegedStartService
+2026-04-29 21:09:58 [EE]     super().privilegedStartService()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:09:58 [EE]     service.privilegedStartService()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 92, in privilegedStartService
+2026-04-29 21:09:58 [EE]     self._port = self._getPort()
+2026-04-29 21:09:58 [EE]                  ^^^^^^^^^^^^^^^
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 116, in _getPort
+2026-04-29 21:09:58 [EE]     return getattr(
+2026-04-29 21:09:58 [EE]            ^^^^^^^^
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/posixbase.py", line 366, in listenTCP
+2026-04-29 21:09:58 [EE]     p.startListening()
+2026-04-29 21:09:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1360, in startListening
+2026-04-29 21:09:58 [EE]     raise CannotListenError(self.interface, self.port, le)
+2026-04-29 21:09:58 [EE] twisted.internet.error.CannotListenError: Couldn't listen on 127.0.0.1:4002: [Errno 98] Address already in use.
+2026-04-29 21:13:04 [..] Loaded.
+2026-04-29 21:13:03 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:13:04 [..] Loaded.
+2026-04-29 21:13:04 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:13:04 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:13:04 [EE] Traceback (most recent call last):
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1358, in startListening
+2026-04-29 21:13:04 [EE]     skt.bind(addr)
+2026-04-29 21:13:04 [EE] OSError: [Errno 98] Address already in use
+None2026-04-29 21:13:04 [EE] During handling of the above exception, another exception occurred:
+None2026-04-29 21:13:04 [EE] Traceback (most recent call last):
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/bin/twistd", line 8, in <module>
+2026-04-29 21:13:04 [EE]     sys.exit(run())
+2026-04-29 21:13:04 [EE]              ^^^^^
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 35, in run
+2026-04-29 21:13:04 [EE]     app.run(runApp, ServerOptions)
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 673, in run
+2026-04-29 21:13:04 [EE]     runApp(config)
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 29, in runApp
+2026-04-29 21:13:04 [EE]     runner.run()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 374, in run
+2026-04-29 21:13:04 [EE]     self.postApplication()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 254, in postApplication
+2026-04-29 21:13:04 [EE]     self.startApplication(self.application)
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 444, in startApplication
+2026-04-29 21:13:04 [EE]     service.IService(application).privilegedStartService()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:13:04 [EE]     service.privilegedStartService()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 186, in privilegedStartService
+2026-04-29 21:13:04 [EE]     super().privilegedStartService()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:13:04 [EE]     service.privilegedStartService()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 92, in privilegedStartService
+2026-04-29 21:13:04 [EE]     self._port = self._getPort()
+2026-04-29 21:13:04 [EE]                  ^^^^^^^^^^^^^^^
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 116, in _getPort
+2026-04-29 21:13:04 [EE]     return getattr(
+2026-04-29 21:13:04 [EE]            ^^^^^^^^
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/posixbase.py", line 366, in listenTCP
+2026-04-29 21:13:04 [EE]     p.startListening()
+2026-04-29 21:13:04 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1360, in startListening
+2026-04-29 21:13:04 [EE]     raise CannotListenError(self.interface, self.port, le)
+2026-04-29 21:13:04 [EE] twisted.internet.error.CannotListenError: Couldn't listen on 127.0.0.1:4002: [Errno 98] Address already in use.
+2026-04-29 21:14:38 [..] Loaded.
+2026-04-29 21:14:37 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:14:38 [..] Loaded.
+2026-04-29 21:14:38 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:14:38 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:14:38 [EE] Traceback (most recent call last):
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1358, in startListening
+2026-04-29 21:14:38 [EE]     skt.bind(addr)
+2026-04-29 21:14:38 [EE] OSError: [Errno 98] Address already in use
+None2026-04-29 21:14:38 [EE] During handling of the above exception, another exception occurred:
+None2026-04-29 21:14:38 [EE] Traceback (most recent call last):
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/bin/twistd", line 8, in <module>
+2026-04-29 21:14:38 [EE]     sys.exit(run())
+2026-04-29 21:14:38 [EE]              ^^^^^
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 35, in run
+2026-04-29 21:14:38 [EE]     app.run(runApp, ServerOptions)
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 673, in run
+2026-04-29 21:14:38 [EE]     runApp(config)
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 29, in runApp
+2026-04-29 21:14:38 [EE]     runner.run()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 374, in run
+2026-04-29 21:14:38 [EE]     self.postApplication()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 254, in postApplication
+2026-04-29 21:14:38 [EE]     self.startApplication(self.application)
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 444, in startApplication
+2026-04-29 21:14:38 [EE]     service.IService(application).privilegedStartService()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:14:38 [EE]     service.privilegedStartService()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 186, in privilegedStartService
+2026-04-29 21:14:38 [EE]     super().privilegedStartService()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:14:38 [EE]     service.privilegedStartService()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 92, in privilegedStartService
+2026-04-29 21:14:38 [EE]     self._port = self._getPort()
+2026-04-29 21:14:38 [EE]                  ^^^^^^^^^^^^^^^
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 116, in _getPort
+2026-04-29 21:14:38 [EE]     return getattr(
+2026-04-29 21:14:38 [EE]            ^^^^^^^^
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/posixbase.py", line 366, in listenTCP
+2026-04-29 21:14:38 [EE]     p.startListening()
+2026-04-29 21:14:38 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1360, in startListening
+2026-04-29 21:14:38 [EE]     raise CannotListenError(self.interface, self.port, le)
+2026-04-29 21:14:38 [EE] twisted.internet.error.CannotListenError: Couldn't listen on 127.0.0.1:4002: [Errno 98] Address already in use.
+2026-04-29 21:15:27 [..] Loaded.
+2026-04-29 21:15:26 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:15:27 [..] Loaded.
+2026-04-29 21:15:27 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:15:27 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:15:27 [EE] Traceback (most recent call last):
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1358, in startListening
+2026-04-29 21:15:27 [EE]     skt.bind(addr)
+2026-04-29 21:15:27 [EE] OSError: [Errno 98] Address already in use
+None2026-04-29 21:15:27 [EE] During handling of the above exception, another exception occurred:
+None2026-04-29 21:15:27 [EE] Traceback (most recent call last):
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/bin/twistd", line 8, in <module>
+2026-04-29 21:15:27 [EE]     sys.exit(run())
+2026-04-29 21:15:27 [EE]              ^^^^^
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 35, in run
+2026-04-29 21:15:27 [EE]     app.run(runApp, ServerOptions)
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 673, in run
+2026-04-29 21:15:27 [EE]     runApp(config)
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 29, in runApp
+2026-04-29 21:15:27 [EE]     runner.run()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 374, in run
+2026-04-29 21:15:27 [EE]     self.postApplication()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 254, in postApplication
+2026-04-29 21:15:27 [EE]     self.startApplication(self.application)
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 444, in startApplication
+2026-04-29 21:15:27 [EE]     service.IService(application).privilegedStartService()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:15:27 [EE]     service.privilegedStartService()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 186, in privilegedStartService
+2026-04-29 21:15:27 [EE]     super().privilegedStartService()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:15:27 [EE]     service.privilegedStartService()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 92, in privilegedStartService
+2026-04-29 21:15:27 [EE]     self._port = self._getPort()
+2026-04-29 21:15:27 [EE]                  ^^^^^^^^^^^^^^^
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 116, in _getPort
+2026-04-29 21:15:27 [EE]     return getattr(
+2026-04-29 21:15:27 [EE]            ^^^^^^^^
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/posixbase.py", line 366, in listenTCP
+2026-04-29 21:15:27 [EE]     p.startListening()
+2026-04-29 21:15:27 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1360, in startListening
+2026-04-29 21:15:27 [EE]     raise CannotListenError(self.interface, self.port, le)
+2026-04-29 21:15:27 [EE] twisted.internet.error.CannotListenError: Couldn't listen on 127.0.0.1:4002: [Errno 98] Address already in use.
+2026-04-29 21:20:44 [..] Loaded.
+2026-04-29 21:20:43 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:20:44 [..] Loaded.
+2026-04-29 21:20:44 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:20:44 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:20:44 [EE] Traceback (most recent call last):
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1358, in startListening
+2026-04-29 21:20:44 [EE]     skt.bind(addr)
+2026-04-29 21:20:44 [EE] OSError: [Errno 98] Address already in use
+None2026-04-29 21:20:44 [EE] During handling of the above exception, another exception occurred:
+None2026-04-29 21:20:44 [EE] Traceback (most recent call last):
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/bin/twistd", line 8, in <module>
+2026-04-29 21:20:44 [EE]     sys.exit(run())
+2026-04-29 21:20:44 [EE]              ^^^^^
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 35, in run
+2026-04-29 21:20:44 [EE]     app.run(runApp, ServerOptions)
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 673, in run
+2026-04-29 21:20:44 [EE]     runApp(config)
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/twistd.py", line 29, in runApp
+2026-04-29 21:20:44 [EE]     runner.run()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/app.py", line 374, in run
+2026-04-29 21:20:44 [EE]     self.postApplication()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 254, in postApplication
+2026-04-29 21:20:44 [EE]     self.startApplication(self.application)
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/scripts/_twistd_unix.py", line 444, in startApplication
+2026-04-29 21:20:44 [EE]     service.IService(application).privilegedStartService()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:20:44 [EE]     service.privilegedStartService()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 186, in privilegedStartService
+2026-04-29 21:20:44 [EE]     super().privilegedStartService()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/service.py", line 271, in privilegedStartService
+2026-04-29 21:20:44 [EE]     service.privilegedStartService()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 92, in privilegedStartService
+2026-04-29 21:20:44 [EE]     self._port = self._getPort()
+2026-04-29 21:20:44 [EE]                  ^^^^^^^^^^^^^^^
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/application/internet.py", line 116, in _getPort
+2026-04-29 21:20:44 [EE]     return getattr(
+2026-04-29 21:20:44 [EE]            ^^^^^^^^
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/posixbase.py", line 366, in listenTCP
+2026-04-29 21:20:44 [EE]     p.startListening()
+2026-04-29 21:20:44 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/tcp.py", line 1360, in startListening
+2026-04-29 21:20:44 [EE]     raise CannotListenError(self.interface, self.port, le)
+2026-04-29 21:20:44 [EE] twisted.internet.error.CannotListenError: Couldn't listen on 127.0.0.1:4002: [Errno 98] Address already in use.
+2026-04-29 21:23:49 [..] Loaded.
+2026-04-29 21:23:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:23:49 [..] Loaded.
+2026-04-29 21:23:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:23:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:23:49 [..] Webserver starting on 4005
+2026-04-29 21:23:49 [..] Evennia Server successfully started.
+2026-04-29 21:24:30 [..] Server disconnected from the portal.
+2026-04-29 21:24:30 [..] Main loop terminated.
+2026-04-29 21:24:30 [..] Server Shut Down.
+2026-04-29 21:24:34 [..] Loaded.
+2026-04-29 21:24:33 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:24:34 [..] Loaded.
+2026-04-29 21:24:34 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:24:34 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:24:34 [..] Webserver starting on 4005
+2026-04-29 21:24:34 [..] Evennia Server successfully started.
+2026-04-29 21:24:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-04-29 21:24:41 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-04-29 21:24:59 [SS] Authentication Success: Witch(account 1) (IP: 127.0.0.1).
+2026-04-29 21:24:59 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 21:27:16 [..] Server disconnected from the portal.
+2026-04-29 21:27:16 [..] Main loop terminated.
+2026-04-29 21:27:16 [..] Server Shut Down.
+2026-04-29 21:27:19 [..] Loaded.
+2026-04-29 21:27:18 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:27:19 [..] Loaded.
+2026-04-29 21:27:19 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:27:19 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:27:19 [..] Webserver starting on 4005
+2026-04-29 21:27:19 [..] Evennia Server successfully started.
+2026-04-29 21:27:30 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 21:36:19 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-29 21:41:50 [..] Server disconnected from the portal.
+2026-04-29 21:41:50 [..] Main loop terminated.
+2026-04-29 21:41:50 [..] Server Shut Down.
+2026-04-29 21:41:53 [..] Loaded.
+2026-04-29 21:41:52 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:41:53 [..] Loaded.
+2026-04-29 21:41:53 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:41:53 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:41:53 [..] Webserver starting on 4005
+2026-04-29 21:41:53 [..] Evennia Server successfully started.
+2026-04-29 21:42:06 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 21:47:10 [..] Server disconnected from the portal.
+2026-04-29 21:47:10 [..] Main loop terminated.
+2026-04-29 21:47:10 [..] Server Shut Down.
+2026-04-29 21:47:14 [..] Loaded.
+2026-04-29 21:47:13 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 21:47:14 [..] Loaded.
+2026-04-29 21:47:14 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 21:47:14 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 21:47:14 [..] Webserver starting on 4005
+2026-04-29 21:47:14 [..] Evennia Server successfully started.
+2026-04-29 21:47:24 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 21:56:14 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-29 22:28:16 [..] Server disconnected from the portal.
+2026-04-29 22:28:16 [..] Main loop terminated.
+2026-04-29 22:28:16 [..] Server Shut Down.
+2026-04-29 22:28:19 [..] Loaded.
+2026-04-29 22:28:18 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 22:28:19 [..] Loaded.
+2026-04-29 22:28:19 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 22:28:19 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 22:28:19 [..] Webserver starting on 4005
+2026-04-29 22:28:19 [..] Evennia Server successfully started.
+2026-04-29 22:28:31 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 22:37:19 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-29 23:03:06 [..] Server disconnected from the portal.
+2026-04-29 23:03:06 [..] Main loop terminated.
+2026-04-29 23:03:06 [..] Server Shut Down.
+2026-04-29 23:03:09 [..] Loaded.
+2026-04-29 23:03:09 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 23:03:09 [..] Loaded.
+2026-04-29 23:03:09 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 23:03:09 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 23:03:10 [..] Webserver starting on 4005
+2026-04-29 23:03:10 [..] Evennia Server successfully started.
+2026-04-29 23:03:20 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 23:26:37 [..] Server disconnected from the portal.
+2026-04-29 23:26:37 [..] Main loop terminated.
+2026-04-29 23:26:37 [..] Server Shut Down.
+2026-04-29 23:26:40 [..] Loaded.
+2026-04-29 23:26:39 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 23:26:40 [..] Loaded.
+2026-04-29 23:26:40 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 23:26:40 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 23:26:40 [..] Webserver starting on 4005
+2026-04-29 23:26:40 [..] Evennia Server successfully started.
+2026-04-29 23:26:48 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 23:35:03 [..] Server disconnected from the portal.
+2026-04-29 23:35:03 [..] Main loop terminated.
+2026-04-29 23:35:03 [..] Server Shut Down.
+2026-04-29 23:35:06 [..] Loaded.
+2026-04-29 23:35:05 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 23:35:06 [..] Loaded.
+2026-04-29 23:35:06 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 23:35:06 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 23:35:06 [..] Webserver starting on 4005
+2026-04-29 23:35:06 [..] Evennia Server successfully started.
+2026-04-29 23:35:10 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 23:35:14 [!!] Traceback (most recent call last):
+2026-04-29 23:35:14 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdsethandler.py", line 209, in import_cmdset
+2026-04-29 23:35:14 [!!]     cmdsetclass = cmdsetclass(cmdsetobj)
+2026-04-29 23:35:14 [!!]                   ^^^^^^^^^^^^^^^^^^^^^^
+2026-04-29 23:35:14 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdset.py", line 225, in __init__
+2026-04-29 23:35:14 [!!]     self.at_cmdset_creation()
+2026-04-29 23:35:14 [!!]   File "/home/laynie/ReVoid/mygame/commands/default_cmdsets.py", line 37, in at_cmdset_creation
+2026-04-29 23:35:14 [!!]     from commands.wisp_commands import CmdOOC
+2026-04-29 23:35:14 [!!] ImportError: cannot import name 'CmdOOC' from 'commands.wisp_commands' (/home/laynie/ReVoid/mygame/commands/wisp_commands.py)
+2026-04-29 23:35:14 [EE] Traceback (most recent call last):
+2026-04-29 23:35:14 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdsethandler.py", line 209, in import_cmdset
+2026-04-29 23:35:14 [EE]     cmdsetclass = cmdsetclass(cmdsetobj)
+2026-04-29 23:35:14 [EE]                   ^^^^^^^^^^^^^^^^^^^^^^
+2026-04-29 23:35:14 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdset.py", line 225, in __init__
+2026-04-29 23:35:14 [EE]     self.at_cmdset_creation()
+2026-04-29 23:35:14 [EE]   File "/home/laynie/ReVoid/mygame/commands/default_cmdsets.py", line 37, in at_cmdset_creation
+2026-04-29 23:35:14 [EE]     from commands.wisp_commands import CmdOOC
+2026-04-29 23:35:14 [EE] ImportError: cannot import name 'CmdOOC' from 'commands.wisp_commands' (/home/laynie/ReVoid/mygame/commands/wisp_commands.py)
+None2026-04-29 23:35:14 [EE] Error loading cmdset 'commands.default_cmdsets.CharacterCmdSet'
+2026-04-29 23:35:14 [EE] (Traceback was logged 26-04-29 23:35:14)
+None2026-04-29 23:35:14 [EE] Error encountered for cmdset at path 'commands.default_cmdsets.CharacterCmdSet'.
+2026-04-29 23:35:14 [EE] Replacing with fallback 'evennia.commands.default.cmdset_character.CharacterCmdSet'.
+2026-04-29 23:49:31 [..] Server disconnected from the portal.
+2026-04-29 23:49:31 [..] Main loop terminated.
+2026-04-29 23:49:31 [..] Server Shut Down.
+2026-04-29 23:49:34 [..] Loaded.
+2026-04-29 23:49:33 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-29 23:49:34 [..] Loaded.
+2026-04-29 23:49:34 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-29 23:49:34 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-29 23:49:34 [..] Webserver starting on 4005
+2026-04-29 23:49:34 [..] Evennia Server successfully started.
+2026-04-29 23:50:12 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-29 23:57:29 [EE] Overwriting existing registered function stopWordFilter
+2026-04-30 00:10:50 [..] Server disconnected from the portal.
+2026-04-30 00:10:50 [..] Main loop terminated.
+2026-04-30 00:10:50 [..] Server Shut Down.
+2026-04-30 00:10:53 [..] Loaded.
+2026-04-30 00:10:52 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-30 00:10:53 [..] Loaded.
+2026-04-30 00:10:53 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-30 00:10:53 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-30 00:10:53 [..] Webserver starting on 4005
+2026-04-30 00:10:53 [..] Evennia Server successfully started.
+2026-04-30 00:10:59 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-04-30 00:10:59 [EE] AMP caught exception (Character.at_post_puppet() missing 1 required positional argument: 'account' (error logged on other side)):
+2026-04-30 00:10:59 [EE] Code<EXCEPTION> (local): Character.at_post_puppet() missing 1 required positional argument: 'account'
+2026-04-30 00:10:59 [EE] Traceback: <class 'TypeError'>: Character.at_post_puppet() missing 1 required positional argument: 'account'
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:214:server_receive_adminportal2server
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/sessionhandler.py:353:portal_connect
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/sessionhandler.py:550:login
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/mygame/typeclasses/accounts.py:148:at_post_login
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py:1738:at_post_login
+2026-04-30 00:10:59 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py:554:puppet_object
+2026-04-30 00:19:53 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-30 00:22:27 [..] Server disconnected from the portal.
+2026-04-30 00:22:27 [..] Main loop terminated.
+2026-04-30 00:22:27 [..] Server Shut Down.
+2026-04-30 00:22:27 [!!] Unhandled error in Deferred:
+2026-04-30 00:22:27 [!!] 
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py", line 2017, in _inlineCallbacks
+	    result = context.run(gen.send, result)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 543, in shutdown
+	    (p.unpuppet_all(), p.at_server_shutdown())
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py", line 589, in unpuppet_all
+	    self.unpuppet_object(self.sessions.all())
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py", line 573, in unpuppet_object
+	    obj.at_pre_unpuppet()
+	builtins.TypeError: Character.at_pre_unpuppet() missing 1 required positional argument: 'account'
+	
+2026-04-30 00:22:28 [..] Loaded.
+2026-04-30 00:22:27 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-30 00:22:28 [..] Loaded.
+2026-04-30 00:22:28 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-30 00:22:28 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-30 00:22:28 [..] Webserver starting on 4005
+2026-04-30 00:22:28 [..] Server successfully reloaded.
+2026-04-30 00:31:28 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-30 00:46:15 [..] Server disconnected from the portal.
+2026-04-30 00:46:15 [..] Main loop terminated.
+2026-04-30 00:46:15 [..] Server Shut Down.
+2026-04-30 00:46:16 [..] Loaded.
+2026-04-30 00:46:15 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-30 00:46:16 [..] Loaded.
+2026-04-30 00:46:16 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-30 00:46:16 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-30 00:46:16 [..] Webserver starting on 4005
+2026-04-30 00:46:16 [..] Server successfully reloaded.
+2026-04-30 00:55:16 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-30 00:57:26 [..] Server disconnected from the portal.
+2026-04-30 00:57:26 [..] Main loop terminated.
+2026-04-30 00:57:26 [..] Server Shut Down.
+2026-04-30 00:57:27 [..] Loaded.
+2026-04-30 00:57:26 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-30 00:57:27 [..] Loaded.
+2026-04-30 00:57:27 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-30 00:57:27 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-30 00:57:28 [..] Webserver starting on 4005
+2026-04-30 00:57:28 [..] Server successfully reloaded.
+2026-04-30 01:09:36 [..] Server disconnected from the portal.
+2026-04-30 01:09:36 [..] Main loop terminated.
+2026-04-30 01:09:36 [..] Server Shut Down.
+2026-04-30 01:09:38 [..] Loaded.
+2026-04-30 01:09:37 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-30 01:09:38 [..] Loaded.
+2026-04-30 01:09:38 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-30 01:09:38 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-30 01:09:38 [..] Webserver starting on 4005
+2026-04-30 01:09:38 [..] Server successfully reloaded.
+2026-04-30 01:18:38 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-04-30 01:18:47 [..] Server disconnected from the portal.
+2026-04-30 01:18:47 [..] Main loop terminated.
+2026-04-30 01:18:47 [..] Server Shut Down.
+2026-04-30 01:18:49 [..] Loaded.
+2026-04-30 01:18:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-04-30 01:18:49 [..] Loaded.
+2026-04-30 01:18:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-04-30 01:18:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-04-30 01:18:49 [..] Webserver starting on 4005
+2026-04-30 01:18:49 [..] Server successfully reloaded.
+2026-04-30 01:27:49 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+Removing stale pidfile /home/laynie/ReVoid/mygame/server/server.pid
+2026-05-02 05:34:55 [..] Loaded.
+2026-05-02 05:34:54 [!!] Removing stale pidfile /home/laynie/ReVoid/mygame/server/server.pid
+2026-05-02 05:34:54 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 05:34:55 [..] Loaded.
+2026-05-02 05:34:55 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 05:34:55 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 05:34:55 [..] Webserver starting on 4005
+2026-05-02 05:34:55 [..] Evennia Server successfully started.
+2026-05-02 05:35:01 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-02 05:35:01 [EE] AMP caught exception (Character.at_post_puppet() missing 1 required positional argument: 'account' (error logged on other side)):
+2026-05-02 05:35:01 [EE] Code<EXCEPTION> (local): Character.at_post_puppet() missing 1 required positional argument: 'account'
+2026-05-02 05:35:01 [EE] Traceback: <class 'TypeError'>: Character.at_post_puppet() missing 1 required positional argument: 'account'
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:214:server_receive_adminportal2server
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/sessionhandler.py:353:portal_connect
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/sessionhandler.py:550:login
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/mygame/typeclasses/accounts.py:152:at_post_login
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py:1738:at_post_login
+2026-05-02 05:35:01 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py:554:puppet_object
+2026-05-02 06:25:50 [!!] Traceback (most recent call last):
+2026-05-02 06:25:50 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2026-05-02 06:25:50 [!!]     ret = cmd.func()
+2026-05-02 06:25:50 [!!]           ^^^^^^^^^^
+2026-05-02 06:25:50 [!!]   File "/home/laynie/ReVoid/mygame/commands/rp_commands.py", line 620, in func
+2026-05-02 06:25:50 [!!]     account.unpuppet_object(self.session)
+2026-05-02 06:25:50 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py", line 573, in unpuppet_object
+2026-05-02 06:25:50 [!!]     obj.at_pre_unpuppet()
+2026-05-02 06:25:50 [!!] TypeError: Character.at_pre_unpuppet() missing 1 required positional argument: 'account'
+2026-05-02 06:25:50 [EE] User input was: 'ooc'.
+2026-05-02 06:27:22 [..] Server disconnected from the portal.
+2026-05-02 06:27:22 [..] Main loop terminated.
+2026-05-02 06:27:22 [..] Server Shut Down.
+2026-05-02 06:27:23 [..] Loaded.
+2026-05-02 06:27:22 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 06:27:23 [..] Loaded.
+2026-05-02 06:27:23 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 06:27:23 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 06:27:24 [..] Webserver starting on 4005
+2026-05-02 06:27:24 [..] Server successfully reloaded.
+2026-05-02 06:27:26 [!!] Traceback (most recent call last):
+2026-05-02 06:27:26 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2026-05-02 06:27:26 [!!]     ret = cmd.func()
+2026-05-02 06:27:26 [!!]           ^^^^^^^^^^
+2026-05-02 06:27:26 [!!]   File "/home/laynie/ReVoid/mygame/commands/rp_commands.py", line 620, in func
+2026-05-02 06:27:26 [!!]     account.unpuppet_object(self.session)
+2026-05-02 06:27:26 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/accounts/accounts.py", line 573, in unpuppet_object
+2026-05-02 06:27:26 [!!]     obj.at_pre_unpuppet()
+2026-05-02 06:27:26 [!!]   File "/home/laynie/ReVoid/mygame/typeclasses/characters.py", line 494, in at_pre_unpuppet
+2026-05-02 06:27:26 [!!]     super().at_pre_unpuppet(
+2026-05-02 06:27:26 [!!] TypeError: DefaultObject.at_pre_unpuppet() takes 1 positional argument but 2 were given
+2026-05-02 06:27:26 [EE] User input was: 'ooc'.
+2026-05-02 06:28:46 [..] Server disconnected from the portal.
+2026-05-02 06:28:46 [..] Main loop terminated.
+2026-05-02 06:28:46 [..] Server Shut Down.
+2026-05-02 06:28:48 [..] Loaded.
+2026-05-02 06:28:47 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 06:28:48 [..] Loaded.
+2026-05-02 06:28:48 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 06:28:48 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 06:28:48 [..] Webserver starting on 4005
+2026-05-02 06:28:48 [..] Server successfully reloaded.
+2026-05-02 06:35:54 [..] Server disconnected from the portal.
+2026-05-02 06:35:54 [..] Main loop terminated.
+2026-05-02 06:35:54 [..] Server Shut Down.
+2026-05-02 06:35:55 [..] Loaded.
+2026-05-02 06:35:54 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 06:35:55 [..] Loaded.
+2026-05-02 06:35:55 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 06:35:55 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 06:35:55 [..] Webserver starting on 4005
+2026-05-02 06:35:55 [..] Server successfully reloaded.
+2026-05-02 06:38:46 [..] Server disconnected from the portal.
+2026-05-02 06:38:46 [..] Main loop terminated.
+2026-05-02 06:38:46 [..] Server Shut Down.
+2026-05-02 06:38:47 [..] Loaded.
+2026-05-02 06:38:46 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 06:38:47 [..] Loaded.
+2026-05-02 06:38:47 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 06:38:47 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 06:38:47 [..] Webserver starting on 4005
+2026-05-02 06:38:47 [..] Server successfully reloaded.
+2026-05-02 06:47:47 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-02 07:02:15 [..] Server disconnected from the portal.
+2026-05-02 07:02:15 [..] Main loop terminated.
+2026-05-02 07:02:15 [..] Server Shut Down.
+2026-05-02 07:02:16 [..] Loaded.
+2026-05-02 07:02:15 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 07:02:16 [..] Loaded.
+2026-05-02 07:02:16 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 07:02:16 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 07:02:16 [..] Webserver starting on 4005
+2026-05-02 07:02:16 [..] Server successfully reloaded.
+2026-05-02 07:11:16 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-02 07:26:48 [..] Server disconnected from the portal.
+2026-05-02 07:26:48 [..] Main loop terminated.
+2026-05-02 07:26:48 [..] Server Shut Down.
+2026-05-02 07:26:49 [..] Loaded.
+2026-05-02 07:26:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 07:26:49 [..] Loaded.
+2026-05-02 07:26:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 07:26:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 07:26:49 [..] Webserver starting on 4005
+2026-05-02 07:26:49 [..] Server successfully reloaded.
+2026-05-02 07:35:49 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-02 07:39:23 [..] Server disconnected from the portal.
+2026-05-02 07:39:23 [..] Main loop terminated.
+2026-05-02 07:39:23 [..] Server Shut Down.
+2026-05-02 07:39:25 [..] Loaded.
+2026-05-02 07:39:24 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-02 07:39:25 [..] Loaded.
+2026-05-02 07:39:25 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-02 07:39:25 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-02 07:39:25 [..] Webserver starting on 4005
+2026-05-02 07:39:25 [..] Server successfully reloaded.
+2026-05-04 07:35:11 [..] Server disconnected from the portal.
+2026-05-04 07:35:12 [..] Main loop terminated.
+2026-05-04 07:35:12 [..] Server Shut Down.
+2026-05-04 07:35:13 [..] Loaded.
+2026-05-04 07:35:12 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-04 07:35:13 [..] Loaded.
+2026-05-04 07:35:13 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-04 07:35:13 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-04 07:35:13 [..] Webserver starting on 4005
+2026-05-04 07:35:13 [..] Server successfully reloaded.
+2026-05-04 07:44:13 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-04 07:52:58 [!!] Traceback (most recent call last):
+2026-05-04 07:52:58 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdsethandler.py", line 209, in import_cmdset
+2026-05-04 07:52:58 [!!]     cmdsetclass = cmdsetclass(cmdsetobj)
+2026-05-04 07:52:58 [!!]                   ^^^^^^^^^^^^^^^^^^^^^^
+2026-05-04 07:52:58 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdset.py", line 225, in __init__
+2026-05-04 07:52:58 [!!]     self.at_cmdset_creation()
+2026-05-04 07:52:58 [!!]   File "/home/laynie/ReVoid/mygame/commands/default_cmdsets.py", line 181, in at_cmdset_creation
+2026-05-04 07:52:58 [!!]     from commands.wisp_commands import (
+2026-05-04 07:52:58 [!!] ImportError: cannot import name 'CmdWSay' from 'commands.wisp_commands' (/home/laynie/ReVoid/mygame/commands/wisp_commands.py)
+2026-05-04 07:52:58 [EE] Traceback (most recent call last):
+2026-05-04 07:52:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdsethandler.py", line 209, in import_cmdset
+2026-05-04 07:52:58 [EE]     cmdsetclass = cmdsetclass(cmdsetobj)
+2026-05-04 07:52:58 [EE]                   ^^^^^^^^^^^^^^^^^^^^^^
+2026-05-04 07:52:58 [EE]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdset.py", line 225, in __init__
+2026-05-04 07:52:58 [EE]     self.at_cmdset_creation()
+2026-05-04 07:52:58 [EE]   File "/home/laynie/ReVoid/mygame/commands/default_cmdsets.py", line 181, in at_cmdset_creation
+2026-05-04 07:52:58 [EE]     from commands.wisp_commands import (
+2026-05-04 07:52:58 [EE] ImportError: cannot import name 'CmdWSay' from 'commands.wisp_commands' (/home/laynie/ReVoid/mygame/commands/wisp_commands.py)
+None2026-05-04 07:52:58 [EE] Error loading cmdset 'commands.default_cmdsets.AccountCmdSet'
+2026-05-04 07:52:58 [EE] (Traceback was logged 26-05-04 07:52:58)
+None2026-05-04 07:52:58 [EE] Error encountered for cmdset at path 'commands.default_cmdsets.AccountCmdSet'.
+2026-05-04 07:52:58 [EE] Replacing with fallback 'evennia.commands.default.cmdset_account.AccountCmdSet'.
+2026-05-04 07:54:42 [SS] Puppet Success: (Caller: Witch(account 1), Target: Witch, IP: 127.0.0.1).
+2026-05-05 16:01:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:01:53 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-05 16:01:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:01:56 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-05 16:02:36 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:03:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:03:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:03:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:03:39 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:03:39 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:04:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:04:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:04:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:04:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:04:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:16 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:21 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:24 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:49 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:49 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:53 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:53 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:05:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:02 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:02 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:06 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:06 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:34 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 16:06:37 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 17:08:01 [..] Logged out: Witch(account 1) 127.0.0.1 (0 sessions(s) remaining)
+2026-05-05 17:35:27 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-05 17:35:27 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-05 17:35:43 [..] Server disconnected from the portal.
+2026-05-05 17:35:43 [..] Main loop terminated.
+2026-05-05 17:35:43 [..] Server Shut Down.
+2026-05-05 17:35:44 [..] Loaded.
+2026-05-05 17:35:43 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-05 17:35:44 [..] Loaded.
+2026-05-05 17:35:44 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-05 17:35:44 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-05 17:35:44 [..] Webserver starting on 4005
+2026-05-05 17:35:44 [..] Server successfully reloaded.
+2026-05-05 17:36:30 [EE] Overwriting existing registered function stopWordFilter
+2026-05-05 17:44:44 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 01:00:28 [..] Server disconnected from the portal.
+2026-05-07 01:00:28 [..] Main loop terminated.
+2026-05-07 01:00:28 [..] Server Shut Down.
+2026-05-07 01:00:29 [..] Loaded.
+2026-05-07 01:00:28 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:00:29 [..] Loaded.
+2026-05-07 01:00:29 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:00:29 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:00:29 [..] Webserver starting on 4005
+2026-05-07 01:00:29 [..] Server successfully reloaded.
+2026-05-07 01:01:15 [..] NPCLoader: spawned NPC 'the Witness' (#13) at #2
+2026-05-07 01:01:16 [..] NPCLoader: spawned NPC 'Lark' (#14) at #2
+2026-05-07 01:01:17 [..] NPCLoader: spawned NPC 'Sable' (#15) at #2
+2026-05-07 01:01:18 [..] NPCLoader: spawned NPC 'the Mirror' (#16) at #2
+2026-05-07 01:01:19 [..] NPCLoader: spawned NPC 'Wren' (#17) at #2
+2026-05-07 01:07:28 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 01:07:28 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 01:07:28 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 01:07:28 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 01:07:28 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 01:14:13 [..] Server disconnected from the portal.
+2026-05-07 01:14:13 [..] Main loop terminated.
+2026-05-07 01:14:13 [..] Server Shut Down.
+2026-05-07 01:14:14 [..] Loaded.
+2026-05-07 01:14:13 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:14:14 [..] Loaded.
+2026-05-07 01:14:14 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:14:14 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:14:14 [..] Webserver starting on 4005
+2026-05-07 01:14:14 [..] Server successfully reloaded.
+2026-05-07 01:16:17 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-07 01:16:19 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-07 01:16:20 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-07 01:17:02 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-07 01:17:40 [SS] Password successfully changed for Laynie(account None).
+2026-05-07 01:17:41 [SS] Account Created: Laynie(account 2) (IP: 127.0.0.1).
+2026-05-07 01:17:41 [SS] Character Created: Laynie (Caller: Laynie(account 2), IP: 127.0.0.1).
+2026-05-07 01:17:51 [SS] Authentication Success: Laynie(account 2) (IP: 127.0.0.1).
+2026-05-07 01:17:51 [..] Logged in: Laynie(account 2) 127.0.0.1 (1 session(s) total)
+2026-05-07 01:19:46 [..] Server disconnected from the portal.
+2026-05-07 01:19:46 [..] Main loop terminated.
+2026-05-07 01:19:46 [..] Server Shut Down.
+2026-05-07 01:19:47 [..] Loaded.
+2026-05-07 01:19:46 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:19:47 [..] Loaded.
+2026-05-07 01:19:47 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:19:47 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:19:47 [..] Webserver starting on 4005
+2026-05-07 01:19:47 [..] Server successfully reloaded.
+2026-05-07 01:27:29 [..] Server disconnected from the portal.
+2026-05-07 01:27:29 [..] Main loop terminated.
+2026-05-07 01:27:29 [..] Server Shut Down.
+2026-05-07 01:27:30 [..] Loaded.
+2026-05-07 01:27:29 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:27:30 [..] Loaded.
+2026-05-07 01:27:30 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:27:30 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:27:30 [..] Webserver starting on 4005
+2026-05-07 01:27:30 [..] Server successfully reloaded.
+2026-05-07 01:36:30 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 01:41:48 [..] Server disconnected from the portal.
+2026-05-07 01:41:48 [..] Main loop terminated.
+2026-05-07 01:41:48 [..] Server Shut Down.
+2026-05-07 01:41:49 [..] Loaded.
+2026-05-07 01:41:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:41:49 [..] Loaded.
+2026-05-07 01:41:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:41:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:41:49 [..] Webserver starting on 4005
+2026-05-07 01:41:49 [..] Server successfully reloaded.
+2026-05-07 01:45:33 [..] Server disconnected from the portal.
+2026-05-07 01:45:33 [..] Main loop terminated.
+2026-05-07 01:45:33 [..] Server Shut Down.
+2026-05-07 01:45:34 [..] Loaded.
+2026-05-07 01:45:33 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:45:34 [..] Loaded.
+2026-05-07 01:45:34 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:45:34 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:45:34 [..] Webserver starting on 4005
+2026-05-07 01:45:34 [..] Server successfully reloaded.
+2026-05-07 01:48:29 [..] Server disconnected from the portal.
+2026-05-07 01:48:29 [..] Main loop terminated.
+2026-05-07 01:48:29 [..] Server Shut Down.
+2026-05-07 01:48:31 [..] Loaded.
+2026-05-07 01:48:29 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:48:31 [..] Loaded.
+2026-05-07 01:48:31 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:48:31 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:48:31 [..] Webserver starting on 4005
+2026-05-07 01:48:31 [..] Server successfully reloaded.
+2026-05-07 01:52:59 [..] Server disconnected from the portal.
+2026-05-07 01:52:59 [..] Main loop terminated.
+2026-05-07 01:52:59 [..] Server Shut Down.
+2026-05-07 01:53:01 [..] Loaded.
+2026-05-07 01:52:59 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:53:01 [..] Loaded.
+2026-05-07 01:53:01 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:53:01 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:53:01 [..] Webserver starting on 4005
+2026-05-07 01:53:01 [..] Server successfully reloaded.
+2026-05-07 01:57:48 [..] Server disconnected from the portal.
+2026-05-07 01:57:48 [..] Main loop terminated.
+2026-05-07 01:57:48 [..] Server Shut Down.
+2026-05-07 01:57:49 [..] Loaded.
+2026-05-07 01:57:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 01:57:49 [..] Loaded.
+2026-05-07 01:57:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 01:57:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 01:57:49 [..] Webserver starting on 4005
+2026-05-07 01:57:49 [..] Server successfully reloaded.
+2026-05-07 02:04:11 [..] Server disconnected from the portal.
+2026-05-07 02:04:11 [..] Main loop terminated.
+2026-05-07 02:04:11 [..] Server Shut Down.
+2026-05-07 02:04:12 [..] Loaded.
+2026-05-07 02:04:11 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:04:12 [..] Loaded.
+2026-05-07 02:04:12 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:04:12 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:04:13 [..] Webserver starting on 4005
+2026-05-07 02:04:13 [..] Server successfully reloaded.
+2026-05-07 02:04:57 [..] Server disconnected from the portal.
+2026-05-07 02:04:57 [..] Main loop terminated.
+2026-05-07 02:04:57 [..] Server Shut Down.
+2026-05-07 02:04:59 [..] Loaded.
+2026-05-07 02:04:57 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:04:59 [..] Loaded.
+2026-05-07 02:04:59 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:04:59 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:04:59 [..] Webserver starting on 4005
+2026-05-07 02:04:59 [..] Server successfully reloaded.
+2026-05-07 02:06:37 [..] Server disconnected from the portal.
+2026-05-07 02:06:37 [..] Main loop terminated.
+2026-05-07 02:06:37 [..] Server Shut Down.
+2026-05-07 02:06:38 [..] Loaded.
+2026-05-07 02:06:37 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:06:38 [..] Loaded.
+2026-05-07 02:06:38 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:06:38 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:06:38 [..] Webserver starting on 4005
+2026-05-07 02:06:38 [..] Server successfully reloaded.
+2026-05-07 02:09:21 [..] Server disconnected from the portal.
+2026-05-07 02:09:21 [..] Main loop terminated.
+2026-05-07 02:09:21 [..] Server Shut Down.
+2026-05-07 02:09:22 [..] Loaded.
+2026-05-07 02:09:21 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:09:22 [..] Loaded.
+2026-05-07 02:09:22 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:09:22 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:09:22 [..] Webserver starting on 4005
+2026-05-07 02:09:22 [..] Server successfully reloaded.
+2026-05-07 02:15:58 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 02:15:58 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 02:15:58 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 02:15:58 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 02:15:58 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 02:16:03 [..] Server disconnected from the portal.
+2026-05-07 02:16:03 [..] Main loop terminated.
+2026-05-07 02:16:03 [..] Server Shut Down.
+2026-05-07 02:16:04 [..] Loaded.
+2026-05-07 02:16:03 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:16:04 [..] Loaded.
+2026-05-07 02:16:04 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:16:04 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:16:04 [..] Webserver starting on 4005
+2026-05-07 02:16:04 [..] Server successfully reloaded.
+2026-05-07 02:21:35 [..] Server disconnected from the portal.
+2026-05-07 02:21:35 [..] Main loop terminated.
+2026-05-07 02:21:35 [..] Server Shut Down.
+2026-05-07 02:21:36 [..] Loaded.
+2026-05-07 02:21:35 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:21:36 [..] Loaded.
+2026-05-07 02:21:36 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:21:36 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:21:36 [..] Webserver starting on 4005
+2026-05-07 02:21:36 [..] Server successfully reloaded.
+2026-05-07 02:24:49 [..] Server disconnected from the portal.
+2026-05-07 02:24:49 [..] Main loop terminated.
+2026-05-07 02:24:49 [..] Server Shut Down.
+2026-05-07 02:24:50 [..] Loaded.
+2026-05-07 02:24:49 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:24:50 [..] Loaded.
+2026-05-07 02:24:50 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:24:50 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:24:50 [..] Webserver starting on 4005
+2026-05-07 02:24:50 [..] Server successfully reloaded.
+2026-05-07 02:27:38 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 02:27:38 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 02:27:38 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 02:27:38 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 02:27:38 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 02:27:42 [..] Server disconnected from the portal.
+2026-05-07 02:27:42 [..] Main loop terminated.
+2026-05-07 02:27:42 [..] Server Shut Down.
+2026-05-07 02:27:43 [..] Loaded.
+2026-05-07 02:27:42 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:27:43 [..] Loaded.
+2026-05-07 02:27:43 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:27:43 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:27:43 [..] Webserver starting on 4005
+2026-05-07 02:27:43 [..] Server successfully reloaded.
+2026-05-07 02:35:31 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 02:35:31 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 02:35:31 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 02:35:31 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 02:35:31 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 02:35:35 [..] Server disconnected from the portal.
+2026-05-07 02:35:35 [..] Main loop terminated.
+2026-05-07 02:35:35 [..] Server Shut Down.
+2026-05-07 02:35:37 [..] Loaded.
+2026-05-07 02:35:36 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:35:37 [..] Loaded.
+2026-05-07 02:35:37 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:35:37 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:35:37 [..] Webserver starting on 4005
+2026-05-07 02:35:37 [..] Server successfully reloaded.
+2026-05-07 02:42:37 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 02:42:37 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 02:42:37 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 02:42:37 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 02:42:37 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 02:42:41 [..] Server disconnected from the portal.
+2026-05-07 02:42:41 [..] Main loop terminated.
+2026-05-07 02:42:41 [..] Server Shut Down.
+2026-05-07 02:42:42 [..] Loaded.
+2026-05-07 02:42:41 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:42:42 [..] Loaded.
+2026-05-07 02:42:42 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:42:42 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:42:42 [..] Webserver starting on 4005
+2026-05-07 02:42:42 [..] Server successfully reloaded.
+2026-05-07 02:48:57 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 02:48:57 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 02:48:57 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 02:48:57 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 02:48:57 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 02:49:01 [..] Server disconnected from the portal.
+2026-05-07 02:49:01 [..] Main loop terminated.
+2026-05-07 02:49:01 [..] Server Shut Down.
+2026-05-07 02:49:03 [..] Loaded.
+2026-05-07 02:49:02 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:49:03 [..] Loaded.
+2026-05-07 02:49:03 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:49:03 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:49:03 [..] Webserver starting on 4005
+2026-05-07 02:49:03 [..] Server successfully reloaded.
+2026-05-07 02:56:27 [..] Server disconnected from the portal.
+2026-05-07 02:56:27 [..] Main loop terminated.
+2026-05-07 02:56:27 [..] Server Shut Down.
+2026-05-07 02:56:29 [..] Loaded.
+2026-05-07 02:56:27 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 02:56:29 [..] Loaded.
+2026-05-07 02:56:29 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 02:56:29 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 02:56:29 [..] Webserver starting on 4005
+2026-05-07 02:56:29 [..] Server successfully reloaded.
+2026-05-07 03:05:29 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 03:11:53 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 03:11:53 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 03:11:53 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 03:11:53 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 03:11:53 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 03:11:59 [..] Server disconnected from the portal.
+2026-05-07 03:11:59 [..] Main loop terminated.
+2026-05-07 03:11:59 [..] Server Shut Down.
+2026-05-07 03:12:00 [..] Loaded.
+2026-05-07 03:11:59 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 03:12:00 [..] Loaded.
+2026-05-07 03:12:00 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 03:12:00 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 03:12:00 [..] Webserver starting on 4005
+2026-05-07 03:12:00 [..] Server successfully reloaded.
+2026-05-07 03:19:01 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 03:19:01 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 03:19:01 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 03:19:01 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 03:19:01 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 03:19:09 [..] Server disconnected from the portal.
+2026-05-07 03:19:09 [..] Main loop terminated.
+2026-05-07 03:19:09 [..] Server Shut Down.
+2026-05-07 03:19:10 [..] Loaded.
+2026-05-07 03:19:09 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 03:19:10 [..] Loaded.
+2026-05-07 03:19:10 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 03:19:10 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 03:19:10 [..] Webserver starting on 4005
+2026-05-07 03:19:10 [..] Server successfully reloaded.
+2026-05-07 03:26:41 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 03:26:41 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 03:26:41 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 03:26:41 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 03:26:41 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 03:26:47 [..] Server disconnected from the portal.
+2026-05-07 03:26:47 [..] Main loop terminated.
+2026-05-07 03:26:47 [..] Server Shut Down.
+2026-05-07 03:26:49 [..] Loaded.
+2026-05-07 03:26:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 03:26:49 [..] Loaded.
+2026-05-07 03:26:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 03:26:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 03:26:49 [..] Webserver starting on 4005
+2026-05-07 03:26:49 [..] Server successfully reloaded.
+2026-05-07 03:30:45 [EE] Overwriting existing registered function stopWordFilter
+2026-05-07 03:35:49 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 03:40:44 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 03:40:44 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 03:40:44 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 03:40:44 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 03:40:44 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 03:40:48 [..] Server disconnected from the portal.
+2026-05-07 03:40:48 [..] Main loop terminated.
+2026-05-07 03:40:48 [..] Server Shut Down.
+2026-05-07 03:40:49 [..] Loaded.
+2026-05-07 03:40:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 03:40:49 [..] Loaded.
+2026-05-07 03:40:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 03:40:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 03:40:49 [..] Webserver starting on 4005
+2026-05-07 03:40:49 [..] Server successfully reloaded.
+2026-05-07 03:49:49 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 03:50:08 [..] Server disconnected from the portal.
+2026-05-07 03:50:08 [..] Main loop terminated.
+2026-05-07 03:50:08 [..] Server Shut Down.
+2026-05-07 03:50:09 [..] Loaded.
+2026-05-07 03:50:08 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 03:50:09 [..] Loaded.
+2026-05-07 03:50:09 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 03:50:09 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 03:50:09 [..] Webserver starting on 4005
+2026-05-07 03:50:09 [..] Server successfully reloaded.
+2026-05-07 03:51:51 [EE] Overwriting existing registered function stopWordFilter
+2026-05-07 03:56:15 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 03:56:15 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 03:56:15 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 03:56:15 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 03:56:15 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 03:56:19 [..] Server disconnected from the portal.
+2026-05-07 03:56:19 [..] Main loop terminated.
+2026-05-07 03:56:19 [..] Server Shut Down.
+2026-05-07 03:56:21 [..] Loaded.
+2026-05-07 03:56:19 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 03:56:21 [..] Loaded.
+2026-05-07 03:56:21 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 03:56:21 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 03:56:21 [..] Webserver starting on 4005
+2026-05-07 03:56:21 [..] Server successfully reloaded.
+2026-05-07 03:57:19 [EE] Overwriting existing registered function stopWordFilter
+2026-05-07 04:05:21 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 04:07:58 [..] Server disconnected from the portal.
+2026-05-07 04:07:58 [..] Main loop terminated.
+2026-05-07 04:07:58 [..] Server Shut Down.
+2026-05-07 04:08:00 [..] Loaded.
+2026-05-07 04:07:59 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:08:00 [..] Loaded.
+2026-05-07 04:08:00 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:08:00 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:08:00 [..] Webserver starting on 4005
+2026-05-07 04:08:00 [..] Server successfully reloaded.
+2026-05-07 04:12:05 [..] Server disconnected from the portal.
+2026-05-07 04:12:05 [..] Main loop terminated.
+2026-05-07 04:12:05 [..] Server Shut Down.
+2026-05-07 04:12:07 [..] Loaded.
+2026-05-07 04:12:05 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:12:07 [..] Loaded.
+2026-05-07 04:12:07 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:12:07 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:12:07 [..] Webserver starting on 4005
+2026-05-07 04:12:07 [..] Server successfully reloaded.
+2026-05-07 04:14:46 [..] Server disconnected from the portal.
+2026-05-07 04:14:46 [..] Main loop terminated.
+2026-05-07 04:14:46 [..] Server Shut Down.
+2026-05-07 04:14:48 [..] Loaded.
+2026-05-07 04:14:46 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:14:48 [..] Loaded.
+2026-05-07 04:14:48 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:14:48 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:14:48 [..] Webserver starting on 4005
+2026-05-07 04:14:48 [..] Server successfully reloaded.
+2026-05-07 04:21:16 [..] Server disconnected from the portal.
+2026-05-07 04:21:16 [..] Main loop terminated.
+2026-05-07 04:21:16 [..] Server Shut Down.
+2026-05-07 04:21:17 [..] Loaded.
+2026-05-07 04:21:16 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:21:17 [..] Loaded.
+2026-05-07 04:21:17 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:21:17 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:21:17 [..] Webserver starting on 4005
+2026-05-07 04:21:17 [..] Server successfully reloaded.
+2026-05-07 04:29:44 [..] Server disconnected from the portal.
+2026-05-07 04:29:44 [..] Main loop terminated.
+2026-05-07 04:29:44 [..] Server Shut Down.
+2026-05-07 04:29:46 [..] Loaded.
+2026-05-07 04:29:44 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:29:46 [..] Loaded.
+2026-05-07 04:29:46 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:29:46 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:29:46 [..] Webserver starting on 4005
+2026-05-07 04:29:46 [..] Server successfully reloaded.
+2026-05-07 04:31:23 [..] Server disconnected from the portal.
+2026-05-07 04:31:23 [..] Main loop terminated.
+2026-05-07 04:31:23 [..] Server Shut Down.
+2026-05-07 04:31:24 [..] Loaded.
+2026-05-07 04:31:23 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:31:24 [..] Loaded.
+2026-05-07 04:31:24 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:31:24 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:31:24 [..] Webserver starting on 4005
+2026-05-07 04:31:24 [..] Server successfully reloaded.
+2026-05-07 04:33:54 [..] Server disconnected from the portal.
+2026-05-07 04:33:54 [..] Main loop terminated.
+2026-05-07 04:33:54 [..] Server Shut Down.
+2026-05-07 04:33:55 [..] Loaded.
+2026-05-07 04:33:54 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:33:55 [..] Loaded.
+2026-05-07 04:33:55 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:33:55 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:33:55 [..] Webserver starting on 4005
+2026-05-07 04:33:55 [..] Server successfully reloaded.
+2026-05-07 04:36:09 [..] Server disconnected from the portal.
+2026-05-07 04:36:09 [..] Main loop terminated.
+2026-05-07 04:36:09 [..] Server Shut Down.
+2026-05-07 04:36:10 [..] Loaded.
+2026-05-07 04:36:09 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:36:10 [..] Loaded.
+2026-05-07 04:36:10 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:36:10 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:36:10 [..] Webserver starting on 4005
+2026-05-07 04:36:10 [..] Server successfully reloaded.
+2026-05-07 04:41:10 [..] Server disconnected from the portal.
+2026-05-07 04:41:10 [..] Main loop terminated.
+2026-05-07 04:41:10 [..] Server Shut Down.
+2026-05-07 04:41:12 [..] Loaded.
+2026-05-07 04:41:11 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:41:12 [..] Loaded.
+2026-05-07 04:41:12 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:41:12 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:41:12 [..] Webserver starting on 4005
+2026-05-07 04:41:12 [..] Server successfully reloaded.
+2026-05-07 04:46:37 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 04:46:37 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 04:46:37 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 04:46:37 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 04:46:37 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 04:46:49 [..] Server disconnected from the portal.
+2026-05-07 04:46:49 [..] Main loop terminated.
+2026-05-07 04:46:49 [..] Server Shut Down.
+2026-05-07 04:46:51 [..] Loaded.
+2026-05-07 04:46:49 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:46:51 [..] Loaded.
+2026-05-07 04:46:51 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:46:51 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:46:51 [..] Webserver starting on 4005
+2026-05-07 04:46:51 [..] Server successfully reloaded.
+2026-05-07 04:53:05 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 04:53:05 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 04:53:05 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 04:53:05 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 04:53:05 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 04:53:10 [..] Server disconnected from the portal.
+2026-05-07 04:53:10 [..] Main loop terminated.
+2026-05-07 04:53:10 [..] Server Shut Down.
+2026-05-07 04:53:11 [..] Loaded.
+2026-05-07 04:53:10 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 04:53:11 [..] Loaded.
+2026-05-07 04:53:11 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 04:53:11 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 04:53:12 [..] Webserver starting on 4005
+2026-05-07 04:53:12 [..] Server successfully reloaded.
+2026-05-07 05:01:58 [..] Server disconnected from the portal.
+2026-05-07 05:01:58 [..] Main loop terminated.
+2026-05-07 05:01:58 [..] Server Shut Down.
+2026-05-07 05:02:00 [..] Loaded.
+2026-05-07 05:01:58 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 05:02:00 [..] Loaded.
+2026-05-07 05:02:00 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 05:02:00 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 05:02:00 [..] Webserver starting on 4005
+2026-05-07 05:02:00 [..] Server successfully reloaded.
+2026-05-07 05:11:00 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 05:11:21 [EE] Overwriting existing registered function stopWordFilter
+2026-05-07 16:54:09 [..] Server disconnected from the portal.
+2026-05-07 16:54:09 [..] Main loop terminated.
+2026-05-07 16:54:09 [..] Server Shut Down.
+2026-05-07 16:54:10 [..] Loaded.
+2026-05-07 16:54:09 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 16:54:10 [..] Loaded.
+2026-05-07 16:54:10 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 16:54:10 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 16:54:10 [..] Webserver starting on 4005
+2026-05-07 16:54:10 [..] Server successfully reloaded.
+2026-05-07 17:01:17 [..] Server disconnected from the portal.
+2026-05-07 17:01:17 [..] Main loop terminated.
+2026-05-07 17:01:17 [..] Server Shut Down.
+2026-05-07 17:01:18 [..] Loaded.
+2026-05-07 17:01:17 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:01:18 [..] Loaded.
+2026-05-07 17:01:18 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:01:18 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:01:18 [..] Webserver starting on 4005
+2026-05-07 17:01:18 [..] Server successfully reloaded.
+2026-05-07 17:05:00 [..] Server disconnected from the portal.
+2026-05-07 17:05:00 [..] Main loop terminated.
+2026-05-07 17:05:00 [..] Server Shut Down.
+2026-05-07 17:05:01 [..] Loaded.
+2026-05-07 17:05:00 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:05:01 [..] Loaded.
+2026-05-07 17:05:01 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:05:01 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:05:01 [..] Webserver starting on 4005
+2026-05-07 17:05:01 [..] Server successfully reloaded.
+2026-05-07 17:07:13 [..] Server disconnected from the portal.
+2026-05-07 17:07:13 [..] Main loop terminated.
+2026-05-07 17:07:13 [..] Server Shut Down.
+2026-05-07 17:07:14 [..] Loaded.
+2026-05-07 17:07:13 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:07:14 [..] Loaded.
+2026-05-07 17:07:14 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:07:14 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:07:14 [..] Webserver starting on 4005
+2026-05-07 17:07:14 [..] Server successfully reloaded.
+2026-05-07 17:09:40 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 17:09:40 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 17:09:40 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 17:09:40 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 17:09:40 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 17:09:46 [..] Server disconnected from the portal.
+2026-05-07 17:09:46 [..] Main loop terminated.
+2026-05-07 17:09:46 [..] Server Shut Down.
+2026-05-07 17:09:47 [..] Loaded.
+2026-05-07 17:09:46 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:09:47 [..] Loaded.
+2026-05-07 17:09:47 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:09:47 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:09:47 [..] Webserver starting on 4005
+2026-05-07 17:09:47 [..] Server successfully reloaded.
+2026-05-07 17:11:21 [!!] Traceback (most recent call last):
+2026-05-07 17:11:21 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2026-05-07 17:11:21 [!!]     ret = cmd.func()
+2026-05-07 17:11:21 [!!]           ^^^^^^^^^^
+2026-05-07 17:11:21 [!!]   File "/home/laynie/ReVoid/mygame/commands/character_commands.py", line 3126, in func
+2026-05-07 17:11:21 [!!]     self.msg(self._build_sheet(target, char))
+2026-05-07 17:11:21 [!!]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-07 17:11:21 [!!]   File "/home/laynie/ReVoid/mygame/commands/character_commands.py", line 3136, in _build_sheet
+2026-05-07 17:11:21 [!!]     title = target.get_full_title()
+2026-05-07 17:11:21 [!!]             ^^^^^^^^^^^^^^^^^^^^^
+2026-05-07 17:11:21 [!!] AttributeError: 'NPC' object has no attribute 'get_full_title'
+2026-05-07 17:11:21 [EE] User input was: 'sheet companion'.
+2026-05-07 17:11:51 [..] Server disconnected from the portal.
+2026-05-07 17:11:51 [..] Main loop terminated.
+2026-05-07 17:11:51 [..] Server Shut Down.
+2026-05-07 17:11:52 [..] Loaded.
+2026-05-07 17:11:51 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:11:52 [..] Loaded.
+2026-05-07 17:11:52 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:11:52 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:11:52 [..] Webserver starting on 4005
+2026-05-07 17:11:52 [..] Server successfully reloaded.
+2026-05-07 17:17:40 [..] Server disconnected from the portal.
+2026-05-07 17:17:40 [..] Main loop terminated.
+2026-05-07 17:17:40 [..] Server Shut Down.
+2026-05-07 17:17:42 [..] Loaded.
+2026-05-07 17:17:41 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:17:42 [..] Loaded.
+2026-05-07 17:17:42 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:17:42 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:17:42 [..] Webserver starting on 4005
+2026-05-07 17:17:42 [..] Server successfully reloaded.
+2026-05-07 17:26:42 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-07 17:28:12 [..] Server disconnected from the portal.
+2026-05-07 17:28:12 [..] Main loop terminated.
+2026-05-07 17:28:12 [..] Server Shut Down.
+2026-05-07 17:28:14 [..] Loaded.
+2026-05-07 17:28:12 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:28:14 [..] Loaded.
+2026-05-07 17:28:14 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:28:14 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:28:14 [..] Webserver starting on 4005
+2026-05-07 17:28:14 [..] Server successfully reloaded.
+2026-05-07 17:29:25 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 17:29:25 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 17:29:25 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 17:29:25 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 17:29:25 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 17:29:32 [..] Server disconnected from the portal.
+2026-05-07 17:29:32 [..] Main loop terminated.
+2026-05-07 17:29:32 [..] Server Shut Down.
+2026-05-07 17:29:34 [..] Loaded.
+2026-05-07 17:29:33 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:29:34 [..] Loaded.
+2026-05-07 17:29:34 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:29:34 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:29:34 [..] Webserver starting on 4005
+2026-05-07 17:29:34 [..] Server successfully reloaded.
+2026-05-07 17:31:48 [..] Server disconnected from the portal.
+2026-05-07 17:31:48 [..] Main loop terminated.
+2026-05-07 17:31:48 [..] Server Shut Down.
+2026-05-07 17:31:49 [..] Loaded.
+2026-05-07 17:31:48 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:31:49 [..] Loaded.
+2026-05-07 17:31:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:31:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:31:49 [..] Webserver starting on 4005
+2026-05-07 17:31:49 [..] Server successfully reloaded.
+2026-05-07 17:32:43 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 17:32:43 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 17:32:43 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 17:32:43 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 17:32:43 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 17:32:49 [..] Server disconnected from the portal.
+2026-05-07 17:32:49 [..] Main loop terminated.
+2026-05-07 17:32:49 [..] Server Shut Down.
+2026-05-07 17:32:50 [..] Loaded.
+2026-05-07 17:32:49 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:32:50 [..] Loaded.
+2026-05-07 17:32:50 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:32:50 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:32:50 [..] Webserver starting on 4005
+2026-05-07 17:32:50 [..] Server successfully reloaded.
+2026-05-07 17:34:55 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-07 17:34:55 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-07 17:34:55 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-07 17:34:55 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-07 17:34:55 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-07 17:34:59 [..] Server disconnected from the portal.
+2026-05-07 17:34:59 [..] Main loop terminated.
+2026-05-07 17:34:59 [..] Server Shut Down.
+2026-05-07 17:35:00 [..] Loaded.
+2026-05-07 17:34:59 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:35:00 [..] Loaded.
+2026-05-07 17:35:00 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:35:00 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:35:00 [..] Webserver starting on 4005
+2026-05-07 17:35:00 [..] Server successfully reloaded.
+2026-05-07 17:37:09 [..] Server disconnected from the portal.
+2026-05-07 17:37:09 [..] Main loop terminated.
+2026-05-07 17:37:09 [..] Server Shut Down.
+2026-05-07 17:37:10 [..] Loaded.
+2026-05-07 17:37:09 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-07 17:37:10 [..] Loaded.
+2026-05-07 17:37:10 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-07 17:37:10 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-07 17:37:10 [..] Webserver starting on 4005
+2026-05-07 17:37:10 [..] Server successfully reloaded.
+2026-05-08 05:34:56 [EE] Overwriting existing registered function stopWordFilter
+2026-05-08 06:09:18 [..] Server disconnected from the portal.
+2026-05-08 06:09:18 [..] Main loop terminated.
+2026-05-08 06:09:18 [..] Server Shut Down.
+2026-05-08 06:09:19 [..] Loaded.
+2026-05-08 06:09:18 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 06:09:19 [..] Loaded.
+2026-05-08 06:09:19 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 06:09:19 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 06:09:20 [..] Webserver starting on 4005
+2026-05-08 06:09:20 [..] Server successfully reloaded.
+2026-05-08 06:26:16 [..] Server disconnected from the portal.
+2026-05-08 06:26:16 [..] Main loop terminated.
+2026-05-08 06:26:16 [..] Server Shut Down.
+2026-05-08 06:26:18 [..] Loaded.
+2026-05-08 06:26:17 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 06:26:18 [..] Loaded.
+2026-05-08 06:26:18 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 06:26:18 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 06:26:18 [..] Webserver starting on 4005
+2026-05-08 06:26:18 [..] Server successfully reloaded.
+2026-05-08 06:35:18 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-08 06:38:11 [..] Server disconnected from the portal.
+2026-05-08 06:38:11 [..] Main loop terminated.
+2026-05-08 06:38:11 [..] Server Shut Down.
+2026-05-08 06:38:12 [..] Loaded.
+2026-05-08 06:38:11 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 06:38:12 [..] Loaded.
+2026-05-08 06:38:12 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 06:38:12 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 06:38:12 [..] Webserver starting on 4005
+2026-05-08 06:38:12 [..] Server successfully reloaded.
+2026-05-08 06:44:58 [..] Server disconnected from the portal.
+2026-05-08 06:44:58 [..] Main loop terminated.
+2026-05-08 06:44:58 [..] Server Shut Down.
+2026-05-08 06:45:00 [..] Loaded.
+2026-05-08 06:44:59 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 06:45:00 [..] Loaded.
+2026-05-08 06:45:00 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 06:45:00 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 06:45:00 [..] Webserver starting on 4005
+2026-05-08 06:45:00 [..] Server successfully reloaded.
+2026-05-08 07:18:06 [..] Server disconnected from the portal.
+2026-05-08 07:18:06 [..] Main loop terminated.
+2026-05-08 07:18:06 [..] Server Shut Down.
+2026-05-08 07:18:07 [..] Loaded.
+2026-05-08 07:18:06 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 07:18:07 [..] Loaded.
+2026-05-08 07:18:07 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 07:18:07 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 07:18:07 [..] Webserver starting on 4005
+2026-05-08 07:18:07 [..] Server successfully reloaded.
+2026-05-08 07:18:24 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-08 07:18:24 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-08 07:18:24 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-08 07:18:24 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-08 07:18:24 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-08 07:18:28 [..] Server disconnected from the portal.
+2026-05-08 07:18:28 [..] Main loop terminated.
+2026-05-08 07:18:28 [..] Server Shut Down.
+2026-05-08 07:18:30 [..] Loaded.
+2026-05-08 07:18:29 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 07:18:30 [..] Loaded.
+2026-05-08 07:18:30 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 07:18:30 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 07:18:30 [..] Webserver starting on 4005
+2026-05-08 07:18:30 [..] Server successfully reloaded.
+2026-05-08 07:18:37 [!!] Traceback (most recent call last):
+2026-05-08 07:18:37 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2026-05-08 07:18:37 [!!]     ret = cmd.func()
+2026-05-08 07:18:37 [!!]           ^^^^^^^^^^
+2026-05-08 07:18:37 [!!]   File "/home/laynie/ReVoid/mygame/commands/npc_commands.py", line 1060, in func
+2026-05-08 07:18:37 [!!]     fired = npc.trigger_keyword(char, keyword)
+2026-05-08 07:18:37 [!!]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-08 07:18:37 [!!]   File "/home/laynie/ReVoid/mygame/typeclasses/npc.py", line 442, in trigger_keyword
+2026-05-08 07:18:37 [!!]     self.location.msg_contents(
+2026-05-08 07:18:37 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/objects/objects.py", line 1159, in msg_contents
+2026-05-08 07:18:37 [!!]     outmessage = outmessage.format_map(
+2026-05-08 07:18:37 [!!]                  ^^^^^^^^^^^^^^^^^^^^^^
+2026-05-08 07:18:37 [!!] KeyError: 'zone'
+2026-05-08 07:18:37 [EE] User input was: 'ask mirror tokens'.
+2026-05-08 07:20:21 [..] Server disconnected from the portal.
+2026-05-08 07:20:21 [..] Main loop terminated.
+2026-05-08 07:20:21 [..] Server Shut Down.
+2026-05-08 07:20:22 [..] Loaded.
+2026-05-08 07:20:21 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 07:20:22 [..] Loaded.
+2026-05-08 07:20:22 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 07:20:22 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 07:20:22 [..] Webserver starting on 4005
+2026-05-08 07:20:22 [..] Server successfully reloaded.
+2026-05-08 07:25:24 [..] NPCLoader: updating existing NPC 'forming_witness' (#13)
+2026-05-08 07:25:24 [..] NPCLoader: updating existing NPC 'forming_lark' (#14)
+2026-05-08 07:25:24 [..] NPCLoader: updating existing NPC 'forming_sable' (#15)
+2026-05-08 07:25:24 [..] NPCLoader: updating existing NPC 'forming_mirror' (#16)
+2026-05-08 07:25:24 [..] NPCLoader: updating existing NPC 'forming_wren' (#17)
+2026-05-08 07:25:29 [..] Server disconnected from the portal.
+2026-05-08 07:25:29 [..] Main loop terminated.
+2026-05-08 07:25:29 [..] Server Shut Down.
+2026-05-08 07:25:31 [..] Loaded.
+2026-05-08 07:25:30 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 07:25:31 [..] Loaded.
+2026-05-08 07:25:31 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 07:25:31 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 07:25:31 [..] Webserver starting on 4005
+2026-05-08 07:25:31 [..] Server successfully reloaded.
+2026-05-08 07:34:31 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-08 07:37:00 [..] Server disconnected from the portal.
+2026-05-08 07:37:00 [..] Main loop terminated.
+2026-05-08 07:37:00 [..] Server Shut Down.
+2026-05-08 07:37:01 [..] Loaded.
+2026-05-08 07:37:00 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 07:37:01 [..] Loaded.
+2026-05-08 07:37:01 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 07:37:01 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 07:37:01 [..] Webserver starting on 4005
+2026-05-08 07:37:01 [..] Server successfully reloaded.
+2026-05-08 07:38:18 [EE] Overwriting existing registered function stopWordFilter
+2026-05-08 07:40:44 [..] Server disconnected from the portal.
+2026-05-08 07:40:44 [..] Main loop terminated.
+2026-05-08 07:40:44 [..] Server Shut Down.
+2026-05-08 07:40:45 [..] Loaded.
+2026-05-08 07:40:44 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 07:40:45 [..] Loaded.
+2026-05-08 07:40:45 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 07:40:45 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 07:40:45 [..] Webserver starting on 4005
+2026-05-08 07:40:46 [..] Server successfully reloaded.
+2026-05-08 07:44:25 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 07:44:26 [..] Logged in: Laynie(account 2) 127.0.0.1 (2 session(s) total)
+2026-05-08 07:44:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 07:44:32 [..] Logged out: Laynie(account 2) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-08 07:44:33 [..] Logged in: Laynie(account 2) 127.0.0.1 (2 session(s) total)
+2026-05-08 07:44:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 07:44:44 [..] Logged in: Laynie(account 2) 127.0.0.1 (3 session(s) total)
+2026-05-08 07:45:03 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-08 07:45:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 07:45:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 07:49:46 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-08 08:07:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:07:42 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:07:47 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:08:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:08:11 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:08:15 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:08:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:08:28 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:10:49 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:10:49 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-08 08:10:57 [..] Server disconnected from the portal.
+2026-05-08 08:10:57 [..] Main loop terminated.
+2026-05-08 08:10:57 [..] Server Shut Down.
+2026-05-08 08:10:58 [..] Loaded.
+2026-05-08 08:10:57 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 08:10:58 [..] Loaded.
+2026-05-08 08:10:58 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 08:10:58 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 08:10:58 [..] Webserver starting on 4005
+2026-05-08 08:10:58 [..] Server successfully reloaded.
+2026-05-08 08:11:17 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:12:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:12:56 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-08 08:12:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:12:56 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-08 08:13:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:13:00 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-08 08:13:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:13:01 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-08 08:13:04 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:13:04 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:13:04 [..] Logged in: Witch(account 1) 127.0.0.1 (3 session(s) total)
+2026-05-08 08:13:14 [..] Logged out: Witch(account 1) 127.0.0.1 (2 sessions(s) remaining)
+2026-05-08 08:13:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:17:57 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:19:58 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-08 08:20:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:20:10 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:24:40 [..] Server disconnected from the portal.
+2026-05-08 08:24:40 [..] Main loop terminated.
+2026-05-08 08:24:40 [..] Server Shut Down.
+2026-05-08 08:24:41 [..] Loaded.
+2026-05-08 08:24:40 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 08:24:41 [..] Loaded.
+2026-05-08 08:24:41 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 08:24:41 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 08:24:41 [..] Webserver starting on 4005
+2026-05-08 08:24:41 [..] Server successfully reloaded.
+2026-05-08 08:24:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:24:52 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:24:53 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:24:53 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:24:55 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:24:55 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:24:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:24:56 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:24:57 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:24:57 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:01 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:01 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:02 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:02 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:03 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:03 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:07 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:43 [..] Server disconnected from the portal.
+2026-05-08 08:25:43 [..] Main loop terminated.
+2026-05-08 08:25:43 [..] Server Shut Down.
+2026-05-08 08:25:47 [..] Loaded.
+2026-05-08 08:25:46 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 08:25:47 [..] Loaded.
+2026-05-08 08:25:47 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 08:25:47 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 08:25:47 [..] Webserver starting on 4005
+2026-05-08 08:25:47 [..] Evennia Server successfully started.
+2026-05-08 08:25:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:52 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:53 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:53 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:25:58 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:25:58 [!!] WSGI application error
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/web/wsgi.py", line 461, in run
+	    appIterator = self.application(self.environ, self.startResponse)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/wsgi.py", line 124, in __call__
+	    response = self.get_response(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/base.py", line 141, in get_response
+	    response = self._middleware_chain(request)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 57, in inner
+	    response = response_for_exception(request, exc)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 141, in response_for_exception
+	    response = handle_uncaught_exception(
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 185, in handle_uncaught_exception
+	    callback = resolver.resolve_error_handler(500)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 743, in resolve_error_handler
+	    callback = getattr(self.urlconf_module, "handler%s" % view_type, None)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/functional.py", line 47, in __get__
+	    res = instance.__dict__[self.name] = self.func(instance)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/resolvers.py", line 722, in urlconf_module
+	    return import_module(self.urlconf_name)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/urls.py", line 24, in <module>
+	    path("", include("web.website.urls")),
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/urls/conf.py", line 39, in include
+	    urlconf_module = import_module(urlconf_module)
+	  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+	    return _bootstrap._gcd_import(name[level:], package, level)
+	  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+	    
+	  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+	    
+	  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+	    
+	  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+	    
+	  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+	    
+	  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+	    
+	  File "/home/laynie/ReVoid/mygame/web/website/urls.py", line 12, in <module>
+	    from web.views import ReVoidIndexView
+	  File "/home/laynie/ReVoid/mygame/web/views.py", line 6, in <module>
+	    from evennia.web.website.views.general import EvenniaIndexView
+	builtins.ModuleNotFoundError: No module named 'evennia.web.website.views.general'
+	
+2026-05-08 08:26:34 [..] Server disconnected from the portal.
+2026-05-08 08:26:34 [..] Main loop terminated.
+2026-05-08 08:26:34 [..] Server Shut Down.
+2026-05-08 08:26:35 [..] Loaded.
+2026-05-08 08:26:34 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 08:26:35 [..] Loaded.
+2026-05-08 08:26:35 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 08:26:35 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 08:26:35 [..] Webserver starting on 4005
+2026-05-08 08:26:35 [..] Server successfully reloaded.
+2026-05-08 08:26:37 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:26:39 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:26:42 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:26:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:26:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:26:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:28:55 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:41 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:32:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:33:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:33:01 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:33:05 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:33:06 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-08 08:33:10 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:33:14 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:33:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:16 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:17 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:19 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:34:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:35:35 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-08 08:36:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:37:28 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:41:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:41:00 [..] Logged out: Witch(account 1) 127.0.0.1 (0 sessions(s) remaining)
+2026-05-08 08:41:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:41:00 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-08 08:45:28 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:47:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:47:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:51:07 [..] Server disconnected from the portal.
+2026-05-08 08:51:07 [..] Main loop terminated.
+2026-05-08 08:51:07 [..] Server Shut Down.
+2026-05-08 08:51:08 [..] Loaded.
+2026-05-08 08:51:07 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 08:51:08 [..] Loaded.
+2026-05-08 08:51:08 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 08:51:08 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 08:51:08 [..] Webserver starting on 4005
+2026-05-08 08:51:08 [..] Server successfully reloaded.
+2026-05-08 08:51:11 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 08:55:21 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:05:34 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:15:30 [..] Server disconnected from the portal.
+2026-05-08 09:15:30 [..] Main loop terminated.
+2026-05-08 09:15:30 [..] Server Shut Down.
+2026-05-08 09:15:31 [..] Loaded.
+2026-05-08 09:15:30 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-08 09:15:31 [..] Loaded.
+2026-05-08 09:15:31 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-08 09:15:31 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-08 09:15:31 [..] Webserver starting on 4005
+2026-05-08 09:15:31 [..] Server successfully reloaded.
+2026-05-08 09:15:34 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:15:37 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:16:24 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:16:27 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:17:19 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:21:36 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:21:36 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:21:37 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-08 09:21:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:21:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-08 09:21:39 [..] Logged in: Witch(account 1) 127.0.0.1 (3 session(s) total)
+2026-05-08 09:21:44 [..] Logged out: Witch(account 1) 127.0.0.1 (2 sessions(s) remaining)
+2026-05-08 09:24:31 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-09 04:57:52 [..] Logged in: Laynie(account 2) 127.0.0.1 (1 session(s) total)
+2026-05-09 04:59:31 [EE] Overwriting existing registered function stopWordFilter
+2026-05-09 05:05:55 [..] Server disconnected from the portal.
+2026-05-09 05:05:55 [..] Main loop terminated.
+2026-05-09 05:05:55 [..] Server Shut Down.
+2026-05-09 05:05:56 [..] Loaded.
+2026-05-09 05:05:55 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 05:05:56 [..] Loaded.
+2026-05-09 05:05:56 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 05:05:56 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 05:05:56 [..] Webserver starting on 4005
+2026-05-09 05:05:56 [..] Server successfully reloaded.
+2026-05-09 05:07:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:07:24 [..] Logged in: Laynie(account 2) 127.0.0.1 (2 session(s) total)
+2026-05-09 05:07:37 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:07:37 [..] Logged out: Laynie(account 2) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-09 05:08:25 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:08:57 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:02 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:04 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:06 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:13 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:14 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:09:16 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:10:41 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:10:42 [..] Logged in: Laynie(account 2) 127.0.0.1 (2 session(s) total)
+2026-05-09 05:10:44 [..] Logged out: Laynie(account 2) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-09 05:10:45 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:13:05 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:13:09 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:13:12 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:13:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:13:28 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:13:30 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:21:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:35:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:38:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:38:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:38:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:39:01 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:39:17 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:39:17 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:39:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:39:21 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:39:25 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 05:51:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:08:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:22:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:32:25 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:43:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:44:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:44:58 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:46:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 06:52:40 [..] Logged out: Laynie(account 2) 127.0.0.1 (0 sessions(s) remaining)
+2026-05-09 07:06:59 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:21:27 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:21:47 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:21:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:21:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:21:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:21:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:22:28 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:22:30 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:22:59 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:30:03 [..] Server disconnected from the portal.
+2026-05-09 07:30:03 [..] Main loop terminated.
+2026-05-09 07:30:03 [..] Server Shut Down.
+2026-05-09 07:30:05 [..] Loaded.
+2026-05-09 07:30:04 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 07:30:05 [..] Loaded.
+2026-05-09 07:30:05 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 07:30:05 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 07:30:05 [..] Webserver starting on 4005
+2026-05-09 07:30:05 [..] Server successfully reloaded.
+2026-05-09 07:30:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:34:13 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:37:53 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:39:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:39:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:40:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:40:35 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:19 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:22 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:45 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:41:47 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:42:44 [..] Server disconnected from the portal.
+2026-05-09 07:42:44 [..] Main loop terminated.
+2026-05-09 07:42:44 [..] Server Shut Down.
+2026-05-09 07:42:45 [..] Loaded.
+2026-05-09 07:42:44 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 07:42:45 [..] Loaded.
+2026-05-09 07:42:45 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 07:42:45 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 07:42:45 [..] Webserver starting on 4005
+2026-05-09 07:42:45 [..] Server successfully reloaded.
+2026-05-09 07:42:45 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:42:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:42:47 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:42:53 [..] Server disconnected from the portal.
+2026-05-09 07:42:53 [..] Main loop terminated.
+2026-05-09 07:42:53 [..] Server Shut Down.
+2026-05-09 07:42:55 [..] Loaded.
+2026-05-09 07:42:53 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 07:42:55 [..] Loaded.
+2026-05-09 07:42:55 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 07:42:55 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 07:42:55 [..] Webserver starting on 4005
+2026-05-09 07:42:55 [..] Server successfully reloaded.
+2026-05-09 07:42:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:44:33 [..] Server disconnected from the portal.
+2026-05-09 07:44:33 [..] Main loop terminated.
+2026-05-09 07:44:33 [..] Server Shut Down.
+2026-05-09 07:44:35 [..] Loaded.
+2026-05-09 07:44:33 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 07:44:35 [..] Loaded.
+2026-05-09 07:44:35 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 07:44:35 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 07:44:35 [..] Webserver starting on 4005
+2026-05-09 07:44:35 [..] Server successfully reloaded.
+2026-05-09 07:44:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:44:39 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:44:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:47:46 [..] Server disconnected from the portal.
+2026-05-09 07:47:46 [..] Main loop terminated.
+2026-05-09 07:47:46 [..] Server Shut Down.
+2026-05-09 07:47:48 [..] Loaded.
+2026-05-09 07:47:46 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 07:47:48 [..] Loaded.
+2026-05-09 07:47:48 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 07:47:48 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 07:47:48 [..] Webserver starting on 4005
+2026-05-09 07:47:48 [..] Server successfully reloaded.
+2026-05-09 07:47:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:50:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:50:43 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-09 07:50:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:50:44 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-09 07:50:53 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:16 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:16 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:37 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:52:45 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:53:08 [..] Server disconnected from the portal.
+2026-05-09 07:53:08 [..] Main loop terminated.
+2026-05-09 07:53:08 [..] Server Shut Down.
+2026-05-09 07:53:10 [..] Loaded.
+2026-05-09 07:53:09 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 07:53:10 [..] Loaded.
+2026-05-09 07:53:10 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 07:53:10 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 07:53:10 [..] Webserver starting on 4005
+2026-05-09 07:53:10 [..] Server successfully reloaded.
+2026-05-09 07:53:15 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:28 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:32 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:36 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:43 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:58:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:59:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:59:30 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:59:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 07:59:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:02:10 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-09 08:08:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:08:58 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:12:09 [..] Server disconnected from the portal.
+2026-05-09 08:12:09 [..] Main loop terminated.
+2026-05-09 08:12:09 [..] Server Shut Down.
+2026-05-09 08:12:11 [..] Loaded.
+2026-05-09 08:12:10 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 08:12:11 [..] Loaded.
+2026-05-09 08:12:11 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 08:12:11 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 08:12:11 [..] Webserver starting on 4005
+2026-05-09 08:12:11 [..] Server successfully reloaded.
+2026-05-09 08:12:30 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:12:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:12:44 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-09 08:12:44 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:12:45 [..] Logged in: Witch(account 1) 127.0.0.1 (2 session(s) total)
+2026-05-09 08:12:46 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:14:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:14:33 [..] Logged out: Witch(account 1) 127.0.0.1 (1 sessions(s) remaining)
+2026-05-09 08:14:59 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:16:49 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:17:12 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:17:45 [..] Server disconnected from the portal.
+2026-05-09 08:17:45 [..] Main loop terminated.
+2026-05-09 08:17:45 [..] Server Shut Down.
+2026-05-09 08:17:47 [..] Loaded.
+2026-05-09 08:17:45 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 08:17:47 [..] Loaded.
+2026-05-09 08:17:47 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 08:17:47 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 08:17:47 [..] Webserver starting on 4005
+2026-05-09 08:17:47 [..] Server successfully reloaded.
+2026-05-09 08:17:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:18:04 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:18:13 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:18:15 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:18:16 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:18:20 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:21:27 [..] Server disconnected from the portal.
+2026-05-09 08:21:27 [..] Main loop terminated.
+2026-05-09 08:21:27 [..] Server Shut Down.
+2026-05-09 08:21:29 [..] Loaded.
+2026-05-09 08:21:27 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 08:21:29 [..] Loaded.
+2026-05-09 08:21:29 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 08:21:29 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 08:21:29 [..] Webserver starting on 4005
+2026-05-09 08:21:29 [..] Server successfully reloaded.
+2026-05-09 08:21:31 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:24:27 [..] Server disconnected from the portal.
+2026-05-09 08:24:27 [..] Main loop terminated.
+2026-05-09 08:24:27 [..] Server Shut Down.
+2026-05-09 08:24:29 [..] Loaded.
+2026-05-09 08:24:28 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-09 08:24:29 [..] Loaded.
+2026-05-09 08:24:29 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-09 08:24:29 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-09 08:24:29 [..] Webserver starting on 4005
+2026-05-09 08:24:29 [..] Server successfully reloaded.
+2026-05-09 08:24:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:24:57 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:24:57 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:25:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:25:07 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:25:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:25:18 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:31:03 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:31:03 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:31:03 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:31:08 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:33:29 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-09 08:34:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:51 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:54 [..] Logged out: Witch(account 1) 127.0.0.1 (0 sessions(s) remaining)
+2026-05-09 08:34:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 08:34:54 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
