@@ -254,6 +254,7 @@ class CmdEditorCmd(Command):
         ":save",
         ":cancel",
         ":show",
+        ":preview", ":p",
         ":add", ":a",
         ":insert", ":i",
         ":erase", ":e", ":delete", ":del",
@@ -300,9 +301,7 @@ class CmdEditorCmd(Command):
             caller.msg("\n".join(lines))
 
         elif sub in ("add", "a"):
-            if not rest:
-                caller.msg("|xUsage: :add <text>|n")
-                return
+            # Allow ":add" with no text to insert a blank line.
             buf = caller.db._editor_buffer or []
             buf.append(rest)
             caller.db._editor_buffer = buf
