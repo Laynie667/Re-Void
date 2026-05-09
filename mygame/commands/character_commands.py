@@ -39,6 +39,114 @@ def _get_char(caller):
 
 
 # -------------------------------------------------------------------
+# Web profile commands
+# -------------------------------------------------------------------
+
+class CmdSetPortrait(MuxCommand):
+    """
+    Set the portrait image shown on your public character profile page.
+
+    Paste a direct link to an image (jpg, png, etc.) hosted anywhere
+    — Discord CDN, Imgur, a personal site, etc.
+
+    Usage:
+        setportrait <url>
+        setportrait/clear
+
+    Example:
+        setportrait https://i.imgur.com/abcdef.jpg
+    """
+    key = "setportrait"
+    locks = "cmd:all()"
+    help_category = "Character"
+
+    def func(self):
+        char = _get_char(self.caller)
+        if not char:
+            return
+
+        if "clear" in self.switches:
+            char.db.portrait_url = None
+            self.caller.msg("|x[Portrait cleared.]|n")
+            return
+
+        url = self.args.strip()
+        if not url:
+            current = char.db.portrait_url or "|x(none set)|n"
+            self.caller.msg(f"|wCurrent portrait:|n {current}")
+            return
+
+        if not (url.startswith("http://") or url.startswith("https://")):
+            self.caller.msg("|xURL must start with http:// or https://|n")
+            return
+
+        char.db.portrait_url = url
+        self.caller.msg(f"|x[Portrait set. It will appear on your profile page.]|n")
+
+
+class CmdSetOOC(MuxCommand):
+    """
+    Set the OOC (out-of-character) about blurb on your public
+    character profile page. Use this to tell other players about
+    yourself, your roleplay preferences, contact info, etc.
+
+    Usage:
+        setooc                  — open the text editor
+        setooc = <text>         — set inline
+        setooc/clear            — remove your OOC blurb
+        setooc/show             — preview your current blurb
+    """
+    key = "setooc"
+    locks = "cmd:all()"
+    help_category = "Character"
+
+    def func(self):
+        char = _get_char(self.caller)
+        if not char:
+            return
+
+        if "clear" in self.switches:
+            char.db.ooc_about = None
+            self.caller.msg("|x[OOC blurb cleared.]|n")
+            return
+
+        if "show" in self.switches:
+            text = char.db.ooc_about or "|x(none set)|n"
+            sep = f"|w{'─' * 44}|n"
+            self.caller.msg(f"\n{sep}\n|wOOC About — {char.key}|n\n{sep}\n{text}\n{sep}")
+            return
+
+        if self.args and "=" in self.args:
+            text = self.args.split("=", 1)[1].strip()
+            if not text:
+                self.caller.msg("|xNo text provided.|n")
+                return
+            char.db.ooc_about = text
+            self.caller.msg("|x[OOC blurb set.]|n")
+            return
+
+        # Open editor
+        from world.text_editor import _enter_editor, _PENDING_SETTERS
+
+        current = char.db.ooc_about or ""
+        initial = [l for l in current.split("\n") if l] if current else []
+
+        def _setter(c, lines):
+            char.db.ooc_about = "\n".join(lines)
+            c.msg(f"|x[OOC blurb saved for '{char.key}'.]|n")
+
+        _PENDING_SETTERS[str(self.caller.dbref)] = _setter
+
+        _enter_editor(
+            self.caller,
+            target_display=f"{char.key} — OOC About",
+            setter_key="_room_field",
+            initial_lines=initial,
+            extra=None,
+        )
+
+
+# -------------------------------------------------------------------
 # Identity commands
 # -------------------------------------------------------------------
 

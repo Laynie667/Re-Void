@@ -29,6 +29,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
 
         # Character commands
         from commands.character_commands import (
+            # Web profile
+            CmdSetPortrait,
+            CmdSetOOC,
             # Identity
             CmdSetName,
             CmdSetPronouns,
@@ -74,6 +77,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
             CmdBlock,
         )
 
+        self.add(CmdSetPortrait())
+        self.add(CmdSetOOC())
         self.add(CmdSetName())
         self.add(CmdSetPronouns())
         self.add(CmdSetSpecies())
