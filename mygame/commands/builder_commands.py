@@ -64,21 +64,24 @@ def _open_editor(caller, room, display_name, getter, setter):
         getter (callable): () -> str  — fetch current value.
         setter (callable): (str) -> None  — save new value.
     """
-    from world.text_editor import _enter_editor
+    from world.text_editor import _enter_editor, _PENDING_SETTERS
 
     current = getter() or ""
     initial = [l for l in current.split("\n") if l] if current else []
 
-    def _setter(c, lines):
+    def _room_setter(c, lines):
         setter("\n".join(lines))
         c.msg(f"|x[{display_name} saved for '{room.key}'.]|n")
+
+    # Store directly in module-level dict — avoids pickle entirely.
+    _PENDING_SETTERS[str(caller.dbref)] = _room_setter
 
     _enter_editor(
         caller,
         target_display=f"{room.key} — {display_name}",
-        setter_key="_room_field",   # triggers general extra fallback
+        setter_key="_room_field",
         initial_lines=initial,
-        extra={"setter": _setter},
+        extra=None,
     )
 
 
