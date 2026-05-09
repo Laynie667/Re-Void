@@ -1630,18 +1630,9 @@ class CmdWispLook(MuxCommand):
         if self.args:
             target_name = self.args.strip().lower()
 
-            # "me" / "self" — look at own character in the room
+            # "me" / "self" — show own wisp appearance
             if target_name in ("me", "self", "myself"):
-                # Find the account's character(s) in this room
-                my_chars = [
-                    obj for obj in room.contents
-                    if hasattr(obj, 'account') and obj.account == account
-                ]
-                if my_chars:
-                    obj = my_chars[0]
-                    self.msg(obj.return_appearance(account))
-                else:
-                    self.msg("|xYour character isn't here right now.|n")
+                self.msg(account.get_wisp_appearance(looker=account))
                 return
 
             from evennia import search_object
