@@ -234,11 +234,6 @@ class EditorCmdSet(CmdSet):
 
     def at_cmdset_creation(self):
         self.add(CmdEditorLine())
-        self.add(CmdEditorDone())
-        self.add(CmdEditorSave())
-        self.add(CmdEditorCancel())
-        self.add(CmdEditorShow())
-        self.add(CmdEditorHelp())
 
 
 # -------------------------------------------------------------------
@@ -707,7 +702,7 @@ def _apply_setter(caller, setter_key, target_display, lines):
             caller.msg(f"|rError saving: {e}|n")
             return False
 
-    # --- In-memory setter fallback (closures stored before pickling) ---
+    # --- In-memory setter fallback (room field edits from builder commands) ---
     setter_fn = _PENDING_SETTERS.pop(str(caller.dbref), None)
     if setter_fn:
         try:
@@ -716,6 +711,14 @@ def _apply_setter(caller, setter_key, target_display, lines):
         except Exception as e:
             caller.msg(f"|rError saving: {e}|n")
             return False
+
+    # Setter was lost (server reloaded while editor was open).
+    if setter_key == "_room_field":
+        caller.msg(
+            "|xSave target was lost — the server likely reloaded while you were editing.\n"
+            "Type |w:cancel|n to exit, then re-open the editor to try again.|n"
+        )
+        return False
 
     caller.msg(f"|xUnknown edit target: '{setter_key}'.|n")
     return False
