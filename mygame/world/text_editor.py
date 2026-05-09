@@ -262,10 +262,9 @@ class CmdEditorLine(Command):
         :done                — save and exit
         :cancel              — discard and exit
     """
-    key = "editor_input"
+    key = "_default"
     aliases = []
     locks = "cmd:all()"
-    # Match everything
     arg_regex = None
 
     def parse(self):
