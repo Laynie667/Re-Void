@@ -17,10 +17,13 @@ The Character holds:
 - Scene and RP tracking
 """
 
+import re
 import random
 from evennia.objects.objects import DefaultCharacter
 from evennia.utils import logger
 from .objects import ObjectParent
+
+_ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_]+)\}')
 
 
 # -------------------------------------------------------------------
@@ -1264,6 +1267,14 @@ class Character(ObjectParent, DefaultCharacter):
         deep = kwargs.get("deep_examine", False)
         is_self = looker == self
 
+        # Zones referenced as tokens in physical_desc — these are shown
+        # inline and must not appear again in the outfit layer.
+        _tokenized = set(
+            _ZONE_TOKEN_RE.findall(self.db.physical_desc or "")
+        )
+        pronouns = self.db.pronouns or {}
+        _possessive = pronouns.get("possessive", "their")
+
         # --- Auto-detect proximity from both proximity dicts ---
         proximity = kwargs.get("proximity", False)
         if not proximity and looker and not is_self:
@@ -1314,16 +1325,61 @@ class Character(ObjectParent, DefaultCharacter):
             physical = render_zone_tokens(physical, self)
             parts.append(physical)
 
-        # --- Layer 4: Outfit summary ---
-        outfit = self.db.outfit_desc or ""
-        freeform_items = self.db.freeform_items or {}
-        outfit_started = False
-        if outfit:
+        # --- Layer 4: Outfit summary (non-tokenized zones only) ---
+        # Zones that appear via {zone:X} tokens in physical_desc are already
+        # shown inline — skip them here to avoid duplication.
+        # Non-tokenized zones show as "On/At/In her [zone], [worn desc]".
+        _outfit_zones = self._get_zones()
+        _freeform_items = self.db.freeform_items or {}
+        _outfit_lines = []
+
+        def _zone_prep(zone_type, mode=None):
+            if mode == "in" or zone_type == "orifice":
+                return "In"
+            if zone_type == "attachment":
+                return "At"
+            return "On"
+
+        for _zname in self.get_zone_order():
+            if _zname in _tokenized:
+                continue  # shown inline via token
+            if _zname not in _outfit_zones:
+                continue
+            _zdata = _outfit_zones[_zname]
+            _ztype = _zdata.get("zone_type", "surface")
+            _zdisplay = _zname.replace("_", " ")
+            _covered = _zdata.get("covered_by")
+            if _covered:
+                _worn = _covered.get(
+                    "worn_desc", _covered.get("desc", "")
+                )
+                if _worn:
+                    _prep = _zone_prep(_ztype)
+                    _outfit_lines.append(
+                        f"{_prep} {_possessive} {_zdisplay}, {_worn}"
+                    )
+
+        # Freeform items on non-tokenized zones
+        for _iname, _idata in _freeform_items.items():
+            if not _idata:
+                continue
+            _izone = _idata.get("zone", "")
+            if _izone in _tokenized:
+                continue  # already shown via token
+            _idesc = _idata.get("desc", "")
+            if not _idesc:
+                continue
+            _imode = _idata.get("display_mode", "on")
+            _iztype = _outfit_zones.get(_izone, {}).get("zone_type", "surface")
+            _prep = _zone_prep(_iztype, mode=_imode)
+            _zdisplay = _izone.replace("_", " ")
+            _outfit_lines.append(
+                f"{_prep} {_possessive} {_zdisplay}, {_idesc}"
+            )
+
+        if _outfit_lines:
             parts.append("")
-            parts.append(outfit)
-            outfit_started = True
-        # Freeform items are shown only on examine (see examine section below),
-        # not on look — tokens in physical_desc handle inline display.
+            parts.extend(_outfit_lines)
 
         # --- Layer 5: Body language ---
         body = self.db.body_language or ""
@@ -1422,6 +1478,9 @@ class Character(ObjectParent, DefaultCharacter):
                 parts.append(f"|x{voice}|n")
 
             # --- E2: Outfit details per zone ---
+            # Tokenized zones: show examine_desc if it differs from worn_desc
+            #   (the token already showed worn_desc on look).
+            # Non-tokenized zones: show "At/On/In her [zone], [examine_desc]"
             zone_lines = []
             for zone_name in self.get_zone_order():
                 if zone_name not in zones:
@@ -1432,18 +1491,30 @@ class Character(ObjectParent, DefaultCharacter):
                     continue
                 examine = covered.get("examine_desc", "")
                 worn = covered.get("worn_desc", covered.get("desc", ""))
-                detail = examine or worn
-                if detail:
-                    zone_lines.append(
-                        f"  |w{zone_name.replace('_', ' ')}|n: {detail}"
-                    )
-            # Freeform items on examine — show zone: itemname only,
-            # not the full desc (which is already embedded via tokens).
+                zone_type = zone_data.get("zone_type", "surface")
+                zdisplay = zone_name.replace("_", " ")
+                if zone_name in _tokenized:
+                    # Only show if there's an examine_desc that adds detail
+                    if examine and examine != worn:
+                        zone_lines.append(
+                            f"  |w{zdisplay}|n: {examine}"
+                        )
+                else:
+                    # Non-tokenized: show with preposition
+                    detail = examine or worn
+                    if detail:
+                        _prep = _zone_prep(zone_type).lower()
+                        zone_lines.append(
+                            f"  {_prep.capitalize()} {_possessive} "
+                            f"{zdisplay}, {detail}"
+                        )
+
+            # Freeform items on examine
             freeform_examine = self.db.freeform_items or {}
-            freeform_keys = sorted(freeform_examine.keys())
-            for _iname in freeform_keys:
+            for _iname in sorted(freeform_examine.keys()):
                 _idata = freeform_examine.get(_iname, {})
-                _izone = _idata.get("zone", "?").replace("_", " ")
+                _izone = _idata.get("zone", "?")
+                _zdisplay = _izone.replace("_", " ")
                 _mode = _idata.get("display_mode", "on")
                 _mode_tag = " |x[in]|n" if _mode == "in" else ""
                 _lock = _idata.get("lock")
@@ -1451,9 +1522,26 @@ class Character(ObjectParent, DefaultCharacter):
                 if _lock:
                     _ltype = _lock.get("type", "locked")
                     _lock_info = f" |r[{_ltype}]|n"
-                zone_lines.append(
-                    f"  |w{_izone}|n: {_iname}{_mode_tag}{_lock_info}"
+                _examine_desc = _idata.get(
+                    "examine_desc", _idata.get("desc", "")
                 )
+                if _izone in _tokenized:
+                    # Token already shows desc — just list item name + lock
+                    zone_lines.append(
+                        f"  |w{_zdisplay}|n: {_iname}"
+                        f"{_mode_tag}{_lock_info}"
+                    )
+                else:
+                    # Non-tokenized — show full examine desc
+                    _iztype = zones.get(_izone, {}).get(
+                        "zone_type", "surface"
+                    )
+                    _prep = _zone_prep(_iztype, mode=_mode).lower()
+                    zone_lines.append(
+                        f"  {_prep.capitalize()} {_possessive} "
+                        f"{_zdisplay}, {_examine_desc or _iname}"
+                        f"{_mode_tag}{_lock_info}"
+                    )
             if zone_lines:
                 parts.append("")
                 parts.append(sep)
