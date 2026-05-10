@@ -35,6 +35,15 @@ INSTALLED_APPS += ["web.apps.WebConfig", "web.news.apps.NewsConfig", "web.mail.a
 
 SERVERNAME = "Re:Void"
 GAME_SLOGAN = "Reshaping the Chaos of Nothingness, Creating from the essence of The Void."
+SERVER_HOSTNAME = "revoid.nexus"
+
+######################################################################
+# Web / domain settings
+######################################################################
+
+ALLOWED_HOSTS = ["revoid.nexus", "www.revoid.nexus"]
+USE_X_FORWARDED_HOST = True
+CSRF_TRUSTED_ORIGINS = ["https://revoid.nexus", "https://www.revoid.nexus"]
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
