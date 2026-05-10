@@ -31,10 +31,11 @@ class ComposeForm(forms.Form):
     )
     affection_type = forms.ChoiceField(
         choices=[
-            ("",         "— none —"),
-            ("kiss",     "A gentle kiss"),
-            ("embrace",  "A warm embrace"),
-            ("intimate", "Something more intimate"),
+            ("",            "— none —"),
+            ("kiss",        "A soft kiss"),
+            ("french_kiss", "A deep, passionate kiss"),
+            ("hug",         "A warm hug"),
+            ("grope",       "Wandering hands"),
         ],
         label="Affection type",
         required=False,

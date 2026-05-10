@@ -25,9 +25,10 @@ class OgramMessage(models.Model):
     ]
 
     AFFECTION_CHOICES = [
-        ("kiss",     "A gentle kiss"),
-        ("embrace",  "A warm embrace"),
-        ("intimate", "Something more intimate"),
+        ("kiss",        "A soft kiss"),
+        ("french_kiss", "A deep, passionate kiss"),
+        ("hug",         "A warm hug"),
+        ("grope",       "Wandering hands"),
     ]
 
     GENDER_CHOICES = [
@@ -110,6 +111,14 @@ class OgramMessage(models.Model):
     def affection_label(self):
         labels = dict(self.AFFECTION_CHOICES)
         return labels.get(self.affection_type, "An affection")
+
+    @property
+    def messenger_name(self):
+        return {
+            "feminine":  "Seraphine",
+            "masculine": "Calix",
+            "neutral":   "Vesper",
+        }.get(self.messenger_gender, "Vesper")
 
     @property
     def gender_label(self):
