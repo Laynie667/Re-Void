@@ -44,6 +44,7 @@ SERVER_HOSTNAME = "revoid.nexus"
 ALLOWED_HOSTS = ["revoid.nexus", "www.revoid.nexus"]
 USE_X_FORWARDED_HOST = True
 CSRF_TRUSTED_ORIGINS = ["https://revoid.nexus", "https://www.revoid.nexus"]
+WEBSOCKET_CLIENT_URL = "wss://revoid.nexus/ws/"
 
 ######################################################################
 # Settings given in secret_settings.py override those in this file.
