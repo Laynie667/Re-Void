@@ -1,0 +1,544 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}New Player Guide · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  /* ── Layout ─────────────────────────────────────────── */
+  .guide-wrap {
+    max-width: 900px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+  .guide-header {
+    text-align: center;
+    margin-bottom: 2.25rem;
+  }
+  .guide-header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.6rem;
+    color: rgba(215,175,255,0.95);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 20px rgba(160,80,255,0.45);
+    margin: 0 0 0.5rem 0;
+  }
+  .guide-header .guide-subtitle {
+    font-size: 0.82rem;
+    color: rgba(160,120,220,0.55);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* ── Tabs ────────────────────────────────────────────── */
+  .guide-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(160,80,255,0.2);
+    margin-bottom: 2rem;
+  }
+  .guide-tab-btn {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: rgba(160,120,220,0.55);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+    margin-bottom: -1px;
+  }
+  .guide-tab-btn:hover {
+    color: rgba(200,160,255,0.85);
+  }
+  .guide-tab-btn.active {
+    color: rgba(215,175,255,0.95);
+    border-bottom-color: rgba(160,80,255,0.7);
+  }
+
+  /* ── Tab panels ──────────────────────────────────────── */
+  .guide-panel { display: none; }
+  .guide-panel.active { display: block; }
+
+  /* ── Section blocks ──────────────────────────────────── */
+  .guide-section {
+    margin-bottom: 2.5rem;
+  }
+  .guide-section-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(160,80,255,0.55);
+    margin-bottom: 0.6rem;
+  }
+  .guide-section h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: rgba(215,175,255,0.9);
+    letter-spacing: 0.08em;
+    margin: 0 0 0.75rem 0;
+  }
+  .guide-section p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: rgba(200,180,240,0.8);
+    line-height: 1.8;
+    margin: 0 0 0.75rem 0;
+  }
+  .guide-section p.ooc {
+    font-family: inherit;
+    font-size: 0.88rem;
+    color: rgba(160,140,200,0.75);
+    font-style: normal;
+    line-height: 1.7;
+  }
+  .guide-divider {
+    border: none;
+    border-top: 1px solid rgba(160,80,255,0.1);
+    margin: 2rem 0;
+  }
+
+  /* ── Callout box (connect info, tips) ────────────────── */
+  .guide-callout {
+    background: rgba(20,0,40,0.4);
+    border: 1px solid rgba(160,80,255,0.22);
+    border-left: 3px solid rgba(160,80,255,0.5);
+    border-radius: 3px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0 1.25rem 0;
+  }
+  .guide-callout .callout-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(160,80,255,0.65);
+    margin-bottom: 0.4rem;
+  }
+  .guide-callout p {
+    margin: 0.25rem 0;
+    font-size: 0.88rem;
+    color: rgba(200,180,240,0.85);
+    font-family: inherit;
+  }
+  .guide-callout code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: rgba(200,160,255,0.9);
+    background: rgba(80,20,160,0.18);
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+  }
+  .guide-callout a {
+    color: rgba(180,120,255,0.85);
+  }
+
+  /* ── Command table ───────────────────────────────────── */
+  .cmd-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1.25rem 0;
+    font-size: 0.86rem;
+  }
+  .cmd-table thead tr {
+    border-bottom: 1px solid rgba(160,80,255,0.2);
+  }
+  .cmd-table th {
+    text-align: left;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(160,80,255,0.6);
+    padding: 0.4rem 0.75rem 0.5rem 0;
+    font-weight: normal;
+  }
+  .cmd-table td {
+    padding: 0.45rem 0.75rem 0.45rem 0;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(160,80,255,0.07);
+    color: rgba(200,180,240,0.8);
+  }
+  .cmd-table td code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.84rem;
+    color: rgba(200,160,255,0.95);
+    background: rgba(80,20,160,0.15);
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .cmd-table tr:last-child td { border-bottom: none; }
+
+  /* ── Step list ───────────────────────────────────────── */
+  .guide-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1.25rem 0;
+    counter-reset: step-counter;
+  }
+  .guide-steps li {
+    counter-increment: step-counter;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.9rem;
+    font-size: 0.88rem;
+    color: rgba(200,180,240,0.8);
+    line-height: 1.65;
+  }
+  .guide-steps li::before {
+    content: counter(step-counter);
+    flex-shrink: 0;
+    width: 1.4rem;
+    height: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(160,80,255,0.35);
+    border-radius: 50%;
+    font-size: 0.68rem;
+    color: rgba(160,80,255,0.8);
+    margin-top: 0.1rem;
+  }
+</style>
+
+<div class="guide-wrap">
+
+  <div class="guide-header">
+    <h1>✦ New Player Guide</h1>
+    <div class="guide-subtitle">Finding your shape in the Void</div>
+  </div>
+
+  <!-- Tab buttons -->
+  <div class="guide-tabs">
+    <button class="guide-tab-btn active" onclick="showTab('getting-started', this)">Getting Started</button>
+    <button class="guide-tab-btn" onclick="showTab('commands', this)">Commands &amp; Systems</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB 1 — GETTING STARTED
+  ══════════════════════════════════════════════════════ -->
+  <div id="tab-getting-started" class="guide-panel active">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« The Invitation »</div>
+      <h2>Welcome to Re:Void</h2>
+      <p>
+        Re:Void is an adult collaborative storytelling game set in a world shaped
+        from the raw substance of The Void — a place where nothing is fixed,
+        where identity is chosen, and where the space between people holds as much
+        meaning as the people themselves.
+      </p>
+      <p>
+        You arrive, as all things do, as a <strong>Wisp</strong> — a luminous,
+        formless presence drifting through a world still being written.
+        From there, you take shape. You choose a character. You find your place.
+      </p>
+      <p class="ooc">
+        Re:Void is invitation-only and intended for adults. If you're here,
+        someone vouched for you. Make yourself at home.
+      </p>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Connecting »</div>
+      <h2>How to Connect</h2>
+      <p class="ooc">
+        You can play Re:Void directly from this website, or connect with any
+        standard MUD client for a richer experience.
+      </p>
+
+      <div class="guide-callout">
+        <div class="callout-label">Play in your browser</div>
+        <p>Use the <a href="{% url 'webclient:index' %}">built-in webclient</a> — no download required.</p>
+      </div>
+
+      <div class="guide-callout">
+        <div class="callout-label">Connect with a MUD client</div>
+        <p>We recommend <strong>Mudlet</strong>, <strong>BeipMU</strong>, or <strong>MUSHclient</strong>.</p>
+        <p>Host: <code>revoid.game</code> &nbsp;·&nbsp; Port: <code>4000</code></p>
+      </div>
+
+      <p class="ooc">
+        Once connected you'll see the login screen. Type <code>create &lt;username&gt; &lt;password&gt;</code>
+        to make an account, or <code>connect &lt;username&gt; &lt;password&gt;</code> if you already have one.
+      </p>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« First Steps »</div>
+      <h2>Your First Login</h2>
+      <p class="ooc">
+        When you log in for the first time, you arrive as a Wisp —
+        your OOC presence in the world. Here's what happens next:
+      </p>
+
+      <ol class="guide-steps">
+        <li>
+          You'll see your <strong>Wisp state</strong> — a mood, a color, a formless
+          presence. This is you, out of character. You can move through rooms,
+          see who's around, and get a feel for the world before committing to a scene.
+        </li>
+        <li>
+          Use <code>chargen</code> to begin creating your first character.
+          You'll set a name, pronouns, species, and physical description.
+          Take your time — you can edit everything later.
+        </li>
+        <li>
+          Once your character is created, type <code>ic &lt;name&gt;</code> to step
+          into them. You'll arrive in <strong>The Forming</strong> — the tutorial space
+          — where you can orient yourself before entering the wider world.
+        </li>
+        <li>
+          When you're ready to return to Wisp form (OOC), type <code>ooc</code>.
+          Your character stays wherever they were — they'll be waiting when you
+          come back.
+        </li>
+      </ol>
+
+      <div class="guide-callout">
+        <div class="callout-label">Good to know</div>
+        <p>You can have up to <strong>5 characters</strong> per account.</p>
+        <p>Your Wisp and all your characters share the same account — switch between them with <code>ic &lt;name&gt;</code>.</p>
+        <p>Type <code>characters</code> at any time to see your roster.</p>
+      </div>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« The World »</div>
+      <h2>What Kind of Place Is This?</h2>
+      <p>
+        The Void is not empty — it never was. It is the substance from which
+        everything is made, and everything that has been unmade returns to it.
+        Re:Void's world exists at the edge of that boundary: places half-remembered,
+        people in the process of becoming, stories that are still deciding
+        how they end.
+      </p>
+      <p>
+        The tone is dark, intimate, and character-driven. Scenes can be emotional,
+        sensual, strange, quiet, or all of these at once. There is no combat system,
+        no levelling, no stats to min-max. What matters here is presence,
+        collaboration, and the space between people.
+      </p>
+      <p class="ooc">
+        If you've played other collaborative MU* games — MUSH, MOO, MUCK —
+        Re:Void will feel familiar. If this is your first, think of it as
+        a shared novel that everyone writes together, in real time,
+        using simple text commands.
+      </p>
+    </div>
+
+  </div><!-- /tab-getting-started -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       TAB 2 — COMMANDS & SYSTEMS
+  ══════════════════════════════════════════════════════ -->
+  <div id="tab-commands" class="guide-panel">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Navigation »</div>
+      <h2>Moving Around</h2>
+      <p class="ooc">
+        Rooms are connected by exits. Type the exit name (or its abbreviation)
+        to move. <code>look</code> describes where you are and what's in it.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>look</code> / <code>l</code></td><td>Describes the current room and its contents.</td></tr>
+          <tr><td><code>look &lt;person&gt;</code></td><td>Looks at a specific character or object.</td></tr>
+          <tr><td><code>examine &lt;person&gt;</code></td><td>A closer look — reveals more detail if the target has set it.</td></tr>
+          <tr><td><code>north</code> / <code>n</code>, <code>south</code>, etc.</td><td>Move through an exit in that direction.</td></tr>
+          <tr><td><code>exits</code></td><td>Lists all available exits from your current room.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Communication »</div>
+      <h2>Talking and Posing</h2>
+      <p class="ooc">
+        Re:Void uses a standard set of communication commands. Everything
+        your character says or does is visible to others in the same room.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>say &lt;text&gt;</code> / <code>"&lt;text&gt;</code></td><td>Your character speaks aloud.</td></tr>
+          <tr><td><code>pose &lt;text&gt;</code> / <code>:&lt;text&gt;</code></td><td>Narrates an action. <em>(Laynie smiles quietly.)</em></td></tr>
+          <tr><td><code>emote &lt;text&gt;</code></td><td>Like pose but always starts with your name.</td></tr>
+          <tr><td><code>whisper &lt;person&gt; = &lt;text&gt;</code></td><td>A quiet word only that person hears.</td></tr>
+          <tr><td><code>mutter &lt;text&gt;</code></td><td>Audible but indistinct — others hear that you spoke, not what.</td></tr>
+          <tr><td><code>ooc &lt;text&gt;</code></td><td>An out-of-character comment visible to everyone in the room.</td></tr>
+          <tr><td><code>tell &lt;person&gt; = &lt;text&gt;</code></td><td>A private message to another character, anywhere.</td></tr>
+          <tr><td><code>page &lt;account&gt; = &lt;text&gt;</code></td><td>A private message to an account (OOC equivalent of tell).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Your Character »</div>
+      <h2>Setting Up Your Character</h2>
+      <p class="ooc">
+        Your character's identity is built from a set of description fields.
+        Most commands accept no arguments to open the full text editor,
+        or <code>= &lt;text&gt;</code> to set a value inline.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>setname &lt;name&gt;</code></td><td>Sets your character's RP display name.</td></tr>
+          <tr><td><code>setpronouns &lt;she/her&gt;</code></td><td>Sets pronouns (she/her, he/him, they/them, or custom).</td></tr>
+          <tr><td><code>setspecies &lt;species&gt;</code></td><td>Sets your character's species/race.</td></tr>
+          <tr><td><code>setage &lt;age&gt;</code></td><td>Sets your character's apparent age.</td></tr>
+          <tr><td><code>setdesc</code></td><td>Opens the editor for your physical description.</td></tr>
+          <tr><td><code>setdesc = &lt;text&gt;</code></td><td>Sets a short physical description inline.</td></tr>
+          <tr><td><code>setbio</code></td><td>Opens the editor for your character's biography.</td></tr>
+          <tr><td><code>setbodylang &lt;text&gt;</code></td><td>A brief line showing your character's current body language at a glance.</td></tr>
+          <tr><td><code>setmood &lt;mood&gt;</code></td><td>Sets your character's current mood tag.</td></tr>
+          <tr><td><code>sheet</code></td><td>Shows your full character sheet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Zones & Wardrobe »</div>
+      <h2>Clothing and Body Zones</h2>
+      <p class="ooc">
+        Re:Void uses a zone system to track what your character is wearing
+        and where. Zones are named body areas (neck, waist, wrists, etc.)
+        that items can be placed on, in, or around.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>zone list</code></td><td>Shows all your character's zones and what's on them.</td></tr>
+          <tr><td><code>zone set &lt;zone&gt;</code></td><td>Opens the editor to write a nude/base description for a zone.</td></tr>
+          <tr><td><code>wear &lt;item&gt; on &lt;zone&gt;</code></td><td>Places a freeform item on a zone.</td></tr>
+          <tr><td><code>remove &lt;item&gt;</code></td><td>Removes an item from a zone.</td></tr>
+          <tr><td><code>wardrobe</code></td><td>Shows your saved outfits.</td></tr>
+          <tr><td><code>outfit save &lt;name&gt;</code></td><td>Saves your current worn items as a named outfit.</td></tr>
+          <tr><td><code>outfit wear &lt;name&gt;</code></td><td>Applies a saved outfit.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Consent & Safety »</div>
+      <h2>Consent System and Safewords</h2>
+      <p>
+        Re:Void is a space built on explicit, ongoing consent.
+        Nothing happens to your character without your agreement —
+        and that agreement can be withdrawn at any time, without explanation.
+      </p>
+      <p class="ooc">
+        Content flags let you signal what kinds of scenes you're open to.
+        You set them on your own account; others can see them before
+        engaging with you. The consent system also lets you grant or
+        revoke specific permissions per-player.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>consent</code></td><td>Shows your current consent flags and grants.</td></tr>
+          <tr><td><code>consent set &lt;flag&gt; on/off</code></td><td>Toggles a content flag (casual, intimate, mature, etc.).</td></tr>
+          <tr><td><code>consent grant &lt;person&gt; &lt;flag&gt;</code></td><td>Grants a specific person permission for a content type.</td></tr>
+          <tr><td><code>safeword</code></td><td>Immediately pauses the scene for everyone in the room. Use it.</td></tr>
+          <tr><td><code>yellow</code></td><td>A softer signal — slow down, check in, something's not quite right.</td></tr>
+          <tr><td><code>block &lt;account&gt;</code></td><td>Blocks an account from interacting with your characters.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="guide-callout">
+        <div class="callout-label">Important</div>
+        <p>Safewords are always in effect. No scene, however immersive, overrides them.
+           If you see someone use <code>safeword</code>, stop immediately and check in OOC.</p>
+        <p>If something happens that made you uncomfortable and you're not sure how to address it in-game,
+           reach out to staff via the <a href="{% url 'contact' %}">contact page</a>.</p>
+      </div>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« Offline Messaging »</div>
+      <h2>Ograms</h2>
+      <p>
+        An Ogram is a sealed message delivered by one of three couriers —
+        Seraphine, Calix, or Vesper — to a character who isn't online.
+        When the recipient next logs in, the courier arrives and delivers
+        whatever was sent: a message, a gesture, an affection, or a
+        formal invitation.
+      </p>
+      <p class="ooc">
+        You can send an Ogram in-game or from the website mailbox.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>ogram &lt;character&gt;</code></td><td>Opens the Ogram wizard to compose and send a message.</td></tr>
+          <tr><td><code>og &lt;character&gt;</code></td><td>Shorthand for <code>ogram</code>.</td></tr>
+        </tbody>
+      </table>
+      <p class="ooc">
+        Your inbox and outbox are also available from the
+        <a href="{% url 'mail-inbox' %}">website mailbox</a>.
+      </p>
+    </div>
+
+    <hr class="guide-divider">
+
+    <div class="guide-section">
+      <div class="guide-section-label">« The Editor »</div>
+      <h2>Writing Longer Text</h2>
+      <p class="ooc">
+        Many commands — <code>setdesc</code>, <code>zone set</code>, <code>ogram</code> —
+        open Re:Void's built-in text editor when used with no arguments.
+        Inside the editor, normal commands are replaced by editor commands
+        that start with <code>:</code>.
+      </p>
+      <table class="cmd-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><em>Just type</em></td><td>Adds a line to the buffer.</td></tr>
+          <tr><td><code>:show</code></td><td>Previews the current buffer with line numbers.</td></tr>
+          <tr><td><code>:add &lt;text&gt;</code></td><td>Appends a line explicitly.</td></tr>
+          <tr><td><code>:insert &lt;#&gt; &lt;text&gt;</code></td><td>Inserts a line before line number.</td></tr>
+          <tr><td><code>:replace &lt;#&gt; &lt;text&gt;</code></td><td>Replaces a specific line.</td></tr>
+          <tr><td><code>:erase &lt;#&gt;</code></td><td>Deletes a line.</td></tr>
+          <tr><td><code>:clear</code></td><td>Clears the entire buffer.</td></tr>
+          <tr><td><code>:done</code></td><td>Saves and exits the editor.</td></tr>
+          <tr><td><code>:cancel</code></td><td>Discards changes and exits.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /tab-commands -->
+
+</div><!-- /guide-wrap -->
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.guide-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+{% endblock %}
