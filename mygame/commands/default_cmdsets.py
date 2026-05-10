@@ -166,6 +166,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_COMMS_CMDS:
             self.add(cmd_cls())
 
+        # Ograms — offline messaging with IC flavor
+        from commands.ogram_commands import CmdOgram
+        self.add(CmdOgram())
+
         # Prefs (dnd, afk, highlight, filter, notify, friends, moodcarry, wispname)
         from commands.prefs_commands import ALL_PREFS_CHAR_CMDS
         for cmd_cls in ALL_PREFS_CHAR_CMDS:
