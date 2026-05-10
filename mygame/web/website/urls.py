@@ -26,7 +26,7 @@ urlpatterns = [
     path("factions/", tbi, name="factions"),
     path("forums/",   tbi, name="forums"),
     path("wiki/",     tbi, name="wiki"),
-    path("guide/",    tbi, name="guide"),
+    path("guide/",    TemplateView.as_view(template_name="website/guide.html"), name="guide"),
     path("discord/",  tbi, name="discord"),
 
     # ── Ogram mailbox ──────────────────────────────────────────────────────
