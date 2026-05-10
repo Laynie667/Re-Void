@@ -1,0 +1,70 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Contact Staff · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .contact-wrap { max-width: 640px; margin: 2.5rem auto; padding: 0 1rem; }
+  .contact-header { text-align: center; margin-bottom: 2rem; }
+  .contact-header h1 { font-family: 'Cinzel Decorative', serif; font-size: 1.5rem; color: rgba(215,175,255,0.95); letter-spacing: 0.1em; text-shadow: 0 0 16px rgba(160,80,255,0.4); margin: 0 0 0.5rem 0; }
+  .contact-header p { font-size: 0.85rem; color: rgba(160,120,220,0.65); }
+  .form-card { border: 1px solid rgba(160,80,255,0.2); border-radius: 4px; background: rgba(20,0,40,0.3); padding: 1.5rem 1.75rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label { display: block; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(160,80,255,0.7); margin-bottom: 0.4rem; }
+  .form-control {
+    width: 100%; box-sizing: border-box;
+    background: rgba(10,0,25,0.5); border: 1px solid rgba(120,60,200,0.3);
+    border-radius: 2px; color: rgba(215,195,255,0.9); padding: 0.5rem 0.7rem;
+    font-size: 0.88rem; font-family: 'Cormorant Garamond', serif;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-control:focus { border-color: rgba(160,80,255,0.6); }
+  textarea.form-control { resize: vertical; min-height: 160px; line-height: 1.65; }
+  .form-error { font-size: 0.75rem; color: rgba(220,80,80,0.85); margin-top: 0.25rem; }
+  .btn-submit { display: inline-block; padding: 0.55rem 1.5rem; background: rgba(120,40,200,0.25); border: 1px solid rgba(160,80,255,0.4); border-radius: 2px; color: rgba(215,175,255,0.95); font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
+  .btn-submit:hover { background: rgba(140,50,220,0.35); border-color: rgba(180,100,255,0.6); }
+</style>
+
+<div class="contact-wrap">
+  <div class="contact-header">
+    <h1>✦ Contact Staff</h1>
+    <p>A message sent here goes directly to the staff inbox.<br>
+       Include an email address if you'd like a reply outside the game.</p>
+  </div>
+
+  <div class="form-card">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.name.id_for_label }}">Your name</label>
+        <input class="form-control" type="text" name="name" id="{{ form.name.id_for_label }}"
+               value="{{ form.name.value|default:'' }}" placeholder="Display name or character name">
+        {% if form.name.errors %}<div class="form-error">{{ form.name.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.email.id_for_label }}">Email (optional)</label>
+        <input class="form-control" type="email" name="email" id="{{ form.email.id_for_label }}"
+               value="{{ form.email.value|default:'' }}" placeholder="you@example.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.subject.id_for_label }}">Subject</label>
+        <input class="form-control" type="text" name="subject" id="{{ form.subject.id_for_label }}"
+               value="{{ form.subject.value|default:'' }}" placeholder="What's this about?">
+        {% if form.subject.errors %}<div class="form-error">{{ form.subject.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.body.id_for_label }}">Message</label>
+        <textarea class="form-control" name="body" id="{{ form.body.id_for_label }}"
+                  placeholder="Your message to staff…">{{ form.body.value|default:'' }}</textarea>
+        {% if form.body.errors %}<div class="form-error">{{ form.body.errors.0 }}</div>{% endif %}
+      </div>
+
+      <button type="submit" class="btn-submit">Send to Staff</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
