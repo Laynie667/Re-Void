@@ -66,17 +66,24 @@ class InboxView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        char_ids = _char_ids_for_account(self.request.user)
+        from django.db.models import Q
+        user = self.request.user
+        char_ids = _char_ids_for_account(user)
+        # Character-addressed Ograms OR account-level messages (e.g. staff contact)
         return OgramMessage.objects.filter(
-            recipient_object_id__in=char_ids,
+            Q(recipient_object_id__in=char_ids) |
+            Q(recipient_account_id=user.id, recipient_object_id__isnull=True),
             deleted_by_recipient=False,
         ).order_by("-sent_at")
 
     def get_context_data(self, **kwargs):
+        from django.db.models import Q
         ctx = super().get_context_data(**kwargs)
-        char_ids = _char_ids_for_account(self.request.user)
+        user = self.request.user
+        char_ids = _char_ids_for_account(user)
         ctx["unread_count"] = OgramMessage.objects.filter(
-            recipient_object_id__in=char_ids,
+            Q(recipient_object_id__in=char_ids) |
+            Q(recipient_account_id=user.id, recipient_object_id__isnull=True),
             deleted_by_recipient=False,
             read_at__isnull=True,
         ).count()
@@ -123,8 +130,12 @@ class MessageDetailView(DetailView):
         msg = get_object_or_404(OgramMessage, pk=pk)
 
         # Check access: must be sender or recipient
-        is_recipient = msg.recipient_object_id in char_ids
-        is_sender    = msg.sender_account_id == user.id
+        # recipient_object_id may be None for account-level messages (staff contact)
+        is_recipient = (
+            (msg.recipient_object_id is not None and msg.recipient_object_id in char_ids) or
+            (msg.recipient_object_id is None and msg.recipient_account_id == user.id)
+        )
+        is_sender = msg.sender_account_id == user.id
 
         if not (is_recipient or is_sender):
             from django.http import Http404
@@ -254,20 +265,16 @@ class StaffContactView(FormView):
         data = form.cleaned_data
         user = self.request.user if self.request.user.is_authenticated else None
 
-        # Route to a designated staff account / character called "Staff"
-        # Falls back to storing with recipient_name="Staff" if not found.
-        staff_target = _resolve_recipient("Staff")
-        staff_account = getattr(staff_target, "account", None) if staff_target else None
-
-        # Try to find any staff account to use as fallback recipient
-        if not staff_account:
-            try:
-                from evennia.accounts.models import AccountDB
-                staff_account = AccountDB.objects.filter(
-                    is_staff=True
-                ).first()
-            except Exception:
-                pass
+        # Route to the superuser account (first is_superuser account found).
+        # recipient_object_id is intentionally left None — this is an
+        # account-level message, not addressed to a specific character.
+        try:
+            from evennia.accounts.models import AccountDB
+            staff_account = AccountDB.objects.filter(
+                is_superuser=True
+            ).order_by("pk").first()
+        except Exception:
+            staff_account = None
 
         msg = OgramMessage(
             sender_name          = data["name"],
