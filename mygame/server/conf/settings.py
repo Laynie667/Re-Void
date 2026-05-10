@@ -27,7 +27,7 @@ put secret game- or server-specific settings in secret_settings.py.
 # Use the defaults from Evennia unless explicitly overridden
 from evennia.settings_default import *
 
-INSTALLED_APPS += ["web.apps.WebConfig", "web.news.apps.NewsConfig"]
+INSTALLED_APPS += ["web.apps.WebConfig", "web.news.apps.NewsConfig", "web.mail.apps.MailConfig"]
 
 ######################################################################
 # Evennia base server config
