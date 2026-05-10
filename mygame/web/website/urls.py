@@ -24,7 +24,7 @@ urlpatterns = [
     # ── Planned pages (TBI) ────────────────────────────────────────────────
     path("lore/",     tbi, name="lore"),
     path("factions/", tbi, name="factions"),
-    path("forums/",   tbi, name="forums"),
+    path("forums/",   include("web.forum.urls")),
     path("wiki/",     tbi, name="wiki"),
     path("guide/",    TemplateView.as_view(template_name="website/guide.html"), name="guide"),
     path("discord/",  tbi, name="discord"),
