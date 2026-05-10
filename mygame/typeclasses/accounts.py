@@ -197,6 +197,13 @@ class Account(DefaultAccount):
             f"|xYou drift into the world.|n"
         )
 
+        # Deliver any pending Ograms
+        try:
+            from commands.ogram_commands import deliver_ograms
+            deliver_ograms(self)
+        except Exception:
+            pass
+
         if room:
             self.msg(self._build_wisp_room_view(room))
         else:
