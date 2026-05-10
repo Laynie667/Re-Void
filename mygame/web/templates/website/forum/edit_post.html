@@ -1,0 +1,83 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Edit Post · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .forum-wrap {
+    max-width: 760px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+  .form-header {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.1rem;
+    color: rgba(215,175,255,0.95);
+    letter-spacing: 0.08em;
+    margin: 0 0 1.5rem 0;
+  }
+  .field-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(160,80,255,0.6);
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(12,0,24,0.7);
+    border: 1px solid rgba(160,80,255,0.2);
+    border-radius: 3px;
+    color: rgba(200,180,240,0.9);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    padding: 0.65rem 0.9rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 180px;
+  }
+  textarea:focus { border-color: rgba(160,80,255,0.45); }
+  .field-errors { color: rgba(220,80,80,0.8); font-size: 0.78rem; margin-top: 0.3rem; }
+  .btn-submit {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(215,175,255,0.9);
+    border: 1px solid rgba(160,80,255,0.4);
+    background: rgba(80,20,160,0.2);
+    padding: 0.55rem 1.4rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    margin-top: 0.75rem;
+    margin-right: 0.75rem;
+  }
+  .btn-submit:hover { background: rgba(80,20,160,0.45); border-color: rgba(160,80,255,0.7); }
+  .btn-cancel {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: rgba(120,80,160,0.55);
+    text-decoration: none;
+  }
+  .btn-cancel:hover { color: rgba(180,120,255,0.8); }
+</style>
+
+<div class="forum-wrap">
+  <h1 class="form-header">✦ Edit Post</h1>
+  <form method="post">
+    {% csrf_token %}
+    <label class="field-label">Post Body</label>
+    {{ form.body }}
+    {% if form.body.errors %}
+      <div class="field-errors">{{ form.body.errors|join:", " }}</div>
+    {% endif %}
+    <div style="margin-top:0.75rem">
+      <button type="submit" class="btn-submit">Save Changes</button>
+      <a class="btn-cancel" href="{% url 'forum-thread' post.thread.pk %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

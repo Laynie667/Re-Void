@@ -1,0 +1,171 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}{{ category.name }} · Forums · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .forum-wrap {
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+  .forum-breadcrumb {
+    font-size: 0.75rem;
+    color: rgba(120,80,180,0.55);
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.1em;
+  }
+  .forum-breadcrumb a {
+    color: rgba(160,100,255,0.65);
+    text-decoration: none;
+  }
+  .forum-breadcrumb a:hover { color: rgba(200,160,255,0.9); }
+  .forum-breadcrumb span { margin: 0 0.4rem; }
+
+  .forum-cat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+  .forum-cat-header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.25rem;
+    color: rgba(215,175,255,0.95);
+    letter-spacing: 0.08em;
+    margin: 0;
+  }
+  .btn-new-thread {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(215,175,255,0.9);
+    border: 1px solid rgba(160,80,255,0.4);
+    background: rgba(80,20,160,0.15);
+    padding: 0.45rem 1rem;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .btn-new-thread:hover {
+    background: rgba(80,20,160,0.35);
+    border-color: rgba(160,80,255,0.7);
+  }
+
+  /* Thread rows */
+  .thread-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(160,80,255,0.08);
+    transition: background 0.15s;
+  }
+  .thread-row:first-child { border-top: 1px solid rgba(160,80,255,0.08); }
+  .thread-row:hover { background: rgba(80,20,160,0.08); }
+
+  .thread-title-wrap { display: flex; align-items: center; gap: 0.5rem; }
+  .thread-pin {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(160,80,255,0.55);
+    border: 1px solid rgba(160,80,255,0.25);
+    border-radius: 2px;
+    padding: 0.1rem 0.35rem;
+    flex-shrink: 0;
+  }
+  .thread-lock {
+    font-size: 0.75rem;
+    color: rgba(120,80,160,0.5);
+    flex-shrink: 0;
+  }
+  .thread-title a {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.82rem;
+    color: rgba(215,175,255,0.9);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+  .thread-title a:hover { color: rgba(255,220,255,1); }
+  .thread-meta {
+    font-size: 0.72rem;
+    color: rgba(120,80,180,0.55);
+    margin-top: 0.2rem;
+  }
+  .thread-meta a { color: rgba(160,100,255,0.65); text-decoration: none; }
+
+  .thread-stats {
+    text-align: right;
+    font-size: 0.75rem;
+    color: rgba(140,100,200,0.55);
+    flex-shrink: 0;
+    min-width: 5rem;
+  }
+  .thread-stats .reply-count {
+    font-size: 1rem;
+    color: rgba(180,130,255,0.7);
+    font-variant-numeric: tabular-nums;
+    display: block;
+  }
+
+  .empty-board {
+    text-align: center;
+    padding: 3rem 0;
+    color: rgba(120,80,180,0.45);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<div class="forum-wrap">
+
+  <div class="forum-breadcrumb">
+    <a href="{% url 'forum-index' %}">Forums</a>
+    <span>›</span>
+    {{ category.name }}
+  </div>
+
+  <div class="forum-cat-header">
+    <h1>{{ category.icon }} {{ category.name }}</h1>
+    {% if can_post %}
+      <a class="btn-new-thread" href="{% url 'forum-new-thread' category.slug %}">+ New Thread</a>
+    {% endif %}
+  </div>
+
+  {% for thread in threads %}
+  <div class="thread-row">
+    <div>
+      <div class="thread-title-wrap">
+        {% if thread.pinned %}<span class="thread-pin">Pinned</span>{% endif %}
+        {% if thread.locked %}<span class="thread-lock">🔒</span>{% endif %}
+        <div class="thread-title">
+          <a href="{% url 'forum-thread' thread.pk %}">{{ thread.title }}</a>
+        </div>
+      </div>
+      <div class="thread-meta">
+        by {{ thread.author_name }} &nbsp;·&nbsp; {{ thread.created_at|date:"M j, Y" }}
+        {% with latest=thread.latest_post %}
+          {% if latest and latest.created_at != thread.created_at %}
+            &nbsp;·&nbsp; Last reply by {{ latest.author_name }} {{ latest.created_at|date:"M j" }}
+          {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+    <div class="thread-stats">
+      <span class="reply-count">{{ thread.reply_count }}</span>
+      repl{% if thread.reply_count == 1 %}y{% else %}ies{% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div class="empty-board">
+    No threads yet.
+    {% if can_post %}Be the first — <a href="{% url 'forum-new-thread' category.slug %}" style="color:rgba(160,100,255,0.75)">start one</a>.{% endif %}
+  </div>
+  {% endfor %}
+
+</div>
+{% endblock %}

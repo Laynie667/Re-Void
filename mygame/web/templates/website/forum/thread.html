@@ -1,0 +1,245 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}{{ thread.title }} · Forums · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .forum-wrap {
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+  .forum-breadcrumb {
+    font-size: 0.75rem;
+    color: rgba(120,80,180,0.55);
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.1em;
+  }
+  .forum-breadcrumb a { color: rgba(160,100,255,0.65); text-decoration: none; }
+  .forum-breadcrumb a:hover { color: rgba(200,160,255,0.9); }
+  .forum-breadcrumb span { margin: 0 0.4rem; }
+
+  .thread-header {
+    margin-bottom: 1.75rem;
+  }
+  .thread-header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.15rem;
+    color: rgba(215,175,255,0.95);
+    letter-spacing: 0.06em;
+    margin: 0 0 0.35rem 0;
+  }
+  .thread-badges { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(160,80,255,0.55);
+    border: 1px solid rgba(160,80,255,0.25);
+    border-radius: 2px;
+    padding: 0.1rem 0.4rem;
+  }
+  .badge.locked { color: rgba(200,100,100,0.6); border-color: rgba(200,100,100,0.25); }
+
+  /* Posts */
+  .post-block {
+    background: rgba(12,0,24,0.5);
+    border: 1px solid rgba(160,80,255,0.12);
+    border-radius: 4px;
+    margin-bottom: 0.85rem;
+    overflow: hidden;
+  }
+  .post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 1rem;
+    background: rgba(80,20,160,0.1);
+    border-bottom: 1px solid rgba(160,80,255,0.1);
+    gap: 0.5rem;
+  }
+  .post-author {
+    font-size: 0.78rem;
+    color: rgba(200,160,255,0.85);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .post-date {
+    font-size: 0.7rem;
+    color: rgba(120,80,180,0.5);
+  }
+  .post-actions { display: flex; gap: 0.5rem; }
+  .post-action-btn {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(140,80,200,0.5);
+    text-decoration: none;
+    border: 1px solid transparent;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    background: none;
+    cursor: pointer;
+  }
+  .post-action-btn:hover {
+    color: rgba(200,140,255,0.9);
+    border-color: rgba(160,80,255,0.3);
+  }
+  .post-action-btn.delete:hover {
+    color: rgba(220,80,80,0.8);
+    border-color: rgba(200,80,80,0.3);
+  }
+  .post-body {
+    padding: 1rem 1.1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: rgba(200,180,240,0.85);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .post-edited {
+    font-size: 0.68rem;
+    color: rgba(120,80,160,0.45);
+    padding: 0 1.1rem 0.6rem;
+    font-style: italic;
+  }
+
+  /* Locked notice */
+  .locked-notice {
+    text-align: center;
+    padding: 1.25rem;
+    border: 1px solid rgba(200,100,100,0.2);
+    border-radius: 3px;
+    color: rgba(200,120,120,0.6);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    margin-top: 1rem;
+    background: rgba(80,0,0,0.1);
+  }
+
+  /* Reply form */
+  .reply-box {
+    margin-top: 2rem;
+  }
+  .reply-box h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.82rem;
+    color: rgba(160,80,255,0.7);
+    letter-spacing: 0.12em;
+    margin: 0 0 0.75rem 0;
+  }
+  .reply-box textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(12,0,24,0.7);
+    border: 1px solid rgba(160,80,255,0.2);
+    border-radius: 3px;
+    color: rgba(200,180,240,0.9);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    padding: 0.75rem 0.9rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .reply-box textarea:focus { border-color: rgba(160,80,255,0.45); }
+  .reply-box textarea::placeholder { color: rgba(120,80,160,0.4); }
+  .btn-submit {
+    margin-top: 0.65rem;
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(215,175,255,0.9);
+    border: 1px solid rgba(160,80,255,0.4);
+    background: rgba(80,20,160,0.2);
+    padding: 0.5rem 1.25rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-submit:hover {
+    background: rgba(80,20,160,0.45);
+    border-color: rgba(160,80,255,0.7);
+  }
+  .login-prompt {
+    text-align: center;
+    color: rgba(120,80,180,0.55);
+    font-size: 0.82rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(160,80,255,0.1);
+    border-radius: 3px;
+  }
+  .login-prompt a { color: rgba(160,100,255,0.75); }
+</style>
+
+<div class="forum-wrap">
+
+  <div class="forum-breadcrumb">
+    <a href="{% url 'forum-index' %}">Forums</a>
+    <span>›</span>
+    <a href="{% url 'forum-category' thread.category.slug %}">{{ thread.category.name }}</a>
+    <span>›</span>
+    {{ thread.title }}
+  </div>
+
+  <div class="thread-header">
+    <h1>{{ thread.title }}</h1>
+    <div class="thread-badges">
+      {% if thread.pinned %}<span class="badge">Pinned</span>{% endif %}
+      {% if thread.locked %}<span class="badge locked">Locked</span>{% endif %}
+    </div>
+  </div>
+
+  {% for post in posts %}
+  <div class="post-block">
+    <div class="post-header">
+      <div>
+        <span class="post-author">{{ post.author_name }}</span>
+        <span class="post-date" style="margin-left:0.75rem">{{ post.created_at|date:"M j, Y · g:i a" }}</span>
+      </div>
+      <div class="post-actions">
+        {% if user_id == post.author_account_id or is_staff %}
+          <a class="post-action-btn" href="{% url 'forum-edit-post' post.pk %}">Edit</a>
+          <form method="post" action="{% url 'forum-delete-post' post.pk %}" style="display:inline">
+            {% csrf_token %}
+            <button type="submit" class="post-action-btn delete"
+                    onclick="return confirm('Remove this post?')">Delete</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+    <div class="post-body">{{ post.body }}</div>
+    {% if post.edited_at %}
+      <div class="post-edited">edited {{ post.edited_at|date:"M j, Y · g:i a" }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  {% if thread.locked %}
+    <div class="locked-notice">🔒 This thread is locked.</div>
+  {% elif can_post %}
+    <div class="reply-box">
+      <h2>✦ Leave a Reply</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.body }}
+        {% if form.body.errors %}
+          <div style="color:rgba(220,80,80,0.8);font-size:0.8rem;margin-top:0.3rem">
+            {{ form.body.errors|join:", " }}
+          </div>
+        {% endif %}
+        <button type="submit" class="btn-submit">Post Reply</button>
+      </form>
+    </div>
+  {% elif not request.user.is_authenticated %}
+    <div class="login-prompt">
+      <a href="{% url 'login' %}">Log in</a> to reply.
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
