@@ -5,8 +5,9 @@ from .models import ForumCategory, ForumPost, ForumThread
 
 @admin.register(ForumCategory)
 class ForumCategoryAdmin(admin.ModelAdmin):
-    list_display  = ("order", "icon", "name", "slug", "staff_only_post")
-    list_editable = ("order", "staff_only_post")
+    list_display       = ("order", "icon", "name", "slug", "staff_only_post")
+    list_display_links = ("name",)
+    list_editable      = ("order", "staff_only_post")
     prepopulated_fields = {"slug": ("name",)}
 
 
