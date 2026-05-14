@@ -1,0 +1,479 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %} — Zone Wardrobe · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  /* ── Page layout ── */
+  .wd-wrap {
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1rem;
+  }
+  .wd-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .wd-header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.5rem;
+    color: rgba(215,175,255,0.95);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 16px rgba(160,80,255,0.4);
+    margin: 0;
+  }
+
+  /* ── Selectors row ── */
+  .wd-selectors {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+    align-items: flex-end;
+  }
+  .wd-selector-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 180px;
+  }
+  .wd-selector-group label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(160,120,220,0.7);
+  }
+  .wd-select {
+    background: rgba(30,10,60,0.7);
+    border: 1px solid rgba(160,80,255,0.25);
+    border-radius: 3px;
+    color: rgba(215,175,255,0.9);
+    padding: 0.45rem 0.7rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(160,80,255,0.5)'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    padding-right: 2rem;
+    cursor: pointer;
+    width: 100%;
+  }
+  .wd-select:focus {
+    outline: none;
+    border-color: rgba(160,80,255,0.55);
+  }
+  .wd-select option {
+    background: #1a0836;
+    color: rgba(215,175,255,0.9);
+  }
+
+  /* ── Editor card ── */
+  .wd-card {
+    background: rgba(20,5,45,0.6);
+    border: 1px solid rgba(120,40,180,0.25);
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+  .wd-zone-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: rgba(215,175,255,0.9);
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.08em;
+  }
+  .wd-zone-hint {
+    font-size: 0.78rem;
+    color: rgba(160,120,220,0.55);
+    margin-bottom: 1.1rem;
+  }
+  .wd-textarea {
+    width: 100%;
+    min-height: 220px;
+    background: rgba(10,2,28,0.7);
+    border: 1px solid rgba(120,40,180,0.3);
+    border-radius: 3px;
+    color: rgba(215,175,255,0.92);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    padding: 0.85rem 1rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+  .wd-textarea:focus {
+    outline: none;
+    border-color: rgba(160,80,255,0.5);
+  }
+  .wd-textarea::placeholder {
+    color: rgba(160,120,220,0.3);
+  }
+  .wd-char-count {
+    text-align: right;
+    font-size: 0.72rem;
+    color: rgba(160,120,220,0.45);
+    margin-top: 0.3rem;
+    margin-bottom: 1.2rem;
+  }
+  .wd-char-count.wd-long { color: rgba(255,200,80,0.5); }
+
+  /* ── Flags grid ── */
+  .wd-flags {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.4rem;
+    padding: 1.1rem 1.2rem;
+    background: rgba(10,2,28,0.4);
+    border: 1px solid rgba(120,40,180,0.2);
+    border-radius: 3px;
+  }
+  .wd-flag-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .wd-flag-group label {
+    font-size: 0.63rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(160,120,220,0.6);
+  }
+  .wd-flag-select {
+    background: rgba(30,10,60,0.7);
+    border: 1px solid rgba(120,40,180,0.25);
+    border-radius: 3px;
+    color: rgba(215,175,255,0.88);
+    padding: 0.38rem 2rem 0.38rem 0.6rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(160,80,255,0.45)'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    cursor: pointer;
+    width: 100%;
+  }
+  .wd-flag-select:focus { outline: none; border-color: rgba(160,80,255,0.5); }
+  .wd-flag-select option { background: #1a0836; color: rgba(215,175,255,0.9); }
+
+  /* intimate toggle */
+  .wd-intimate-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.55rem;
+  }
+  .wd-intimate-row input[type="checkbox"] {
+    width: 15px; height: 15px;
+    accent-color: rgba(160,80,255,0.8);
+    cursor: pointer;
+  }
+  .wd-intimate-row span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    color: rgba(215,175,255,0.8);
+  }
+
+  /* ── Save button ── */
+  .wd-save-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .wd-btn-save {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(215,175,255,0.9);
+    background: rgba(120,40,200,0.25);
+    border: 1px solid rgba(160,80,255,0.4);
+    border-radius: 3px;
+    padding: 0.5rem 1.4rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .wd-btn-save:hover {
+    background: rgba(140,50,220,0.38);
+    border-color: rgba(200,120,255,0.55);
+  }
+  .wd-btn-save:active {
+    background: rgba(100,30,180,0.5);
+  }
+
+  /* ── Toast / notice ── */
+  .wd-notice {
+    padding: 0.6rem 1rem;
+    border-radius: 3px;
+    font-size: 0.83rem;
+    letter-spacing: 0.04em;
+  }
+  .wd-notice.success {
+    background: rgba(60,160,80,0.12);
+    border: 1px solid rgba(60,200,80,0.25);
+    color: rgba(120,220,130,0.9);
+  }
+
+  /* ── Empty state ── */
+  .wd-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(160,120,220,0.5);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  /* ── Zone dot indicator ── */
+  .zone-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+    background: rgba(160,80,255,0.35);
+  }
+  .zone-dot.filled { background: rgba(160,80,255,0.8); }
+  .zone-dot.intimate { background: rgba(220,100,180,0.7); }
+</style>
+
+<div class="wd-wrap">
+
+  <!-- Header -->
+  <div class="wd-header">
+    <h1>Zone Wardrobe</h1>
+  </div>
+
+  {% if success %}
+  <div class="wd-notice success" style="margin-bottom:1.25rem;">
+    ✦ Zone description saved successfully.
+  </div>
+  {% endif %}
+
+  {% if not chars %}
+  <div class="wd-empty">
+    You don't have any characters yet.<br>
+    <a href="{% url 'character-create' %}" style="color:rgba(200,140,255,0.7);">Create your first character</a> to get started.
+  </div>
+
+  {% else %}
+
+  <!-- Character + Zone selectors (auto-submit on change) -->
+  <form method="get" action="/profile/wardrobe/" id="selector-form">
+    <div class="wd-selectors">
+
+      {% if chars|length > 1 %}
+      <div class="wd-selector-group">
+        <label for="char-select">Character</label>
+        <select name="char" id="char-select" class="wd-select" onchange="document.getElementById('selector-form').submit()">
+          {% for c in chars %}
+          <option value="{{ c.pk }}"{% if c.pk == selected_char.pk %} selected{% endif %}>
+            {{ c.db.rp_name|default:c.key }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% else %}
+      <input type="hidden" name="char" value="{{ selected_char.pk }}">
+      {% endif %}
+
+      {% if zone_display %}
+      <div class="wd-selector-group">
+        <label for="zone-select">Zone</label>
+        <select name="zone" id="zone-select" class="wd-select" onchange="document.getElementById('selector-form').submit()">
+          {% for z in zone_display %}
+          <option value="{{ z.name }}"{% if z.name == selected_zone %} selected{% endif %}>
+            {% if z.intimate %}♦ {% endif %}{{ z.label }}{% if z.has_desc %} ·{% endif %}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+    </div>
+  </form>
+
+  <!-- Zone editor -->
+  {% if selected_zone %}
+  <div class="wd-card">
+
+    <div class="wd-zone-title">
+      {% for z in zone_display %}{% if z.name == selected_zone %}{{ z.label }}{% endif %}{% endfor %}
+    </div>
+    <div class="wd-zone-hint">
+      This is the nude description for this zone — what others see when this area is unclothed.
+      Plain text or Evennia color codes (|r red|n, |w white|n, etc.) are supported.
+    </div>
+
+    <form method="post" action="/profile/wardrobe/">
+      {% csrf_token %}
+      <input type="hidden" name="char_id" value="{{ selected_char.pk }}">
+      <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+
+      <textarea
+        name="nude_desc"
+        class="wd-textarea"
+        placeholder="Describe this zone when unclothed…"
+        id="zone-textarea"
+        oninput="updateCharCount(this)"
+      >{{ zone_content }}</textarea>
+
+      <div class="wd-char-count" id="char-count">
+        <span id="count-num">{{ zone_content|length }}</span> characters
+      </div>
+
+      <!-- Zone flags -->
+      <div class="wd-flags">
+
+        <div class="wd-flag-group">
+          <label for="f-visibility">Visibility</label>
+          <select name="visibility" id="f-visibility" class="wd-flag-select">
+            {% for val, label in visibility_choices %}
+            <option value="{{ val }}"{% if val == zone_visibility %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="wd-flag-group">
+          <label for="f-type">Zone Type</label>
+          <select name="zone_type" id="f-type" class="wd-flag-select">
+            {% for val, label in type_choices %}
+            <option value="{{ val }}"{% if val == zone_type %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="wd-flag-group">
+          <label for="f-consent">Consent Required</label>
+          <select name="consent_required" id="f-consent" class="wd-flag-select">
+            {% for val, label in consent_choices %}
+            <option value="{{ val }}"{% if val == zone_consent %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="wd-flag-group">
+          <label>Intimate Zone</label>
+          <div class="wd-intimate-row">
+            <input type="checkbox" name="intimate" id="f-intimate" value="1"{% if zone_intimate %} checked{% endif %}>
+            <span>Mark as intimate</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="wd-save-row">
+        <button type="submit" class="wd-btn-save">Save Zone</button>
+        <span style="font-size:0.75rem;color:rgba(160,120,220,0.4);">
+          Changes take effect in-game immediately.
+        </span>
+      </div>
+    </form>
+
+  </div>
+
+  <!-- Freeform items on this zone -->
+  {% if zone_freeform %}
+  <div style="margin-top:1.5rem;">
+    <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(160,120,220,0.6);margin-bottom:0.75rem;">
+      Items on this zone
+    </div>
+
+    {% for item in zone_freeform %}
+    <div style="background:rgba(10,2,28,0.5);border:1px solid rgba(120,40,180,0.2);border-radius:3px;padding:1rem 1.2rem;margin-bottom:0.85rem;">
+
+      <!-- Item header row -->
+      <div style="display:flex;align-items:baseline;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+        <span style="font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:rgba(215,175,255,0.92);">{{ item.name }}</span>
+        <span style="font-size:0.7rem;color:rgba(160,120,220,0.5);text-transform:uppercase;letter-spacing:0.12em;">
+          {% if item.mode == "in" %}placed inside{% elif item.mode == "cover" %}covering{% else %}placed on{% endif %}
+        </span>
+        {% if item.lock %}
+          {% if item.lock.type == "plock" %}
+          <span style="font-size:0.72rem;color:rgba(255,100,100,0.8);letter-spacing:0.06em;">
+            🔒 Permanent lock &nbsp;·&nbsp; Key #{{ item.lock.key_id }} — held by {{ item.lock.holder_name }}
+          </span>
+          {% else %}
+          <span style="font-size:0.72rem;color:rgba(255,200,80,0.7);letter-spacing:0.06em;">
+            🔑 Scene-locked (code: {{ item.lock.code }})
+          </span>
+          {% endif %}
+        {% else %}
+        <span style="font-size:0.72rem;color:rgba(120,220,130,0.55);letter-spacing:0.06em;">no lock</span>
+        {% endif %}
+      </div>
+
+      <!-- Original desc (read-only reference) -->
+      <div style="font-size:0.78rem;color:rgba(160,120,220,0.45);margin-bottom:0.85rem;font-style:italic;">
+        Original: "{{ item.desc|truncatechars:120 }}"
+      </div>
+
+      <!-- player_desc editor -->
+      <form method="post" action="/profile/wardrobe/">
+        {% csrf_token %}
+        <input type="hidden" name="action"    value="save_item_desc">
+        <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+        <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+        <input type="hidden" name="item_name" value="{{ item.name }}">
+
+        <div style="margin-bottom:0.35rem;">
+          <label style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(160,120,220,0.55);">
+            Your description — editable even while locked
+          </label>
+        </div>
+        <textarea
+          name="player_desc"
+          style="width:100%;min-height:100px;background:rgba(10,2,28,0.7);border:1px solid rgba(120,40,180,0.25);border-radius:3px;color:rgba(215,175,255,0.9);font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.6;padding:0.65rem 0.85rem;resize:vertical;box-sizing:border-box;"
+          placeholder="Write how this reads on your body…"
+        >{{ item.player_desc }}</textarea>
+
+        <div style="margin-top:0.6rem;">
+          <button type="submit" class="wd-btn-save" style="font-size:0.65rem;padding:0.38rem 1rem;">
+            Save Description
+          </button>
+          {% if item.player_desc %}
+          <span style="margin-left:0.75rem;font-size:0.7rem;color:rgba(120,220,130,0.6);">✦ Custom version saved</span>
+          {% endif %}
+        </div>
+      </form>
+
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Zone legend -->
+  <div style="margin-top:1rem;font-size:0.72rem;color:rgba(160,120,220,0.4);letter-spacing:0.05em;line-height:1.7;">
+    ♦ = intimate zone &nbsp;·&nbsp; zones with a description show a · in the selector.<br>
+    To <strong style="color:rgba(180,130,240,0.5);">add or remove zones</strong>, use the in-game
+    <code style="font-size:inherit;color:rgba(180,130,240,0.6);">zone add &lt;name&gt;</code> /
+    <code style="font-size:inherit;color:rgba(180,130,240,0.6);">zone remove &lt;name&gt;</code> commands.
+    Clothing is managed in-game with the <code style="font-size:inherit;color:rgba(180,130,240,0.6);">wear</code> command.
+  </div>
+  {% endif %}
+
+  {% endif %}
+</div>
+
+<script>
+  function updateCharCount(el) {
+    var n = el.value.length;
+    var el2 = document.getElementById('count-num');
+    var wrap = document.getElementById('char-count');
+    el2.textContent = n;
+    wrap.classList.toggle('wd-long', n >= 5000);
+  }
+  // Run once on load
+  var ta = document.getElementById('zone-textarea');
+  if (ta) updateCharCount(ta);
+</script>
+{% endblock %}

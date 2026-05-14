@@ -28,6 +28,7 @@
       <a href="{% url 'character-manage' %}">Manage Characters</a>
       <div class="nav-dropdown-divider"></div>
       <a href="{% url 'mail-inbox' %}">✦ Ograms</a>
+      <a href="{% url 'wardrobe' %}">✦ Zone Wardrobe</a>
       <div class="nav-dropdown-divider"></div>
       {% for character in account.characters|slice:"10" %}
       <a href="{{ character.web_get_puppet_url }}?next={{ request.path }}">{{ character }}</a>
