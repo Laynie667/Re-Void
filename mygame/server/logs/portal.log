@@ -1294,3 +1294,262 @@
 |Portal| 2026-05-09 08:35:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57860)
 |Portal| 2026-05-09 08:35:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57864)
 |Portal| 2026-05-09 08:35:54 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=57858)
+|Portal| 2026-05-09 18:48:15 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48338)
+|Portal| 2026-05-09 18:48:23 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48336)
+|Portal| 2026-05-13 17:49:47 [..] Loaded.
+|Portal| 2026-05-13 17:49:45 [!!] Removing stale pidfile /home/laynie/ReVoid/mygame/server/portal.pid
+|Portal| 2026-05-13 17:49:45 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 17:49:47 [..] Loaded.
+|Portal| 2026-05-13 17:49:47 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 17:49:47 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 17:49:47 [..] AMP starting on 4006
+|Portal| 2026-05-13 17:49:47 [..] Telnet starting on 4000
+|Portal| 2026-05-13 17:49:47 [..] Websocket starting on 4002
+|Portal| 2026-05-13 17:49:47 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 17:49:47 [..] Portal starting server ... 
+|Portal| 2026-05-13 17:50:57 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36864)
+|Portal| 2026-05-13 17:50:58 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36880)
+|Portal| 2026-05-13 17:51:30 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=36878)
+|Portal| 2026-05-13 17:52:04 [..] Portal starting server ... 
+|Portal| 2026-05-13 17:52:32 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=39794)
+|Portal| 2026-05-13 17:53:27 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=39774)
+|Portal| 2026-05-13 17:53:27 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=39784)
+|Portal| 2026-05-13 18:43:41 [..] Portal starting server ... 
+|Portal| 2026-05-13 18:43:43 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 18:43:43 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 18:43:43 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 18:44:47 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48694)
+|Portal| 2026-05-13 18:44:47 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48708)
+|Portal| 2026-05-13 18:44:47 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48712)
+|Portal| 2026-05-13 18:44:50 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48680)
+|Portal| 2026-05-13 18:44:50 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48678)
+|Portal| 2026-05-13 18:44:50 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=48674)
+|Portal| 2026-05-13 19:16:18 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 19:16:18 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 19:16:18 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 19:16:18 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 19:16:18 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 19:16:18 [..] Main loop terminated.
+|Portal| 2026-05-13 19:16:18 [..] Server Shut Down.
+|Portal| 2026-05-13 19:16:31 [..] Loaded.
+|Portal| 2026-05-13 19:16:30 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 19:16:31 [..] Loaded.
+|Portal| 2026-05-13 19:16:31 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 19:16:31 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 19:16:31 [..] AMP starting on 4006
+|Portal| 2026-05-13 19:16:31 [..] Telnet starting on 4000
+|Portal| 2026-05-13 19:16:31 [..] Websocket starting on 4002
+|Portal| 2026-05-13 19:16:31 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 19:16:32 [..] Portal starting server ... 
+|Portal| 2026-05-13 19:16:33 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 19:16:33 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 19:16:33 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 19:17:54 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=37136)
+|Portal| 2026-05-13 19:17:55 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=37156)
+|Portal| 2026-05-13 19:18:49 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=37142)
+|Portal| 2026-05-13 19:24:58 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 19:24:58 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 19:24:58 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 19:24:58 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 19:24:58 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 19:24:58 [..] Main loop terminated.
+|Portal| 2026-05-13 19:24:58 [..] Server Shut Down.
+|Portal| 2026-05-13 19:25:05 [..] Loaded.
+|Portal| 2026-05-13 19:25:04 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 19:25:05 [..] Loaded.
+|Portal| 2026-05-13 19:25:05 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 19:25:05 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 19:25:05 [..] AMP starting on 4006
+|Portal| 2026-05-13 19:25:05 [..] Telnet starting on 4000
+|Portal| 2026-05-13 19:25:05 [..] Websocket starting on 4002
+|Portal| 2026-05-13 19:25:05 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 19:25:05 [..] Portal starting server ... 
+|Portal| 2026-05-13 19:25:06 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 19:25:06 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 19:25:06 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 19:26:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54072)
+|Portal| 2026-05-13 19:27:12 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=54044)
+|Portal| 2026-05-13 22:48:36 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58364)
+|Portal| 2026-05-13 22:48:36 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58372)
+|Portal| 2026-05-13 22:48:36 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=58388)
+|Portal| 2026-05-13 22:53:13 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 22:53:13 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 22:53:13 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 22:53:13 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 22:53:13 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 22:53:13 [..] Main loop terminated.
+|Portal| 2026-05-13 22:53:13 [..] Server Shut Down.
+|Portal| 2026-05-13 22:53:16 [..] Loaded.
+|Portal| 2026-05-13 22:53:15 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 22:53:16 [..] Loaded.
+|Portal| 2026-05-13 22:53:16 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 22:53:16 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 22:53:17 [..] AMP starting on 4006
+|Portal| 2026-05-13 22:53:17 [..] Telnet starting on 4000
+|Portal| 2026-05-13 22:53:17 [..] Websocket starting on 4002
+|Portal| 2026-05-13 22:53:17 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 22:53:17 [..] Portal starting server ... 
+|Portal| 2026-05-13 22:53:18 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 22:53:18 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 22:53:18 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 22:53:29 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 22:53:29 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 22:53:29 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 22:53:29 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 22:53:29 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 22:53:29 [..] Main loop terminated.
+|Portal| 2026-05-13 22:53:29 [..] Server Shut Down.
+|Portal| 2026-05-13 22:53:34 [..] Loaded.
+|Portal| 2026-05-13 22:53:33 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 22:53:34 [..] Loaded.
+|Portal| 2026-05-13 22:53:34 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 22:53:34 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 22:53:34 [..] AMP starting on 4006
+|Portal| 2026-05-13 22:53:34 [..] Telnet starting on 4000
+|Portal| 2026-05-13 22:53:34 [..] Websocket starting on 4002
+|Portal| 2026-05-13 22:53:34 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 22:53:34 [..] Portal starting server ... 
+|Portal| 2026-05-13 22:53:35 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 22:53:35 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 22:53:35 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:22:49 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:22:49 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:22:49 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:22:49 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:22:49 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:22:49 [..] Main loop terminated.
+|Portal| 2026-05-13 23:22:49 [..] Server Shut Down.
+|Portal| 2026-05-13 23:22:57 [..] Loaded.
+|Portal| 2026-05-13 23:22:56 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:22:57 [..] Loaded.
+|Portal| 2026-05-13 23:22:57 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:22:57 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:22:57 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:22:57 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:22:57 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:22:57 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:22:57 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:22:58 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 23:22:58 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:22:58 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:26:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45432)
+|Portal| 2026-05-13 23:26:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45426)
+|Portal| 2026-05-13 23:26:26 [..] Timing out client: IPv4Address(type='TCP', host='127.0.0.1', port=45448)
+|Portal| 2026-05-13 23:30:15 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:30:15 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:30:15 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:30:15 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:30:15 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:30:15 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:30:17 [..] Main loop terminated.
+|Portal| 2026-05-13 23:30:17 [..] Server Shut Down.
+|Portal| 2026-05-13 23:30:24 [..] Loaded.
+|Portal| 2026-05-13 23:30:23 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:30:24 [..] Loaded.
+|Portal| 2026-05-13 23:30:24 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:30:24 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:30:24 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:30:24 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:30:24 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:30:24 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:30:24 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:30:26 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 23:30:26 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:30:26 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:34:50 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:34:50 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:34:50 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:34:50 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:34:50 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:34:50 [..] Main loop terminated.
+|Portal| 2026-05-13 23:34:50 [..] Server Shut Down.
+|Portal| 2026-05-13 23:34:55 [..] Loaded.
+|Portal| 2026-05-13 23:34:54 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:34:55 [..] Loaded.
+|Portal| 2026-05-13 23:34:55 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:34:55 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:34:55 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:34:55 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:34:55 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:34:55 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:34:55 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:34:57 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 23:34:57 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:34:57 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:37:29 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:37:29 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:37:29 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:37:29 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:37:29 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:37:29 [..] Main loop terminated.
+|Portal| 2026-05-13 23:37:29 [..] Server Shut Down.
+|Portal| 2026-05-13 23:37:35 [..] Loaded.
+|Portal| 2026-05-13 23:37:34 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:37:35 [..] Loaded.
+|Portal| 2026-05-13 23:37:35 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:37:35 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:37:35 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:37:35 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:37:35 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:37:35 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:37:35 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:37:37 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 23:37:37 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:37:37 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:40:14 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:40:14 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:40:14 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:40:14 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:40:14 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:40:14 [..] Main loop terminated.
+|Portal| 2026-05-13 23:40:14 [..] Server Shut Down.
+|Portal| 2026-05-13 23:40:19 [..] Loaded.
+|Portal| 2026-05-13 23:40:18 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:40:19 [..] Loaded.
+|Portal| 2026-05-13 23:40:19 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:40:19 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:40:19 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:40:19 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:40:19 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:40:19 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:40:20 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:40:21 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 23:40:21 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:40:21 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:43:22 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:43:22 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:43:22 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:43:22 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:43:22 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:43:22 [..] Main loop terminated.
+|Portal| 2026-05-13 23:43:22 [..] Server Shut Down.
+|Portal| 2026-05-13 23:43:27 [..] Loaded.
+|Portal| 2026-05-13 23:43:26 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:43:27 [..] Loaded.
+|Portal| 2026-05-13 23:43:27 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:43:27 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:43:27 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:43:27 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:43:27 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:43:27 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:43:27 [..] Portal starting server ... 
+|Portal| 2026-05-13 23:43:29 [EE] AMP Error from AdminPortal2Server: Traceback (most recent call last):
+|Portal| 2026-05-13 23:43:29 [EE] Failure: builtins.Exception: FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:43:29 [EE]  FOREIGN KEY constraint failed (error logged on other side)
+|Portal| 2026-05-13 23:57:10 [..] Received SIGTERM, shutting down.
+|Portal| 2026-05-13 23:57:10 [..] (TCP Port 4001 Closed)
+|Portal| 2026-05-13 23:57:10 [..] (TCP Port 4002 Closed)
+|Portal| 2026-05-13 23:57:10 [..] (TCP Port 4000 Closed)
+|Portal| 2026-05-13 23:57:10 [..] (TCP Port 4006 Closed)
+|Portal| 2026-05-13 23:57:10 [..] Main loop terminated.
+|Portal| 2026-05-13 23:57:10 [..] Server Shut Down.
+|Portal| 2026-05-13 23:57:18 [..] Loaded.
+|Portal| 2026-05-13 23:57:17 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/portal/portal.py...
+|Portal| 2026-05-13 23:57:18 [..] Loaded.
+|Portal| 2026-05-13 23:57:18 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+|Portal| 2026-05-13 23:57:18 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+|Portal| 2026-05-13 23:57:18 [..] AMP starting on 4006
+|Portal| 2026-05-13 23:57:18 [..] Telnet starting on 4000
+|Portal| 2026-05-13 23:57:18 [..] Websocket starting on 4002
+|Portal| 2026-05-13 23:57:18 [..] Webserver-proxy starting on 4001
+|Portal| 2026-05-13 23:57:18 [..] Portal starting server ... 

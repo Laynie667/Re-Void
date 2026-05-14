@@ -15,3 +15,9 @@ to override your public, shared settings.
 # generally not be changed once people have registered with the game
 # since it will invalidate their existing sessions.
 SECRET_KEY = 'tmD;@+JO.,j/YSvGWPiU^__ZMV?N9K8ka03IrR`g'
+
+# ── Local development overrides ───────────────────────────────────────────────
+# These override settings.py for local dev only.
+# This file is in .gitignore and never pushed to production.
+WEBSOCKET_CLIENT_URL = "ws://localhost:4002/"
+SERVER_HOSTNAME = "localhost"

@@ -2562,3 +2562,515 @@ None2026-05-04 07:52:58 [EE] Error encountered for cmdset at path 'commands.defa
 2026-05-09 08:34:54 [..] Logged out: Witch(account 1) 127.0.0.1 (0 sessions(s) remaining)
 2026-05-09 08:34:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
 2026-05-09 08:34:54 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-09 18:47:15 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-09 18:47:23 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-10 08:01:14 [..] Logged out: Witch(account 1) 127.0.0.1 (0 sessions(s) remaining)
+Removing stale pidfile /home/laynie/ReVoid/mygame/server/server.pid
+2026-05-13 17:49:49 [..] Loaded.
+2026-05-13 17:49:47 [!!] Removing stale pidfile /home/laynie/ReVoid/mygame/server/server.pid
+2026-05-13 17:49:47 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 17:49:49 [..] Loaded.
+2026-05-13 17:49:49 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 17:49:49 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 17:49:49 [..] Webserver starting on 4005
+2026-05-13 17:49:49 [..] Evennia Server successfully started.
+2026-05-13 17:52:04 [..] Server disconnected from the portal.
+2026-05-13 17:52:04 [..] Main loop terminated.
+2026-05-13 17:52:04 [..] Server Shut Down.
+2026-05-13 17:52:05 [..] Loaded.
+2026-05-13 17:52:04 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 17:52:05 [..] Loaded.
+2026-05-13 17:52:05 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 17:52:05 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 17:52:05 [..] Webserver starting on 4005
+2026-05-13 17:52:05 [..] Server successfully reloaded.
+2026-05-13 17:52:27 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 18:43:41 [..] Server disconnected from the portal.
+2026-05-13 18:43:41 [..] Main loop terminated.
+2026-05-13 18:43:41 [..] Server Shut Down.
+2026-05-13 18:43:43 [..] Loaded.
+2026-05-13 18:43:41 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 18:43:43 [..] Loaded.
+2026-05-13 18:43:43 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 18:43:43 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 18:43:43 [..] Webserver starting on 4005
+2026-05-13 18:43:43 [..] Server successfully reloaded.
+2026-05-13 18:43:43 [..] GLOBAL_SCRIPTS: (Re)creating passive_income (<class 'typeclasses.economy_scripts.PassiveIncomeScript'>).
+2026-05-13 18:43:43 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 18:43:43 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 18:43:43 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 18:43:43 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 18:43:43 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 18:43:47 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 18:43:48 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 18:43:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 18:43:50 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 18:52:43 [WW] Warning: Idmapper flush called more than once in 5.0 min interval. Check memory usage.
+2026-05-13 19:14:23 [!!] Unhandled error in Deferred:
+2026-05-13 19:14:23 [!!] 
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py", line 2017, in _inlineCallbacks
+	    result = context.run(gen.send, result)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 516, in shutdown
+	    (s._pause_task(auto_pause=True) if s.is_active else None, s.at_server_reload())
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/scripts/scripts.py", line 268, in _pause_task
+	    self.db._paused_time = task.next_call_time()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1461, in __setattr__
+	    _GA(self, _GA(self, "name")).add(attrname, value)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1295, in add
+	    self.backend.create_attribute(keystr, category, lockstring, value, strattr)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 741, in create_attribute
+	    attr = self.do_create_attribute(key, category, lockstring, value, strvalue)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1081, in do_create_attribute
+	    getattr(self.obj, self._m2m_fieldname).add(new_attr)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 1228, in add
+	    with transaction.atomic(using=db, savepoint=False):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py", line 263, in __exit__
+	    connection.commit()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+	    return func(*args, **kwargs)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 327, in commit
+	    self._commit()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 302, in _commit
+	    with debug_transaction(self, "COMMIT"), self.wrap_database_errors:
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py", line 94, in __exit__
+	    raise dj_exc_value.with_traceback(traceback) from exc_value
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+	    return self.connection.commit()
+	django.db.utils.IntegrityError: FOREIGN KEY constraint failed
+	
+2026-05-13 19:16:18 [..] Received SIGTERM, shutting down.
+2026-05-13 19:16:18 [..] Server disconnected from the portal.
+2026-05-13 19:16:18 [..] Main loop terminated.
+2026-05-13 19:16:18 [..] Server Shut Down.
+2026-05-13 19:16:33 [..] Loaded.
+2026-05-13 19:16:32 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 19:16:33 [..] Loaded.
+2026-05-13 19:16:33 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 19:16:33 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 19:16:33 [..] Webserver starting on 4005
+2026-05-13 19:16:33 [..] Evennia Server successfully started.
+2026-05-13 19:16:33 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 19:16:33 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 19:16:33 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 19:16:33 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 19:16:33 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 19:16:54 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:16:56 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:17:19 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:17:33 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:17:38 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:17:49 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:24:33 [!!] Unhandled error in Deferred:
+2026-05-13 19:24:33 [!!] 
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py", line 2017, in _inlineCallbacks
+	    result = context.run(gen.send, result)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 516, in shutdown
+	    (s._pause_task(auto_pause=True) if s.is_active else None, s.at_server_reload())
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/scripts/scripts.py", line 268, in _pause_task
+	    self.db._paused_time = task.next_call_time()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1461, in __setattr__
+	    _GA(self, _GA(self, "name")).add(attrname, value)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1295, in add
+	    self.backend.create_attribute(keystr, category, lockstring, value, strattr)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 741, in create_attribute
+	    attr = self.do_create_attribute(key, category, lockstring, value, strvalue)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1081, in do_create_attribute
+	    getattr(self.obj, self._m2m_fieldname).add(new_attr)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 1228, in add
+	    with transaction.atomic(using=db, savepoint=False):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py", line 263, in __exit__
+	    connection.commit()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+	    return func(*args, **kwargs)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 327, in commit
+	    self._commit()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 302, in _commit
+	    with debug_transaction(self, "COMMIT"), self.wrap_database_errors:
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py", line 94, in __exit__
+	    raise dj_exc_value.with_traceback(traceback) from exc_value
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+	    return self.connection.commit()
+	django.db.utils.IntegrityError: FOREIGN KEY constraint failed
+	
+2026-05-13 19:24:58 [..] Received SIGTERM, shutting down.
+2026-05-13 19:24:58 [..] Server disconnected from the portal.
+2026-05-13 19:24:58 [..] Main loop terminated.
+2026-05-13 19:24:58 [..] Server Shut Down.
+2026-05-13 19:25:06 [..] Loaded.
+2026-05-13 19:25:05 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 19:25:06 [..] Loaded.
+2026-05-13 19:25:06 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 19:25:06 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 19:25:06 [..] Webserver starting on 4005
+2026-05-13 19:25:06 [..] Evennia Server successfully started.
+2026-05-13 19:25:06 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 19:25:06 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 19:25:06 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 19:25:06 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 19:25:06 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 19:25:11 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:25:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:25:52 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:26:00 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 19:26:12 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 22:47:36 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 22:53:13 [..] Received SIGTERM, shutting down.
+2026-05-13 22:53:13 [..] Server disconnected from the portal.
+2026-05-13 22:53:13 [..] Main loop terminated.
+2026-05-13 22:53:13 [..] Server Shut Down.
+2026-05-13 22:53:18 [..] Loaded.
+2026-05-13 22:53:17 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 22:53:18 [..] Loaded.
+2026-05-13 22:53:18 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 22:53:18 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 22:53:18 [..] Webserver starting on 4005
+2026-05-13 22:53:18 [..] Evennia Server successfully started.
+2026-05-13 22:53:18 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 22:53:18 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 22:53:18 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 22:53:18 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 22:53:18 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 22:53:29 [..] Received SIGTERM, shutting down.
+2026-05-13 22:53:29 [..] Server disconnected from the portal.
+2026-05-13 22:53:29 [..] Main loop terminated.
+2026-05-13 22:53:29 [..] Server Shut Down.
+2026-05-13 22:53:35 [..] Loaded.
+2026-05-13 22:53:34 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 22:53:35 [..] Loaded.
+2026-05-13 22:53:35 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 22:53:35 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 22:53:35 [..] Webserver starting on 4005
+2026-05-13 22:53:35 [..] Evennia Server successfully started.
+2026-05-13 22:53:35 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 22:53:35 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 22:53:35 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 22:53:35 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 22:53:35 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:22:49 [..] Received SIGTERM, shutting down.
+2026-05-13 23:22:49 [..] Server disconnected from the portal.
+2026-05-13 23:22:49 [..] Main loop terminated.
+2026-05-13 23:22:49 [..] Server Shut Down.
+2026-05-13 23:22:58 [..] Loaded.
+2026-05-13 23:22:57 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:22:58 [..] Loaded.
+2026-05-13 23:22:58 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:22:58 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:22:58 [..] Webserver starting on 4005
+2026-05-13 23:22:58 [..] Evennia Server successfully started.
+2026-05-13 23:22:58 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:22:58 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 23:22:58 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 23:22:58 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 23:22:58 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:25:26 [WW] ip_from_request: No valid IP address found in request. Using remote_addr.
+2026-05-13 23:25:26 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-13 23:29:58 [!!] Unhandled error in Deferred:
+2026-05-13 23:29:58 [!!] 
+	Traceback (most recent call last):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py", line 2017, in _inlineCallbacks
+	    result = context.run(gen.send, result)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py", line 516, in shutdown
+	    (s._pause_task(auto_pause=True) if s.is_active else None, s.at_server_reload())
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/scripts/scripts.py", line 268, in _pause_task
+	    self.db._paused_time = task.next_call_time()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1461, in __setattr__
+	    _GA(self, _GA(self, "name")).add(attrname, value)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1295, in add
+	    self.backend.create_attribute(keystr, category, lockstring, value, strattr)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 741, in create_attribute
+	    attr = self.do_create_attribute(key, category, lockstring, value, strvalue)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py", line 1081, in do_create_attribute
+	    getattr(self.obj, self._m2m_fieldname).add(new_attr)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 1228, in add
+	    with transaction.atomic(using=db, savepoint=False):
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py", line 263, in __exit__
+	    connection.commit()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+	    return func(*args, **kwargs)
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 327, in commit
+	    self._commit()
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 302, in _commit
+	    with debug_transaction(self, "COMMIT"), self.wrap_database_errors:
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py", line 94, in __exit__
+	    raise dj_exc_value.with_traceback(traceback) from exc_value
+	  File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+	    return self.connection.commit()
+	django.db.utils.IntegrityError: FOREIGN KEY constraint failed
+	
+2026-05-13 23:30:15 [..] Received SIGTERM, shutting down.
+2026-05-13 23:30:15 [..] Server disconnected from the portal.
+2026-05-13 23:30:15 [..] Main loop terminated.
+2026-05-13 23:30:15 [..] Server Shut Down.
+2026-05-13 23:30:17 [..] Loaded.
+2026-05-13 23:30:16 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:30:17 [..] Loaded.
+2026-05-13 23:30:17 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:30:17 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:30:17 [..] Webserver starting on 4005
+2026-05-13 23:30:17 [..] Attempting to reconnect to Portal ...
+2026-05-13 23:30:18 [..] Attempting to reconnect to Portal ...
+2026-05-13 23:30:21 [..] Attempting to reconnect to Portal ...
+2026-05-13 23:30:26 [..] Evennia Server successfully started.
+2026-05-13 23:30:26 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:30:26 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 23:30:26 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 23:30:26 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 23:30:26 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:30:29 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-13 23:33:55 [!!] Traceback (most recent call last):
+2026-05-13 23:33:55 [!!]   File "/home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/commands/cmdhandler.py", line 629, in _run_command
+2026-05-13 23:33:55 [!!]     ret = cmd.func()
+2026-05-13 23:33:55 [!!]           ^^^^^^^^^^
+2026-05-13 23:33:55 [!!]   File "/home/laynie/ReVoid/mygame/commands/npc_commands.py", line 983, in func
+2026-05-13 23:33:55 [!!]     npc.trigger_greeting(char)
+2026-05-13 23:33:55 [!!]   File "/home/laynie/ReVoid/mygame/typeclasses/npc.py", line 469, in trigger_greeting
+2026-05-13 23:33:55 [!!]     fired = self.trigger_keyword(caller, "hello")
+2026-05-13 23:33:55 [!!]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-05-13 23:33:55 [!!]   File "/home/laynie/ReVoid/mygame/typeclasses/npc.py", line 434, in trigger_keyword
+2026-05-13 23:33:55 [!!]     safe = response.replace("{", "{{").replace("}", "}}")
+2026-05-13 23:33:55 [!!]            ^^^^^^^^^^^^^^^^
+2026-05-13 23:33:55 [!!] AttributeError: '_SaverList' object has no attribute 'replace'
+2026-05-13 23:33:55 [EE] User input was: 'greet durgin'.
+2026-05-13 23:34:50 [..] Received SIGTERM, shutting down.
+2026-05-13 23:34:50 [..] Server disconnected from the portal.
+2026-05-13 23:34:50 [..] Main loop terminated.
+2026-05-13 23:34:50 [..] Server Shut Down.
+2026-05-13 23:34:57 [..] Loaded.
+2026-05-13 23:34:56 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:34:57 [..] Loaded.
+2026-05-13 23:34:57 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:34:57 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:34:57 [..] Webserver starting on 4005
+2026-05-13 23:34:57 [..] Evennia Server successfully started.
+2026-05-13 23:34:57 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:34:57 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 23:34:57 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 23:34:57 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 23:34:57 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:35:07 [SS] Authentication Success: Witch(account 1) (IP: 127.0.0.1).
+2026-05-13 23:35:07 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-13 23:37:29 [..] Received SIGTERM, shutting down.
+2026-05-13 23:37:29 [..] Server disconnected from the portal.
+2026-05-13 23:37:29 [..] Main loop terminated.
+2026-05-13 23:37:29 [..] Server Shut Down.
+2026-05-13 23:37:36 [..] Loaded.
+2026-05-13 23:37:35 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:37:36 [..] Loaded.
+2026-05-13 23:37:36 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:37:36 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:37:37 [..] Webserver starting on 4005
+2026-05-13 23:37:37 [..] Evennia Server successfully started.
+2026-05-13 23:37:37 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:37:37 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 23:37:37 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 23:37:37 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 23:37:37 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:37:40 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-13 23:40:14 [..] Received SIGTERM, shutting down.
+2026-05-13 23:40:14 [..] Server disconnected from the portal.
+2026-05-13 23:40:14 [..] Main loop terminated.
+2026-05-13 23:40:14 [..] Server Shut Down.
+2026-05-13 23:40:21 [..] Loaded.
+2026-05-13 23:40:20 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:40:21 [..] Loaded.
+2026-05-13 23:40:21 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:40:21 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:40:21 [..] Webserver starting on 4005
+2026-05-13 23:40:21 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-13 23:40:21 [..] Evennia Server successfully started.
+2026-05-13 23:40:21 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:40:21 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 23:40:21 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 23:40:21 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 23:40:21 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:43:22 [..] Received SIGTERM, shutting down.
+2026-05-13 23:43:22 [..] Server disconnected from the portal.
+2026-05-13 23:43:22 [..] Main loop terminated.
+2026-05-13 23:43:22 [..] Server Shut Down.
+2026-05-13 23:43:28 [..] Loaded.
+2026-05-13 23:43:27 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:43:28 [..] Loaded.
+2026-05-13 23:43:28 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:43:28 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:43:28 [..] Webserver starting on 4005
+2026-05-13 23:43:29 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)
+2026-05-13 23:43:29 [..] Evennia Server successfully started.
+2026-05-13 23:43:29 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:43:29 [EE] AMP caught exception (FOREIGN KEY constraint failed (error logged on other side)):
+2026-05-13 23:43:29 [EE] Code<EXCEPTION> (local): FOREIGN KEY constraint failed
+2026-05-13 23:43:29 [EE] Traceback: <class 'django.db.utils.IntegrityError'>: FOREIGN KEY constraint failed
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/twisted/internet/defer.py:216:maybeDeferred
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/amp_client.py:233:server_receive_adminportal2server
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/service.py:486:run_init_hooks
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:177:start
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/utils/containers.py:157:_load_script
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1295:add
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:741:create_attribute
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/typeclasses/attributes.py:1081:do_create_attribute
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py:1228:add
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/transaction.py:263:__exit__
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/utils/asyncio.py:26:inner
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:327:commit
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:302:_commit
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/utils.py:94:__exit__
+2026-05-13 23:43:29 [EE] /home/laynie/ReVoid/venv/lib/python3.12/site-packages/django/db/backends/base/base.py:303:_commit
+2026-05-13 23:43:49 [EE] NPC purchase handler error: no such table: housing_housingplot
+2026-05-13 23:44:13 [EE] NPC purchase handler error: no such table: housing_housingplot
+2026-05-13 23:45:36 [EE] NPC purchase handler error: no such table: housing_housingplot
+2026-05-13 23:47:32 [EE] NPC purchase handler error: no such table: housing_housingplot
+2026-05-13 23:50:07 [EE] NPC purchase handler error: no such table: housing_housingplot
+2026-05-13 23:57:10 [..] Received SIGTERM, shutting down.
+2026-05-13 23:57:10 [..] Server disconnected from the portal.
+2026-05-13 23:57:10 [..] Main loop terminated.
+2026-05-13 23:57:10 [..] Server Shut Down.
+2026-05-13 23:57:19 [..] Loaded.
+2026-05-13 23:57:18 [..] Loading /home/laynie/ReVoid/venv/lib/python3.12/site-packages/evennia/server/server.py...
+2026-05-13 23:57:19 [..] Loaded.
+2026-05-13 23:57:19 [..] twistd 24.11.0 (/home/laynie/ReVoid/venv/bin/python3 3.12.3) starting up.
+2026-05-13 23:57:19 [..] reactor class: twisted.internet.epollreactor.EPollReactor.
+2026-05-13 23:57:19 [..] Webserver starting on 4005
+2026-05-13 23:57:19 [..] Evennia Server successfully started.
+2026-05-13 23:57:19 [..] GLOBAL_SCRIPTS: (Re)creating daily_allowance (<class 'typeclasses.economy_scripts.DailyAllowanceScript'>).
+2026-05-13 23:57:19 [..] Logged in: Witch(account 1) 127.0.0.1 (1 session(s) total)

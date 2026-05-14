@@ -27,7 +27,29 @@ put secret game- or server-specific settings in secret_settings.py.
 # Use the defaults from Evennia unless explicitly overridden
 from evennia.settings_default import *
 
-INSTALLED_APPS += ["web.apps.WebConfig", "web.news.apps.NewsConfig", "web.mail.apps.MailConfig", "web.forum.apps.ForumConfig"]
+INSTALLED_APPS += [
+    "web.apps.WebConfig",
+    "web.news.apps.NewsConfig",
+    "web.mail.apps.MailConfig",
+    "web.forum.apps.ForumConfig",
+    "web.economy.apps.EconomyConfig",
+    "web.housing.apps.HousingConfig",
+]
+
+GLOBAL_SCRIPTS = {
+    "passive_income": {
+        "typeclass":  "typeclasses.economy_scripts.PassiveIncomeScript",
+        "interval":   600,
+        "persistent": True,
+        "desc":       "Awards passive shard income to logged-in characters every 10 min.",
+    },
+    "daily_allowance": {
+        "typeclass":  "typeclasses.economy_scripts.DailyAllowanceScript",
+        "interval":   3600,
+        "persistent": True,
+        "desc":       "Sends The Witch's daily allowance O'gram once per account per day.",
+    },
+}
 
 ######################################################################
 # Evennia base server config
@@ -41,7 +63,7 @@ SERVER_HOSTNAME = "revoid.nexus"
 # Web / domain settings
 ######################################################################
 
-ALLOWED_HOSTS = ["revoid.nexus", "www.revoid.nexus"]
+ALLOWED_HOSTS = ["revoid.nexus", "www.revoid.nexus", "localhost", "127.0.0.1"]
 USE_X_FORWARDED_HOST = True
 CSRF_TRUSTED_ORIGINS = ["https://revoid.nexus", "https://www.revoid.nexus"]
 WEBSOCKET_CLIENT_URL = "wss://revoid.nexus/ws/"
