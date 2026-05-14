@@ -9,7 +9,7 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 
 from evennia.web.website.urls import urlpatterns as evennia_website_urlpatterns
-from web.views import ReVoidIndexView
+from web.views import ReVoidIndexView, WardrobeView
 from web.mail.views import StaffContactView
 
 # ---------------------------------------------------------------------------
@@ -31,6 +31,9 @@ urlpatterns = [
 
     # ── Ogram mailbox ──────────────────────────────────────────────────────
     path("mail/", include("web.mail.urls")),
+
+    # ── Profile tools ─────────────────────────────────────────────────────
+    path("profile/wardrobe/", WardrobeView.as_view(), name="wardrobe"),
 
     # ── Staff contact ──────────────────────────────────────────────────────
     path("contact/", StaffContactView.as_view(), name="contact"),
