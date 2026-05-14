@@ -17,6 +17,7 @@ from django.db import models
 class OgramMessage(models.Model):
 
     MSG_TYPE_CHOICES = [
+        ("allowance", "Daily Allowance"),
         ("message",   "Message"),
         ("emote",     "Emote / Pose"),
         ("affection", "Affection"),

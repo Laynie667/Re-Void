@@ -56,9 +56,10 @@ class ComposeForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": "Optional subject"}),
     )
     body = forms.CharField(
+        max_length=4000,
         widget=forms.Textarea(attrs={
             "rows": 8,
-            "placeholder": "Write your message here…",
+            "placeholder": "Write your message here… (4,000 character limit)",
         }),
         label="Message",
         required=False,
