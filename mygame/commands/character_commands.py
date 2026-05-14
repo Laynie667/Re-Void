@@ -3485,6 +3485,7 @@ class CmdConsent(MuxCommand):
     Aliases: 'give' = 'on', 'revoke' = 'off'
 
     Types: casual / intimate / mature / bdsm / lead_follow / restraint / plock
+           allow_jump / allow_summon
     """
     key = "consent"
     locks = "cmd:all()"
@@ -3500,7 +3501,12 @@ class CmdConsent(MuxCommand):
         "undress", "blindfold", "gag", "tieup",
         "strip", "examclose", "restrain", "claimmark",
     ]
-    VALID_CONSENT_TYPES = TIER_TYPES + ACT_TYPES
+    # Privacy / movement flags
+    PRIVACY_TYPES = [
+        "allow_jump",
+        "allow_summon",
+    ]
+    VALID_CONSENT_TYPES = TIER_TYPES + ACT_TYPES + PRIVACY_TYPES
 
     CONSENT_LABELS = {
         # Tiers
@@ -3520,6 +3526,9 @@ class CmdConsent(MuxCommand):
         "examclose":   "Examine closely",
         "restrain":    "Restrain",
         "claimmark":   "Claimmark",
+        # Privacy
+        "allow_jump":   "Allow jump-to",
+        "allow_summon": "Allow summon",
     }
 
     def func(self):
@@ -3575,6 +3584,11 @@ class CmdConsent(MuxCommand):
         lines.append("")
         lines.append("|wSpecific acts:|n")
         for flag in self.ACT_TYPES:
+            lines.append(flag_line(flag))
+
+        lines.append("")
+        lines.append("|wPrivacy / movement:|n")
+        for flag in self.PRIVACY_TYPES:
             lines.append(flag_line(flag))
 
         lines.append(

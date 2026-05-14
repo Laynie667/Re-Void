@@ -170,6 +170,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         from commands.ogram_commands import CmdOgram
         self.add(CmdOgram())
 
+        # Economy — shards, wallet, pay, tip
+        from commands.economy_commands import CmdWallet, CmdPay
+        self.add(CmdWallet())
+        self.add(CmdPay())
+
         # Prefs (dnd, afk, highlight, filter, notify, friends, moodcarry, wispname)
         from commands.prefs_commands import ALL_PREFS_CHAR_CMDS
         for cmd_cls in ALL_PREFS_CHAR_CMDS:
@@ -188,6 +193,20 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         # Freeform (place, slock, plock, sensory layers)
         from commands.freeform_commands import ALL_FREEFORM_CMDS
         for cmd_cls in ALL_FREEFORM_CMDS:
+            self.add(cmd_cls())
+
+        # Housing (home, sethome, grid, housing)
+        from commands.housing_commands import (
+            CmdHome, CmdSetHome, CmdGrid, CmdHousing,
+        )
+        self.add(CmdHome())
+        self.add(CmdSetHome())
+        self.add(CmdGrid())
+        self.add(CmdHousing())
+
+        # Teleport (jump, summon, accept, decline)
+        from commands.teleport_commands import ALL_TELEPORT_CMDS
+        for cmd_cls in ALL_TELEPORT_CMDS:
             self.add(cmd_cls())
 
         # Builder commands (perm-locked; only Builders can use them)

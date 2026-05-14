@@ -93,39 +93,55 @@ def _char_name(character):
 
 class CmdPlace(MuxCommand):
     """
-    Place a freeform item on a character.
+    Place a freeform item on another character's zone.
 
     Freeform items are purely descriptive — no inventory object is created.
-    They show up in look and on the character sheet in the relevant zone.
+    They show up in look and on the character sheet, appended alongside the
+    character's own zone description (never replacing it).
 
     Usage:
         place <target> <zone> = <name>/<description>
-        place me neck = collar/A thin silver collar, engraved with runes
-        place helena intimate = plug/A smooth obsidian plug, firmly seated
-        place self wrist = cuff/A worn leather cuff buckled tight
+        place/in    <target> <zone> = <name>/<description>
+        place/cover <target> <zone> = <name>/<description>
+
+    Switches:
+        /in     — item is placed inside an orifice zone
+        /cover  — item covers the zone (renders in the clothing layer,
+                  e.g. a chastity belt, a gag, a blindfold)
+        (none)  — item is placed on the exterior surface of the zone
 
     The 'name' is the short handle used for slock/plock/unplace commands.
-    The 'description' is displayed when others look at the character.
+    To place something on yourself, use: wear <zone> <description>
 
-    Placing on yourself requires no consent. Placing on another character
-    is allowed freely but is recorded (they can unplace it if unlocked).
+    The character whose zone it is can always edit how the item reads on
+    their body with: edititem <name> = <their version>
 
-    See also: unplace, slock, plock, freeform
+    See also: unplace, slock, plock, freeform, wear, edititem
     """
     key = "place"
     locks = "cmd:all()"
     help_category = "Freeform"
-    switch_options = ("in",)
+    switch_options = ("in", "cover")
 
     def func(self):
         caller = self.caller
         char = caller.puppet if hasattr(caller, 'puppet') else caller
-        display_mode = "in" if "in" in self.switches else "on"
+        if "in" in self.switches:
+            display_mode = "in"
+        elif "cover" in self.switches:
+            display_mode = "cover"
+        else:
+            display_mode = "on"
 
         if not self.lhs or not self.rhs:
             self.msg(
                 "Usage: place <target> <zone> = <name>/<description>\n"
-                "Example: place helena neck = collar/A silver collar"
+                "       place/in    <target> <zone> = <name>/<description>\n"
+                "       place/cover <target> <zone> = <name>/<description>\n"
+                "Example: place helena neck = collar/A silver collar\n"
+                "         place/in helena pussy = plug/A smooth glass plug\n"
+                "         place/cover helena groin = belt/A locked steel chastity belt\n"
+                "To dress yourself use: wear <zone> <description>"
             )
             return
 
@@ -140,6 +156,16 @@ class CmdPlace(MuxCommand):
 
         target_name = lhs_parts[0]
         zone = lhs_parts[1].lower().replace(" ", "_")
+
+        # Block self-targeting — use wear for yourself
+        if target_name.lower() in ("me", "self",
+                                   char.key.lower(),
+                                   (char.db.rp_name or "").lower()):
+            self.msg(
+                "|xplace is for putting things on other characters.\n"
+                "To dress yourself, use: |wwear <zone> <description>|n"
+            )
+            return
 
         # Parse rhs: "<name>/<description>"
         if "/" not in self.rhs:
@@ -164,15 +190,8 @@ class CmdPlace(MuxCommand):
         # Find target
         target, err = _find_character(caller, target_name)
         if err:
-            # Allow placing on self by name
-            if target_name.lower() in (
-                char.key.lower(),
-                (char.db.rp_name or "").lower()
-            ):
-                target = char
-            else:
-                self.msg(err)
-                return
+            self.msg(err)
+            return
 
         ok, result = FreeformManager.place_item(
             target, zone, name, desc, char.id, display_mode=display_mode
@@ -183,32 +202,29 @@ class CmdPlace(MuxCommand):
 
         target_name_display = _char_name(target)
         char_name = _char_name(char)
-        is_self = (target == char)
-
-        mode_tag = " |x[in]|n" if display_mode == "in" else ""
-        if is_self:
-            self.msg(
-                f"You wear |w{name}|n [{zone}]{mode_tag}: {desc}"
-            )
-            if char.location:
-                char.location.msg_contents(
-                    f"{char_name} adjusts something at their {zone.replace('_', ' ')}.",
-                    exclude=char
-                )
+        zone_display = zone.replace("_", " ")
+        if display_mode == "in":
+            prep = "inside"
+        elif display_mode == "cover":
+            prep = "covering"
         else:
-            self.msg(
-                f"You place |w{name}|n on {target_name_display} [{zone}]{mode_tag}: {desc}"
+            prep = "on"
+
+        self.msg(
+            f"You place |w{name}|n {prep} {target_name_display}'s {zone_display}: {desc}\n"
+            f"|x[{target_name_display} can edit how it reads with: "
+            f"edititem {name} = <their version>]|n"
+        )
+        target.msg(
+            f"{char_name} places |w{name}|n {prep} your {zone_display}: {desc}\n"
+            f"|x[You can edit how it reads on you with: edititem {name} = <your version>]|n"
+        )
+        if char.location:
+            char.location.msg_contents(
+                f"{char_name} places something {prep} "
+                f"{target_name_display}'s {zone_display}.",
+                exclude=[char, target]
             )
-            target.msg(
-                f"{char_name} places something at your "
-                f"{zone.replace('_', ' ')}: {desc}"
-            )
-            if char.location:
-                char.location.msg_contents(
-                    f"{char_name} adjusts something at "
-                    f"{target_name_display}'s {zone.replace('_', ' ')}.",
-                    exclude=[char, target]
-                )
 
             # If this was the forming companion, trigger Wren's completion reaction
             # then push the player out to the hub room after a short delay.
@@ -996,12 +1012,145 @@ class CmdSenses(MuxCommand):
 
 
 # ---------------------------------------------------------------------------
+# edititem — owner edits player_desc on their own freeform items
+# ---------------------------------------------------------------------------
+
+class CmdEditItem(MuxCommand):
+    """
+    Edit how a freeform item reads on your character.
+
+    The placer wrote the original description. This lets you write your own
+    version — what others actually see when they look at you. Your version
+    takes priority in all rendering, but the original is preserved and shown
+    to you for reference.
+
+    You can edit any item on your body, even if it is permanently locked.
+    Plock freezes the removal, not the prose.
+
+    Usage:
+        edititem                            — list items on you
+        edititem <name>                     — open text editor for that item
+        edititem <name> = <your version>    — set inline
+
+    Examples:
+        edititem clit_ring = a slender gold ring seated through her hood,
+            the metal warmed by her skin
+        edititem plug
+
+    See also: freeform, place, plock
+    """
+    key = "edititem"
+    aliases = ["editi"]
+    locks = "cmd:all()"
+    help_category = "Freeform"
+
+    def func(self):
+        caller = self.caller
+        char = caller.puppet if hasattr(caller, 'puppet') else caller
+        args = self.args.strip()
+
+        if not args:
+            # List all items with lock status and edit state
+            items = char.db.freeform_items or {}
+            if not items:
+                self.msg("|xYou have no freeform items on you.|n")
+                return
+            sep = "|x" + "─" * 44 + "|n"
+            lines = [f"\n{sep}", "|wYour freeform items:|n", sep]
+            for iname, item in sorted(items.items()):
+                zone        = item.get("zone", "?")
+                lock        = item.get("lock")
+                player_desc = item.get("player_desc", "")
+                mode        = item.get("display_mode", "on")
+                mode_tag    = " |x[inside]|n" if mode == "in" else ""
+
+                if lock:
+                    ltype = lock.get("type", "locked")
+                    if ltype == "plock":
+                        lock_str = f" |r[plock'd — Key #{lock.get('key_id', '?')}]|n"
+                    else:
+                        lock_str = f" |y[slock'd]|n"
+                else:
+                    lock_str = ""
+
+                edited = " |g[edited]|n" if player_desc else ""
+                lines.append(
+                    f"  |w{iname}|n [{zone}]{mode_tag}{lock_str}{edited}"
+                )
+            lines.append(sep)
+            lines.append(
+                "|xedititem <name> = <text>  or  "
+                "edititem <name>  (opens editor)|n"
+            )
+            self.msg("\n".join(lines))
+            return
+
+        # Inline = assignment
+        if "=" in args:
+            iname, _, text = args.partition("=")
+            iname = iname.strip().lower()
+            text  = text.strip()
+
+            item = FreeformManager.get_item(char, iname)
+            if not item:
+                self.msg(f"|xNo freeform item named '{iname}' on you.|n")
+                return
+
+            ok, result = FreeformManager.set_player_desc(char, iname, text)
+            if ok:
+                self.msg(
+                    f"|x[Your description for |w{iname}|x has been set.]|n\n"
+                    f"  |w{text[:80]}|n{'...' if len(text) > 80 else ''}"
+                )
+            else:
+                self.msg(f"|r{result}|n")
+            return
+
+        # Open text editor
+        iname = args.lower()
+        item  = FreeformManager.get_item(char, iname)
+        if not item:
+            self.msg(f"|xNo freeform item named '{iname}' on you.|n")
+            return
+
+        from world.text_editor import _enter_editor, _PENDING_SETTERS
+
+        current  = item.get("player_desc", "") or ""
+        initial  = current.split("\n") if current else []
+        original = item.get("desc", "")
+
+        if original:
+            self.msg(
+                f"|xOriginal description:\n  {original}\n"
+                f"Enter your version in the editor.|n"
+            )
+
+        char_ref = char
+        item_name_ref = iname
+
+        def _setter(c, lines):
+            FreeformManager.set_player_desc(char_ref, item_name_ref, "\n".join(lines))
+            c.msg(f"|x[Your description for |w{item_name_ref}|x has been saved.]|n")
+
+        _PENDING_SETTERS[str(caller.dbref)] = _setter
+
+        _enter_editor(
+            caller,
+            target_display=f"edititem: {iname}",
+            setter_key="_room_field",
+            initial_lines=initial,
+            extra=None,
+        )
+
+
+# ---------------------------------------------------------------------------
 # Export
 # ---------------------------------------------------------------------------
 
 ALL_FREEFORM_CMDS = [
     CmdPlace,
     CmdUnplace,
+    CmdEditItem,
     CmdSlock,
     CmdUnslock,
     CmdPlock,

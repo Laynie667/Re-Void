@@ -139,6 +139,64 @@ _MESSENGERS = {
 }
 
 
+# ------------------------------------------------------------------ #
+# Allowance delivery lines — The Witch's daily gift
+# Each triplet has distinct behavior:
+#   Seraphine / Calix — 50 % chance of a wandering hand
+#   Vesper            — always shy, always a little flustered
+# ------------------------------------------------------------------ #
+
+_ALLOWANCE_SERAPHINE = [
+    # No grope
+    (
+        "A flash of deep crimson and the warm suggestion of something floral, and "
+        "|wSeraphine|n is simply |ithere|n — pressing a small coin purse into your "
+        "hands with the smile of someone who already knows what you'll spend it on. "
+        "|xFrom |wWitch|n|x, she says. She lingers one deliberate beat. Then she is gone.|n"
+    ),
+    # Grope
+    (
+        "|wSeraphine|n arrives warm and unhurried, extends the coin purse — and her "
+        "free hand, entirely unbidden, finds a place it was not invited to be. She "
+        "holds your gaze while she does it. |xFrom |wWitch|n|x. She's out the door "
+        "before the indignation fully arrives.|n"
+    ),
+]
+
+_ALLOWANCE_CALIX = [
+    # No grope
+    (
+        "|wCalix|n sets a small coin purse before you with the efficient economy of "
+        "someone who has better places to be and doesn't let it show. Two words: "
+        "|wWitch|n sent it. Then he is gone.|n"
+    ),
+    # Grope
+    (
+        "|wCalix|n drops the coin purse into your palm — and on his way back, his "
+        "hand takes a thoroughly unannounced detour. He holds your gaze while he "
+        "does it. |x|wWitch|n|x sent it, he says, and saunters off without a single "
+        "apology.|n"
+    ),
+]
+
+_ALLOWANCE_VESPER = [
+    (
+        "There is a soft knock — tentative, like whoever made it is already "
+        "reconsidering. |wVesper|n stands in your threshold with a small coin purse "
+        "held in both hands, their eyes aimed somewhere past your left ear. When "
+        "your fingers meet theirs in the exchange, they make a very small sound and "
+        "are abruptly elsewhere. |x|wWitch|n|x, they had said. Barely.|n"
+    ),
+    (
+        "|wVesper|n arrives holding the coin purse with the careful attention they "
+        "give most things — like it might make a break for it. They begin what sounds "
+        "like a prepared greeting, lose the thread halfway through, and press the "
+        "purse into your hands instead. They nod twice more than necessary and depart "
+        "at a pace that is not quite running. The |wWitch|n sends her regards.|n"
+    ),
+]
+
+
 def _get_messenger(gender):
     """Return (name, arrival_line) for the given gender key."""
     name, arrivals = _MESSENGERS.get(gender, _MESSENGERS["neutral"])
@@ -573,6 +631,7 @@ def _type_label(msg_type):
         "affection": "Affection",
         "invite":    "Invitation",
         "staff":     "Staff",
+        "allowance": "Daily Allowance",
     }.get(msg_type, msg_type.capitalize())
 
 
@@ -602,6 +661,14 @@ def _save_ogram(caller, body):
         "masculine": "Calix",
         "neutral":   "Vesper",
     }.get(draft.get("gender", "neutral"), "Vesper")
+
+    BODY_LIMIT = 4000
+    if len(body) > BODY_LIMIT:
+        caller.msg(
+            f"|rYour Ogram body is too long ({len(body):,} characters). "
+            f"The limit is {BODY_LIMIT:,} characters. Please shorten it and try again.|n"
+        )
+        return
 
     msg = OgramMessage(
         sender_object_id     = caller.id,
@@ -707,6 +774,16 @@ def deliver_ograms(account):
     for msg in pending:
         lines.append("")
         lines.append(_format_delivery(msg))
+        # Deposit shards for allowance O'grams on delivery
+        if msg.msg_type == "allowance" and msg.recipient_object_id:
+            try:
+                from evennia.objects.models import ObjectDB
+                from typeclasses.economy import add_shards
+                char = ObjectDB.objects.filter(pk=msg.recipient_object_id).first()
+                if char:
+                    add_shards(char, 15, reason="daily_allowance")
+            except Exception:
+                pass
 
     lines.append("")
     lines.append("|x(Your full mailbox is available on the website.)|n")
@@ -747,6 +824,24 @@ def _format_delivery(msg):
         action = f"|x{name} presents a formal invitation from {sender}:|n"
         body   = f"\n{msg.body}" if msg.body else ""
         return f"{header}\n{action}{body}"
+
+    elif msg.msg_type == "allowance":
+        gender = msg.messenger_gender
+        if gender == "feminine":
+            delivery = random.choice([
+                _ALLOWANCE_SERAPHINE[0],
+                _ALLOWANCE_SERAPHINE[1] if random.random() < 0.5 else _ALLOWANCE_SERAPHINE[0],
+            ])
+        elif gender == "masculine":
+            delivery = random.choice([
+                _ALLOWANCE_CALIX[0],
+                _ALLOWANCE_CALIX[1] if random.random() < 0.5 else _ALLOWANCE_CALIX[0],
+            ])
+        else:
+            delivery = random.choice(_ALLOWANCE_VESPER)
+        note       = f'\n\n|x"|n{msg.body}|x"|n' if msg.body else ""
+        shard_note = "\n\n|m+15 shards have been added to your wallet.|n"
+        return f"{delivery}{note}{shard_note}"
 
     else:
         return f"{header}\n|xFrom {sender}:|n\n{msg.body}"

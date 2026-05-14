@@ -46,6 +46,28 @@ def _name(char):
     return char.db.rp_name or char.name
 
 
+def _second_person_verb(verb):
+    """
+    Convert a 3rd-person singular verb to its 2nd-person form for 'You ...' messages.
+
+    Examples:
+        says     → say
+        murmurs  → murmur
+        hisses   → hiss
+        watches  → watch
+        cries    → cry
+        drawls   → drawl
+    """
+    v = verb.lower()
+    if v.endswith("ies") and len(v) > 3:
+        return v[:-3] + "y"                          # cries → cry
+    if v.endswith(("sses", "ches", "shes", "xes", "zes")):
+        return v[:-2]                                 # hisses → hiss, watches → watch
+    if v.endswith("s") and not v.endswith("ss"):
+        return v[:-1]                                 # says → say, murmurs → murmur
+    return v                                          # already base form
+
+
 def _mood_color(char):
     """Return the Evennia color code for the character's current mood."""
     mood = (char.db.mood or "").lower().strip()
@@ -118,10 +140,11 @@ class CmdSay(MuxCommand):
         name = _name(char)
         color = _mood_color(char)
         verb = char.db.say_verb or "says"
+        verb_2nd = _second_person_verb(verb)
 
         room_msg = f'{color}{name} {verb}, "{text}"|n'
 
-        self.msg(f'{color}You {verb}, "{text}"|n')
+        self.msg(f'{color}You {verb_2nd}, "{text}"|n')
         if char.location:
             char.location.msg_contents(room_msg, exclude=char)
             char.location.append_scene_log(name, room_msg)
