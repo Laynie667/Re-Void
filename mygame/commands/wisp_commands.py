@@ -503,8 +503,8 @@ class CmdHaunt(MuxCommand):
         haunt off       — disable haunting
 
     Note: Haunting only works when you are invisible
-    in the room (outside the Hub, and not revealed).
-    In the Hub your wisp is always visible.
+    in the room (outside the Wayfarer's Hall, and not revealed).
+    In the Wayfarer's Hall your wisp is always visible.
     """
     key = "haunt"
     locks = "cmd:all()"
@@ -547,7 +547,7 @@ class CmdReveal(MuxCommand):
     Reveal your wisp to a specific player, or conceal it again.
 
     By default your wisp is invisible to IC characters
-    outside the Hub. Use this command to make yourself
+    outside the Wayfarer's Hall. Use this command to make yourself
     visible to a specific person.
 
     Usage:
@@ -653,7 +653,7 @@ class CmdWispPref(MuxCommand):
     Usage:
         wisp                — see current preference
         wisp visible        — see all wisps in all rooms
-        wisp hidden         — see wisps only in the Hub
+        wisp hidden         — see wisps only in the Wayfarer's Hall
                               (and those revealed to you)
 
     When set to visible, all wisps appear in room listings
@@ -675,7 +675,7 @@ class CmdWispPref(MuxCommand):
             self.msg(
                 f"Wisp visibility preference: "
                 f"{color}{current}|n\n"
-                f"  |whidden|n  — wisps only visible in Hub "
+                f"  |whidden|n  — wisps only visible in the Wayfarer's Hall "
                 f"and those revealed to you\n"
                 f"  |wvisible|n — all wisps visible everywhere"
             )
@@ -694,7 +694,7 @@ class CmdWispPref(MuxCommand):
             account.db.wisp_preference = "hidden"
             self.msg(
                 "Wisp preference set to |whidden|n.\n"
-                "Wisps only visible to you in the Hub\n"
+                "Wisps only visible to you in the Wayfarer's Hall\n"
                 "or when specifically revealed to you."
             )
         else:

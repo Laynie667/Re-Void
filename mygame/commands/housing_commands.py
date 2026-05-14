@@ -7,7 +7,7 @@ Commands
 --------
 home        — teleport to your home room
 sethome     — set your home to the current room (must be owner or friend)
-grid        — return to the nearest hub room
+grid        — return to the Wayfarer's Hall
 housing     — manage your housing rooms (lock, friends, builders, dig, exits, list)
 """
 
@@ -71,7 +71,7 @@ class CmdHome(Command):
         home
 
     Your home room is the housing room you have set with 'sethome'.
-    Use 'grid' to return to the hub.
+    Use 'grid' to return to the Wayfarer's Hall.
     """
     key = "home"
     locks = "cmd:all()"
@@ -154,7 +154,7 @@ class CmdSetHome(Command):
 
 class CmdGrid(Command):
     """
-    Return to the hub grid.
+    Return to the Wayfarer's Hall.
 
     Usage:
         grid
@@ -170,7 +170,7 @@ class CmdGrid(Command):
         hub = _get_hub_room()
 
         if not hub:
-            self.msg("|xNo hub room found. Ask a staff member for help.|n")
+            self.msg("|xCouldn't find the Wayfarer's Hall. Ask a staff member for help.|n")
             return
 
         if char.location == hub:
