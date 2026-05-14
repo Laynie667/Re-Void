@@ -95,14 +95,16 @@ def render_zone_tokens(text, character):
     Replace {zone:name} tokens in text with the zone's current rendered state.
 
     Resolution order per zone:
-      1. Freeform item with display_mode="on" (default) → item desc only
-         (nude desc suppressed — item covers the zone)
-      2. Freeform item with display_mode="in" → nude desc + em-dash + item desc
-         (nude desc stays — item is additive/layered within)
-      3. Multiple /in items on the same zone → all appended in placement order
-      4. covered_by clothing → clothing worn_desc or desc
-      5. Bare → nude desc
-      6. Zone not found or empty → empty string (token removed silently)
+      nude desc is always the base — nothing replaces it.
+      All layers append with " — " and are joined with ", ".
+
+      Render order (clothing layer first, then on-items, then in-items):
+        1. covered_by clothing (from wear command)
+        2. Freeform items with display_mode="cover" (placed covering items, e.g. chastity belt)
+        3. Freeform items with display_mode="on" (placed on the surface)
+        4. Freeform items with display_mode="in" (placed inside an orifice)
+        5. Bare nude desc if nothing else present
+        6. Zone not found or empty → empty string (token removed silently)
 
     Usage in physical_desc:
         {zone:hair}, framing {zone:face}. At the throat, {zone:neck}.
@@ -123,41 +125,49 @@ def render_zone_tokens(text, character):
         zdata = zones.get(zname, {})
         nude = (zdata.get("nude") or "").strip()
 
-        # Collect freeform items on this zone
-        on_items  = []   # display_mode="on"  — replace nude
-        in_items  = []   # display_mode="in"   — append to nude
+        # Collect freeform items on this zone.
+        # "cover"  — placed covering item (chastity belt, gag, etc.) — renders in clothing layer
+        # "on"     — placed on the surface/attachment zone
+        # "in"     — placed inside an orifice zone
+        # All use player_desc if set, else original desc.
+        cover_items = []
+        on_items = []
+        in_items = []
 
         for ikey in freeform_keys:
             idata = freeform.get(ikey, {})
             if not idata or idata.get("zone") != zname:
                 continue
             mode = idata.get("display_mode", "on")
-            idesc = (idata.get("desc") or "").strip()
+            # Prefer the owner's custom description over the placer's
+            idesc = (idata.get("player_desc") or idata.get("desc") or "").strip()
             if not idesc:
                 continue
-            if mode == "in":
+            if mode == "cover":
+                cover_items.append(idesc)
+            elif mode == "in":
                 in_items.append(idesc)
             else:
                 on_items.append(idesc)
 
-        # Resolution
-        if on_items:
-            # Last /on item wins (most recently placed replaces)
-            base = on_items[-1]
-        elif nude:
-            # Check clothing coverage
-            covered = zdata.get("covered_by")
-            if covered:
-                base = (covered.get("worn_desc") or covered.get("desc") or nude).strip()
-            else:
-                base = nude
-        else:
-            base = ""
+        # Nude desc is always the base — nothing ever replaces it.
+        base = nude
 
-        # Append all /in items
-        if in_items:
-            suffix = " — " + ", ".join(in_items)
-            return base + suffix if base else ", ".join(in_items)
+        # Clothing layer: worn items (via wear) then cover-mode placed items.
+        covered = zdata.get("covered_by")
+        clothing_parts = []
+        if covered:
+            worn = (covered.get("worn_desc") or covered.get("desc") or "").strip()
+            if worn:
+                clothing_parts.append(worn)
+        clothing_parts.extend(cover_items)
+
+        # Full stack: clothing/cover first, then on-items, then in-items.
+        all_parts = clothing_parts + on_items + in_items
+
+        if all_parts:
+            suffix = " — " + ", ".join(all_parts)
+            return base + suffix if base else ", ".join(all_parts)
 
         return base
 
@@ -198,11 +208,14 @@ class FreeformManager:
             character:       Target character object.
             zone (str):      Zone name that must exist on the character.
             name (str):      Short handle for the item (used in lock commands).
-            desc (str):      Display description shown in look/sheet.
+            desc (str):      The placer's description — shown unless owner sets
+                             their own player_desc.
             placer_id:       ID of the character placing the item.
-            display_mode:    "on" (default) — item replaces zone nude desc in
-                             {zone:x} token rendering.
-                             "in" — item appends after nude desc, both visible.
+            display_mode:    "on"     — placed externally on the zone surface.
+                             "in"     — placed inside (orifice zone).
+                             "cover"  — placed covering the zone (renders in the
+                                        clothing layer, e.g. chastity belt, gag).
+                             All modes render alongside nude desc (never replace).
 
         Returns:
             (True, item_dict) or (False, error_str)
@@ -218,7 +231,7 @@ class FreeformManager:
             )
 
         name = name.lower()
-        display_mode = display_mode if display_mode in ("on", "in") else "on"
+        display_mode = display_mode if display_mode in ("on", "in", "cover") else "on"
         items = character.db.freeform_items or {}
 
         # Allow overwriting an unlocked existing item
@@ -233,7 +246,8 @@ class FreeformManager:
         items[name] = {
             "zone":         zone,
             "name":         name,
-            "desc":         desc,
+            "desc":         desc,       # placer's description (read-only to owner)
+            "player_desc":  "",         # owner's custom description (editable always)
             "placed_by":    placer_id,
             "lock":         None,
             "display_mode": display_mode,
@@ -271,6 +285,32 @@ class FreeformManager:
                 )
 
         del items[name]
+        character.db.freeform_items = items
+        return True, item
+
+    @staticmethod
+    def set_player_desc(character, item_name, text):
+        """
+        Set the character's own description for a freeform item on them.
+
+        The owner can always do this, even on locked items — plock freezes
+        removal, not narrative. The player_desc takes priority over the
+        placer's original desc in all rendering.
+
+        Args:
+            character:        The character who owns the zone.
+            item_name (str):  Name of the freeform item.
+            text (str):       The owner's custom description.
+
+        Returns:
+            (True, item_dict) or (False, error_str)
+        """
+        items = character.db.freeform_items or {}
+        name = item_name.lower()
+        item = items.get(name)
+        if not item:
+            return False, f"No freeform item named '{name}'."
+        item["player_desc"] = text.strip()
         character.db.freeform_items = items
         return True, item
 
@@ -612,23 +652,39 @@ class FreeformManager:
 
         lines = []
         for name, item in sorted(items.items()):
-            zone = item.get("zone", "unknown")
-            desc = item.get("desc", "")
-            lock = item.get("lock")
+            zone        = item.get("zone", "unknown")
+            desc        = item.get("desc", "")
+            player_desc = item.get("player_desc", "")
+            mode        = item.get("display_mode", "on")
+            lock        = item.get("lock")
 
             if lock:
                 ltype = lock.get("type", "locked")
                 if ltype == "slock":
-                    lock_str = f" |y[scene-locked: {lock.get('code', '?')}]|n"
+                    lock_str = f" |y[slock'd — code: {lock.get('code', '?')}]|n"
                 else:
-                    lock_str = " |r[permanently locked]|n"
+                    # Key ID always shown so players can report it to staff
+                    lock_str = f" |r[plock'd — Key #{lock.get('key_id', '?')}]|n"
             else:
                 lock_str = ""
 
+            if mode == "in":
+                mode_tag = " |x[inside]|n"
+            elif mode == "cover":
+                mode_tag = " |x[covers]|n"
+            else:
+                mode_tag = ""
+            edited_tag = " |g[edited]|n" if player_desc else ""
+            display    = player_desc if player_desc else desc
+
             lines.append(
-                f"  |w{name}|n [{zone}]{lock_str}\n"
-                f"    {desc[:72]}{'...' if len(desc) > 72 else ''}"
+                f"  |w{name}|n [{zone}]{mode_tag}{lock_str}{edited_tag}\n"
+                f"    {display[:72]}{'...' if len(display) > 72 else ''}"
             )
+            if player_desc:
+                lines.append(
+                    f"    |x(original: {desc[:60]}{'...' if len(desc) > 60 else ''})|n"
+                )
 
         return "\n".join(lines)
 

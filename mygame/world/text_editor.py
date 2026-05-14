@@ -76,7 +76,7 @@ def _get_lines(attr, default=""):
         if isinstance(val, list):
             return list(val)
         # Single string — split on newlines for editing
-        return [line for line in str(val).split("\n") if line] if val else []
+        return str(val).split("\n") if val else []
     return getter
 
 
@@ -114,7 +114,7 @@ def _wisp_getter(attr):
         val = getattr(acct.db, attr, None) or ""
         if isinstance(val, list):
             return list(val)
-        return [line for line in str(val).split("\n") if line] if val else []
+        return str(val).split("\n") if val else []
     return getter
 
 
@@ -163,15 +163,15 @@ def _get_zone_target(caller, zone_name):
     def getter(c):
         zones = c.db.zones or {}
         zone = zones.get(zone_name.lower(), {})
-        desc = zone.get("nude_desc", "")
-        return [line for line in desc.split("\n") if line] if desc else []
+        desc = zone.get("nude", "")
+        return desc.split("\n") if desc else []
 
     def setter(c, lines):
         zones = c.db.zones or {}
         if zone_name.lower() not in zones:
             c.msg(f"|xZone '{zone_name}' not found.|n")
             return
-        zones[zone_name.lower()]["nude_desc"] = "\n".join(lines)
+        zones[zone_name.lower()]["nude"] = "\n".join(lines)
         c.db.zones = zones
 
     return getter, setter
@@ -206,7 +206,7 @@ def _get_marking_target(caller, idx):
         if idx < 0 or idx >= len(markings):
             return []
         desc = markings[idx].get("desc", "")
-        return [line for line in desc.split("\n") if line] if desc else []
+        return desc.split("\n") if desc else []
 
     def setter(c, lines):
         markings = c.db.markings or []
@@ -706,7 +706,7 @@ class CmdEdit(MuxCommand):
             if target_str == "rdesc":
                 def getter(c):
                     v = room.db.desc or ""
-                    return [l for l in v.split("\n") if l]
+                    return v.split("\n") if v else []
                 def setter(c, lines):
                     room.db.desc = "\n".join(lines)
                 EDITOR_TARGETS["_rdesc_dynamic"] = (getter, setter)
@@ -715,7 +715,7 @@ class CmdEdit(MuxCommand):
             if target_str == "rentry":
                 def getter(c):
                     v = room.db.entry_desc or ""
-                    return [l for l in v.split("\n") if l]
+                    return v.split("\n") if v else []
                 def setter(c, lines):
                     room.db.entry_desc = "\n".join(lines)
                 EDITOR_TARGETS["_rentry_dynamic"] = (getter, setter)
@@ -724,7 +724,7 @@ class CmdEdit(MuxCommand):
             if target_str == "rexamine":
                 def getter(c):
                     v = room.db.examine_desc or ""
-                    return [l for l in v.split("\n") if l]
+                    return v.split("\n") if v else []
                 def setter(c, lines):
                     room.db.examine_desc = "\n".join(lines)
                 EDITOR_TARGETS["_rexamine_dynamic"] = (getter, setter)
