@@ -365,7 +365,10 @@ class Character(ObjectParent, DefaultCharacter):
             "bdsm":        False,
             "lead_follow": False,
             "restraint":   False,
-            "plock":       False,  # consents to permanent freeform locks
+            "plock":       False,   # consents to permanent freeform locks
+            # Privacy / movement
+            "allow_jump":   True,   # others may jump to this character's location
+            "allow_summon": True,   # others may summon this character
         }
         self.db.consent_grants = {}
         # Per-zone grants: {zone_name: set(character_ids)}

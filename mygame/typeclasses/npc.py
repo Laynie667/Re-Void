@@ -418,12 +418,31 @@ class NPC(ObjectParent, DefaultCharacter):
 
         # Pick response
         response = trigger.get("response", "")
-        if isinstance(response, list):
-            response = random.choice(response)
+        if not isinstance(response, str):
+            response = random.choice(list(response))
 
         if response == "READY_CHECK":
             # Delegate to the NPC's ready gate handler
             self.do_ready_check(caller)
+        elif response.startswith("_HANDLE_PURCHASE_"):
+            # Delegate to the NPC's purchase handler
+            handler_path = self.db.purchase_handler
+            if handler_path:
+                try:
+                    import importlib
+                    module_path, func_name = handler_path.rsplit(".", 1)
+                    module = importlib.import_module(module_path)
+                    handler = getattr(module, func_name)
+                    suffix = response[len("_HANDLE_PURCHASE_"):]
+                    if suffix == "TENT":
+                        purchase_type = "tent"
+                    elif suffix.startswith("ROOM_"):
+                        purchase_type = int(suffix[5:])
+                    else:
+                        purchase_type = suffix.lower()
+                    handler(caller, self, purchase_type)
+                except Exception as e:
+                    logger.log_err(f"NPC purchase handler error: {e}")
         elif response:
             trigger_type = trigger.get("type", "say")
             npc_name = self.db.rp_name or self.key
@@ -439,8 +458,18 @@ class NPC(ObjectParent, DefaultCharacter):
                     from_obj=self
                 )
             elif trigger_type in ("emote", "action"):
+                # Strip leading NPC name from response if already present,
+                # so we don't get "Durgin Ironwood Durgin leans on the counter"
+                display = safe.strip()
+                for prefix in (npc_name, npc_name.split()[0]):
+                    pl = prefix.lower()
+                    dl = display.lower()
+                    if dl.startswith(pl + " ") or dl.startswith(pl + "'"):
+                        display = display[len(prefix):].strip()
+                        break
+                sep = "" if display.startswith("'") else " "
                 self.location.msg_contents(
-                    f"\n|w{npc_name}|n {safe}",
+                    f"\n|w{npc_name}|n{sep}{display}",
                     from_obj=self
                 )
             else:
@@ -483,15 +512,24 @@ class NPC(ObjectParent, DefaultCharacter):
         Called by the say command when this NPC is in the room and
         react_to_say is True.
 
-        Picks a random response from db.parrot_responses.
-        Templates may use:
+        For Tier 2+ NPCs, tries to match the spoken text against the
+        trigger table first. If a trigger fires, returns early.
+
+        Falls back to parrot responses for Tier 1 NPCs or when no
+        trigger matched. Templates may use:
             {text} — what the caller said
             {name} — the caller's display name
-
-        Used by Sable in Space 3 of The Forming.
-        Any NPC with react_to_say = True and a populated parrot_responses
-        list will use this behaviour.
         """
+        # Don't react to our own speech
+        if caller == self:
+            return
+
+        # Tier 2+ — try trigger keyword match first
+        tier = self.db.npc_tier or NPC_TIER_AMBIENT
+        if tier >= NPC_TIER_SCRIPTED:
+            if self.trigger_keyword(caller, text.strip()):
+                return
+
         responses = self.db.parrot_responses or []
         if not responses:
             return
