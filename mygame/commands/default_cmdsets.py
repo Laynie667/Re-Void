@@ -209,6 +209,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_TELEPORT_CMDS:
             self.add(cmd_cls())
 
+        # Navigation shortcuts (n/s/e/w/ne/nw/se/sw/u/d)
+        from commands.navigation_commands import ALL_NAVIGATION_CMDS
+        for cmd_cls in ALL_NAVIGATION_CMDS:
+            self.add(cmd_cls())
+
         # Builder commands (perm-locked; only Builders can use them)
         from commands.builder_commands import ALL_BUILDER_CMDS
         for cmd_cls in ALL_BUILDER_CMDS:
