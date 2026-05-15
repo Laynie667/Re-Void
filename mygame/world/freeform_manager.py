@@ -150,20 +150,18 @@ def render_zone_tokens(text, character):
             else:
                 on_items.append(idesc)
 
-        # Nude desc is always the base — nothing ever replaces it.
-        base = nude
-
-        # Clothing layer: worn items (via wear) then cover-mode placed items.
+        # Worn clothing (via wear) replaces the nude desc as the visible base.
+        # If nothing is worn, the nude desc shows instead.
+        # place/cover items, place/on items, and place/in items always append.
         covered = zdata.get("covered_by")
-        clothing_parts = []
         if covered:
             worn = (covered.get("worn_desc") or covered.get("desc") or "").strip()
-            if worn:
-                clothing_parts.append(worn)
-        clothing_parts.extend(cover_items)
+            base = worn if worn else nude
+        else:
+            base = nude
 
-        # Full stack: clothing/cover first, then on-items, then in-items.
-        all_parts = clothing_parts + on_items + in_items
+        # cover-mode placed items, on-items, and in-items all append.
+        all_parts = cover_items + on_items + in_items
 
         if all_parts:
             suffix = " — " + ", ".join(all_parts)
