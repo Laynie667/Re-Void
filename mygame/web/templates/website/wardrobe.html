@@ -4,259 +4,489 @@
 
 {% block content %}
 <style>
-  /* ── Page layout ── */
-  .wd-wrap {
-    max-width: 860px;
-    margin: 2.5rem auto;
-    padding: 0 1rem;
-  }
-  .wd-header {
-    display: flex;
-    align-items: baseline;
-    gap: 1.5rem;
-    margin-bottom: 1.75rem;
-  }
-  .wd-header h1 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1.5rem;
-    color: rgba(215,175,255,0.95);
-    letter-spacing: 0.1em;
-    text-shadow: 0 0 16px rgba(160,80,255,0.4);
-    margin: 0;
-  }
+/* ═══════════════════════════════════════════════════════════════
+   WARDROBE — Layout
+═══════════════════════════════════════════════════════════════ */
+.wd-page {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+.wd-page-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.4rem;
+  color: rgba(215,175,255,0.95);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 16px rgba(160,80,255,0.4);
+  margin: 0 0 0.4rem 0;
+}
+.wd-page-sub {
+  font-size: 0.78rem;
+  color: rgba(160,120,220,0.5);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.04em;
+}
 
-  /* ── Selectors row ── */
-  .wd-selectors {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.75rem;
-    align-items: flex-end;
-  }
-  .wd-selector-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    flex: 1;
-    min-width: 180px;
-  }
-  .wd-selector-group label {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(160,120,220,0.7);
-  }
-  .wd-select {
-    background: rgba(30,10,60,0.7);
-    border: 1px solid rgba(160,80,255,0.25);
-    border-radius: 3px;
-    color: rgba(215,175,255,0.9);
-    padding: 0.45rem 0.7rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(160,80,255,0.5)'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.7rem center;
-    padding-right: 2rem;
-    cursor: pointer;
-    width: 100%;
-  }
-  .wd-select:focus {
-    outline: none;
-    border-color: rgba(160,80,255,0.55);
-  }
-  .wd-select option {
-    background: #1a0836;
-    color: rgba(215,175,255,0.9);
-  }
+/* char selector */
+.wd-char-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.25rem;
+}
+.wd-char-bar label {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(160,120,220,0.6);
+  white-space: nowrap;
+}
+.wd-select {
+  background: rgba(30,10,60,0.7);
+  border: 1px solid rgba(160,80,255,0.25);
+  border-radius: 3px;
+  color: rgba(215,175,255,0.9);
+  padding: 0.4rem 2rem 0.4rem 0.65rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(160,80,255,0.5)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  cursor: pointer;
+  min-width: 160px;
+}
+.wd-select:focus { outline: none; border-color: rgba(160,80,255,0.55); }
+.wd-select option { background: #1a0836; color: rgba(215,175,255,0.9); }
 
-  /* ── Editor card ── */
-  .wd-card {
-    background: rgba(20,5,45,0.6);
-    border: 1px solid rgba(120,40,180,0.25);
-    border-radius: 4px;
-    padding: 1.5rem;
-  }
-  .wd-zone-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1rem;
-    color: rgba(215,175,255,0.9);
-    margin-bottom: 0.25rem;
-    letter-spacing: 0.08em;
-  }
-  .wd-zone-hint {
-    font-size: 0.78rem;
-    color: rgba(160,120,220,0.55);
-    margin-bottom: 1.1rem;
-  }
-  .wd-textarea {
-    width: 100%;
-    min-height: 220px;
-    background: rgba(10,2,28,0.7);
-    border: 1px solid rgba(120,40,180,0.3);
-    border-radius: 3px;
-    color: rgba(215,175,255,0.92);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    line-height: 1.65;
-    padding: 0.85rem 1rem;
-    resize: vertical;
-    transition: border-color 0.2s;
-    box-sizing: border-box;
-  }
-  .wd-textarea:focus {
-    outline: none;
-    border-color: rgba(160,80,255,0.5);
-  }
-  .wd-textarea::placeholder {
-    color: rgba(160,120,220,0.3);
-  }
-  .wd-char-count {
-    text-align: right;
-    font-size: 0.72rem;
-    color: rgba(160,120,220,0.45);
-    margin-top: 0.3rem;
-    margin-bottom: 1.2rem;
-  }
-  .wd-char-count.wd-long { color: rgba(255,200,80,0.5); }
+/* ── Two-column body ── */
+.wd-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 680px) {
+  .wd-body { grid-template-columns: 1fr; }
+}
 
-  /* ── Flags grid ── */
-  .wd-flags {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-top: 1.25rem;
-    margin-bottom: 1.4rem;
-    padding: 1.1rem 1.2rem;
-    background: rgba(10,2,28,0.4);
-    border: 1px solid rgba(120,40,180,0.2);
-    border-radius: 3px;
-  }
-  .wd-flag-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-  .wd-flag-group label {
-    font-size: 0.63rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(160,120,220,0.6);
-  }
-  .wd-flag-select {
-    background: rgba(30,10,60,0.7);
-    border: 1px solid rgba(120,40,180,0.25);
-    border-radius: 3px;
-    color: rgba(215,175,255,0.88);
-    padding: 0.38rem 2rem 0.38rem 0.6rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.95rem;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(160,80,255,0.45)'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.6rem center;
-    cursor: pointer;
-    width: 100%;
-  }
-  .wd-flag-select:focus { outline: none; border-color: rgba(160,80,255,0.5); }
-  .wd-flag-select option { background: #1a0836; color: rgba(215,175,255,0.9); }
+/* ═══════════════════════════════════════════════════════════════
+   SIDEBAR — accordion zone tree
+═══════════════════════════════════════════════════════════════ */
+.wd-sidebar {
+  background: rgba(15,4,38,0.6);
+  border: 1px solid rgba(120,40,180,0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.wd-sidebar-head {
+  padding: 0.6rem 0.9rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(160,120,220,0.55);
+  border-bottom: 1px solid rgba(120,40,180,0.15);
+}
 
-  /* intimate toggle */
-  .wd-intimate-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding-top: 0.55rem;
-  }
-  .wd-intimate-row input[type="checkbox"] {
-    width: 15px; height: 15px;
-    accent-color: rgba(160,80,255,0.8);
-    cursor: pointer;
-  }
-  .wd-intimate-row span {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.95rem;
-    color: rgba(215,175,255,0.8);
-  }
+/* accordion section */
+.wd-acc { border-bottom: 1px solid rgba(120,40,180,0.1); }
+.wd-acc:last-child { border-bottom: none; }
 
-  /* ── Save button ── */
-  .wd-save-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .wd-btn-save {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(215,175,255,0.9);
-    background: rgba(120,40,200,0.25);
-    border: 1px solid rgba(160,80,255,0.4);
-    border-radius: 3px;
-    padding: 0.5rem 1.4rem;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .wd-btn-save:hover {
-    background: rgba(140,50,220,0.38);
-    border-color: rgba(200,120,255,0.55);
-  }
-  .wd-btn-save:active {
-    background: rgba(100,30,180,0.5);
-  }
+/* header row: link + toggle button */
+.wd-acc-header {
+  display: flex;
+  align-items: center;
+}
+.wd-acc-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.38rem 0.75rem;
+  text-decoration: none;
+  color: rgba(200,165,245,0.8);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.97rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: background 0.12s, color 0.12s;
+  overflow: hidden;
+}
+.wd-acc-link:hover { background: rgba(120,40,180,0.15); color: rgba(215,175,255,0.97); }
+.wd-acc-link.active {
+  background: rgba(120,40,180,0.28);
+  color: rgba(215,175,255,1);
+  border-left: 2px solid rgba(180,100,255,0.7);
+}
+.wd-acc-toggle {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: rgba(140,90,210,0.5);
+  font-size: 0.7rem;
+  padding: 0.38rem 0.6rem;
+  cursor: pointer;
+  transition: color 0.12s, transform 0.18s;
+  line-height: 1;
+}
+.wd-acc-toggle:hover { color: rgba(180,120,255,0.85); }
+.wd-acc.is-open .wd-acc-toggle { transform: rotate(90deg); }
 
-  /* ── Toast / notice ── */
-  .wd-notice {
-    padding: 0.6rem 1rem;
-    border-radius: 3px;
-    font-size: 0.83rem;
-    letter-spacing: 0.04em;
-  }
-  .wd-notice.success {
-    background: rgba(60,160,80,0.12);
-    border: 1px solid rgba(60,200,80,0.25);
-    color: rgba(120,220,130,0.9);
-  }
+/* children body */
+.wd-acc-body { display: none; background: rgba(10,2,28,0.35); }
+.wd-acc.is-open .wd-acc-body { display: block; }
+.wd-acc-child {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.75rem 0.28rem 1.4rem;
+  text-decoration: none;
+  color: rgba(175,135,225,0.7);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.89rem;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wd-acc-child:hover { background: rgba(100,30,160,0.18); color: rgba(210,170,250,0.95); }
+.wd-acc-child.active {
+  background: rgba(100,30,160,0.28);
+  color: rgba(215,175,255,1);
+  border-left: 2px solid rgba(160,80,240,0.6);
+}
+/* indent for grandchildren (depth ≥ 2) */
+.wd-acc-child[data-depth="2"] { padding-left: 2.2rem; font-size: 0.85rem; }
+.wd-acc-child[data-depth="3"] { padding-left: 3rem;   font-size: 0.82rem; }
 
-  /* ── Empty state ── */
-  .wd-empty {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: rgba(160,120,220,0.5);
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1.1rem;
-  }
+/* dot indicator */
+.wd-dot {
+  flex-shrink: 0;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: rgba(120,60,200,0.35);
+}
+.wd-dot.has-desc  { background: rgba(160,80,255,0.75); }
+.wd-dot.intimate  { background: rgba(220,100,200,0.75); }
+.wd-dot.covered   { background: rgba(100,200,120,0.75); }
 
-  /* ── Zone dot indicator ── */
-  .zone-dot {
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    margin-right: 5px;
-    vertical-align: middle;
-    background: rgba(160,80,255,0.35);
-  }
-  .zone-dot.filled { background: rgba(160,80,255,0.8); }
-  .zone-dot.intimate { background: rgba(220,100,180,0.7); }
+/* zone type badge */
+.wd-tree-badge {
+  flex-shrink: 0;
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  padding: 0.08rem 0.28rem;
+  border-radius: 2px;
+  background: rgba(80,30,130,0.4);
+  color: rgba(160,120,220,0.6);
+  margin-left: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN PANEL
+═══════════════════════════════════════════════════════════════ */
+.wd-panel {
+  min-width: 0;
+}
+.wd-zone-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.wd-zone-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.1rem;
+  color: rgba(215,175,255,0.97);
+  letter-spacing: 0.08em;
+}
+.wd-zone-meta {
+  font-size: 0.72rem;
+  color: rgba(160,120,220,0.5);
+  letter-spacing: 0.05em;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.45rem;
+  border-radius: 2px;
+  border: 1px solid rgba(120,40,180,0.3);
+  color: rgba(160,120,220,0.7);
+  background: rgba(60,20,100,0.3);
+}
+.badge.intimate { border-color: rgba(220,100,200,0.4); color: rgba(220,140,210,0.8); background: rgba(100,20,80,0.3); }
+.badge.orifice  { border-color: rgba(255,140,80,0.3);  color: rgba(255,180,120,0.75); background: rgba(80,30,10,0.3); }
+.badge.both     { border-color: rgba(255,180,80,0.3);  color: rgba(255,200,120,0.75); background: rgba(70,40,0,0.3); }
+.badge.covered  { border-color: rgba(80,200,120,0.4);  color: rgba(120,220,140,0.85); background: rgba(10,60,20,0.3); }
+
+/* ── Tab bar ── */
+.wd-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(120,40,180,0.25);
+  margin-bottom: 1.25rem;
+  gap: 0;
+}
+.wd-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: rgba(160,120,220,0.6);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.wd-tab-btn:hover { color: rgba(200,160,255,0.85); }
+.wd-tab-btn.active {
+  color: rgba(215,175,255,0.97);
+  border-bottom-color: rgba(160,80,255,0.7);
+}
+.wd-tab-pane { display: none; }
+.wd-tab-pane.active { display: block; }
+
+/* ── Cards / sections ── */
+.wd-card {
+  background: rgba(18,5,42,0.55);
+  border: 1px solid rgba(120,40,180,0.22);
+  border-radius: 4px;
+  padding: 1.25rem 1.4rem;
+  margin-bottom: 1rem;
+}
+.wd-card-title {
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(160,120,220,0.55);
+  margin-bottom: 0.9rem;
+}
+
+/* ── Form elements ── */
+.wd-label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(160,120,220,0.6);
+  margin-bottom: 0.3rem;
+}
+.wd-textarea {
+  width: 100%;
+  min-height: 180px;
+  background: rgba(10,2,28,0.7);
+  border: 1px solid rgba(120,40,180,0.3);
+  border-radius: 3px;
+  color: rgba(215,175,255,0.92);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  padding: 0.75rem 0.9rem;
+  resize: vertical;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.wd-textarea.short { min-height: 80px; }
+.wd-textarea:focus { outline: none; border-color: rgba(160,80,255,0.5); }
+.wd-textarea::placeholder { color: rgba(160,120,220,0.28); }
+.wd-input {
+  width: 100%;
+  background: rgba(10,2,28,0.7);
+  border: 1px solid rgba(120,40,180,0.3);
+  border-radius: 3px;
+  color: rgba(215,175,255,0.92);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  padding: 0.42rem 0.75rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.wd-input:focus { outline: none; border-color: rgba(160,80,255,0.5); }
+.wd-input::placeholder { color: rgba(160,120,220,0.28); }
+.wd-flag-select {
+  width: 100%;
+  background: rgba(20,6,50,0.8);
+  border: 1px solid rgba(120,40,180,0.28);
+  border-radius: 3px;
+  color: rgba(215,175,255,0.88);
+  padding: 0.38rem 2rem 0.38rem 0.6rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.93rem;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(160,80,255,0.45)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  cursor: pointer;
+}
+.wd-flag-select:focus { outline: none; border-color: rgba(160,80,255,0.5); }
+.wd-flag-select option { background: #1a0836; }
+.wd-flags-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  background: rgba(10,2,28,0.4);
+  border: 1px solid rgba(120,40,180,0.18);
+  border-radius: 3px;
+  margin: 0.85rem 0 1.1rem;
+}
+.wd-flag-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.wd-check-row {
+  display: flex; align-items: center; gap: 0.45rem; padding-top: 0.55rem;
+}
+.wd-check-row input[type="checkbox"] {
+  width: 14px; height: 14px;
+  accent-color: rgba(160,80,255,0.8); cursor: pointer;
+}
+.wd-check-row span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.93rem;
+  color: rgba(215,175,255,0.78);
+}
+.wd-char-count {
+  text-align: right;
+  font-size: 0.7rem;
+  color: rgba(160,120,220,0.4);
+  margin-top: 0.25rem;
+}
+.wd-char-count.long { color: rgba(255,200,80,0.5); }
+
+/* ── Buttons ── */
+.wd-btn {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(215,175,255,0.9);
+  background: rgba(100,35,180,0.22);
+  border: 1px solid rgba(160,80,255,0.38);
+  border-radius: 3px;
+  padding: 0.45rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.wd-btn:hover  { background: rgba(130,50,210,0.35); border-color: rgba(200,120,255,0.55); }
+.wd-btn:active { background: rgba(90,25,160,0.5); }
+.wd-btn.sm { font-size: 0.6rem; padding: 0.3rem 0.85rem; }
+.wd-btn.danger {
+  color: rgba(255,130,130,0.85);
+  background: rgba(120,20,20,0.2);
+  border-color: rgba(200,80,80,0.35);
+}
+.wd-btn.danger:hover { background: rgba(160,30,30,0.3); border-color: rgba(240,100,100,0.5); }
+.wd-row { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; margin-top: 0.9rem; }
+.wd-hint { font-size: 0.72rem; color: rgba(160,120,220,0.4); letter-spacing: 0.03em; }
+
+/* ── Notice ── */
+.wd-notice {
+  padding: 0.55rem 1rem;
+  border-radius: 3px;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+.wd-notice.success { background: rgba(40,120,60,0.12); border: 1px solid rgba(60,200,80,0.25); color: rgba(100,220,120,0.9); }
+.wd-notice.error   { background: rgba(120,20,20,0.15); border: 1px solid rgba(200,80,80,0.3);  color: rgba(255,130,130,0.9); }
+
+/* ── Freeform item cards ── */
+.wd-item-card {
+  background: rgba(10,2,28,0.5);
+  border: 1px solid rgba(120,40,180,0.2);
+  border-radius: 3px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 0.75rem;
+}
+.wd-item-head {
+  display: flex; align-items: baseline; gap: 0.6rem;
+  flex-wrap: wrap; margin-bottom: 0.5rem;
+}
+.wd-item-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.82rem;
+  color: rgba(215,175,255,0.92);
+}
+.wd-item-mode {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(160,120,220,0.5);
+}
+.wd-item-lock-perm { font-size: 0.7rem; color: rgba(255,100,100,0.85); }
+.wd-item-lock-scene { font-size: 0.7rem; color: rgba(255,200,80,0.75); }
+.wd-item-lock-none  { font-size: 0.7rem; color: rgba(100,200,120,0.55); }
+.wd-item-orig {
+  font-size: 0.76rem;
+  color: rgba(160,120,220,0.42);
+  font-style: italic;
+  margin-bottom: 0.7rem;
+}
+.wd-mode-row {
+  display: flex; gap: 1rem; margin-bottom: 0.6rem; flex-wrap: wrap;
+}
+.wd-mode-row label {
+  display: flex; align-items: center; gap: 0.35rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: rgba(190,150,240,0.75);
+  cursor: pointer;
+}
+.wd-mode-row input[type="radio"] { accent-color: rgba(160,80,255,0.8); }
+
+/* covered-by display in clothing tab */
+.wd-clothing-current {
+  background: rgba(10,40,15,0.25);
+  border: 1px solid rgba(60,160,80,0.25);
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+.wd-clothing-label {
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(100,200,120,0.6);
+  margin-bottom: 0.3rem;
+}
+.wd-clothing-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: rgba(180,230,190,0.9);
+  line-height: 1.55;
+}
+.wd-clothing-examine {
+  font-size: 0.78rem;
+  color: rgba(140,200,150,0.6);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* empty state */
+.wd-empty {
+  text-align: center; padding: 3rem 1rem;
+  color: rgba(160,120,220,0.45);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 1.1rem;
+}
 </style>
 
-<div class="wd-wrap">
+<div class="wd-page">
 
-  <!-- Header -->
-  <div class="wd-header">
-    <h1>Zone Wardrobe</h1>
-  </div>
+  <h1 class="wd-page-title">Zone Wardrobe</h1>
+  <p class="wd-page-sub">Edit how your character looks, zone by zone.</p>
+
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="wd-notice {% if 'error' in msg.tags %}error{% else %}success{% endif %}">
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endif %}
 
   {% if success %}
-  <div class="wd-notice success" style="margin-bottom:1.25rem;">
-    ✦ Zone description saved successfully.
-  </div>
+  <div class="wd-notice success">✦ Saved successfully.</div>
   {% endif %}
 
   {% if not chars %}
@@ -267,213 +497,430 @@
 
   {% else %}
 
-  <!-- Character + Zone selectors (auto-submit on change) -->
-  <form method="get" action="/profile/wardrobe/" id="selector-form">
-    <div class="wd-selectors">
-
-      {% if chars|length > 1 %}
-      <div class="wd-selector-group">
-        <label for="char-select">Character</label>
-        <select name="char" id="char-select" class="wd-select" onchange="document.getElementById('selector-form').submit()">
-          {% for c in chars %}
-          <option value="{{ c.pk }}"{% if c.pk == selected_char.pk %} selected{% endif %}>
-            {{ c.db.rp_name|default:c.key }}
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-      {% else %}
-      <input type="hidden" name="char" value="{{ selected_char.pk }}">
-      {% endif %}
-
-      {% if zone_display %}
-      <div class="wd-selector-group">
-        <label for="zone-select">Zone</label>
-        <select name="zone" id="zone-select" class="wd-select" onchange="document.getElementById('selector-form').submit()">
-          {% for z in zone_display %}
-          <option value="{{ z.name }}"{% if z.name == selected_zone %} selected{% endif %}>
-            {% if z.intimate %}♦ {% endif %}{{ z.label }}{% if z.has_desc %} ·{% endif %}
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-      {% endif %}
-
-    </div>
+  <!-- Character selector -->
+  {% if chars|length > 1 %}
+  <form method="get" action="/profile/wardrobe/" id="char-form" class="wd-char-bar">
+    <label for="char-sel">Character</label>
+    <select name="char" id="char-sel" class="wd-select" onchange="document.getElementById('char-form').submit()">
+      {% for c in chars %}
+      <option value="{{ c.pk }}"{% if c.pk == selected_char.pk %} selected{% endif %}>
+        {{ c.db.rp_name|default:c.key }}
+      </option>
+      {% endfor %}
+    </select>
+    {% if selected_zone %}<input type="hidden" name="zone" value="{{ selected_zone }}">{% endif %}
   </form>
-
-  <!-- Zone editor -->
-  {% if selected_zone %}
-  <div class="wd-card">
-
-    <div class="wd-zone-title">
-      {% for z in zone_display %}{% if z.name == selected_zone %}{{ z.label }}{% endif %}{% endfor %}
-    </div>
-    <div class="wd-zone-hint">
-      This is the nude description for this zone — what others see when this area is unclothed.
-      Plain text or Evennia color codes (|r red|n, |w white|n, etc.) are supported.
-    </div>
-
-    <form method="post" action="/profile/wardrobe/">
-      {% csrf_token %}
-      <input type="hidden" name="char_id" value="{{ selected_char.pk }}">
-      <input type="hidden" name="zone_name" value="{{ selected_zone }}">
-
-      <textarea
-        name="nude_desc"
-        class="wd-textarea"
-        placeholder="Describe this zone when unclothed…"
-        id="zone-textarea"
-        oninput="updateCharCount(this)"
-      >{{ zone_content }}</textarea>
-
-      <div class="wd-char-count" id="char-count">
-        <span id="count-num">{{ zone_content|length }}</span> characters
-      </div>
-
-      <!-- Zone flags -->
-      <div class="wd-flags">
-
-        <div class="wd-flag-group">
-          <label for="f-visibility">Visibility</label>
-          <select name="visibility" id="f-visibility" class="wd-flag-select">
-            {% for val, label in visibility_choices %}
-            <option value="{{ val }}"{% if val == zone_visibility %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="wd-flag-group">
-          <label for="f-type">Zone Type</label>
-          <select name="zone_type" id="f-type" class="wd-flag-select">
-            {% for val, label in type_choices %}
-            <option value="{{ val }}"{% if val == zone_type %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="wd-flag-group">
-          <label for="f-consent">Consent Required</label>
-          <select name="consent_required" id="f-consent" class="wd-flag-select">
-            {% for val, label in consent_choices %}
-            <option value="{{ val }}"{% if val == zone_consent %} selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="wd-flag-group">
-          <label>Intimate Zone</label>
-          <div class="wd-intimate-row">
-            <input type="checkbox" name="intimate" id="f-intimate" value="1"{% if zone_intimate %} checked{% endif %}>
-            <span>Mark as intimate</span>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="wd-save-row">
-        <button type="submit" class="wd-btn-save">Save Zone</button>
-        <span style="font-size:0.75rem;color:rgba(160,120,220,0.4);">
-          Changes take effect in-game immediately.
-        </span>
-      </div>
-    </form>
-
+  {% else %}
+  <div class="wd-char-bar">
+    <span class="wd-hint">Character: <strong style="color:rgba(200,160,255,0.8);">{{ selected_char.db.rp_name|default:selected_char.key }}</strong></span>
   </div>
+  {% endif %}
 
-  <!-- Freeform items on this zone -->
-  {% if zone_freeform %}
-  <div style="margin-top:1.5rem;">
-    <div style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(160,120,220,0.6);margin-bottom:0.75rem;">
-      Items on this zone
-    </div>
+  {% if not zone_display %}
+  <div class="wd-empty">This character has no zones yet. Use <code>zone add &lt;name&gt;</code> in-game to create some.</div>
+  {% else %}
 
-    {% for item in zone_freeform %}
-    <div style="background:rgba(10,2,28,0.5);border:1px solid rgba(120,40,180,0.2);border-radius:3px;padding:1rem 1.2rem;margin-bottom:0.85rem;">
+  <div class="wd-body">
 
-      <!-- Item header row -->
-      <div style="display:flex;align-items:baseline;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-        <span style="font-family:'Cinzel Decorative',serif;font-size:0.85rem;color:rgba(215,175,255,0.92);">{{ item.name }}</span>
-        <span style="font-size:0.7rem;color:rgba(160,120,220,0.5);text-transform:uppercase;letter-spacing:0.12em;">
-          {% if item.mode == "in" %}placed inside{% elif item.mode == "cover" %}covering{% else %}placed on{% endif %}
-        </span>
-        {% if item.lock %}
-          {% if item.lock.type == "plock" %}
-          <span style="font-size:0.72rem;color:rgba(255,100,100,0.8);letter-spacing:0.06em;">
-            🔒 Permanent lock &nbsp;·&nbsp; Key #{{ item.lock.key_id }} — held by {{ item.lock.holder_name }}
-          </span>
-          {% else %}
-          <span style="font-size:0.72rem;color:rgba(255,200,80,0.7);letter-spacing:0.06em;">
-            🔑 Scene-locked (code: {{ item.lock.code }})
-          </span>
+    <!-- ── SIDEBAR ACCORDION ── -->
+    <aside class="wd-sidebar">
+      <div class="wd-sidebar-head">Zones</div>
+      {% for section in zone_accordion %}
+      <div class="wd-acc{% if section.contains_selected or section.name == selected_zone %} is-open{% endif %}">
+
+        <div class="wd-acc-header">
+          <a href="/profile/wardrobe/?char={{ selected_char.pk }}&zone={{ section.name }}"
+             class="wd-acc-link{% if section.name == selected_zone %} active{% endif %}">
+            <span class="wd-dot{% if section.intimate %} intimate{% elif section.has_desc %} has-desc{% endif %}"></span>
+            {{ section.label }}
+            {% if section.zone_type == "orifice" %}<span class="wd-tree-badge">or</span>
+            {% elif section.zone_type == "both" %}<span class="wd-tree-badge">b</span>
+            {% elif section.zone_type == "attachment" %}<span class="wd-tree-badge">att</span>{% endif %}
+          </a>
+          {% if section.descendants %}
+          <button type="button" class="wd-acc-toggle"
+                  onclick="this.closest('.wd-acc').classList.toggle('is-open')">▶</button>
           {% endif %}
-        {% else %}
-        <span style="font-size:0.72rem;color:rgba(120,220,130,0.55);letter-spacing:0.06em;">no lock</span>
+        </div>
+
+        {% if section.descendants %}
+        <div class="wd-acc-body">
+          {% for z in section.descendants %}
+          <a href="/profile/wardrobe/?char={{ selected_char.pk }}&zone={{ z.name }}"
+             class="wd-acc-child{% if z.name == selected_zone %} active{% endif %}"
+             data-depth="{{ z.depth }}">
+            <span class="wd-dot{% if z.intimate %} intimate{% elif z.has_desc %} has-desc{% endif %}"></span>
+            {{ z.label }}
+            {% if z.zone_type == "orifice" %}<span class="wd-tree-badge">or</span>
+            {% elif z.zone_type == "both" %}<span class="wd-tree-badge">b</span>
+            {% elif z.zone_type == "attachment" %}<span class="wd-tree-badge">att</span>{% endif %}
+          </a>
+          {% endfor %}
+        </div>
         {% endif %}
+
+      </div>
+      {% endfor %}
+    </aside>
+
+    <!-- ── MAIN PANEL ── -->
+    <div class="wd-panel">
+
+      {% if selected_zone %}
+
+      <!-- Zone header -->
+      <div class="wd-zone-header">
+        <span class="wd-zone-name">{{ selected_zone|title }}</span>
+        {% if zone_intimate %}<span class="badge intimate">♦ intimate</span>{% endif %}
+        {% if zone_type == "orifice" %}<span class="badge orifice">orifice</span>
+        {% elif zone_type == "both" %}<span class="badge both">surface + orifice</span>
+        {% elif zone_type == "attachment" %}<span class="badge">attachment</span>{% endif %}
+        {% if zone_parent %}<span class="wd-zone-meta">child of {{ zone_parent }}</span>{% endif %}
       </div>
 
-      <!-- Original desc (read-only reference) -->
-      <div style="font-size:0.78rem;color:rgba(160,120,220,0.45);margin-bottom:0.85rem;font-style:italic;">
-        Original: "{{ item.desc|truncatechars:120 }}"
+      <!-- Tab bar -->
+      <div class="wd-tabs">
+        <button class="wd-tab-btn active" onclick="switchTab(this,'tab-zone')">Zone</button>
+        <button class="wd-tab-btn" onclick="switchTab(this,'tab-clothing')">Clothing</button>
+        <button class="wd-tab-btn" onclick="switchTab(this,'tab-items')">
+          Items{% if zone_freeform %} <span style="font-size:0.7em;opacity:0.6;">({{ zone_freeform|length }})</span>{% endif %}
+        </button>
       </div>
 
-      <!-- player_desc editor -->
-      <form method="post" action="/profile/wardrobe/">
-        {% csrf_token %}
-        <input type="hidden" name="action"    value="save_item_desc">
-        <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
-        <input type="hidden" name="zone_name" value="{{ selected_zone }}">
-        <input type="hidden" name="item_name" value="{{ item.name }}">
+      <!-- ══════════════ TAB: ZONE ══════════════ -->
+      <div class="wd-tab-pane active" id="tab-zone">
 
-        <div style="margin-bottom:0.35rem;">
-          <label style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(160,120,220,0.55);">
-            Your description — editable even while locked
-          </label>
+        <form method="post" action="/profile/wardrobe/">
+          {% csrf_token %}
+          <input type="hidden" name="action"    value="save_zone">
+          <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+          <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+
+          <div class="wd-card">
+            <div class="wd-card-title">Nude Description</div>
+            <p class="wd-hint" style="margin-bottom:0.75rem;">What others see when this zone is unclothed. Supports Evennia color codes like |r red|n.</p>
+            <label class="wd-label" for="nude-ta">Description</label>
+            <textarea name="nude_desc" id="nude-ta" class="wd-textarea"
+              placeholder="Describe this zone when bare…"
+              oninput="wdCount(this,'nude-count')"
+            >{{ zone_content }}</textarea>
+            <div class="wd-char-count" id="nude-count">{{ zone_content|length }} characters</div>
+          </div>
+
+          <!-- Flags -->
+          <div class="wd-card">
+            <div class="wd-card-title">Zone Flags</div>
+            <div class="wd-flags-grid">
+
+              <div class="wd-flag-group">
+                <label class="wd-label" for="f-vis">Visibility</label>
+                <select name="visibility" id="f-vis" class="wd-flag-select">
+                  {% for val, lbl in visibility_choices %}
+                  <option value="{{ val }}"{% if val == zone_visibility %} selected{% endif %}>{{ lbl }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="wd-flag-group">
+                <label class="wd-label" for="f-type">Zone Type</label>
+                <select name="zone_type" id="f-type" class="wd-flag-select">
+                  {% for val, lbl in type_choices %}
+                  <option value="{{ val }}"{% if val == zone_type %} selected{% endif %}>{{ lbl }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="wd-flag-group">
+                <label class="wd-label" for="f-consent">Consent Required</label>
+                <select name="consent_required" id="f-consent" class="wd-flag-select">
+                  {% for val, lbl in consent_choices %}
+                  <option value="{{ val }}"{% if val == zone_consent %} selected{% endif %}>{{ lbl }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="wd-flag-group">
+                <label class="wd-label">Intimate Zone</label>
+                <div class="wd-check-row">
+                  <input type="checkbox" name="intimate" id="f-intimate" value="1"{% if zone_intimate %} checked{% endif %}>
+                  <span>Mark as intimate</span>
+                </div>
+              </div>
+
+            </div>
+            <div class="wd-row">
+              <button type="submit" class="wd-btn">Save Zone</button>
+              <span class="wd-hint">Takes effect in-game immediately.</span>
+            </div>
+          </div>
+        </form>
+
+        <!-- Interior description (orifice / both only) -->
+        {% if zone_type == "orifice" or zone_type == "both" %}
+        <div class="wd-card">
+          <div class="wd-card-title">Interior Description</div>
+          <p class="wd-hint" style="margin-bottom:0.75rem;">
+            Shown at deep examine (mature consent). Used by womb-room items to describe the interior space.
+          </p>
+          <form method="post" action="/profile/wardrobe/">
+            {% csrf_token %}
+            <input type="hidden" name="action"    value="save_interior">
+            <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+            <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+            <label class="wd-label" for="int-ta">Interior</label>
+            <textarea name="interior_desc" id="int-ta" class="wd-textarea short"
+              placeholder="Describe the inside of this zone…"
+              oninput="wdCount(this,'int-count')"
+            >{{ zone_interior }}</textarea>
+            <div class="wd-char-count" id="int-count">{{ zone_interior|length }} characters</div>
+            <div class="wd-row"><button type="submit" class="wd-btn">Save Interior</button></div>
+          </form>
         </div>
-        <textarea
-          name="player_desc"
-          style="width:100%;min-height:100px;background:rgba(10,2,28,0.7);border:1px solid rgba(120,40,180,0.25);border-radius:3px;color:rgba(215,175,255,0.9);font-family:'Cormorant Garamond',serif;font-size:1rem;line-height:1.6;padding:0.65rem 0.85rem;resize:vertical;box-sizing:border-box;"
-          placeholder="Write how this reads on your body…"
-        >{{ item.player_desc }}</textarea>
+        {% endif %}
 
-        <div style="margin-top:0.6rem;">
-          <button type="submit" class="wd-btn-save" style="font-size:0.65rem;padding:0.38rem 1rem;">
-            Save Description
-          </button>
-          {% if item.player_desc %}
-          <span style="margin-left:0.75rem;font-size:0.7rem;color:rgba(120,220,130,0.6);">✦ Custom version saved</span>
-          {% endif %}
+      </div><!-- /tab-zone -->
+
+      <!-- ══════════════ TAB: CLOTHING ══════════════ -->
+      <div class="wd-tab-pane" id="tab-clothing">
+
+        <!-- Current covering -->
+        {% if zone_type != "orifice" %}
+
+
+        <div class="wd-card">
+          <div class="wd-card-title">Current Clothing</div>
+
+          {% comment %}
+            covered_by is not directly passed — checking zone_content is for nude.
+            We use zone_freeform 'cover' mode items as clothing indicator.
+            For the wear system, the zone's covered_by field is set by char.place_on_zone().
+            We need to pass it from the view. For now we show the wear form and rely on
+            the view providing zone_covered context (added in views.py above via zone_data).
+          {% endcomment %}
+
+          {# clothing status line #}
+          <div id="clothing-status" style="margin-bottom:1rem;">
+            {% if zone_covered %}
+            <div class="wd-clothing-current">
+              <div class="wd-clothing-label">Currently wearing</div>
+              <div class="wd-clothing-desc">{{ zone_covered.worn_desc|default:zone_covered.desc }}</div>
+              {% if zone_covered.examine_desc %}
+              <div class="wd-clothing-examine">On examine: {{ zone_covered.examine_desc }}</div>
+              {% endif %}
+              {% if zone_covered.state and zone_covered.state != "pristine" %}
+              <div style="font-size:0.72rem;color:rgba(255,200,80,0.65);margin-top:0.2rem;">State: {{ zone_covered.state }}</div>
+              {% endif %}
+            </div>
+            <!-- Remove button -->
+            <form method="post" action="/profile/wardrobe/" style="margin-bottom:0.75rem;">
+              {% csrf_token %}
+              <input type="hidden" name="action"    value="remove_clothing">
+              <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+              <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+              <button type="submit" class="wd-btn danger sm">Remove Clothing</button>
+            </form>
+            {% else %}
+            <p class="wd-hint" style="margin-bottom:0.75rem;font-style:italic;">This zone is currently bare.</p>
+            {% endif %}
+          </div>
+
+          <!-- Wear form -->
+          <div class="wd-card-title" style="margin-top:0.5rem;">Wear Something</div>
+          <form method="post" action="/profile/wardrobe/">
+            {% csrf_token %}
+            <input type="hidden" name="action"    value="wear_zone">
+            <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+            <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+
+            <label class="wd-label" for="worn-desc">Worn description <span style="color:rgba(255,100,100,0.6);">*</span></label>
+            <textarea name="worn_desc" id="worn-desc" class="wd-textarea short"
+              placeholder="a fitted leather collar, plain and deliberate"
+              oninput="wdCount(this,'worn-count')"
+            ></textarea>
+            <div class="wd-char-count" id="worn-count">0 characters</div>
+
+            <div style="margin-top:0.75rem;">
+              <label class="wd-label" for="examine-desc">Examine description <span class="wd-hint">(optional)</span></label>
+              <input type="text" name="examine_desc" id="examine-desc" class="wd-input"
+                placeholder="Closer detail shown on examine…">
+            </div>
+
+            <div class="wd-row">
+              <button type="submit" class="wd-btn">Wear</button>
+              <span class="wd-hint">Replaces any current clothing on this zone.</span>
+            </div>
+          </form>
         </div>
-      </form>
 
-    </div>
-    {% endfor %}
+        {% else %}
+        <div class="wd-card">
+          <p class="wd-hint" style="font-style:italic;">
+            This is an orifice zone — use the Items tab to place things inside it.
+          </p>
+        </div>
+        {% endif %}
+
+      </div><!-- /tab-clothing -->
+
+      <!-- ══════════════ TAB: ITEMS ══════════════ -->
+      <div class="wd-tab-pane" id="tab-items">
+
+        <!-- Existing freeform items -->
+        {% if zone_freeform %}
+        <div style="margin-bottom:1rem;">
+          {% for item in zone_freeform %}
+          <div class="wd-item-card">
+            <div class="wd-item-head">
+              <span class="wd-item-name">{{ item.name }}</span>
+              <span class="wd-item-mode">
+                {% if item.mode == "in" %}inside{% elif item.mode == "cover" %}covering{% else %}on surface{% endif %}
+              </span>
+              {% if item.lock %}
+                {% if item.lock.type == "plock" %}
+                <span class="wd-item-lock-perm">🔒 perm-locked · key held by {{ item.lock.holder_name }}</span>
+                {% else %}
+                <span class="wd-item-lock-scene">🔑 scene-locked ({{ item.lock.code }})</span>
+                {% endif %}
+              {% else %}
+              <span class="wd-item-lock-none">no lock</span>
+              {% endif %}
+            </div>
+            <div class="wd-item-orig">Original: "{{ item.desc|truncatechars:120 }}"</div>
+
+            <!-- Player desc editor -->
+            <form method="post" action="/profile/wardrobe/">
+              {% csrf_token %}
+              <input type="hidden" name="action"    value="save_item_desc">
+              <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+              <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+              <input type="hidden" name="item_name" value="{{ item.name }}">
+              <label class="wd-label">Your version <span class="wd-hint">(editable even when locked)</span></label>
+              <textarea name="player_desc" class="wd-textarea short"
+                placeholder="How it reads on your body…"
+              >{{ item.player_desc }}</textarea>
+              <div class="wd-row">
+                <button type="submit" class="wd-btn sm">Save</button>
+                {% if item.player_desc %}<span class="wd-hint" style="color:rgba(100,200,120,0.6);">✦ custom version active</span>{% endif %}
+              </div>
+            </form>
+
+            <!-- Remove (only if unlocked) -->
+            {% if not item.lock %}
+            <form method="post" action="/profile/wardrobe/" style="margin-top:0.75rem;">
+              {% csrf_token %}
+              <input type="hidden" name="action"    value="remove_freeform">
+              <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+              <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+              <input type="hidden" name="item_name" value="{{ item.name }}">
+              <button type="submit" class="wd-btn danger sm"
+                onclick="return confirm('Remove item \'{{ item.name }}\' from this zone?')">
+                Remove Item
+              </button>
+            </form>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="wd-hint" style="font-style:italic;margin-bottom:1rem;">No items on this zone yet.</p>
+        {% endif %}
+
+        <!-- Add new freeform item -->
+        <div class="wd-card">
+          <div class="wd-card-title">Add Item to This Zone</div>
+          <form method="post" action="/profile/wardrobe/">
+            {% csrf_token %}
+            <input type="hidden" name="action"    value="add_freeform">
+            <input type="hidden" name="char_id"   value="{{ selected_char.pk }}">
+            <input type="hidden" name="zone_name" value="{{ selected_zone }}">
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;">
+              <div>
+                <label class="wd-label" for="new-item-name">Item name <span style="color:rgba(255,100,100,0.6);">*</span></label>
+                <input type="text" name="item_name" id="new-item-name" class="wd-input"
+                  placeholder="e.g. collar, tattoo, ring">
+              </div>
+              <div>
+                <label class="wd-label">Placement mode</label>
+                <div class="wd-mode-row" style="margin-top:0.4rem;">
+                  <label><input type="radio" name="display_mode" value="on" checked> On surface</label>
+                  {% if zone_type == "orifice" or zone_type == "both" %}
+                  <label><input type="radio" name="display_mode" value="in"> Inside</label>
+                  {% endif %}
+                  <label><input type="radio" name="display_mode" value="cover"> Covering</label>
+                </div>
+              </div>
+            </div>
+
+            <label class="wd-label" for="new-item-desc">Description <span style="color:rgba(255,100,100,0.6);">*</span></label>
+            <textarea name="item_desc" id="new-item-desc" class="wd-textarea short"
+              placeholder="Describe what this item looks like on/in this zone…"
+              oninput="wdCount(this,'new-item-count')"
+            ></textarea>
+            <div class="wd-char-count" id="new-item-count">0 characters</div>
+
+            <div class="wd-row">
+              <button type="submit" class="wd-btn">Add Item</button>
+              <span class="wd-hint">Items are visible to others on look / examine.</span>
+            </div>
+          </form>
+        </div>
+
+      </div><!-- /tab-items -->
+
+      {% endif %}{# selected_zone #}
+    </div><!-- /wd-panel -->
+  </div><!-- /wd-body -->
+
+  <!-- Legend -->
+  <div style="margin-top:1.25rem;font-size:0.7rem;color:rgba(160,120,220,0.38);letter-spacing:0.04em;line-height:1.8;">
+    <span style="color:rgba(160,80,255,0.6);">●</span> filled dot = has nude description &nbsp;·&nbsp;
+    <span style="color:rgba(220,100,200,0.7);">●</span> pink = intimate zone &nbsp;·&nbsp;
+    <strong style="color:rgba(160,120,220,0.5);">or</strong> = orifice &nbsp;·&nbsp;
+    <strong style="color:rgba(160,120,220,0.5);">b</strong> = surface + orifice &nbsp;·&nbsp;
+    <strong style="color:rgba(160,120,220,0.5);">att</strong> = attachment<br>
+    Add or remove zones in-game with <code style="color:rgba(180,130,240,0.6);">zone add &lt;parent/name&gt;</code> /
+    <code style="color:rgba(180,130,240,0.6);">zone remove &lt;name&gt;</code>.
   </div>
-  {% endif %}
 
-  <!-- Zone legend -->
-  <div style="margin-top:1rem;font-size:0.72rem;color:rgba(160,120,220,0.4);letter-spacing:0.05em;line-height:1.7;">
-    ♦ = intimate zone &nbsp;·&nbsp; zones with a description show a · in the selector.<br>
-    To <strong style="color:rgba(180,130,240,0.5);">add or remove zones</strong>, use the in-game
-    <code style="font-size:inherit;color:rgba(180,130,240,0.6);">zone add &lt;name&gt;</code> /
-    <code style="font-size:inherit;color:rgba(180,130,240,0.6);">zone remove &lt;name&gt;</code> commands.
-    Clothing is managed in-game with the <code style="font-size:inherit;color:rgba(180,130,240,0.6);">wear</code> command.
-  </div>
-  {% endif %}
+  {% endif %}{# zone_display #}
+  {% endif %}{# chars #}
 
-  {% endif %}
 </div>
 
 <script>
-  function updateCharCount(el) {
-    var n = el.value.length;
-    var el2 = document.getElementById('count-num');
-    var wrap = document.getElementById('char-count');
-    el2.textContent = n;
-    wrap.classList.toggle('wd-long', n >= 5000);
+function switchTab(btn, tabId) {
+  // deactivate all tabs and panes
+  btn.closest('.wd-panel').querySelectorAll('.wd-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.closest('.wd-panel').querySelectorAll('.wd-tab-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function wdCount(ta, countId) {
+  var el = document.getElementById(countId);
+  if (!el) return;
+  var n = ta.value.length;
+  el.textContent = n + ' characters';
+  el.classList.toggle('long', n >= 5000);
+}
+
+// Init char counts on load
+document.querySelectorAll('textarea[oninput]').forEach(function(ta) {
+  var m = ta.getAttribute('oninput').match(/wdCount\(this,'([^']+)'\)/);
+  if (m) wdCount(ta, m[1]);
+});
+
+// Open the correct tab if URL has a hash
+(function() {
+  var hash = window.location.hash;
+  if (hash === '#clothing') {
+    var btn = document.querySelector('.wd-tab-btn:nth-child(2)');
+    if (btn) btn.click();
+  } else if (hash === '#items') {
+    var btn2 = document.querySelector('.wd-tab-btn:nth-child(3)');
+    if (btn2) btn2.click();
   }
-  // Run once on load
-  var ta = document.getElementById('zone-textarea');
-  if (ta) updateCharCount(ta);
+})();
 </script>
 {% endblock %}

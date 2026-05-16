@@ -927,26 +927,37 @@ class CmdZone(MuxCommand):
     their own description, visibility, and clothing state.
 
     Usage:
-        zone list                           — list all zones
-        zone show <name>                    — zone detail
-        zone set <name>                     — open editor for nude desc
-        zone set <name> = <description>     — set nude desc inline
-        zone add <name>                     — add freeform zone
-        zone add <name> type=<type>         — add with type
-        zone remove <name>                  — remove freeform zone
-        zone rename <name> <new>            — rename zone
-        zone visibility <name> <level>      — set visibility
-        zone intimate <name> <on/off>       — flag as intimate
-        zone order <zone> <zone> ...        — set display order
-        zone ambient <name> add <line>      — add ambient line
-        zone ambient <name> list            — list ambient lines
-        zone ambient <name> remove <#>      — remove ambient line
-        zone reset <name>                   — clear zone desc
+        zone list                               — list all zones (tree view)
+        zone show <name>                        — zone detail
+        zone set <name>                         — open editor for nude desc
+        zone set <name> = <description>         — set nude desc inline
+        zone interior <name>                    — open editor for interior desc
+        zone interior <name> = <description>    — set interior desc (orifice zones)
+        zone add <name>                         — add root freeform zone
+        zone add <parent>/<name>                — add child zone
+        zone add <parent>/<name> type=<type>    — add child zone with type
+        zone remove <name>                      — remove freeform zone
+        zone remove/cascade <name>              — remove zone and all children
+        zone rename <name> <new>                — rename zone
+        zone visibility <name> <level>          — set visibility
+        zone intimate <name> <on/off>           — flag as intimate
+        zone order <zone> <zone> ...            — set root display order
+        zone ambient <name> add <line>          — add ambient line
+        zone ambient <name> list                — list ambient lines
+        zone ambient <name> remove <#>          — remove ambient line
+        zone reset <name>                       — clear zone desc
 
     Zone types: surface / orifice / both / attachment
     Visibility: look / examine / deep / proximity / consent / hidden
+
+    Path syntax adds children to existing zones:
+        zone add groin/vulva type=both intimate
+        zone add groin/vulva/labia type=both intimate
+        zone add groin/anus type=orifice intimate
+    Each parent in the path must already exist.
     """
     key = "zone"
+    switch_options = ("cascade",)
     locks = "cmd:all()"
     help_category = "Character"
 
@@ -967,6 +978,7 @@ class CmdZone(MuxCommand):
             "list":       self._zone_list,
             "show":       self._zone_show,
             "set":        self._zone_set,
+            "interior":   self._zone_interior,
             "add":        self._zone_add,
             "remove":     self._zone_remove,
             "rename":     self._zone_rename,
@@ -985,132 +997,88 @@ class CmdZone(MuxCommand):
             self._zone_show(char, args)
 
     def _zone_list(self, char, args=""):
-        """Show all zones grouped and formatted."""
+        """Show all zones as an indented tree."""
         zones = char._get_zones()
-        lines = ["|wYour zones:|n\n"]
-        sep = "|x" + "━" * 40 + "|n"
+        order = char.get_zone_order()
+        sep = "|x" + "━" * 44 + "|n"
 
-        covered_count = 0
-        freeform_count = 0
+        covered_count = sum(
+            1 for z in zones.values() if z.get("covered_by")
+        )
+        freeform_count = sum(
+            1 for z in zones.values() if z.get("freeform")
+        )
 
-        for group_name, group_zones in ZONE_GROUPS:
-            # Check if any zones in this group exist
-            group_has = [z for z in group_zones if z in zones]
-            if not group_has:
+        lines = [f"|wYour zones:|n\n{sep}"]
+
+        for zone_name in order:
+            if zone_name not in zones:
                 continue
+            zone = zones[zone_name]
+            depth = char._zone_depth(zone_name, zones)
+            indent = "  " * depth
 
-            lines.append(f"\n|w{group_name}|n")
+            zone_type  = zone.get("zone_type", "surface")
+            visibility = zone.get("visibility", "look")
+            intimate   = zone.get("intimate", False)
+            freeform   = zone.get("freeform", False)
+            covered    = zone.get("covered_by")
+            contents   = zone.get("contents", [])
+            interior   = zone.get("interior", "")
 
-            for zone_name in group_zones:
-                if zone_name not in zones:
-                    continue
+            # Ancestry coverage
+            ancestor_covered = char._is_covered_by_ancestor(
+                zone_name, zones
+            )
 
-                zone = zones[zone_name]
-                zone_type = zone.get("zone_type", "surface")
-                visibility = zone.get("visibility", "look")
-                intimate = zone.get("intimate", False)
-                covered = zone.get("covered_by")
-                contents = zone.get("contents", [])
+            intimate_marker = "|m♦|n " if intimate else "  "
+            freeform_marker = "|c+|n" if freeform else " "
+            type_tag = f"|x[{zone_type[:3]}]|n"
+            vis_tag  = f"|x[{visibility[:3]}]|n"
+            int_tag  = " |x[int]|n" if interior else ""
 
-                # Status indicators
-                intimate_marker = "|m♦|n " if intimate else "  "
-                type_tag = f"|x[{zone_type[:3]}]|n"
-                vis_tag = f"|x[{visibility[:3]}]|n"
-
-                if covered:
-                    covered_count += 1
-                    worn = covered.get(
-                        "worn_desc",
-                        covered.get("desc", "")
-                    )
-                    state = covered.get("state", "pristine")
-                    state_tag = (
-                        f" |y({state})|n"
-                        if state != "pristine"
-                        else ""
-                    )
-                    status = (
-                        f"|gCOVERED|n: "
-                        f"{worn[:40]}"
-                        f"{'...' if len(worn) > 40 else ''}"
-                        f"{state_tag}"
-                    )
-                elif contents:
-                    status = (
-                        f"|cCONTENTS|n: "
-                        f"{len(contents)} item(s)"
-                    )
-                else:
-                    nude = zone.get("nude", "")
-                    if nude:
-                        status = (
-                            f"|xnude|n: "
-                            f"{nude[:40]}"
-                            f"{'...' if len(nude) > 40 else ''}"
-                        )
-                    else:
-                        status = "|xnude — no description|n"
-
-                lines.append(
-                    f"  {intimate_marker}"
-                    f"|w{zone_name:<14}|n "
-                    f"{type_tag} {vis_tag}  "
-                    f"{status}"
+            if ancestor_covered:
+                status = "|x(hidden under parent)|n"
+            elif covered:
+                worn = covered.get(
+                    "worn_desc", covered.get("desc", "")
                 )
-
-        # Freeform zones
-        freeform = [
-            (n, z) for n, z in zones.items()
-            if z.get("freeform")
-        ]
-        if freeform:
-            lines.append(f"\n|wFREEFORM ZONES|n")
-            for zone_name, zone in freeform:
-                freeform_count += 1
-                zone_type = zone.get("zone_type", "surface")
-                visibility = zone.get("visibility", "look")
-                intimate = zone.get("intimate", False)
-                covered = zone.get("covered_by")
-                contents = zone.get("contents", [])
-                intimate_marker = "|m♦|n " if intimate else "  "
-
-                if covered:
-                    covered_count += 1
-                    worn = covered.get(
-                        "worn_desc",
-                        covered.get("desc", "")
-                    )
-                    status = f"|gCOVERED|n: {worn[:40]}"
-                elif contents:
-                    status = (
-                        f"|cCONTENTS|n: "
-                        f"{len(contents)} item(s)"
-                    )
-                else:
-                    nude = zone.get("nude", "")
-                    status = (
-                        f"|xnude|n: {nude[:40]}"
-                        if nude
-                        else "|xnude — no description|n"
-                    )
-
-                lines.append(
-                    f"  {intimate_marker}"
-                    f"|w{zone_name:<14}|n "
-                    f"|x[{zone_type[:3]}]|n "
-                    f"|x[{visibility[:3]}]|n  "
-                    f"{status}"
+                state = covered.get("state", "pristine")
+                state_tag = (
+                    f" |y({state})|n" if state != "pristine" else ""
                 )
+                worn_preview = (
+                    worn[:38] + "..." if len(worn) > 38 else worn
+                )
+                status = f"|gCOVERED|n: {worn_preview}{state_tag}"
+            elif contents:
+                status = f"|cCONTENTS|n: {len(contents)} item(s)"
+            else:
+                nude = zone.get("nude", "")
+                if nude:
+                    preview = (
+                        nude[:38] + "..." if len(nude) > 38 else nude
+                    )
+                    status = f"|xnude|n: {preview}"
+                else:
+                    status = "|xnude — no description|n"
 
-        lines.append(f"\n{sep}")
+            lines.append(
+                f"{indent}{intimate_marker}{freeform_marker} "
+                f"|w{zone_name}|n "
+                f"{type_tag}{vis_tag}{int_tag}  "
+                f"{status}"
+            )
+
+        lines.append(sep)
         lines.append(
             f"|x{len(zones)} zones  |  "
             f"{covered_count} covered  |  "
             f"{freeform_count} freeform|n\n"
-            f"|xCommands: zone set / zone add / "
-            f"zone show / zone visibility|n"
+            f"|x♦=intimate  +=freeform  [int]=has interior desc|n\n"
+            f"|xzone set <name>  zone add <parent>/<name>  "
+            f"zone show <name>|n"
         )
-
         self.msg("\n".join(lines))
 
     def _zone_show(self, char, args):
@@ -1152,7 +1120,15 @@ class CmdZone(MuxCommand):
         covered = zone.get("covered_by")
         contents = zone.get("contents", [])
         nude = zone.get("nude", "")
+        interior = zone.get("interior", "")
         ambient = zone.get("ambient", [])
+        parent = zone.get("parent")
+
+        # Build child list
+        children = sorted(
+            z for z, zd in zones.items()
+            if zd.get("parent") == zone_name
+        )
 
         lines = [
             f"|wZONE: {zone_name}|n",
@@ -1165,6 +1141,10 @@ class CmdZone(MuxCommand):
             f"  Consent required: {consent_req}",
             f"  Zone type:        "
             f"{'default' if default else 'freeform'}",
+            f"  Parent zone:      "
+            f"{parent if parent else '|x[root zone]|n'}",
+            f"  Children:         "
+            f"{', '.join(children) if children else '|x[none]|n'}",
             "",
         ]
 
@@ -1175,6 +1155,19 @@ class CmdZone(MuxCommand):
         else:
             lines.append("  |x[not set]|n")
         lines.append("")
+
+        # Interior description (orifice / both zones only)
+        if zone_type in ("orifice", "both"):
+            lines.append("|wInterior description:|n")
+            if interior:
+                lines.append(f"  {interior}")
+            else:
+                lines.append(
+                    "  |x[not set]|n  "
+                    "  |x(used by womb-room items — set with: zone interior "
+                    f"{zone_name})|n"
+                )
+            lines.append("")
 
         # Surface covering
         if zone_type in ("surface", "both", "attachment"):
@@ -1300,23 +1293,118 @@ class CmdZone(MuxCommand):
             extra=None,
         )
 
-    def _zone_add(self, char, args):
-        """Add a freeform zone."""
+    def _zone_interior(self, char, args):
+        """Set the interior description for an orifice or both zone."""
         if not args:
             self.msg(
-                "Usage: zone add <name>\n"
-                "       zone add <name> type=<type>\n"
-                "Types: surface / orifice / both / attachment"
+                "Usage: zone interior <name> = <description>\n"
+                "       zone interior <name>   (opens editor)\n"
+                "Only applies to zones with type=orifice or type=both."
             )
             return
 
-        # Parse optional type= argument
-        zone_type = "surface"
-        intimate = False
-        visibility = "look"
+        # Inline: zone interior <name> = <desc>
+        if "=" in args:
+            zone_name, _, desc = args.partition("=")
+            zone_name = zone_name.strip().lower().replace(" ", "_")
+            desc = desc.strip()
+
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(
+                    f"No zone named '{zone_name}'. "
+                    f"Type 'zone list' to see all zones."
+                )
+                return
+
+            zone_type = zones[zone_name].get("zone_type", "surface")
+            if zone_type not in ("orifice", "both"):
+                self.msg(
+                    f"Zone '{zone_name}' is type '{zone_type}'. "
+                    f"Interior descriptions only apply to "
+                    f"orifice or both zones.\n"
+                    f"Change the type with: "
+                    f"zone visibility {zone_name} — or recreate "
+                    f"the zone with the correct type."
+                )
+                return
+
+            result = char.set_zone_interior(zone_name, desc)
+            if result:
+                self.msg(
+                    f"Interior description set for zone "
+                    f"|w{zone_name}|n.\n"
+                    f"|x[Visible at deep examine with mature "
+                    f"consent, or via a womb-room item.]|n"
+                )
+            else:
+                self.msg("Could not set interior description.")
+            return
+
+        # No = — open editor for this zone
+        zone_name = args.strip().lower().replace(" ", "_")
+        zones = char._get_zones()
+
+        if zone_name not in zones:
+            self.msg(
+                f"No zone named '{zone_name}'. "
+                f"Type 'zone list' to see all zones."
+            )
+            return
+
+        zone_type = zones[zone_name].get("zone_type", "surface")
+        if zone_type not in ("orifice", "both"):
+            self.msg(
+                f"Zone '{zone_name}' is type '{zone_type}'. "
+                f"Interior descriptions only apply to "
+                f"orifice or both zones."
+            )
+            return
+
+        from world.text_editor import _enter_editor, _PENDING_SETTERS
+
+        current = zones[zone_name].get("interior", "") or ""
+        initial = [l for l in current.split("\n") if l] if current else []
+
+        def _setter(c, lines):
+            char.set_zone_interior(zone_name, "\n".join(lines))
+            c.msg(
+                f"|x[Interior description saved for zone "
+                f"|w{zone_name}|x.]|n"
+            )
+
+        _PENDING_SETTERS[str(self.caller.dbref)] = _setter
+
+        _enter_editor(
+            self.caller,
+            target_display=(
+                f"{char.db.rp_name or char.key} "
+                f"— zone interior: {zone_name}"
+            ),
+            setter_key="_room_field",
+            initial_lines=initial,
+            extra=None,
+        )
+
+    def _zone_add(self, char, args):
+        """Add a freeform zone. Supports path syntax: parent/child/grandchild."""
+        if not args:
+            self.msg(
+                "Usage: zone add <name>\n"
+                "       zone add <parent>/<name>\n"
+                "       zone add <parent>/<name> type=<type>\n"
+                "Types: surface / orifice / both / attachment\n"
+                "Example: zone add groin/vulva type=both intimate"
+            )
+            return
 
         parts = args.split()
-        zone_name = parts[0].lower().replace(" ", "_")
+        raw_path = parts[0].lower().replace(" ", "_")
+
+        # Parse optional keyword flags
+        zone_type  = "surface"
+        intimate   = False
+        visibility = "look"
 
         for part in parts[1:]:
             if part.startswith("type="):
@@ -1324,8 +1412,7 @@ class CmdZone(MuxCommand):
                 if zone_type not in ZONE_TYPES:
                     self.msg(
                         f"Unknown type '{zone_type}'. "
-                        f"Valid: "
-                        f"{', '.join(ZONE_TYPES.keys())}"
+                        f"Valid: {', '.join(ZONE_TYPES.keys())}"
                     )
                     return
             elif part.startswith("visibility="):
@@ -1338,40 +1425,75 @@ class CmdZone(MuxCommand):
             elif part == "intimate":
                 intimate = True
 
-        # Default consent based on type
+        # Parse path: "groin/vulva/labia" → parent="vulva", leaf="labia"
+        path_parts = [p for p in raw_path.split("/") if p]
+        if not path_parts:
+            self.msg("Zone name cannot be empty.")
+            return
+
+        zones = char._get_zones()
+
+        if len(path_parts) == 1:
+            # Simple name — root-level freeform zone
+            leaf_name = path_parts[0]
+            parent_name = None
+        else:
+            # Path — verify every ancestor exists
+            leaf_name = path_parts[-1]
+            parent_name = path_parts[-2]
+            for i, ancestor in enumerate(path_parts[:-1]):
+                if ancestor not in zones:
+                    chain = "/".join(path_parts[:i + 1])
+                    self.msg(
+                        f"Zone '{ancestor}' doesn't exist. "
+                        f"Create the path in order:\n"
+                        f"  zone add {chain}\n"
+                        f"  zone add {'/'.join(path_parts[:i + 2])}\n"
+                        f"  ... and so on."
+                    )
+                    return
+
+        # Default consent for intimate / orifice zones
         consent = (
             "intimate"
-            if (zone_type == "orifice" or intimate)
+            if (zone_type == "orifice" or zone_type == "both" or intimate)
             else "casual"
         )
+        # Orifice/both zones default to examine visibility unless specified
+        if zone_type in ("orifice", "both") and visibility == "look":
+            visibility = "examine"
 
         result = char.add_zone(
-            zone_name,
+            leaf_name,
             intimate=intimate,
             visibility=visibility,
             zone_type=zone_type,
             consent_required=consent,
+            parent=parent_name,
         )
 
         if result:
+            parent_note = (
+                f" (child of |w{parent_name}|n)"
+                if parent_name else " (root zone)"
+            )
             self.msg(
-                f"Freeform zone |w{zone_name}|n added.\n"
-                f"Type: {zone_type} | "
-                f"Visibility: {visibility} | "
+                f"Zone |w{leaf_name}|n added{parent_note}.\n"
+                f"Type: {zone_type}  |  "
+                f"Visibility: {visibility}  |  "
                 f"Intimate: {'yes' if intimate else 'no'}\n"
                 f"Set its description with: "
-                f"zone set {zone_name} = <description>"
+                f"zone set {leaf_name} = <description>"
             )
         else:
-            self.msg(
-                f"Zone '{zone_name}' already exists."
-            )
+            self.msg(f"Zone '{leaf_name}' already exists.")
 
     def _zone_remove(self, char, args):
-        """Remove a freeform zone."""
+        """Remove a freeform zone. Use /cascade to also remove children."""
         if not args:
             self.msg(
                 "Usage: zone remove <name>\n"
+                "       zone remove/cascade <name>\n"
                 "Note: default zones cannot be removed."
             )
             return
@@ -1391,11 +1513,21 @@ class CmdZone(MuxCommand):
             )
             return
 
-        result = char.remove_zone(zone_name)
-        if result:
-            self.msg(f"Zone |w{zone_name}|n removed.")
+        cascade = "cascade" in self.switches
+        ok, result = char.remove_zone(zone_name, cascade=cascade)
+
+        if ok:
+            removed = result  # list of removed zone names
+            if len(removed) == 1:
+                self.msg(f"Zone |w{zone_name}|n removed.")
+            else:
+                self.msg(
+                    f"Zone |w{zone_name}|n and "
+                    f"{len(removed) - 1} child zone(s) removed:\n"
+                    f"  {', '.join(removed)}"
+                )
         else:
-            self.msg("Could not remove zone.")
+            self.msg(result)
 
     def _zone_rename(self, char, args):
         """Rename a zone."""
@@ -1423,6 +1555,12 @@ class CmdZone(MuxCommand):
 
         # Rename by copying and deleting
         zones[new_name] = zones.pop(old_name)
+
+        # Update parent references in all child zones
+        for zdata in zones.values():
+            if zdata.get("parent") == old_name:
+                zdata["parent"] = new_name
+
         char.db.zones = zones
 
         # Update display order if present

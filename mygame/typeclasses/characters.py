@@ -30,94 +30,12 @@ _ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_]+)\}')
 # Zone configuration
 # -------------------------------------------------------------------
 
-DEFAULT_ZONES = [
-    "hair", "face", "eyes", "lips", "ears",
-    "throat", "neck", "nape",
-    "shoulders", "chest", "back",
-    "arms", "wrists", "hands",
-    "abdomen", "waist", "hips", "lower_back",
-    "thighs", "legs", "ankles", "feet",
-]
-
-# Default display order for outfit assembly — top to bottom
-ZONE_DISPLAY_ORDER = [
-    "hair", "face", "eyes", "lips", "ears",
-    "throat", "neck", "nape",
-    "shoulders", "chest", "back",
-    "arms", "wrists", "hands",
-    "abdomen", "waist", "hips", "lower_back",
-    "thighs", "legs", "ankles", "feet",
-]
-
 # Zone types
 ZONE_TYPES = {
     "surface":    "things rest on or against this zone",
     "orifice":    "things can be placed inside this zone",
     "both":       "surface and orifice",
     "attachment": "things attach to or pierce this zone",
-}
-
-# Default zone types per zone
-DEFAULT_ZONE_TYPES = {
-    "hair":       "surface",
-    "face":       "surface",
-    "eyes":       "surface",
-    "lips":       "both",
-    "ears":       "attachment",
-    "throat":     "both",
-    "neck":       "surface",
-    "nape":       "surface",
-    "shoulders":  "surface",
-    "chest":      "surface",
-    "back":       "surface",
-    "arms":       "surface",
-    "wrists":     "attachment",
-    "hands":      "surface",
-    "abdomen":    "surface",
-    "waist":      "surface",
-    "hips":       "surface",
-    "lower_back": "surface",
-    "thighs":     "surface",
-    "legs":       "surface",
-    "ankles":     "attachment",
-    "feet":       "surface",
-}
-
-# Default consent required per zone for interaction by others
-DEFAULT_ZONE_CONSENT = {
-    "hair":       "casual",
-    "face":       "casual",
-    "eyes":       "casual",
-    "lips":       "intimate",
-    "ears":       "casual",
-    "throat":     "intimate",
-    "neck":       "casual",
-    "nape":       "intimate",
-    "shoulders":  "casual",
-    "chest":      "casual",
-    "back":       "casual",
-    "arms":       "casual",
-    "wrists":     "casual",
-    "hands":      "casual",
-    "abdomen":    "intimate",
-    "waist":      "intimate",
-    "hips":       "intimate",
-    "lower_back": "intimate",
-    "thighs":     "intimate",
-    "legs":       "intimate",
-    "ankles":     "casual",
-    "feet":       "casual",
-}
-
-# Zones that require consent when nude
-INTIMATE_ZONES = {
-    "chest", "abdomen", "waist", "hips",
-    "lower_back", "thighs", "legs",
-}
-
-# Zones visible only on examine by default
-EXAMINE_ONLY_ZONES = {
-    "nape", "lower_back",
 }
 
 # Zone visibility levels
@@ -130,14 +48,96 @@ ZONE_VISIBILITY = {
     "hidden":    "private — not visible to others",
 }
 
-# Zone display groupings for zone list command
+# Hierarchical zone tree.
+# Each entry: (name, parent, zone_type, intimate, visibility, consent_required)
+# parent=None means root zone. Children inherit coverage from parents.
+# Supports arbitrary depth — players extend via 'zone add parent/child/grandchild'.
+DEFAULT_ZONE_TREE = [
+    # ── ROOT ZONES ────────────────────────────────────────────────────
+    # Wearing a root covers all its descendants.
+    ("head",       None,    "surface",    False, "look",    "casual"),
+    ("neck",       None,    "surface",    False, "look",    "casual"),
+    ("torso",      None,    "surface",    False, "look",    "casual"),
+    ("arms",       None,    "surface",    False, "look",    "casual"),
+    ("groin",      None,    "surface",    True,  "hidden",  "intimate"),
+    ("legs",       None,    "surface",    False, "look",    "casual"),
+
+    # ── HEAD ──────────────────────────────────────────────────────────
+    ("hair",       "head",  "surface",    False, "look",    "casual"),
+    ("face",       "head",  "surface",    False, "look",    "casual"),
+    ("ears",       "head",  "attachment", False, "look",    "casual"),
+
+    # face children
+    ("eyes",       "face",  "surface",    False, "look",    "casual"),
+    ("lips",       "face",  "attachment", False, "look",    "casual"),
+    ("mouth",      "face",  "both",       False, "look",    "casual"),
+
+    # mouth children
+    ("tongue",     "mouth", "attachment", False, "examine", "casual"),
+
+    # ── NECK ──────────────────────────────────────────────────────────
+    ("throat",     "neck",  "both",       False, "look",    "casual"),
+    ("nape",       "neck",  "surface",    False, "examine", "intimate"),
+
+    # ── TORSO ─────────────────────────────────────────────────────────
+    ("shoulders",  "torso", "surface",    False, "look",    "casual"),
+    ("chest",      "torso", "surface",    True,  "look",    "casual"),
+    ("abdomen",    "torso", "surface",    True,  "look",    "intimate"),
+    ("back",       "torso", "surface",    False, "look",    "casual"),
+    ("lower_back", "back",  "surface",    True,  "examine", "intimate"),
+    ("waist",      "torso", "surface",    False, "look",    "casual"),
+
+    # ── ARMS ──────────────────────────────────────────────────────────
+    ("wrists",     "arms",  "attachment", False, "look",    "casual"),
+    ("hands",      "arms",  "surface",    False, "look",    "casual"),
+
+    # ── GROIN ─────────────────────────────────────────────────────────
+    # Ships empty. Players build anatomy here:
+    #   zone add groin/vulva type=both intimate
+    #   zone add groin/anus  type=orifice intimate
+    #   etc.
+
+    # ── LEGS ──────────────────────────────────────────────────────────
+    ("hips",       "legs",  "surface",    True,  "look",    "intimate"),
+    ("thighs",     "legs",  "surface",    True,  "look",    "intimate"),
+    ("ankles",     "legs",  "attachment", False, "look",    "casual"),
+    ("feet",       "legs",  "surface",    False, "look",    "casual"),
+]
+
+# Ordered list of root zone names — determines tree display order.
+DEFAULT_ROOT_ORDER = ["head", "neck", "torso", "arms", "groin", "legs"]
+
+# Child display order within each parent — append-order wins for unlisted.
+DEFAULT_CHILD_ORDER = {
+    "head":  ["hair", "face", "ears"],
+    "face":  ["eyes", "lips", "mouth"],
+    "mouth": ["tongue"],
+    "neck":  ["throat", "nape"],
+    "torso": ["shoulders", "chest", "abdomen", "back", "waist"],
+    "back":  ["lower_back"],
+    "arms":  ["wrists", "hands"],
+    "legs":  ["hips", "thighs", "ankles", "feet"],
+}
+
+# ZONE_DISPLAY_ORDER kept for backwards compatibility — derived from tree walk.
+ZONE_DISPLAY_ORDER = [
+    "head", "hair", "face", "eyes", "lips", "mouth", "tongue", "ears",
+    "neck", "throat", "nape",
+    "torso", "shoulders", "chest", "abdomen", "back", "lower_back", "waist",
+    "arms", "wrists", "hands",
+    "groin",
+    "legs", "hips", "thighs", "ankles", "feet",
+]
+
+# ZONE_GROUPS kept for backwards compatibility — tree display replaces this
+# in zone list, but imported by character_commands.py.
 ZONE_GROUPS = [
-    ("HEAD",        ["hair", "face", "eyes", "lips", "ears"]),
-    ("NECK",        ["throat", "neck", "nape"]),
-    ("UPPER TORSO", ["shoulders", "chest", "back"]),
-    ("ARMS",        ["arms", "wrists", "hands"]),
-    ("CORE",        ["abdomen", "waist", "hips", "lower_back"]),
-    ("LOWER BODY",  ["thighs", "legs", "ankles", "feet"]),
+    ("HEAD",   ["head", "hair", "face", "eyes", "lips", "mouth", "tongue", "ears"]),
+    ("NECK",   ["neck", "throat", "nape"]),
+    ("TORSO",  ["torso", "shoulders", "chest", "abdomen", "back", "lower_back", "waist"]),
+    ("ARMS",   ["arms", "wrists", "hands"]),
+    ("GROIN",  ["groin"]),
+    ("LEGS",   ["legs", "hips", "thighs", "ankles", "feet"]),
 ]
 
 # Reputation tiers — drives level title
@@ -160,12 +160,30 @@ CONSENT_LEVELS = ["casual", "intimate", "mature", "bdsm"]
 
 def _make_default_zone(intimate=False, visibility="look",
                        zone_type="surface",
-                       consent_required="casual"):
-    """Helper to create a fresh zone dict."""
+                       consent_required="casual",
+                       parent=None):
+    """
+    Helper to create a fresh zone dict.
+
+    Args:
+        intimate (bool): Zone is intimate when nude.
+        visibility (str): Default visibility level.
+        zone_type (str): surface / orifice / both / attachment
+        consent_required (str): Minimum consent for interaction.
+        parent (str|None): Parent zone name, or None for root zones.
+    """
     return {
+        # Hierarchy
+        "parent":           parent,
+
         # Surface layer — what's ON or AT this zone
         "nude":             "",
         "covered_by":       None,
+
+        # Interior description — for orifice/both zones.
+        # Shown only at deep examine with mature consent,
+        # or when a womb-room item renders this zone as an interior space.
+        "interior":         "",
 
         # Orifice layer — what's IN this zone
         # List of dicts: {desc, state, set_by, removable_by}
@@ -658,82 +676,175 @@ class Character(ObjectParent, DefaultCharacter):
 
     def _build_default_zones(self):
         """
-        Build the initial zone dict with all default zones.
-        Each zone gets correct type and consent level.
+        Build the initial zone dict from DEFAULT_ZONE_TREE.
+        Each zone gets its parent, type, consent, and visibility.
 
         Returns:
-            dict: Full zone dict with defaults.
+            dict: Full zone dict with hierarchy.
         """
         zones = {}
-        for zone_name in DEFAULT_ZONES:
-            intimate = zone_name in INTIMATE_ZONES
-            visibility = (
-                "examine"
-                if zone_name in EXAMINE_ONLY_ZONES
-                else "look"
-            )
-            zone_type = DEFAULT_ZONE_TYPES.get(
-                zone_name, "surface"
-            )
-            consent = DEFAULT_ZONE_CONSENT.get(
-                zone_name, "casual"
-            )
-            zones[zone_name] = _make_default_zone(
+        for (name, parent, zone_type,
+             intimate, visibility, consent) in DEFAULT_ZONE_TREE:
+            zones[name] = _make_default_zone(
                 intimate=intimate,
                 visibility=visibility,
                 zone_type=zone_type,
                 consent_required=consent,
+                parent=parent,
             )
         return zones
 
     def get_zone_order(self):
         """
-        Get the effective zone display order for this character.
+        Return all zone names in depth-first tree order.
+
+        Roots appear in DEFAULT_ROOT_ORDER. Children follow their
+        parent immediately, in DEFAULT_CHILD_ORDER then alpha.
+        Any custom zone_display_order is respected for roots.
 
         Returns:
             list: Zone names in display order.
         """
-        custom = self.db.zone_display_order or []
         zones = self._get_zones()
 
-        if not custom:
-            order = [
-                z for z in ZONE_DISPLAY_ORDER
-                if z in zones
+        # Build children map from zone data
+        children_map = {}   # parent_name -> [child_names]
+        roots = []
+        for zname, zdata in zones.items():
+            parent = zdata.get("parent")
+            if not parent or parent not in zones:
+                roots.append(zname)
+            else:
+                children_map.setdefault(parent, []).append(zname)
+
+        # Sort children within each parent by preferred order then alpha
+        for parent, kids in children_map.items():
+            preferred = DEFAULT_CHILD_ORDER.get(parent, [])
+            children_map[parent] = sorted(
+                kids,
+                key=lambda z: (
+                    preferred.index(z)
+                    if z in preferred
+                    else len(preferred),
+                    z
+                )
+            )
+
+        # Order roots — respect custom order list if set, else DEFAULT_ROOT_ORDER
+        custom_root_order = self.db.zone_display_order or []
+        if custom_root_order:
+            seen_r = set()
+            ordered_roots = [
+                z for z in custom_root_order
+                if z in zones and zones[z].get("parent") is None
+                and (seen_r.add(z) or True)
             ]
-            for zone_name in zones:
-                if zone_name not in order:
-                    order.append(zone_name)
-            return order
+            for z in roots:
+                if z not in seen_r:
+                    ordered_roots.append(z)
+                    seen_r.add(z)
+        else:
+            seen_r = set()
+            ordered_roots = []
+            for z in DEFAULT_ROOT_ORDER:
+                if z in zones:
+                    ordered_roots.append(z)
+                    seen_r.add(z)
+            for z in roots:
+                if z not in seen_r:
+                    ordered_roots.append(z)
 
-        order = [z for z in custom if z in zones]
-        seen = set(order)
+        # Depth-first walk
+        result = []
 
-        for zone_name in ZONE_DISPLAY_ORDER:
-            if zone_name in zones and zone_name not in seen:
-                order.append(zone_name)
-                seen.add(zone_name)
+        def _walk(name):
+            result.append(name)
+            for child in children_map.get(name, []):
+                _walk(child)
 
-        for zone_name in zones:
-            if zone_name not in seen:
-                order.append(zone_name)
+        for root in ordered_roots:
+            _walk(root)
 
-        return order
+        return result
+
+    def _is_covered_by_ancestor(self, zone_name, zones):
+        """
+        Walk the parent chain and return True if any ancestor
+        has a covered_by set (i.e. is wearing something).
+
+        This is what makes hierarchy work for rendering:
+        wearing 'torso' hides 'chest', 'breast', 'nipple', etc.
+
+        Args:
+            zone_name (str): Zone to start the walk from.
+            zones (dict): Current zone dict (from _get_zones()).
+
+        Returns:
+            bool: True if any ancestor is covered.
+        """
+        visited = set()
+        current = zone_name
+        while True:
+            zdata = zones.get(current, {})
+            parent = zdata.get("parent")
+            if not parent or parent not in zones:
+                return False
+            if parent in visited:
+                return False    # circular reference guard
+            visited.add(parent)
+            if zones[parent].get("covered_by"):
+                return True
+            current = parent
+
+    def _zone_depth(self, zone_name, zones):
+        """
+        Return the depth of a zone in the tree (0 = root).
+        Used for indented display.
+
+        Args:
+            zone_name (str): Zone to measure.
+            zones (dict): Current zone dict.
+
+        Returns:
+            int: Depth from root.
+        """
+        depth = 0
+        current = zone_name
+        visited = set()
+        while True:
+            zdata = zones.get(current, {})
+            parent = zdata.get("parent")
+            if not parent or parent not in zones:
+                return depth
+            if parent in visited:
+                return depth
+            visited.add(parent)
+            depth += 1
+            current = parent
 
     def add_zone(self, name, intimate=False,
                  visibility="look", desc="",
                  zone_type="surface",
-                 consent_required="casual"):
+                 consent_required="casual",
+                 parent=None):
         """
         Add a freeform zone to this character.
 
+        Supports path syntax: 'chest/breast/nipple' will create 'nipple'
+        as a child of 'breast' (which must already exist), or create
+        the full path if intermediate zones are also being added.
+
+        The 'name' argument here should already be the leaf zone name
+        (path splitting is handled by _zone_add in character_commands.py).
+
         Args:
-            name (str): Zone name.
+            name (str): Zone name (leaf only, no slashes).
             intimate (bool): Whether zone is intimate when nude.
             visibility (str): Default visibility level.
             desc (str): Initial nude description.
             zone_type (str): surface/orifice/both/attachment
             consent_required (str): Minimum consent for interaction.
+            parent (str|None): Parent zone name, or None for root.
 
         Returns:
             bool: True if added, False if already exists.
@@ -745,8 +856,10 @@ class Character(ObjectParent, DefaultCharacter):
             return False
 
         zones[name] = {
+            "parent":           parent,
             "nude":             desc,
             "covered_by":       None,
+            "interior":         "",
             "contents":         [],
             "state":            "pristine",
             "state_desc":       None,
@@ -762,35 +875,70 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.zones = zones
         return True
 
-    def remove_zone(self, name):
+    def remove_zone(self, name, cascade=False):
         """
         Remove a freeform zone. Default zones cannot be removed.
 
+        If the zone has children, removal is blocked unless cascade=True,
+        in which case all descendants are removed recursively.
+
         Args:
             name (str): Zone name.
+            cascade (bool): If True, also remove all child zones.
 
         Returns:
-            bool: True if removed, False if not found or default.
+            (bool, str|list):
+                (True, [removed_names]) on success.
+                (False, error_str) on failure.
         """
         zones = self._get_zones()
         name = name.lower().replace(" ", "_")
 
         if name not in zones:
-            return False
+            return False, f"No zone named '{name}'."
 
         if zones[name].get("default", False):
-            return False
+            return False, f"Cannot remove default zone '{name}'."
 
-        del zones[name]
+        # Find all descendants
+        def _descendants(zname):
+            kids = [
+                z for z, zd in zones.items()
+                if zd.get("parent") == zname
+            ]
+            result = list(kids)
+            for k in kids:
+                result.extend(_descendants(k))
+            return result
+
+        children = _descendants(name)
+
+        if children and not cascade:
+            return False, (
+                f"Zone '{name}' has {len(children)} child zone(s): "
+                f"{', '.join(children)}.\n"
+                f"Use zone remove/cascade to remove it and all children."
+            )
+
+        # Remove the zone and all descendants
+        to_remove = [name] + children
+        for zname in to_remove:
+            if zname in zones:
+                del zones[zname]
+
         self.db.zones = zones
 
         # Clean up custom order
         order = self.db.zone_display_order or []
-        if name in order:
-            order.remove(name)
+        changed = False
+        for zname in to_remove:
+            if zname in order:
+                order.remove(zname)
+                changed = True
+        if changed:
             self.db.zone_display_order = order
 
-        return True
+        return True, to_remove
 
     def set_zone_desc(self, zone_name, desc):
         """
@@ -810,6 +958,35 @@ class Character(ObjectParent, DefaultCharacter):
             return False
 
         zones[zone_name]["nude"] = desc
+        self.db.zones = zones
+        return True
+
+    def set_zone_interior(self, zone_name, desc):
+        """
+        Set the interior description for an orifice or both zone.
+
+        The interior description is shown only on deep examine with
+        mature consent, or when a womb-room item renders this zone
+        as an enterable interior space.
+
+        Args:
+            zone_name (str): Zone to set.
+            desc (str): Interior description text.
+
+        Returns:
+            bool: True if set, False if zone not found or wrong type.
+        """
+        zones = self._get_zones()
+        zone_name = zone_name.lower().replace(" ", "_")
+
+        if zone_name not in zones:
+            return False
+
+        zone_type = zones[zone_name].get("zone_type", "surface")
+        if zone_type not in ("orifice", "both"):
+            return False
+
+        zones[zone_name]["interior"] = desc
         self.db.zones = zones
         return True
 
@@ -865,6 +1042,12 @@ class Character(ObjectParent, DefaultCharacter):
                     "visible": False}
 
         is_self = looker == self
+
+        # Check ancestor coverage — if a parent zone is wearing something,
+        # this zone is hidden underneath and should not be shown.
+        if self._is_covered_by_ancestor(zone_name, zones):
+            return {"surface": None, "contents": None,
+                    "visible": False}
 
         # Check consent for intimate zones when nude
         covered = zone.get("covered_by")
@@ -1156,6 +1339,10 @@ class Character(ObjectParent, DefaultCharacter):
             if zone_type == "orifice":
                 continue
 
+            # Skip zones hidden under an ancestor's clothing
+            if self._is_covered_by_ancestor(zone_name, zones):
+                continue
+
             covered = zone_data.get("covered_by")
             if not covered:
                 continue
@@ -1348,6 +1535,9 @@ class Character(ObjectParent, DefaultCharacter):
                 continue  # shown inline via token
             if _zname not in _outfit_zones:
                 continue
+            # Skip zones hidden under a parent's clothing
+            if self._is_covered_by_ancestor(_zname, _outfit_zones):
+                continue
             _zdata = _outfit_zones[_zname]
             _ztype = _zdata.get("zone_type", "surface")
             _zdisplay = _zname.replace("_", " ")
@@ -1488,6 +1678,9 @@ class Character(ObjectParent, DefaultCharacter):
             for zone_name in self.get_zone_order():
                 if zone_name not in zones:
                     continue
+                # Hidden under a parent zone's clothing — skip
+                if self._is_covered_by_ancestor(zone_name, zones):
+                    continue
                 zone_data = zones[zone_name]
                 covered = zone_data.get("covered_by")
                 if not covered:
@@ -1566,7 +1759,7 @@ class Character(ObjectParent, DefaultCharacter):
                         parts.append("")
                         parts.append(touch)
 
-            # --- E5: Zone contents (orifice zones, consent-gated) ---
+            # --- E5: Zone contents + interior descs (orifice zones, consent-gated) ---
             orifice_lines = []
             for zone_name in self.get_zone_order():
                 if zone_name not in zones:
@@ -1574,17 +1767,31 @@ class Character(ObjectParent, DefaultCharacter):
                 zone_data = zones[zone_name]
                 if zone_data.get("zone_type", "surface") not in ("orifice", "both"):
                     continue
-                contents = zone_data.get("contents", [])
-                if not contents:
+                # Hidden under ancestor clothing — skip entirely
+                if self._is_covered_by_ancestor(zone_name, zones):
                     continue
-                if is_self or self._looker_has_consent(
+                has_consent = is_self or self._looker_has_consent(
                     looker, "intimate", zone_name=zone_name
+                )
+                zdisplay = zone_name.replace("_", " ")
+                # Interior description — visible with mature consent at deep examine
+                interior = zone_data.get("interior", "")
+                if interior and (
+                    is_self or self._looker_has_consent(
+                        looker, "mature", zone_name=zone_name
+                    )
                 ):
+                    orifice_lines.append(
+                        f"|x[{zdisplay} — interior] {interior}|n"
+                    )
+                # Contents
+                contents = zone_data.get("contents", [])
+                if contents and has_consent:
                     for item in contents:
                         desc = item.get("desc", "")
                         if desc:
                             orifice_lines.append(
-                                f"|x[{zone_name.replace('_', ' ')}] {desc}|n"
+                                f"|x[{zdisplay}] {desc}|n"
                             )
             if orifice_lines:
                 parts.append("")

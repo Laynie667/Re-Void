@@ -90,21 +90,48 @@ def _char_name(character):
 _ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_]+)\}')
 
 
+def _ancestor_covered(zone_name, zones):
+    """
+    Walk the parent chain of zone_name and return True if any ancestor
+    has a covered_by set.
+
+    When a parent zone is wearing something, all its descendants are
+    hidden underneath — {zone:nipple} returns "" if chest is covered.
+
+    Args:
+        zone_name (str): Zone to start the walk from.
+        zones (dict): Full zone dict (character.db.zones).
+
+    Returns:
+        bool: True if any ancestor is covered.
+    """
+    visited = set()
+    current = zone_name
+    while True:
+        zdata = zones.get(current, {})
+        parent = zdata.get("parent")
+        if not parent or parent not in zones:
+            return False
+        if parent in visited:
+            return False    # circular reference guard
+        visited.add(parent)
+        if zones[parent].get("covered_by"):
+            return True
+        current = parent
+
+
 def render_zone_tokens(text, character):
     """
     Replace {zone:name} tokens in text with the zone's current rendered state.
 
     Resolution order per zone:
-      nude desc is always the base — nothing replaces it.
-      All layers append with " — " and are joined with ", ".
-
-      Render order (clothing layer first, then on-items, then in-items):
-        1. covered_by clothing (from wear command)
-        2. Freeform items with display_mode="cover" (placed covering items, e.g. chastity belt)
-        3. Freeform items with display_mode="on" (placed on the surface)
-        4. Freeform items with display_mode="in" (placed inside an orifice)
-        5. Bare nude desc if nothing else present
-        6. Zone not found or empty → empty string (token removed silently)
+      1. If any ancestor zone has covered_by → return "" (zone hidden under parent clothing)
+      2. covered_by clothing (from wear command) → replaces nude desc
+      3. Freeform items with display_mode="cover" → append
+      4. Freeform items with display_mode="on"    → append
+      5. Freeform items with display_mode="in"    → append
+      6. Bare nude desc if nothing else present
+      7. Zone not found or empty → empty string (token removed silently)
 
     Usage in physical_desc:
         {zone:hair}, framing {zone:face}. At the throat, {zone:neck}.
@@ -122,11 +149,15 @@ def render_zone_tokens(text, character):
         if zname not in zone_keys:
             return ""
 
+        # If any ancestor is wearing clothing, this zone is hidden — show nothing.
+        if _ancestor_covered(zname, zones):
+            return ""
+
         zdata = zones.get(zname, {})
         nude = (zdata.get("nude") or "").strip()
 
         # Collect freeform items on this zone.
-        # "cover"  — placed covering item (chastity belt, gag, etc.) — renders in clothing layer
+        # "cover"  — placed covering item (chastity belt, gag, etc.)
         # "on"     — placed on the surface/attachment zone
         # "in"     — placed inside an orifice zone
         # All use player_desc if set, else original desc.
