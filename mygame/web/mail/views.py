@@ -153,8 +153,11 @@ class MessageDetailView(DetailView):
         user = self.request.user
         char_ids = _char_ids_for_account(user)
         msg = ctx["ogram"]
-        ctx["is_recipient"] = msg.recipient_object_id in char_ids
-        ctx["is_sender"]    = msg.sender_account_id == user.id
+        ctx["is_recipient"] = (
+            (msg.recipient_object_id is not None and msg.recipient_object_id in char_ids) or
+            (msg.recipient_object_id is None and msg.recipient_account_id == user.id)
+        )
+        ctx["is_sender"] = msg.sender_account_id == user.id
         return ctx
 
 
@@ -169,7 +172,13 @@ class DeleteMessageView(View):
         char_ids = _char_ids_for_account(user)
         msg = get_object_or_404(OgramMessage, pk=pk)
 
-        is_recipient = msg.recipient_object_id in char_ids
+        # Mirror the same dual check used in MessageDetailView:
+        # account-level messages (staff contact) have recipient_object_id=None
+        # and are matched by recipient_account_id instead.
+        is_recipient = (
+            (msg.recipient_object_id is not None and msg.recipient_object_id in char_ids) or
+            (msg.recipient_object_id is None and msg.recipient_account_id == user.id)
+        )
         is_sender    = msg.sender_account_id == user.id
 
         if not (is_recipient or is_sender):
