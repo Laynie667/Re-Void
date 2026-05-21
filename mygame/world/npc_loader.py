@@ -354,6 +354,26 @@ class NPCLoader:
         if parrot is not None:
             npc.db.parrot_responses = list(parrot)
 
+        # Zones (optional — NPC zone descriptors for examine/zone-targeting)
+        zones_raw = config.get("zones")
+        if zones_raw is not None:
+            zones = {}
+            for zname, zdata in zones_raw.items():
+                zones[zname] = {
+                    "nude":             zdata.get("nude", ""),
+                    "interior":         zdata.get("interior", ""),
+                    "covered_by":       None,
+                    "contents":         [],
+                    "ambient":          [],
+                    "zone_type":        zdata.get("zone_type", "surface"),
+                    "intimate":         bool(zdata.get("intimate", False)),
+                    "visibility":       zdata.get("visibility", "look"),
+                    "consent_required": zdata.get("consent_required", "casual"),
+                    "default":          True,
+                    "parent":           zdata.get("parent", None),
+                }
+            npc.db.zones = zones
+
         # Store raw config for reference
         npc.db.npc_config = config
 

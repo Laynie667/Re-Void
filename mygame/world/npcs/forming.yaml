@@ -28,6 +28,20 @@ npcs:
         - "The figure looks up briefly, as though they heard your name spoken somewhere far away."
         - "The Witness's stillness is the kind that comes from a very long practice of it."
 
+    zones:
+      face:
+        nude: "Features that almost resolve — eyes that are clearly present, a mouth that rests near patience — but the precise details shift when looked at directly. Less blurred than uncommitted."
+        visibility: look
+        parent: head
+      hands:
+        nude: "Whatever they are holding is too small to make out. The hands themselves have the quality of things that have been very still for a very long time."
+        visibility: examine
+        parent: arms
+      presence:
+        nude: "The Witness occupies the center of the space with the quality of a fixed point — not heavy, not imposing, simply the thing everything else is relative to."
+        visibility: look
+        parent: null
+
     triggers:
       _arrive:
         type: prose
@@ -248,6 +262,16 @@ npcs:
         - "Lark drifts in a slow idle circle, the way some people pace while they think."
         - "The amber light brightens briefly — the wisp equivalent of a smile, you suspect."
         - "Lark holds very still for a moment, then resumes moving. Whatever it was, it passed."
+
+    zones:
+      light:
+        nude: "Warm amber, slightly larger than the other wisps in the drift. At its edges — if light can have edges — a quality that is almost but not quite sound. It has the settled radiance of something that has been this for a long time and has made peace with that."
+        visibility: look
+        parent: null
+      presence:
+        nude: "Lark holds the specific warmth of something that enjoys existing. Not radiantly cheerful — more the comfortable glow of a thing that has sorted itself out and is glad."
+        visibility: examine
+        parent: null
 
     triggers:
       _arrive:
@@ -527,6 +551,20 @@ npcs:
       - '"Oh, we are saying things," Sable says, pleased. "{text}." They nod once, as if approving of the attempt. "|wsay|n is your voice in the room. |wpose|n is your body. You will need both. Once you have tried them — |wask Sable about |cdesc|n."'
       - '"{text}," Sable repeats back, perfectly. A small, dry smile. "Yes. That worked. Welcome to verbal communication." They gesture, casual. "Now try |wpose|n — write what you are doing in third person. |c{name} reaches for something|n. Then ask me about |cdesc|n."'
       - 'Sable pauses in whatever they were doing. "{text}," they echo, with the quality of someone who found this word choice personally interesting. "Valid. Now |wpose|n it — give it a body. And when you are done exploring those two, |wask Sable about |cdesc|n."'
+
+    zones:
+      face:
+        nude: "Not remarkable from a distance — dark eyes, particular features that become specific on close inspection rather than immediately distinctive. The kind of face that rewards attention."
+        visibility: look
+        parent: head
+      hair:
+        nude: "Dark, simple, worn in whatever way required the fewest decisions. Practical rather than styled."
+        visibility: examine
+        parent: head
+      hands:
+        nude: "Still. The hands of someone who has learned to keep them that way — not fidgeting, not purposefully placed, just at rest. You notice this because you don't have hands yet."
+        visibility: examine
+        parent: arms
 
     triggers:
       _arrive:
@@ -1024,6 +1062,16 @@ npcs:
         - "The surface brightens by a fraction. Responding to something. You're not sure what."
         - "Your reflection in the Mirror looks, very briefly, like the version of you that knows what it's doing."
 
+    zones:
+      surface:
+        nude: "Reflective without being passive about it. The surface holds your shape with particular attention — not the flat accuracy of glass, but the focused regard of something that is actively engaged with what it's seeing. Your reflection in it is real but provisional."
+        visibility: look
+        parent: null
+      reflection:
+        nude: "What the Mirror shows you is almost you. The shape is right. The proportions, the basic facts. The details are waiting — present as spaces, empty with a specific quality of expectation."
+        visibility: examine
+        parent: null
+
     triggers:
       _arrive:
         type: prose
@@ -1252,12 +1300,14 @@ npcs:
           "Your body is divided into territories," the Mirror says. "Zones. Named areas, each
           with their own description, visibility setting, and clothing state."
 
-          "You already have the default set — hair, face, neck, chest, all of it. Use |wzone
-          list|n to see them. Each zone can hold its own description, independent of your
-          main desc."
+          "The defaults are organized as a tree. Six root zones — |chead|n, |cneck|n, |ctorso|n,
+          |carms|n, |cgroin|n, |clegs|n — each with children beneath them. Head holds hair,
+          face, and ears. Face holds eyes, lips, and mouth. Torso holds chest, back, shoulders,
+          and so on. Use |wzone list|n to see the full tree."
 
           "Zone descriptions are brief and physical — just that part of the body, nothing more.
-          They appear when someone examines you closely."
+          They appear when someone examines you closely, or when someone looks at that zone
+          directly with |wlook <name> <zone>|n."
 
           "For example: |wzone set hair = Dark, loosely pinned, a few strands escaping
           at the temples.|n"
@@ -1268,8 +1318,11 @@ npcs:
           "Write them as fragments, not full sentences — they are meant to slot into prose.
           Ask me about |wtokens|n to see how."
 
-          "You can also add more zones if the defaults don't cover what you need. Ask me
-          about |wplace|n when you're ready to start dressing."
+          "You can add more zones beneath any existing one. |wzone add groin/vulva type=both
+          intimate|n adds a child zone under groin. |wzone add groin/vulva/labia type=both
+          intimate|n adds a child beneath that. Each parent must already exist."
+
+          "Ask me about |wplace|n when you're ready to start dressing."
 
       zone:
         type: prose
@@ -1277,12 +1330,14 @@ npcs:
           "Your body is divided into territories," the Mirror says. "Zones. Named areas, each
           with their own description, visibility setting, and clothing state."
 
-          "You already have the default set — hair, face, neck, chest, all of it. Use |wzone
-          list|n to see them. Each zone can hold its own description, independent of your
-          main desc."
+          "The defaults are organized as a tree. Six root zones — |chead|n, |cneck|n, |ctorso|n,
+          |carms|n, |cgroin|n, |clegs|n — each with children beneath them. Head holds hair,
+          face, and ears. Face holds eyes, lips, and mouth. Torso holds chest, back, shoulders,
+          and so on. Use |wzone list|n to see the full tree."
 
           "Zone descriptions are brief and physical — just that part of the body, nothing more.
-          They appear when someone examines you closely."
+          They appear when someone examines you closely, or when someone looks at that zone
+          directly with |wlook <name> <zone>|n."
 
           "For example: |wzone set hair = Dark, loosely pinned, a few strands escaping
           at the temples.|n"
@@ -1290,8 +1345,10 @@ npcs:
           "Keep them short. One or two sentences at most. They are details, not paragraphs —
           the kind of thing someone notices when they're already looking carefully."
 
-          "You can also add more zones if the defaults don't cover what you need. Ask me
-          about |wplace|n when you're ready to start dressing."
+          "You can add more zones beneath any existing one. |wzone add groin/vulva type=both
+          intimate|n adds a child zone under groin. Each parent in the path must already exist."
+
+          "Ask me about |wplace|n when you're ready to start dressing."
 
       presence:
         type: prose
@@ -1664,7 +1721,7 @@ npcs:
           IDENTITY: |wsetname|n  |wsetpronouns|n  |wsetspecies|n
           BODY:      |wsetdesc|n  |wsetbodylang|n  |wsetmood|n  |wsetmoodtell|n
           PRESENCE:  |wsetpresence|n  |wsetproxtell|n  |wsetscent|n
-          ZONES:     |wzone list|n  |wzone add <name>|n  |wzone set <name> = <desc>|n
+          ZONES:     |wzone list|n  |wzone add <parent>/<name>|n  |wzone set <name> = <desc>|n
           DRESS:     |wplace me <zone> = <name>/<desc>|n  |wflist|n
           WARDROBE:  |woutfit save \"<name>\"|n  |woutfit wear \"<name>\"|n
           CHECK:     |wsheet|n  |wlook me|n"
@@ -1720,6 +1777,20 @@ npcs:
         - "She glances at the companion on the platform with the expression of someone checking that something is still where they left it."
         - "Wren sets her pen down, picks it up again. Continues."
         - "She looks at you. Then back at her paperwork. You have been assessed."
+
+    zones:
+      face:
+        nude: "Sharp-featured, somewhere between thirty and the concept of having stopped counting. The expression is professionally neutral — not unfriendly, simply occupied. She looks like someone who has answered every question at least once."
+        visibility: look
+        parent: head
+      hair:
+        nude: "Pulled back with the specific practicality of someone who solved this problem once, long ago, and has not revisited it. The solution works. She is not interested in alternatives."
+        visibility: examine
+        parent: head
+      hands:
+        nude: "The hands of someone who writes a great deal and handles small, precise objects. A pen callus on the right index finger that has been there long enough to be architectural."
+        visibility: examine
+        parent: arms
 
     triggers:
       _arrive:

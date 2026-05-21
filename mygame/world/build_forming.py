@@ -699,44 +699,58 @@ def _build_companion(room):
     # Zone layout — every visibility level demonstrated
     # -------------------------------------------------------------------
     def zone(nude, visibility, intimate=False, zone_type="surface",
-             consent_required="casual"):
+             consent_required="casual", parent=None):
         return {
             "nude":             nude,
+            "interior":         "",
             "covered_by":       None,
             "contents":         [],
-            "state":            "pristine",
-            "state_desc":       None,
-            "state_ambient":    [],
+            "ambient":          [],
             "visibility":       visibility,
             "intimate":         intimate,
             "zone_type":        zone_type,
             "consent_required": consent_required,
             "default":          True,
-            "freeform":         False,
-            "ambient":          [],
+            "parent":           parent,
         }
 
     companion.db.zones = {
+        # -- ROOT: head --
+        "head": zone(
+            "The companion's head is held with the quality of something "
+            "that knows it is being looked at and is comfortable with that.",
+            "look",
+            parent=None,
+        ),
+
         # -- look visibility (visible on standard look) --
         "hair": zone(
             "Dark, swept back, held in place with something minimal — "
             "a clip or cord, functional and close.",
             "look",
+            parent="head",
         ),
         "face": zone(
             "Even features, arranged with the particular quality of attention "
             "that comes from being looked at often. Neither inviting nor closed — present.",
             "look",
+            parent="head",
         ),
+
+        # -- ROOT: neck --
         "neck": zone(
             "A clean line from jaw to collarbone. Unadorned at the skin, "
             "waiting for what will be placed.",
             "look",
+            parent=None,
         ),
-        "hands": zone(
-            "Still. The kind of still that reads as practice rather than accident — "
-            "deliberate, composed, at rest.",
+
+        # -- ROOT: torso --
+        "torso": zone(
+            "The trunk of it — proportioned for visibility, held with the "
+            "awareness of a figure that has been built to be examined.",
             "look",
+            parent=None,
         ),
 
         # -- examine visibility (visible on examine) --
@@ -744,27 +758,48 @@ def _build_companion(room):
             "Where the garment begins its commitments — the surface beneath structured "
             "fabric, present and described without apology.",
             "examine",
+            parent="torso",
         ),
         "waist": zone(
             "The line where the garment makes its first decision. Narrow, defined, "
             "the point around which everything else is organized.",
             "examine",
-        ),
-        "arms": zone(
-            "Fine detail work visible on the inner wrist — a small marking, not "
-            "immediately visible from a distance, that becomes clear on closer inspection.",
-            "examine",
+            parent="torso",
         ),
         "back": zone(
             "Bare from shoulder to mid-back where the garment begins. "
             "The line of the spine visible. Intentionally uncovered.",
             "examine",
+            parent="torso",
         ),
-        "wrist": zone(
+
+        # -- ROOT: arms --
+        "arms": zone(
+            "Fine detail work visible on the inner wrist — a small marking, not "
+            "immediately visible from a distance, that becomes clear on closer inspection.",
+            "examine",
+            parent=None,
+        ),
+        "hands": zone(
+            "Still. The kind of still that reads as practice rather than accident — "
+            "deliberate, composed, at rest.",
+            "look",
+            parent="arms",
+        ),
+        "wrists": zone(
             "The left wrist, bare at the skin beneath whatever is placed here. "
             "The attachment point for the cuff.",
             "examine",
             zone_type="attachment",
+            parent="arms",
+        ),
+
+        # -- ROOT: legs --
+        "legs": zone(
+            "The lower half, present and proportioned. The garment covers them "
+            "while implying them.",
+            "look",
+            parent=None,
         ),
 
         # -- proximity visibility (visible only at near/with) --
@@ -773,18 +808,29 @@ def _build_companion(room):
             "the line beneath it present and readable at close range.",
             "proximity",
             consent_required="intimate",
+            parent="legs",
         ),
         "thighs": zone(
             "The garment suggests them more than it conceals. The shape beneath it "
             "is present — visible at close range, not from across the room.",
             "proximity",
             consent_required="intimate",
+            parent="legs",
         ),
         "lower_back": zone(
             "A small mark here — a brand or a tattoo, old enough to have settled "
             "into the skin — visible only at close range.",
             "proximity",
             consent_required="intimate",
+            parent="torso",
+        ),
+
+        # -- ROOT: groin --
+        "groin": zone(
+            "The companion's groin is present in its design. The garment covers it "
+            "with intention — suggesting what is beneath rather than revealing.",
+            "look",
+            parent=None,
         ),
 
         # -- consent-gated intimate zones --
@@ -795,8 +841,9 @@ def _build_companion(room):
             intimate=True,
             zone_type="both",
             consent_required="intimate",
+            parent="torso",
         ),
-        "hips_intimate": zone(
+        "groin_intimate": zone(
             "Fully described. Consent-gated. This zone is complete in its description "
             "and present in the companion's design — it exists to demonstrate what the "
             "consent system protects.",
@@ -804,6 +851,7 @@ def _build_companion(room):
             intimate=True,
             zone_type="both",
             consent_required="mature",
+            parent="groin",
         ),
     }
 

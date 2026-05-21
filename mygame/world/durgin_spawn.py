@@ -630,6 +630,90 @@ def spawn_durgin(room_dbref=None):
     # Register purchase handler on the NPC so the trigger system can call it
     durgin.db.purchase_handler = "world.durgin_spawn.handle_purchase"
 
+    # -------------------------------------------------------------------
+    # Zones — visible on examine / zone-targeted look
+    # -------------------------------------------------------------------
+    def _dzone(nude, visibility="examine", zone_type="surface",
+               intimate=False, consent_required="casual", parent=None):
+        return {
+            "nude":             nude,
+            "interior":         "",
+            "covered_by":       None,
+            "contents":         [],
+            "ambient":          [],
+            "zone_type":        zone_type,
+            "intimate":         intimate,
+            "visibility":       visibility,
+            "consent_required": consent_required,
+            "default":          True,
+            "parent":           parent,
+        }
+
+    durgin.db.zones = {
+        # ── Head ──────────────────────────────────────────────────────
+        "face": _dzone(
+            "A ruddy, weathered face — the kind earned over decades of "
+            "sawdust, ale, and professional opinions. Reading spectacles "
+            "sit perpetually perched near the end of his broad nose, "
+            "usually pushed down far enough to look over them rather than through.",
+            visibility="look",
+            parent="head",
+        ),
+        "hair": _dzone(
+            "Sparse on top, what remains is a reddish-brown going grey "
+            "at the temples, cropped close enough that it isn't a concern.",
+            visibility="examine",
+            parent="head",
+        ),
+        "beard": _dzone(
+            "His most distinguished feature and obvious point of personal "
+            "pride: a full, dense beard braided into three thick plaits, "
+            "each one secured with a small iron door hinge instead of a "
+            "bead. The braids are even, deliberate, and maintained with "
+            "far more care than the rest of him.",
+            visibility="look",
+            parent="head",
+        ),
+
+        # ── Torso ─────────────────────────────────────────────────────
+        "chest": _dzone(
+            "Broad, solid, and largely concealed beneath the leather apron "
+            "that is Durgin's default state of dress. Whatever's under the "
+            "apron is a shirt of undetermined color that has seen better "
+            "decades.",
+            visibility="examine",
+            parent="torso",
+        ),
+        "abdomen": _dzone(
+            "Durgin is a dwarf of considerable girth, and he is entirely "
+            "at peace with this. The apron does not conceal so much as "
+            "organize.",
+            visibility="examine",
+            parent="torso",
+        ),
+
+        # ── Arms ──────────────────────────────────────────────────────
+        "hands": _dzone(
+            "Thick, scarred, perpetually dusted with sawdust or chalk. "
+            "The knuckles are the kind that have met wood, metal, and "
+            "at least one disputed door frame. He handles small mechanisms "
+            "— locks, hinges, springs — with surprising precision.",
+            visibility="look",
+            parent="arms",
+        ),
+
+        # ── Outfit / covering ─────────────────────────────────────────
+        "apron": _dzone(
+            "Heavy leather, stained in layers that tell a professional "
+            "biography. Dark patches of oil, lighter scars of sawdust, "
+            "a faint burn mark near the left pocket. Several pockets, all "
+            "full of things that rattle. A maker's stamp on the bib reads: "
+            "|xIRONWOOD CO.|n, faded almost to invisibility.",
+            visibility="look",
+            parent=None,   # freeform outer layer, not in standard tree
+        ),
+    }
+
     # Apply shop room desc if a location was given and it has no desc yet
     if location and not (location.db.desc or "").strip():
         location.db.desc         = DURGIN_SHOP_DESC

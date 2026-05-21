@@ -79,6 +79,169 @@ def _ends_with_punctuation(text):
     return text.endswith((".", "!", "?", "...", "—"))
 
 
+# -------------------------------------------------------------------
+# Zone targeting helpers (look/examine <target> <zone>)
+# -------------------------------------------------------------------
+
+def _render_zone_target(char, target, zone_name, zone_data, deep=False):
+    """
+    Render a focused single-zone view for zone-targeted look/examine.
+
+    Args:
+        char:      The looking character.
+        target:    The target character or NPC.
+        zone_name: Canonical zone key (underscore-separated).
+        zone_data: Zone dict (already flattened from _SaverDict).
+        deep:      True if called from examine (shows interior on orifice zones).
+
+    Returns:
+        str: Formatted zone output, or an access-denied message.
+    """
+    visibility = zone_data.get("visibility", "look")
+    intimate   = zone_data.get("intimate", False)
+    is_self    = (char == target)
+
+    # Hidden zones — never shown via direct targeting
+    if visibility == "hidden":
+        return "|xYou don't notice anything particular about that.|n"
+
+    # Proximity-gated zones — require near/with
+    if visibility == "proximity" and not is_self:
+        is_near = False
+        try:
+            prox = getattr(target.db, "proximity", None) or {}
+            for pid, plevel in prox.items():
+                try:
+                    if int(pid) == char.id and plevel in ("near", "with"):
+                        is_near = True
+                        break
+                except (ValueError, TypeError):
+                    pass
+            if not is_near and hasattr(char, "db"):
+                looker_prox = char.db.proximity or {}
+                for pid, plevel in looker_prox.items():
+                    try:
+                        if int(pid) == target.id and plevel in ("near", "with"):
+                            is_near = True
+                            break
+                    except (ValueError, TypeError):
+                        pass
+        except Exception:
+            pass
+        if not is_near:
+            return "|xYou'd need to get closer to notice that.|n"
+
+    # Consent-gated zones (visibility == "consent" OR intimate flag)
+    if not is_self and (visibility == "consent" or intimate):
+        # For full characters: use their consent system
+        has_consent = False
+        if hasattr(target, "_looker_has_consent"):
+            has_consent = target._looker_has_consent(
+                char, "intimate", zone_name=zone_name
+            )
+        else:
+            # For NPCs without the consent method, check consent_flags
+            npc_flags = getattr(target.db, "consent_flags", None) or {}
+            has_consent = bool(npc_flags.get("intimate", False))
+        if not has_consent:
+            return "|xYou don't have consent to look there.|n"
+
+    # Build the view
+    target_name  = (target.db.rp_name if (hasattr(target.db, "rp_name")
+                    and target.db.rp_name) else target.key)
+    zone_display = zone_name.replace("_", " ")
+    nude_desc    = (zone_data.get("nude") or "").strip()
+
+    lines = [f"|w{target_name}|n — |x{zone_display}|n"]
+    lines.append("|w" + "─" * 36 + "|n")
+
+    if nude_desc:
+        lines.append(nude_desc)
+    else:
+        lines.append("|xNothing particularly notable here.|n")
+
+    # Interior desc on examine — orifice/both zones with mature consent
+    if deep:
+        interior  = (zone_data.get("interior") or "").strip()
+        zone_type = zone_data.get("zone_type", "surface")
+        if interior and zone_type in ("orifice", "both"):
+            has_mature = is_self
+            if not has_mature:
+                if hasattr(target, "_looker_has_consent"):
+                    has_mature = target._looker_has_consent(
+                        char, "mature", zone_name=zone_name
+                    )
+                else:
+                    npc_flags = getattr(target.db, "consent_flags", None) or {}
+                    has_mature = bool(npc_flags.get("mature", False))
+            if has_mature:
+                lines.append(f"|x[interior] {interior}|n")
+
+    return "\n".join(lines)
+
+
+def _try_zone_target(char, args, deep=False):
+    """
+    Try to interpret args as '<target> <zone>' and render a zone view.
+
+    Attempts splits from right to left (1-word zone first, then 2-word zone)
+    to support both 'look laynie face' and 'look laynie lower back'.
+
+    Args:
+        char:  The character issuing the command.
+        args:  The full argument string (already stripped of 'at ').
+        deep:  True if called from examine.
+
+    Returns:
+        str or None: Rendered zone output, or None if no match found.
+    """
+    words = args.split()
+    if len(words) < 2:
+        return None
+
+    # Try zone = last N words, target = first len-N words (N = 1, then 2)
+    for zone_word_count in (1, 2):
+        if zone_word_count >= len(words):
+            continue
+        target_str = " ".join(words[:-zone_word_count])
+        zone_str   = "_".join(words[-zone_word_count:]).lower()
+
+        target = char.search(target_str, quiet=True)
+        if isinstance(target, list):
+            target = target[0] if target else None
+        if not target:
+            continue
+
+        # Get zones dict — Characters use _get_zones(), NPCs use db.zones
+        if hasattr(target, "_get_zones"):
+            zones_raw = target._get_zones()
+        else:
+            zones_raw = getattr(target.db, "zones", None) or {}
+
+        if not zones_raw:
+            continue
+
+        # Find matching zone key (case-insensitive)
+        matched_name = None
+        zone_data    = None
+        for zkey in list(zones_raw.keys()):
+            if zkey.lower() == zone_str:
+                matched_name = zkey
+                zone_data    = zones_raw[zkey]
+                break
+
+        if not matched_name:
+            continue
+
+        # Flatten _SaverDict to plain dict
+        if hasattr(zone_data, "items"):
+            zone_data = {k: v for k, v in zone_data.items()}
+
+        return _render_zone_target(char, target, matched_name, zone_data, deep=deep)
+
+    return None
+
+
 def _mutter_fragment(text):
     """
     Return a partial version of 'text' for use in mutter output.
@@ -829,17 +992,19 @@ class CmdSpoof(MuxCommand):
 
 class CmdLook(MuxCommand):
     """
-    Look at a character, object, or the room.
+    Look at a character, object, the room, or a specific zone.
 
     Usage:
       look
       look <character/object>
+      look <character> <zone>
       look/deep <character>
 
     'look' with no target shows the current room.
     'look <name>' shows a standard view of that person or thing.
-    'look/deep <name>' shows a detailed examination — reveals voice,
-    deep markings, intimate zones, and RP hooks if set.
+    'look <name> <zone>' zooms in on a specific body zone — for example,
+    'look laynie face' or 'look durgin beard'.
+    'look/deep <name>' shows a detailed examination.
 
     Proximity layers (scent, proximity tell, touch, intimate desc)
     are shown automatically when you are near or with the target.
@@ -877,6 +1042,12 @@ class CmdLook(MuxCommand):
             target = target[0] if target else None
 
         if not target:
+            # Try zone targeting: 'look <target> <zone>'
+            zone_output = _try_zone_target(char, args, deep=deep)
+            if zone_output is not None:
+                char.msg("\n" + zone_output)
+                return
+
             # Fallback: check caller's own freeform items
             freeform = char.db.freeform_items or {}
             query = args.lower().replace("-", " ").replace(" ", "")
@@ -912,14 +1083,18 @@ class CmdLook(MuxCommand):
 
 class CmdExamine(MuxCommand):
     """
-    Examine a character or object closely.
+    Examine a character, object, or specific zone closely.
 
     Equivalent to 'look/deep' — reveals voice, detailed markings,
     intimate zones, and RP hooks when set.
 
     Usage:
       examine <character/object>
+      examine <character> <zone>
       ex <character/object>
+
+    'examine <name> <zone>' zooms in on a specific body zone — for example,
+    'examine laynie chest' or 'examine companion lower back'.
 
     Proximity layers are shown automatically if you are near or with
     the target.
@@ -951,6 +1126,12 @@ class CmdExamine(MuxCommand):
             target = target[0] if target else None
 
         if not target:
+            # Try zone targeting: 'examine <target> <zone>'
+            zone_output = _try_zone_target(char, args, deep=True)
+            if zone_output is not None:
+                char.msg("\n" + zone_output)
+                return
+
             # Fallback: check caller's own freeform items
             freeform = char.db.freeform_items or {}
             query = args.lower().replace("-", " ").replace(" ", "")
