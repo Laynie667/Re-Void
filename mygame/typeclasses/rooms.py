@@ -194,6 +194,230 @@ class Room(ObjectParent, DefaultRoom):
         # ---------------------------------------------------------------
         self.db.room_type = "general"
 
+        # ---------------------------------------------------------------
+        # Room zones — spatial areas with mechanic and detail hooks.
+        #
+        # Each zone dict:
+        #   desc        (str)   — shown inline via {zone:<name>} token,
+        #                         or auto-appended if no token present
+        #   details     (dict)  — name → text; inspectable via look/examine
+        #   scent       (str)   — zone-local scent string
+        #   ambient     (list)  — ambient lines contributed by this zone
+        #   contents    (list)  — dbids of objects placed in this zone
+        #   parent      (str)   — parent zone name, or None for roots
+        #   mechanics   (dict)  — mechanic_id → state/config (data mechanics)
+        #   scripts     (list)  — Script dbids active on this zone
+        #   event_hooks (dict)  — event_name → list of handler dicts
+        #                         open-ended: any string is a valid event name
+        # ---------------------------------------------------------------
+        self.db.zones = self._build_default_zones()
+
+    # -------------------------------------------------------------------
+    # Room zone helpers
+    # -------------------------------------------------------------------
+
+    def _build_default_zones(self):
+        """
+        Return the default directional + center zone dict for a new room.
+        All fields start empty so nothing renders until owners fill them in.
+        """
+        def _z(parent=None):
+            return {
+                "desc":        "",
+                "details":     {},
+                "scent":       None,
+                "ambient":     [],
+                "contents":    [],
+                "parent":      parent,
+                "mechanics":   {},
+                "scripts":     [],
+                "event_hooks": {},
+            }
+        return {
+            "north":  _z(),
+            "south":  _z(),
+            "east":   _z(),
+            "west":   _z(),
+            "up":     _z(),
+            "down":   _z(),
+            "center": _z(),
+        }
+
+    # Protected zone names that cannot be removed
+    _PROTECTED_ZONES = frozenset(
+        {"north", "south", "east", "west", "up", "down", "center"}
+    )
+
+    def _resolve_zone_tokens(self, text):
+        """
+        Replace {zone:<name>} tokens in text with the zone's desc string.
+        Tokens for zones with no desc resolve to an empty string (removed).
+        """
+        import re
+        zones = self.db.zones or {}
+
+        def _replace(match):
+            zone_name = match.group(1).strip().lower()
+            zone = zones.get(zone_name)
+            if not zone or not hasattr(zone, "get"):
+                return ""
+            return zone.get("desc", "") or ""
+
+        return re.sub(r"\{zone:([^}]+)\}", _replace, text)
+
+    def get_zone_auto_append(self, base_desc):
+        """
+        Return a string of zone descs that have content but whose
+        {zone:<name>} token does NOT appear in base_desc.
+        These are appended below the main description automatically.
+
+        Args:
+            base_desc (str): The assembled base description text.
+
+        Returns:
+            str: Newline-joined zone descs to append, or empty string.
+        """
+        zones = self.db.zones or {}
+        lines = []
+        for zone_name, zone_data in zones.items():
+            if not hasattr(zone_data, "get"):
+                continue
+            desc = zone_data.get("desc", "") or ""
+            if not desc:
+                continue
+            token = "{zone:" + zone_name + "}"
+            if token not in (base_desc or ""):
+                lines.append(desc)
+        return "\n".join(lines)
+
+    def fire_zone_event(self, zone_name, event_name, **kwargs):
+        """
+        Fire a named event on a zone, calling all registered handlers.
+
+        Handlers are stored as dicts in zone["event_hooks"][event_name]:
+            {
+                "mechanic_id": str,
+                "handler":     "dotted.module.path.function",
+                "priority":    int,   # higher = called first
+            }
+
+        Extra kwargs are passed through to each handler as:
+            handler(room, zone_name, event_name, **kwargs)
+
+        Args:
+            zone_name  (str): The zone the event is occurring on.
+            event_name (str): Any string — completely open-ended.
+        """
+        zones = self.db.zones or {}
+        zone = zones.get(zone_name)
+        if not zone or not hasattr(zone, "get"):
+            return
+
+        hooks = zone.get("event_hooks", {}) or {}
+        handlers = list(hooks.get(event_name, []))
+        if not handlers:
+            return
+
+        # Sort by priority descending, then call each
+        handlers.sort(key=lambda h: h.get("priority", 0), reverse=True)
+        for hook in handlers:
+            handler_path = hook.get("handler", "")
+            if not handler_path:
+                continue
+            try:
+                import importlib
+                module_path, func_name = handler_path.rsplit(".", 1)
+                module = importlib.import_module(module_path)
+                func = getattr(module, func_name)
+                func(self, zone_name, event_name, **kwargs)
+            except Exception as e:
+                logger.log_err(
+                    f"Zone event handler error on {self.key} "
+                    f"zone={zone_name} event={event_name} "
+                    f"handler={handler_path}: {e}"
+                )
+
+    def register_zone_hook(self, zone_name, event_name,
+                           mechanic_id, handler_path, priority=0):
+        """
+        Register a mechanic event handler on a zone.
+
+        Args:
+            zone_name    (str): Zone to attach to.
+            event_name   (str): Event name (any string).
+            mechanic_id  (str): Mechanic identifier.
+            handler_path (str): Dotted path to handler function.
+            priority     (int): Call order (higher = first).
+        """
+        zones = self.db.zones or {}
+        zone = zones.get(zone_name)
+        if not zone or not hasattr(zone, "get"):
+            return
+        hooks = zone.get("event_hooks", {}) or {}
+        handlers = list(hooks.get(event_name, []))
+        # Remove any existing entry for this mechanic + event
+        handlers = [
+            h for h in handlers
+            if h.get("mechanic_id") != mechanic_id
+        ]
+        handlers.append({
+            "mechanic_id": mechanic_id,
+            "handler":     handler_path,
+            "priority":    priority,
+        })
+        hooks[event_name] = handlers
+        zone["event_hooks"] = hooks
+        zones[zone_name] = zone
+        self.db.zones = zones
+
+    def unregister_zone_hooks(self, zone_name, mechanic_id):
+        """
+        Remove all event hooks for a mechanic from a zone.
+        """
+        zones = self.db.zones or {}
+        zone = zones.get(zone_name)
+        if not zone or not hasattr(zone, "get"):
+            return
+        hooks = zone.get("event_hooks", {}) or {}
+        for event_name in list(hooks.keys()):
+            hooks[event_name] = [
+                h for h in hooks[event_name]
+                if h.get("mechanic_id") != mechanic_id
+            ]
+        zone["event_hooks"] = hooks
+        zones[zone_name] = zone
+        self.db.zones = zones
+
+    def get_zone_detail(self, detail_key):
+        """
+        Search all zones for a named detail. Returns the first match.
+        Checks exact match first, then prefix match.
+
+        Args:
+            detail_key (str): Detail name to look up (will be lowercased).
+
+        Returns:
+            str or None: Detail text, or None if not found.
+        """
+        zones = self.db.zones or {}
+        key_lower = detail_key.strip().lower()
+        # Exact match pass
+        for zone_data in zones.values():
+            if not hasattr(zone_data, "get"):
+                continue
+            details = zone_data.get("details", {}) or {}
+            if key_lower in details:
+                return details[key_lower]
+        # Prefix match pass
+        for zone_data in zones.values():
+            if not hasattr(zone_data, "get"):
+                continue
+            details = zone_data.get("details", {}) or {}
+            for kw, text in details.items():
+                if kw.startswith(key_lower):
+                    return text
+        return None
+
     # -------------------------------------------------------------------
     # Scene lock enforcement
     # -------------------------------------------------------------------
@@ -629,10 +853,10 @@ class Room(ObjectParent, DefaultRoom):
         parts.append(f"|w{name}|n")
         parts.append("")
 
-        # --- Layer 1: Base description ---
+        # --- Layer 1: Base description (with zone token resolution) ---
         base = self.db.desc or ""
         if base:
-            parts.append(base)
+            parts.append(self._resolve_zone_tokens(base))
 
         # --- Scene stage overlay (rp_tools: stage command) ---
         stage = self.db.scene_stage_desc or ""
@@ -696,6 +920,11 @@ class Room(ObjectParent, DefaultRoom):
                 if (world_state.get(flag) and
                         state_descs.get(flag)):
                     parts.append(state_descs[flag])
+
+        # --- Zone auto-append (zones with desc but no inline token) ---
+        zone_append = self.get_zone_auto_append(self.db.desc or "")
+        if zone_append:
+            parts.append(zone_append)
 
         # --- Separator before presence section ---
         parts.append("")
@@ -944,10 +1173,14 @@ class Room(ObjectParent, DefaultRoom):
 
     def get_detail(self, detail_key, looker=None):
         """
-        Return a scene detail by keyword, or None if not found.
+        Return a detail by keyword, or None if not found.
 
-        Called by the default 'look at <keyword>' handler in Evennia.
-        We check scene_details first, then fall back to default behavior.
+        Resolution order:
+          1. scene_details (RP tool temp props — exact then prefix)
+          2. Zone details  (permanent architectural details — exact then prefix)
+
+        Called by the default 'look at <keyword>' handler in Evennia,
+        and also by our custom CmdLook / CmdExamine for bare keyword lookup.
 
         Args:
             detail_key (str): The keyword being looked up.
@@ -956,15 +1189,21 @@ class Room(ObjectParent, DefaultRoom):
         Returns:
             str or None: Detail text, or None if not found.
         """
+        key_lower = detail_key.strip().lower()
+
+        # 1. Scene details (temporary RP props)
         details = self.db.scene_details or {}
-        key_lower = detail_key.lower()
-        # Exact match
         if key_lower in details:
             return details[key_lower]
-        # Partial match
         for kw, text in details.items():
             if kw.startswith(key_lower):
                 return text
+
+        # 2. Permanent zone details
+        zone_result = self.get_zone_detail(key_lower)
+        if zone_result:
+            return zone_result
+
         return None
 
     # -------------------------------------------------------------------

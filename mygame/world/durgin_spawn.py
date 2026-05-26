@@ -17,6 +17,8 @@ keyword triggers. He has... opinions on his customers' purchases.
 
 from web.housing.models import TENT_PRICE, ROOM_PACK_PRICES
 
+WAYPOST_PRICE = 300   # shards — one waypost, one realm address
+
 
 # ---------------------------------------------------------------------------
 # Durgin's dialogue data
@@ -220,7 +222,8 @@ DURGIN_TRIGGERS = {
             f"  +5 room pack    — {ROOM_PACK_PRICES[5]} shards\n"
             f"  +10 room pack   — {ROOM_PACK_PRICES[10]} shards\n"
             f"  +20 room pack   — {ROOM_PACK_PRICES[20]} shards\n"
-            f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n\n"
+            f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n"
+            f"  Waypost         — {WAYPOST_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -237,7 +240,8 @@ DURGIN_TRIGGERS = {
             f"  +5 room pack    — {ROOM_PACK_PRICES[5]} shards\n"
             f"  +10 room pack   — {ROOM_PACK_PRICES[10]} shards\n"
             f"  +20 room pack   — {ROOM_PACK_PRICES[20]} shards\n"
-            f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n\n"
+            f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n"
+            f"  Waypost         — {WAYPOST_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -306,6 +310,37 @@ DURGIN_TRIGGERS = {
         "type": "action",
     },
 
+    # ── Waypost ───────────────────────────────────────────────────────────
+    "waypost": {
+        "response": [
+            f"Durgin reaches under the counter and sets a carved wooden post on "
+            f"the surface with a solid thunk. It's small — maybe a foot tall — "
+            f"dark wood worked with fine runes that catch the light in a way "
+            f"that feels slightly deliberate. "
+            f"'Waypost,' he says. 'You give it a name — your realm address — "
+            f"and drop it in a room you own. Anyone who knows the address "
+            f"can say it near a hub waystone and travel straight to you.' "
+            f"He taps the runes. 'Private destinations for private people. "
+            f"No map, no door, just a word.' He sets it back down. "
+            f"'{WAYPOST_PRICE} shards. Say |wbuy waypost|n when you're ready.'",
+
+            f"'Ah.' Durgin's eyes light up. 'The waypost. One of my finer products.' "
+            f"He pulls one out from under the counter — a short post of dark carved "
+            f"wood, its runes very subtly glowing. "
+            f"'You name it — a realm address, one word, yours — and place it in a "
+            f"room you own. After that, anyone who knows the word can travel to your "
+            f"room from the hub waystone just by speaking it.' He sets it back. "
+            f"'Privacy, accessibility, a hint of mystique. {WAYPOST_PRICE} shards. "
+            f"Say |wbuy waypost|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy waypost": {
+        "response": "_HANDLE_PURCHASE_WAYPOST",
+        "type": "action",
+    },
+
     # ── Lore / personality ────────────────────────────────────────────────
     "who are you": {
         "response": [
@@ -365,7 +400,7 @@ DURGIN_TRIGGERS = {
 def handle_purchase(caller, npc, purchase_type):
     """
     Called by the NPC trigger system when a player triggers a buy action.
-    purchase_type: "tent" | 1 | 5 | 10 | 20 | 25
+    purchase_type: "tent" | "waypost" | 1 | 5 | 10 | 20 | 25
     """
     from web.housing.models import HousingPlot, TENT_PRICE, ROOM_PACK_PRICES
     from web.economy.models import ShardTransaction
@@ -461,6 +496,69 @@ def handle_purchase(caller, npc, purchase_type):
 
         import random
         npc.location.msg_contents(random.choice(_tent_responses))
+        return
+
+    # ── Waypost purchase ───────────────────────────────────────────────────
+    if purchase_type == "waypost":
+        shards = char.db.shards or 0
+        if shards < WAYPOST_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, that's {WAYPOST_PRICE} shards for a waypost. "
+                f"You've got {shards}. Come back when you've got the coin."
+            )
+            return
+
+        # Charge
+        char.db.shards = shards - WAYPOST_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=WAYPOST_PRICE,
+            reason="purchase",
+            note="Waypost purchase from Durgin Ironwood",
+        )
+
+        # Create the waypost object and hand it to the player
+        from typeclasses.waypost import Waypost
+        waypost = create.create_object(
+            typeclass=Waypost,
+            key="a waypost",
+            location=char,
+        )
+        waypost.db.owner_account_id = char.account.id if char.account else None
+        waypost.db.owner_char_id    = char.id
+        waypost.db.owner_name       = char_name
+
+        _waypost_responses = [
+            f"Durgin produces a waypost from under the counter, handles it briefly "
+            f"with the reverence of a craftsman handing over good work, and sets it "
+            f"in front of {char_name}. "
+            f"'Yours now. Give it a realm address — say |wwaypost address <word>|n — "
+            f"then drop it in a room you own. Anyone who knows the word can reach you "
+            f"from the hub waystone.' He pockets the shards. "
+            f"'One word. Your word. Guard it or share it — that's entirely your business.'",
+
+            f"Durgin counts the shards, nods in satisfied approval, and slides a "
+            f"carved waypost across the counter to {char_name}. "
+            f"'It's inert until you name it,' he says. "
+            f"'Type |wwaypost address <word>|n to set your realm address, "
+            f"then place it — drop it — in whatever room you're calling home. "
+            f"After that, anyone who speaks the address near a hub waystone "
+            f"arrives right at your door.' A pause. "
+            f"'Or whatever you've put in place of a door. I don't judge.'",
+
+            f"'Here.' Durgin sets the waypost down between them with a satisfying "
+            f"clunk. 'Good wood, Ironwood runes, properly keyed. "
+            f"It'll take whatever address you give it.' "
+            f"He meets {char_name}'s eyes. 'One word. Something you'll remember. "
+            f"Use |wwaypost address <word>|n, drop it in your space, and that's your "
+            f"corner of the realm — reachable by anyone who knows the name.' "
+            f"He grins into his beard. 'Private, but not secret. Unless you want it secret. "
+            f"In which case: don't tell anyone.'",
+        ]
+
+        import random
+        npc.location.msg_contents(random.choice(_waypost_responses))
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────

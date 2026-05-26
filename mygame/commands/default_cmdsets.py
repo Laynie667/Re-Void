@@ -229,6 +229,16 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_NPC_PLAYER_CMDS:
             self.add(cmd_cls())
 
+        # Waystone builder commands (perm-locked; only Builders can use them)
+        from commands.waystone_commands import ALL_WAYSTONE_BUILDER_CMDS
+        for cmd_cls in ALL_WAYSTONE_BUILDER_CMDS:
+            self.add(cmd_cls())
+
+        # Room zone commands (Builders + housing owners in their rooms)
+        from commands.roomzone_commands import ALL_ROOMZONE_CMDS
+        for cmd_cls in ALL_ROOMZONE_CMDS:
+            self.add(cmd_cls())
+
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

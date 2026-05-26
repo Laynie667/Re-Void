@@ -257,6 +257,72 @@ def _mutter_fragment(text):
     return fragment
 
 
+def _try_room_zone_or_detail(char, args):
+    """
+    Try to resolve args as a room zone name or zone detail.
+
+    Resolution:
+      1. '<zone>'              — shows zone desc if zone has content
+      2. '<detail>'            — finds matching detail in any zone
+      3. '<detail> in <zone>'  — detail search scoped to one zone
+
+    Args:
+        char:  The character doing the looking.
+        args:  Full argument string (already stripped of 'at ').
+
+    Returns:
+        str output to display, or None if no match.
+    """
+    room = getattr(char, "location", None)
+    if not room:
+        return None
+
+    args_lower = args.strip().lower()
+    zones = {}
+    try:
+        zones = room.db.zones or {}
+    except Exception:
+        pass
+
+    # Parse optional 'in <zone>' disambiguation suffix
+    zone_hint = None
+    target_name = args_lower
+    if " in " in args_lower:
+        parts = args_lower.rsplit(" in ", 1)
+        candidate_target = parts[0].strip()
+        candidate_zone  = parts[1].strip()
+        if candidate_zone in zones:
+            target_name = candidate_target
+            zone_hint   = candidate_zone
+
+    # 1. Bare zone name (only if the zone actually has a desc)
+    if not zone_hint and target_name in zones:
+        zone_data = zones[target_name]
+        if hasattr(zone_data, "get"):
+            desc = zone_data.get("desc", "") or ""
+            if desc:
+                return f"|x[{target_name}]|n\n{desc}"
+
+    # 2. Detail lookup
+    if zone_hint:
+        # Scoped to one zone
+        zone_data = zones.get(zone_hint)
+        if zone_data and hasattr(zone_data, "get"):
+            details = zone_data.get("details", {}) or {}
+            if target_name in details:
+                return details[target_name]
+            for kw, text in details.items():
+                if kw.startswith(target_name):
+                    return text
+    else:
+        # All zones via room.get_detail (checks scene_details + zone details)
+        if hasattr(room, "get_detail"):
+            result = room.get_detail(target_name, looker=char)
+            if result:
+                return result
+
+    return None
+
 
 # -------------------------------------------------------------------
 # CmdSay
@@ -1048,6 +1114,12 @@ class CmdLook(MuxCommand):
                 char.msg("\n" + zone_output)
                 return
 
+            # Try room zone name or zone detail lookup
+            room_output = _try_room_zone_or_detail(char, args)
+            if room_output is not None:
+                char.msg("\n" + room_output)
+                return
+
             # Fallback: check caller's own freeform items
             freeform = char.db.freeform_items or {}
             query = args.lower().replace("-", " ").replace(" ", "")
@@ -1130,6 +1202,12 @@ class CmdExamine(MuxCommand):
             zone_output = _try_zone_target(char, args, deep=True)
             if zone_output is not None:
                 char.msg("\n" + zone_output)
+                return
+
+            # Try room zone name or zone detail lookup
+            room_output = _try_room_zone_or_detail(char, args)
+            if room_output is not None:
+                char.msg("\n" + room_output)
                 return
 
             # Fallback: check caller's own freeform items
