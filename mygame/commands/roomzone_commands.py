@@ -175,13 +175,40 @@ class CmdRoomZone(default_cmds.MuxCommand):
     # Main dispatch
     # ------------------------------------------------------------------
 
+    # All valid subcommand names (including compound ones)
+    _SUBCMDS = frozenset({
+        "list", "desc", "detail", "detail/rm",
+        "add", "rm", "scent", "scent/clear",
+        "ambient", "ambient/clear", "token",
+    })
+
     def func(self):
         if not self._check_perm():
             return
 
-        switch = (self.switches[0].lower() if self.switches
-                  else "").strip()
-        args   = self.args.strip()
+        # Support both styles:
+        #   roomzone/desc north = text   (slash-switch style)
+        #   roomzone desc north = text   (space style — more natural)
+        if self.switches:
+            # Slash-switch: join multiple switches to handle "detail/rm"
+            switch = "/".join(s.lower() for s in self.switches)
+            args   = self.args.strip()
+        else:
+            raw = self.args.strip()
+            # Try to pull a subcommand from the first word(s) of args.
+            # Check two-word compounds first (e.g. "detail/rm", "scent/clear")
+            # then single words.
+            switch = ""
+            args   = raw
+            if raw:
+                first, _, rest = raw.partition(" ")
+                first = first.lower()
+                if first in self._SUBCMDS:
+                    switch = first
+                    args   = rest.strip()
+
+        # Update self.args so every handler gets the trimmed remainder
+        self.args = args
 
         # No switch + no args → list
         if not switch and not args:
@@ -190,6 +217,7 @@ class CmdRoomZone(default_cmds.MuxCommand):
 
         dispatch = {
             "":               self._do_list_or_error,
+            "list":           self._do_list,
             "desc":           self._do_desc,
             "detail":         self._do_detail,
             "detail/rm":      self._do_detail_rm,
@@ -205,7 +233,7 @@ class CmdRoomZone(default_cmds.MuxCommand):
         handler = dispatch.get(switch)
         if handler is None:
             self.caller.msg(
-                f"|xUnknown roomzone switch: '{switch}'. "
+                f"|xUnknown roomzone subcommand: '{switch}'. "
                 f"Type |wroomzone|n to see usage.|n"
             )
             return
