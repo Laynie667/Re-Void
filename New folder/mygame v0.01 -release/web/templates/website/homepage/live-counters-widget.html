@@ -1,0 +1,25 @@
+<!-- ============================================================
+     Re:Void — Live Counters
+     Pulls from Evennia's default index view context.
+     ============================================================ -->
+<div class="rv-live-counters">
+
+  <div class="rv-counter-box">
+    <div class="rv-counter-glyph">♦</div>
+    <div class="rv-counter-num">{{ num_accounts_connected|default:"0" }}</div>
+    <div class="rv-counter-label">Online Now</div>
+  </div>
+
+  <div class="rv-counter-box">
+    <div class="rv-counter-glyph">♥</div>
+    <div class="rv-counter-num">{{ num_characters|default:"0" }}</div>
+    <div class="rv-counter-label">Characters</div>
+  </div>
+
+  <div class="rv-counter-box">
+    <div class="rv-counter-glyph">✧</div>
+    <div class="rv-counter-num">{{ num_rooms|default:"0" }}</div>
+    <div class="rv-counter-label">Rooms</div>
+  </div>
+
+</div>

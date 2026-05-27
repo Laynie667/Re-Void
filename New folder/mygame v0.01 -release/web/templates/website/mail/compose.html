@@ -1,0 +1,137 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Compose Ogram · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .mail-wrap { max-width: 700px; margin: 2.5rem auto; padding: 0 1rem; }
+  .mail-header h1 { font-family: 'Cinzel Decorative', serif; font-size: 1.5rem; color: rgba(215,175,255,0.95); letter-spacing: 0.1em; text-shadow: 0 0 16px rgba(160,80,255,0.4); margin: 0 0 1.75rem 0; }
+  .mail-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .mail-tab { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.3rem 0.85rem; border: 1px solid rgba(160,80,255,0.25); border-radius: 2px; color: rgba(160,120,220,0.7); text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+  .mail-tab:hover { border-color: rgba(160,80,255,0.55); color: rgba(215,175,255,0.9); }
+  .mail-tab.active { border-color: rgba(160,80,255,0.6); color: rgba(215,175,255,0.95); background: rgba(120,40,200,0.12); }
+  .form-card { border: 1px solid rgba(160,80,255,0.2); border-radius: 4px; background: rgba(20,0,40,0.3); padding: 1.5rem 1.75rem; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label { display: block; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(160,80,255,0.7); margin-bottom: 0.4rem; }
+  .form-control {
+    width: 100%; box-sizing: border-box;
+    background: rgba(10,0,25,0.5);
+    border: 1px solid rgba(120,60,200,0.3);
+    border-radius: 2px;
+    color: rgba(215,195,255,0.9);
+    padding: 0.5rem 0.7rem;
+    font-size: 0.88rem;
+    font-family: 'Cormorant Garamond', serif;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-control:focus { border-color: rgba(160,80,255,0.6); }
+  select.form-control { cursor: pointer; }
+  textarea.form-control { resize: vertical; min-height: 160px; line-height: 1.65; }
+  .form-check { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
+  .form-check input { accent-color: rgba(160,80,255,0.8); }
+  .form-check label { font-size: 0.82rem; color: rgba(160,120,220,0.75); }
+  .form-error { font-size: 0.75rem; color: rgba(220,80,80,0.85); margin-top: 0.25rem; }
+  .btn-submit {
+    display: inline-block; padding: 0.55rem 1.5rem;
+    background: rgba(120,40,200,0.25);
+    border: 1px solid rgba(160,80,255,0.4);
+    border-radius: 2px;
+    color: rgba(215,175,255,0.95);
+    font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-submit:hover { background: rgba(140,50,220,0.35); border-color: rgba(180,100,255,0.6); }
+  #id_affection_type_group { display: none; }
+</style>
+
+<div class="mail-wrap">
+  <div class="mail-header"><h1>✦ Ograms</h1></div>
+  <div class="mail-tabs">
+    <a href="{% url 'mail-inbox' %}"   class="mail-tab">Inbox</a>
+    <a href="{% url 'mail-outbox' %}"  class="mail-tab">Outbox</a>
+    <a href="{% url 'mail-compose' %}" class="mail-tab active">Compose</a>
+  </div>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div style="margin-bottom:1rem;padding:0.6rem 0.9rem;border:1px solid rgba(160,80,255,0.3);border-radius:3px;background:rgba(40,0,80,0.3);font-size:0.85rem;color:rgba(200,170,255,0.9);">
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="form-card">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.recipient.id_for_label }}">To (character name)</label>
+        <input class="form-control" type="text" name="recipient" id="{{ form.recipient.id_for_label }}"
+               value="{{ form.recipient.value|default:'' }}" placeholder="Character name" autocomplete="off">
+        {% if form.recipient.errors %}<div class="form-error">{{ form.recipient.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.msg_type.id_for_label }}">Type</label>
+        <select class="form-control" name="msg_type" id="{{ form.msg_type.id_for_label }}" onchange="toggleAffection(this.value)">
+          {% for val, label in form.msg_type.field.choices %}
+          <option value="{{ val }}" {% if form.msg_type.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group" id="id_affection_type_group">
+        <label class="form-label" for="{{ form.affection_type.id_for_label }}">Affection type</label>
+        <select class="form-control" name="affection_type" id="{{ form.affection_type.id_for_label }}">
+          {% for val, label in form.affection_type.field.choices %}
+          <option value="{{ val }}" {% if form.affection_type.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.affection_type.errors %}<div class="form-error">{{ form.affection_type.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.messenger_gender.id_for_label }}">Messenger presentation</label>
+        <select class="form-control" name="messenger_gender" id="{{ form.messenger_gender.id_for_label }}">
+          {% for val, label in form.messenger_gender.field.choices %}
+          <option value="{{ val }}" {% if form.messenger_gender.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.subject.id_for_label }}">Subject (optional)</label>
+        <input class="form-control" type="text" name="subject" id="{{ form.subject.id_for_label }}"
+               value="{{ form.subject.value|default:'' }}" placeholder="Optional subject">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="{{ form.body.id_for_label }}">Message</label>
+        <textarea class="form-control" name="body" id="{{ form.body.id_for_label }}"
+                  placeholder="Write your message here…">{{ form.body.value|default:'' }}</textarea>
+        {% if form.body.errors %}<div class="form-error">{{ form.body.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="form-group">
+        <div class="form-check">
+          <input type="checkbox" name="anonymous" id="{{ form.anonymous.id_for_label }}"
+                 {% if form.anonymous.value %}checked{% endif %}>
+          <label for="{{ form.anonymous.id_for_label }}">Send anonymously</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Seal and Send</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleAffection(val) {
+  document.getElementById('id_affection_type_group').style.display =
+    (val === 'affection') ? 'block' : 'none';
+}
+// Run on page load in case of form re-submission
+toggleAffection(document.getElementById('{{ form.msg_type.id_for_label }}').value);
+</script>
+{% endblock %}

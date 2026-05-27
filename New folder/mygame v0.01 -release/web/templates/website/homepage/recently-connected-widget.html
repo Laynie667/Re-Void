@@ -1,0 +1,18 @@
+<!-- ============================================================
+     Re:Void — Recently Connected Widget
+     ============================================================ -->
+<div class="rv-stat-card">
+  <h5>Recently Connected</h5>
+  <ul>
+    {% for account in accounts_connected_recent %}
+    <li>
+      <span class="rv-stat-name">{{ account.username }}</span>
+      <span class="rv-stat-val">{{ account.last_login|timesince }} ago</span>
+    </li>
+    {% empty %}
+    <li>
+      <span class="rv-stat-name" style="color:#7c4da0;font-style:italic;">No recent connections.</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

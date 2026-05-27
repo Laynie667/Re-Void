@@ -37,7 +37,11 @@ class SeatMechanic(MechanicItem):
         self.db.capacity = 2
         # Label defaults to the item's key; builders can override with
         # @set obj/label = the bench
-        self.db.label = self.key
+        self.db.label    = self.key
+        # Position type: "seated", "lying", or "kneeling"
+        self.db.position = "seated"
+        # If True, a second sitter goes into the first occupant's lap
+        self.db.allow_lap = False
 
     def install_into_zone(self, room, zone_name, installer):
         """Install seat mechanic data into the target zone."""
@@ -62,13 +66,17 @@ class SeatMechanic(MechanicItem):
                 f"|xZone '|w{zone_name}|x' already has a seating mechanic installed.|n"
             )
 
-        capacity = self.db.capacity or 2
-        label    = self.db.label or self.key
+        capacity  = self.db.capacity or 2
+        label     = self.db.label or self.key
+        position  = self.db.position or "seated"
+        allow_lap = bool(self.db.allow_lap)
 
         mechanics["seat"] = {
-            "capacity": capacity,
-            "label":    label,
-            "occupied": [],
+            "capacity":  capacity,
+            "label":     label,
+            "occupied":  [],
+            "position":  position,
+            "allow_lap": allow_lap,
         }
         zone["mechanics"] = mechanics
         zones_copy = dict(zones)

@@ -1,0 +1,2 @@
+[console_scripts]
+evennia = evennia.server.evennia_launcher:main

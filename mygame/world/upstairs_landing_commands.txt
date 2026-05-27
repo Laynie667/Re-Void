@@ -1,0 +1,85 @@
+== Helena's Log Cabin — Upstairs Landing ==
+== Paste these commands in order while standing in the room ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = The stairs open onto a landing kept warm by a pair of |yiron wall sconces|n, their amber glass casting everything in a low, steady glow. |xDark lumber walls|n continue up from the floor below, grain deep-oiled, built to outlast whoever commissioned it. A plain |yburgundy runner|n stretches between the two doorways, worn soft at its center.|/{zone:chest}|/{zone:window}|/{zone:west}|/{zone:east}
+
+
+-- STEP 2: Create non-directional zones --
+(west and east already exist as protected directional zones)
+
+roomzone add chest
+roomzone add window
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc chest = A |wlow cedar chest|n sits against the wall opposite the stairhead, its lid padded in |xdark leather|n stitched in an X-pattern — used as a seat and clearly not for the first time. A |xwicker basket|n beside it holds the organized chaos of someone who lives here: a half-burned |ypillar candle|n, a |mslim leather collar|n with a silver ring, a length of |mbraided rope|n, and a handful of hair ties sharing space without apparent irony. A |xrumpled flannel shirt|n has been left draped over the chest's corner with all the intent of someone meaning to retrieve it. Above the chest, a small |xink illustration|n — three wolves on cream paper, unsigned — hangs in a plain dark frame.
+
+roomzone desc window = A |wnarrow window|n sits between the eaves at the landing's far end. Through it the treeline cuts a dark silhouette against a sky that carries the perpetual faint |cblue-white glow|n of the distant ice palace. After dark the glass holds the amber reflection of the sconces — two small fires floating over the snow.
+
+roomzone desc west = The |wwest door|n stands slightly ajar. Through the gap comes whatever the entertainment room is doing at this hour — the roll of dice on felt, the clink of crystal, music, or something harder to name. A smell of bourbon and dry-erase marker drifts through. Someone has written |x'knock first or don't — either is information'|n in small, deliberate letters along the inner door frame.
+
+roomzone desc east = The |weast door|n is closed and quiet, its frame dressed with a small sprig of |ydried lavender|n tied with yellow ribbon. The choice belongs to whoever made it and left it there.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail chest/collar = A |mslim leather collar|n, well-made, its silver D-ring polished from use. The buckle is the quick-release kind — functional, not decorative. It has been left in the basket with the hair ties and rope as if all of them occupy the same category of useful, which in this household they may well do.
+
+roomzone detail chest/rope = |mBraided black rope|n, the ends whipped neatly, a workmanlike length — long enough to accommodate most purposes, short enough to suggest the person who bought it knew exactly which purposes those were. It smells faintly of cedar from the chest.
+
+roomzone detail chest/shirt = A |xflannel shirt|n in red and black plaid, soft from repeated washing. It smells of woodsmoke and something floral — either two different people or one person in two different moods. Whoever draped it over the chest's corner intended to come back for it and hasn't yet.
+
+roomzone detail chest/candle = A |ypillar candle|n burned down to its last few inches, the wax pooled and re-hardened in irregular rings around the base. Unscented. The kind bought in bulk when you go through them regularly. The holder beneath it has the faint marks of several previous candles doing the same thing.
+
+roomzone detail chest/illustration = A small |xink illustration|n on cream paper, mounted in a plain dark frame. Three wolves — two seated, one standing — rendered with the spare economy of someone who knew the subject well enough not to overwork it. No title, no signature. The kind of thing hung not for guests but for whoever climbs these stairs.
+
+roomzone detail window/palace = The ice palace sits at the visible edge of the treeline, its towers catching available light and returning it |cblue|n. On clear nights the architecture is legible — spires, ramparts, the suggestion of scale that only resolves as enormous when you've been looking long enough. On overcast nights it disappears into a glow between the trees as if something under the snow is lit from the inside.
+
+roomzone detail window/treeline = The pines crowd close enough that individual branches are visible in moonlight. In heavy snowfall the forest closes to the first row of trunks and stops there, everything beyond it white and without depth. From here you can see the gap in the canopy where the path runs toward the waystone — a straight dark line heading into the trees and vanishing.
+
+roomzone detail west/note = Written along the inner door frame in small, deliberate permanent marker: |x'knock first or don't — either is information'|n. The handwriting belongs to someone who found this funny, or found it necessary, or both.
+
+roomzone detail east/lavender = A small bundle of |ydried lavender|n, stems bound with yellow ribbon — the same yellow as the wallpaper in the room beyond, which is either coincidence or wasn't. It's been there long enough to fade at the tips but still holds a faint scent when the air moves past it.
+
+
+-- STEP 5: Window study observations --
+
+roomzone study window + The ice palace is visible from here even on overcast nights. Not clearly — just the glow of it between the trees, faint and blue-white, the light of something too large and too cold to fully disappear behind weather. On clear nights you can make out individual spires. The scale doesn't resolve until you've been looking long enough, and then it resolves all at once.
+
+roomzone study window + The gap in the canopy directly ahead is the path to the waystone. From here it reads as an absence — a straight dark line where the trees decided not to grow, heading into the forest and ending before the palace does. It is not visible from the ground. Whether Helena chose this window placement deliberately is a question the window declines to answer.
+
+roomzone study window + The wolf prints in the snow below this window are fresh enough to still have definition. They come from the treeline, cross the open ground toward the cabin's east side, and stop below the window as if something stood here for a while before moving on. They are large. The stride is deliberate.
+
+roomzone study window + On still nights the palace carries a sound at the edge of perception — not quite sound, more a low harmonic the ear catches only when you stop expecting silence. It stops when you stop paying attention to it, which may say something about the palace or may say something about attention.
+
+
+-- STEP 6: Handle text --
+
+roomzone handle chest/collar = You pick up the collar from the basket, turning it in your hands. The leather is soft from conditioning, the buckle cold until your fingers warm it. The D-ring catches the sconce light. You hold it for a moment with the specific stillness of someone who knows exactly what it means to be holding it — what it would feel like buckled, what the weight of it would be, what Helena's hands look like on a thing like this. You set it back in the basket exactly as you found it.|/You return the collar to the basket with the careful precision of someone who was absolutely just examining it for workmanship.
+
+
+-- STEP 7: Scents --
+
+roomzone scent chest = |xCedar from the chest, leather conditioner, a trace of the rope's raw fiber. The half-burned candle contributes nothing — it's been cold long enough to lose it.|n
+
+roomzone scent window = |xCold air from the window frame's gap, pine resin, and the particular quality of outside-air-at-altitude that has no name but is immediately identifiable. Faintly, on the right nights, something from the direction of the palace that reads as cold stone and old ice.|n
+
+roomzone scent west = |xBourbon, dry-erase marker, a ghost of something floral that doesn't belong to the bar. The warm air from the entertainment room comes through the gap in the door and carries all of it.|n
+
+roomzone scent east = |xDried lavender — faint and real, not perfume. The room beyond is quiet enough that you can almost smell the quiet itself, which is not a thing that can be smelled but the impression holds.|n
+
+
+-- STEP 8: Ambient messages --
+(These fire randomly to players in the room)
+
+roomzone ambient chest + |xThe sconces cast a slow flicker across the cedar chest as a draft moves through the landing. The shadow of the collar's D-ring shifts briefly on the wall.|n
+
+roomzone ambient window + |xThe window frame ticks faintly — wood against cold glass, the cabin settling against the temperature outside. The glow from the palace is steady. It is always steady.|n
+
+roomzone ambient west + |xA sound from the entertainment room — something rolling across the game table, perhaps a die, perhaps something else — and then quiet again.|n
+
+roomzone ambient east + |xA faint scent of lavender stirs when the air from the staircase reaches the east door. The ribbon on the bundle shifts. The door stays closed.|n

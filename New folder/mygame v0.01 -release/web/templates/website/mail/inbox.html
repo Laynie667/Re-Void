@@ -1,0 +1,146 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Ograms — Inbox · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .mail-wrap { max-width: 860px; margin: 2.5rem auto; padding: 0 1rem; }
+  .mail-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 1.75rem; }
+  .mail-header h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.5rem;
+    color: rgba(215,175,255,0.95);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 16px rgba(160,80,255,0.4);
+    margin: 0;
+  }
+  .mail-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .mail-tab {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.85rem;
+    border: 1px solid rgba(160,80,255,0.25);
+    border-radius: 2px;
+    color: rgba(160,120,220,0.7);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .mail-tab:hover { border-color: rgba(160,80,255,0.55); color: rgba(215,175,255,0.9); }
+  .mail-tab.active {
+    border-color: rgba(160,80,255,0.6);
+    color: rgba(215,175,255,0.95);
+    background: rgba(120,40,200,0.12);
+  }
+  .mail-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .mail-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.4rem 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(160,80,255,0.18);
+    border-radius: 3px;
+    background: rgba(20,0,40,0.3);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .mail-item:hover { border-color: rgba(160,80,255,0.4); background: rgba(30,0,60,0.4); }
+  .mail-item.unread { border-left: 2px solid rgba(180,80,255,0.7); }
+  .mail-from {
+    font-size: 0.88rem;
+    color: rgba(215,195,255,0.9);
+    font-weight: 500;
+  }
+  .mail-snippet {
+    font-size: 0.8rem;
+    color: rgba(160,120,220,0.65);
+    grid-column: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mail-date {
+    font-size: 0.72rem;
+    color: rgba(120,80,180,0.55);
+    text-align: right;
+    align-self: start;
+  }
+  .mail-type-badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border: 1px solid rgba(160,80,255,0.2);
+    border-radius: 2px;
+    color: rgba(160,80,255,0.7);
+    vertical-align: middle;
+    margin-left: 0.4rem;
+  }
+  .mail-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(120,80,180,0.45);
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  .mail-unread-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(180,80,255,0.8);
+    vertical-align: middle;
+    margin-right: 0.4rem;
+  }
+</style>
+
+<div class="mail-wrap">
+  <div class="mail-header">
+    <h1>✦ Ograms</h1>
+    {% if unread_count %}
+    <span style="font-size:0.78rem;color:rgba(180,80,255,0.8);">{{ unread_count }} unread</span>
+    {% endif %}
+  </div>
+
+  <div class="mail-tabs">
+    <a href="{% url 'mail-inbox' %}"   class="mail-tab {% if view_tab == 'inbox'   %}active{% endif %}">Inbox</a>
+    <a href="{% url 'mail-outbox' %}"  class="mail-tab {% if view_tab == 'outbox'  %}active{% endif %}">Outbox</a>
+    <a href="{% url 'mail-compose' %}" class="mail-tab {% if view_tab == 'compose' %}active{% endif %}">Compose</a>
+  </div>
+
+  {% if messages_list %}
+  <div class="mail-list">
+    {% for msg in messages_list %}
+    <a class="mail-item {% if not msg.is_read %}unread{% endif %}"
+       href="{% url 'mail-detail' msg.pk %}">
+      <div class="mail-from">
+        {% if not msg.is_read %}<span class="mail-unread-dot"></span>{% endif %}
+        {{ msg.display_sender }}
+        <span class="mail-type-badge">{{ msg.get_msg_type_display }}</span>
+      </div>
+      <div class="mail-date">{{ msg.sent_at|date:"M d, Y" }}</div>
+      <div class="mail-snippet">
+        {% if msg.subject %}{{ msg.subject }}{% elif msg.body %}{{ msg.body|truncatechars:80 }}{% else %}<em>No content</em>{% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% if is_paginated %}
+  <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="mail-tab">← Newer</a>
+    {% endif %}
+    <span style="font-size:0.75rem;color:rgba(120,80,180,0.5);align-self:center;">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="mail-tab">Older →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="mail-empty">Your inbox is quiet. No Ograms yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

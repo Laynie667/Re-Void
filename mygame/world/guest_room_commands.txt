@@ -1,0 +1,129 @@
+== Helena's Log Cabin — Guest Room ==
+== Paste these commands in order while standing in the room ==
+== (formerly Elle's room — her name removed, everything else kept) ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = A guest room prepared with the kind of care that takes time. The walls are covered in |ypale yellow and white striped wallpaper|n, printed at intermittent points with roses and ivy — the pattern of a room designed to feel like a gift. |xLight wooden flooring|n extends from the white mopboards, a |wplush white area rug|n spread at the center.|/{zone:bed}|/{zone:dresser}|/{zone:wardrobe}|/{zone:chair}|/{zone:west}
+
+
+-- STEP 2: Create zones --
+(west already exists as a protected directional zone)
+
+roomzone add bed
+roomzone add dresser
+roomzone add wardrobe
+roomzone add chair
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc bed = The |wround bed|n in the back corner of the room has a mattress thick enough that anyone laying on it sinks several inches into its embrace. It is topped with an |mabundance of fluffy pillows|n and a careful assortment of stuffed animals, each one well looked after. At the edge of the bed, a |wleather-bound copy of 'Six of Crows'|n rests atop a |xhand-sewn white sundress|n, and beside them a |wpround wolf stuffie|n sits upright against the pillows, a small tag around its neck reading simply: |m'From Helena'|n.
+
+roomzone desc dresser = A |wdresser, bedside table, and vanity|n occupy one wall, all in the same shade of white that carries a faint |mpink glow|n, as if the wood itself is warm. The surfaces of the dresser and vanity are comfortably strewn with |xcoloring books|n, makeup organized by shade, knick-knacks, and small collected treasures. The large round |xvanity mirror|n catches the whole room in its reflection. From beneath the dresser, a handful of |madult toys|n of varied nature and intent are visible — pushed far enough back to technically qualify as 'under the dresser', not far enough to be out of sight.
+
+roomzone desc wardrobe = A |wtall white wardrobe|n stands with both double doors open, filled to capacity with outfits that span the entire range of |xsundresses to party gowns|n, with costume jewellery filling the hooks along the interior doors. The whole of it glows faintly |mpink|n at the edges, consistent with the rest of the furniture.
+
+roomzone desc chair = A |wrocking chair|n sits at the edge of the rug, angled slightly toward the door. It has |msoft cushions|n and a wide fleece blanket draped over the back — the seat is broad enough for two, the kind of width that is the result of a specific intention rather than incidental furniture sizing.
+
+roomzone desc west = Above the doorway, a |xdecorative wooden plaque|n has been mounted with care. Carved into it in clean, deliberate letters: |w'This room was made with care for someone. It still is.'|n
+
+
+-- STEP 4: Zone details --
+
+roomzone detail bed/stuffie = A |mwolf stuffie|n, well-made, its fur dense and unreasonably soft. It is seated upright against the pillows with the posture of something placed deliberately and not moved since. The bed has been made around it. The tag at its neck reads |m'From Helena'|n in handwriting that took care to be legible. It is looking directly at the door.
+
+roomzone detail bed/book = A |wleather-bound copy of Six of Crows|n, the spine broken at several points from repeated reading. It is bookmarked roughly two-thirds through with what appears to be a pressed violet. Beneath it, a |xhand-sewn white sundress|n — the stitching at the collar is small and even, the work of someone who took their time on it. A tiny embroidered detail sits at the neckline: two crossed keys, small enough to miss.
+
+roomzone detail dresser/toys = The toys under the dresser are not hidden — they're just under the dresser, which in this room constitutes the only concession to discretion. A slim pink vibrator with a velvet finish. A white rabbit with dual motors and a charge cable coiled beside it with the same tidiness applied to everything else in the room. A thick silicone cock, flared base down, in a shade of lavender that someone chose specifically. A jewelled plug, small, the gem a deep rose that matches the furniture. A flat of AA batteries, two-thirds depleted. The room is extremely carefully curated in every other respect. The arrangement under the dresser is not an oversight — it's a category decision.
+
+roomzone detail dresser/vanity = The |xvanity mirror|n is large enough to reflect the entire bed from where it stands. This may or may not be incidental. The makeup on the surface is organized with the same attention as everything else in the room — foundations sorted by shade, lipsticks standing upright in a small ceramic cup by color family, brushes in a glass jar with the handles down. The |xcoloring books|n are stacked with their spines aligned.
+
+roomzone detail wardrobe/dresses = The sundresses occupy the left side, party gowns the right, and the interior door hooks hold what the wardrobe is politely calling costume jewellery. The gowns include a deep green silk, a pale gold with beading at the bodice, and at the far end a red dress that covers the nipples and the top third of the ass and has made its peace with that being sufficient. The sundresses are all white or yellow or pale pink and look hand-selected for someone specific. The interior hooks hold three collars — leather, one with a D-ring, one with a chain lead still attached — and what is clearly a harness in black nylon, sized small, hanging with the buckles out like it's been put back in a hurry.
+
+roomzone detail chair/blanket = The fleece blanket draped over the rocking chair is wide enough to cover two people seated together without arrangement — the kind of width that results from buying a blanket for a specific purpose. The cushions have the compression of regular use and have learned a shape that is not the shape of one person sitting upright. The chair is broad enough to sit someone in your lap with room to move, which the wear pattern on the cushions suggests has occurred. It smells of lavender and underneath that something warmer, the kind of accumulated warmth that fleece holds onto. The chair faces the bed directly and rocks smoothly. Someone oiled the joints.
+
+roomzone detail west/plaque = The plaque is carved from pale wood, sanded smooth, mounted above the door frame at a height that requires you to look up. The lettering is clean and deliberate: |w'This room was made with care for someone. It still is.'|n Below the main text, smaller, the same hand: |x'— H'|n
+
+
+-- STEP 5: Study observations --
+
+roomzone study bed + The wolf stuffie is seated upright against the pillows with the posture of something that was placed deliberately and has not been moved. The bed has been made around it. The tag at its neck says 'From Helena' in handwriting that took care to be legible. Someone tucked it in.
+
+roomzone study bed + The copy of Six of Crows is bookmarked two-thirds through, the spine broken at three separate points from repeated reading. The hand-sewn sundress beneath it has a small embroidered detail at the collar — two crossed keys — that takes a moment to identify and longer to assign meaning to. The pressing of the violet used as a bookmark has left a faint stain on the page.
+
+roomzone study dresser + The vanity mirror is positioned to reflect the full length of the bed from where it stands. This is either coincidence or the result of someone who furnished the room with a clear understanding of its full range of uses. The makeup is organized with the care of someone who takes that ritual seriously. The jewelled plug under the dresser is in the same rose shade as the furniture. Someone coordinated this.
+
+roomzone study dresser + The silicone cock under the dresser has a suction cup base and has been used on a flat surface — there is a faint ring on the underside of the bedside table at a height consistent with someone kneeling beside it. The flat of AA batteries is two-thirds depleted. The charge cable is coiled with the same precision as every other surface in the room. This tells you something about the person who lived here, or about whoever stocked the room for them.
+
+roomzone study wardrobe + The red dress at the far end covers the nipples and clears the ass by a margin that requires stillness to maintain. It is well-made. It has been worn enough that the hem has a slight give to it. The harness hanging beside it on the interior hook is black nylon, sized small, all the buckles out — put back quickly, or put back by someone who doesn't care about the buckles. The collar with the chain lead is the most expensive-looking thing on the hooks. Someone bought it with intention.
+
+roomzone study chair + The rocking chair is angled toward the door with the specificity of something positioned to be looked at when the door opens, not to look out. The seat is wide enough to take someone in your lap with room to work with. The cushions have learned a shape that is not upright and solitary. The chair faces the bed and the vanity mirror in the same sightline. Someone oiled the joints so it doesn't creak. That was a deliberate choice.
+
+
+-- STEP 6: Handle text --
+
+roomzone handle bed/stuffie = You pick up the wolf stuffie from the bed. It is unreasonably soft — the kind of soft that takes money to source, the kind Helena would have specifically looked for. The tag at its neck says 'From Helena' in handwriting that took care to be legible, which is its own kind of statement. You sit with it for a moment, turning it in your hands, thinking about what it means that this is sitting on a bed in a room that also has a jewelled plug in the dresser and a harness in the wardrobe and a chair oiled so it doesn't creak. What it means that she put something this gentle in a room set up for that. What it means that whoever she gave it to kept it upright against the pillows and made the bed around it. You set it back exactly where it was. The alternative is not acceptable.|/You return the wolf stuffie to its place on the bed with the careful attention of someone who was absolutely just checking the craftsmanship.
+
+roomzone handle chair/blanket = You pull the blanket from the arm of the rocking chair and hold it. Wide enough to cover two people in the chair without thinking about it — wide enough to cover two people doing most things in the chair without thinking about it. It smells of lavender and body warmth and the specific combination that accumulates in a blanket used regularly in a small space with another person. The chair rocks once under your hands and settles silently. The joints don't creak. You think about that, briefly. You fold the blanket back over the arm and step away.|/You refold the blanket over the arm of the rocking chair with the composed expression of someone who was absolutely just assessing the thread count.
+
+
+-- STEP 7: Scents --
+
+roomzone scent bed = |xSomething warm and faintly floral — the stuffed animals and pillows have accumulated the particular softness of a space that has been slept in and cared for. The sundress contributes a faint clean-linen note. The wolf stuffie smells of cedar and, very faintly, of whatever Helena uses.|n
+
+roomzone scent dresser = |xCosmetics and powder, the specific warm-chemical note of lip products and foundation. Underneath it, something faintly electric from the direction of the floor — the practical, neutral smell of a charging cable.|n
+
+roomzone scent wardrobe = |xFabric and cedar from a block hanging inside the wardrobe door. The green silk carries a trace of perfume — floral and dry, expensive. The red dress, nothing. It hasn't been worn recently enough.|n
+
+roomzone scent chair = |xLavender and warmth, the specific combination of a blanket that has been used by the same person many times. The fleece holds scent the way fleece does. It is comfortable in a way that is difficult to be neutral about.|n
+
+
+-- STEP 8: Install zone mechanics --
+
+-- Rocking chair: seated, capacity 2, lap enabled --
+@create Cushioned Rocking Chair:typeclasses.seat_mechanic.SeatMechanic
+@set Cushioned Rocking Chair/label = the rocking chair
+@set Cushioned Rocking Chair/allow_lap = True
+use Cushioned Rocking Chair on chair
+
+-- Round bed: lying, capacity 3 --
+@create Round Bed:typeclasses.seat_mechanic.SeatMechanic
+@set Round Bed/label = the round bed
+@set Round Bed/capacity = 3
+@set Round Bed/position = lying
+use Round Bed on bed
+
+-- Rug: kneeling, capacity 4 --
+-- (create a rug subzone first if not already done) --
+roomzone add rug
+@create Plush Rug:typeclasses.seat_mechanic.SeatMechanic
+@set Plush Rug/label = the rug
+@set Plush Rug/capacity = 4
+@set Plush Rug/position = kneeling
+use Plush Rug on rug
+
+
+-- STEP 9: Toy handle texts --
+-- (handle vibrator / handle rabbit / handle cock / handle plug) --
+-- Uses the existing handle system — private text to caller, discreet emote to room --
+
+roomzone handle dresser/vibrator = You pick it up by the grip, thumb finding the button from muscle memory that isn't yours — it clicks on with the ease of something used often.|/The first setting is polite. The second is not. You press it to the inside of your wrist first, because that's what you tell yourself you're doing, and then you stop pretending that's what you're doing.|/The hum of it is quiet enough it wouldn't carry past the door. You find a position against the edge of the dresser and work with it, one hand braced on the surface, the other occupied. The vanity mirror shows you in reasonable detail. You look at yourself in it for exactly as long as feels honest and then you find somewhere else to look.|/You ride the second setting out until your hips stop cooperating with you and your free hand leaves a damp print on the dresser surface. The third setting you save for another time. You wipe it on the hem of your shirt, click it off, and set it back under the dresser exactly as you found it.|/You return the vibrator to its place beneath the dresser and close the distance to the door with the composed expression of someone who was absolutely just checking the battery life.
+
+roomzone handle dresser/rabbit = The rabbit is heavier than it looks — dual motor, white, the pearl finish cool against your palm before your hand warms it. The charge cable is coiled beside it with the same precision as everything else in this room, which makes picking it up feel like you're untidying something. You do it anyway.|/The main motor is what it is. The ears are a separate matter entirely. They find an angle on the first try, which tells you something about the design philosophy of whoever built this, and you sit down on the edge of the bed because standing felt like an optimistic choice.|/The settings cycle with polite mechanical indifference to what they're doing to you. You don't cycle through all of them. You find the one that makes the decision for you and you stay there, one hand in the mattress, the other keeping the ears exactly where they need to be. The stuffie watches from the pillows. You've stopped caring.|/The mirror catches you with your chin up and your mouth open, which is a specific kind of information about yourself to come away from a guest room with. You take the time the ears insist on taking. When you finally click it off you sit with it for a moment before you remember where you are, then you set it back and refold the cable with the meditative attention of someone who has just had an experience they plan to think about later.|/You return the rabbit to its place beneath the dresser with the careful focus of someone who was absolutely just testing the dual-motor configuration.
+
+roomzone handle dresser/cock = The lavender cock comes free of the surface with the quiet pop of suction releasing — someone pressed it to the underside of the bedside table at some point and more recently someone stacked it with the others without bothering to clean the base, which is its own kind of information. You weigh it in both hands. It is substantial. The color was chosen deliberately.|/The suction cup presses to the flat top of the dresser with a definitive click. The height is immediately correct. Whoever furnished this room understood that the dresser would be the correct height, which you find enormously telling as you take your time working down onto it, bracing on the surface with both hands, finding the angle.|/It takes patience. The patience is the point. You work through the resistance of it in increments, hips dropping by degrees, and by the time you've taken all of it you're making sounds you're grateful don't carry past the door. The dresser does not move. It was built for this, or something equivalent.|/You ride it at your own pace with the mirror across the room showing you in profile. You look at yourself in it for exactly as long as feels honest. You don't rush the ending.|/When you're done you clean the base with the cloth in the bedside drawer — as if this was anticipated, which it clearly was — and replace it beside the others in the exact orientation you found it.|/You set the cock back in its place beneath the dresser with the composure of someone who was absolutely just assessing the silicone quality.
+
+roomzone handle dresser/plug = Small in your palm — flared base, the rose gem catching the light in a way someone chose specifically because it matches. The logic of the room becomes more coherent the longer you spend in it.|/You take it to the en suite and come back slicked. The insertion is the specific work of going slowly and then not slowly, the base settling flush with a pressure that sits in your spine and does not go away. The gem is visible in the vanity mirror when you straighten up. You look at yourself for a moment, taking stock.|/The room sits around you — the wolf stuffie watching from the bed, the harness on the wardrobe hook, the dresser with its contents, the chair that someone oiled so it doesn't creak. Everything here was chosen by someone who knew what it would be used for and chose it anyway. The plug sits warm and full and present. You decide that's enough for now, or decide it isn't — both are decisions the room accommodates.|/You clean the plug and set it back with the others beneath the dresser with the precise care of someone who was absolutely just examining the gem setting.
+
+
+-- STEP 10: Ambient messages --
+
+roomzone ambient bed + |xOne of the stuffed animals on the bed has shifted slightly — the wolf stuffie has not. It continues to face the door with the steady attention of something that was placed there on purpose.|n
+
+roomzone ambient dresser + |xThe vanity mirror catches a passing reflection — the room, the bed, the open wardrobe — and holds it for a moment before the light shifts.|n
+
+roomzone ambient chair + |xThe rocking chair moves a half-inch in the draft from under the door and settles. The blanket over its arm doesn't move.|n
+
+roomzone ambient wardrobe + |xSomething in the wardrobe shifts — a dress sliding on its hanger, or the weight of the jewellery on the interior hooks redistributing. The doors stay open.|n

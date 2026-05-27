@@ -412,8 +412,10 @@ class Character(ObjectParent, DefaultCharacter):
         # Position and proximity
         # ---------------------------------------------------------------
         self.db.seated_at = None
-        # Zone-based seating — (room_id, zone_name) or None
-        self.db.zone_seated_at = None
+        # Zone-based positions — (room_id, zone_name) or None
+        self.db.zone_seated_at   = None
+        self.db.zone_lying_at    = None
+        self.db.zone_kneeling_at = None
         # Proximity: {character_id: "near"/"with"}
         # You can be near/with multiple people simultaneously.
         self.db.proximity = {}
@@ -572,13 +574,15 @@ class Character(ObjectParent, DefaultCharacter):
             self.db.seated_at = None
             self.db.body_language = ""
 
-        # Zone-based seating cleanup
-        if self.db.zone_seated_at:
+        # Zone-based position cleanup (seated / lying / kneeling)
+        if self.db.zone_seated_at or self.db.zone_lying_at or self.db.zone_kneeling_at:
             try:
-                from commands.mechanic_commands import _do_stand
-                _do_stand(self, silent=True)
+                from commands.mechanic_commands import _do_rise
+                _do_rise(self, silent=True)
             except Exception:
-                self.db.zone_seated_at = None
+                self.db.zone_seated_at   = None
+                self.db.zone_lying_at    = None
+                self.db.zone_kneeling_at = None
 
         if self.db.wall_state:
             self.db.wall_state = None
@@ -657,13 +661,15 @@ class Character(ObjectParent, DefaultCharacter):
         )
         _proximity_clear_and_notify(self)
 
-        # Auto-stand from any zone seat when leaving a room
-        if self.db.zone_seated_at:
+        # Auto-rise from any zone position when leaving a room
+        if self.db.zone_seated_at or self.db.zone_lying_at or self.db.zone_kneeling_at:
             try:
-                from commands.mechanic_commands import _do_stand
-                _do_stand(self, silent=True)
+                from commands.mechanic_commands import _do_rise
+                _do_rise(self, silent=True)
             except Exception:
-                self.db.zone_seated_at = None
+                self.db.zone_seated_at   = None
+                self.db.zone_lying_at    = None
+                self.db.zone_kneeling_at = None
 
         # Fire stair creak notifications if applicable
         try:

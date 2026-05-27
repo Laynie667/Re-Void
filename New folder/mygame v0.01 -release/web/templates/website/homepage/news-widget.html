@@ -1,0 +1,20 @@
+<div class="panel panel-warm">
+  <div class="panel-title">Transmissions from the Void</div>
+
+  {% if news_posts %}
+    {% for post in news_posts %}
+    <div class="news-item">
+      <div class="news-date">{{ post.date|date:"M d · Y" }}</div>
+      <div class="news-title">{{ post.title }}</div>
+      <div class="news-body">{{ post.body|safe }}</div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="news-item">
+      <div class="news-body" style="opacity:0.5;font-style:italic;">
+        No transmissions yet. Check back soon.
+      </div>
+    </div>
+  {% endif %}
+
+</div>

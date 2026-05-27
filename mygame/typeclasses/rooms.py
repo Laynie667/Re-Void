@@ -293,13 +293,14 @@ class Room(ObjectParent, DefaultRoom):
     def get_zone_seated_lines(self):
         """
         Return display lines for any zone that currently has characters
-        seated in it via the 'seat' mechanic.
+        in a zone position (seated / lying / kneeling / in a lap).
 
         Returns:
-            list[str]: Lines like "|xSeated at the bench: Helena, Kira.|n"
+            list[str] — one line per occupied zone.
         """
         zones = self.db.zones or {}
         lines = []
+
         for zone_name, zone_data in zones.items():
             if not hasattr(zone_data, "get"):
                 continue
@@ -310,10 +311,43 @@ class Room(ObjectParent, DefaultRoom):
             occupied = seat.get("occupied", [])
             if not occupied:
                 continue
-            label = seat.get("label", zone_name)
-            names = ", ".join(entry[1] for entry in occupied if len(entry) > 1)
-            if names:
-                lines.append(f"|xSeated at {label}: {names}.|n")
+
+            label    = seat.get("label", zone_name)
+            position = seat.get("position", "seated")
+
+            # Separate seat/lap slots
+            seat_entries = [e for e in occupied if len(e) < 3 or e[2] in ("seat", "seated")]
+            lap_entries  = [e for e in occupied if len(e) >= 3 and e[2] == "lap"]
+            lie_entries  = [e for e in occupied if len(e) >= 3 and e[2] == "lying"]
+            kneel_entries= [e for e in occupied if len(e) >= 3 and e[2] == "kneeling"]
+
+            # Seated (with optional lap riders)
+            if seat_entries and position == "seated":
+                host_name = seat_entries[0][1]
+                if lap_entries and len(seat_entries) == 1:
+                    lap_names = ", ".join(e[1] for e in lap_entries)
+                    lines.append(
+                        f"|x{host_name} is seated in {label} "
+                        f"with {lap_names} in their lap.|n"
+                    )
+                else:
+                    names = ", ".join(e[1] for e in seat_entries)
+                    lines.append(f"|xSeated in {label}: {names}.|n")
+
+            # Lying
+            elif lie_entries or position == "lying":
+                entries = lie_entries or seat_entries
+                names = ", ".join(e[1] for e in entries if len(e) > 1)
+                if names:
+                    lines.append(f"|x{names} {'is' if ',' not in names else 'are'} lying on {label}.|n")
+
+            # Kneeling
+            elif kneel_entries or position == "kneeling":
+                entries = kneel_entries or seat_entries
+                names = ", ".join(e[1] for e in entries if len(e) > 1)
+                if names:
+                    lines.append(f"|x{names} {'is' if ',' not in names else 'are'} kneeling on {label}.|n")
+
         return lines
 
     def fire_zone_event(self, zone_name, event_name, **kwargs):

@@ -1,0 +1,192 @@
+{% load static sekizai_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Re:Void" />
+  <meta name="description" content="Re:Void — a text-based roleplaying world built on the bones of a dead city." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="{% static "website/images/evennia_logo.png" %}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Cinzel+Decorative:wght@400;700&family=Josefin+Sans:ital,wght@0,100;0,300;0,400;1,100;1,300&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static "website/css/website.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% static "website/css/custom.css" %}?v=20">
+  {% block header_ext %}{% endblock %}
+  <title>Re:Void{% if flatpage %} — {{flatpage.title}}{% else %}{% block titleblock %}{% endblock %}{% endif %}</title>
+</head>
+<body>
+{% block body %}
+
+<!-- ── Sparkle / star field — layer 0 ── -->
+<div id="rv-starfield" aria-hidden="true"></div>
+
+<!-- ── Drip layer — layer 2 ── -->
+<div id="rv-drip-layer" aria-hidden="true">
+  <svg width="100%" height="100%" viewBox="0 0 1000 900"
+       preserveAspectRatio="xMidYMin slice"
+       xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sg-a" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="rgba(235,215,255,0.55)"/>
+        <stop offset="70%"  stop-color="rgba(200,160,255,0.25)"/>
+        <stop offset="100%" stop-color="rgba(180,120,255,0.0)"/>
+      </linearGradient>
+      <linearGradient id="sg-b" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="rgba(220,200,255,0.50)"/>
+        <stop offset="70%"  stop-color="rgba(190,140,255,0.22)"/>
+        <stop offset="100%" stop-color="rgba(170,110,255,0.0)"/>
+      </linearGradient>
+      <linearGradient id="sg-c" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="rgba(245,225,255,0.58)"/>
+        <stop offset="70%"  stop-color="rgba(210,170,255,0.28)"/>
+        <stop offset="100%" stop-color="rgba(185,130,255,0.0)"/>
+      </linearGradient>
+      <filter id="vblur" x="-20%" y="-5%" width="140%" height="110%">
+        <feGaussianBlur stdDeviation="0.8"/>
+      </filter>
+      <filter id="vblur-soft" x="-30%" y="-10%" width="160%" height="120%">
+        <feGaussianBlur stdDeviation="1.3"/>
+      </filter>
+    </defs>
+    <!-- DRIP A -->
+    <g filter="url(#vblur)">
+      <path d="M76,0 C75,32 73,72 71,108 C69,124 70,142 76,152 C73,163 77,177 90,183 C103,177 107,163 104,152 C110,142 111,124 109,108 C107,72 105,32 104,0 Z" fill="url(#sg-a)"/>
+      <ellipse cx="80" cy="158" rx="5" ry="2.2" fill="rgba(220,180,255,0.35)"/>
+    </g>
+    <!-- DRIP B -->
+    <g filter="url(#vblur)">
+      <path d="M281,0 C280,18 278,42 277,66 C275,80 276,98 280,110 C277,120 280,135 292,141 C304,135 307,120 304,110 C308,98 309,80 307,66 C306,42 304,18 303,0 Z" fill="url(#sg-b)"/>
+      <ellipse cx="285" cy="120" rx="4" ry="1.8" fill="rgba(210,170,255,0.30)"/>
+    </g>
+    <!-- DRIP C -->
+    <g filter="url(#vblur)">
+      <path d="M482,0 C480,48 477,105 475,148 C472,166 473,200 500,210 C527,200 528,166 525,148 C523,105 520,48 518,0 Z" fill="url(#sg-c)"/>
+      <ellipse cx="488" cy="178" rx="7" ry="3" fill="rgba(225,185,255,0.38)"/>
+    </g>
+    <!-- DRIP D -->
+    <g filter="url(#vblur)">
+      <path d="M656,0 C655,30 653,68 651,104 C649,120 650,140 656,152 C653,163 657,178 670,184 C683,178 687,163 684,152 C690,140 691,120 689,104 C687,68 685,30 684,0 Z" fill="url(#sg-a)"/>
+      <ellipse cx="660" cy="160" rx="5" ry="2.2" fill="rgba(215,175,255,0.32)"/>
+    </g>
+    <!-- DRIP E -->
+    <g filter="url(#vblur)">
+      <path d="M854,0 C853,36 850,84 848,130 C845,148 846,178 870,187 C894,178 895,148 892,130 C890,84 887,36 886,0 Z" fill="url(#sg-b)"/>
+      <ellipse cx="858" cy="155" rx="5.5" ry="2.4" fill="rgba(210,170,255,0.33)"/>
+    </g>
+    <!-- DRIP F -->
+    <g filter="url(#vblur-soft)">
+      <path d="M171,0 C170,16 169,36 168,58 C166,72 167,88 171,98 C169,107 172,120 179,125 C186,120 189,107 187,98 C191,88 192,72 190,58 C189,36 188,16 187,0 Z" fill="url(#sg-c)"/>
+      <ellipse cx="174" cy="107" rx="3.5" ry="1.5" fill="rgba(205,165,255,0.28)"/>
+    </g>
+  </svg>
+</div>
+
+<!-- ── Ticker ── -->
+<div class="ticker-bar" aria-hidden="true">
+  <div class="ticker-inner">
+    <em>✦</em> Welcome to Re:Void!
+    <em>✦</em> Check out the updates
+    <em>✦</em> Wander through our new site!
+    <em>✦</em> Send an O'gram to someone you love!
+  </div>
+</div>
+
+<!-- ── Main wrapper ── -->
+<div class="wrapper">
+
+  <!-- Header -->
+  <header>
+    <a href="/" class="logo-link">
+      <div class="logo"><span class="logo-caps">RE:</span>Void</div>
+    </a>
+    <div class="tagline">From nothing to existence in the spaces between the stars<span class="blink">_</span></div>
+  </header>
+
+  <!-- Nav -->
+  {% include "website/_menu.html" %}
+
+  <!-- Django messages -->
+  {% include 'website/messages.html' %}
+
+  <!-- Page content -->
+  {% block content %}{% endblock %}
+
+  <!-- Pagination -->
+  {% include 'website/pagination.html' %}
+
+  <!-- Footer -->
+  {% block footer %}
+  <div class="section-divider">⋆ ✦ ✧ ✦ ⋆</div>
+  <footer>
+    <div class="footer-ornament">⋆ ✦ ✧ ✦ ⋆</div>
+    <p>Re:Void &nbsp;·&nbsp; Est. 2026 &nbsp;·&nbsp; All content is original fiction</p>
+    <p>Built with <a href="https://evennia.com">Evennia</a> &nbsp;·&nbsp; Python &nbsp;·&nbsp; Lore &nbsp;·&nbsp; Spite</p>
+    <p>⋆ the void was here first ⋆</p>
+  </footer>
+  {% endblock %}
+
+</div><!-- /.wrapper -->
+
+{% endblock %}{# /body #}
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+/* ── Sparkles ── */
+(function () {
+  var field = document.getElementById('rv-starfield');
+  if (!field) return;
+  for (var i = 0; i < 70; i++) {
+    var el = document.createElement('div');
+    el.className = 'sp';
+    var size = 1.5 + Math.random() * 2.5;
+    el.style.cssText =
+      'left:' + (Math.random()*100).toFixed(2) + '%;' +
+      'top:'  + (Math.random()*100).toFixed(2) + '%;' +
+      'width:' + size.toFixed(1) + 'px;' +
+      'height:' + size.toFixed(1) + 'px;' +
+      '--d:' + (2.5 + Math.random()*4).toFixed(2) + 's;' +
+      '--dl:-' + (Math.random()*6).toFixed(2) + 's;' +
+      (Math.random() > 0.65 ? 'border-radius:1px;transform:rotate(45deg);' : '');
+    field.appendChild(el);
+  }
+})();
+
+/* ── Cursor sparkle trail ── */
+document.addEventListener('pointermove', function(e) {
+  if (Math.random() > 0.55) return;
+  var el = document.createElement('div');
+  el.className = 'sp';
+  el.style.cssText =
+    'position:fixed;left:' + (e.clientX - 1) + 'px;top:' + (e.clientY - 1) + 'px;' +
+    'width:3px;height:3px;--d:0.7s;--dl:0s;z-index:9999;pointer-events:none;';
+  document.body.appendChild(el);
+  setTimeout(function(){ el.parentNode && el.parentNode.removeChild(el); }, 750);
+});
+
+/* ── User nav dropdown toggle ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var dropdowns = document.querySelectorAll('.nav-user-dropdown > a');
+  dropdowns.forEach(function(toggle) {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      var parent = this.closest('.nav-user-dropdown');
+      parent.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-user-dropdown')) {
+      document.querySelectorAll('.nav-user-dropdown.open').forEach(function(el) {
+        el.classList.remove('open');
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

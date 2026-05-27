@@ -1,0 +1,51 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block titleblock %}Home{% endblock %}
+
+{% block content %}
+
+<!-- ── Live counter strip ── -->
+<div class="counter-strip">
+  <div class="counter-cell">
+    <div class="counter-value"><span class="counter-dot"></span>{{ num_accounts_connected|default:"0" }}</div>
+    <div class="counter-label">Online Now</div>
+  </div>
+  <div class="counter-cell">
+    <div class="counter-value">{{ num_characters|default:"0" }}</div>
+    <div class="counter-label">Characters</div>
+  </div>
+  <div class="counter-cell">
+    <div class="counter-value">{{ num_rooms|default:"0" }}</div>
+    <div class="counter-label">Rooms</div>
+  </div>
+</div>
+
+<!-- ── Mobile connect CTA (hidden on desktop) ── -->
+<div class="mobile-cta">
+  {% if webclient_enabled %}
+  <a href="{% url 'webclient:index' %}" class="btn-enter">
+    <span class="orb"></span>
+    Enter the Void
+    <span class="orb"></span>
+  </a>
+  {% endif %}
+</div>
+
+<!-- ── Content grid: main + sidebar ── -->
+<div class="content-grid">
+
+  <!-- Main column -->
+  <main>
+    {% include "website/homepage/what-is-widget.html" %}
+    {% include "website/homepage/news-widget.html" %}
+  </main>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    {% include "website/homepage/sidebar-widget.html" %}
+  </aside>
+
+</div>
+
+{% endblock %}

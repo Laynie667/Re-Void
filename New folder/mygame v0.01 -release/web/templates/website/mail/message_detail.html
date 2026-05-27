@@ -1,0 +1,95 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Ogram · Re:Void{% endblock %}
+
+{% block content %}
+<style>
+  .mail-wrap { max-width: 760px; margin: 2.5rem auto; padding: 0 1rem; }
+  .mail-back { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(120,80,180,0.6); text-decoration: none; display: inline-block; margin-bottom: 1.5rem; }
+  .mail-back:hover { color: rgba(160,80,255,0.85); }
+  .mail-card { border: 1px solid rgba(160,80,255,0.22); border-radius: 4px; background: rgba(20,0,40,0.35); padding: 1.5rem 1.75rem; }
+  .mail-card-header { border-bottom: 1px solid rgba(160,80,255,0.15); padding-bottom: 1rem; margin-bottom: 1.25rem; }
+  .mail-meta-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; }
+  .mail-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(160,80,255,0.6); margin-bottom: 0.15rem; }
+  .mail-value { font-size: 0.9rem; color: rgba(215,195,255,0.88); }
+  .mail-date-val { font-size: 0.75rem; color: rgba(120,80,180,0.55); }
+  .mail-type-badge { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.15rem 0.5rem; border: 1px solid rgba(160,80,255,0.25); border-radius: 2px; color: rgba(160,80,255,0.7); }
+  .mail-body { font-size: 0.94rem; color: rgba(215,195,255,0.85); line-height: 1.75; white-space: pre-wrap; margin-top: 0.25rem; }
+  .mail-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; align-items: center; }
+  .mail-btn-back { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(120,80,180,0.65); text-decoration: none; padding: 0.35rem 0.8rem; border: 1px solid rgba(120,80,180,0.25); border-radius: 2px; }
+  .mail-btn-back:hover { border-color: rgba(160,80,255,0.5); color: rgba(215,175,255,0.9); }
+  .mail-btn-delete { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(180,60,60,0.55); padding: 0.35rem 0.8rem; border: 1px solid rgba(180,60,60,0.2); border-radius: 2px; background: none; cursor: pointer; margin-left: auto; }
+  .mail-btn-delete:hover { border-color: rgba(200,80,80,0.5); color: rgba(220,100,100,0.85); }
+  .mail-delivered-note { font-size: 0.7rem; color: rgba(80,180,100,0.5); letter-spacing: 0.08em; }
+</style>
+
+<div class="mail-wrap">
+  <a href="{% if is_recipient %}{% url 'mail-inbox' %}{% else %}{% url 'mail-outbox' %}{% endif %}" class="mail-back">← Back to {% if is_recipient %}Inbox{% else %}Outbox{% endif %}</a>
+
+  <div class="mail-card">
+    <div class="mail-card-header">
+      <div class="mail-meta-row">
+        <div>
+          <div class="mail-label">From</div>
+          <div class="mail-value">
+            {{ ogram.display_sender }}
+            <span class="mail-type-badge">{{ ogram.get_msg_type_display }}</span>
+            {% if ogram.anonymous %}<span class="mail-type-badge">Anonymous</span>{% endif %}
+          </div>
+        </div>
+        <div class="mail-date-val">{{ ogram.sent_at|date:"M d, Y · g:i a" }}</div>
+      </div>
+
+      <div style="margin-top:0.75rem;">
+        <div class="mail-label">To</div>
+        <div class="mail-value">{{ ogram.recipient_name }}</div>
+      </div>
+
+      {% if ogram.subject %}
+      <div style="margin-top:0.75rem;">
+        <div class="mail-label">Subject</div>
+        <div class="mail-value">{{ ogram.subject }}</div>
+      </div>
+      {% endif %}
+
+      <div style="margin-top:0.75rem;display:flex;gap:2rem;">
+        <div>
+          <div class="mail-label">Messenger</div>
+          <div class="mail-value" style="font-size:0.82rem;">{{ ogram.gender_label }}</div>
+        </div>
+        {% if ogram.affection_type %}
+        <div>
+          <div class="mail-label">Affection</div>
+          <div class="mail-value" style="font-size:0.82rem;">{{ ogram.affection_label }}</div>
+        </div>
+        {% endif %}
+        <div>
+          <div class="mail-label">Status</div>
+          <div class="mail-value" style="font-size:0.82rem;">
+            {% if ogram.is_delivered %}
+              <span class="mail-delivered-note">✓ Delivered {{ ogram.delivered_at|date:"M d" }}</span>
+            {% else %}
+              <span style="color:rgba(160,120,80,0.6);">Pending delivery</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if ogram.body %}
+    <div class="mail-body">{{ ogram.body }}</div>
+    {% else %}
+    <div style="color:rgba(120,80,180,0.4);font-style:italic;font-size:0.85rem;">(No written body — gesture only)</div>
+    {% endif %}
+
+    <div class="mail-actions">
+      <a href="{% url 'mail-compose' %}" class="mail-btn-back">Compose Reply</a>
+      <form method="post" action="{% url 'mail-delete' ogram.pk %}" onsubmit="return confirm('Remove this Ogram from your mailbox?');">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% if is_recipient %}{% url 'mail-inbox' %}{% else %}{% url 'mail-outbox' %}{% endif %}">
+        <button type="submit" class="mail-btn-delete">Delete</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

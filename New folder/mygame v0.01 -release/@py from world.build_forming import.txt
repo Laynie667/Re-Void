@@ -1,0 +1,6 @@
+@py from world.build_forming import build_all; build_all()
+
+
+@py from world.npc_loader import NPCLoader; [NPCLoader.spawn_from_config(c) for c in NPCLoader.load_file("world/npcs/forming.yaml")]
+
+@py from world.build_forming import build_all; build_all()

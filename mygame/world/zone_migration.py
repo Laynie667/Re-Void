@@ -138,10 +138,12 @@ def migrate_character(char, dry_run=False, verbose=True):
         return None
 
     def _plain(obj):
-        """Recursively convert _SaverDict / _SaverList to plain Python types."""
-        if isinstance(obj, dict):
+        """Recursively convert _SaverDict / _SaverList to plain Python types.
+        Uses hasattr instead of isinstance so it works even when _SaverDict
+        does not inherit from dict."""
+        if hasattr(obj, 'items'):
             return {k: _plain(v) for k, v in obj.items()}
-        if isinstance(obj, list):
+        if hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes)):
             return [_plain(i) for i in obj]
         return obj
 
