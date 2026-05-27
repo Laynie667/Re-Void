@@ -48,15 +48,17 @@ _DEPTH_WARN = 5
 def _blank_zone(parent=None):
     """Return a fresh empty zone dict."""
     return {
-        "desc":        "",
-        "details":     {},
-        "scent":       None,
-        "ambient":     [],
-        "contents":    [],
-        "parent":      parent,
-        "mechanics":   {},
-        "scripts":     [],
-        "event_hooks": {},
+        "desc":           "",
+        "details":        {},
+        "handle_details": {},   # detail_name -> intimate emote text
+        "study_details":  [],   # list of random observation strings
+        "scent":          None,
+        "ambient":        [],
+        "contents":       [],
+        "parent":         parent,
+        "mechanics":      {},
+        "scripts":        [],
+        "event_hooks":    {},
     }
 
 
@@ -180,6 +182,8 @@ class CmdRoomZone(default_cmds.MuxCommand):
         "list", "desc", "detail", "detail/rm",
         "add", "rm", "scent", "scent/clear",
         "ambient", "ambient/clear", "token",
+        "handle", "handle/rm",
+        "study", "study/rm", "study/list",
     })
 
     def func(self):
@@ -228,6 +232,11 @@ class CmdRoomZone(default_cmds.MuxCommand):
             "ambient":        self._do_ambient,
             "ambient/clear":  self._do_ambient_clear,
             "token":          self._do_token,
+            "handle":         self._do_handle,
+            "handle/rm":      self._do_handle_rm,
+            "study":          self._do_study,
+            "study/rm":       self._do_study_rm,
+            "study/list":     self._do_study_list,
         }
 
         handler = dispatch.get(switch)
@@ -621,6 +630,192 @@ class CmdRoomZone(default_cmds.MuxCommand):
             f"description inline. Zones without an embedded token "
             f"are auto-appended below the main description.|n"
         )
+
+
+    # ------------------------------------------------------------------
+    # handle (intimate detail interaction text)
+    # ------------------------------------------------------------------
+
+    def _do_handle(self):
+        """
+        roomzone handle <zone>/<detail> = <text>
+        Set the intimate handle-interaction text for a detail.
+        Stored in zone["handle_details"][detail_name].
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        if "=" not in self.args or "/" not in self.args.split("=")[0]:
+            self.caller.msg(
+                "|xUsage: |wroomzone handle <zone>/<detail> = <text>|n"
+            ); return
+
+        lhs, _, text = self.args.partition("=")
+        lhs = lhs.strip()
+        text = text.strip()
+
+        if "/" not in lhs:
+            self.caller.msg(
+                "|xUsage: |wroomzone handle <zone>/<detail> = <text>|n"
+            ); return
+
+        zone_name, _, detail_name = lhs.partition("/")
+        zone_name   = zone_name.strip().lower()
+        detail_name = detail_name.strip().lower()
+
+        if zone_name not in zones:
+            self.caller.msg(
+                f"|xZone '{zone_name}' not found.|n"
+            ); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        handle_details = dict(zone.get("handle_details", {}) or {})
+        handle_details[detail_name] = text
+        zone["handle_details"] = handle_details
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|wHandle text set for '{detail_name}' in zone '{zone_name}'.|n\n"
+            f"|xPlayers can trigger it with: |whandle {detail_name}|n"
+        )
+
+    def _do_handle_rm(self):
+        """roomzone handle/rm <zone>/<detail>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        if "/" not in self.args:
+            self.caller.msg(
+                "|xUsage: |wroomzone handle/rm <zone>/<detail>|n"
+            ); return
+
+        zone_name, _, detail_name = self.args.partition("/")
+        zone_name   = zone_name.strip().lower()
+        detail_name = detail_name.strip().lower()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        handle_details = dict(zone.get("handle_details", {}) or {})
+
+        if detail_name not in handle_details:
+            self.caller.msg(
+                f"|xNo handle text for '{detail_name}' in zone '{zone_name}'.|n"
+            ); return
+
+        del handle_details[detail_name]
+        zone["handle_details"] = handle_details
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|wHandle text removed for '{detail_name}' in '{zone_name}'.|n"
+        )
+
+    # ------------------------------------------------------------------
+    # study (randomised observation list)
+    # ------------------------------------------------------------------
+
+    def _do_study(self):
+        """
+        roomzone study <zone> + <observation text>
+        Append a random observation to a zone's study_details list.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        if "+" not in self.args:
+            self.caller.msg(
+                "|xUsage: |wroomzone study <zone> + <observation text>|n"
+            ); return
+
+        zone_name, _, text = self.args.partition("+")
+        zone_name = zone_name.strip().lower()
+        text      = text.strip()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        if not text:
+            self.caller.msg("|xObservation text cannot be empty.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        study_details = list(zone.get("study_details", []) or [])
+        study_details.append(text)
+        zone["study_details"] = study_details
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|wStudy observation #{len(study_details)} added to zone '{zone_name}'.|n\n"
+            f"|xPlayers can discover it randomly with: |wstudy {zone_name}|n"
+        )
+
+    def _do_study_rm(self):
+        """roomzone study/rm <zone> <index>  (1-based)"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        parts = self.args.strip().split(None, 1)
+        if len(parts) < 2:
+            self.caller.msg(
+                "|xUsage: |wroomzone study/rm <zone> <index>|n"
+            ); return
+
+        zone_name = parts[0].lower()
+        try:
+            idx = int(parts[1]) - 1
+        except ValueError:
+            self.caller.msg("|xIndex must be a number.|n"); return
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        study_details = list(zone.get("study_details", []) or [])
+
+        if idx < 0 or idx >= len(study_details):
+            self.caller.msg(
+                f"|xIndex {idx + 1} out of range "
+                f"(zone has {len(study_details)} observations).|n"
+            ); return
+
+        removed = study_details.pop(idx)
+        zone["study_details"] = study_details
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|wObservation #{idx + 1} removed from zone '{zone_name}'.|n\n"
+            f"|x(Removed: {removed[:60]}{'...' if len(removed) > 60 else ''})|n"
+        )
+
+    def _do_study_list(self):
+        """roomzone study/list <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = zones[zone_name]
+        study_details = zone.get("study_details", []) or [] if hasattr(zone, "get") else []
+
+        if not study_details:
+            self.caller.msg(
+                f"|xNo study observations on zone '{zone_name}' yet.\n"
+                f"Add one with: |wroomzone study {zone_name} + <text>|n"
+            ); return
+
+        lines = [f"|wStudy observations for zone '{zone_name}':|n"]
+        for i, obs in enumerate(study_details, 1):
+            preview = obs[:80] + ("..." if len(obs) > 80 else "")
+            lines.append(f"  |w{i}.|n {preview}")
+        self.caller.msg("\n".join(lines))
 
 
 # ---------------------------------------------------------------------------

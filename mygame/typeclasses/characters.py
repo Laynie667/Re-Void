@@ -592,6 +592,26 @@ class Character(ObjectParent, DefaultCharacter):
         Blocks movement if any exit to the destination is flock-locked
         and the character doesn't hold the matching key.
         """
+        # --- Door lock check ---
+        if self.location and destination:
+            try:
+                zones = self.location.db.zones or {}
+                for zone_name, zone_data in zones.items():
+                    if not hasattr(zone_data, "get"):
+                        continue
+                    door = (zone_data.get("mechanics") or {}).get("door")
+                    if not door:
+                        continue
+                    if not door.get("locked"):
+                        continue
+                    dest_id = door.get("destination_id")
+                    if dest_id and destination.id == dest_id:
+                        msg = door.get("lock_msg", "That door is locked.")
+                        self.msg(f"|x{msg}|n")
+                        return False
+            except Exception:
+                pass
+
         # --- Restraint check ---
         restraints = self.db.restraints or {}
         for zone_name, data in restraints.items():
@@ -644,6 +664,13 @@ class Character(ObjectParent, DefaultCharacter):
                 _do_stand(self, silent=True)
             except Exception:
                 self.db.zone_seated_at = None
+
+        # Fire stair creak notifications if applicable
+        try:
+            from commands.stair_commands import fire_stair_creak
+            fire_stair_creak(self, source_location, self.location)
+        except Exception:
+            pass
 
         # Notify lead partner if we moved while connected
         leading_id = self.db.leading

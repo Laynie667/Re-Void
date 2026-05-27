@@ -244,6 +244,21 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_MECHANIC_CMDS:
             self.add(cmd_cls())
 
+        # Door mechanic commands (lock, unlock, knock, door)
+        from commands.door_commands import ALL_DOOR_CMDS
+        for cmd_cls in ALL_DOOR_CMDS:
+            self.add(cmd_cls())
+
+        # Stair mechanic commands (stair set/add/remove/list/msg)
+        from commands.stair_commands import ALL_STAIR_CMDS
+        for cmd_cls in ALL_STAIR_CMDS:
+            self.add(cmd_cls())
+
+        # Interaction commands (handle, study)
+        from commands.interact_commands import ALL_INTERACT_CMDS
+        for cmd_cls in ALL_INTERACT_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
