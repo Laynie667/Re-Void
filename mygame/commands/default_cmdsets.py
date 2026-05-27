@@ -239,6 +239,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_ROOMZONE_CMDS:
             self.add(cmd_cls())
 
+        # Mechanic item commands (use, sit, stand)
+        from commands.mechanic_commands import ALL_MECHANIC_CMDS
+        for cmd_cls in ALL_MECHANIC_CMDS:
+            self.add(cmd_cls())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

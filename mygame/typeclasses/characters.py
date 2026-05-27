@@ -412,6 +412,8 @@ class Character(ObjectParent, DefaultCharacter):
         # Position and proximity
         # ---------------------------------------------------------------
         self.db.seated_at = None
+        # Zone-based seating — (room_id, zone_name) or None
+        self.db.zone_seated_at = None
         # Proximity: {character_id: "near"/"with"}
         # You can be near/with multiple people simultaneously.
         self.db.proximity = {}
@@ -570,6 +572,14 @@ class Character(ObjectParent, DefaultCharacter):
             self.db.seated_at = None
             self.db.body_language = ""
 
+        # Zone-based seating cleanup
+        if self.db.zone_seated_at:
+            try:
+                from commands.mechanic_commands import _do_stand
+                _do_stand(self, silent=True)
+            except Exception:
+                self.db.zone_seated_at = None
+
         if self.db.wall_state:
             self.db.wall_state = None
 
@@ -626,6 +636,14 @@ class Character(ObjectParent, DefaultCharacter):
             source_location, move_type=move_type, **kwargs
         )
         _proximity_clear_and_notify(self)
+
+        # Auto-stand from any zone seat when leaving a room
+        if self.db.zone_seated_at:
+            try:
+                from commands.mechanic_commands import _do_stand
+                _do_stand(self, silent=True)
+            except Exception:
+                self.db.zone_seated_at = None
 
         # Notify lead partner if we moved while connected
         leading_id = self.db.leading

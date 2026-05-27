@@ -290,6 +290,32 @@ class Room(ObjectParent, DefaultRoom):
                 lines.append(desc)
         return "\n".join(lines)
 
+    def get_zone_seated_lines(self):
+        """
+        Return display lines for any zone that currently has characters
+        seated in it via the 'seat' mechanic.
+
+        Returns:
+            list[str]: Lines like "|xSeated at the bench: Helena, Kira.|n"
+        """
+        zones = self.db.zones or {}
+        lines = []
+        for zone_name, zone_data in zones.items():
+            if not hasattr(zone_data, "get"):
+                continue
+            mechanics = zone_data.get("mechanics", {}) or {}
+            seat = mechanics.get("seat")
+            if not seat:
+                continue
+            occupied = seat.get("occupied", [])
+            if not occupied:
+                continue
+            label = seat.get("label", zone_name)
+            names = ", ".join(entry[1] for entry in occupied if len(entry) > 1)
+            if names:
+                lines.append(f"|xSeated at {label}: {names}.|n")
+        return lines
+
     def fire_zone_event(self, zone_name, event_name, **kwargs):
         """
         Fire a named event on a zone, calling all registered handlers.
@@ -925,6 +951,11 @@ class Room(ObjectParent, DefaultRoom):
         zone_append = self.get_zone_auto_append(self.db.desc or "")
         if zone_append:
             parts.append(zone_append)
+
+        # --- Zone seated characters ---
+        seated_lines = self.get_zone_seated_lines()
+        if seated_lines:
+            parts.extend(seated_lines)
 
         # --- Separator before presence section ---
         parts.append("")
