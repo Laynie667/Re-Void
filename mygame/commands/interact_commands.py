@@ -45,13 +45,13 @@ def _find_detail_in_zones(room, detail_name):
             if dkey in details:
                 return zone_name, dkey, details[dkey]
 
-    # Pass 2: prefix
+    # Pass 2: substring — "wolf" finds "center_wolf"
     for zone_name, zone_data in zones.items():
         if not hasattr(zone_data, "get"):
             continue
         details = zone_data.get("details") or {}
         for dkey, dtext in details.items():
-            if dkey.startswith(name) or dkey.startswith(name_under):
+            if name in dkey or name_under in dkey:
                 return zone_name, dkey, dtext
 
     return None, None, None
@@ -74,13 +74,13 @@ def _get_handle_text(room, detail_name):
             if dkey in handle_details:
                 return zone_name, dkey, handle_details[dkey]
 
-    # Prefix fallback
+    # Substring fallback — "wolf" finds "center_wolf"
     for zone_name, zone_data in zones.items():
         if not hasattr(zone_data, "get"):
             continue
         handle_details = zone_data.get("handle_details") or {}
         for dkey, htext in handle_details.items():
-            if dkey.startswith(name) or dkey.startswith(name_under):
+            if name in dkey or name_under in dkey:
                 return zone_name, dkey, htext
 
     return None, None, None
