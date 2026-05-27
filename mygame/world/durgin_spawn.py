@@ -17,7 +17,8 @@ keyword triggers. He has... opinions on his customers' purchases.
 
 from web.housing.models import TENT_PRICE, ROOM_PACK_PRICES
 
-WAYPOST_PRICE = 300   # shards — one waypost, one realm address
+WAYPOST_PRICE  = 300   # shards — one waypost, one realm address
+CUSHION_PRICE  = 50    # shards — installs seating on a room zone (capacity 2)
 
 
 # ---------------------------------------------------------------------------
@@ -223,7 +224,8 @@ DURGIN_TRIGGERS = {
             f"  +10 room pack   — {ROOM_PACK_PRICES[10]} shards\n"
             f"  +20 room pack   — {ROOM_PACK_PRICES[20]} shards\n"
             f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n"
-            f"  Waypost         — {WAYPOST_PRICE} shards\n\n"
+            f"  Waypost         — {WAYPOST_PRICE} shards\n"
+            f"  Seat cushion    — {CUSHION_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -241,7 +243,8 @@ DURGIN_TRIGGERS = {
             f"  +10 room pack   — {ROOM_PACK_PRICES[10]} shards\n"
             f"  +20 room pack   — {ROOM_PACK_PRICES[20]} shards\n"
             f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n"
-            f"  Waypost         — {WAYPOST_PRICE} shards\n\n"
+            f"  Waypost         — {WAYPOST_PRICE} shards\n"
+            f"  Seat cushion    — {CUSHION_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -338,6 +341,37 @@ DURGIN_TRIGGERS = {
 
     "buy waypost": {
         "response": "_HANDLE_PURCHASE_WAYPOST",
+        "type": "action",
+    },
+
+    # ── Seat cushion ──────────────────────────────────────────────────────
+    "cushion": {
+        "response": [
+            f"Durgin reaches under the counter and produces a flat cushion — "
+            f"thick, well-stuffed, covered in practical canvas with a strap "
+            f"on the back. He sets it down with a businesslike pat. "
+            f"'Seat cushion. {CUSHION_PRICE} shards.' He folds his hands. "
+            f"'You use it on a zone in your room — say you've got a bench, "
+            f"a chair, a pile of things you're calling a throne — you drop "
+            f"the cushion on it and it becomes proper seating. Capacity two. "
+            f"Whoever sits, shows up in the room description as seated there.' "
+            f"He taps the counter. 'It's consumed when you install it. "
+            f"One cushion, one seat. Say |wbuy cushion|n when you're ready.'",
+
+            f"'Ah.' Durgin holds up a cushion. 'One of my quieter products, "
+            f"but a useful one.' He turns it over in his thick hands. "
+            f"'You use this on any zone or subzone in a room you own — "
+            f"|wuse cushion on <zone>|n — and that zone becomes a proper seat. "
+            f"Two people can sit there at once. They show up in the room desc "
+            f"when they do.' He sets it down. "
+            f"'{CUSHION_PRICE} shards. It gets used up on install, "
+            f"so buy one per seat. Say |wbuy cushion|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy cushion": {
+        "response": "_HANDLE_PURCHASE_CUSHION",
         "type": "action",
     },
 
@@ -559,6 +593,59 @@ def handle_purchase(caller, npc, purchase_type):
 
         import random
         npc.location.msg_contents(random.choice(_waypost_responses))
+        return
+
+    # ── Seat cushion purchase ──────────────────────────────────────────────
+    if purchase_type == "cushion":
+        if shards < CUSHION_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, a seat cushion is {CUSHION_PRICE} shards. "
+                f"You've got {shards}. That's a standing problem."
+            )
+            return
+
+        char.db.shards = shards - CUSHION_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=CUSHION_PRICE,
+            reason="purchase",
+            note="Seat cushion from Durgin Ironwood",
+        )
+
+        from typeclasses.seat_mechanic import SeatMechanic
+        cushion = create.create_object(
+            typeclass=SeatMechanic,
+            key="a seat cushion",
+            location=char,
+        )
+        cushion.db.capacity = 2
+        cushion.db.label    = "the seat"
+
+        _cushion_responses = [
+            f"Durgin slides the cushion across the counter to {char_name} "
+            f"with the no-nonsense air of a man completing a straightforward transaction. "
+            f"'There you go. |wuse seat cushion on <zone>|n — whatever zone "
+            f"you want to make sittable. It installs and disappears, "
+            f"and after that two people can sit there.' "
+            f"He glances up. 'Set the label on it first if you want "
+            f"something other than \"the seat\" to show in the room desc. "
+            f"|w@set seat cushion/label = <name>|n. Builders only.' "
+            f"He goes back to his ledger. 'Enjoy the seating arrangement.'",
+
+            f"Durgin pockets the shards, produces a cushion from under the counter "
+            f"in one smooth motion, and holds it out to {char_name}. "
+            f"'One seat cushion. Use it on a zone, it becomes seating for two, "
+            f"it gets consumed. Clean transaction.' "
+            f"He tilts his head. 'You can rename what shows up in the room desc '— "
+            f"by default it says \"the seat\" — with |w@set seat cushion/label = <name>|n '— "
+            f"'before you install it. After that it's permanent until someone "
+            f"rebuilds the zone.' A pause. 'Or you buy another cushion. "
+            f"Which I am always happy to sell you.'",
+        ]
+
+        import random
+        npc.location.msg_contents(random.choice(_cushion_responses))
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────
