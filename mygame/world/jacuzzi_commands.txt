@@ -1,0 +1,237 @@
+== Helena's Log Cabin — Jacuzzi Room ==
+== Paste these commands in order while standing in the OUTER room ==
+== Exits: east to Common Room, In/through to Jacuzzi ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = |yHelena's Log Cabin — Jacuzzi Room|n/The room is large enough to feel designed rather than merely built, and everything in it supports that impression — |xdark continuous tile underfoot|n, proportions that feel considered, art that occupies the walls with intention. The |mwolf-print jacuzzi|n sits flush with the floor at the room's center, its rim level with the tile as though the room was poured around it, |xsteam rising from the surface in slow curtains|n. Along the far wall, |cfloor-to-ceiling glass|n gives a view that earns the space it occupies. Behind you, the three interior walls arrange themselves without rushing for attention.//{zone:window}//{zone:mural}//{zone:pedestals}//{zone:cables}
+
+
+-- STEP 2: Create zones --
+
+roomzone add window
+roomzone add mural
+roomzone add pedestals
+roomzone add cables
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc window = The |wwindow|n occupies the entire far wall — |xthick glass, barely visible as glass at all|n, just a solid opening in the room that happens to radiate cold from the outside against your face when you stand close. Floor to ceiling, wall to wall: the full canopy of the |csnow-covered forest|n stretches outward, unbroken for what looks like miles. Further out, through the |xcold haze of distance|n, the shapes of mountains resolve from purple suggestion into something with real weight. At night the mountains disappear into the dark and |mthe aurora spreads across the sky in bands of green and violet|n, its fingers pulling themselves from the horizon upward across the stars. The glass does not diminish any of it. The view is different every hour and has not repeated itself yet.
+
+roomzone desc mural = The |wmural|n runs the full lower half of the three interior walls in fitted tile and glass — thousands of pieces, each placed with intention, together producing something both technically precise and entirely unambiguous in its subject. The narrative reads right to left in continuous panels: |ma large black direwolf|n, built to a scale that makes its |mthick red phallus|n a statement rather than a detail, moving through pale shapes of inattentive maidens; then pursuit, |mthe tearing of white gowns|n from shoulders and hips, and the expression on the nearest maiden's face that is not entirely fear and was given more tile work than anything else in this panel; then |mthe wolf mounting her|n against the remaining fabric of her gown while the other watches with her hand at her own throat; then the slow evidence of the wolf's work accumulating across the remaining panels — |mfullness, expansion|n, the visible weight of a body being changed from the inside; and finally, in the last section above the jacuzzi's rim, |mthe maidens attending their alpha|n with the expressions the artist chose to make specific: not resigned. Not performing. |mSettled.|n The grout lines across the entire surface are perfect.
+
+roomzone desc pedestals = In each corner, a |wpedestal of welded chain|n rises to hip height, the links fused into a solid column that reads as structural rather than decorative. Each supports a |xlarge potted ivy|n — old plants, the leaves heavy and trailing low enough in places to touch the floor — and a cluster of |mcandles in varying heights|n, the wax in deep purples and near-blacks. The scent they produce together is layered: |xsandalwood arrives first|n, clean and warm, |xthen something sweeter behind it|n that takes a second breath to identify, |xthen the musk underneath|n, the layer that doesn't announce itself until you've been in the room long enough for it to settle in. The whole room carries all of them at once, in different proportions depending on where you're standing.
+
+roomzone desc cables = Along the three interior walls above the mural's upper edge, |wsteel cables|n are anchored at measured intervals into the stone — not added later, but set into the wall at construction with flush hardware that leaves only the cable visible, emerging from the tile like it grew there. From each anchor, a cable drops in a loose coil with |ma collar and a set of shackles|n at its end: soft-lined leather, properly fitted, the kind made for extended wear. The cables extend to mid-chest at current resting length. Fully extended they reach the floor. A tension lock at each anchor — a small knurled dial — sets the maximum extension and holds it without drift. The length is set by the host. |mThe hardware at the anchor points has been used.|n
+
+
+-- STEP 4: Zone details --
+
+roomzone detail window/view = The distance behaves differently at different times. Midday the mountains are most readable — the purple of them, the specific quality of height seen through winter haze. Late afternoon the light changes the snow in the canopy to gold for about forty minutes and then stops. At night the window becomes something else entirely: the snow reflects the aurora's movement and the forest is shapes in shifting green and violet, and the stars behind them are the kind of quantity that doesn't happen in places with electric light. The cold radiates through the glass and can be felt against your face from a foot away. The glass itself has no distortion. Whoever installed it wanted nothing between the room and what was outside.
+
+roomzone detail window/glass = The glass is thick enough that it should blur things, but it doesn't. Up close, at the lower edge, a faint line of condensation marks where the temperature difference between inside and outside is largest. The frame is minimal — just enough to hold the glass, no more. There is a handprint on the lower-left panel at the height of someone who stood here and leaned their weight against it. It has not been wiped away. At night, at the right angle, the window reflects the jacuzzi and the room behind you laid over the aurora outside. The effect is clearly not accidental.
+
+roomzone detail mural/wolf = The wolf in the mural is not stylized. The artist worked from a reference that knew the animal: the proportions are accurate, the musculature correct, the weight and structure of the thing present in the tile even where the scale has been adjusted upward. The |mred phallus|n rendered below it was given the same care — not exaggerated into the implausible, just scaled to match the animal's impossible proportions, detailed with the specificity of something the artist wanted to get right. The eyes in the stalking panel follow you regardless of where in the room you stand to look at them. This was intentional.
+
+roomzone detail mural/maidens = The maidens in the mural are individually distinct — different faces, different builds, each given enough specificity that they read as portraits rather than types. Their expressions were the most labored part of the work. The first panel: unaware. The transition panel: the particular expression of something being decided in real time. The middle panels: a fullness that is not discomfort, rendered with the same care as the wolf's anatomy. The final panel: the expression the artist chose to make |munmistakably content|n — not performed, not ambiguous. The gowns that remain after the second panel are minimal throughout and were not brought back. The artist made a choice about that.
+
+roomzone detail mural/final_panel = This section sits directly above the jacuzzi's rim. To look at it properly you have to stand at the water's edge, which puts the steam against your face while you do. At this distance the tile work is most apparent — the transitions between colors managed with a precision that implies the artist knew exactly what they were doing and how long it would take. The two maidens here |mface the wolf|n. One crouches at his feet with both hands engaged and an expression of focus. The other stands with a hand resting on his flank with the specific quality of resting a hand on something you have decided belongs to you. The wolf's posture in this panel is different from all the others — not hunting, not mounting. |mReceiving.|n
+
+roomzone detail pedestals/candles = The candles have their own record of previous evenings — the wax shaped by accumulated burns, the holders with residue at their bases, the nearby ivy leaves learned to stay clear of the heat. The scent is different at different positions in the room. Close to the window corner the sandalwood is primary. Close to the mural wall the musk comes forward. At the jacuzzi's rim, with the steam mixed in, all three layers arrive together and occupy the back of the throat in a way that doesn't go away.
+
+roomzone detail cables/collar = The collar is soft-lined on the inside — broken-in leather, thin, the kind that doesn't mark even after hours. The outer surface is plain and unornamented in keeping with everything else in the room. The clasp operates with one hand and has a positive stop. The shackles below it are the same: soft-lined, sized correctly, with a locking mechanism that requires a key the host keeps. The cable above them runs through the tension dial at the anchor — |mthe length is set and held by the host|n, not by the person wearing the collar. The collar is warm from the room. It fills the hand with more weight than it looks like it should.
+
+roomzone detail cables/hardware = The anchor hardware is flush with the tile — visible once you look for it, invisible at a glance from across the room. Each anchor point shows wear in the surface around it from the cable moving over time. The wall at cable-reach is seamless, the tile uninterrupted. Someone thought about what would happen at that surface under that kind of use and built for it.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study window = The frame of the window has a barely visible tint at its uppermost edge — UV-filtering built into the glass, so the room gets full daylight without sun damage to the mural. Someone thought about the mural when they installed the window.
+roomzone study window = At night, if you look at the glass at the correct angle from across the room, you can see the jacuzzi's surface reflected in it, laid over the aurora outside. The effect is specific and was clearly planned.
+roomzone study window = The wolf's eyes in the mural's first panel, if you trace the angle of them, point to the exact position of the throne in the jacuzzi. This was not an accident in the installation.
+
+roomzone study mural = The grout lines vary in width by less than a millimeter across the entire surface. Whoever did this work was either very patient or had done it before at this scale.
+roomzone study mural = There is one tile in the final panel — upper right corner, above the wolf's shoulder — that does not quite match its neighbors. The color is close. It was replaced at some point. The original may have been damaged.
+roomzone study mural = The maiden's expression in the transition panel — the one that is being decided — was the most worked area of the entire mural. Under direct light you can see where earlier tile placements were removed and redone. The artist revised it at least twice.
+
+roomzone study pedestals = The ivy on the east pedestal has grown long enough to trail to the floor and double back. It was given a small hook to grip at some point. Someone has been tending these plants with attention.
+roomzone study pedestals = One of the pedestal bases has a wax ring pressed into accumulated drip residue — the circular base of a glass, set there and lifted again, many times.
+
+roomzone study cables = The cables are structural-grade — the load rating stamped on one of the anchor housings is significantly above anything decorative requires.
+roomzone study cables = One collar has been fastened and unfastened more than the others. The clasp is smoother, the leather at the contact points softer from use. It is the one closest to the jacuzzi.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable mural
+
+
+-- STEP 7: Mechanic items --
+
+@create Jacuzzi Room Cables:typeclasses.restrain_mechanic.RestrainMechanic
+@set Jacuzzi Room Cables/capacity = 4
+@set Jacuzzi Room Cables/label = the steel cables along the walls
+@set Jacuzzi Room Cables/blocker_msg = The cable is locked at its set length. You aren't going anywhere the host hasn't decided yet.
+use Jacuzzi Room Cables on cables
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle window/view = You step up to the glass and look out. The canopy spreads below and outward without interruption, every tree carrying its snow. The mountains are in the distance — the specific grey-purple of winter peaks seen through haze — and above them at night the aurora moves in its slow sweep. You stay longer than you meant to. The glass is cool against your breath and you can feel the cold through it from here.
+
+roomzone handle mural/wolf = You stop in front of the stalking panel and look properly. The wolf is rendered with the specificity of something studied, not imagined — the muscle and weight and scale of the animal correct before the adjustments that make it impossible. The |mred phallus|n below is the same: not exaggerated into the implausible, just scaled to match what the wolf has been made into. The eyes in this panel find you wherever you stand. You are aware of them while you look at everything else.
+
+roomzone handle mural/maidens = You follow the second panel. The expression the artist gave the maiden here — the one that is |mnot entirely fear|n — was given more tile work than anywhere else nearby. You can see where decisions were revised. The gown is already wrong at the shoulder. The other maiden in the background is watching with both hands at her own body and an expression the artist decided to make specific. You stay on this panel for a moment.
+
+roomzone handle mural/final_panel = You move to the panel above the jacuzzi's edge. At this distance the tile work is extraordinary — the color transitions, the precision, the way the pieces fit. The two maidens face the wolf. Their expressions were the most labored in the mural; up close you can see the revision marks, the places the artist changed their mind. They settled on |mcontented|n. Not resigned. The wolf receives them. Steam from the jacuzzi moves against your face while you look.
+
+roomzone handle cables/collar = You lift the collar from the wall. It fills your hand — more weight than it looks, the inner leather soft and broken-in, the clasp precise. You work it a few times. It opens and closes cleanly with one hand. The shackles below it are the same quality. The cable above you has a tension dial at the anchor that adjusts by feel. |mThe collar is warm from the room.|n You hold it for a moment before deciding what to do with it.
+
+roomzone handle pedestals/candles = You stand close to one of the corner clusters and let the scent locate itself. Sandalwood arrives first — clean and warm. Then the sweeter layer, identifiable on the second breath. Then the musk underneath, the layer that was already there before you focused on it. The ivy trails near your hand. The wax has a texture that is its own kind of record. You stay in this corner longer than you expected to.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add The cables against the wall settle with a faint sound — metal against stone, brief. The collar at the end of the nearest one rotates slightly and stills.
+rambient/add The candle in the northeast corner has burned lower than the others. The musk layer in that corner is heavier for it.
+rambient/add Steam from the jacuzzi drifts far enough to reach the window glass. A small patch of condensation forms near the lower edge and slowly clears.
+rambient/add The aurora outside — if it is night — pulls a sweep of color across the upper half of the window. The light it casts on the jacuzzi's surface arrives for a moment and then goes.
+rambient/add The ivy on the west pedestal shifts, one long trailing tendril moving as though something passed it. Nothing did.
+rambient/add The mural catches the candlelight differently when one of the flames adjusts. The wolf's eye in the stalking panel holds the light for a moment longer than the tile around it.
+rambient/add The water in the jacuzzi moves without instruction — small undulations rolling from the far side to the near, steam rising from each low point in the wave.
+
+
+
+== Helena's Log Cabin — Jacuzzi ==
+== Paste these commands in order while standing INSIDE the jacuzzi ==
+== Exit: Out to Jacuzzi Room ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = |mHelena's Log Cabin — Jacuzzi|n/The water is dark and hot and moves without being asked to — shallow undulations crossing the surface in slow rolls, the steam rising from it in steady curtains that thicken the air above the rim. The bottom of the tub is |xnot visible|n. The dark composite of the walls blurs into the water and the water blurs into depth, and in each of the four toe-shaped seats, |mdeep red resolves through the turbulence|n — not shape, just color, just enough to account for — before the next wave obscures it again. At the base of the print, the wider seat faces the window. The silver panel beside it is closed.//{zone:water}//{zone:seats}//{zone:throne}//{zone:panel}
+
+
+-- STEP 2: Create zones --
+
+roomzone add water
+roomzone add seats
+roomzone add throne
+roomzone add panel
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc water = The water runs |rhot from first contact|n — the kind of heat that needs a moment before it becomes what it is, which is exactly right, which is comfortable in a way that softens decision-making over time. The jets set into the tub walls keep the surface in constant motion: bubbles rising and flattening and being replaced, the water moving in slow competing directions, |xthe bottom permanently obscured|n. The composite material of the tub is dark enough that the water reads dark, reducing everything below the surface to color and approximation. The steam it produces is significant and continuous. The air inside the jacuzzi's rim is meaningfully warmer than the room outside it.
+
+roomzone desc seats = The tub's four toe shapes each hold |wone seat|n: contoured to receive a body correctly, engineered to position an occupant without requiring active effort to hold the position. Below the waterline, mounted at the center of each, is |ma wolf-cock dildo|n — nine inches, fully detailed, the material giving slightly and returning, the knot at its base |mdimensionally faithful to the species on the mural|n and significantly wider than the shaft above it. From the surface these are visible only as |mblurs of deep red|n, the precise shape obscured by the moving water. The knot, at the point of full seating, is apparent without the benefit of visibility. |mThe seat does not release easily without assistance. This is the point.|n
+
+roomzone desc throne = At the base of the print — the widest point, the heel — a |wlarger seat|n is built into the composite two inches above the toe seats. It faces the window: from this position the panorama fills the view, and silhouetted against it, all four toe seats face inward. |xThe sight lines were considered.|n The rim at the throne's sides is flat and wide enough to rest things on without concern. At the left hand, flush with the rim, the silver control panel sits in its mount — warm from proximity to the water, its lid smooth and closed, the seam barely visible.
+
+roomzone desc panel = The |wcontrol panel|n is silver, flush-mounted to the rim on the throne's left side, currently closed: a smooth surface broken only by the seam of its lid and a small keyhole that takes a specific key. When open — |mthe host has the key|n — the controls inside are arranged without labels: two large dials, a row of three toggles on a recessed bar, and three small indicators with colored lenses. One indicator is currently green. The panel does not explain what any of this controls to someone who doesn't already know. The host knows.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail seats/dildo = Below the waterline, each toe seat's fixture is detailed with the specificity of something designed to be felt rather than examined: the shape of the shaft, the texture of the material that gives slightly under pressure and returns, the flare of the knot at its base. Nine inches of it mounted firmly at the seat's center, the angle positioned so that sitting fully down is a process rather than a moment — each inch of it asking something, the knot at the end asking something more. The knot is what holds. Once properly seated, rising requires effort the water temperature has been working to undermine since before the decision became relevant. |mThe panel controls whether rising is possible at all.|n
+
+roomzone detail seats/surface = From above, the dildos resolve only as red — not shape, not dimension, just the color bleeding through the turbulence into suggestion. The knot is not apparent from the surface. What is apparent is the color, the heat, the steam, and the specific quality of the seat's contour before the water takes the rest of the information away. This is deliberate.
+
+roomzone detail throne/position = The two-inch elevation is precisely enough: it repositions the sight lines so the host looks down at the occupied toe seats without drama, just enough to register differently for everyone in the water. From the throne the window frames the four guests facing inward — their expressions readable, their positions visible, the water at their waists and whatever is happening below it their own private relationship with what the seat was built to do.
+
+roomzone detail throne/rim = The rim at the throne is wide enough to rest both forearms on while leaning forward. The armrests show wear at the forward edge from exactly this. The center of the seat shows no wear — the host does not sit back. The silver panel at the left hand is always within reach without moving.
+
+roomzone detail panel/controls = When open: the left dial controls temperature in five positions by texture — a progression from smooth to increasingly ridged. The right dial controls the jets in five positions the same way. The row of three toggles occupies a recessed bar below the dials. The two dark indicators have thin wire traces connecting through the rim into the seat bases. The panel controls the dildo seats directly — whether they release, and under what conditions. The green indicator has always been green. It does not appear to be connected to anything inside the panel housing. |mThe host has not explained it.|n
+
+
+-- STEP 5: Zone study details --
+
+roomzone study water = The water temperature is calibrated well above a standard hot tub. Whoever set the heating element either runs hot or was deliberate about the effect sustained heat has on sustained decision-making.
+roomzone study water = Even when the jets are off there is a baseline movement to the water from the heating elements themselves. The surface of this tub has never been still.
+
+roomzone study seats = The composite at the base of each toe seat is smoother at one small patch than the rest — wear from weight applied in the same position, many times. All four show it. The wear patterns are consistent.
+roomzone study seats = The knot dimensions on the dildo seats become apparent only at the point of full seating. By then the water temperature has been active for some time.
+
+roomzone study throne = The throne shows no wear at the seat center. The forward edge of both armrests shows significant wear. The host leans forward and stays there.
+roomzone study throne = The elevation of the throne relative to the toe seats places the host's eye level at approximately the same height as the seated guests' expressions. This is precise and was planned.
+
+roomzone study panel = The two dark indicators' wire traces run to mechanisms embedded in the seat bases. The panel does control the dildo fixtures directly. The green indicator's wire trace dead-ends inside the panel housing. It has been green since before the panel was installed.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable seats
+
+
+-- STEP 7: Seating mechanics --
+
+@create Jacuzzi Toe Seats:typeclasses.seat_mechanic.SeatMechanic
+@set Jacuzzi Toe Seats/capacity = 4
+@set Jacuzzi Toe Seats/zone_label = seated in the jacuzzi
+@set Jacuzzi Toe Seats/sit_msg = You lower yourself into the water at one of the toe seats. The heat arrives immediately — properly hot, the kind that takes a breath before it becomes welcome. Then the seat beneath you makes itself known: the blunt tip finding its angle, the nine inches of the shaft asking to be decided about, the knot at the base a specific promise about what fully seated will mean. You take your time. The water makes the decision easier than it should.
+@set Jacuzzi Toe Seats/sit_msg_others = lowers into the water at one of the toe seats. Their expression changes in stages as they settle.
+@set Jacuzzi Toe Seats/stand_msg = You push yourself up from the seat. The knot has opinions about this. You work past them. The water runs off you as you rise.
+@set Jacuzzi Toe Seats/stand_msg_others = rises from their seat in the jacuzzi with visible effort.
+use Jacuzzi Toe Seats on seats
+
+@create Jacuzzi Throne:typeclasses.seat_mechanic.SeatMechanic
+@set Jacuzzi Throne/capacity = 1
+@set Jacuzzi Throne/zone_label = seated at the throne
+@set Jacuzzi Throne/sit_msg = You settle into the throne at the base of the print. It is broad and comfortable — elevated just enough, no fixture beneath you, just the heat of the water and the position. The window fills your view. The four toe seats face you from the upper curve of the print. The panel is at your left hand. You are exactly where this room was designed for someone to be.
+@set Jacuzzi Throne/sit_msg_others = takes the throne at the base of the jacuzzi. Their posture changes with it.
+@set Jacuzzi Throne/stand_msg = You rise from the throne.
+@set Jacuzzi Throne/stand_msg_others = rises from the throne.
+use Jacuzzi Throne on throne
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle water/surface = You trail a hand through the surface. |rThe water is genuinely hot|n — not aggressive, the kind that softens things rather than scalds, but insistent. Your hand sinks past the jets and the bubbles move against it and past. The bottom of the tub is not visible from here. The red shapes in the toe seats are present as color, not form, before the next wave crosses them.
+
+roomzone handle seats/seat = You reach down into the water toward one of the toe seats. Your hand finds the shaft first — smooth, detailed, the material giving slightly under grip. Nine inches of it, mounted firmly and unmoving. Your palm finds the base and the knot below it: |mlarger than the shaft would suggest|n, the dimensions apparent by feel before they're apparent any other way. You hold it for a moment in the hot water. It does not move. It was not designed to.
+
+roomzone handle throne/seat = You settle into the throne. Broad, elevated just slightly, and from here the window fills your view and in front of it, against the light, the four toe seats face you in whatever arrangement they currently hold. The panel is at your left hand. The rim is wide enough for both forearms. You understand, sitting here, why the room is arranged the way it is. |mYou understand what this seat is for.|n
+
+roomzone handle panel/lid = You run a finger along the seam of the panel lid. Flush — no gap, no flex, smooth from edge to keyhole. The keyhole is small and specific. |mYou don't have the key.|n The indicator behind the lid is visible as a faint green glow through the seam.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add The water shifts in a slow roll across the tub, the surface catching the light from the room beyond for a moment before settling.
+rambient/add A bubble rises at the edge of one of the toe seats and breaks the surface. The red shape below it is briefly, fractionally more visible — and then the water closes again.
+rambient/add The steam thickens above the throne side of the tub, drifts toward the open frame, and thins into the room beyond.
+rambient/add The heat of the water is a presence — not aggressive, total. The kind that reclassifies thoughts into something that takes more effort to complete.
+rambient/add The green indicator on the panel is visible through the panel seam. It has been green since before you arrived.
+rambient/add The candle scent from the room outside drifts over the rim. In here, mixed with the steam, the musk layer comes through first.
+rambient/add The water at the far toe seat shifts in a way that is slightly different from the jet pattern. It settles. Whatever it was, it was brief.
+
+
+-- STEP 10: Jacuzzi state system (future build) --
+
+Flag this room to enable future jacuzzi commands:
+  @set here/has_jacuzzi = 1
+  @set here/jacuzzi_host_id = <Helena's character dbid>
+
+Planned state dict (room.db.jacuzzi_state):
+  {
+    "running":    True,      -- water heated and jets active
+    "jets":       "gentle",  -- off / gentle / strong / full
+    "temp":       "hot",     -- lukewarm / warm / hot / scalding
+    "seats_locked": False,   -- panel toggle: prevents standing from toe seats
+    "dildos_active": False,  -- panel toggle: activates seat fixtures (vibration etc.)
+  }
+
+Planned commands:
+  'jets on' / 'jets off'
+  'adjust jets <off|gentle|strong|full>'
+  'adjust temp <lukewarm|warm|hot|scalding>'
+  'panel'  — opens panel interface, host-only (checks jacuzzi_host_id)
+    panel subcommands: lock seats / release seats / activate / deactivate
+
+JacuzziStateScript (same pattern as ShowerStateScript):
+  - Ambient tick: 5-10 min, fires jacuzzi-specific ambient lines
+  - Seat lock enforcement: when seats_locked, standing from toe seats is blocked
+    with a flavor message about the panel
+  Attach once: @py self.location.scripts.add("typeclasses.jacuzzi_script.JacuzziStateScript")
