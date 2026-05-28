@@ -364,6 +364,10 @@ class CmdStartShower(Command):
             caller.msg("|xYou aren't anywhere.|n")
             return
 
+        if not room.db.has_shower:
+            caller.msg("|xThere's no shower here.|n")
+            return
+
         state = _get_state(room)
 
         if state["running"]:
@@ -426,6 +430,10 @@ class CmdStopShower(Command):
             caller.msg("|xYou aren't anywhere.|n")
             return
 
+        if not room.db.has_shower:
+            caller.msg("|xThere's no shower here.|n")
+            return
+
         state = _get_state(room)
 
         if not state["running"]:
@@ -485,6 +493,10 @@ class CmdAdjustTemp(Command):
         room   = caller.location
         if not room:
             caller.msg("|xYou aren't anywhere.|n")
+            return
+
+        if not room.db.has_shower:
+            caller.msg("|xThere's no shower here.|n")
             return
 
         state = _get_state(room)
