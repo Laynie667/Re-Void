@@ -206,13 +206,16 @@ class CmdStudy(Command):
         if zone_name is None or not hasattr(zone_data, "get"):
             caller.msg(f"|xYou don't see '{target}' here to study.|n"); return
 
-        study_details = zone_data.get("study_details") or []
-        if not study_details:
+        study_details = list(zone_data.get("study_details") or [])
+        inscriptions  = list(zone_data.get("inscriptions") or [])
+        pool = study_details + inscriptions
+
+        if not pool:
             caller.msg(
                 f"|xYou study {zone_name} carefully but nothing new catches your attention.|n"
             ); return
 
-        observation = random.choice(study_details)
+        observation = random.choice(pool)
         caller.msg(observation)
 
         char_name = caller.db.rp_name or caller.name

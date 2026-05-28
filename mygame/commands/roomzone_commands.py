@@ -52,6 +52,8 @@ def _blank_zone(parent=None):
         "details":        {},
         "handle_details": {},   # detail_name -> intimate emote text
         "study_details":  [],   # list of random observation strings
+        "inscribable":    False, # whether players can inscribe this zone
+        "inscriptions":   [],   # player-written inscriptions (shown via study)
         "scent":          None,
         "ambient":        [],
         "contents":       [],
@@ -59,6 +61,8 @@ def _blank_zone(parent=None):
         "mechanics":      {},
         "scripts":        [],
         "event_hooks":    {},
+        "bar_drinks":     [],   # list of drink name strings for CmdPour
+        "games":          [],   # list of game name strings for CmdPlay
     }
 
 
@@ -184,6 +188,9 @@ class CmdRoomZone(default_cmds.MuxCommand):
         "ambient", "ambient/clear", "token",
         "handle", "handle/rm",
         "study", "study/rm", "study/list",
+        "inscribe/enable", "inscribe/disable", "inscribe/list",
+        "bar", "bar/rm", "bar/list",
+        "game", "game/rm", "game/list",
     })
 
     def func(self):
@@ -220,23 +227,32 @@ class CmdRoomZone(default_cmds.MuxCommand):
             return
 
         dispatch = {
-            "":               self._do_list_or_error,
-            "list":           self._do_list,
-            "desc":           self._do_desc,
-            "detail":         self._do_detail,
-            "detail/rm":      self._do_detail_rm,
-            "add":            self._do_add,
-            "rm":             self._do_rm,
-            "scent":          self._do_scent,
-            "scent/clear":    self._do_scent_clear,
-            "ambient":        self._do_ambient,
-            "ambient/clear":  self._do_ambient_clear,
-            "token":          self._do_token,
-            "handle":         self._do_handle,
-            "handle/rm":      self._do_handle_rm,
-            "study":          self._do_study,
-            "study/rm":       self._do_study_rm,
-            "study/list":     self._do_study_list,
+            "":                  self._do_list_or_error,
+            "list":              self._do_list,
+            "desc":              self._do_desc,
+            "detail":            self._do_detail,
+            "detail/rm":         self._do_detail_rm,
+            "add":               self._do_add,
+            "rm":                self._do_rm,
+            "scent":             self._do_scent,
+            "scent/clear":       self._do_scent_clear,
+            "ambient":           self._do_ambient,
+            "ambient/clear":     self._do_ambient_clear,
+            "token":             self._do_token,
+            "handle":            self._do_handle,
+            "handle/rm":         self._do_handle_rm,
+            "study":             self._do_study,
+            "study/rm":          self._do_study_rm,
+            "study/list":        self._do_study_list,
+            "inscribe/enable":   self._do_inscribe_enable,
+            "inscribe/disable":  self._do_inscribe_disable,
+            "inscribe/list":     self._do_inscribe_list,
+            "bar":               self._do_bar,
+            "bar/rm":            self._do_bar_rm,
+            "bar/list":          self._do_bar_list,
+            "game":              self._do_game,
+            "game/rm":           self._do_game_rm,
+            "game/list":         self._do_game_list,
         }
 
         handler = dispatch.get(switch)
@@ -815,6 +831,275 @@ class CmdRoomZone(default_cmds.MuxCommand):
         for i, obs in enumerate(study_details, 1):
             preview = obs[:80] + ("..." if len(obs) > 80 else "")
             lines.append(f"  |w{i}.|n {preview}")
+        self.caller.msg("\n".join(lines))
+
+
+    # ------------------------------------------------------------------
+    # inscribe/enable — inscribe/disable — inscribe/list
+    # ------------------------------------------------------------------
+
+    def _do_inscribe_enable(self):
+        """roomzone inscribe/enable <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if not zone_name:
+            self.caller.msg(
+                "|xUsage: |wroomzone inscribe/enable <zone>|n"
+            ); return
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        zone["inscribable"] = True
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|wZone '{zone_name}' is now inscribable.\n"
+            f"|xPlayers can mark it with: |winscribe {zone_name} = <text>|n"
+        )
+
+    def _do_inscribe_disable(self):
+        """roomzone inscribe/disable <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        zone["inscribable"] = False
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|wZone '{zone_name}' inscribing disabled. "
+            f"Existing inscriptions are preserved.|n"
+        )
+
+    def _do_inscribe_list(self):
+        """roomzone inscribe/list <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = zones[zone_name]
+        inscriptions = zone.get("inscriptions", []) or [] if hasattr(zone, "get") else []
+        if not inscriptions:
+            self.caller.msg(
+                f"|xNo inscriptions on zone '{zone_name}' yet.|n"
+            ); return
+
+        lines = [f"|wInscriptions on zone '{zone_name}' ({len(inscriptions)} total):|n"]
+        for i, ins in enumerate(inscriptions, 1):
+            preview = ins[:90] + ("..." if len(ins) > 90 else "")
+            lines.append(f"  |w{i}.|n {preview}")
+        self.caller.msg("\n".join(lines))
+
+    # ------------------------------------------------------------------
+    # bar — bar/rm — bar/list
+    # ------------------------------------------------------------------
+
+    def _do_bar(self):
+        """
+        roomzone bar <zone> + <drink name>
+        Add a drink to a zone's bar inventory.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        if "+" not in self.args:
+            self.caller.msg(
+                "|xUsage: |wroomzone bar <zone> + <drink name>|n"
+            ); return
+
+        zone_name, _, text = self.args.partition("+")
+        zone_name = zone_name.strip().lower()
+        text      = text.strip()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        if not text:
+            self.caller.msg("|xDrink name cannot be empty.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        bar_drinks = list(zone.get("bar_drinks", []) or [])
+        bar_drinks.append(text)
+        zone["bar_drinks"] = bar_drinks
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|w'{text}' added to bar on zone '{zone_name}' "
+            f"({len(bar_drinks)} drinks total).|n"
+        )
+
+    def _do_bar_rm(self):
+        """roomzone bar/rm <zone> <index>  (1-based)"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        parts = self.args.strip().split(None, 1)
+        if len(parts) < 2:
+            self.caller.msg(
+                "|xUsage: |wroomzone bar/rm <zone> <index>|n"
+            ); return
+
+        zone_name = parts[0].lower()
+        try:
+            idx = int(parts[1]) - 1
+        except ValueError:
+            self.caller.msg("|xIndex must be a number.|n"); return
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        bar_drinks = list(zone.get("bar_drinks", []) or [])
+
+        if idx < 0 or idx >= len(bar_drinks):
+            self.caller.msg(
+                f"|xIndex {idx + 1} out of range "
+                f"(zone has {len(bar_drinks)} drinks).|n"
+            ); return
+
+        removed = bar_drinks.pop(idx)
+        zone["bar_drinks"] = bar_drinks
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(f"|wRemoved '{removed}' from bar on zone '{zone_name}'.|n")
+
+    def _do_bar_list(self):
+        """roomzone bar/list <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone       = zones[zone_name]
+        bar_drinks = zone.get("bar_drinks", []) or [] if hasattr(zone, "get") else []
+
+        if not bar_drinks:
+            self.caller.msg(
+                f"|xNo drinks on zone '{zone_name}' yet.\n"
+                f"Add one with: |wroomzone bar {zone_name} + <name>|n"
+            ); return
+
+        lines = [f"|wDrinks available on zone '{zone_name}':|n"]
+        for i, d in enumerate(bar_drinks, 1):
+            lines.append(f"  |w{i}.|n {d}")
+        self.caller.msg("\n".join(lines))
+
+    # ------------------------------------------------------------------
+    # game — game/rm — game/list
+    # ------------------------------------------------------------------
+
+    def _do_game(self):
+        """
+        roomzone game <zone> + <game name>
+        Add a game to a zone's game list.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        if "+" not in self.args:
+            self.caller.msg(
+                "|xUsage: |wroomzone game <zone> + <game name>|n"
+            ); return
+
+        zone_name, _, text = self.args.partition("+")
+        zone_name = zone_name.strip().lower()
+        text      = text.strip()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        if not text:
+            self.caller.msg("|xGame name cannot be empty.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        games = list(zone.get("games", []) or [])
+        games.append(text)
+        zone["games"] = games
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|w'{text}' added to games on zone '{zone_name}' "
+            f"({len(games)} games total).|n"
+        )
+
+    def _do_game_rm(self):
+        """roomzone game/rm <zone> <index>  (1-based)"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        parts = self.args.strip().split(None, 1)
+        if len(parts) < 2:
+            self.caller.msg(
+                "|xUsage: |wroomzone game/rm <zone> <index>|n"
+            ); return
+
+        zone_name = parts[0].lower()
+        try:
+            idx = int(parts[1]) - 1
+        except ValueError:
+            self.caller.msg("|xIndex must be a number.|n"); return
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        games = list(zone.get("games", []) or [])
+
+        if idx < 0 or idx >= len(games):
+            self.caller.msg(
+                f"|xIndex {idx + 1} out of range "
+                f"(zone has {len(games)} games).|n"
+            ); return
+
+        removed = games.pop(idx)
+        zone["games"] = games
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(f"|wRemoved '{removed}' from games on zone '{zone_name}'.|n")
+
+    def _do_game_list(self):
+        """roomzone game/list <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone  = zones[zone_name]
+        games = zone.get("games", []) or [] if hasattr(zone, "get") else []
+
+        if not games:
+            self.caller.msg(
+                f"|xNo games on zone '{zone_name}' yet.\n"
+                f"Add one with: |wroomzone game {zone_name} + <name>|n"
+            ); return
+
+        lines = [f"|wGames on zone '{zone_name}':|n"]
+        for i, g in enumerate(games, 1):
+            lines.append(f"  |w{i}.|n {g}")
         self.caller.msg("\n".join(lines))
 
 

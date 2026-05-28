@@ -416,6 +416,10 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.zone_seated_at   = None
         self.db.zone_lying_at    = None
         self.db.zone_kneeling_at = None
+        # Zone-based restraint — (room_id, zone_name, restrainer_id) or None
+        self.db.zone_restrained_at = None
+        # Watching — target character id, or None
+        self.db.zone_watching    = None
         # Proximity: {character_id: "near"/"with"}
         # You can be near/with multiple people simultaneously.
         self.db.proximity = {}
@@ -584,6 +588,17 @@ class Character(ObjectParent, DefaultCharacter):
                 self.db.zone_lying_at    = None
                 self.db.zone_kneeling_at = None
 
+        # Zone restraint cleanup
+        if getattr(self.db, "zone_restrained_at", None):
+            try:
+                from commands.restrain_commands import _do_release
+                _do_release(self, silent=True)
+            except Exception:
+                self.db.zone_restrained_at = None
+
+        # Watching state cleanup
+        self.db.zone_watching = None
+
         if self.db.wall_state:
             self.db.wall_state = None
 
@@ -616,7 +631,7 @@ class Character(ObjectParent, DefaultCharacter):
             except Exception:
                 pass
 
-        # --- Restraint check ---
+        # --- Restraint check (freeform wardrobe restraints) ---
         restraints = self.db.restraints or {}
         for zone_name, data in restraints.items():
             if data.get("blocks_movement"):
@@ -625,6 +640,24 @@ class Character(ObjectParent, DefaultCharacter):
                     f"|xYou try to move, but {desc} holds you in place.|n"
                 )
                 return False
+
+        # --- Zone restraint check (mechanic-installed restraint points) ---
+        if getattr(self.db, "zone_restrained_at", None):
+            val = self.db.zone_restrained_at
+            blocker_msg = "|xYou are restrained and cannot move.|n"
+            try:
+                if self.location:
+                    _, z_name, _ = val
+                    zones = self.location.db.zones or {}
+                    zone  = zones.get(z_name)
+                    if zone and hasattr(zone, "get"):
+                        r = (zone.get("mechanics") or {}).get("restrain")
+                        if r:
+                            blocker_msg = f"|x{r.get('blocker_msg', 'Something holds you fast.')}|n"
+            except Exception:
+                pass
+            self.msg(blocker_msg)
+            return False
 
         # --- Exit flock check ---
         if self.location and destination:
@@ -670,6 +703,17 @@ class Character(ObjectParent, DefaultCharacter):
                 self.db.zone_seated_at   = None
                 self.db.zone_lying_at    = None
                 self.db.zone_kneeling_at = None
+
+        # Clear zone restraint on room change (admin move / teleport bypass)
+        if getattr(self.db, "zone_restrained_at", None):
+            try:
+                from commands.restrain_commands import _do_release
+                _do_release(self, silent=True)
+            except Exception:
+                self.db.zone_restrained_at = None
+
+        # Clear watching on room change
+        self.db.zone_watching = None
 
         # Fire stair creak notifications if applicable
         try:

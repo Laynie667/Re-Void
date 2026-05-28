@@ -1,0 +1,169 @@
+== Helena's Log Cabin — Entertainment Room ==
+== Paste these commands in order while standing in the room ==
+== Exit is east to the upstairs landing ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = A |ytable-top nerd's haven|n intermixed with secrets, tomes, and boxes of boundless imagination. The air is a specific combination of |xold paper, spilled bourbon, and carpet that has seen things|n — warm, close, familiar in the way rooms get when they've been used hard and not apologized for.|/{zone:north}|/{zone:center}|/{zone:east}|/{zone:south}|/{zone:floor}
+
+
+-- STEP 2: Create zones --
+(north/center/east/south already exist as protected directionals)
+
+roomzone add floor
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc north = |wDark lumber bookshelves|n line most of the north wall, floor to ceiling, packed with an unapologetic density of content. |xRPG manuals|n in cracked spines and |xboard game boxes|n in varying states of destruction share space with |mfigurines|n from the full spectrum of fantasy, anime, and hentai — |xlumbering tentacle monsters|n, |xproud amazons|n mid-conquest, |xdragons and heroes|n locked in conflicts that are not entirely combat, and a row of |wdire wolves|n patrolling the highest shelf with the calm authority of things that know where they are.
+
+roomzone desc center = At the center of the room, a |wgame table|n commands the space — broad, dark-surfaced, with a |xrecessed field|n inset into its top suitable for maps, mazes, tiles, and the accumulated debris of ongoing campaigns. It resembles a repurposed pool table, |xcup holders|n set into each corner. The surface is scattered with |xdice, notebooks, and campaign notes|n in the organized chaos of something actively in use. Beneath the table, just visible if you know to look, |msteel cables|n on retractable reels wait with the patient readiness of equipment that gets used regularly.
+
+roomzone desc east = Near the door to the landing, a |wwet bar|n occupies the east wall with the settled confidence of something that has always been exactly here. |xBar stools|n line its face; |wcrystal glasses|n of every shape stand clean along the wooden counter. The surface of the bar carries |xgraffiti|n scratched into the wood over years, the kind that accumulates in spaces where people feel comfortable enough to leave their mark. Behind it, a wall of |xliquors, wines, craft beers and ales|n runs floor to near-ceiling, and beside the bottles a |wsmall glass-door fridge|n hums with the particular contentment of something kept cold and full.
+
+roomzone desc south = A |wblack leather sofa|n sits with its back to the room's full-length glass windows, which run floor to ceiling and offer the permanent glint of |cblue ice|n off the distant palace through the snow-capped treeline. The sofa faces inward — toward the game table, toward the door, toward whatever the room is doing. It is wide and deep and has the particular broken-in softness of furniture that has accommodated a range of activities without complaint.
+
+roomzone desc floor = The |wwhite carpet|n underfoot is a record of the room's history — |xdice|n in several colors have rolled to rest against the baseboards, |xempty plastic party cups|n and wrappers cluster near the bar end of the room, and a trail of |wmuddy wolf prints|n cuts clearly across the plush from the direction of the window to the direction of the door, unhurried and deliberate.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail north/shelves = The bookshelves reward close attention. The RPG manuals run to several editions of the same systems — someone has been playing long enough to collect the iterations. The board games range from strategy to the kind with cards that require reading the rules twice and still arguing. The figurines occupy every available gap between the books: a |mfull-color amazon|n with her spear and nothing else, a |mtentacle scene|n cast in translucent resin with a level of anatomical specificity that implies the sculptor had opinions, several |wdire wolves|n in various poses, and at the end of the highest shelf a |msmall ceramic figure|n of a woman on her knees that is looking directly at the room.
+
+roomzone detail north/wolves = The dire wolves on the top shelf are a matched set — same sculptor, different poses. One seated, alert. One standing, mid-motion. One lying with its head on its paws, watching. They are well-made, the fur rendered in individual strokes, the eyes |mdeep amber|n and specific. Someone dusted them recently. Not everything on the shelf received the same attention.
+
+roomzone detail north/amazon = A |mfigured amazon|n in painted resin — tall, broad-shouldered, wearing her victory and nothing else, spear in one hand, the other fisted at her side. She is looking slightly to the left of wherever you're standing. Her expression is the specific focus of someone who has already decided the outcome and is simply waiting for events to confirm it. She has been handled — the paint at the grip of the spear is worn smooth.
+
+roomzone detail north/tentacle = A |mresin figurine|n in translucent amber, the scene a woman and an arrangement of tentacles that the sculptor approached with the same dedication a marine biologist might bring to an illustration. The anatomical specificity is considerable. It is displayed at eye level, between a Player's Handbook and a box of dungeon tiles, with the casual confidence of something that belongs exactly where it is.
+
+roomzone detail center/table = The game table's |xrecessed field|n is currently hosting three overlapping campaigns' worth of notes, a hex map that has been updated and re-updated in different inks, and a set of dice that someone stopped rolling mid-session and left face-up. The cup holders at each corner contain, respectively: a pen, a d20, a hair tie, and a dried ring from a glass set down there often enough to leave a permanent mark.
+
+roomzone detail center/cables = The |msteel cables|n beneath the table are on smooth retractable reels bolted to the underside — four of them, one at each corner, each ending in a set of |mmetal links and padded cuffs|n. The cuffs are the quality of something bought with intent rather than assembled from improvisation: lined, adjustable, the buckles well-oiled. Pulled to full extension, they would reach the table's surface from below. The cables show the particular wear of regular use. The cuffs are clean. Someone takes care of them.
+
+roomzone detail east/graffiti = The bar surface carries years of scratched additions in several hands. |x'Helena bred her bitches here'|n in large letters near the center, underlined twice. |x'Eat more pussy'|n to the left of it, smaller, matter-of-fact. A heart with initials inside it that have been partially scratched out, leaving a mystery. |x'First time: terrified. Second time: asked for it.'|n in very small print near the tap handle. The wood has absorbed all of it.
+
+roomzone detail east/fridge = The glass-door fridge holds a row of identical bottles, chilled and condensating lightly. The liquid inside is |mwhite|n. The labels are printed with the care of something produced in volume: a |mblonde hucow|n and an |maubern fae|n side by side in cow-print bikinis, both thoroughly damp, both grinning with the unself-conscious enthusiasm of people who are exactly where they want to be. The banner reads |w'Helena's Dairy Farms — whole breast milk from eager sluts to you!'|n in bold. Below the illustration, in smaller print: |xfresh, pasteurized, lovingly extracted.|n The bottles are full.
+
+roomzone detail east/glasses = The crystal glasses are arranged by type along the counter — highballs, lowballs, coupes, something tall and narrow that requires knowing what you're doing. All of them are clean. The bar is well-stocked in a way that implies someone made a deliberate inventory at some point and filled every gap. The top shelf behind the bar holds a bottle with no label and a handwritten tag: |x'Don't — H'|n.
+
+roomzone detail south/sofa = The leather sofa is broad and deep and has the particular broken-in give of something that has held a lot of weight in a range of configurations. It faces the game table directly, which puts anyone sitting on it in the position of audience or participant depending on what's happening at the table. The cushions have settled into the shapes of regular use. There is a |xthrow blanket|n folded over one arm and a |xremote control|n of uncertain purpose tucked between the cushions.
+
+roomzone detail south/window = Floor-to-ceiling glass, the full width of the south wall. The forest presses close outside — pines in silhouette against a sky that always carries the |cblue-white glow|n of the ice palace. At night the glass turns mirror-dark except for that light. Wolf prints in the snow outside stop directly below this window, facing in, as if something stood there long enough to see everything and then decided against knocking.
+
+roomzone detail floor/prints = The muddy wolf prints cut straight across the white carpet — entry point near the window, exit near the door, stride long and unhurried. They are large. They have not been cleaned up. Either no one has gotten around to it, or no one felt it was necessary, or both. They come through this room regularly enough that the carpet shows older impressions under the current ones.
+
+
+-- STEP 5: Study observations --
+
+roomzone study north + The figurine at the end of the highest shelf — the ceramic woman on her knees — is looking directly out at the room. She has been positioned with care: not tucked behind the books, not angled toward the wall, but facing forward, chin slightly up. Someone put her there to be seen from the door. The glaze on her is older than most of the shelf's other occupants.
+
+roomzone study north + The RPG manuals are organized by edition rather than system, which tells you something about the person who organized them. The newer editions sit beside the old ones with equal wear on their spines. Several have bookmarks in them — actual bookmarks, not receipts or torn paper — at sections on social encounters and negotiation rather than combat. The combat sections are also heavily tabbed.
+
+roomzone study north + The hentai figurines occupy the spaces between books with the same casual authority as everything else on the shelf. They are not hidden. They are not displayed as a statement. They are simply present among the dragons and manuals and dice towers, organized by size, dusted with the same regularity as the wolves. The tentacle resin piece is in the center of its shelf. It is the most technically accomplished piece in the collection.
+
+roomzone study center + The hex map on the table has been updated in at least four different inks across what appears to be several months of sessions. Territories have shifted. A region in the northeast has been crossed out and relabeled three times. Someone has drawn a small wolf in the margin beside the main settlement and written 'here' beneath it with an arrow. The arrow points to the settlement.
+
+roomzone study center + The cables under the table are on smooth spring-loaded reels. Pulled to full extension and released, they retract without snagging. The cuffs at the end are lined with a soft material that shows compression wear consistent with regular use. The fourth reel, the one at the corner nearest the door, has a small scratch on the housing that looks like it was made by a ring. Someone was wearing jewelry.
+
+roomzone study east + The 'Don't — H' bottle on the top shelf behind the bar is about two-thirds full of something amber. The handwritten tag is in the same hand as the note on the landing door frame. The bottle has not been touched in some time — there is a faint ring of dust around its base. Whatever is in it, Helena's instruction has been followed. So far.
+
+roomzone study east + The dairy bottles in the fridge have a production date printed on the bottom. They are recent. The illustration on the label depicts two women with enough specific physical detail — one blonde, one auburn with pointed ears — that the artist was clearly working from reference. The fae's ears are visible through her curls. The blonde's expression is the specific one of someone who finds the situation funnier than they're letting on. Both of them are very wet.
+
+roomzone study south + The sofa faces the table directly, which means anyone on it has an unobstructed view of whoever is in the table's cables. This may or may not be the reason it was positioned that way. The leather on the arm closest to the table has a faint mark where someone gripped it hard enough to leave an impression. The throw blanket has been refolded recently — the creases are fresh.
+
+roomzone study floor + The wolf prints cross the carpet on the same line every time — the older impressions under the current ones show the same path, the same stride, the same unhurried pace. Whatever comes through this window-to-door route has been doing it long enough that the carpet pile is slightly compressed along the route even between fresh prints. The prints never stop at the table. They always go directly to the door.
+
+
+-- STEP 6: Handle texts --
+
+roomzone handle center/cables = You crouch beside the table and pull the nearest cable free of its reel — it extends smoothly, the links cool and heavier than they look, the cuff at the end swinging once before it stills in your hand. You turn it over. The padding is soft, the buckle precise, the whole thing built by someone who thought carefully about what it would be used for and built it to last.|/You work the second cable free. Then the third. You lay the cuffs on the table surface and look at them for a moment — four points, the right spacing, the table height correct for exactly the purpose they were designed for. You think about this with more specificity than you intend to. You think about who has been on this table with these on their wrists and ankles, and what the rest of the room looked like from that angle — the shelves, the sofa, the bar. You think about what Helena looks like standing at the end of this table looking down.|/You reel the cables back in, one by one, slowly, until the cuffs click into their housings. You stand up. The room looks the same as it did before you crouched down. You are not sure you do.|/You rise from beside the table and adjust your composure with the careful ease of someone who was absolutely just checking the cable tension.
+
+roomzone handle east/fridge = You open the glass door — the cold comes out clean and sharp — and take one of the bottles from the row. It is heavier than expected, the liquid inside white and still. The label is at eye level: the blonde and the auburn fae, cow-print bikinis, expressions that know exactly what the label is for. You read the fine print. |xFresh. Pasteurized. Lovingly extracted.|n The production date is recent.|/You open the bottle. The smell is warm, faintly sweet, unmistakably real — not dairy-industrial, not artificial. This was made by someone. By two someones, specifically, who appear to have found the process at minimum cooperative, judging by their expressions on the label.|/You drink. It is warm at the start despite the cold, the sweetness of it specific and generous, the kind of taste that requires a second to classify and then a moment longer to stop classifying. You finish a third of the bottle. You close it. You put it back in line with the others, in the exact place you took it from.|/You close the fridge door and return to the room with the particular stillness of someone who was absolutely just checking the temperature.
+
+roomzone handle north/amazon = You lift the amazon figurine from the shelf with both hands, the resin cool and solid, the detail of her close-up resolving into precision — individual muscle definition, the exact texture of the fur trim at her boots, the particular expression of someone in the specific moment of having won something and choosing how to receive that. She has no interest in your opinion of this.|/The paint at the grip of her spear is worn smooth from handling. Someone has picked her up many times — held her like this, turned her, looked at her face from the angle she doesn't look at you. You find yourself doing the same. Her expression is the same from every angle: decided, present, not performing anything for anyone.|/You hold her long enough that your hands warm the resin, then set her back exactly where she was. She resumes looking slightly to the left of wherever you're standing.|/You replace the amazon on the shelf with the composed attention of someone who was absolutely just examining the paint quality.
+
+
+-- STEP 7: Scents --
+
+roomzone scent north = |xOld paper, the particular dry-warm smell of book spines and rulebooks left open. Resin from the figurines — a faint chemical warmth at close range. Something woodsy underneath, cedar from the shelves themselves.|n
+
+roomzone scent center = |xBourbon from a glass left on the table, dried now into the wood grain. Dry-erase marker. Paper and ink. The faint metallic note of the cable links, the same smell as old keys.|n
+
+roomzone scent east = |xBourbon and wood polish and the cold-clean of the fridge when the door opens. The bar's graffiti side carries a ghost of cigarette smoke that predates Helena, absorbed into the wood decades ago. The dairy bottles, if the fridge is open: warm and sweet and specific.|n
+
+roomzone scent south = |xLeather from the sofa, broken in and warm. The cold comes through the glass windows in a slow seep — pine resin, clean snow, and underneath it the particular quality of air that has traveled from the palace and carries something neither warm nor cold.|n
+
+roomzone scent floor = |xCarpet and spilled drink, old party cups, the specific combination of a floor that has seen a lot of evenings. The wolf prints carry a note of forest — damp pine and something wilder — wherever they're fresh.|n
+
+
+-- STEP 8: Install seat mechanics --
+
+-- Bar stools: seated, capacity 4 --
+@create Bar Stool Set:typeclasses.seat_mechanic.SeatMechanic
+@set Bar Stool Set/label = the bar stools
+@set Bar Stool Set/capacity = 4
+use Bar Stool Set on east
+
+-- Sofa: seated + lying, capacity 3 --
+-- Install seated first --
+@create Leather Sofa:typeclasses.seat_mechanic.SeatMechanic
+@set Leather Sofa/label = the leather sofa
+@set Leather Sofa/capacity = 3
+@set Leather Sofa/allow_lap = True
+use Leather Sofa on south
+
+-- Game table: seated, capacity 6 (around the table) --
+@create Game Table Seats:typeclasses.seat_mechanic.SeatMechanic
+@set Game Table Seats/label = the game table
+@set Game Table Seats/capacity = 6
+use Game Table Seats on center
+
+
+-- STEP 9: Ambient messages --
+
+roomzone ambient north + |xSomething on the bookshelf shifts — a figurine adjusting its balance, a book settling. The dire wolves on the top shelf have not moved.|n
+
+roomzone ambient center + |xA die on the game table catches a breath of air from somewhere and rolls two faces, coming to rest on a different number than it was. Nobody calls the result.|n
+
+roomzone ambient east + |xThe fridge hums once, a longer note than usual, and goes quiet. The bottles inside don't move. The 'Don't' bottle on the top shelf behind the bar catches the light and holds it.|n
+
+roomzone ambient south + |xThe windows flex slightly — the cold outside pressing against the glass. The palace is visible through the treeline, its glow as steady as it always is. The wolf prints in the snow below the window are still there.|n
+
+roomzone ambient floor + |xThe carpet carries a faint impression of where someone stood for a long time near the table. The wolf prints cross it without stopping, the same path they always take.|n
+
+
+-- STEP 10: Enable inscribe on east zone (bar graffiti surface) --
+
+roomzone inscribe/enable east
+
+
+-- STEP 11: Add drinks to the bar (east zone) --
+
+roomzone bar east + bourbon
+roomzone bar east + single malt
+roomzone bar east + red wine
+roomzone bar east + sparkling wine
+roomzone bar east + craft ale
+roomzone bar east + dark stout
+roomzone bar east + pale ale
+roomzone bar east + sparkling water
+
+
+-- STEP 12: Add games to the game table (center zone) --
+
+roomzone game center + cards
+roomzone game center + dice
+roomzone game center + poker
+roomzone game center + campaign
+roomzone game center + tiles
+
+
+-- STEP 13: Install the restraint mechanic on the center zone --
+-- Creates the cable assembly as a consumable mechanic item, then installs it --
+
+@create Table Cables:typeclasses.restrain_mechanic.RestrainMechanic
+@set Table Cables/label = the cables
+@set Table Cables/capacity = 4
+@set Table Cables/blocker_msg = The cables hold you exactly where you are.
+use Table Cables on center

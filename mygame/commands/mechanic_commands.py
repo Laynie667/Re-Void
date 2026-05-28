@@ -637,7 +637,408 @@ class CmdMirror(Command):
 
 
 # ---------------------------------------------------------------------------
+# CmdInscribe
+# ---------------------------------------------------------------------------
+
+class CmdInscribe(Command):
+    """
+    Leave a mark on an inscribable zone.
+
+    Usage:
+      inscribe <zone> = <text>
+
+    The zone must have inscribing enabled by a Builder
+    (roomzone inscribe/enable <zone>). Inscriptions are
+    permanent and visible through 'study <zone>'.
+
+    Example:
+      inscribe east = The night Helena found the wolves.
+    """
+
+    key   = "inscribe"
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        room   = caller.location
+        if not room:
+            caller.msg("|xYou aren't anywhere.|n")
+            return
+
+        args = self.args.strip()
+        if "=" not in args:
+            caller.msg("|xUsage: |winscribe <zone> = <text>|n")
+            return
+
+        zone_arg, _, text = args.partition("=")
+        zone_arg = zone_arg.strip().lower()
+        text     = text.strip()
+
+        if not zone_arg or not text:
+            caller.msg("|xUsage: |winscribe <zone> = <text>|n")
+            return
+
+        zones      = room.db.zones or {}
+        name_under = zone_arg.replace(" ", "_")
+
+        zone_name = None
+        zone_data = None
+        for candidate in (zone_arg, name_under):
+            if candidate in zones:
+                zone_name = candidate
+                zone_data = zones[candidate]
+                break
+        if zone_name is None:
+            for zname, zdata in zones.items():
+                if zone_arg in zname or name_under in zname:
+                    zone_name = zname
+                    zone_data = zdata
+                    break
+
+        if zone_name is None or not hasattr(zone_data, "get"):
+            caller.msg(f"|xYou don't see '{zone_arg}' here.|n")
+            return
+
+        if not zone_data.get("inscribable"):
+            caller.msg(
+                f"|xThe surface here doesn't lend itself to being marked.|n"
+            )
+            return
+
+        char_name    = caller.db.rp_name or caller.name
+        inscriptions = list(zone_data.get("inscriptions", []) or [])
+        entry        = f"|x{text}|n  — |w{char_name}|n"
+        inscriptions.append(entry)
+
+        # Write back via full dict copy
+        zc = dict(zone_data)
+        zc["inscriptions"] = inscriptions
+        zs = dict(zones)
+        zs[zone_name] = zc
+        room.db.zones = zs
+
+        caller.msg(f"|wYou add your mark to {zone_name}.|n")
+        room.msg_contents(
+            f"|x{char_name} takes a moment to leave something on {zone_name}.|n",
+            exclude=caller,
+        )
+
+
+# ---------------------------------------------------------------------------
+# CmdPour
+# ---------------------------------------------------------------------------
+
+class CmdPour(Command):
+    """
+    Pour a drink from a zone with a bar mechanic.
+
+    Usage:
+      pour <drink>
+      pour <drink> from <zone>
+
+    The zone must have drinks configured by a Builder
+    (roomzone bar <zone> + <drink name>).
+
+    Example:
+      pour bourbon
+      pour beer from east
+    """
+
+    key   = "pour"
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        room   = caller.location
+        if not room:
+            caller.msg("|xYou aren't anywhere.|n")
+            return
+
+        args = self.args.strip()
+        if not args:
+            caller.msg("|xUsage: |wpour <drink>|n")
+            return
+
+        zone_arg  = None
+        drink_arg = args
+        if " from " in args.lower():
+            idx       = args.lower().index(" from ")
+            drink_arg = args[:idx].strip()
+            zone_arg  = args[idx + 6:].strip().lower()
+
+        drink_lower = drink_arg.lower()
+
+        zones = room.db.zones or {}
+
+        # Find zone with bar_drinks containing the drink
+        found_zone  = None
+        found_drink = None
+        zone_name_f = None
+
+        def _check_zone(zname, zdata):
+            if not hasattr(zdata, "get"):
+                return False, None
+            drinks = zdata.get("bar_drinks") or []
+            for d in drinks:
+                if drink_lower in d.lower() or d.lower() in drink_lower:
+                    return True, d
+            return False, None
+
+        if zone_arg:
+            name_under = zone_arg.replace(" ", "_")
+            for candidate in (zone_arg, name_under):
+                if candidate in zones:
+                    ok, d = _check_zone(candidate, zones[candidate])
+                    if ok:
+                        found_zone  = zones[candidate]
+                        zone_name_f = candidate
+                        found_drink = d
+                        break
+        else:
+            for zname, zdata in zones.items():
+                ok, d = _check_zone(zname, zdata)
+                if ok:
+                    found_zone  = zdata
+                    zone_name_f = zname
+                    found_drink = d
+                    break
+
+        if not found_drink:
+            if zone_arg:
+                caller.msg(f"|xThe bar doesn't have '{drink_arg}'.|n")
+            else:
+                caller.msg(
+                    f"|xYou don't see '{drink_arg}' behind any of the bars here.|n"
+                )
+            return
+
+        label     = (found_zone.get("mechanics") or {}).get("seat", {}).get("label") \
+                    or zone_name_f
+        char_name = caller.db.rp_name or caller.name
+
+        caller.msg(
+            f"|wYou pour {found_drink} at {label} "
+            f"and settle it in front of you.|n"
+        )
+        room.msg_contents(
+            f"|x{char_name} pours something at {label}.|n",
+            exclude=caller,
+        )
+
+
+# ---------------------------------------------------------------------------
+# CmdWatch / CmdUnwatch
+# ---------------------------------------------------------------------------
+
+class CmdWatch(Command):
+    """
+    Direct your attention toward a person in the room.
+
+    Usage:
+      watch <person>
+
+    Others will see that you're watching them. Your attention
+    is visible in the room description.
+
+    Example:
+      watch Auria
+    """
+
+    key   = "watch"
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        room   = caller.location
+        if not room:
+            caller.msg("|xYou aren't anywhere.|n")
+            return
+
+        args = self.args.strip()
+        if not args:
+            caller.msg("|xUsage: |wwatch <person>|n")
+            return
+
+        target = caller.search(args, location=room)
+        if not target:
+            return
+
+        if target == caller:
+            caller.msg("|xYou're already plenty aware of yourself.|n")
+            return
+
+        char_name = caller.db.rp_name or caller.name
+        tgt_name  = target.db.rp_name if hasattr(target.db, "rp_name") else target.name
+
+        caller.db.zone_watching = target.id
+        caller.msg(f"|wYou settle your attention on {tgt_name}.|n")
+        target.msg(f"|x{char_name} is watching you.|n")
+        room.msg_contents(
+            f"|x{char_name}'s attention settles on {tgt_name}.|n",
+            exclude=[caller, target],
+        )
+
+
+class CmdUnwatch(Command):
+    """
+    Stop watching whoever you're currently watching.
+
+    Usage:
+      unwatch
+
+    Clears your current focus.
+    """
+
+    key   = "unwatch"
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        watching_id = getattr(caller.db, "zone_watching", None)
+        if not watching_id:
+            caller.msg("|xYou aren't watching anyone in particular.|n")
+            return
+
+        char_name = caller.db.rp_name or caller.name
+        tgt_name  = "them"
+
+        # Try to get the name for the message
+        if caller.location:
+            for obj in caller.location.contents:
+                if hasattr(obj, "id") and obj.id == watching_id:
+                    tgt_name = obj.db.rp_name if hasattr(obj.db, "rp_name") else obj.name
+                    break
+
+        caller.db.zone_watching = None
+        caller.msg(f"|wYou let your attention drift away from {tgt_name}.|n")
+        if caller.location:
+            caller.location.msg_contents(
+                f"|x{char_name}'s attention moves on.|n",
+                exclude=caller,
+            )
+
+
+# ---------------------------------------------------------------------------
+# CmdPlay (stub — full card game implementations coming later)
+# ---------------------------------------------------------------------------
+
+class CmdPlay(Command):
+    """
+    Play a game available in this room.
+
+    Usage:
+      play <game>
+      play <game> in <zone>
+      play                     — list available games
+
+    Games are configured by Builders with:
+      roomzone game <zone> + <game name>
+
+    Example:
+      play cards
+      play cah in center
+    """
+
+    key   = "play"
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        room   = caller.location
+        if not room:
+            caller.msg("|xYou aren't anywhere.|n")
+            return
+
+        args = self.args.strip()
+
+        # No args — list available games
+        if not args:
+            zones  = room.db.zones or {}
+            all_games = []
+            for zname, zdata in zones.items():
+                if not hasattr(zdata, "get"):
+                    continue
+                for g in (zdata.get("games") or []):
+                    all_games.append((zname, g))
+            if not all_games:
+                caller.msg("|xThere are no games set up here.|n")
+            else:
+                lines = ["|wAvailable games:|n"]
+                for zname, g in all_games:
+                    lines.append(f"  |w{g}|n |x(in {zname})|n")
+                caller.msg("\n".join(lines))
+            return
+
+        zone_arg = None
+        game_arg = args
+        if " in " in args.lower():
+            idx      = args.lower().index(" in ")
+            game_arg = args[:idx].strip()
+            zone_arg = args[idx + 4:].strip().lower()
+
+        game_lower = game_arg.lower()
+        zones      = room.db.zones or {}
+
+        found_zone = None
+        found_game = None
+        zone_name_f = None
+
+        def _check(zname, zdata):
+            if not hasattr(zdata, "get"):
+                return False, None
+            for g in (zdata.get("games") or []):
+                if game_lower in g.lower() or g.lower() in game_lower:
+                    return True, g
+            return False, None
+
+        if zone_arg:
+            name_under = zone_arg.replace(" ", "_")
+            for candidate in (zone_arg, name_under):
+                if candidate in zones:
+                    ok, g = _check(candidate, zones[candidate])
+                    if ok:
+                        found_zone  = zones[candidate]
+                        zone_name_f = candidate
+                        found_game  = g
+                        break
+        else:
+            for zname, zdata in zones.items():
+                ok, g = _check(zname, zdata)
+                if ok:
+                    found_zone  = zdata
+                    zone_name_f = zname
+                    found_game  = g
+                    break
+
+        if not found_game:
+            caller.msg(
+                f"|xNo game called '{game_arg}' is set up here.\n"
+                f"|xType |wplay|n with no arguments to see available games.|n"
+            )
+            return
+
+        char_name = caller.db.rp_name or caller.name
+        caller.msg(
+            f"|xFull {found_game} rules aren't implemented yet — "
+            f"coming soon. For now, use posed actions to play freeform.|n"
+        )
+        caller.location.msg_contents(
+            f"|x{char_name} moves to play {found_game}.|n",
+            exclude=caller,
+        )
+
+
+# ---------------------------------------------------------------------------
 # Export
 # ---------------------------------------------------------------------------
 
-ALL_MECHANIC_CMDS = [CmdUse, CmdSit, CmdLay, CmdKneel, CmdStand, CmdBrowse, CmdTryOn, CmdMirror]
+ALL_MECHANIC_CMDS = [
+    CmdUse, CmdSit, CmdLay, CmdKneel, CmdStand,
+    CmdBrowse, CmdTryOn, CmdMirror,
+    CmdInscribe, CmdPour, CmdWatch, CmdUnwatch, CmdPlay,
+]

@@ -350,6 +350,68 @@ class Room(ObjectParent, DefaultRoom):
 
         return lines
 
+    def get_zone_restrained_lines(self):
+        """
+        Return display lines for zones that currently have characters restrained.
+
+        Returns:
+            list[str] — one line per zone with restrained occupants.
+        """
+        zones = self.db.zones or {}
+        lines = []
+
+        for zone_name, zone_data in zones.items():
+            if not hasattr(zone_data, "get"):
+                continue
+            mechanics = zone_data.get("mechanics", {}) or {}
+            restrain  = mechanics.get("restrain")
+            if not restrain:
+                continue
+            restrained = restrain.get("restrained", [])
+            if not restrained:
+                continue
+
+            label = restrain.get("label", zone_name)
+            names = ", ".join(e[1] for e in restrained if len(e) > 1)
+            if names:
+                verb = "is" if "," not in names else "are"
+                lines.append(
+                    f"|m{names} {verb} secured to {label}.|n"
+                )
+
+        return lines
+
+    def get_zone_watching_lines(self):
+        """
+        Return display lines for characters currently watching someone.
+
+        Returns:
+            list[str] — one line per watcher whose target is in the room.
+        """
+        lines = []
+        contents = list(self.contents)
+        id_to_name = {}
+        for obj in contents:
+            if hasattr(obj, "id"):
+                n = obj.db.rp_name if hasattr(obj.db, "rp_name") and obj.db.rp_name else obj.name
+                id_to_name[obj.id] = n
+
+        for obj in contents:
+            if not (hasattr(obj, "has_account") and obj.has_account):
+                continue
+            watching_id = getattr(obj.db, "zone_watching", None)
+            if not watching_id:
+                continue
+            if watching_id not in id_to_name:
+                continue    # target left the room
+            watcher_name = id_to_name.get(obj.id, obj.name)
+            target_name  = id_to_name[watching_id]
+            lines.append(
+                f"|x{watcher_name} is watching {target_name}.|n"
+            )
+
+        return lines
+
     def fire_zone_event(self, zone_name, event_name, **kwargs):
         """
         Fire a named event on a zone, calling all registered handlers.
@@ -990,6 +1052,16 @@ class Room(ObjectParent, DefaultRoom):
         seated_lines = self.get_zone_seated_lines()
         if seated_lines:
             parts.extend(seated_lines)
+
+        # --- Zone restrained characters ---
+        restrained_lines = self.get_zone_restrained_lines()
+        if restrained_lines:
+            parts.extend(restrained_lines)
+
+        # --- Zone watching ---
+        watching_lines = self.get_zone_watching_lines()
+        if watching_lines:
+            parts.extend(watching_lines)
 
         # --- Separator before presence section ---
         parts.append("")

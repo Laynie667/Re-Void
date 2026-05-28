@@ -259,6 +259,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_INTERACT_CMDS:
             self.add(cmd_cls())
 
+        # Restraint commands (restrain, release)
+        from commands.restrain_commands import ALL_RESTRAIN_CMDS
+        for cmd_cls in ALL_RESTRAIN_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
