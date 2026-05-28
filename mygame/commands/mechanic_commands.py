@@ -1022,6 +1022,16 @@ class CmdPlay(Command):
             )
             return
 
+        # --- Game dispatcher ---
+        game_key = found_game.lower()
+
+        # Cards Against Humanity → hand off to CmdCAH
+        _CAH_ALIASES = ("cards against humanity", "cards against", "cah", "cards")
+        if any(game_key == alias or game_key.startswith(alias) for alias in _CAH_ALIASES):
+            caller.execute_cmd("cah")
+            return
+
+        # Fallback for unimplemented games
         char_name = caller.db.rp_name or caller.name
         caller.msg(
             f"|xFull {found_game} rules aren't implemented yet — "
