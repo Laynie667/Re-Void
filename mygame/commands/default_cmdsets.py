@@ -279,6 +279,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_COOKING_CMDS:
             self.add(cmd_cls())
 
+        # Cursed Shower (start/stop shower, adjust temp — mimic system)
+        from commands.shower_commands import ALL_SHOWER_CMDS
+        for cmd_cls in ALL_SHOWER_CMDS:
+            self.add(cmd_cls())
+
         # Dairy / fridge stock (setdairy, milk, fridge)
         # TODO: Disabled until milking machine MechanicItem and zone-installed
         # production mechanic are properly designed. Re-enable and rewrite when ready.
