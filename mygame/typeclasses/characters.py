@@ -420,6 +420,10 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.zone_restrained_at = None
         # Watching — target character id, or None
         self.db.zone_watching    = None
+        # Dairy production profile
+        self.db.dairy_fluid = None   # "milk", "cream", "honey", "seed", etc.
+        self.db.dairy_desc  = None   # label flavor text e.g. "warm and sweet"
+        self.db.dairy_on    = False  # available for milking
         # Proximity: {character_id: "near"/"with"}
         # You can be near/with multiple people simultaneously.
         self.db.proximity = {}

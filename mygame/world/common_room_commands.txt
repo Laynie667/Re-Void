@@ -1,0 +1,188 @@
+== Helena's Log Cabin — Common Room ==
+== Paste these commands in order while standing in the room ==
+== Exits: west to Entertainment Room, south to Passageway, east to Jacuzzi Room ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = |yHelena's Log Cabin — Common Room|n/The common room spreads across a generous open floor plan, |ythe deep amber of exposed timber and crossbeam ceiling|n doing most of the work of making the space feel like a single thing despite having three distinct lives. The |xsmell of the room|n shifts as you move through it — |ysmoke and cedar|n near the hearth, |xsomething baking or recently baked|n in the kitchen end, and in between, the quiet accumulated scent of a space used daily by people who are comfortable here.//{zone:hearth}//{zone:dining}//{zone:island}//{zone:kitchen}//{zone:floor}
+
+
+-- STEP 2: Create zones --
+(hearth/dining/island/kitchen already cover named areas — floor for ambient)
+
+roomzone add floor
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc hearth = The western end of the room belongs entirely to the |wfireplace|n, a wide-mouthed stone hearth that runs nearly floor to mantle with the confidence of something that has been the center of every winter evening in this cabin. |yLow coals glow amber|n at its base; above them, |ylive flames|n shift without hurry. The |wmantle|n above is a single beam of dark-stained oak, carved along its face with |xwinding trails of leaves|n and, if you follow the line of them, |xthe clean-pressed tracks of wolves|n moving through the grain as though the wood remembers them. Arranged before the hearth: an |woverstuffed loveseat|n and a |wmatching full sofa|n in cream suede, worn soft with use and positioned close enough to the fire that the warmth is felt rather than merely noticed. A |wpadded rocking chair|n sits slightly apart from the pair, angled to face both fire and room. A |wrecliner|n — more honest about its purpose than the rest of the furniture — occupies the corner nearest the Jacuzzi Room door with the posture of something that has held a person asleep more than once.
+
+roomzone desc dining = A |wrectangular dining table|n of dark mahogany anchors the center of the room, broad enough that eight people around it are comfortable and a ninth would be an occasion. |xEight matching chairs|n with |mdeep plum velvet cushions|n are pulled close to it, the kind of seating that encourages staying. A |xlace runner|n runs the length of the table beneath a |wglass vase|n filled with wild flowers — cabin flowers, the kind that grow near the treeline and get picked without ceremony and last a week in water. The table has the particular character of furniture that gets used hard: |xcup rings|n worn into the finish at the ends people sit most, a |xscorch mark|n near one corner that no one has explained, and a faint groove along one edge that a thumb finds naturally when leaning in close.
+
+roomzone desc island = The |wkitchen island|n stands at the border between the kitchen proper and the rest of the room — |xmarble-topped|n, pale and cool against the warmth of everything else, with a |xsingle deep sink|n set into its surface. The side facing the dining area is fitted with |wfour barstools|n, their seats padded in cracked dark leather that has softened into something more comfortable than it looks. It is the kind of surface that accumulates things: a |xcoffee mug not yet washed|n, a |xhandwritten note under a salt shaker|n, a |wparing knife|n resting on a folded dish towel. The marble holds the light from the overhead fixtures in a way that makes it look expensive and slightly indifferent to being touched.
+
+roomzone desc kitchen = The kitchen occupies the northeastern corner with a layout that rewards actually cooking in it. |wWhite-painted cabinets|n with |xyellow-trimmed edges|n run the upper and lower walls, the paint in the high-traffic areas slightly worn from years of the same hands opening the same doors. |wModern stainless appliances|n sit flush into the cabinetry — a |xcooktop and oven|n built into the counter, range hood above — everything in easy reach of everything else. The |wrefrigerator|n at the end is oversized, double-doored, with a |xfreezer drawer|n along the bottom; it hums with the specific contentment of something kept full. One door has a small whiteboard panel on it, currently bearing a list in at least two different handwritings. The |xcounter space|n is generous enough to actually use, the surfaces clean but not sterile — a |xwooden cutting board|n, a row of |xhung herbs|n drying near the window, a |wcopper kettle|n on a back burner that looks like it gets daily use.
+
+roomzone desc floor = The |wwide-plank hardwood floor|n runs most of the common room, covered in part by a |xlarge woven rug|n in earthy reds and browns that the hearthside furniture sits on. The rug is thick enough underfoot to be felt through socks and shows the particular flattening of a rug that has been walked across the same way thousands of times. At the edges of the room the floor shows more of itself: |xscratch marks|n near the hearth that may be from furniture or may be from something with claws; a set of |wbare heel scuffs|n between the island and the dining table from someone standing barefoot doing something in the kitchen for a long time.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail hearth/mantle = The carving along the mantle is fine work — the leaves are specific enough to be identified, oak and ash intertwined with something that grows only at elevation. The wolf tracks run between them without disrupting the botanical rhythm, as though the carver considered the wolves native to the same environment. Following the tracks from left to right, they grow closer together — a quickening pace — and at the rightmost end of the beam they simply stop, mid-stride, as though the wolf stepped off the edge of the wood and into the room. On the mantle's surface: a |wmatched pair of pillar candles|n, mostly burned; a |xsmall carved figure|n of a wolf sitting upright; and a |xphoto in a simple frame|n that faces the fire rather than the room.
+
+roomzone detail hearth/photo = The photo faces the fireplace rather than any viewer, as though it belongs to the hearth rather than to whoever is looking. What's visible from the side: three figures, indoors, somewhere with warm light. Someone is laughing. The frame is plain dark wood, well-handled.
+
+roomzone detail hearth/loveseat = The loveseat is sized for two people who don't mind being close, or one person using the full width with intent. The suede has gone buttery-soft from use and carries the particular warmth of furniture that lives near a fire year-round. The left cushion has a slight depression that reforms slowly after you sit in it — someone's usual spot.
+
+roomzone detail hearth/recliner = The recliner is the most honest piece of furniture in the room. It reclines to nearly flat, its footrest has a lever rather than a button, and the armrests are worn to a shine at the exact points where hands rest watching a fire. It is the color of strong tea and it does not apologize for existing.
+
+roomzone detail dining/table = The cup rings in the finish cluster at two ends of the table — the chairs pulled out most often, the seats worn smoother than the others. The scorch mark near the southeast corner is old and sealed into the finish, a minor catastrophe from some past meal or evening that has become furniture history. The groove along the northern edge is deliberate: shallow, smooth, worn by the same motion repeated often. A thumb, or the edge of a palm. Someone who sits on that side and leans in when they talk.
+
+roomzone detail dining/flowers = The wild flowers in the vase are fresh within the last few days — a mix of whatever was growing near the treeline, stems uneven, nothing arranged with particular intention. There is no card. Someone picked them and put them in water and that was the whole of it.
+
+roomzone detail island/note = The handwritten note under the salt shaker is folded once. The handwriting visible on the outside edge — neat, deliberate — belongs to someone who writes the way they do everything else. The note is not addressed to you.
+
+roomzone detail island/fridge_contents = The refrigerator is well-stocked in the way of a house where people actually cook: |xcondiments|n ranked by frequency of use, |xleftovers|n in labeled containers, a full |wvegetable drawer|n, wine on the door shelf. One shelf on the right side has been given over entirely to small sealed jars — pale, cream-colored contents — labeled in the same neat hand as the whiteboard list. The labels do not explain. The shelf is consistently full.
+
+roomzone detail kitchen/whiteboard = The whiteboard on the refrigerator door is in two handwritings. The first — neat, organized — lists what appears to be a meal plan, partially completed, one day crossed off with a clean line. The second handwriting is looser, slanted, and has added several items to the list that are not groceries, interspersed with the actual groceries without any apparent awareness of incongruity. Neither hand has addressed the other's additions.
+
+roomzone detail kitchen/herbs = The drying herbs near the kitchen window are tied in small bunches — lavender, rosemary, something with a sharper green smell that is harder to name. They have been there long enough to be properly dry. Someone put them up deliberately and has left them deliberately. The window they hang near faces north, which gets no direct sun, which is correct for drying.
+
+roomzone detail floor/scorch = There is a second scorch mark on the hearthside floor, half-hidden by the rug's edge. Smaller than the one on the dining table. Older. The hardwood around it is otherwise unmarked. Whatever caused it was contained quickly and completely and was never discussed in any way that left a record.
+
+
+-- STEP 5: Zone study details (random observations from 'study') --
+
+roomzone study hearth = The fire sounds different when the wind changes outside — a lower draw through the flue, the flames leaning fractionally toward the room before correcting.
+roomzone study hearth = The wolf tracks on the mantle are slightly larger than any wolf you've personally encountered in the wild. You file this away and say nothing.
+roomzone study hearth = The loveseat's left cushion holds its depression for almost a full minute after someone stands. The right one springs back immediately. The difference is years.
+roomzone study hearth = The rocking chair moves with the lightest pressure — the floorboards under its runners are slightly worn in the exact arc of its range of motion.
+
+roomzone study dining = Someone has put a small nick in the underside of the table edge with what was probably a thumbnail. Idle, repeated, habitual. The nick is smooth now.
+roomzone study dining = The velvet chair cushions are all the same depth of wear except the one at the head nearest the kitchen, which is noticeably more compressed. Someone sits there most.
+roomzone study dining = The wildflowers include one variety that should not be blooming this time of year. You look at it for a moment and decide not to mention it.
+
+roomzone study island = The marble surface is very slightly warmer near the sink than it should be — residual from something set there recently. The dish towel beside the knife is damp.
+roomzone study island = The barstool second from the left has a small set of initials scratched into the underside of the seat. They are not the initials of anyone you know for certain.
+roomzone study island = The note under the salt shaker shifts slightly with foot traffic through the kitchen. It has clearly been read and replaced rather than acted on. Several times.
+
+roomzone study kitchen = The copper kettle on the back burner is warm. Someone had tea recently or is expecting to.
+roomzone study kitchen = The jar labels in the refrigerator shelf are consistent — same pen, same hand, dated. The dates are regular. This is a routine.
+roomzone study kitchen = The cabinet hinges near the cooktop are looser than the others. This cabinet gets opened the most, several times per meal, and nobody has tightened the screws. It is not a problem anyone has decided to solve.
+
+
+-- STEP 6: Zone properties --
+
+roomzone inscribe/enable dining
+roomzone inscribe/enable hearth
+
+
+-- STEP 7: Seating mechanics —-
+(Create these items and use them on their zones)
+
+-- Hearth seating (capacity 4 — loveseat, couch, rocker, recliner) --
+@create Hearthside Seating:typeclasses.seat_mechanic.SeatMechanic
+@set Hearthside Seating/capacity = 4
+@set Hearthside Seating/zone_label = nestled into the hearthside seating
+@set Hearthside Seating/sit_msg = You settle into the hearthside seating, the warmth of the fire reaching you immediately.
+@set Hearthside Seating/sit_msg_others = settles into the hearthside seating near the fire.
+@set Hearthside Seating/stand_msg = You rise from the hearthside seating.
+@set Hearthside Seating/stand_msg_others = rises from the hearthside seating.
+use Hearthside Seating on hearth
+
+-- Dining chairs (capacity 8) --
+@create Dining Chairs:typeclasses.seat_mechanic.SeatMechanic
+@set Dining Chairs/capacity = 8
+@set Dining Chairs/zone_label = seated at the dining table
+@set Dining Chairs/sit_msg = You pull out a chair and settle at the dining table.
+@set Dining Chairs/sit_msg_others = pulls out a chair and sits at the dining table.
+@set Dining Chairs/stand_msg = You push back your chair and stand.
+@set Dining Chairs/stand_msg_others = pushes back their chair and stands.
+use Dining Chairs on dining
+
+-- Island barstools (capacity 4) --
+@create Island Barstools:typeclasses.seat_mechanic.SeatMechanic
+@set Island Barstools/capacity = 4
+@set Island Barstools/zone_label = perched at the kitchen island
+@set Island Barstools/sit_msg = You climb onto one of the island barstools, the leather seat cool and then not.
+@set Island Barstools/sit_msg_others = settles onto one of the island barstools.
+@set Island Barstools/stand_msg = You slide off the barstool.
+@set Island Barstools/stand_msg_others = slides off the barstool.
+use Island Barstools on island
+
+
+-- STEP 8: Bar drinks on the island --
+(Players can use 'pour <drink>' while in the room)
+
+roomzone bar island + black coffee
+roomzone bar island + tea, black
+roomzone bar island + chamomile tea
+roomzone bar island + orange juice
+roomzone bar island + sparkling water
+roomzone bar island + red wine
+roomzone bar island + white wine
+roomzone bar island + whiskey, neat
+roomzone bar island + whiskey on the rocks
+roomzone bar island + bourbon
+roomzone bar island + gin and tonic
+roomzone bar island + hot chocolate
+roomzone bar island + cold brew
+roomzone bar island + whatever's in the copper kettle
+
+
+-- STEP 9: Kitchen pantry (for 'cook' and 'bake' commands) --
+(stand in the room and paste these)
+
+roomzone pantry kitchen + scrambled eggs
+roomzone pantry kitchen + fried eggs
+roomzone pantry kitchen + bacon and eggs
+roomzone pantry kitchen + oatmeal with honey
+roomzone pantry kitchen + sourdough toast
+roomzone pantry kitchen + pancakes
+roomzone pantry kitchen + grilled cheese
+roomzone pantry kitchen + tomato soup
+roomzone pantry kitchen + roasted vegetables
+roomzone pantry kitchen + pasta with garlic and oil
+roomzone pantry kitchen + slow-cooked stew
+roomzone pantry kitchen + roast chicken
+roomzone pantry kitchen + fresh bread
+roomzone pantry kitchen + shortbread cookies
+roomzone pantry kitchen + apple cake
+
+
+-- STEP 10: Fireplace state --
+(the fire starts at "warm" by default — no setup needed)
+(players use: tend fire / stoke fire / bank fire)
+(fire levels: banked → low → warm → bright → roaring)
+
+
+-- STEP 11: Dairy / fridge stock setup —-
+(each character who wants to be producitve sets up their own profile)
+(no in-game builder commands needed — players do this themselves)
+
+-- Example (each player runs for their own character): --
+setdairy fluid = milk
+setdairy desc = warm, faintly sweet
+setdairy on
+
+-- To collect: --
+milk <character>      -- collect from another character (requires their consent)
+milk me               -- self-collect
+
+-- To grant consent: --
+consent allow milking
+
+-- To browse/take from the fridge: --
+fridge
+fridge take 1
+
+
+-- STEP 12: Optional — hearthside restraint (if desired) --
+(same pattern as the entertainment room cable table)
+
+@create Hearthstone Ring:typeclasses.restrain_mechanic.RestrainMechanic
+@set Hearthstone Ring/capacity = 2
+@set Hearthstone Ring/label = the iron ring set into the hearthstone
+@set Hearthstone Ring/blocker_msg = The ring holds you fast. The fire is very close.
+use Hearthstone Ring on hearth

@@ -63,6 +63,7 @@ def _blank_zone(parent=None):
         "event_hooks":    {},
         "bar_drinks":     [],   # list of drink name strings for CmdPour
         "games":          [],   # list of game name strings for CmdPlay
+        "pantry":         [],   # list of food/ingredient strings for CmdCook
     }
 
 
@@ -191,6 +192,7 @@ class CmdRoomZone(default_cmds.MuxCommand):
         "inscribe/enable", "inscribe/disable", "inscribe/list",
         "bar", "bar/rm", "bar/list",
         "game", "game/rm", "game/list",
+        "pantry", "pantry/rm", "pantry/list",
     })
 
     def func(self):
@@ -253,6 +255,9 @@ class CmdRoomZone(default_cmds.MuxCommand):
             "game":              self._do_game,
             "game/rm":           self._do_game_rm,
             "game/list":         self._do_game_list,
+            "pantry":            self._do_pantry,
+            "pantry/rm":         self._do_pantry_rm,
+            "pantry/list":       self._do_pantry_list,
         }
 
         handler = dispatch.get(switch)
@@ -1100,6 +1105,103 @@ class CmdRoomZone(default_cmds.MuxCommand):
         lines = [f"|wGames on zone '{zone_name}':|n"]
         for i, g in enumerate(games, 1):
             lines.append(f"  |w{i}.|n {g}")
+        self.caller.msg("\n".join(lines))
+
+    # ------------------------------------------------------------------
+    # pantry — pantry/rm — pantry/list
+    # ------------------------------------------------------------------
+
+    def _do_pantry(self):
+        """
+        roomzone pantry <zone> + <item name>
+        Add a food/ingredient to a zone's pantry for CmdCook.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        args = self.args.strip()
+        if "+" not in args:
+            self.caller.msg(
+                "|xUsage: roomzone pantry <zone> + <item name>|n"
+            ); return
+
+        zone_part, _, text = args.partition("+")
+        zone_name = zone_part.strip().lower()
+        text      = text.strip()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+        if not text:
+            self.caller.msg("|xItem name cannot be empty.|n"); return
+
+        zone   = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        pantry = list(zone.get("pantry", []) or [])
+        pantry.append(text)
+        zone["pantry"] = pantry
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(
+            f"|w'{text}' added to pantry on zone '{zone_name}' "
+            f"({len(pantry)} items total).|n"
+        )
+
+    def _do_pantry_rm(self):
+        """roomzone pantry/rm <zone> <index>  (1-based)"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        args  = self.args.strip().split()
+        if len(args) < 2:
+            self.caller.msg("|xUsage: roomzone pantry/rm <zone> <index>|n"); return
+
+        zone_name = args[0].lower()
+        try:
+            idx = int(args[1]) - 1
+        except ValueError:
+            self.caller.msg("|xIndex must be a number.|n"); return
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone   = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        pantry = list(zone.get("pantry", []) or [])
+
+        if idx < 0 or idx >= len(pantry):
+            self.caller.msg(
+                f"|xIndex {idx + 1} out of range "
+                f"(zone has {len(pantry)} pantry items).|n"
+            ); return
+
+        removed = pantry.pop(idx)
+        zone["pantry"] = pantry
+        zones[zone_name] = zone
+        room.db.zones = zones
+        self.caller.msg(f"|wRemoved '{removed}' from pantry on zone '{zone_name}'.|n")
+
+    def _do_pantry_list(self):
+        """roomzone pantry/list <zone>"""
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        zone_name = self.args.strip().lower()
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone   = zones[zone_name]
+        pantry = zone.get("pantry", []) or [] if hasattr(zone, "get") else []
+
+        if not pantry:
+            self.caller.msg(
+                f"|xNo pantry items on zone '{zone_name}' yet.\n"
+                f"Add one with: |wroomzone pantry {zone_name} + <item>|n"
+            ); return
+
+        lines = [f"|wPantry items on zone '{zone_name}':|n"]
+        for i, item in enumerate(pantry, 1):
+            lines.append(f"  |w{i}.|n {item}")
         self.caller.msg("\n".join(lines))
 
 

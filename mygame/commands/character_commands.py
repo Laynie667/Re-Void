@@ -3638,6 +3638,7 @@ class CmdConsent(MuxCommand):
     ACT_TYPES = [
         "undress", "blindfold", "gag", "tieup",
         "strip", "examclose", "restrain", "claimmark",
+        "milking",
     ]
     # Privacy / movement flags
     PRIVACY_TYPES = [
@@ -3660,6 +3661,7 @@ class CmdConsent(MuxCommand):
         "blindfold":   "Blindfold",
         "gag":         "Gag",
         "tieup":       "Tie up",
+        "milking":     "Milking",
         "strip":       "Strip",
         "examclose":   "Examine closely",
         "restrain":    "Restrain",

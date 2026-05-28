@@ -269,6 +269,21 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_CAH_CMDS:
             self.add(cmd_cls())
 
+        # Fireplace (tend fire, stoke, bank)
+        from commands.fireplace_commands import ALL_FIREPLACE_CMDS
+        for cmd_cls in ALL_FIREPLACE_CMDS:
+            self.add(cmd_cls())
+
+        # Cooking (cook, bake — draws from zone pantry)
+        from commands.cooking_commands import ALL_COOKING_CMDS
+        for cmd_cls in ALL_COOKING_CMDS:
+            self.add(cmd_cls())
+
+        # Dairy / fridge stock (setdairy, milk, fridge)
+        from commands.dairy_commands import ALL_DAIRY_CMDS
+        for cmd_cls in ALL_DAIRY_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
