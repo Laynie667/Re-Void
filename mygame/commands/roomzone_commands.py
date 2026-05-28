@@ -61,6 +61,7 @@ def _blank_zone(parent=None):
         "mechanics":      {},
         "scripts":        [],
         "event_hooks":    {},
+        "summary":        "",    # short one-liner for main room look
         "bar_drinks":     [],   # list of drink name strings for CmdPour
         "games":          [],   # list of game name strings for CmdPlay
         "pantry":         [],   # list of food/ingredient strings for CmdCook
@@ -193,6 +194,7 @@ class CmdRoomZone(default_cmds.MuxCommand):
         "bar", "bar/rm", "bar/list",
         "game", "game/rm", "game/list",
         "pantry", "pantry/rm", "pantry/list",
+        "summary",
     })
 
     def func(self):
@@ -258,6 +260,7 @@ class CmdRoomZone(default_cmds.MuxCommand):
             "pantry":            self._do_pantry,
             "pantry/rm":         self._do_pantry_rm,
             "pantry/list":       self._do_pantry_list,
+            "summary":           self._do_summary,
         }
 
         handler = dispatch.get(switch)
@@ -1106,6 +1109,46 @@ class CmdRoomZone(default_cmds.MuxCommand):
         for i, g in enumerate(games, 1):
             lines.append(f"  |w{i}.|n {g}")
         self.caller.msg("\n".join(lines))
+
+    # ------------------------------------------------------------------
+    # summary
+    # ------------------------------------------------------------------
+
+    def _do_summary(self):
+        """
+        roomzone summary <zone> = <text>
+        Set a short one-liner for a zone that shows in the main room look.
+
+        The summary is what {zone:<name>} tokens render in the room
+        description, and what auto-appends for zones without a token.
+        The full desc is only shown when a player uses 'look <zone>'.
+
+        To clear: roomzone summary <zone> =
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n"); return
+
+        args = self.args.strip()
+        if "=" not in args:
+            self.caller.msg("|xUsage: roomzone summary <zone> = <text>|n"); return
+
+        zone_part, _, text = args.partition("=")
+        zone_name = zone_part.strip().lower()
+        text      = text.strip()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n"); return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        zone["summary"] = text
+        zones[zone_name] = zone
+        room.db.zones = zones
+
+        if text:
+            self.caller.msg(f"|wSummary set for zone '{zone_name}':|n |x{text}|n")
+        else:
+            self.caller.msg(f"|xSummary cleared for zone '{zone_name}'.|n")
 
     # ------------------------------------------------------------------
     # pantry — pantry/rm — pantry/list

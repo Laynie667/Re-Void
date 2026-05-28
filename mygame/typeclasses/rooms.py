@@ -250,8 +250,15 @@ class Room(ObjectParent, DefaultRoom):
 
     def _resolve_zone_tokens(self, text):
         """
-        Replace {zone:<name>} tokens in text with the zone's desc string.
-        Tokens for zones with no desc resolve to an empty string (removed).
+        Replace {zone:<name>} tokens in text with the zone's inline text.
+
+        Rendering priority:
+          1. zone["summary"]  — a short one-liner set by the builder
+          2. zone["desc"]     — full description (fallback for existing rooms)
+          3. ""               — token removed if neither is set
+
+        This lets builders use {zone:name} tokens for brief inline mentions
+        while reserving the full desc for 'look <zone>'.
         """
         import re
         zones = self.db.zones or {}
@@ -261,34 +268,21 @@ class Room(ObjectParent, DefaultRoom):
             zone = zones.get(zone_name)
             if not zone or not hasattr(zone, "get"):
                 return ""
+            summary = zone.get("summary", "") or ""
+            if summary:
+                return summary
             return zone.get("desc", "") or ""
 
         return re.sub(r"\{zone:([^}]+)\}", _replace, text)
 
     def get_zone_auto_append(self, base_desc):
         """
-        Return a string of zone descs that have content but whose
-        {zone:<name>} token does NOT appear in base_desc.
-        These are appended below the main description automatically.
-
-        Args:
-            base_desc (str): The assembled base description text.
-
-        Returns:
-            str: Newline-joined zone descs to append, or empty string.
+        Auto-append is disabled. Zone descriptions only appear when a
+        {zone:<name>} token is explicitly placed in the room's @desc,
+        or when a player uses 'look <zone>'. ANSI colors in the main
+        description are the intended cue for what's interactable.
         """
-        zones = self.db.zones or {}
-        lines = []
-        for zone_name, zone_data in zones.items():
-            if not hasattr(zone_data, "get"):
-                continue
-            desc = zone_data.get("desc", "") or ""
-            if not desc:
-                continue
-            token = "{zone:" + zone_name + "}"
-            if token not in (base_desc or ""):
-                lines.append(desc)
-        return "\n".join(lines)
+        return ""
 
     def get_zone_seated_lines(self):
         """
