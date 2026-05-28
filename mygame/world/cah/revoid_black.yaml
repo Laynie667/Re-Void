@@ -1,0 +1,31 @@
+cards:
+  - text: "Helena's eyebrow did the thing again. It meant _."
+    pick: 1
+  - text: "The dire wolves showed up at the cabin door. They wanted _."
+    pick: 1
+  - text: "Nobody talks about what's in the chest. The chest definitely contains _."
+    pick: 1
+  - text: "Laynie explained _ to the wolves. They already knew."
+    pick: 1
+  - text: "Auria's curls sensed _ before anyone else did."
+    pick: 1
+  - text: "The ice palace at midnight smelled like _."
+    pick: 1
+  - text: "The wolf prints in the carpet were traced back to _ and _."
+    pick: 2
+  - text: "The campaign derailed when the DM introduced _. Nobody recovered."
+    pick: 1
+  - text: "The dairy fridge had _ in it. No one asked how it got there."
+    pick: 1
+  - text: "The entertainment room was destroyed. The cause: _ combined with _."
+    pick: 2
+  - text: "The cables under the table were eventually traced to _. This raised more questions."
+    pick: 1
+  - text: "Helena gave the look. The look that said: 'You are about to learn about _'."
+    pick: 1
+  - text: "The tentacle figurine moved overnight. In the morning it was facing _."
+    pick: 1
+  - text: "When Auria gets really flustered, her curls do the thing and someone ends up explaining _ to a mythical creature."
+    pick: 1
+  - text: "The wolves got into the cabin again. They ate _. We are choosing not to investigate."
+    pick: 1

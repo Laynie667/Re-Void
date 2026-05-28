@@ -1,0 +1,61 @@
+cards:
+  - text: "What's that smell?"
+    pick: 1
+  - text: "I never thought I'd say this, but _ really changed my life."
+    pick: 1
+  - text: "Scientists have discovered that _ is responsible for _."
+    pick: 2
+  - text: "My therapist says I need to stop thinking about _."
+    pick: 1
+  - text: "What's the one thing you should never bring to a dinner party?"
+    pick: 1
+  - text: "In a shocking turn of events, the mayor was caught _ in the town square."
+    pick: 1
+  - text: "The new wellness trend everyone is trying: _."
+    pick: 1
+  - text: "What did the fortune cookie actually say?"
+    pick: 1
+  - text: "The museum's newest exhibit is called '_' and people are deeply unsettled."
+    pick: 1
+  - text: "What's my spirit animal?"
+    pick: 1
+  - text: "They said it couldn't be done. They were almost right. The secret was _."
+    pick: 1
+  - text: "When asked what ruined the wedding, the photographer hesitantly said: '_'."
+    pick: 1
+  - text: "I've been training for years. My secret weapon is _."
+    pick: 1
+  - text: "The product recall notice cited _ as the primary safety concern."
+    pick: 1
+  - text: "How did I end up in the hospital? Long story, but it started with _ and ended with _."
+    pick: 2
+  - text: "Breaking news: Local man survives three days in the wilderness using only _."
+    pick: 1
+  - text: "What is the most useless college major?"
+    pick: 1
+  - text: "The ancient prophecy foretold that the world would end not with a bang, but with _."
+    pick: 1
+  - text: "What did grandma leave me in the will?"
+    pick: 1
+  - text: "I asked the AI for help and it suggested _. The problem got worse."
+    pick: 1
+  - text: "The self-help book promised that _ would fix everything. It did not."
+    pick: 1
+  - text: "According to a new study, _ is the number one cause of awkward silences."
+    pick: 1
+  - text: "The new IKEA product is called _ and nobody can figure out how to assemble it."
+    pick: 1
+  - text: "It was _ that finally convinced me to uninstall social media."
+    pick: 1
+  - text: "What do I have way too many of?"
+    pick: 1
+  - text: "The search history that got me put on a list: _ combined with _."
+    pick: 2
+  - text: "The budget airline's new slogan is: 'We may not have _, but at least we have _'."
+    pick: 2
+  - text: "My New Year's resolution was to stop _. It lasted four days."
+    pick: 1
+  - text: "The worst thing to discover mid-hike is _."
+    pick: 1
+  - text: "What's the one thing everyone pretends they've read?"
+    pick: 1
