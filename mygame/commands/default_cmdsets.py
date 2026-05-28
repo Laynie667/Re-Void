@@ -280,9 +280,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
             self.add(cmd_cls())
 
         # Dairy / fridge stock (setdairy, milk, fridge)
-        from commands.dairy_commands import ALL_DAIRY_CMDS
-        for cmd_cls in ALL_DAIRY_CMDS:
-            self.add(cmd_cls())
+        # TODO: Disabled until milking machine MechanicItem and zone-installed
+        # production mechanic are properly designed. Re-enable and rewrite when ready.
+        # from commands.dairy_commands import ALL_DAIRY_CMDS
+        # for cmd_cls in ALL_DAIRY_CMDS:
+        #     self.add(cmd_cls())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
