@@ -30,7 +30,29 @@ def at_server_start():
     This is called every time the server starts up, regardless of
     how it was shut down.
     """
-    pass
+    _ensure_all_ambient_scripts()
+
+
+def _ensure_all_ambient_scripts():
+    """
+    Walk every room in the database and make sure its AmbientScript is
+    running.  Safe to call on every boot — ensure_ambient_script() is
+    idempotent and will not duplicate a running script.
+    """
+    try:
+        from evennia.objects.models import ObjectDB
+        rooms = ObjectDB.objects.filter(
+            db_typeclass_path__contains="rooms"
+        )
+        for room in rooms:
+            try:
+                obj = room.typeclass
+                if hasattr(obj, "ensure_ambient_script"):
+                    obj.ensure_ambient_script()
+            except Exception:
+                pass
+    except Exception:
+        pass
 
 
 def at_server_stop():

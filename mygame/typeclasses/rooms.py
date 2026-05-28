@@ -212,6 +212,9 @@ class Room(ObjectParent, DefaultRoom):
         # ---------------------------------------------------------------
         self.db.zones = self._build_default_zones()
 
+        # Start the ambient script immediately so new rooms tick from day one
+        self.ensure_ambient_script()
+
     # -------------------------------------------------------------------
     # Room zone helpers
     # -------------------------------------------------------------------

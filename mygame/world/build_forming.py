@@ -559,6 +559,7 @@ def _apply_room_data(room, data):
     room.db.ambient_msgs    = list(data["ambient_msgs"])
     room.db.scene_details   = dict(data["scene_details"])
     room.db.is_forming      = True
+    room.ensure_ambient_script()
 
 
 def _replace_exit(exit_key, aliases, source, destination):
