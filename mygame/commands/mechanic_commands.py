@@ -18,6 +18,170 @@ from evennia import Command
 
 
 # ---------------------------------------------------------------------------
+# Dildo seat helpers and message pools
+# ---------------------------------------------------------------------------
+#
+# HOW THE MESSAGE POOLS WORK
+# ─────────────────────────────────────────────────────────────────────────
+# When a character sits on a dildo seat (seat_type == "dildo"), the sit
+# command picks one message at random from _DILDO_SIT_MSGS (if the character
+# has a groin-parented orifice zone) or uses _DILDO_SIT_MSG_GENERIC.
+#
+# Available format placeholders in sit messages:
+#   {orifice}    — replaced with the zone name of the character's selected
+#                  orifice (e.g. "pussy", "ass") — underscores → spaces
+#                  Not available in the generic message or room messages.
+#   {label}      — the seat's label string (e.g. "the toe seats")
+#   {char_name}  — the character's rp_name or name (room messages only)
+#
+# Available format placeholders in locked messages:
+#   None — these are static strings. Personalise by editing the pool.
+#
+# ANSI color guide for these messages:
+#   |m   intimate / physical sensation (use for the main body of sit msgs)
+#   |r   urgent / alarming (use for "the seat doesn't release" openers)
+#   |x   ambient / understated (use for panel references, observer lines)
+#   |w   prominent white (use for short direct statements)
+#   |n   always reset at end
+#
+# TONE & LENGTH
+#   Sit messages:    2nd-person present tense; 3–6 sentences; private to caller.
+#   Locked messages: 2nd-person present tense; 1–3 sentences; private to caller.
+#   Room messages:   3rd-person; one sentence; visible to the room.
+#
+# CUSTOMISING
+#   Replace the examples below with your own. The pools are plain Python lists
+#   so you can add, remove, or reorder entries freely. A pool of at least 3
+#   sit messages and 4 locked messages gives good variety over time.
+#   The examples here are intentionally mild — write your explicit versions
+#   in exactly this same structure.
+# ─────────────────────────────────────────────────────────────────────────
+
+
+def _get_groin_orifices(char):
+    """
+    Return a list of zone names parented to 'groin' with zone_type
+    'orifice' or 'both'. These are the zones a dildo seat can address.
+
+    Groin ships empty; players build anatomy with:
+      zone add groin/pussy type=both intimate
+      zone add groin/ass   type=orifice intimate
+    """
+    zones = char.db.zones or {}
+    return [
+        zname for zname, zdata in zones.items()
+        if hasattr(zdata, "get")
+        and zdata.get("parent") == "groin"
+        and zdata.get("zone_type") in ("orifice", "both")
+    ]
+
+
+# ── Sit messages (personalised) ──────────────────────────────────────────
+# Each string receives .format(orifice=...) before display.
+# These examples are starter-level. Replace with your own explicit pool.
+
+_DILDO_SIT_MSGS = [
+    ("|mYou lower into the water and feel the fixture in the toe seat find your "
+     "{orifice} as your weight settles. The shaft is long and the heat works "
+     "steadily in its favor. The knot at the base is the part that decides "
+     "things — broader than everything above it — and when you've seated it, "
+     "it holds. The panel is at the throne.|n"),
+
+    ("|mThe heat has been patient. You take the toe seat and feel the fixture "
+     "press against your {orifice} and settle. Nine inches, and the knot at "
+     "the base that makes full seating a commitment. You commit. "
+     "The seat has you.|n"),
+
+    ("|mYou take the toe seat and feel the fixture locate your {orifice} through "
+     "the moving water. Each inch of the shaft is present as you settle; the "
+     "knot at the base is wide enough that reaching the bottom requires a "
+     "decision. You make it. The knot holds. You are seated.|n"),
+
+    ("|mThe fixture in the toe seat finds your {orifice} as you lower your weight "
+     "into the water. You settle into it gradually — nine inches, widening toward "
+     "the knot at the base, the heat keeping your body cooperative throughout. "
+     "When the knot seats, it is clear and final. "
+     "This is what the seat was installed to do.|n"),
+]
+
+# ── Sit message (generic fallback — no orifice zone found) ───────────────
+
+_DILDO_SIT_MSG_GENERIC = (
+    "|mYou lower onto the fixture in the toe seat. The shaft is long and the "
+    "knot at the base is broad — full seating is a process rather than a moment, "
+    "and holds when you've completed it. The water is hot. The seat has you.|n"
+)
+
+# ── Room sit messages (visible to others) ────────────────────────────────
+# Receives .format(char_name=..., label=...).
+
+_DILDO_ROOM_SIT_MSGS = [
+    "|x{char_name} lowers into one of the toe seats. Their expression changes as they settle fully.|n",
+    "|x{char_name} takes a toe seat. There is a pause — brief, visible — before they are fully settled.|n",
+    "|x{char_name} settles into one of the toe seats. What the seat involves makes itself apparent in their face.|n",
+]
+
+# ── Locked stand messages — shown when player tries to stand/move ─────────
+# No format placeholders — static strings. Add variety; pool is cycled randomly.
+# These examples are mild; replace with your own explicit versions.
+
+_DILDO_LOCKED_MSGS = [
+    ("|xThe knot holds. You press upward and feel exactly how wide the base of "
+     "the fixture is from the inside — it has not changed. The panel at the "
+     "throne is closed. The host decides when you come off this seat.|n"),
+
+    ("|xRising requires clearing the knot. The knot, from this side, is not "
+     "interested in that without the panel's permission. You stay.|n"),
+
+    ("|rThe seat doesn't release.|n The lock is engaged and the knot is what it "
+     "is. The panel is at the throne. The indicator is green. "
+     "The host has the key.|n"),
+
+    ("|xYou push against the seat. The knot has spent the last several minutes "
+     "making a case for staying, and between the water and the lock, it wins. "
+     "The panel is closed. You settle back.|n"),
+
+    ("|xThe seat is locked. The knot was wide going in; it has not changed. "
+     "Rising without the panel releasing you is not what this seat allows. "
+     "The host has the key.|n"),
+
+    ("|xYou try to stand. The knot disagrees. The panel indicator is green. "
+     "The panel is closed. The host has not moved. You sit.|n"),
+]
+
+
+def _check_dildo_seat_locked(char):
+    """
+    Check whether char is currently sitting in a locked dildo seat.
+
+    Returns (True, msg) if blocked, (False, None) if free to stand/move.
+    Called by CmdStand and at_before_move.
+    """
+    val = getattr(char.db, "zone_seated_at", None)
+    if not val:
+        return False, None
+    try:
+        room_id, zone_name = val
+        from evennia import search_object
+        results = search_object(f"#{room_id}")
+        room = results[0] if results else None
+        if not room:
+            return False, None
+        zones = room.db.zones or {}
+        zone  = zones.get(zone_name)
+        if not zone or not hasattr(zone, "get"):
+            return False, None
+        seat = (zone.get("mechanics") or {}).get("seat")
+        if not seat:
+            return False, None
+        if seat.get("seat_type") == "dildo" and seat.get("locked"):
+            return True, random.choice(_DILDO_LOCKED_MSGS)
+    except Exception:
+        pass
+    return False, None
+
+
+# ---------------------------------------------------------------------------
 # Position helpers
 # ---------------------------------------------------------------------------
 
@@ -217,7 +381,27 @@ def _take_position(caller, zone_arg, position, db_attr,
 
     char_name = caller.db.rp_name or caller.name
     slot = {"seated": "seat", "lying": "lying", "kneeling": "kneeling"}.get(position, position)
-    occupied.append((caller.id, char_name, slot))
+
+    # ── Dildo seat: personalised messaging + extended occupied tuple ─────
+    is_dildo    = seat.get("seat_type") == "dildo"
+    orifice_key = None   # stored in occupied for later reference
+
+    if is_dildo:
+        orifices = _get_groin_orifices(caller)
+        if orifices:
+            orifice_key     = random.choice(orifices)
+            orifice_display = orifice_key.replace("_", " ")
+            sit_msg    = random.choice(_DILDO_SIT_MSGS).format(orifice=orifice_display)
+        else:
+            sit_msg    = _DILDO_SIT_MSG_GENERIC
+        room_sit_msg = random.choice(_DILDO_ROOM_SIT_MSGS)
+    # ─────────────────────────────────────────────────────────────────────
+
+    if is_dildo:
+        occupied.append((caller.id, char_name, slot, orifice_key))
+    else:
+        occupied.append((caller.id, char_name, slot))
+
     sc = dict(seat)
     sc["occupied"] = occupied
     _write_seat(room, zone_name, zone_data, sc)
@@ -437,6 +621,11 @@ class CmdStand(Command):
         attr, _, _ = _get_position_attr(caller)
         if not attr:
             caller.msg("|xYou aren't in any position to get up from.|n")
+            return
+        # Dildo seat lock check — blocks stand if panel has locked the seat
+        locked, lock_msg = _check_dildo_seat_locked(caller)
+        if locked:
+            caller.msg(lock_msg)
             return
         _do_rise(caller)
 

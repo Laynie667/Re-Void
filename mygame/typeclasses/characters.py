@@ -663,6 +663,19 @@ class Character(ObjectParent, DefaultCharacter):
             self.msg(blocker_msg)
             return False
 
+        # --- Dildo seat lock check ---
+        # Must run before movement is allowed; _do_rise (called at_post_move)
+        # does NOT check this — it cleans up silently after moves that slip
+        # through (teleports, server reloads). Only voluntary moves are blocked.
+        try:
+            from commands.mechanic_commands import _check_dildo_seat_locked
+            locked, lock_msg = _check_dildo_seat_locked(self)
+            if locked:
+                self.msg(lock_msg)
+                return False
+        except Exception:
+            pass
+
         # --- Exit flock check ---
         if self.location and destination:
             for exit_obj in self.location.exits:

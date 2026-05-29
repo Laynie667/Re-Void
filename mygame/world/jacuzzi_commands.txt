@@ -167,22 +167,26 @@ roomzone inscribe/enable seats
 
 -- STEP 7: Seating mechanics --
 
-@create Jacuzzi Toe Seats:typeclasses.seat_mechanic.SeatMechanic
+== TOE SEATS (dildo seats — zone-aware sit messaging, panel-lockable) ==
+== Uses DildoSeatMechanic: sit messages come from _DILDO_SIT_MSGS pool   ==
+== in commands/mechanic_commands.py — edit that file to customise them.  ==
+== @set .../label sets the label shown in lock/capacity messages.        ==
+== (Previous builds used zone_label — that was a bug; the correct attr   ==
+== is label, which is what install_into_zone reads.)                     ==
+
+@create Jacuzzi Toe Seats:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
 @set Jacuzzi Toe Seats/capacity = 4
-@set Jacuzzi Toe Seats/zone_label = seated in the jacuzzi
-@set Jacuzzi Toe Seats/sit_msg = You lower yourself into the water at one of the toe seats. The heat arrives immediately — properly hot, the kind that takes a breath before it becomes welcome. Then the seat beneath you makes itself known: the blunt tip finding its angle, the nine inches of the shaft asking to be decided about, the knot at the base a specific promise about what fully seated will mean. You take your time. The water makes the decision easier than it should.
-@set Jacuzzi Toe Seats/sit_msg_others = lowers into the water at one of the toe seats. Their expression changes in stages as they settle.
-@set Jacuzzi Toe Seats/stand_msg = You push yourself up from the seat. The knot has opinions about this. You work past them. The water runs off you as you rise.
-@set Jacuzzi Toe Seats/stand_msg_others = rises from their seat in the jacuzzi with visible effort.
+@set Jacuzzi Toe Seats/label = the toe seats
 use Jacuzzi Toe Seats on seats
+
+
+== THRONE (no dildo — plain SeatMechanic, sit/stand messages hardcoded   ==
+== in the CmdSit defaults; override with your own by editing CmdSit in   ==
+== commands/mechanic_commands.py if you want throne-specific text.)      ==
 
 @create Jacuzzi Throne:typeclasses.seat_mechanic.SeatMechanic
 @set Jacuzzi Throne/capacity = 1
-@set Jacuzzi Throne/zone_label = seated at the throne
-@set Jacuzzi Throne/sit_msg = You settle into the throne at the base of the print. It is broad and comfortable — elevated just enough, no fixture beneath you, just the heat of the water and the position. The window fills your view. The four toe seats face you from the upper curve of the print. The panel is at your left hand. You are exactly where this room was designed for someone to be.
-@set Jacuzzi Throne/sit_msg_others = takes the throne at the base of the jacuzzi. Their posture changes with it.
-@set Jacuzzi Throne/stand_msg = You rise from the throne.
-@set Jacuzzi Throne/stand_msg_others = rises from the throne.
+@set Jacuzzi Throne/label = the throne
 use Jacuzzi Throne on throne
 
 
