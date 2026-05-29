@@ -1,0 +1,127 @@
+== Shadow's Den - Princess' Private Space ==
+== Paste these commands in order while standing in the room ==
+== Exits: north → Birthing Den ==
+
+-- STEP 1: Room Description --
+
+@desc here = \|yShadow's Den — Princess' Private Space\|n/The \|wbeaded curtain\|n in the doorway fills the entrance with a soft clicking sound when disturbed and then falls still, the hundreds of pale beads catching the room's \|xrose-pink light\|n from the wall sconces and redistributing it in slow arcs across the ceiling. The room is smaller than the cavern above but more deliberately appointed — every surface has been chosen. The \|wnorthern wall\|n is given over entirely to a mural that runs floor to ceiling, its pigments vivid enough that it might have been made recently. Against the \|weastern wall\|n, a \|mpink-sheeted bed\|n sits low and wide, its headboard fitted with two short lengths of \|cchain\|n. At the room's center stands a \|mcherry-finish pillory\|n, its wood polished and its stocks currently open. Beside the western wall, a \|xlarge mechanical frame\|n occupies its corner with the undemonstrative presence of a thing that has been placed where it will be used.//{zone:mural}//{zone:bed}//{zone:pillory}//{zone:milking_machine}//{zone:chest}
+
+
+-- STEP 2: Create zones --
+
+roomzone add mural
+roomzone add bed
+roomzone add pillory
+roomzone add milking_machine
+roomzone add chest
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc mural = The \|wmural\|n fills the northern wall without frame or border, its edges bleeding to the stone. Three figures are rendered at near-life scale: \|xan elven woman\|n in the center, drawn from behind; a \|mblack wolf\|x of exceptional size occupying the left third of the composition; and a \|mcherry-wood pillory\|x at the composition's right edge — the same pillory, or its model, that stands in the center of this room. The elven woman's wrists are in the pillory's stocks. The wolf's posture is not ambiguous. The rendering is skilled and specific, worked in a palette that favors warm blacks, ivory, and a deep rose that matches the room's light. \|xAt the bottom of the mural, following the wall's baseboard for its full width, runs a single line of text in small, neat script.\|n
+
+roomzone desc bed = The \|wbed\|n against the eastern wall is low-framed and wide — larger than a single bed, smaller than a full double, exactly sized for one person to spread out or two to share closely. \|mPink sheets\|n cover it, their color saturated and deliberate, layered over a thick mattress that yields softly underhand. The headboard is pale wood fitted at each upper corner with an iron loop, and from each loop hangs a short chain ending in a \|mpink-padded cuff\|n, the padding stitched in a pattern of small hearts. \|xThe cuffs are currently unclasped and hanging loosely against the headboard. A stuffed rabbit sits against the left pillow, its ears worn flat from handling.\|n
+
+roomzone desc pillory = The \|mpillory\|n stands at the room's center on a low dais of polished stone, its cherry-finish wood gleaming under the rose light. It is antique in its construction — the stocks are a single piece of hardwood, hinged at one end and pinned at the other, with three cutouts: one large for the neck, two smaller for the wrists, each cutout lined with a strip of worn velvet that has been replaced enough times that the color is no longer original. \|xThe frame supporting the stocks can be adjusted for height by a mechanism at the base: a knurled brass wheel that moves smoothly and holds position without a lock.\|n The top surface of the stocks, where a person's nape would rest, has been worn to a higher polish than the rest.
+
+roomzone desc milking_machine = The machine against the western wall is large — roughly the size of a wardrobe — and constructed from brass fittings, dark rubber tubing, and a steel frame that has been bolted to the floor. \|xA padded bench is integrated into its front face, positioned at roughly hip height, sized for kneeling or leaning.\|n From the upper portion of the frame, four rubber hoses descend in a loose arrangement, each ending in a sealed cup assembly. A small pressure gauge is mounted at eye level on the frame's right side, its needle currently resting at zero. The whole apparatus has the functional cleanliness of something that is maintained carefully and used regularly.
+
+roomzone desc chest = Against the eastern wall beside the bed, a \|wooden chest\|n of moderate size sits on the floor, its lid closed. The wood is pale and unpolished, the hardware plain, and the surface is covered in a dense collection of \|xstickers\|n — animals, stars, flowers, cartoon characters — applied in overlapping layers until the original wood is barely visible beneath them. A stuffed bear sits on top of the closed lid, wearing a small ribbon. The interior, when opened, holds a mix of stuffed animals, soft toys, and — somewhat lower in the pile — a collection of items whose function is less ambiguous.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail mural/figures = The elven woman in the mural is drawn with the same care and specificity as the woman in the Birthing Den paintings above — the proportions are consistent, the ear shape identical, the long pale hair rendered with individual attention. This is not a generic figure. The black wolf is rendered with the same deliberate specificity: its size relative to the woman, the set of its posture, and the particular markings at its chest are all rendered with the confidence of someone working from direct observation. The pillory in the composition matches the one at the room's center in every detail, including the velvet lining, the brass adjustment wheel, and the wear pattern at the neck rest.
+
+roomzone detail mural/text = The script running along the base of the mural is small and neat — written in a hand that is careful rather than decorative. It is in a language you may or may not read, but its position beneath the three figures suggests it functions as a caption or dedication rather than a title. Those who can read it will find it is addressed in the second person, to no one in particular, or to whoever stands here reading it.
+
+roomzone detail bed/cuffs = The padded cuffs are built on a steel-core wrist loop covered in a dense foam padding, and over that a stitched cover in soft pink cotton. The hearts pattern in the stitching is regular and small. The clasp mechanism is a simple D-ring snap that closes with a firm click and releases with a squeeze — operable from inside or outside when fully understood, but not immediately obvious from inside. The chains connecting the cuffs to the headboard loops are short enough to allow a person to rest their arms beside them but not long enough to reach the lower half of the bed.
+
+roomzone detail bed/rabbit = The stuffed rabbit against the left pillow is old enough that its original texture is difficult to assess — it has been handled so thoroughly that the nap of its fabric is entirely gone, leaving a smooth, slightly shiny surface. One ear has been reattached at some point with thread that doesn't quite match. The rabbit's eyes are intact. It has been sat in this position, against this pillow, with enough consistency that the pillow shows a slight compression in its shape around the toy.
+
+roomzone detail pillory/stocks = The velvet lining in the stock cutouts is a deep rose, and it has been replaced enough times that the current layer sits over a faint ridge of older material at the edges of the cutouts. The lining in the neck cutout is slightly thicker than in the wrist cutouts — additional padding added at some point after the original construction. The pin that secures the stocks closed is a drop-bar on a cord, designed to be operated with one hand by someone standing beside rather than in front of the pillory.
+
+roomzone detail pillory/adjustment = The brass wheel at the base of the pillory frame moves with two full turns to raise or lower the stocks by approximately fifteen centimeters. At its lowest setting, the cutouts are at approximately knee height for a standing adult; at its highest, roughly shoulder height. The current setting is mid-range. A small chalk mark has been made on the frame at the adjustment point, slightly below mid-range — someone's preferred height, noted for future reference.
+
+roomzone detail milking_machine/cups = One of the four cup assemblies has been disconnected from its hose and set aside on a small shelf built into the machine's frame — not removed, just out of the current configuration. The remaining three are sealed and ready. The cups themselves are a soft rubber that flexes under pressure; the seal is maintained by a low continuous suction from the machine's pump mechanism, which runs from a foot pedal at the base of the frame.
+
+roomzone detail chest/top_layer = The upper layer of the chest's contents is soft toys and stuffed animals — a bear, two more rabbits in various sizes, a stuffed cat with a missing eye, a round soft thing that might be a seal. They are not piled randomly; each has a position and is in it. Beneath this layer, wrapped loosely in a length of soft cloth, are a series of items that are clearly intended for adult use.
+
+roomzone detail chest/stickers = The sticker collection on the chest exterior spans a considerable time range — some are old enough to be yellowing at their edges, their colors faded, while others are clearly recent, their colors bright against the layers beneath. The older stickers have been applied directly to the wood; the newer ones to previous layers of stickers. There is a logic to where types cluster: animals in the upper left quadrant, stars and space things across the top, characters along the right side.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study mural = The mural has been touched repeatedly at one specific point: the elven woman's left wrist, where it enters the pillory's stock. The pigment there is slightly more worn than elsewhere, the surface matte rather than holding any sheen. Someone has pressed a fingertip to that point often enough to affect the paint.
+roomzone study mural = The text along the base of the mural was written in a single sitting — the line does not pause or restart, and the script maintains consistent pressure throughout. The writing instrument used was narrow and soft, probably a brush rather than a pen.
+roomzone study mural = The pillory rendered in the mural is shown at its mid-range adjustment height — the chalk mark on the actual pillory's frame corresponds to the height depicted.
+
+roomzone study bed = The mattress on the bed has an uneven compression pattern: the greatest compression is off-center, displaced slightly toward the headboard side. The position suggests someone who sleeps or rests curled toward the head of the bed rather than fully extended.
+roomzone study bed = The chain on the right side of the headboard is slightly longer than the one on the left — a few links' difference. The padding on the right cuff is also more worn at its clasp edge.
+roomzone study bed = The stuffed rabbit has been removed from its position and returned to it enough times that the pillow shape around it has become definitional rather than incidental — the rabbit has a specific place, and the pillow knows it.
+
+roomzone study pillory = The dais beneath the pillory is slightly off-center in the room — positioned with the pillory facing the mural rather than the door. Standing in the pillory, the mural fills the entire visual field forward.
+roomzone study pillory = The floor immediately in front of the pillory, between the dais and the mural wall, is slightly smoother than the floor elsewhere in the room — the stone worn by standing and shifting weight in a limited area over time.
+roomzone study pillory = The chalk height mark on the pillory frame is at the height of the elven woman's wrists as depicted in the mural — assuming the woman depicted is of the proportions the painting suggests.
+
+roomzone study milking_machine = The foot pedal at the base of the machine shows wear consistent with use from a kneeling position — the pressure point is lower on the pedal than it would be for someone standing. The padding on the integrated bench is compressed in a pattern consistent with kneeling forward from the hips rather than sitting.
+roomzone study milking_machine = The pressure gauge needle, currently at zero, has a faint scratch across the glass face at roughly the halfway mark. The scratch is not damage; it is a line made deliberately, marking a reference point.
+
+roomzone study chest = The ribbon around the bear on the lid has been retied recently — the bow is fresh and even. The bear's positioning on the lid is precise: centered, facing forward. It functions as something between a guardian and a sign.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable mural
+
+
+-- STEP 7: Mechanic items --
+
+-- Bed mechanic (lying, capacity 2) --
+@create Princess Bed Mechanic:typeclasses.seat_mechanic.SeatMechanic
+@set Princess Bed Mechanic/capacity = 2
+@set Princess Bed Mechanic/label = the bed
+@set Princess Bed Mechanic/position = lying
+@set Princess Bed Mechanic/allow_lap = 0
+use Princess Bed Mechanic on bed
+
+-- Bed cuffs restrain mechanic (capacity 1) --
+@create Bed Cuffs Mechanic:typeclasses.restrain_mechanic.RestrainMechanic
+@set Bed Cuffs Mechanic/capacity = 1
+@set Bed Cuffs Mechanic/label = the bed cuffs
+@set Bed Cuffs Mechanic/blocker_msg = The cuffs hold your wrists to the headboard.
+use Bed Cuffs Mechanic on bed
+
+-- Pillory restrain mechanic (capacity 1) --
+@create Pillory Mechanic:typeclasses.restrain_mechanic.RestrainMechanic
+@set Pillory Mechanic/capacity = 1
+@set Pillory Mechanic/label = the pillory
+@set Pillory Mechanic/blocker_msg = The stocks hold your neck and wrists fast.
+use Pillory Mechanic on pillory
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle mural/figures = You stand close to the mural and move along it slowly. At this range the brushwork is visible — the wolf's coat is built from individual strokes in several overlapping blacks, and the woman's hair was painted in long, single passes from root to end. The pillory in the composition is rendered with the meticulous attention of someone who examined the actual object before painting it: the brass wheel is there, the velvet lining is there, the cord on the drop-pin is there. You find the worn point at the woman's wrist without looking for it. The paint is smooth under your fingertip, the surface different from the rest of the mural.
+
+roomzone handle mural/text = You crouch at the base of the mural and read — or trace, if the language is unfamiliar — the line of text along the baseboard. It runs the full width of the room without interruption. The script is small enough that reading it requires proximity, which means being close to the floor, which means the mural's figures are above you as you read what is written beneath them. Whatever the text says, the position from which it must be read was chosen deliberately.
+
+roomzone handle bed/cuffs = You lift the nearer cuff from the headboard and hold it. The padding is dense and soft, the stitching firm, the clasp mechanism exactly as described — a squeeze to release, a press to close. You work it a few times with your free hand: it closes cleanly and opens cleanly and the mechanism is smooth from use. The chain pays out its full length from the headboard loop and then holds, approximately wrist-to-headboard distance for someone lying at the top of the bed. The rabbit watches from the other pillow.
+
+roomzone handle pillory/stocks = You lift the stock bar and let it fall open on its hinge. The velvet lining in the cutouts is immediately evident — the neck cutout is genuinely soft, cushioned enough that the pressure of the wood would be distributed rather than concentrated. You rest your wrists in the wrist cutouts without closing the stock. The height is correct for a person to stand with their arms extended forward at a natural angle. Looking up from this position, the mural fills your entire forward view. You reach for the drop-pin cord with your free hand and understand at once why it is positioned where it is.
+
+roomzone handle milking_machine/cups = You lift one of the connected cup assemblies and flex the rubber in your hands. It yields with gentle pressure, the seal rim maintaining its shape. The suction, when the foot pedal engages, would be consistent and adjustable — the gauge on the frame has gradations marked in increments small enough to be precise. The bench padding is softer than it looks, and the angle at which it meets the machine frame is calibrated so that a person kneeling on it is positioned correctly relative to the cup assemblies without adjustment.
+
+roomzone handle chest/surface = You lift the bear from the lid and set it aside to open the chest. The stickers shift slightly under your hands as the hinges engage — the lid is light and balanced, opening fully and staying open. The stuffed animals in the top layer are arranged in a specific order that is disrupted when you move them. Beneath the cloth wrapping at the bottom of the chest, the other items are organized with the same care as the toys above them: nothing is buried or forgotten here.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add \|xThe beaded curtain in the doorway moves without perceptible cause — a soft clicking of bead against bead, one pass, then still.\|n
+rambient/add \|xThe rose-pink light from the wall sconces catches the brass adjustment wheel on the pillory and holds a slow arc of reflection across the ceiling.\|n
+rambient/add \|xThe stuffed rabbit against the bed's pillow has not moved. It will not move.\|n
+rambient/add \|xThe mural on the northern wall is static, but the light the sconces give it is not — the figures emerge and recede as the flame quality shifts.\|n
+rambient/add \|xThe milking machine makes no sound while idle. The silence it holds is different in quality from the room's other silences.\|n
+rambient/add \|xSomewhere in the chest, the stuffed animals have settled against each other, and the faint sound of compressed fabric releasing is almost inaudible.\|n
+rambient/add \|xThe pillory stocks are open. The velvet lining in the neck cutout catches the room's light and holds it in a narrow rose band.\|n
+rambient/add \|xThe chalk mark on the pillory frame is at exactly eye level for someone standing at the machine bench.\|n

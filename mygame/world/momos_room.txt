@@ -1,0 +1,162 @@
+== Momo's Room ==
+== Paste these commands in order while standing in the room ==
+== Exits: east -> The Gargoyle's Chamber | west -> Helena's Room ==
+
+-- STEP 1: Room Description --
+
+@desc here = \|yMomo's Room\|n/\|xThe warm, woody scent of clean straw settles through the room, cut through occasionally by honeysuckle riding in on the breeze from the open southern wall.\|n The wall drops to waist height there, nothing between the room and the rolling meadow beyond — a brook threads through the grass, a single tree stands at the far edge, and the light that comes in is the soft, unhurried kind that knows it is welcome. The other three walls are \|wyellow stucco over wooden paneling\|n, the fence-line motif making the space feel like a very cherished enclosure rather than a room. Somewhere above the \|wfuton\|n, a small \|mgolden bell\|n stirs in the breeze, and the sound it makes is light enough that you might almost miss it.//\|x\|n{zone:futon}//{zone:collar_wall}//{zone:pillory}//{zone:tack_wall}//{zone:bench_pedestal}
+
+
+-- STEP 2: Create zones --
+
+roomzone add futon
+roomzone add collar_wall
+roomzone add pillory
+roomzone add tack_wall
+roomzone add bench_pedestal
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc futon = The \|wfuton\|n against the northern wall is a deep, yielding yellow, piled with \|xpillows and blankets\|n in warm golds and creams, the layers accumulated over time rather than arranged. It has the look of something slept in rather than displayed — a dip worn into the center, the topmost blanket always slightly displaced, a pillow that has been hugged so often it holds a shape on its own. It is the most obviously lived-in surface in the room, and it is the warmest.
+
+roomzone desc collar_wall = Above the futon, a \|wdark collar\|n of thick leather with \|csilver studs\|n has been chained to the wall on a long, \|csteel-linked leash\|n, its length calculated to allow the bed and a little beyond. The collar hangs at rest now, the bell on its front catching any air that moves through the room and returning it as a faint, clear chime. The engraving on the bell reads \|m'Helena's Momo'\|n, the letters worn to a particular softness at the fingertip contact points that suggests they have been read many times, and not always by a standing person.
+
+roomzone desc pillory = At the center of the room, an \|woak and steel frame\|n supports an adjustable \|wpillory\|n — the slot for neck and wrists mounted on a vertical track that allows it to be set low, level, or raised until whoever is locked in it is forced onto the balls of their feet. The wood is pale and close-grained, the steel hardware a dull, functional black that does not reflect. Below, set into an open cabinet at the base of the frame, a \|mmilking machine\|n sits in careful arrangement: the cups coiled on their hoses, a small row of glass bottles clean and waiting, a tin of skin lotion beside them with the lid left slightly loose.
+
+roomzone desc tack_wall = The eastern wall holds the leather work: \|wpurple and black harnesses\|n arranged by size, several bridles with their buckles aligned, two coils of rope, and a \|wcrop\|n hanging by its loop at the far end. The leather is clean and conditioned, the metal rings and buckles free of tarnish. It is orderly in the way that things are orderly when they are used and returned rather than simply stored. The smell of leather oil carries from here across the room on still days.
+
+roomzone desc bench_pedestal = Near the pillory, an \|wadjustable bench\|n sits at a height that suggests kneeling is the intended position — padded in dark vinyl, the adjustment mechanism on the side locked at a setting that has not been changed in some time. Beside it, a \|wcurious pedestal\|n rises to about hip height, a single \|mfeather\|n mounted at the top on a flexible stem, angled slightly inward. The feather is pristine, which is somehow more unsettling than if it were worn.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail futon/blankets = The blankets on the futon are a mix: a heavy knit throw that smells faintly of someone, several lighter cotton layers in yellows and warm whites, and one small blanket tucked under the pillow that is noticeably softer and smaller than the rest — the kind that gets kept close rather than decorative. The layers have been arranged and re-arranged so many times they no longer lay quite flat.
+
+roomzone detail futon/pillows = There are more pillows here than the futon strictly needs. Several are bolster-shaped, useful for positioning. Others are simply comfort — a small round pillow near the center with a slight depression in it from being held or slept against. One pillow near the wall has a yellow pillowcase with a small embroidered detail at the hem: a tiny bell, stitched in gold thread.
+
+roomzone detail futon/trough = Against the wall beside the futon, a \|wfeeding trough\|n of clean pale wood sits at floor level. It is sized to be used from a kneeling or prone position comfortably. The interior is smooth and shows the patina of regular use — the grain worn open at the center in the pattern that comes from repeated cleaning. Beside it, a \|cfaucet and hose\|n extend from the wall with an \|wadjustable shower head\|n at the end, the hose long enough to reach the trough or beyond.
+
+roomzone detail collar_wall/collar = The \|wcollar\|n is dark leather, thick enough to hold its shape when worn, lined on the inside with something softer — pale suede, worn to an even softness that speaks to extended wear. The \|csilver studs\|n are set in two rows. The \|mgolden bell\|n is sized to be heard, not ornamental — solid, with a clear tone rather than a tinny one. The engraving is precise, the letters even: \|mHelena's Momo\|n.
+
+roomzone detail collar_wall/bell = Lifting the bell, the weight of it is more than expected — this is not a decoration. The surface is warm from the light that reaches it through the open wall. The inside of the bell is polished to a mirror surface, and the clapper strikes clean and clear. The words on the front were engraved professionally, not scratched in.
+
+roomzone detail collar_wall/leash = The \|csteel leash\|n is made of small, close-linked chain — the kind that has some give in movement but does not stretch. Its length, measured from the wall anchor to the end clip, is enough to reach the trough and the faucet from the bed, with little more. The anchor point in the wall is set into a steel plate mounted flush with the stucco, fitted with a swivel so the chain does not bind.
+
+roomzone detail pillory/hardware = The pillory's neck-and-wrist board is a single piece of smooth oak, the edges rounded rather than squared — it was built with the understanding that it would be worn for more than a moment. The steel bolt that locks it closed is a quarter-turn mechanism, fast to operate. The vertical track allows the entire board to be positioned anywhere from floor level to a height that requires standing on tiptoe, and the tilt mechanism at the base can angle the whole frame forward, shifting weight.
+
+roomzone detail pillory/milking_machine = The \|mmilking machine\|n in the base cabinet is a purpose-built unit: four \|mcups\|n on flexible hoses connected to a quiet pump, a set of small glass collection bottles in a rack, a pressure-adjustment dial on the side marked in unmarked increments from 1 to 10. The tin of \|wskin lotion\|n beside it has a handwritten label — the lotion inside is unscented. The cups themselves are sized for comfort rather than efficiency.
+
+roomzone detail tack_wall/harnesses = The \|wharnesses\|n range from a simple chest piece in black to a full-body configuration in deep purple that includes leg loops, a chest band, and two D-rings at the back for attachment points. All of them are supple, the buckles set without resistance. The smallest harness on the rack is fitted for someone slight.
+
+roomzone detail tack_wall/bridles = Three \|wbridles\|n hang in a row, each in the same purple-and-black coloring as the harnesses. They are fitted with \|csteel rings\|n at the bit and cheek positions, and soft padding at the crown. The leftmost bridle has a small brass charm clipped to one cheek strap — a tiny horseshoe, the kind of thing added personally rather than purchased.
+
+roomzone detail tack_wall/crop = The \|wcrop\|n is standard length, with a loop handle and a flat leather keeper at the tip. It is the most worn item on the wall — the handle leather compressed and darkened in the grip zone, the keeper at the tip showing the small scuffing that comes from use rather than display. It hangs by its loop, unhurried.
+
+roomzone detail bench_pedestal/bench = The \|wadjustable bench\|n is padded in dark vinyl that has taken on the permanent impression of kneeling weight — the surface is slightly compressed at the knee position, the vinyl there a shade duller than the rest from repeated contact. The adjustment lever on the side is set and has not moved; whatever height this is, it is the height that is used.
+
+roomzone detail bench_pedestal/pedestal = The \|wpedestal\|n is a simple turned column of wood, waist-high, with a flat top from which a flexible steel stem rises, the \|mfeather\|n — long, pale, from something large — mounted at the tip. The stem can be angled. The feather is clean and intact, not a single barb disturbed. It has never been used carelessly.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study futon = The depression in the center of the futon is not the kind that comes from sitting — it is the specific impression of a body curled on its side, and it is always there, regardless of whether the blankets have been smoothed.
+
+roomzone study futon = The small embroidered pillow near the wall smells very faintly of honeysuckle and something warmer. It has been held against a face more than it has been slept on.
+
+roomzone study futon = The feeding trough beside the bed has been cleaned recently, but the wood at the center still shows a faint ring-stain from repeated filling — the kind of mark that cleaning maintains rather than removes.
+
+roomzone study collar_wall = The leash chain has a slight kink about two-thirds of the way along its length — the kind of permanent set that forms in chain that has been pulled against repeatedly at that point.
+
+roomzone study collar_wall = The collar's inner lining is worn most at two points: the back of the neck, and the left side. Someone wears it tilted slightly, or turns their head a preferred direction.
+
+roomzone study pillory = The oak board of the pillory has been sanded at the edges more than once — there are faint concentric arcs along the inside curve where a sanding block worked the edge smooth again after use had roughened it.
+
+roomzone study pillory = The lotion tin in the milking cabinet has no lid-ring residue — it is opened, used, and closed cleanly every time. This suggests care rather than habit.
+
+roomzone study tack_wall = The rope coils have been re-coiled by the same hand so many times that they hold the pattern without a tie. The inner coil of each retains a slight body-heat warmth that dissipates slowly.
+
+roomzone study tack_wall = The small brass horseshoe on the bridle cheek strap has been polished more recently than the bridle itself. Someone keeps it bright.
+
+roomzone study bench_pedestal = The bench's adjustment lever is slightly sticky from a lubricant that has dried in the set position — it has not been moved in a long time, which means this height is always right.
+
+roomzone study bench_pedestal = The feather on the pedestal has a faint trace of motion at its tip when the breeze from the southern wall reaches it — enough to move, not enough to disturb.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable collar_wall
+roomzone inscribe/enable futon
+
+
+-- STEP 7: Mechanic items --
+
+-- Futon: lying surface, capacity 2 --
+@create Futon Mechanic:typeclasses.seat_mechanic.SeatMechanic
+@set Futon Mechanic/capacity = 2
+@set Futon Mechanic/label = the futon
+@set Futon Mechanic/position = lying
+@set Futon Mechanic/allow_lap = 0
+use Futon Mechanic on futon
+
+-- Collar/wall restraint: the leash and collar anchored to the wall --
+@create Collar Leash Mechanic:typeclasses.restrain_mechanic.RestrainMechanic
+@set Collar Leash Mechanic/capacity = 1
+@set Collar Leash Mechanic/label = Momo's collar
+@set Collar Leash Mechanic/blocker_msg = The leash keeps you at the wall.
+use Collar Leash Mechanic on collar_wall
+
+-- Pillory restraint --
+@create Pillory Mechanic:typeclasses.restrain_mechanic.RestrainMechanic
+@set Pillory Mechanic/capacity = 1
+@set Pillory Mechanic/label = the pillory
+@set Pillory Mechanic/blocker_msg = The pillory holds your neck and hands fast.
+use Pillory Mechanic on pillory
+
+-- Bench: kneeling surface, capacity 1 --
+@create Bench Mechanic:typeclasses.seat_mechanic.SeatMechanic
+@set Bench Mechanic/capacity = 1
+@set Bench Mechanic/label = the bench
+@set Bench Mechanic/position = kneeling
+@set Bench Mechanic/allow_lap = 0
+use Bench Mechanic on bench_pedestal
+
+-- NOTE: Milking machine (dairy mechanic) is present in the room description and the pillory zone --
+-- but the DairyMechanic typeclass does not exist yet. Do not create it here. --
+-- When implemented, it should be installed on the pillory zone and reference the milking_machine detail. --
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle futon/blankets = You pull the top blanket back and find the layers underneath in exactly the order they have always been — the heavy knit throw closest to the mattress, the lighter ones above, and that small soft blanket tucked at the pillow. The whole pile gives under your hands like something that knows how to hold a person. The warmth that comes up from the center of the bed is not residual heat from the day. It is the specific warmth of something that has been slept in recently, and will be again.
+
+roomzone handle collar_wall/collar = You take the collar from its hanging position and it settles into your hands with a weight that is denser than it looks — the leather is thick, the studs solid silver, nothing hollow about any of it. The inside lining is a soft suede that gives slightly under a fingertip. You turn it to the bell, and even the small motion of lifting sets it ringing — clear, light, carrying across the room. The engraving faces outward, the letters catching light: \|mHelena's Momo\|n. You hold it for a moment. It is clearly not a prop.
+
+roomzone handle collar_wall/bell = You cup the bell in your palm and it stops ringing immediately, the sound cut off clean. The metal is warm. You release it and it swings on its ring, finding its note again almost at once — one clean chime, then silence, then the faint continuation of the tone in the air longer than you expect. The bell was made to be heard.
+
+roomzone handle pillory/hardware = You set your hands on the pillory board and feel the smoothness of it — the kind that only comes from the specific friction of skin over wood, over and over, until the wood polishes itself to the shape of contact. The bolt that closes it operates with one quarter-turn, simple enough to manage with one hand. You run your thumb along the inside edge of the neck slot, and the curve is right: not too tight, not loose. Someone worked this until it fit correctly. You stand in front of it and understand very clearly what it is designed to do.
+
+roomzone handle tack_wall/crop = The crop comes off its hook with the particular feel of a handle that has been worn to fit a grip — the leather compressed just right in the palm zone, the balance forward-heavy the way a working crop should be. You turn it over. The keeper at the tip shows the small scuff-marks of use, nothing dramatic, everything purposeful. You let it rest across your open palm and the weight is familiar in the way that functional things are familiar. It goes back on its hook without a sound.
+
+roomzone handle bench_pedestal/bench = You kneel onto the bench and the height is right immediately — the pressure distributed across the knees correctly, the angle of the hips set forward by the slope of the padding. The vinyl is cool at first and then not. The adjustment lever is within reach but you do not touch it. Whatever height this is, it is the height that is used, and you stay at it for a moment, aware of exactly where the pillory would be in relation to you from here.
+
+roomzone handle bench_pedestal/pedestal = You move the pedestal's feather stem slightly, tilting it, and the feather arcs through the air in a slow, deliberate curve. Even the motion of setting it back to center is enough: the tip of the feather brushes the back of your hand in passing, and the contact is so light it barely registers as touch, which is exactly the point. You step back. The feather resettles on its own, turning in the air with the patience of something that knows it will be used eventually.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add \|xThe golden bell above the futon chimes once, then settles — the breeze from the meadow finding it briefly before moving on.\|n
+
+rambient/add \|xThe scent of honeysuckle strengthens for a moment as a gust crosses the low southern wall, then fades back to the warm straw underneath.\|n
+
+rambient/add \|xThe leash chain shifts along the wall with a faint sound — metal against stucco, less than a breath.\|n
+
+rambient/add \|xThe light through the open southern wall moves across the floor as something passes the tree at the meadow's edge.\|n
+
+rambient/add \|xThe feather on the pedestal turns in a slow arc as the room's air shifts, the tip describing a small circle before going still again.\|n
+
+rambient/add \|xFrom somewhere in the direction of the brook, a bird calls twice and does not repeat itself.\|n
+
+rambient/add \|xThe leather smell from the eastern wall carries across the room on a cross-draft — clean oil and worked hide, brief and distinct.\|n
+
+rambient/add \|xA pillow on the futon shifts imperceptibly, the stack settling under its own weight in the warm afternoon air.\|n

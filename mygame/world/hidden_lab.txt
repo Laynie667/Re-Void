@@ -1,0 +1,167 @@
+== Helena's Log Cabin - Hidden Laboratory ==
+== Paste these commands in order while standing in the room ==
+== Exits: east -> S.I.D.M.A.U. | west -> Garden of Knowledge | up -> Helena's Room ==
+
+-- STEP 1: Room Description --
+
+@desc here = \|yHelena's Hidden Laboratory\|n/\|xThe trap door above is a memory by the time you reach the bottom of the spiral stair — the rough-hewn stone giving way without ceremony to cold tile, cream plaster, and the unblinking efficiency of a room that has been used.\|n The \|wlaboratory\|n is large, and the orange-tinged light of the sconces does not warm it. \|xThere is a smell here: antiseptic uppermost, clinical and flat, but underneath something organic and harder to name — the kind of smell a room acquires from sustained occupation and sustained purpose.\|n//\|x{zone:table}\|n//\|x{zone:cross}\|n//\|x{zone:pillory}\|n//\|x{zone:rack}\|n//\|x{zone:shelves}\|n//\|x{zone:mirror}\|n
+
+
+-- STEP 2: Create Zones --
+
+roomzone add table
+roomzone add cross
+roomzone add pillory
+roomzone add rack
+roomzone add shelves
+roomzone add mirror
+
+
+-- STEP 3: Zone Descriptions --
+
+roomzone desc table = Centered in the room as if by deliberate declaration, the \|woperating table\|n is \|ccold stainless steel\|n — the kind that holds temperature and does not release it. \|xIt is fitted along its sides and at wrist and ankle with \|wleather-lined restraints\|n, the hardware surgical-grade, the leather worn to softness from use. A \|wsmaller instrument table\|n stands to its immediate right, close enough to reach without a step, its surface arranged with \|wpristine blades\|n and \|wmedical tools\|n in a line that is meticulous to the point of ceremony.\|n The layout is not random. Whoever set this up knows exactly what they intend.
+
+roomzone desc cross = The \|wSt. Andrew's cross\|n stands against the wall with the particular authority of something both ancient in concept and expensive in execution. \|xIt is heavy timber — dark, finished to a near-black — standing nearly two meters at its tallest point, its diagonal arms spread wide at the upper corners, the lower ones braced and weighted.\|n \|wD-ring anchors\|n are set at wrists, elbows, waist, knees, and ankles, each fitted with \|wpadded leather cuffs\|n that have been buckled and unbuckled enough times to acquire a memory of the shape they most often hold. \|xA \|wsmall hook\|n at hip height on the left side holds a coil of rope — not stored here casually, but returned to this place specifically, every time.\|n
+
+roomzone desc pillory = The \|wpillory\|n is old wood — genuinely old, not decorative-old — standing waist-height on a reinforced base that keeps it from shifting under load. \|xThe hinged upper board, when lowered, locks the \|wneck\|n and both \|wwrists\|n into three smooth apertures, and a \|wmodern pin-and-clasp mechanism\|n replaces whatever original lock it may once have had.\|n The wood around the neck hole and wrist holes is worn to a near-polish where skin has rested against it, over and over, in the same places. \|xIt smells faintly of oil — maintained, not neglected.\|n
+
+roomzone desc rack = The \|wrack\|n occupies its corner with the gravity of something that takes up more psychological space than its footprint suggests. \|xIt is purpose-built rather than antique: \|wheavy timber\|n on a steel frame, with \|wshackle anchors\|n set into each corner on adjustable tracks — the spread is variable, the tension adjustable by a \|whand-crank assembly\|n bolted to the lower frame.\|n The shackles themselves are \|csteel cuffs\|n lined with fleece, the contrast between the cold metal and the soft lining deliberate. \|xAt full extension the frame stretches a body to its geometry's limit, and the wear pattern on the crank handle makes clear this setting is not merely theoretical.\|n
+
+roomzone desc shelves = Three walls of \|wshelving, cabinetry, and racks\|n hold the room's inventory with the orderliness of a professional's kit. \|xThere are \|wwhips\|n — single-tail, flogger, crop, cane — hung in a row with the tails down, each labeled by a small tag at the handle. Below them, \|wrestraint hardware\|n in coiled and folded array: rope, chain, zip-ties in a sealed case, leather straps of varying width, a row of \|wcollars\|n ascending from slender to substantial.\|n \|wBottles and jars\|n occupy a recessed middle shelf — some pharmaceutical in label, some unlabeled, contents ranging from clear to amber — alongside \|welectric implements\|n with their attendant leads and controls, and a sealed tray of \|wsurgical-grade implants\|n whose specifics are not immediately legible.\|n \|xA locked glass cabinet holds the items that require a key.\|n
+
+roomzone desc mirror = The \|wone-way mirror\|n occupies the full width of the fourth wall, floor-to-ceiling, fitted into a frame of the same cream plaster as the surrounding walls so that at a glance it reads almost as a window into a lit room. \|xBeyond it: a cell fitted to suggest the interior of a \|wbarnyard stall\|n — rough-hewn planks for one wall, a mat of artificial straw on the floor, a \|wlow trough\|n, a \|wsingle hanging bulb\|n — the illusion of livestock enclosure applied to a human space with the precision of someone who has thought carefully about what the detail accomplishes.\|n From this side the one-way glass reflects the laboratory back at you with a faint blue tint. From the other side, it shows nothing but a wall.
+
+
+-- STEP 4: Zone Details --
+
+roomzone detail table/surface = The steel surface of the \|woperating table\|n is seamless and slightly concave along its length — a drain at the foot end, currently dry, connects to plumbing recessed into the floor. \|xThe table tilts and adjusts via a foot pedal at the base, the mechanism smooth from regular adjustment.\|n
+
+roomzone detail table/restraints = The \|wrestraints\|n are four at the wrists and ankles, plus a broader \|wwaist strap\|n and a narrow \|wthroat band\|n that sits at the neck without constricting unless the occupant moves against it. \|xThe leather is dark from use and has been treated to stay supple — the difference between equipment maintained by someone who uses it and equipment maintained for show.\|n
+
+roomzone detail table/instruments = The \|winstrument table\|n holds a \|wscalpel\|n, two \|wneedles\|n, a \|wretractor\|n, \|wforceps\|n, and a sealed roll of \|wsurgical suture\|n — arranged in order of likely use, smallest blade to largest, left to right. \|xA narrow tray at the edge holds \|wgauze pads\|n and a brown glass bottle of something astringent. The layout is not approximate; it has been placed this way many times until this became the only configuration.\|n
+
+roomzone detail table/stains = \|xClose examination of the lower leather restraint — right wrist — reveals a faint, dark staining where the buckle meets the strap, the kind left by prolonged pressure over prolonged time.\|n There are similar marks at the ankle cuffs, symmetrical. \|xWhatever pressure was applied here was applied both sides, both ends, simultaneously.\|n
+
+roomzone detail cross/hardware = The \|wD-rings\|n are welded, not screwed — the fixings at each anchor point are recessed into the timber and backed with a steel plate on the reverse, the kind of construction that accommodates weight and dynamic force without flex. \|xThe bolt pattern at the base shows reinforcement added after the original build: two additional lag bolts, larger gauge, driven in at an angle for shear resistance.\|n
+
+roomzone detail cross/cuffs = The \|wleather cuffs\|n are double-layered: a firm outer shell and a softer lining, with a quick-release tab at each that can be worked by the wearer only with significant difficulty and in only one configuration of the hands. \|xThe cuffs at wrist height are more worn than those at ankle height. The elbows and knees, least worn of all.\|n
+
+roomzone detail cross/rope = The coiled \|wrope\|n at the cross's hip-hook is natural fiber — linen or hemp — wound in a figure-eight pattern and secured with a half-hitch. \|xThe ends have been finished and are not frayed; this is rope that belongs to someone who knows rope.\|n
+
+roomzone detail pillory/wood = The \|wpillory wood\|n is oak — the grain is tight and the surface at the apertures has been sanded to remove roughness, then worn to the smoothness that only extended skin contact produces. \|xThe lower board shows faint impressions at both wrist positions: shallow but legible, the palimpsest of many hours.\|n
+
+roomzone detail pillory/lock = The \|wpin-and-clasp mechanism\|n is a modern addition: a steel pin that drops through aligned holes in the upper and lower boards and locks with a half-turn, operated by a small key on a hook at the side of the room. \|xThe lock is scratched where the key has been inserted quickly, in the dark, or without attention. There are a lot of scratches.\|n
+
+roomzone detail rack/crank = The \|whand-crank assembly\|n operates through a ratchet mechanism with a numbered tension gauge set into the frame — \|xthe gauge reads in increments from zero to ten, and the wear on the handle grip is heaviest between four and seven.\|n A safety pin can arrest the crank at any setting; the pin is present in the frame but has been bent slightly from use as a stopper rather than a safety measure.
+
+roomzone detail rack/shackles = The \|wfleece-lined steel cuffs\|n at each corner are hinged and lock with a bolt throw that requires a key; the keys are on a ring mounted to the frame at the foot end, within easy reach of someone standing at the crank. \|xThe fleece lining at the ankle shackles is more compressed than at the wrists — either more weight, or more pulling.\|n
+
+roomzone detail shelves/whips = The \|wwhips\|n are hung with their tails down, and the tags at each handle identify type and maker in small, careful handwriting. \|xThe single-tail shows the most wear at the handle wrap; the flogger's falls are soft and slightly separated, the way leather becomes after repeated use and regular conditioning.\|n
+
+roomzone detail shelves/bottles = The \|wbottles and jars\|n include: a labeled pharmaceutical solution in saline, a dark-amber oil without marking, a clear fluid in a sealed pharmaceutical bottle labeled only with a date two months prior, and several small unmarked vials with crimped metal caps. \|xThe oil shows fingerprints on the glass — handled often, not wiped down.\|n
+
+roomzone detail shelves/electrics = The \|welectric implements\|n include a \|wTENS unit\|n with its electrode pads in a sealed sleeve, a \|wwand-style device\|n in a hard case with a set of interchangeable glass attachments, and a compact unit with a dial and two output leads that has no visible branding. \|xAll are charged; indicator lights show green. None of them have been put away without being serviced first.\|n
+
+roomzone detail shelves/cabinet = The \|wlocked glass cabinet\|n holds its contents behind half-inch glass: \|wsurgical implements\|n, a \|wpneumatic piercing device\|n, two sealed packages containing what appear to be implantable hardware, and a bound case whose label reads only a string of numbers. \|xThe lock is a keyed deadbolt. The glass shows no fingerprints on the outside, but the inside is smudged along the bottom shelf edge.\|n
+
+roomzone detail mirror/glass = The \|wone-way mirror\|n is thick — plate glass — and the frame is set flush with the wall so that from the laboratory side it appears simply as a large mirror with a cold tint. \|xAt the right angle, in the right light, shapes can be made out in the cell beyond. At most angles, it is only your own reflection.\|n
+
+roomzone detail mirror/cell = The \|wcell\|n beyond the mirror is roughly three meters by three — large enough, no more. The \|wstraw mat\|n on the floor is artificial, clean to a degree inconsistent with how it has been used. The \|wtrough\|n is ceramic, set low, fitted with a small drain. A \|wclip-anchor\|n set into the rear wall accommodates a lead. \|xThe single hanging bulb is on a dimmer, controlled from this side of the glass.\|n
+
+roomzone detail mirror/dimmer = A \|wdimmer switch\|n and a \|wsound panel\|n are recessed into the laboratory wall immediately beside the mirror's right edge — small, labeled in the same careful handwriting as the whip tags. \|xThe sound panel has two inputs: one for monitoring, one for broadcast. The monitoring feed is always live.\|n
+
+
+-- STEP 5: Zone Study Details --
+
+roomzone study table = The drain at the foot of the operating table is cleaner than the rest of the room — scrubbed recently, the grout around it lighter than the surrounding tile.
+roomzone study table = The wrist restraint on the right side has been rebuckled at a different hole than the left: whoever uses this table most does not have perfectly symmetrical wrists, and the difference has been calibrated over time.
+roomzone study table = The instrument table is on wheels, but the wheel locks are engaged. They are always engaged. The wheels show no use-wear at all — it has never been moved.
+
+roomzone study cross = The rope on the hook is not always the same rope: there are faint impressions from at least two different coil diameters on the hook itself, and the current rope is slightly thinner than the impression it rests in.
+roomzone study cross = The timber at the center of the cross, where two bodies meet at the crossing point, is slightly warmer than the surrounding wood — a phenomenon without obvious mechanical cause.
+roomzone study cross = One of the quick-release tabs on the left wrist cuff has been sewn back into place: the thread is newer than the cuff, and the stitch is confident, close, and done by someone who does not fumble with a needle.
+
+roomzone study pillory = The top board's hinge has been oiled so recently that a finger drawn along it comes away with a faint residue. The pin mechanism shows no such attention — its scratches are un-oiled, deliberate.
+roomzone study pillory = The height of the pillory places the neck aperture at a specific height: someone measured it for someone.
+roomzone study pillory = Faint marks on the base board suggest the pillory has been turned — rotated on its base to face different walls. The arc of the marks describes a quarter circle toward the mirror.
+
+roomzone study rack = The tension gauge's needle rests at four when at rest. Someone set it there and left it. It is not the zero-point; it is the preferred starting setting.
+roomzone study rack = The fleece at the left ankle shackle is more compressed on the inner surface — the medial side — than the outer. Consistent with a specific turning of the foot under tension.
+roomzone study rack = A single dark hair is caught in the wrist shackle hinge on the upper right corner. It is long.
+
+roomzone study shelves = Two of the whip tags have been rewritten — the old handwriting crossed out with a single line, the new entry written smaller and more precisely below it.
+roomzone study shelves = The pharmaceutical bottle dated two months ago has been opened: the foil seal is broken and pressed back into place, which does not reseal it, but almost hides that it has been opened.
+roomzone study shelves = The locked cabinet's key is not on the hook beside the pillory or anywhere visible in the room. It is not here.
+
+roomzone study mirror = The monitoring feed from the cell is set to a low hum that blends with the room's ambient electrical noise — easy to miss as the sound of the room itself.
+roomzone study mirror = A smudge on the laboratory side of the mirror, at approximately chest height and slightly left of center, is a handprint — palm flat, fingers spread.
+roomzone study mirror = The dimmer for the cell's bulb has a small piece of tape over the upper end of its travel. The bulb cannot be turned fully on from this side.
+
+
+-- STEP 6: Zone Inscriptions --
+
+roomzone inscribe/enable mirror
+
+
+-- STEP 7: Mechanic Items --
+
+@create Operating Table:typeclasses.seat_mechanic.SeatMechanic
+@set Operating Table/capacity = 1
+@set Operating Table/label = the operating table
+@set Operating Table/position = lying
+@set Operating Table/allow_lap = 0
+use Operating Table on table
+
+@create St. Andrew's Cross:typeclasses.restrain_mechanic.RestrainMechanic
+@set St. Andrew's Cross/capacity = 1
+@set St. Andrew's Cross/label = the St. Andrew's cross
+@set St. Andrew's Cross/blocker_msg = The cross holds you spread and immobile — wrists and ankles fixed, the timber unyielding at your back.
+use St. Andrew's Cross on cross
+
+@create Pillory:typeclasses.restrain_mechanic.RestrainMechanic
+@set Pillory/capacity = 1
+@set Pillory/label = the pillory
+@set Pillory/blocker_msg = The pillory holds your neck and wrists fast, the upper board heavy against the back of your neck.
+use Pillory on pillory
+
+@create Rack:typeclasses.restrain_mechanic.RestrainMechanic
+@set Rack/capacity = 1
+@set Rack/label = the rack
+@set Rack/blocker_msg = The rack's shackles have you stretched at its corners — the crank has seen to that, and there is no give.
+use Rack on rack
+
+
+-- STEP 8: Handle Interactions --
+
+roomzone handle table/restraints = The leather is soft in a way that new leather is not — worn in, the surface almost skin-like, the buckle teeth smooth from having been engaged thousands of times in the same holes. You lay a hand flat on the table surface and the cold moves through your palm with immediate, clinical authority. The restraints do not require force to apply; they are designed for compliance and for its opposite in equal measure. The throat band sits across your fingers like a question. The wrist cuffs are sized for a specific wrist — not yours, or maybe exactly yours.
+
+roomzone handle table/instruments = The instruments on the side table are arranged in a line so precise it reads as ritual. You do not touch them. The scalpel's handle catches the orange light from the sconces and holds it; the blade has been honed recently and the edge is not visible so much as implied. The forceps are warm from sitting under the lights — the only warm metal in the room. Picking them up and setting them back down in the wrong position feels, somehow, inadvisable.
+
+roomzone handle cross/cuffs = The cuffs at wrist height open easily — the design is meant to be applied quickly — and close around your wrist with a firmness that is not quite tight and not quite comfortable. The quick-release tab is exactly where they told you it would be, and working it one-handed requires a specific configuration of the fingers that is harder than it should be. The D-ring at the wrist is cold steel and does not shift when you test it. You test it twice. The timber at your back is solid in the way that things built to receive force are solid: not decorating solidity, actually solid.
+
+roomzone handle pillory/wood = The apertures are smooth against your neck and wrists — the wood worn to something closer to stone than timber, the grain polished away by the particular friction of skin over years. When the upper board comes down, the fit is close without being painful, and the pin drops into place with a sound that carries no ambiguity. Your hands hang below the board, palms forward, the position not uncomfortable so much as absolute. The room looks different from this height and this angle. The mirror is directly in your line of sight.
+
+roomzone handle rack/crank = The crank moves smoothly — the ratchet clicks in a slow, deliberate rhythm, and the gauge needle climbs one increment per three turns of the handle. You can feel the tension in the mechanism before you can see it change. The fleece in the shackles compresses with a faint sound when the track takes up slack. At four on the gauge, the pull is insistent. At five, it is a conversation. The safety pin sits in its socket, and you note where it is.
+
+roomzone handle shelves/whips = The single-tail comes off its hook with a weight that clarifies its purpose immediately — the balance is toward the handle, the fall coiled with the muscle memory of someone who knows how to lay it down. You hold it for a moment without moving. The flogger's falls fan open under their own weight, the leather soft and split at the tips in the way of something well-used. Each implement on this wall is what it is without apology. You return it to its hook. The tag swings twice, then settles.
+
+roomzone handle mirror/dimmer = The dimmer moves under your thumb with immediate response — the cell's single bulb brightens by slow degrees, and the shapes beyond the glass resolve: the mat, the trough, the clip-anchor on the wall. At full travel — minus the tape stop — the light in the cell is adequate but not generous. Dim enough for shadow, bright enough to see what the shadow falls on. You press the monitor input on the sound panel and the room's silence in the cell comes through the speaker as a specific, occupied silence, the kind a space holds when it has been recently used and not yet emptied of what happened there.
+
+
+-- STEP 9: Ambient Lines --
+
+rambient/add \|xThe sconces at the stairwell base flicker once — brief, orange — and return to their steady glow. The light never quite reaches the room's corners.\|n
+
+rambient/add \|xSomething on the instrument table shifts with a sound like a single note struck on metal: a blade settling against its neighbor, or the table responding to a change in temperature.\|n
+
+rambient/add \|xThe antiseptic smell sharpens for a moment, then levels. It is always present but not always equally present.\|n
+
+rambient/add \|xA faint sound from behind the mirror — nothing identifiable, possibly the cell's ventilation system, possibly not.\|n
+
+rambient/add \|xThe rack's crank makes a single, quiet click, the ratchet releasing a fraction of tension and re-engaging. Nothing has touched it.\|n
+
+rambient/add \|xThe light inside the cell beyond the mirror dims slightly, then returns. The dimmer switch has not moved.\|n
+
+rambient/add \|xThe single-tail on the shelf stirs — barely, a current of air from the stairwell above — and the tag at its handle turns once and is still.\|n
+
+rambient/add \|xThe cold of the tile conducts up from the floor with a consistency that makes the room feel like it is always exactly this temperature, always has been, always will be.\|n
