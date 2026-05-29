@@ -200,6 +200,24 @@ def _make_default_zone(intimate=False, visibility="look",
         "zone_type":        zone_type,
         "consent_required": consent_required,
 
+        # Details — keyed observations (like room zone details)
+        # Set with: zone detail <zone>/<key> = <text>
+        "details":          {},
+
+        # Study pool — discovered only via careful observation
+        # Set with: zone study <zone> = <observation>
+        "study_details":    [],
+
+        # Handle pool — verb-keyed interaction messages
+        # Set with: zone handle/add <zone>/<verb> = <message>
+        # Tokens: {actor}, {actor_s}, {actor_they}, {actor_them},
+        #         {actor_their}, {target}, {target_s}, {target_they},
+        #         {target_them}, {target_their}
+        "handle_details":   {},
+
+        # Mechanics — reserved for items installed onto this zone
+        "mechanics":        {},
+
         # Metadata
         "default":          True,
         "freeform":         False,

@@ -177,6 +177,19 @@ def _render_zone_target(char, target, zone_name, zone_data, deep=False):
             if has_mature:
                 lines.append(f"|x[interior] {interior}|n")
 
+    # Details hint — list available keys
+    details = zone_data.get("details", {}) or {}
+    if details:
+        keys = sorted(details.keys())
+        target_name_hint = (
+            target.db.rp_name if (hasattr(target.db, "rp_name")
+                                   and target.db.rp_name) else target.key
+        ).lower()
+        lines.append(
+            f"\n|x[details: {', '.join(keys)} — "
+            f"look {target_name_hint} {zone_name}/<key>]|n"
+        )
+
     return "\n".join(lines)
 
 
@@ -238,6 +251,153 @@ def _try_zone_target(char, args, deep=False):
             zone_data = {k: v for k, v in zone_data.items()}
 
         return _render_zone_target(char, target, matched_name, zone_data, deep=deep)
+
+    return None
+
+
+def _try_zone_detail_target(char, args, deep=False):
+    """
+    Try to interpret args as a character zone detail lookup.
+
+    Handles two forms:
+      '<target> <zone>/<key>'  — specific detail by zone and key
+      '<target> <key>'         — flat search across all zones' details
+
+    For flat search, if multiple zones have a matching key, shows a
+    numbered disambiguation list and asks the player to retype with
+    the zone prefix.
+
+    Returns:
+        str or None: Rendered detail output, or None if no match.
+    """
+    words = args.split()
+    if len(words) < 2:
+        return None
+
+    # ── Slash syntax: last word contains '/' ──────────────────────
+    last_word = words[-1]
+    if "/" in last_word:
+        target_str = " ".join(words[:-1])
+        zone_str, _, key_str = last_word.partition("/")
+        zone_str = zone_str.lower().replace("-", "_")
+        key_str  = key_str.lower().replace("-", "_")
+
+        target = char.search(target_str, quiet=True)
+        if isinstance(target, list):
+            target = target[0] if target else None
+        if not target:
+            return None
+
+        if hasattr(target, "_get_zones"):
+            zones = target._get_zones()
+        else:
+            zones = getattr(target.db, "zones", None) or {}
+
+        zone_data = zones.get(zone_str)
+        if not zone_data:
+            return None
+        if hasattr(zone_data, "items"):
+            zone_data = {k: v for k, v in zone_data.items()}
+
+        details = zone_data.get("details", {}) or {}
+        if hasattr(details, "items"):
+            details = dict(details)
+
+        detail_text = details.get(key_str)
+        if not detail_text:
+            for k, v in details.items():
+                if k.startswith(key_str):
+                    detail_text = v
+                    key_str = k
+                    break
+
+        if not detail_text:
+            return None
+
+        target_name = (
+            target.db.rp_name if (hasattr(target.db, "rp_name")
+                                   and target.db.rp_name) else target.key
+        )
+        zone_display = zone_str.replace("_", " ")
+        key_display  = key_str.replace("_", " ")
+        lines = [
+            f"|w{target_name}|n — "
+            f"|x{zone_display}|n / |x{key_display}|n",
+            "|w" + "─" * 36 + "|n",
+            detail_text,
+        ]
+        return "\n".join(lines)
+
+    # ── Flat search: <target> <key> ────────────────────────────────
+    # Try splitting at each word boundary (1-word target first)
+    for split_at in range(1, len(words)):
+        target_str = " ".join(words[:split_at])
+        key_str    = "_".join(words[split_at:]).lower().replace("-", "_")
+
+        target = char.search(target_str, quiet=True)
+        if isinstance(target, list):
+            target = target[0] if target else None
+        if not target:
+            continue
+
+        if hasattr(target, "_get_zones"):
+            zones = target._get_zones()
+        else:
+            zones = getattr(target.db, "zones", None) or {}
+
+        matches = []
+        for zone_name, zone_data in zones.items():
+            if not hasattr(zone_data, "get"):
+                continue
+            details = zone_data.get("details", {}) or {}
+            if hasattr(details, "items"):
+                details = dict(details)
+            # Exact match first, then prefix
+            if key_str in details:
+                matches.append((zone_name, key_str, details[key_str]))
+            else:
+                for k, v in details.items():
+                    if k.startswith(key_str):
+                        matches.append((zone_name, k, v))
+                        break
+
+        if len(matches) == 1:
+            zone_name, k, v = matches[0]
+            target_name = (
+                target.db.rp_name if (hasattr(target.db, "rp_name")
+                                       and target.db.rp_name) else target.key
+            )
+            zone_display = zone_name.replace("_", " ")
+            key_display  = k.replace("_", " ")
+            lines = [
+                f"|w{target_name}|n — "
+                f"|x{zone_display}|n / |x{key_display}|n",
+                "|w" + "─" * 36 + "|n",
+                v,
+            ]
+            return "\n".join(lines)
+
+        elif len(matches) > 1:
+            target_name = (
+                target.db.rp_name if (hasattr(target.db, "rp_name")
+                                       and target.db.rp_name) else target.key
+            )
+            tname_lower = target_name.lower()
+            lines = [
+                f"|wMultiple matches for '{key_str}' on "
+                f"{target_name}:|n"
+            ]
+            for i, (zone_name, k, _) in enumerate(matches, 1):
+                lines.append(f"  {i}. {zone_name}/{k}")
+            lines.append(
+                f"|xRetype with zone: look {tname_lower} "
+                f"{matches[0][0]}/{key_str}|n"
+            )
+            return "\n".join(lines)
+
+        # Found the target but no detail match — don't try longer splits
+        if target:
+            break
 
     return None
 
@@ -1114,6 +1274,13 @@ class CmdLook(MuxCommand):
                 char.msg("\n" + zone_output)
                 return
 
+            # Try character zone detail lookup: '<target> <zone>/<key>'
+            # or flat search: '<target> <key>'
+            detail_output = _try_zone_detail_target(char, args, deep=deep)
+            if detail_output is not None:
+                char.msg("\n" + detail_output)
+                return
+
             # Try room zone name or zone detail lookup
             room_output = _try_room_zone_or_detail(char, args)
             if room_output is not None:
@@ -1202,6 +1369,12 @@ class CmdExamine(MuxCommand):
             zone_output = _try_zone_target(char, args, deep=True)
             if zone_output is not None:
                 char.msg("\n" + zone_output)
+                return
+
+            # Try character zone detail lookup
+            detail_output = _try_zone_detail_target(char, args, deep=True)
+            if detail_output is not None:
+                char.msg("\n" + detail_output)
                 return
 
             # Try room zone name or zone detail lookup

@@ -931,6 +931,7 @@ class CmdZone(MuxCommand):
         zone show <name>                        — zone detail
         zone set <name>                         — open editor for nude desc
         zone set <name> = <description>         — set nude desc inline
+        zone desc <name> = <description>        — alias for zone set
         zone interior <name>                    — open editor for interior desc
         zone interior <name> = <description>    — set interior desc (orifice zones)
         zone add <name>                         — add root freeform zone
@@ -947,6 +948,18 @@ class CmdZone(MuxCommand):
         zone ambient <name> remove <#>          — remove ambient line
         zone reset <name>                       — clear zone desc
 
+        zone detail <zone>/<key> = <text>       — add/set a detail
+        zone detail/list <zone>                 — list details for a zone
+        zone detail/rm <zone>/<key>             — remove a detail
+
+        zone study <zone> = <observation>       — add a study observation to pool
+        zone study/list <zone>                  — list all study observations
+        zone study/rm <zone> <#>                — remove study observation by number
+
+        zone handle/add <zone>/<verb> = <msg>   — add message to verb's interaction pool
+        zone handle/list <zone>                 — list all verbs and messages
+        zone handle/rm <zone>/<verb> <#>        — remove message by number
+
     Zone types: surface / orifice / both / attachment
     Visibility: look / examine / deep / proximity / consent / hidden
 
@@ -955,9 +968,25 @@ class CmdZone(MuxCommand):
         zone add groin/vulva/labia type=both intimate
         zone add groin/anus type=orifice intimate
     Each parent in the path must already exist.
+
+    Handle message tokens (replace at output time):
+        {actor}        — the person doing the action (their rp_name)
+        {actor_s}      — actor's name with possessive ('s)
+        {actor_they}   — actor's subject pronoun (he/she/they)
+        {actor_them}   — actor's object pronoun (him/her/them)
+        {actor_their}  — actor's possessive pronoun (his/her/their)
+        {target}       — the person being interacted with
+        {target_s}     — target's name with possessive ('s)
+        {target_they}  — target's subject pronoun
+        {target_them}  — target's object pronoun
+        {target_their} — target's possessive pronoun
+
+    Example handle message:
+        zone handle/add neck/touch = {actor} traces a finger along
+        {target_s} neck.
     """
     key = "zone"
-    switch_options = ("cascade",)
+    switch_options = ("cascade", "rm", "add", "list")
     locks = "cmd:all()"
     help_category = "Character"
 
@@ -978,6 +1007,7 @@ class CmdZone(MuxCommand):
             "list":       self._zone_list,
             "show":       self._zone_show,
             "set":        self._zone_set,
+            "desc":       self._zone_set,        # alias for set
             "interior":   self._zone_interior,
             "add":        self._zone_add,
             "remove":     self._zone_remove,
@@ -987,6 +1017,9 @@ class CmdZone(MuxCommand):
             "order":      self._zone_order,
             "ambient":    self._zone_ambient,
             "reset":      self._zone_reset,
+            "detail":     self._zone_detail,
+            "study":      self._zone_study,
+            "handle":     self._zone_handle,
         }
 
         handler = dispatch.get(subcmd)
@@ -1784,6 +1817,385 @@ class CmdZone(MuxCommand):
         char.db.zones = zones
         self.msg(
             f"Zone |w{zone_name}|n nude description cleared."
+        )
+
+    # ----------------------------------------------------------------
+    # zone detail
+    # ----------------------------------------------------------------
+
+    def _zone_detail(self, char, args):
+        """
+        Manage zone details — keyed observations others can look up.
+
+        zone detail <zone>/<key> = <text>   — set/update
+        zone detail/list <zone>             — list all
+        zone detail/rm <zone>/<key>         — remove
+        """
+        switches = self.switches
+
+        # ── list ────────────────────────────────────────────────────
+        if "list" in switches:
+            zone_name = args.strip().lower().replace(" ", "_")
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(f"No zone named '{zone_name}'.")
+                return
+            details = zones[zone_name].get("details", {}) or {}
+            if not details:
+                self.msg(f"Zone |w{zone_name}|n has no details set.")
+                return
+            lines = [f"|wDetails on zone {zone_name}:|n"]
+            for k, v in sorted(details.items()):
+                preview = v[:60] + "..." if len(v) > 60 else v
+                lines.append(f"  |w{k}|n: {preview}")
+            lines.append(
+                f"\n|xView with: look <name> {zone_name}/<key>|n"
+            )
+            self.msg("\n".join(lines))
+            return
+
+        # ── rm ──────────────────────────────────────────────────────
+        if "rm" in switches:
+            if "/" not in args:
+                self.msg(
+                    "Usage: zone detail/rm <zone>/<key>"
+                )
+                return
+            zone_str, _, key_str = args.strip().partition("/")
+            zone_name = zone_str.strip().lower().replace(" ", "_")
+            key_name = key_str.strip().lower().replace(" ", "_")
+
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(f"No zone named '{zone_name}'.")
+                return
+            zone = zones[zone_name]
+            details = dict(zone.get("details", {}) or {})
+            if key_name not in details:
+                self.msg(
+                    f"No detail '{key_name}' on zone "
+                    f"'{zone_name}'."
+                )
+                return
+            del details[key_name]
+            zone["details"] = details
+            zones[zone_name] = zone
+            char.db.zones = zones
+            self.msg(
+                f"Detail |w{key_name}|n removed from zone "
+                f"|w{zone_name}|n."
+            )
+            return
+
+        # ── set (default) ────────────────────────────────────────────
+        if "=" not in args or "/" not in args.split("=", 1)[0]:
+            self.msg(
+                "Usage:\n"
+                "  zone detail <zone>/<key> = <text>\n"
+                "  zone detail/list <zone>\n"
+                "  zone detail/rm <zone>/<key>"
+            )
+            return
+
+        zone_key_part, _, text = args.partition("=")
+        zone_key_part = zone_key_part.strip()
+        text = text.strip()
+
+        if not text:
+            self.msg("Detail text cannot be empty.")
+            return
+
+        slash_pos = zone_key_part.index("/")
+        zone_name = zone_key_part[:slash_pos].strip().lower().replace(" ", "_")
+        key_name = zone_key_part[slash_pos + 1:].strip().lower().replace(" ", "_")
+
+        if not zone_name or not key_name:
+            self.msg("Usage: zone detail <zone>/<key> = <text>")
+            return
+
+        zones = char._get_zones()
+        if zone_name not in zones:
+            self.msg(
+                f"No zone named '{zone_name}'. "
+                f"Type 'zone list' to see all zones."
+            )
+            return
+
+        zone = zones[zone_name]
+        details = dict(zone.get("details", {}) or {})
+        details[key_name] = text
+        zone["details"] = details
+        zones[zone_name] = zone
+        char.db.zones = zones
+        self.msg(
+            f"Detail |w{key_name}|n set on zone |w{zone_name}|n.\n"
+            f"|xOthers can see it with: look <name> "
+            f"{zone_name}/{key_name}|n"
+        )
+
+    # ----------------------------------------------------------------
+    # zone study
+    # ----------------------------------------------------------------
+
+    def _zone_study(self, char, args):
+        """
+        Manage zone study observations — shown randomly when studied.
+
+        zone study <zone> = <observation>   — add to pool
+        zone study/list <zone>              — list all
+        zone study/rm <zone> <#>            — remove by number
+        """
+        switches = self.switches
+
+        # ── list ────────────────────────────────────────────────────
+        if "list" in switches:
+            zone_name = args.strip().lower().replace(" ", "_")
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(f"No zone named '{zone_name}'.")
+                return
+            study = zones[zone_name].get("study_details", []) or []
+            if not study:
+                self.msg(
+                    f"Zone |w{zone_name}|n has no study "
+                    f"observations set."
+                )
+                return
+            lines = [f"|wStudy pool for zone {zone_name}:|n"]
+            for i, obs in enumerate(study, 1):
+                lines.append(f"  {i}. {obs}")
+            self.msg("\n".join(lines))
+            return
+
+        # ── rm ──────────────────────────────────────────────────────
+        if "rm" in switches:
+            parts = args.strip().split(None, 1)
+            if len(parts) < 2:
+                self.msg("Usage: zone study/rm <zone> <#>")
+                return
+            zone_name = parts[0].lower().replace(" ", "_")
+            try:
+                idx = int(parts[1].strip()) - 1
+            except ValueError:
+                self.msg("Please provide a number.")
+                return
+
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(f"No zone named '{zone_name}'.")
+                return
+            zone = zones[zone_name]
+            study = list(zone.get("study_details", []) or [])
+            if idx < 0 or idx >= len(study):
+                self.msg(
+                    f"No entry #{idx + 1}. "
+                    f"Zone '{zone_name}' has "
+                    f"{len(study)} observation(s)."
+                )
+                return
+            removed = study.pop(idx)
+            zone["study_details"] = study
+            zones[zone_name] = zone
+            char.db.zones = zones
+            self.msg(f"Removed: {removed}")
+            return
+
+        # ── add (default) ────────────────────────────────────────────
+        if "=" not in args:
+            self.msg(
+                "Usage:\n"
+                "  zone study <zone> = <observation>\n"
+                "  zone study/list <zone>\n"
+                "  zone study/rm <zone> <#>"
+            )
+            return
+
+        zone_str, _, observation = args.partition("=")
+        zone_name = zone_str.strip().lower().replace(" ", "_")
+        observation = observation.strip()
+
+        if not zone_name or not observation:
+            self.msg("Usage: zone study <zone> = <observation>")
+            return
+
+        zones = char._get_zones()
+        if zone_name not in zones:
+            self.msg(
+                f"No zone named '{zone_name}'. "
+                f"Type 'zone list' to see all zones."
+            )
+            return
+
+        zone = zones[zone_name]
+        study = list(zone.get("study_details", []) or [])
+        study.append(observation)
+        zone["study_details"] = study
+        zones[zone_name] = zone
+        char.db.zones = zones
+        self.msg(
+            f"Study observation added to zone |w{zone_name}|n "
+            f"(#{len(study)})."
+        )
+
+    # ----------------------------------------------------------------
+    # zone handle
+    # ----------------------------------------------------------------
+
+    def _zone_handle(self, char, args):
+        """
+        Manage zone handle messages — triggered by zone interaction verbs.
+
+        zone handle/add <zone>/<verb> = <message>  — add to verb pool
+        zone handle/list <zone>                    — list all
+        zone handle/rm <zone>/<verb> <#>           — remove by number
+
+        Available verbs: touch, caress, grope, stroke, grab, squeeze,
+        kiss, bite, lick, taste, pull, pinch, nuzzle, hold, pet
+
+        Tokens usable in messages:
+          {actor}        name of the person acting
+          {actor_s}      possessive (e.g. "Kira's")
+          {actor_they}   subject pronoun (he/she/they)
+          {actor_them}   object pronoun (him/her/them)
+          {actor_their}  possessive pronoun (his/her/their)
+          {target}       name of the person being interacted with
+          {target_s}     target's possessive
+          {target_they}  target's subject pronoun
+          {target_them}  target's object pronoun
+          {target_their} target's possessive pronoun
+        """
+        switches = self.switches
+
+        # ── list ────────────────────────────────────────────────────
+        if "list" in switches:
+            zone_name = args.strip().lower().replace(" ", "_")
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(f"No zone named '{zone_name}'.")
+                return
+            handles = zones[zone_name].get("handle_details", {}) or {}
+            if not handles:
+                self.msg(
+                    f"Zone |w{zone_name}|n has no handle "
+                    f"messages set."
+                )
+                return
+            lines = [f"|wHandle messages for zone {zone_name}:|n"]
+            for verb, msgs in sorted(handles.items()):
+                lines.append(f"  |w{verb}|n ({len(msgs)} message(s)):")
+                for i, m in enumerate(msgs, 1):
+                    preview = m[:70] + "..." if len(m) > 70 else m
+                    lines.append(f"    {i}. {preview}")
+            self.msg("\n".join(lines))
+            return
+
+        # ── rm ──────────────────────────────────────────────────────
+        if "rm" in switches:
+            if "/" not in args:
+                self.msg(
+                    "Usage: zone handle/rm <zone>/<verb> <#>"
+                )
+                return
+            zone_verb_part, _, num_str = args.strip().rpartition(" ")
+            if "/" not in zone_verb_part:
+                self.msg(
+                    "Usage: zone handle/rm <zone>/<verb> <#>"
+                )
+                return
+            zone_str, _, verb_str = zone_verb_part.partition("/")
+            zone_name = zone_str.strip().lower().replace(" ", "_")
+            verb = verb_str.strip().lower()
+            try:
+                idx = int(num_str.strip()) - 1
+            except ValueError:
+                self.msg("Please provide a number.")
+                return
+
+            zones = char._get_zones()
+            if zone_name not in zones:
+                self.msg(f"No zone named '{zone_name}'.")
+                return
+            zone = zones[zone_name]
+            handles = dict(zone.get("handle_details", {}) or {})
+            msgs = list(handles.get(verb, []))
+            if not msgs:
+                self.msg(
+                    f"No handle messages for verb '{verb}' "
+                    f"on zone '{zone_name}'."
+                )
+                return
+            if idx < 0 or idx >= len(msgs):
+                self.msg(
+                    f"No entry #{idx + 1}. Verb '{verb}' "
+                    f"has {len(msgs)} message(s)."
+                )
+                return
+            removed = msgs.pop(idx)
+            if msgs:
+                handles[verb] = msgs
+            else:
+                del handles[verb]
+            zone["handle_details"] = handles
+            zones[zone_name] = zone
+            char.db.zones = zones
+            self.msg(f"Removed: {removed}")
+            return
+
+        # ── add (requires /add switch or defaults to add) ───────────
+        # Usage: zone handle/add <zone>/<verb> = <message>
+        if "=" not in args or "/" not in args.split("=", 1)[0]:
+            self.msg(
+                "Usage:\n"
+                "  zone handle/add <zone>/<verb> = <message>\n"
+                "  zone handle/list <zone>\n"
+                "  zone handle/rm <zone>/<verb> <#>"
+            )
+            return
+
+        zone_verb_part, _, message = args.partition("=")
+        zone_verb_part = zone_verb_part.strip()
+        message = message.strip()
+
+        if not message:
+            self.msg("Message cannot be empty.")
+            return
+
+        if "/" not in zone_verb_part:
+            self.msg(
+                "Usage: zone handle/add <zone>/<verb> = <message>"
+            )
+            return
+
+        slash_pos = zone_verb_part.index("/")
+        zone_name = zone_verb_part[:slash_pos].strip().lower().replace(" ", "_")
+        verb = zone_verb_part[slash_pos + 1:].strip().lower()
+
+        if not zone_name or not verb:
+            self.msg(
+                "Usage: zone handle/add <zone>/<verb> = <message>"
+            )
+            return
+
+        zones = char._get_zones()
+        if zone_name not in zones:
+            self.msg(
+                f"No zone named '{zone_name}'. "
+                f"Type 'zone list' to see all zones."
+            )
+            return
+
+        zone = zones[zone_name]
+        handles = dict(zone.get("handle_details", {}) or {})
+        msgs = list(handles.get(verb, []))
+        msgs.append(message)
+        handles[verb] = msgs
+        zone["handle_details"] = handles
+        zones[zone_name] = zone
+        char.db.zones = zones
+        self.msg(
+            f"Handle message added to zone |w{zone_name}|n / "
+            f"verb |w{verb}|n (#{len(msgs)}).\n"
+            f"|xOthers trigger it with: {verb} <name> {zone_name}|n"
         )
 
 
@@ -3442,8 +3854,6 @@ class CmdSheet(MuxCommand):
         self.msg(self._build_sheet(target, char))
 
     def _build_sheet(self, target, looker):
-        from typeclasses.characters import DEFAULT_ZONE_TYPES
-
         is_self = target == looker
         sep = "|w" + "━" * 44 + "|n"
         thin = "|x" + "─" * 44 + "|n"
@@ -3484,8 +3894,8 @@ class CmdSheet(MuxCommand):
         zones_public = target.db.zones_public or False
         surface_zones, both_zones, attach_zones, orifice_zones, freeform_zones = [], [], [], [], []
         for zname, zdata in zones.items():
-            ztype = zdata.get("zone_type") or DEFAULT_ZONE_TYPES.get(zname, "surface")
-            is_default = zname in DEFAULT_ZONE_TYPES
+            ztype = zdata.get("zone_type") or "surface"
+            is_default = zdata.get("default", False)
             display = zname.replace("_", " ")
             if not is_default:
                 freeform_zones.append(display)

@@ -289,6 +289,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_JACUZZI_CMDS:
             self.add(cmd_cls())
 
+        # Zone interactions (touch, kiss, grope, etc. — handle pool dispatch)
+        from commands.zone_interact_commands import ALL_ZONE_INTERACT_CMDS
+        for cmd_cls in ALL_ZONE_INTERACT_CMDS:
+            self.add(cmd_cls())
+
         # Dairy / fridge stock (setdairy, milk, fridge)
         # TODO: Disabled until milking machine MechanicItem and zone-installed
         # production mechanic are properly designed. Re-enable and rewrite when ready.
