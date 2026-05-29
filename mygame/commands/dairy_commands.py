@@ -255,16 +255,31 @@ class CmdMilk(Command):
 # CmdFridge
 # ---------------------------------------------------------------------------
 
+def _fridge_bottles(room):
+    """Return FluidBottle objects stocked in this room's fridge."""
+    from typeclasses.fluid_bottle import FluidBottle
+    return [
+        obj for obj in room.contents
+        if isinstance(obj, FluidBottle) and getattr(obj.db, "in_fridge", False)
+    ]
+
+
 class CmdFridge(Command):
     """
-    Browse or take from the room's fridge stock.
+    Browse, take from, stock, or drink from the room's fridge.
 
     Usage:
-      fridge              — list all jars on the dairy shelf
-      fridge take <n>     — take jar number <n>
+      fridge                  — list everything on the shelf
+      fridge take <n>         — take item number <n> from the shelf
+      fridge drink <n>        — take a sip from bottle number <n> in place
+      fridge store <bottle>   — put a FluidBottle from your inventory into the fridge
+      fridge drain <n>        — drain an entire bottle (consume fully)
 
-    Jars are labeled with the producer's name, fluid type, description,
-    and the date they were collected.
+    The shelf shows both old-style jars (collected via legacy 'milk' command)
+    and new FluidBottle objects (produced by the milking machine).
+
+    New-style bottles can be taken as physical objects, sipped in place,
+    or drained entirely. Old-style jars are removed from the list when taken.
 
     See also: milk, setdairy
     """
@@ -280,51 +295,182 @@ class CmdFridge(Command):
             caller.msg("|xYou aren't anywhere.|n")
             return
 
-        stock = _fridge_stock(room)
-        args  = self.args.strip().lower()
+        args = self.args.strip()
 
-        # List
-        if not args or args == "list":
-            if not stock:
+        # -- Store a bottle --
+        if args.lower().startswith("store"):
+            self._do_store(caller, room, args[5:].strip())
+            return
+
+        # Build unified shelf: legacy dicts first, then FluidBottle objects
+        stock   = _fridge_stock(room)      # list of dicts
+        bottles = _fridge_bottles(room)    # FluidBottle objects
+
+        total = len(stock) + len(bottles)
+
+        # -- List --
+        if not args or args.lower() == "list":
+            if total == 0:
                 caller.msg("|xThe dairy shelf in the fridge is empty.|n")
                 return
             lines = ["|wDairy shelf:|n"]
-            for i, jar in enumerate(stock, 1):
+            idx = 1
+            for jar in stock:
                 lines.append(
-                    f"  |w{i}.|n |y{jar['from']}'s {jar['fluid']}|n "
-                    f"|x— {jar['desc']} — {jar['date']}|n"
+                    f"  |w{idx}.|n |y{jar['from']}'s {jar['fluid']}|n "
+                    f"|x— {jar.get('desc', '')} — {jar.get('date', '')}|n"
                 )
+                idx += 1
+            for bottle in bottles:
+                from typeclasses.production_item import format_volume
+                vol   = format_volume(bottle.db.volume_ml or 0)
+                flav  = f", {bottle.db.fluid_flavor}" if bottle.db.fluid_flavor else ""
+                lines.append(
+                    f"  |w{idx}.|n |y{bottle.db.producer_name}'s "
+                    f"{bottle.db.fluid_type}{flav}|n |x({vol})|n"
+                )
+                idx += 1
             caller.msg("\n".join(lines))
             return
 
-        # Take
-        if args.startswith("take"):
-            rest = args[4:].strip()
-            if not rest.isdigit():
-                caller.msg("|xUsage: fridge take <number>|n")
-                return
-            n = int(rest)
-            if n < 1 or n > len(stock):
-                caller.msg(
-                    f"|xNo jar #{n}. "
-                    f"There {'is' if len(stock) == 1 else 'are'} "
-                    f"{len(stock)} jar(s) on the shelf.|n"
-                )
-                return
-            jar    = stock.pop(n - 1)
+        # -- Take --
+        if args.lower().startswith("take"):
+            n_str = args[4:].strip()
+            self._do_take(caller, room, n_str, stock, bottles, drain=False)
+            return
+
+        # -- Drink (sip in place) --
+        if args.lower().startswith("drink"):
+            n_str = args[5:].strip()
+            self._do_drink(caller, room, n_str, stock, bottles)
+            return
+
+        # -- Drain --
+        if args.lower().startswith("drain"):
+            n_str = args[5:].strip()
+            self._do_take(caller, room, n_str, stock, bottles, drain=True)
+            return
+
+        caller.msg(
+            "|xUsage: fridge | fridge take <n> | fridge drink <n> | "
+            "fridge store <bottle> | fridge drain <n>|n"
+        )
+
+    def _resolve_n(self, n_str, stock, bottles):
+        """
+        Parse the shelf number and return (jar_or_bottle, is_bottle, index_in_list).
+        Returns (None, False, -1) on error.
+        """
+        if not n_str.isdigit():
+            return None, False, -1
+        n = int(n_str)
+        total = len(stock) + len(bottles)
+        if n < 1 or n > total:
+            return None, False, -1
+        if n <= len(stock):
+            return stock[n - 1], False, n - 1
+        else:
+            bottle_idx = n - len(stock) - 1
+            return bottles[bottle_idx], True, bottle_idx
+
+    def _do_take(self, caller, room, n_str, stock, bottles, drain=False):
+        item, is_bottle, idx = self._resolve_n(n_str, stock, bottles)
+        if item is None:
+            caller.msg(f"|xNo item #{n_str} on the shelf.|n")
+            return
+        c_name = caller.db.rp_name or caller.name
+
+        if not is_bottle:
+            jar = item
+            stock.pop(idx)
             _write_fridge(room, stock)
-            c_name = caller.db.rp_name or caller.name
             caller.msg(
                 f"|yYou take the jar of {jar['from']}'s {jar['fluid']}|n "
-                f"|x({jar['desc']}, {jar['date']}).|n"
+                f"|x({jar.get('desc','')}, {jar.get('date','')}).|n"
             )
             room.msg_contents(
                 f"|x{c_name} takes something from the dairy shelf.|n",
                 exclude=caller,
             )
-            return
+        else:
+            bottle = item
+            if drain:
+                msg = bottle.do_drink(caller, drain=True)
+                caller.msg(msg)
+                if bottle.db.is_empty:
+                    bottle.delete()
+                else:
+                    bottle.db.in_fridge = False
+                    bottle.location = caller
+            else:
+                bottle.db.in_fridge = False
+                bottle.location = caller
+                from typeclasses.production_item import format_volume
+                vol = format_volume(bottle.db.volume_ml or 0)
+                caller.msg(
+                    f"|yYou take the bottle of "
+                    f"{bottle.db.producer_name}'s {bottle.db.fluid_type}|n "
+                    f"|x({vol}).|n"
+                )
+            room.msg_contents(
+                f"|x{c_name} takes something from the dairy shelf.|n",
+                exclude=caller,
+            )
 
-        caller.msg("|xUsage: fridge | fridge take <number>|n")
+    def _do_drink(self, caller, room, n_str, stock, bottles):
+        item, is_bottle, idx = self._resolve_n(n_str, stock, bottles)
+        if item is None:
+            caller.msg(f"|xNo item #{n_str} on the shelf.|n")
+            return
+        c_name = caller.db.rp_name or caller.name
+
+        if not is_bottle:
+            # Legacy jar — no partial drinking; just describes it
+            jar = item
+            caller.msg(
+                f"You taste a bit from the jar — "
+                f"{jar['from']}'s {jar['fluid']}, {jar.get('desc','')}."
+            )
+        else:
+            bottle = item
+            msg = bottle.do_drink(caller)
+            caller.msg(msg)
+            if bottle.db.is_empty:
+                bottle.delete()
+            room.msg_contents(
+                f"|x{c_name} samples something from the dairy shelf.|n",
+                exclude=caller,
+            )
+
+    def _do_store(self, caller, room, bottle_name):
+        from typeclasses.fluid_bottle import FluidBottle
+        target = None
+        for obj in caller.contents:
+            if isinstance(obj, FluidBottle):
+                if not bottle_name or bottle_name.lower() in obj.key.lower():
+                    target = obj
+                    break
+        if not target:
+            caller.msg(
+                "|xYou don't have a fluid bottle"
+                + (f" matching '{bottle_name}'" if bottle_name else "")
+                + " to store.|n"
+            )
+            return
+        target.db.in_fridge = True
+        target.location = room
+        c_name = caller.db.rp_name or caller.name
+        from typeclasses.production_item import format_volume
+        vol = format_volume(target.db.volume_ml or 0)
+        caller.msg(
+            f"|yYou place the bottle of "
+            f"{target.db.producer_name}'s {target.db.fluid_type}|n "
+            f"|x({vol}) on the dairy shelf.|n"
+        )
+        room.msg_contents(
+            f"|x{c_name} adds something to the dairy shelf.|n",
+            exclude=caller,
+        )
 
 
 # ---------------------------------------------------------------------------

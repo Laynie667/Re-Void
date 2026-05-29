@@ -74,7 +74,23 @@ roomzone inscribe/enable bars
 
 -- STEP 7: Mechanic items --
 
--- No mechanics for this room. --
+-- Blanket mechanic (lying, capacity 2 — close quarters in the kennel corner) --
+@create Kennel Blanket:typeclasses.seat_mechanic.SeatMechanic
+@set Kennel Blanket/capacity = 2
+@set Kennel Blanket/label = the blanket
+@set Kennel Blanket/position = lying
+@set Kennel Blanket/allow_lap = 1
+use Kennel Blanket on blanket
+
+-- Kennel bars lock mechanic (capacity 0 — locks the kennel from outside) --
+-- Note: this uses the door mechanic to model 'inside the kennel' confinement. --
+-- Install on the bars zone; the latch is described as outside-operable only.    --
+@create Kennel Latch:typeclasses.door_mechanic.DoorMechanic
+@set Kennel Latch/label = the kennel latch
+@set Kennel Latch/lock_msg = The kennel door swings shut and the latch drops into the bracket with a definitive sound.
+@set Kennel Latch/unlock_msg = The latch lifts free. The kennel door swings open.
+@set Kennel Latch/locked_traverse_msg = The kennel door is latched from outside. It does not open from within.
+use Kennel Latch on bars
 
 
 -- STEP 8: Handle interactions --

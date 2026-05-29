@@ -294,12 +294,15 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_ZONE_INTERACT_CMDS:
             self.add(cmd_cls())
 
-        # Dairy / fridge stock (setdairy, milk, fridge)
-        # TODO: Disabled until milking machine MechanicItem and zone-installed
-        # production mechanic are properly designed. Re-enable and rewrite when ready.
-        # from commands.dairy_commands import ALL_DAIRY_CMDS
-        # for cmd_cls in ALL_DAIRY_CMDS:
-        #     self.add(cmd_cls())
+        # Body mod system (install, uninstall, setfluid, lotion, inject, milk)
+        from commands.body_mod_commands import ALL_BODY_MOD_CMDS
+        for cmd_cls in ALL_BODY_MOD_CMDS:
+            self.add(cmd_cls())
+
+        # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
+        from commands.dairy_commands import CmdSetDairy, CmdFridge
+        self.add(CmdSetDairy())
+        self.add(CmdFridge())
 
 
 class AccountCmdSet(default_cmds.AccountCmdSet):

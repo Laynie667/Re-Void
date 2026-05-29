@@ -1,6 +1,8 @@
 == S.I.D.M.A.U. ==
 == Paste these commands in order while standing in the room ==
-== Exits: west -> Hidden Laboratory ==
+== Exits: out → Helena's Hidden Laboratory ==
+== Note: this room is not entered via compass direction. From the lab, players use ==
+==   'enter sidmau' or 'use sidmau' (see hidden_lab.txt STEP 10 exit setup).      ==
 
 -- STEP 1: Room Description --
 
@@ -130,3 +132,12 @@ rambient/add \|mThe fluid inside the unit — the door is closed, it cannot be s
 rambient/add \|xThe blue-white light from the monitors brightens by an increment, holds for three seconds, returns. No input caused this.\|n
 
 rambient/add \|mOne of the unidentified panel ports on the interior wall is slightly warmer than it was an hour ago. The unit has not been used in an hour.\|n
+
+
+-- STEP 10: Exit back to the lab --
+-- The exit from inside SIDMAU is 'emerge', 'exit', or 'out'. --
+-- From the lab side, entry is via 'enter sidmau' (see hidden_lab.txt STEP 10). --
+
+@open out;exit;emerge = [dbref of Helena's Hidden Laboratory]
+@desc out = The obsidian door panel — warm under the fingertip, the authorization point unmistakable once known.
+@lock out = traverse:all()

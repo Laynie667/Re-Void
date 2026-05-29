@@ -1,10 +1,11 @@
 == Helena's Log Cabin - Hidden Laboratory ==
 == Paste these commands in order while standing in the room ==
-== Exits: east -> S.I.D.M.A.U. | west -> Garden of Knowledge | up -> Helena's Room ==
+== Exits: west → Garden of Knowledge | up → Helena's Room (via secret trapdoor) | south → Disciplination Room ==
+== SIDMAU is entered via 'enter sidmau' from this room, not a compass direction (see STEP 10) ==
 
 -- STEP 1: Room Description --
 
-@desc here = \|yHelena's Hidden Laboratory\|n/\|xThe trap door above is a memory by the time you reach the bottom of the spiral stair — the rough-hewn stone giving way without ceremony to cold tile, cream plaster, and the unblinking efficiency of a room that has been used.\|n The \|wlaboratory\|n is large, and the orange-tinged light of the sconces does not warm it. \|xThere is a smell here: antiseptic uppermost, clinical and flat, but underneath something organic and harder to name — the kind of smell a room acquires from sustained occupation and sustained purpose.\|n//\|x{zone:table}\|n//\|x{zone:cross}\|n//\|x{zone:pillory}\|n//\|x{zone:rack}\|n//\|x{zone:shelves}\|n//\|x{zone:mirror}\|n
+@desc here = \|yHelena's Hidden Laboratory\|n/\|xThe trap door above is a memory by the time you reach the bottom of the spiral stair — the rough-hewn stone giving way without ceremony to cold tile, cream plaster, and the unblinking efficiency of a room that has been used.\|n The \|wlaboratory\|n is large, and the orange-tinged light of the sconces does not warm it. \|xThere is a smell here: antiseptic uppermost, clinical and flat, but underneath something organic and harder to name — the kind of smell a room acquires from sustained occupation and sustained purpose.\|n Against the eastern wall, set flush into the plaster with the certainty of something that was never meant to be temporary, the \|mSIDMAU\|n occupies its space with the sealed patience of a thing that is always ready.//\|x{zone:table}\|n//\|x{zone:cross}\|n//\|x{zone:pillory}\|n//\|x{zone:rack}\|n//\|x{zone:shelves}\|n//\|x{zone:mirror}\|n//\|m{zone:sidmau}\|n
 
 
 -- STEP 2: Create Zones --
@@ -15,6 +16,7 @@ roomzone add pillory
 roomzone add rack
 roomzone add shelves
 roomzone add mirror
+roomzone add sidmau
 
 
 -- STEP 3: Zone Descriptions --
@@ -98,9 +100,32 @@ roomzone study mirror = A smudge on the laboratory side of the mirror, at approx
 roomzone study mirror = The dimmer for the cell's bulb has a small piece of tape over the upper end of its travel. The bulb cannot be turned fully on from this side.
 
 
+-- SIDMAU zone --
+
+roomzone desc sidmau = The \|mSIDMAU\|n — the \|wSensory Input, Deprivation, and Morphic Adaptation Unit\|n — is set flush into the eastern wall with the authority of something that was never meant to be moved. Its shell is \|cobsidian-dark\|n and seamless, not quite glass and not quite metal, flanked on each side by two \|wmonitor arms\|n whose screens display continuous biometric and environmental data whether or not the unit is occupied. \|xThe air near it carries a faint mineral edge — specific, brined — that sharpens when the door has recently been open.\|n The status panel beside the door reads: |wVACANT|n.
+-- Note: the status line above (VACANT/OCCUPIED + occupant names) should be rendered
+-- dynamically at look-time by checking if any characters are located in the SIDMAU room.
+-- Until that code is in place, the static 'VACANT' serves as placeholder.
+
+roomzone detail sidmau/monitors = The four monitor screens display in continuous rotation: a biometric feed (pulse, respiration, skin conductance), an environmental readout (temperature gradient, fluid level, pressure delta), a waveform labeled only ADAPT that cycles in patterns that resist categorization, and a log display showing timestamped entries in the unit's internal notation. The log is the most legible and the least readable — the timestamps are precise to the millisecond, the entries brief, and the notation system is not disclosed anywhere in the room.
+
+roomzone detail sidmau/door = The door's authorization point is unmarked on the obsidian surface — findable by warmth, by memory, or by being shown. Contact initiates a one-second verification and then the door recesses completely into the shell, silent, without visible hinge or track. When open, the warm mineral air of the interior displaces into the lab with the slow pressure of something that has been kept. The interior is visible from the threshold: the egg-curved ceiling, the fluid surface below, the panel ports ringing the walls. The door closes on its own if left unattended for more than thirty seconds.
+
+roomzone detail sidmau/status = The status panel is a small inset display to the right of the door, at eye level, showing one of two states: |wVACANT|n in cold blue, or |mOCCUPIED|n in warm amber with the occupant's designation below it. The panel cannot be manually set — it reads directly from the unit's internal sensors.
+
+roomzone study sidmau = The floor in front of the SIDMAU door is worn in a specific pattern: a standing-position compression just before the threshold, and a slightly different wear to either side, consistent with someone stepping back to observe. The second pattern is older and more established.
+roomzone study sidmau = The monitor arm on the upper-left screen has been adjusted more than the others — the articulation joint is looser from repeated repositioning. That screen shows the biometric feed. Someone has looked at it carefully, often.
+roomzone study sidmau = The mineral smell near the SIDMAU is constant whether the unit is occupied or not, but varies slightly in quality: when occupied, it carries a secondary warmth. The difference is subtle enough to miss unless you know to check.
+
+roomzone handle sidmau/door = You bring your fingertip to the authorization region — the warmth gives it away immediately, a differentiated heat in the otherwise uniform shell surface. You hold it there. The verification takes exactly one second: a faint vibration conducted up through the fingertip, then the door recesses. The warm mineral air meets your face with the slow, accumulated pressure of something that has been contained and is now choosing to release. Beyond the threshold, the interior is dim and spatially wrong in the particular way that makes the body accept the space before the mind has finished measuring it. The fluid surface is visible below, shifting in ways that still water doesn't shift. The door's edge holds at the fully-open position, waiting.
+
+roomzone handle sidmau/monitors = You stand at the monitor array and read across the screens. The biometric feed is currently either showing baseline data from the room's ambient sensors or someone inside — the values would tell you, if you know what baseline looks like. The ADAPT waveform cycles through a sequence that takes approximately ninety seconds to complete before beginning again in a form that is similar but not identical to the previous cycle. You watch two complete cycles. They are not the same. The log screen is showing the six most recent entries. Two of them are from today.
+
+
 -- STEP 6: Zone Inscriptions --
 
 roomzone inscribe/enable mirror
+roomzone inscribe/enable sidmau
 
 
 -- STEP 7: Mechanic Items --
@@ -165,3 +190,25 @@ rambient/add \|xThe light inside the cell beyond the mirror dims slightly, then 
 rambient/add \|xThe single-tail on the shelf stirs — barely, a current of air from the stairwell above — and the tag at its handle turns once and is still.\|n
 
 rambient/add \|xThe cold of the tile conducts up from the floor with a consistency that makes the room feel like it is always exactly this temperature, always has been, always will be.\|n
+rambient/add \|mThe SIDMAU's status panel holds its current reading — the blue of VACANT or the amber of OCCUPIED — with the unblinking certainty of a machine that does not need to be watched to continue working.\|n
+
+
+-- STEP 10: Exits --
+
+-- Exit up to Helena's Room (via hidden trapdoor — discoverable from Helena's Room side) --
+@open up;trapdoor;spiral stair = [dbref of Helena's Room]
+@desc up = The spiral stair ascends through the stone to the trap door above — flush with the floor of Helena's Room, spring-loaded, found from above only by those who know where to press.
+
+-- Exit south to Disciplination Room --
+@open south;disciplination room = [dbref of Disciplination Room]
+@desc south = A reinforced door at the far end of the laboratory, its frame set into the stone without ornament.
+
+-- Exit west to Garden of Knowledge (unchanged) --
+@open west;garden = [dbref of Garden of Knowledge]
+
+-- SIDMAU 'enter' exit — not a compass direction; accessed as object interaction --
+@open sidmau;enter sidmau;enter the sidmau = [dbref of S.I.D.M.A.U. room]
+@desc sidmau = The obsidian door of the SIDMAU, authorization point warm beneath the fingertip.
+-- This exit will not appear in the exits list unless you set its locks accordingly.
+-- Recommended: leave unlocked for all (authorization is RP/narrative, not code-gated)
+@lock sidmau = traverse:all()

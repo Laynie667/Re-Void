@@ -1,6 +1,7 @@
 == Helena's Log Cabin - Mistress Helena's Room ==
 == Paste these commands in order while standing in the room ==
-== Exits: down → Hidden Laboratory | east → Momo's Room | north → Nursery | south → Disciplination Room | out → Passageway | in → Kennel under the bed ==
+== Exits: east → Momo's Room | north → Nursery | out → Passageway | in → Kennel under the bed ==
+== Secret exit: hidden down → Hidden Laboratory (see STEP 10) ==
 
 -- STEP 1: Room Description --
 
@@ -138,3 +139,24 @@ rambient/add \|xThe tapestry near the northeast wall moves at its lower edge wit
 rambient/add \|xThe scent in the room has a layered quality: the perfume is recent; the leather is older; the metal is oldest of all.\|n
 rambient/add \|xOne of the chewed pillows on the bed has shifted slightly from where it was. The stuffing at the tear has pulled a little further free.\|n
 rambient/add \|xThe claw gouges along the kennel bars catch what light there is and hold it in the pale wood at their edges.\|n
+
+
+-- STEP 10: Secret exit — hidden trapdoor to Hidden Laboratory --
+-- The northeast tapestry already hints at passages; the hook behind the SE tapestry
+-- (noted in tapestries/passages detail) is the lever. Paste these while in the room. --
+
+-- Create the hidden exit (no compass direction shown in exits list) --
+@open trapdoor;hidden passage;down = [dbref of Hidden Laboratory room]
+
+-- Lock it so it doesn't show in exit listings by default --
+-- Players discover it via 'look tapestry' or 'push sconce' --
+@lock trapdoor = view:perm(Builder) OR attr(has_found_lab)
+@lock trapdoor = traverse:perm(Builder) OR attr(has_found_lab)
+
+-- Add an interact hook on the tapestries zone so 'push sconce' or 'pull hook'
+-- sets the has_found_lab attr on the caller and opens the way --
+-- Note: the actual trigger logic lives in a custom interact handler or
+-- can be handled by a staff @py until a dedicated interact script is built. --
+
+-- Until the interact script is built, staff can manually reveal for a player: --
+-- @py [player].attributes.add('has_found_lab', 1) --

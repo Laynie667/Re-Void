@@ -1,6 +1,6 @@
 == Disciplination Room ==
 == Paste these commands in order while standing in the room ==
-== Exits: north -> Helena's Room ==
+== Exits: out → Helena's Hidden Laboratory ==
 
 -- STEP 1: Room Description --
 

@@ -191,6 +191,12 @@ def render_zone_tokens(text, character):
         else:
             base = nude
 
+        # Resolve {size} token — replaced with the display size of any
+        # BodyModItem installed in this zone's mechanics dict.
+        if base and '{size}' in base:
+            size_str = _resolve_size_token(zname, zdata)
+            base = base.replace('{size}', size_str)
+
         # cover-mode placed items, on-items, and in-items all append.
         all_parts = cover_items + on_items + in_items
 
@@ -201,6 +207,32 @@ def render_zone_tokens(text, character):
         return base
 
     return _ZONE_TOKEN_RE.sub(resolve, text)
+
+
+def _resolve_size_token(zone_name: str, zone_data: dict) -> str:
+    """
+    Return the display size string for the BodyModItem installed in zone_data,
+    or an empty string if nothing is installed.
+
+    Used by render_zone_tokens() to resolve {size} tokens in zone nude descs.
+    """
+    mechanics = zone_data.get("mechanics", {}) or {}
+    bm_entry  = mechanics.get("body_mod")
+    if not bm_entry:
+        return ""
+    try:
+        from evennia import search_object
+        results = search_object(bm_entry.get("item_dbref", ""), exact=True)
+        if results:
+            item = results[0]
+            if hasattr(item, "display_size"):
+                return item.display_size()
+        # Fall back to snapshot size in the mechanics entry
+        from typeclasses.body_mod_item import _breast_display
+        size = bm_entry.get("size", 0.0)
+        return _breast_display(float(size))
+    except Exception:
+        return ""
 
 
 # ---------------------------------------------------------------------------

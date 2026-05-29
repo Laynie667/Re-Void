@@ -4005,6 +4005,51 @@ class CmdSheet(MuxCommand):
                     status_str = f"  |x[{cstatus}]|n" if cstatus else ""
                     lines.append(f"  |w{cname}|n{status_str}")
 
+        # Installed body modifications (always shown on own sheet; visible to
+        # others only if the target's zones are public or is_self)
+        if is_self or zones_public:
+            from typeclasses.body_mod_item import BodyModItem
+            from typeclasses.production_item import ProductionItem
+            mod_lines = []
+            prod_lines = []
+            for zname, zdata in zones.items():
+                mechanics = zdata.get("mechanics", {}) or {}
+                zone_disp = zname.replace("_", " ")
+
+                bm_entry = mechanics.get("body_mod")
+                if bm_entry:
+                    from evennia import search_object
+                    results = search_object(bm_entry.get("item_dbref", ""), exact=True)
+                    if results and isinstance(results[0], BodyModItem):
+                        item = results[0]
+                        mod_lines.append(
+                            f"  {zone_disp:<20} {item.display_size()}"
+                            f"  |x({item.db.mod_type or 'mod'})|n"
+                        )
+
+                pr_entry = mechanics.get("production")
+                if pr_entry:
+                    results = search_object(pr_entry.get("item_dbref", ""), exact=True)
+                    if results and isinstance(results[0], ProductionItem):
+                        item = results[0]
+                        prod_lines.append(
+                            f"  {zone_disp:<20} {item.db.fluid_type or 'fluid'}"
+                            f"  {item.volume_display()}"
+                        )
+
+            if mod_lines:
+                lines.append("")
+                lines.append(thin)
+                lines.append("|wInstalled Modifications:|n")
+                lines.extend(mod_lines)
+
+            if prod_lines:
+                lines.append("")
+                if not mod_lines:
+                    lines.append(thin)
+                lines.append("|wFluid Production:|n")
+                lines.extend(prod_lines)
+
         lines.append(f"\n{sep}")
         return "\n".join(lines)
 
