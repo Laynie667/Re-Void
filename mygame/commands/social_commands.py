@@ -1161,7 +1161,11 @@ class SocialEmoteCommand(MuxCommand):
         if not persist:
             return
         field, value = persist
-        if target and "{t}" in value:
+        if "{t}" in value:
+            if not target:
+                # Template needs a target name but there is none —
+                # skip the persist so we don't write a broken string.
+                return
             tname = target.db.rp_name or target.name
             value = value.replace("{t}", tname)
         setattr(char.db, field, value)
