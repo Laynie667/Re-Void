@@ -212,30 +212,37 @@ rambient/add The candle scent from the room outside drifts over the rim. In here
 rambient/add The water at the far toe seat shifts in a way that is slightly different from the jet pattern. It settles. Whatever it was, it was brief.
 
 
--- STEP 10: Jacuzzi state system (future build) --
+-- STEP 10: Jacuzzi state system --
 
-Flag this room to enable future jacuzzi commands:
+Run these three lines while standing INSIDE the Jacuzzi room.
+Replace <Helena's dbid> with Helena's actual character #dbref (e.g. #42).
+
   @set here/has_jacuzzi = 1
-  @set here/jacuzzi_host_id = <Helena's character dbid>
+  @set here/jacuzzi_host_id = <Helena's dbid>
+  @py self.location.scripts.add("typeclasses.jacuzzi_script.JacuzziStateScript")
 
-Planned state dict (room.db.jacuzzi_state):
-  {
-    "running":    True,      -- water heated and jets active
-    "jets":       "gentle",  -- off / gentle / strong / full
-    "temp":       "hot",     -- lukewarm / warm / hot / scalding
-    "seats_locked": False,   -- panel toggle: prevents standing from toe seats
-    "dildos_active": False,  -- panel toggle: activates seat fixtures (vibration etc.)
-  }
+After that, the following commands work in this room:
 
-Planned commands:
-  'jets on' / 'jets off'
-  'adjust jets <off|gentle|strong|full>'
-  'adjust temp <lukewarm|warm|hot|scalding>'
-  'panel'  — opens panel interface, host-only (checks jacuzzi_host_id)
-    panel subcommands: lock seats / release seats / activate / deactivate
+  jets on                        — start the jets (any player)
+  jets off                       — stop the jets (any player)
+  adjust jets <off|gentle|strong|full>   — change intensity (any player)
 
-JacuzziStateScript (same pattern as ShowerStateScript):
-  - Ambient tick: 5-10 min, fires jacuzzi-specific ambient lines
-  - Seat lock enforcement: when seats_locked, standing from toe seats is blocked
-    with a flavor message about the panel
-  Attach once: @py self.location.scripts.add("typeclasses.jacuzzi_script.JacuzziStateScript")
+  panel                          — show current state (host only)
+  panel temp <lukewarm|warm|hot|scalding>  — adjust water temperature
+  panel lock                     — lock the toe seats
+  panel release                  — release the toe seats
+  panel activate                 — flag seat fixtures as active
+  panel deactivate               — flag seat fixtures as inactive
+
+State dict (room.db.jacuzzi_state):
+  running      bool   — whether jets are currently on
+  jets         str    — off / gentle / strong / full
+  temp         str    — lukewarm / warm / hot / scalding
+  seats_locked bool   — toe seats locked (blocks stand + at_before_move)
+  dildos_active bool  — fixtures flagged active (flavor flag; hooks into future pulse script)
+
+JacuzziStateScript:
+  Persistent restart-recovery watchdog. If the server goes down while
+  seats are locked, it clears the lock on restart and notifies the room.
+  Reserved at_repeat hook (5-min tick) is available for future ambient
+  or activation pulse messages.

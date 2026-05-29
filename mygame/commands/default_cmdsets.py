@@ -284,6 +284,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_SHOWER_CMDS:
             self.add(cmd_cls())
 
+        # Jacuzzi (jets on/off, adjust jets, panel — state system)
+        from commands.jacuzzi_commands import ALL_JACUZZI_CMDS
+        for cmd_cls in ALL_JACUZZI_CMDS:
+            self.add(cmd_cls())
+
         # Dairy / fridge stock (setdairy, milk, fridge)
         # TODO: Disabled until milking machine MechanicItem and zone-installed
         # production mechanic are properly designed. Re-enable and rewrite when ready.
