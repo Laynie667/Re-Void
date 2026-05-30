@@ -32,7 +32,13 @@ roomzone detail paintings/transformation = The leftmost panel shows a woman — 
 
 roomzone detail paintings/claiming = Near the center of the wall register, the narrative pauses on a single large panel that occupies more space than any other in the sequence. The black wolf — rendered here at its largest, the figure taking up the full height of the wall — stands over the elven woman, her wrists pressed beneath two of its forepaws. The composition is frontal and deliberate: nothing in it is obscured, and the woman's expression, rendered in a few strokes of ochre, is not ambiguous. Beneath this panel, pressed into the stone in a slightly different pigment and possibly a different hand, is the same mark that appears on Helena's door: H.S.
 
-roomzone detail paintings/lineage = The eastern wall continues the register: past the central panel, the narrative tracks forward in time. New figures appear — smaller, varying in form, some clearly wolf-shaped and others human, each introduced with a panel showing the paw print motif beneath them. The final panel on the eastern wall is unfinished. The paw prints run along the bottom of the register to the very edge of the painted surface and continue onto bare stone for perhaps thirty centimeters before they stop, the pigment thinning to nothing.
+roomzone detail paintings/lineage = The eastern wall continues the register past the central claiming panel — a genealogy in ash and ochre, each generation positioned below the one that came before it. At the far left of this section, set apart and dominant: the |mAlpha's mark|n. Shadow's paw, enormous even by direwolf standards, pressed in thick ashen pigment at eye level — and nested within it, deliberate and precise, two |whandprints|n in warmer pigment: Laynie's and Auria's, each labeled |mWolfBred|n beneath their name. To the right, slightly lower: |mWhisper|n's mark, the Beta's paw, large and clean-edged, with |mAlara|n's handprint nested within it. Beneath these five marks in a gentle downward arc come the seven |cpup prints|n: Midnight, Ash, Sable, Solstice, Skye, Silver, Frost. Each is named. Each is sizeable, carrying Shadow's scale forward through blood. The stone wall beyond the final pup print has been scraped smooth and primed — the surface prepared and waiting for what comes next.
+
+roomzone detail paintings/pawprints_alpha = Shadow's pawprint is the largest mark in the den — pressed with the full weight of a direwolf, the central pad impression wide as a dinner plate, the toe prints splayed and deeply set. The pigment is thick and double-layered, as though the mark was reinforced after the first pressing. At its center, nested with care so that the handprints don't overlap each other: Laynie's hand, fingers spread wide, and Auria's beside it, fingers together and slightly lower. Both were applied with a brush rather than pressed directly — deliberate where Shadow's is forceful. Beneath the whole mark, written in the same hand as the naming register: |mShadow — Alpha|n. Beneath Laynie's hand: |mLaynie — WolfBred|n. Beneath Auria's: |mAuria — WolfBred|n.
+
+roomzone detail paintings/pawprints_beta = Whisper's pawprint is large — unmistakably a wolf's mark, made by an animal well beyond ordinary size, though it reads as modest beside the Alpha's. Its edges are cleaner, the impression lighter, the pigment applied with a narrower tool. Nested within it: Alara's handprint, fingers close together, palm heel resting precisely against the central pad of the paw. The ratio of handprint to pawprint is the same as in Shadow's mark — deliberate, as if this portion of the wall was built to a consistent grammar. Beneath the whole: |mWhisper — Beta|n. Beneath Alara's hand: |mAlara — WolfBred|n.
+
+roomzone detail paintings/pawprints_pups = Seven prints arc below the parent marks — and they are not small. Even accounting for age, the scale of Shadow's bloodline shows: each pup's pawprint is wider across than a large human hand, the toe impressions distinct and well-separated. They were made at different times; the pigment varies in depth and tone, some pressed dark, some lighter, as if each was added when the animal was ready rather than in a single session. The names beneath each print read left to right in birth order: |mMidnight|n, |mAsh|n, |mSable|n, |mSolstice|n, |mSkye|n, |mSilver|n, |mFrost|n. All are marked |xFirst Litter — L & S|n in smaller script beneath the arc.
 
 roomzone detail pools/large_pool = The largest pool's basin is carved at its eastern edge into a low step — not natural, worked deliberately — that allows someone to sit at the rim with their feet in the water or descend into the pool gradually. The water temperature does not change with depth. Submerged, the light source is invisible: the luminescence appears to suffuse the water evenly rather than originating from any point. The floor of the pool is smooth and gently sloped toward its center, which is approximately two meters deep.
 
@@ -49,7 +55,13 @@ roomzone detail columns/rings = The floor ring at the base of the nearest column
 
 roomzone study paintings + The ochre pigment used in the transformation panels is a different compound from the pigment used in the claiming panel — the color is slightly warmer and the texture finer. The claiming panel may have been made later, or by a different hand working with different materials, or both.
 roomzone study paintings + The H.S. mark beneath the claiming panel is pressed deeper into the stone than the surrounding pigment — worked in rather than painted on. A fingertip run over it catches on its edges.
-roomzone study paintings + The unfinished paw print register on the eastern wall: the final few prints are slightly larger than the ones preceding them. The scaling is gradual, beginning about midway through the eastern register. By the point where the pigment runs out, each print is roughly a third larger than the first.
+roomzone study paintings + The paw print register on the eastern wall ends at a section of stone that has been deliberately prepared: the surface is smoother here, the grain worked out, a faint primer coat applied. The wall is ready. The register is not.
+roomzone study paintings + Shadow's pawprint is pressed with more force than anything else on the wall — the pigment is deeper in the center of the pad impression than at the edges, and the stone beneath has a faint compression that the surrounding surface does not. The mark was made by something very large, pressing with its full weight, standing still.
+roomzone study paintings + The two handprints inside Shadow's paw are not pressed simultaneously — the pigment depths are slightly different, suggesting separate sessions. Laynie's is deeper; Auria's is on top of it, overlapping at the wrist by a centimeter. The order of application is legible to close examination.
+roomzone study paintings + Holding a hand up to Laynie's handprint inside Shadow's paw: the print is roughly the same size. The fingers in the print are spread to their full extent. The heel of the palm impression is deeper than the fingertips, as if she was pressing forward into the stone rather than laying her hand flat.
+roomzone study paintings + Alara's handprint inside Whisper's paw is made by a smaller hand than either print in the Alpha's mark — the fingers are narrow, the span short. The pigment was applied carefully, each finger visible as a distinct impression. It was made by someone paying close attention to the act.
+roomzone study paintings + The seven pup prints were not all made on the same day. Midnight's print, leftmost, is the most faded — the oldest. Frost's, rightmost, is the freshest. The pigment difference between them represents a span of time: Frost's is still slightly tacky in its deepest impressions. The litter is ongoing.
+roomzone study paintings + The pup prints, though called pup prints, are larger than the paw of an average adult wolf. Each one is identifiably an individual: subtle differences in the pad geometry, the spacing of toes, the pressure distribution. They were made by animals beginning to carry their full size while still young.
 
 roomzone study pools + The stone between the second and third pool is worn into a shallow channel — a path, worn from repeated movement between them. The channel is narrow, consistent with being made by something that moved on four legs rather than two.
 roomzone study pools + The river stone at the small pool's rim has been there long enough that a faint mineral ring has formed beneath it, staining the stone a slightly darker color. It has not been moved in some time, but it has been moved before — the ring is older than the stone's current position.
@@ -79,6 +91,14 @@ roomzone inscribe/enable columns
 @set Nest Mechanic/allow_lap = 1
 use Nest Mechanic on nest
 
+-- Large pool mechanic (sitting in the water, capacity 4) --
+@create Pool Mechanic:typeclasses.seat_mechanic.SeatMechanic
+@set Pool Mechanic/capacity = 4
+@set Pool Mechanic/label = the large pool
+@set Pool Mechanic/position = sitting
+@set Pool Mechanic/allow_lap = 1
+use Pool Mechanic on pools
+
 
 -- STEP 8: Handle interactions --
 
@@ -102,6 +122,6 @@ rambient/add |xThe nest settles with a quiet compression of hides, as if adjusti
 rambient/add |xThe paintings catch the pool light at a low angle and for a moment the figures seem to exist at a slight depth beneath the stone surface rather than on it.|n
 rambient/add |xWarm mineral air drifts up from the small pool and disperses near the ceiling without reaching the floor.|n
 rambient/add |xOne of the floor rings at the base of a column shifts a fraction of a degree and stills — the sound it makes is a single low note, clear in the quiet of the cavern.|n
-rambient/add |xThe paw print register on the eastern wall catches the pool light and the final, larger prints stand out briefly before the light settles.|n
+rambient/add |xThe paw print register on the eastern wall catches the pool light — the arc of seven pup prints illuminated briefly, each name legible beneath its mark, before the light settles back.|n
 rambient/add |xThe water in the large pool surfaces in one slow, complete pulse of light and then resumes its usual rhythm.|n
 rambient/add |xThe smell of the nest — warm hides, worn fabric, something more personal beneath both — reaches the center of the room for a moment before the cavern air absorbs it.|n
