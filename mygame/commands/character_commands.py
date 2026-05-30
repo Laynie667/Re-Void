@@ -2548,21 +2548,21 @@ class CmdUndress(MuxCommand):
         char = self.caller
         zones = char._get_zones()
 
+        # Use remove_from_zone() for each covered zone — same path CmdRemove
+        # uses, guaranteed to persist each write individually.
         cleared = []
         for zone_name, zone_data in zones.items():
             if zone_data.get("covered_by"):
-                zone_data["covered_by"] = None
-                zone_data["state"] = "pristine"
-                zone_data["state_desc"] = None
+                char.remove_from_zone(zone_name)
                 cleared.append(zone_name)
 
         # Also clear freeform items (place/wear items stored separately)
         freeform_cleared = bool(char.db.freeform_items)
-        char.db.freeform_items = {}
+        if freeform_cleared:
+            char.db.freeform_items = {}
+            char._rebuild_outfit_desc()
 
         if cleared or freeform_cleared:
-            char.db.zones = zones
-            char._rebuild_outfit_desc()
             name = char.db.rp_name or char.key
             self.msg(
                 f"You undress. {len(cleared)} zone(s) cleared."
