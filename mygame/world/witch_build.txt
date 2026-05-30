@@ -351,17 +351,22 @@ zone ambient playful_aura add The luminescence around |mWitch|n dims very slight
 -- @create runs as staff / in-game builder command --
 -- @create syntax: @create <name>:<typeclass_path> --
 
-@create Witch's Breast Enhancement:typeclasses.body_mod_item.BreastItem
-@create Witch's Milk Glands:typeclasses.production_item.MilkProductionItem
+-- NOTE: @create puts items in the room, not inventory. Pick them up before installing. --
+@create Breast Enhancement:typeclasses.body_mod_item.BreastItem
+@create Milk Glands:typeclasses.production_item.MilkProductionItem
+
+-- Pick them up from the room --
+get Breast Enhancement
+get Milk Glands
 
 -- Install the BreastItem on the chest zone. This populates {size} in zone desc. --
-install Witch's Breast Enhancement on chest
+install Breast Enhancement on chest
 
 -- Install the MilkProductionItem on the chest zone. This enables milking. --
-install Witch's Milk Glands on chest
+install Milk Glands on chest
 
 -- Set a flavor for the milk. --
-setfluid/flavor Witch's Milk Glands = warm and faintly sweet, with the particular honey-vanilla of her scent translated into something tangible — richer than expected, not ungentle
+setfluid/flavor Milk Glands = warm and faintly sweet, with the particular honey-vanilla of her scent translated into something tangible — richer than expected, not ungentle
 
 -- NOTE: After installing, zone set chest will now render {size} dynamically. --
 -- To demonstrate: look witch chest — the {size} token resolves to the BreastItem's current size. --
