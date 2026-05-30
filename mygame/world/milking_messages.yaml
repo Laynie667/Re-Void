@@ -176,3 +176,133 @@ fullness:
         - "Past the point of comfort by a significant margin. Every movement registers against the fullness. Resolution is the only coherent direction your thoughts are moving."
         - "The pressure is a constant, occupying thing. Your attention cannot leave it and your body has stopped being quiet about it."
         - "At this volume the milking machine exists in your awareness as the single most relevant object in the room. Your body has reached a conclusion."
+
+    - ml: 2000
+      private: true
+      messages:
+        - "The fullness has become a visible distension — a shape, not just a pressure. Two litres of accumulated weight and your body has been making its case for some time."
+        - "Concentration on anything else requires active effort. The distension is substantial and has been for a while. The milking machine is not an abstract thought."
+        - "Two thousand millilitres. The physical weight of it is real and present and your body has stopped framing this as a preference."
+
+    - ml: 3785
+      private: true
+      messages:
+        - "A full gallon of pressure. The weight and volume together are physically demanding in a way that has moved well past discomfort into its own territory."
+        - "One gallon, distributed entirely within you. Your body's objections have been ongoing and well-articulated. The machine exists as a specific, necessary destination."
+        - "A gallon. The actual physical reality of carrying this has shaped how you've been holding yourself for some time. Resolution is the only coherent plan."
+
+    - ml: 7570
+      private: true
+      messages:
+        - "Two gallons. The distension is significant and visible. Every movement negotiates around what you're carrying. There is no longer a question of whether the machine is needed."
+        - "The volume you're carrying would fill a substantial container. You are that container and you have been aware of this for longer than is comfortable to acknowledge."
+        - "Two gallons of accumulated pressure. The milking machine is not a thought — it is the thought. Everything else is a secondary consideration."
+
+    - ml: 15000
+      private: true
+      messages:
+        - "Four gallons. The physical reality of this has stopped requiring description — it is simply the entire situation. Your body resolved this question some time ago."
+        - "At this volume the usual language has stopped being adequate. Four gallons of pressure, and your body has been making a very clear argument about this for a considerable time."
+        - "This is the part where the milking machine stops being an option and becomes the only remaining subject. Your body reached that conclusion some time ago."
+
+# ---------------------------------------------------------------------------
+# Size-aware ambient messages — private to the character.
+# Fired occasionally (~30% chance per 15-min tick) when body mod size
+# exceeds the threshold. The highest matching tier fires.
+# Size values use the body mod float scale: G=7, L=12, Z=26, Monumental=30+
+# ---------------------------------------------------------------------------
+
+size_ambient:
+  tiers:
+    - min_size: 38.0   # Gravitationally Concerning / Beyond Classification
+      messages:
+        - "The descriptor stopped being hyperbole. Everything nearby bends toward the weight they carry, including posture, balance, and the attention of everyone in the room."
+        - "At this scale they are not a feature — they are a condition. Your body organizes around them entirely and has for some time. There is no version of a moment that doesn't account for them."
+        - "Gravitationally Concerning is the label, and it has stopped being funny. The weight is its own weather system. Movement is a negotiation."
+
+    - min_size: 34.0   # Architecturally Significant / Incomprehensible
+      messages:
+        - "The term architecturally significant has taken on a literal quality. No position or movement fails to account for them first. They precede every decision your body makes."
+        - "They are a structural fact of every room you enter. The weight is total, the presence is constant, and your body has reorganized itself around them as a baseline condition."
+        - "Moving with them requires planning. They carry their own momentum. Every doorway is a consideration."
+
+    - min_size: 30.0   # Monumental / named absurd tiers begin
+      messages:
+        - "They exist as a physical force rather than a size. They precede you into rooms. They dictate how you sit and stand and breathe. Your center of gravity has relocated."
+        - "At this scale the weight is not something you carry — it's something you are organized around. Every posture accounts for them before anything else."
+        - "Monumental is accurate. The weight is constant, total, and has been reshaping the way your body moves for long enough that it feels like baseline now."
+
+    - min_size: 26.0   # Z cup and above / Structurally Significant testicles
+      messages:
+        - "At this size they can't be negotiated with or ignored. Every posture accounts for them first. Every movement negotiates around the weight."
+        - "The weight is a constant companion that has rewritten what resting feels like. Your center of gravity has shifted. It is simply the state of things."
+        - "They are present in everything — standing, sitting, moving, staying still. The weight has been consistent long enough that its absence would be the remarkable thing."
+
+    - min_size: 12.0   # L cup and above / Very Large and above
+      messages:
+        - "The size of them shapes how you hold yourself without your input. They displace weight in every position and your body has built its habits around this."
+        - "A significant presence, continuous and physical. Not painful, not incapacitating — simply always there, always accounted for, always part of the geometry."
+        - "They are simply always there — preceding your movements, carrying their own momentum, occupying their own space."
+
+    - min_size: 7.0    # G cup and above / Large and above
+      messages:
+        - "The weight of them is present in everything you do — a consistent physical fact your body has organized itself around."
+        - "They precede your movements by their own momentum. It is not painful, just a continuous, familiar heaviness that has become part of how you take up space."
+        - "A persistent, pleasant weight — notable at rest, more notable in motion. The kind of thing that becomes familiar without ever becoming ignorable."
+
+# ---------------------------------------------------------------------------
+# Leaking conditions — size + volume thresholds combined.
+# room_visible: true → broadcast to room with {target} token
+# room_visible: false → private to character
+# The highest matching condition fires per tick.
+# ---------------------------------------------------------------------------
+
+leaking:
+  conditions:
+    - min_size: 38.0    # Gravitationally Concerning+
+      min_volume: 0     # volume-independent — always leaking at this scale
+      room_visible: true
+      messages:
+        - "{target}'s presence in the room has already marked the floor. At the scale they carry, leaking is not a condition — it is a baseline. The floor confirms this."
+        - "At the size {target} carries, retention is a technical impossibility. The drip is constant, unhurried, and entirely inevitable."
+        - "A steady trail follows {target}. The scale of them has simply outpaced any capacity for containment regardless of volume."
+
+    - min_size: 34.0    # Architecturally Significant+
+      min_volume: 0
+      room_visible: true
+      messages:
+        - "{target} is leaking steadily — at the size they carry, the threshold for containment requires no particular volume to exceed."
+        - "The floor beneath {target} is marked and being marked further. The combination of size and capacity has resolved the question of retention."
+        - "Leaking, continuously, at a pace that requires no particular fullness to maintain. {target}'s scale handles that independently."
+
+    - min_size: 30.0    # Monumental+
+      min_volume: 50
+      room_visible: true
+      messages:
+        - "{target} is leaking continuously at the pace their size demands — the volume present is more than sufficient context."
+        - "A steady drip from {target} — the size and the pressure together have long since resolved the question of containment."
+        - "At {target}'s scale and this volume, leaking is simply what happens. The floor is already aware."
+
+    - min_size: 26.0    # Z cup+ / Structurally Significant+
+      min_volume: 100
+      room_visible: true
+      messages:
+        - "{target} is dripping visibly — the combination of size and pressure has exceeded any threshold of retention. The floor marks their position."
+        - "A consistent drip from {target}. At this size and volume the pressure has found its exit and is not being particularly subtle about it."
+        - "Fluid tracks down {target} in a thin, steady line. The size and the fullness together have made containment a past tense condition."
+
+    - min_size: 12.0    # L cup+ / Very Large+
+      min_volume: 300
+      room_visible: true
+      messages:
+        - "A thin drip marks {target}'s position — size and volume together have brought them to the threshold where the pressure expresses itself visibly."
+        - "{target} is beginning to drip. The combination of size and fullness has crossed the line between internal and external."
+        - "Slow and visible — a bead forms at {target}'s nipple and drops. The pressure has found its expression."
+
+    - min_size: 7.0     # G cup+ / Large+
+      min_volume: 600
+      room_visible: false
+      messages:
+        - "A warmth at the tips — not yet visible, but felt. The pressure and the size together have brought you to the edge of passive escape."
+        - "There's a dampness that wasn't there before. The fullness has reached the threshold where the size is no longer fully containing it."
+        - "The pressure has begun to express itself. Not visible yet, but present — a warmth at the tips that will become more apparent if nothing changes."

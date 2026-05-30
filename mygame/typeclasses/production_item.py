@@ -125,6 +125,8 @@ class ProductionItem(DefaultObject):
         self.db.lifetime_produced_ml = (self.db.lifetime_produced_ml or 0.0) + amount
         # Fire private fullness messages when crossing new thresholds
         self._check_fullness_thresholds(old_vol, new_vol)
+        # Fire size-aware ambient and leaking messages (size + volume combined)
+        self._check_size_messages(new_vol)
 
     def _check_fullness_thresholds(self, old_vol: float, new_vol: float):
         """
@@ -156,6 +158,79 @@ class ProductionItem(DefaultObject):
         next fill cycle. Called by MilkingSessionScript after extraction.
         """
         self.db.notified_thresholds = []
+
+    # ------------------------------------------------------------------
+    # Size-aware ambient + leaking messages
+    # ------------------------------------------------------------------
+
+    def _get_body_mod_size(self) -> float:
+        """
+        Return the effective size of the BodyModItem installed on the same
+        zone as this production item, or 0.0 if none is installed.
+        """
+        char      = self.db.installed_on_char
+        zone_name = self.db.installed_on_zone
+        if not char or not zone_name:
+            return 0.0
+        zones     = getattr(char.db, "zones", None) or {}
+        zone      = zones.get(zone_name, {})
+        mechanics = zone.get("mechanics", {}) or {}
+        bm_entry  = mechanics.get("body_mod")
+        if not bm_entry:
+            return 0.0
+        from evennia import search_object
+        results = search_object(bm_entry.get("item_dbref", ""), exact=True)
+        if results:
+            item = results[0]
+            if hasattr(item, "effective_size"):
+                return item.effective_size()
+        return float(bm_entry.get("size", 0.0))
+
+    def _check_size_messages(self, current_vol: float):
+        """
+        Check size-aware ambient and leaking conditions.
+
+        Size ambient: fired with ~30% probability per tick when body mod size
+        exceeds a tier threshold. Only the highest matching tier fires.
+
+        Leaking: fired when both size AND volume meet a condition's thresholds.
+        Only the highest matching condition fires. Room-visible conditions are
+        broadcast to the character's location; private ones go only to them.
+        """
+        char = self.db.installed_on_char
+        if not char:
+            return
+
+        size = self._get_body_mod_size()
+        if size <= 0:
+            return
+
+        try:
+            from world.milking_loader import get_size_ambient_tiers, get_leaking_conditions
+        except ImportError:
+            return
+
+        import random
+
+        # ── Size ambient (private, ~30% chance, highest tier only) ────
+        for tier_min, messages in get_size_ambient_tiers():
+            if size >= tier_min:
+                if random.random() < 0.30:
+                    char.msg(f"|x{random.choice(messages)}|n")
+                break   # only one tier fires per tick
+
+        # ── Leaking conditions (highest matching fires) ────────────────
+        room = char.location
+        char_name = char.db.rp_name or char.name
+
+        for cond_size, cond_vol, messages, room_visible in get_leaking_conditions():
+            if size >= cond_size and current_vol >= cond_vol:
+                msg = random.choice(messages).replace("{target}", char_name)
+                if room_visible and room:
+                    room.msg_contents(f"|x{msg}|n")
+                else:
+                    char.msg(f"|x{msg}|n")
+                break   # only one condition fires per tick
 
     def _get_body_mod_multiplier(self) -> float:
         """

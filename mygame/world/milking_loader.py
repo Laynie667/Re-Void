@@ -76,9 +76,53 @@ def get_fullness_thresholds():
     thresholds = data.get("fullness", {}).get("thresholds", [])
     result = []
     for entry in thresholds:
-        ml  = entry.get("ml", 0)
+        ml   = entry.get("ml", 0)
         msgs = entry.get("messages", [])
         if msgs:
             result.append((ml, msgs))
     result.sort(key=lambda x: x[0])
+    return result
+
+
+def get_size_ambient_tiers():
+    """
+    Return size ambient tiers sorted descending by min_size (highest first).
+    Each entry: (min_size, messages_list).
+    Caller should find the first (highest) matching tier and roll for chance.
+
+    Example:
+        [(38.0, [...]), (34.0, [...]), (30.0, [...]), ...]
+    """
+    data = _load()
+    tiers = data.get("size_ambient", {}).get("tiers", [])
+    result = []
+    for entry in tiers:
+        min_size = entry.get("min_size", 0.0)
+        msgs     = entry.get("messages", [])
+        if msgs:
+            result.append((min_size, msgs))
+    result.sort(key=lambda x: x[0], reverse=True)
+    return result
+
+
+def get_leaking_conditions():
+    """
+    Return leaking conditions sorted descending by min_size (highest first).
+    Each entry: (min_size, min_volume, messages_list, room_visible).
+    Caller should find the first matching condition and fire.
+
+    Example:
+        [(38.0, 0, [...], True), (34.0, 0, [...], True), ...]
+    """
+    data = _load()
+    conditions = data.get("leaking", {}).get("conditions", [])
+    result = []
+    for entry in conditions:
+        min_size   = entry.get("min_size",   0.0)
+        min_vol    = entry.get("min_volume", 0.0)
+        msgs       = entry.get("messages",   [])
+        room_vis   = entry.get("room_visible", False)
+        if msgs:
+            result.append((min_size, min_vol, msgs, room_vis))
+    result.sort(key=lambda x: x[0], reverse=True)
     return result
