@@ -1648,17 +1648,11 @@ class Character(ObjectParent, DefaultCharacter):
         # --- Layer 4: Outfit summary (non-tokenized zones only) ---
         # Zones that appear via {zone:X} tokens in physical_desc are already
         # shown inline — skip them here to avoid duplication.
-        # Non-tokenized zones show as "On/At/In her [zone], [worn desc]".
+        # Non-tokenized zones: render worn desc as a clean prose paragraph,
+        # no preposition prefix.  Each item gets its own blank-separated line.
         _outfit_zones = self._get_zones()
         _freeform_items = self.db.freeform_items or {}
         _outfit_lines = []
-
-        def _zone_prep(zone_type, mode=None):
-            if mode == "in" or zone_type == "orifice":
-                return "In"
-            if zone_type == "attachment":
-                return "At"
-            return "On"
 
         for _zname in self.get_zone_order():
             if _zname in _tokenized:
@@ -1669,18 +1663,13 @@ class Character(ObjectParent, DefaultCharacter):
             if self._is_covered_by_ancestor(_zname, _outfit_zones):
                 continue
             _zdata = _outfit_zones[_zname]
-            _ztype = _zdata.get("zone_type", "surface")
-            _zdisplay = _zname.replace("_", " ")
             _covered = _zdata.get("covered_by")
             if _covered:
                 _worn = _covered.get(
                     "worn_desc", _covered.get("desc", "")
                 )
                 if _worn:
-                    _prep = _zone_prep(_ztype)
-                    _outfit_lines.append(
-                        f"{_prep} {_possessive} {_zdisplay}, {_worn}"
-                    )
+                    _outfit_lines.append(_worn)
 
         # Freeform items on non-tokenized zones
         for _iname, _idata in _freeform_items.items():
@@ -1690,15 +1679,8 @@ class Character(ObjectParent, DefaultCharacter):
             if _izone in _tokenized:
                 continue  # already shown via token
             _idesc = _idata.get("desc", "")
-            if not _idesc:
-                continue
-            _imode = _idata.get("display_mode", "on")
-            _iztype = _outfit_zones.get(_izone, {}).get("zone_type", "surface")
-            _prep = _zone_prep(_iztype, mode=_imode)
-            _zdisplay = _izone.replace("_", " ")
-            _outfit_lines.append(
-                f"{_prep} {_possessive} {_zdisplay}, {_idesc}"
-            )
+            if _idesc:
+                _outfit_lines.append(_idesc)
 
         if _outfit_lines:
             parts.append("")
@@ -1708,17 +1690,17 @@ class Character(ObjectParent, DefaultCharacter):
         body = self.db.body_language or ""
         if body:
             parts.append("")
-            parts.append(body)
+            parts.append(f"|wBearing:|n {body}")
 
         # --- Layer 6: Mood tell ---
         mood_tell = self.db.mood_tell or ""
         mood = self.db.mood or ""
         if mood_tell:
             parts.append("")
-            parts.append(f"|x{mood_tell}|n")
+            parts.append(f"|wMood:|n |x{mood_tell}|n")
         elif mood:
             parts.append("")
-            parts.append(f"|x({mood})|n")
+            parts.append(f"|wMood:|n |x({mood})|n")
 
         # --- Layer 7: State tells (restraints + lead) ---
         state_tells = []

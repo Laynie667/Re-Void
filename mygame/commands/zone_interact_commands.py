@@ -150,9 +150,17 @@ def _find_zone(target, zone_query):
             zd = dict(zd)
         return key, zd
 
-    # Prefix match
+    # Prefix match on full path
     for zname, zdata in zones.items():
         if zname.startswith(key):
+            if hasattr(zdata, "items"):
+                zdata = dict(zdata)
+            return zname, zdata
+
+    # Leaf-name match — e.g. "pussy" matches "groin/pussy"
+    for zname, zdata in zones.items():
+        leaf = zname.split("/")[-1]
+        if leaf == key or leaf.startswith(key):
             if hasattr(zdata, "items"):
                 zdata = dict(zdata)
             return zname, zdata
@@ -259,15 +267,25 @@ class CmdZoneInteract(Command):
                 break
 
         if not target:
-            caller.msg(f"|xYou don't see '{args}' here.|n")
-            return
-
-        # Can't interact with yourself with these verbs (mostly)
-        if target == caller:
-            caller.msg(
-                f"|xYou can't {verb} yourself with this command.|n"
-            )
-            return
+            # Fallback: check if args looks like a zone on the caller
+            # e.g. "grope pussy" → grope self's pussy zone
+            zone_test = args.lower().replace(" ", "_")
+            caller_zones = getattr(caller.db, "zones", None) or {}
+            matched_zone = None
+            if zone_test in caller_zones:
+                matched_zone = zone_test
+            else:
+                # Leaf-name match
+                for zn in caller_zones:
+                    if zn.split("/")[-1] == zone_test or zn.split("/")[-1].startswith(zone_test):
+                        matched_zone = zn
+                        break
+            if matched_zone:
+                target = caller
+                zone_query = matched_zone
+            else:
+                caller.msg(f"|xYou don't see '{args}' here.|n")
+                return
 
         # ── Resolve zone ──────────────────────────────────────────
         zone_name = None
@@ -361,7 +379,62 @@ class CmdZoneInteract(Command):
 
 
 # ---------------------------------------------------------------------------
+# CmdSmell — perception command, shows scent_desc of a target
+# ---------------------------------------------------------------------------
+
+class CmdSmell(Command):
+    """
+    Smell yourself or another character.
+
+    Usage:
+      smell           — smell yourself
+      smell <target>  — smell someone nearby
+      sniff <target>  — alias
+
+    Shows the scent description set via setscent.
+    """
+
+    key     = "smell"
+    aliases = ["sniff"]
+    locks   = "cmd:all()"
+    help_category = "RP Tools"
+
+    def func(self):
+        caller = self.caller
+        args   = self.args.strip()
+
+        if args:
+            # Search in room + self
+            target = caller.search(args, quiet=True)
+            if isinstance(target, list):
+                target = target[0] if target else None
+            if not target:
+                caller.msg(f"|xYou don't see '{args}' here.|n")
+                return
+        else:
+            target = caller
+
+        scent = getattr(target.db, "scent_desc", None) or ""
+        target_name = (getattr(target.db, "rp_name", None) or target.name)
+
+        if scent:
+            if target == caller:
+                caller.msg(f"|xYou smell yourself — {scent}.|n")
+            else:
+                caller.msg(
+                    f"|xYou breathe in. {target_name} — {scent}.|n"
+                )
+        else:
+            if target == caller:
+                caller.msg("|xYou don't notice anything particular about your own scent.|n")
+            else:
+                caller.msg(
+                    f"|x{target_name} doesn't have a notable scent.|n"
+                )
+
+
+# ---------------------------------------------------------------------------
 # Export
 # ---------------------------------------------------------------------------
 
-ALL_ZONE_INTERACT_CMDS = [CmdZoneInteract]
+ALL_ZONE_INTERACT_CMDS = [CmdZoneInteract, CmdSmell]

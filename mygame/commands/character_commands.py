@@ -2556,7 +2556,11 @@ class CmdUndress(MuxCommand):
                 zone_data["state_desc"] = None
                 cleared.append(zone_name)
 
-        if cleared:
+        # Also clear freeform items (place/wear items stored separately)
+        freeform_cleared = bool(char.db.freeform_items)
+        char.db.freeform_items = {}
+
+        if cleared or freeform_cleared:
             char.db.zones = zones
             char._rebuild_outfit_desc()
             name = char.db.rp_name or char.key
