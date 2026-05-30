@@ -351,18 +351,14 @@ zone ambient playful_aura add The luminescence around |mWitch|n dims very slight
 -- @create runs as staff / in-game builder command --
 -- @create syntax: @create <name>:<typeclass_path> --
 
--- NOTE: @create puts items in the room, not inventory. Pick them up before installing. --
-@create Breast Enhancement:typeclasses.body_mod_item.BreastItem
-@create Milk Glands:typeclasses.production_item.MilkProductionItem
+-- NOTE: Use @py to create items directly in inventory — @create may lack perms or mislocation. --
 
--- Pick them up from the room --
-get Breast Enhancement
-get Milk Glands
+@py from evennia import create_object; from typeclasses.body_mod_item import BreastItem; item = create_object(BreastItem, key="Breast Enhancement", location=caller); caller.msg(f"Created: {item.key}")
 
--- Install the BreastItem on the chest zone. This populates {size} in zone desc. --
+@py from evennia import create_object; from typeclasses.production_item import MilkProductionItem; item = create_object(MilkProductionItem, key="Milk Glands", location=caller); caller.msg(f"Created: {item.key}")
+
+-- Items are now in your inventory. Install them: --
 install Breast Enhancement on chest
-
--- Install the MilkProductionItem on the chest zone. This enables milking. --
 install Milk Glands on chest
 
 -- Set a flavor for the milk. --
