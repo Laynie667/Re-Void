@@ -348,18 +348,12 @@ zone ambient playful_aura add The luminescence around |mWitch|n dims very slight
 
 -- STEP 9: Body Mod Test Items --
 -- Demonstrates the {size} token in zone descriptions and the install system. --
--- @create runs as staff / in-game builder command --
--- @create syntax: @create <name>:<typeclass_path> --
+-- Uses @py with me.puppet to target the Character (me alone is the Account). --
+-- Calls item.install() directly — no need for the install command. --
 
--- NOTE: Use @py to create items directly in inventory — @create may lack perms or mislocation. --
+@py from evennia import create_object; from typeclasses.body_mod_item import BreastItem; item = create_object(BreastItem, key="Breast Enhancement", location=me); ok, reason = item.install(me, "chest"); me.msg(f"BreastItem: {ok} {reason or 'installed OK'}")
 
-@py from evennia import create_object; from typeclasses.body_mod_item import BreastItem; item = create_object(BreastItem, key="Breast Enhancement", location=caller); caller.msg(f"Created: {item.key}")
-
-@py from evennia import create_object; from typeclasses.production_item import MilkProductionItem; item = create_object(MilkProductionItem, key="Milk Glands", location=caller); caller.msg(f"Created: {item.key}")
-
--- Items are now in your inventory. Install them: --
-install Breast Enhancement on chest
-install Milk Glands on chest
+@py from evennia import create_object; from typeclasses.production_item import MilkProductionItem; item = create_object(MilkProductionItem, key="Milk Glands", location=me); ok, reason = item.install(me, "chest"); me.msg(f"MilkProductionItem: {ok} {reason or 'installed OK'}")
 
 -- Set a flavor for the milk. --
 setfluid/flavor Milk Glands = warm and faintly sweet, with the particular honey-vanilla of her scent translated into something tangible — richer than expected, not ungentle

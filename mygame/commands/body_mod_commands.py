@@ -29,6 +29,7 @@ ALL_BODY_MOD_CMDS — exported list for default_cmdsets.py
 """
 
 from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from evennia.utils import search
 
 
@@ -148,7 +149,7 @@ class CmdInstall(Command):
 
         item = None
         for obj in caller.contents:
-            if item_name in obj.key.lower():
+            if item_name.lower() in obj.key.lower():
                 if isinstance(obj, (BodyModItem, ProductionItem)):
                     item = obj
                     break
@@ -286,7 +287,7 @@ class CmdUninstall(Command):
 # CmdSetFluid
 # ---------------------------------------------------------------------------
 
-class CmdSetFluid(Command):
+class CmdSetFluid(MuxCommand):
     """
     Set the fluid type or flavor text on a production item.
 
@@ -453,7 +454,7 @@ class CmdApplyLotion(Command):
 # CmdInject
 # ---------------------------------------------------------------------------
 
-class CmdInject(Command):
+class CmdInject(MuxCommand):
     """
     Inject a syringe into a character zone for a temporary (and with repeated use,
     increasingly permanent) size boost to the installed body mod item.
@@ -538,7 +539,7 @@ class CmdInject(Command):
 # CmdMilk
 # ---------------------------------------------------------------------------
 
-class CmdMilk(Command):
+class CmdMilk(MuxCommand):
     """
     Operate the milking machine in the room.
 
