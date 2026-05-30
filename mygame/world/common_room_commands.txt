@@ -54,22 +54,22 @@ roomzone detail floor/scorch = There is a second scorch mark on the hearthside f
 
 -- STEP 5: Zone study details (random observations from 'study') --
 
-roomzone study hearth = The fire sounds different when the wind changes outside — a lower draw through the flue, the flames leaning fractionally toward the room before correcting.
-roomzone study hearth = The wolf tracks on the mantle are slightly larger than any wolf you've personally encountered in the wild. You file this away and say nothing.
-roomzone study hearth = The loveseat's left cushion holds its depression for almost a full minute after someone stands. The right one springs back immediately. The difference is years.
-roomzone study hearth = The rocking chair moves with the lightest pressure — the floorboards under its runners are slightly worn in the exact arc of its range of motion.
+roomzone study hearth + The fire sounds different when the wind changes outside — a lower draw through the flue, the flames leaning fractionally toward the room before correcting.
+roomzone study hearth + The wolf tracks on the mantle are slightly larger than any wolf you've personally encountered in the wild. You file this away and say nothing.
+roomzone study hearth + The loveseat's left cushion holds its depression for almost a full minute after someone stands. The right one springs back immediately. The difference is years.
+roomzone study hearth + The rocking chair moves with the lightest pressure — the floorboards under its runners are slightly worn in the exact arc of its range of motion.
 
-roomzone study dining = Someone has put a small nick in the underside of the table edge with what was probably a thumbnail. Idle, repeated, habitual. The nick is smooth now.
-roomzone study dining = The velvet chair cushions are all the same depth of wear except the one at the head nearest the kitchen, which is noticeably more compressed. Someone sits there most.
-roomzone study dining = The wildflowers include one variety that should not be blooming this time of year. You look at it for a moment and decide not to mention it.
+roomzone study dining + Someone has put a small nick in the underside of the table edge with what was probably a thumbnail. Idle, repeated, habitual. The nick is smooth now.
+roomzone study dining + The velvet chair cushions are all the same depth of wear except the one at the head nearest the kitchen, which is noticeably more compressed. Someone sits there most.
+roomzone study dining + The wildflowers include one variety that should not be blooming this time of year. You look at it for a moment and decide not to mention it.
 
-roomzone study island = The marble surface is very slightly warmer near the sink than it should be — residual from something set there recently. The dish towel beside the knife is damp.
-roomzone study island = The barstool second from the left has a small set of initials scratched into the underside of the seat. They are not the initials of anyone you know for certain.
-roomzone study island = The note under the salt shaker shifts slightly with foot traffic through the kitchen. It has clearly been read and replaced rather than acted on. Several times.
+roomzone study island + The marble surface is very slightly warmer near the sink than it should be — residual from something set there recently. The dish towel beside the knife is damp.
+roomzone study island + The barstool second from the left has a small set of initials scratched into the underside of the seat. They are not the initials of anyone you know for certain.
+roomzone study island + The note under the salt shaker shifts slightly with foot traffic through the kitchen. It has clearly been read and replaced rather than acted on. Several times.
 
-roomzone study kitchen = The copper kettle on the back burner is warm. Someone had tea recently or is expecting to.
-roomzone study kitchen = The jar labels in the refrigerator shelf are consistent — same pen, same hand, dated. The dates are regular. This is a routine.
-roomzone study kitchen = The cabinet hinges near the cooktop are looser than the others. This cabinet gets opened the most, several times per meal, and nobody has tightened the screws. It is not a problem anyone has decided to solve.
+roomzone study kitchen + The copper kettle on the back burner is warm. Someone had tea recently or is expecting to.
+roomzone study kitchen + The jar labels in the refrigerator shelf are consistent — same pen, same hand, dated. The dates are regular. This is a routine.
+roomzone study kitchen + The cabinet hinges near the cooktop are looser than the others. This cabinet gets opened the most, several times per meal, and nobody has tightened the screws. It is not a problem anyone has decided to solve.
 
 
 -- STEP 6: Zone properties --

@@ -5,7 +5,7 @@
 
 -- STEP 1: Room Description --
 
-@desc here = \|yHelena's Room\|n/The chamber behind the \|wiron-reinforced door\|n sits heavier than the rest of the cabin — warmer, closer, and unmistakably hers. \|xThe smell of warm leather and a particular elven perfume reaches you before your eyes adjust: something dry and dark, cut through with the cold thread of \|cchain metal\|x.\|n The \|wcanopied bed\|n dominates the center of the room, its frame resting on \|cvertical bars\|n you understand at once are not decorative. Every wooden surface near the furniture bears the \|xdeep gouges of claws\|n — not vandalism, but repetition; the marks of something that has paced and circled and returned here many times.//{zone:bed}//{zone:desk}//{zone:tapestries}//{zone:wall_chains}//{zone:pet_bed}
+@desc here = |yHelena's Room|n/The chamber behind the |wiron-reinforced door|n sits heavier than the rest of the cabin — warmer, closer, and unmistakably hers. |xThe smell of warm leather and a particular elven perfume reaches you before your eyes adjust: something dry and dark, cut through with the cold thread of |cchain metal|x.|n The |wcanopied bed|n dominates the center of the room, its frame resting on |cvertical bars|n you understand at once are not decorative. Every wooden surface near the furniture bears the |xdeep gouges of claws|n — not vandalism, but repetition; the marks of something that has paced and circled and returned here many times.//{zone:bed}//{zone:desk}//{zone:tapestries}//{zone:wall_chains}//{zone:pet_bed}
 
 
 -- STEP 2: Create zones --
@@ -19,15 +19,15 @@ roomzone add pet_bed
 
 -- STEP 3: Zone descriptions --
 
-roomzone desc bed = The \|wcanopied bed\|n is king-sized and centered on the far wall from the door, made up with \|mvelvety red silk sheets\|n and a thick blanket tucked neatly at the edges — the kind of made that means someone cared to do it right. \|xSeveral pillows are distributed across the head of the bed, some plump and whole, others chewed through at the corners with stuffing pulled free.\|n The canopy frame above is supported by the \|ckennel cage\|n beneath it: floor-to-ceiling vertical bars forming a cell, its door hinged at the foot of the bed and fitted with a simple latch. The gouges in the floorboards are deepest here, worn into long parallel grooves that trace where something paced the length of the bars again and again.
+roomzone desc bed = The |wcanopied bed|n is king-sized and centered on the far wall from the door, made up with |mvelvety red silk sheets|n and a thick blanket tucked neatly at the edges — the kind of made that means someone cared to do it right. |xSeveral pillows are distributed across the head of the bed, some plump and whole, others chewed through at the corners with stuffing pulled free.|n The canopy frame above is supported by the |ckennel cage|n beneath it: floor-to-ceiling vertical bars forming a cell, its door hinged at the foot of the bed and fitted with a simple latch. The gouges in the floorboards are deepest here, worn into long parallel grooves that trace where something paced the length of the bars again and again.
 
-roomzone desc desk = A \|wmetal desk\|n stands a few steps left of the bed, its surface given over entirely to \|mthe collection\|n — dildos and vibrators arranged without particular order, a coiled \|mblack and purple cat 'o nine tails\|n, a feathered crop, two sizes of strap-on harness, and smaller items whose function is obvious enough. Nothing is hidden here; the desk is a working surface, not a display. \|xFour drawers are set into the left side of the desk, each fitted with a small lock.\|n The metal surface itself is scratched in several places and shows the faint ring-marks of objects set down wet.
+roomzone desc desk = A |wmetal desk|n stands a few steps left of the bed, its surface given over entirely to |mthe collection|n — dildos and vibrators arranged without particular order, a coiled |mblack and purple cat 'o nine tails|n, a feathered crop, two sizes of strap-on harness, and smaller items whose function is obvious enough. Nothing is hidden here; the desk is a working surface, not a display. |xFour drawers are set into the left side of the desk, each fitted with a small lock.|n The metal surface itself is scratched in several places and shows the faint ring-marks of objects set down wet.
 
-roomzone desc tapestries = \|wHeavy tapestries\|n hang at irregular intervals around the room's walls, their weight pulling them flush against the stone behind. Each bears the same design: \|xgothic-lettered H.S. at the center\|n, surrounded by oversized wolf paw prints worked in deep burgundy thread. Several are torn along their lower edges — long diagonal rips consistent with large fangs — and the backing fabric shows through in pale contrast. The tapestries do not merely decorate: at least two hang with a gap behind them that suggests a passage rather than a wall.
+roomzone desc tapestries = |wHeavy tapestries|n hang at irregular intervals around the room's walls, their weight pulling them flush against the stone behind. Each bears the same design: |xgothic-lettered H.S. at the center|n, surrounded by oversized wolf paw prints worked in deep burgundy thread. Several are torn along their lower edges — long diagonal rips consistent with large fangs — and the backing fabric shows through in pale contrast. The tapestries do not merely decorate: at least two hang with a gap behind them that suggests a passage rather than a wall.
 
-roomzone desc wall_chains = Along the \|wnorthern wall\|n, two \|ccollar-and-chain sets\|n are bolted at shoulder height, the chains long enough to allow a person to stand or kneel but not to reach the center of the room. \|xDirectly below them, four sets of \|cfloor shackles\|n are anchored in a row: spaced roughly a meter apart, each set half a meter from the wall.\|n The iron of the nearest chain is dulled from handling where the links pass through the collar ring.
+roomzone desc wall_chains = Along the |wnorthern wall|n, two |ccollar-and-chain sets|n are bolted at shoulder height, the chains long enough to allow a person to stand or kneel but not to reach the center of the room. |xDirectly below them, four sets of |cfloor shackles|n are anchored in a row: spaced roughly a meter apart, each set half a meter from the wall.|n The iron of the nearest chain is dulled from handling where the links pass through the collar ring.
 
-roomzone desc pet_bed = Against the \|wnorthern wall\|n, beside the chains, sits a large \|mcircular pet bed\|n in deep purple — the kind of plush that holds the shape of whoever last curled into it. It is genuinely large: two adults could lie in it without crowding, three with deliberate closeness. \|xThe surface fabric is pilled and soft from use, and the foam beneath it has compressed unevenly on one side, shaped by a preferred sleeping position.\|n
+roomzone desc pet_bed = Against the |wnorthern wall|n, beside the chains, sits a large |mcircular pet bed|n in deep purple — the kind of plush that holds the shape of whoever last curled into it. It is genuinely large: two adults could lie in it without crowding, three with deliberate closeness. |xThe surface fabric is pilled and soft from use, and the foam beneath it has compressed unevenly on one side, shaped by a preferred sleeping position.|n
 
 
 -- STEP 4: Zone details --
@@ -42,7 +42,7 @@ roomzone detail bed/claw_marks = The gouge lines in the floorboards along the ke
 
 roomzone detail desk/drawers = The four drawers are fitted with small barrel locks, each keyhole worn bright around its edges. The locks are not the same — three are original hardware, one has been replaced at some point with a newer mechanism. None are currently locked. The drawers themselves slide on wood runners that have been waxed recently.
 
-roomzone detail desk/toys = The \|mcollection on the desk\|n is not curated for display — it is equipment. The larger strap-on harness has the leather softened and shaped at the hip straps from repeated wear. The cat 'o nine tails, black cord and purple-tipped, shows no wear; the feathered crop shows a great deal. Several of the smaller vibrators have charging cables coiled around them.
+roomzone detail desk/toys = The |mcollection on the desk|n is not curated for display — it is equipment. The larger strap-on harness has the leather softened and shaped at the hip straps from repeated wear. The cat 'o nine tails, black cord and purple-tipped, shows no wear; the feathered crop shows a great deal. Several of the smaller vibrators have charging cables coiled around them.
 
 roomzone detail tapestries/hs_mark = The H.S. at the center of each tapestry is worked in a genuinely skilled hand — the gothic letterforms are consistent and precise, not a copy of a copy. The same mark appears on the iron door to this room, struck into the metal rather than embroidered. The initials are an ownership mark, not a signature. They face inward: meant to be seen by whoever is inside the room.
 
@@ -57,25 +57,25 @@ roomzone detail pet_bed/surface = The purple fabric is a short-pile plush, the k
 
 -- STEP 5: Zone study details --
 
-roomzone study bed = The underside of the canopy frame, directly above where a person's head would rest, has three light scratches in the paint — high enough that they could only have been made from someone lying on the bed, reaching up.
-roomzone study bed = The sheet on the left side of the bed is tucked more firmly than the right. The right-side tuck has been redone at some point after the initial making — the fold is slightly off from the left's precision.
-roomzone study bed = The chewed pillows have not been moved to the foot of the bed or removed. They sit among the intact ones as a matter of course, as if their condition is unremarkable.
+roomzone study bed + The underside of the canopy frame, directly above where a person's head would rest, has three light scratches in the paint — high enough that they could only have been made from someone lying on the bed, reaching up.
+roomzone study bed + The sheet on the left side of the bed is tucked more firmly than the right. The right-side tuck has been redone at some point after the initial making — the fold is slightly off from the left's precision.
+roomzone study bed + The chewed pillows have not been moved to the foot of the bed or removed. They sit among the intact ones as a matter of course, as if their condition is unremarkable.
 
-roomzone study desk = The scratch marks on the desk surface cluster around the area directly in front of the drawers. Whatever made them was at floor level and repeated.
-roomzone study desk = The feathered crop has a faint discoloration on the handle end, at the grip point, where the leather wrapping has absorbed something over time. The tip feathers are intact but clumped in a way that suggests they have been wet and dried more than once.
-roomzone study desk = One of the vibrators has a small piece of ribbon tied around its base — not functional, just there. The ribbon is frayed at both ends.
+roomzone study desk + The scratch marks on the desk surface cluster around the area directly in front of the drawers. Whatever made them was at floor level and repeated.
+roomzone study desk + The feathered crop has a faint discoloration on the handle end, at the grip point, where the leather wrapping has absorbed something over time. The tip feathers are intact but clumped in a way that suggests they have been wet and dried more than once.
+roomzone study desk + One of the vibrators has a small piece of ribbon tied around its base — not functional, just there. The ribbon is frayed at both ends.
 
-roomzone study tapestries = The torn sections of the tapestries have not been repaired. The tears are treated as a feature rather than damage — the fabric around each tear is clean and not further fraying, as if the tearing was done once and is finished.
-roomzone study tapestries = The paw print motif on the tapestries is not stylized; the proportions match a very large wolf, and the claws are rendered individually with accurate anatomical spacing.
-roomzone study tapestries = Behind the tapestry near the southeast corner, there is no passage — only wall. But there is a hook set into the stone at about eye height, and whatever hung from it has been removed.
+roomzone study tapestries + The torn sections of the tapestries have not been repaired. The tears are treated as a feature rather than damage — the fabric around each tear is clean and not further fraying, as if the tearing was done once and is finished.
+roomzone study tapestries + The paw print motif on the tapestries is not stylized; the proportions match a very large wolf, and the claws are rendered individually with accurate anatomical spacing.
+roomzone study tapestries + Behind the tapestry near the southeast corner, there is no passage — only wall. But there is a hook set into the stone at about eye height, and whatever hung from it has been removed.
 
-roomzone study wall_chains = The floor shackles are bolted in two distinct pairs rather than a true row of four: the inner spacing between each pair is slightly less than the spacing between the pairs. The effect is subtle but deliberate — two people restrained here would be closer to each other than to the wall anchors.
-roomzone study wall_chains = The second chain from the left has a loop of cord tied around one of its middle links — not a permanent addition, just a marker or a reminder for something.
-roomzone study wall_chains = The floor around the shackles is cleaner than the surrounding boards. Whatever dust and grit the room accumulates has been swept from this section regularly.
+roomzone study wall_chains + The floor shackles are bolted in two distinct pairs rather than a true row of four: the inner spacing between each pair is slightly less than the spacing between the pairs. The effect is subtle but deliberate — two people restrained here would be closer to each other than to the wall anchors.
+roomzone study wall_chains + The second chain from the left has a loop of cord tied around one of its middle links — not a permanent addition, just a marker or a reminder for something.
+roomzone study wall_chains + The floor around the shackles is cleaner than the surrounding boards. Whatever dust and grit the room accumulates has been swept from this section regularly.
 
-roomzone study pet_bed = The compressed side of the pet bed is the side closest to the wall chains. Whatever position is preferred here faces that direction.
-roomzone study pet_bed = Pressed into the fabric near the edge of the bed, barely visible, is the outline of a handprint — small-palmed, fingers spread, pushed in with some force.
-roomzone study pet_bed = The center of the pet bed smells faintly different from its edges — warmer and more personal, a scent that doesn't belong to the leather and perfume of the larger room.
+roomzone study pet_bed + The compressed side of the pet bed is the side closest to the wall chains. Whatever position is preferred here faces that direction.
+roomzone study pet_bed + Pressed into the fabric near the edge of the bed, barely visible, is the outline of a handprint — small-palmed, fingers spread, pushed in with some force.
+roomzone study pet_bed + The center of the pet bed smells faintly different from its edges — warmer and more personal, a scent that doesn't belong to the leather and perfume of the larger room.
 
 
 -- STEP 6: Zone inscriptions --
@@ -131,32 +131,39 @@ roomzone handle pet_bed/surface = You press one hand into the center of the pet 
 
 -- STEP 9: Ambient lines --
 
-rambient/add \|xThe chain nearest the wall shifts with a faint sound — a single link settling against another, then silence.\|n
-rambient/add \|xSomewhere in the room, the leather of the harness on the desk creaks faintly as the temperature shifts.\|n
-rambient/add \|xThe canopy above the bed holds a stillness that the rest of the room does not. No draft reaches it.\|n
-rambient/add \|xA slow breath of air from beneath the bed carries the close, dim smell of the kennel floor — wood and something warmer.\|n
-rambient/add \|xThe tapestry near the northeast wall moves at its lower edge without any detectable draft. It settles back.\|n
-rambient/add \|xThe scent in the room has a layered quality: the perfume is recent; the leather is older; the metal is oldest of all.\|n
-rambient/add \|xOne of the chewed pillows on the bed has shifted slightly from where it was. The stuffing at the tear has pulled a little further free.\|n
-rambient/add \|xThe claw gouges along the kennel bars catch what light there is and hold it in the pale wood at their edges.\|n
+rambient/add |xThe chain nearest the wall shifts with a faint sound — a single link settling against another, then silence.|n
+rambient/add |xSomewhere in the room, the leather of the harness on the desk creaks faintly as the temperature shifts.|n
+rambient/add |xThe canopy above the bed holds a stillness that the rest of the room does not. No draft reaches it.|n
+rambient/add |xA slow breath of air from beneath the bed carries the close, dim smell of the kennel floor — wood and something warmer.|n
+rambient/add |xThe tapestry near the northeast wall moves at its lower edge without any detectable draft. It settles back.|n
+rambient/add |xThe scent in the room has a layered quality: the perfume is recent; the leather is older; the metal is oldest of all.|n
+rambient/add |xOne of the chewed pillows on the bed has shifted slightly from where it was. The stuffing at the tear has pulled a little further free.|n
+rambient/add |xThe claw gouges along the kennel bars catch what light there is and hold it in the pale wood at their edges.|n
 
 
 -- STEP 10: Secret exit — hidden trapdoor to Hidden Laboratory --
--- The northeast tapestry already hints at passages; the hook behind the SE tapestry
--- (noted in tapestries/passages detail) is the lever. Paste these while in the room. --
+-- The southeast tapestry passage hides a trapdoor with an iron ring lever.   --
+-- Paste these while standing in Helena's Room, AFTER you know the lab dbref. --
 
--- Create the hidden exit (no compass direction shown in exits list) --
-@open trapdoor;hidden passage;down = [dbref of Hidden Laboratory room]
+-- 10a. Add a new study hint to the tapestries zone --
+roomzone study tapestries + At the far end of one of the tapestry passages, barely visible from the room side, a narrow seam runs perfectly parallel with the floor — too regular to be a crack.
 
--- Lock it so it doesn't show in exit listings by default --
--- Players discover it via 'look tapestry' or 'push sconce' --
-@lock trapdoor = view:perm(Builder) OR attr(has_found_lab)
-@lock trapdoor = traverse:perm(Builder) OR attr(has_found_lab)
+-- 10b. Add the iron ring discovery detail --
+roomzone detail tapestries/iron_ring = Set flush into the stone floor at the back of the southeastern tapestry passage is a heavy iron ring, the metal worn smooth at the grip from repeated use. The ring sits in a recessed pull handle mounted on what, on closer inspection, is not floor at all — a trapdoor, its seams so precise they were invisible until you knew to look.
 
--- Add an interact hook on the tapestries zone so 'push sconce' or 'pull hook'
--- sets the has_found_lab attr on the caller and opens the way --
--- Note: the actual trigger logic lives in a custom interact handler or
--- can be handled by a staff @py until a dedicated interact script is built. --
+-- 10c. Add the handle text for iron_ring (this is what players see when they 'handle iron_ring') --
+roomzone handle tapestries/iron_ring = You close your fingers around the iron ring and pull. The trapdoor rises on well-oiled hinges — heavy but responsive — and a column of cold air rises from below: stone, metal, something electrical and faint. A vertical ladder descends into lit stone below. The laboratory. You lower the trapdoor back into place, careful and quiet, and note the way.
 
--- Until the interact script is built, staff can manually reveal for a player: --
+-- 10d. Wire the discovery trigger: handling iron_ring sets has_found_lab on the caller --
+-- (The patched CmdHandle checks zone mechanics 'triggers' dict automatically)         --
+@py z=dict(here.db.zones['tapestries']); m=dict(z.get('mechanics',{})); m['triggers']={'iron_ring':{'type':'set_attr','attr':'has_found_lab','value':1,'msg_caller':'|xYou have found the way down.|n','once':True}}; z['mechanics']=m; zones=dict(here.db.zones); zones['tapestries']=z; here.db.zones=zones
+
+-- 10e. Create the hidden exit (replace [#dbref] with the actual lab room dbref) --
+@open iron_ring;trapdoor;down = [#dbref of Hidden Laboratory room]
+
+-- 10f. Lock it: hidden from exit listings, only passable after discovery --
+@lock iron_ring = view:perm(Builder) OR attr(has_found_lab)
+@lock iron_ring = traverse:perm(Builder) OR attr(has_found_lab)
+
+-- Staff can manually grant discovery to a player if needed: --
 -- @py [player].attributes.add('has_found_lab', 1) --

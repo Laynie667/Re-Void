@@ -4,7 +4,7 @@
 
 -- STEP 1: Room Description --
 
-@desc here = \|yShadow's Den — Birthing Den\|n/The cavern does not feel carved. \|xIt feels grown — stone walls curved inward like something that breathed itself into being long before the cabin above was built. The floor is warm underfoot: not from fire, but from the \|cmild spring\|x that seeps up through the stone in three low pools, their surfaces still and faintly luminous in the dark. Torches are unnecessary here; the water provides its own soft light.\|n The walls bear \|mpaintings\|n that predate the pools and probably the den itself — ochre and charcoal pressed directly into the stone in a hand that knew what it was recording. The air smells of wet earth and animal warmth, and the large \|wnest\|n packed against the far curve of the wall has absorbed both until they are inseparable from the space itself.//{zone:paintings}//{zone:pools}//{zone:nest}//{zone:columns}
+@desc here = |yShadow's Den — Birthing Den|n/The cavern does not feel carved. |xIt feels grown — stone walls curved inward like something that breathed itself into being long before the cabin above was built. The floor is warm underfoot: not from fire, but from the |cmild spring|x that seeps up through the stone in three low pools, their surfaces still and faintly luminous in the dark. Torches are unnecessary here; the water provides its own soft light.|n The walls bear |mpaintings|n that predate the pools and probably the den itself — ochre and charcoal pressed directly into the stone in a hand that knew what it was recording. The air smells of wet earth and animal warmth, and the large |wnest|n packed against the far curve of the wall has absorbed both until they are inseparable from the space itself.//{zone:paintings}//{zone:pools}//{zone:nest}//{zone:columns}
 
 
 -- STEP 2: Create zones --
@@ -17,13 +17,13 @@ roomzone add columns
 
 -- STEP 3: Zone descriptions --
 
-roomzone desc paintings = The \|wpaintings\|n cover the northern and eastern walls in an unbroken register that reads left to right: a record, not decoration. The figures are rendered in confident strokes — the pigment is thick where emphasis was intended and thin where the hand moved quickly through familiar ground. \|xThe story they tell is long and specific, and the figures return across multiple panels: an elven woman, drawn always the same way; a \|mblack wolf\|x of unusual size; and a repeating motif of \|cpaw prints\|x that runs beneath the narrative like a written line beneath pictures.\|n The rendering does not moralize. It documents.
+roomzone desc paintings = The |wpaintings|n cover the northern and eastern walls in an unbroken register that reads left to right: a record, not decoration. The figures are rendered in confident strokes — the pigment is thick where emphasis was intended and thin where the hand moved quickly through familiar ground. |xThe story they tell is long and specific, and the figures return across multiple panels: an elven woman, drawn always the same way; a |mblack wolf|x of unusual size; and a repeating motif of |cpaw prints|x that runs beneath the narrative like a written line beneath pictures.|n The rendering does not moralize. It documents.
 
-roomzone desc pools = Three \|cspring pools\|n occupy the center of the cavern floor, their basins worn smooth and almost perfectly circular. \|xThe water that fills them seeps up from below — it is neither hot nor cold, but exactly the temperature of living skin, and it has never been known to fluctuate.\|n The light the pools emit is faint, blue-white, sourceless: it comes from the water itself rather than any reflection. The largest pool is wide enough for four people to sit in comfortably. The smallest is barely a meter across and noticeably deeper than the others. None of them make sound.
+roomzone desc pools = Three |cspring pools|n occupy the center of the cavern floor, their basins worn smooth and almost perfectly circular. |xThe water that fills them seeps up from below — it is neither hot nor cold, but exactly the temperature of living skin, and it has never been known to fluctuate.|n The light the pools emit is faint, blue-white, sourceless: it comes from the water itself rather than any reflection. The largest pool is wide enough for four people to sit in comfortably. The smallest is barely a meter across and noticeably deeper than the others. None of them make sound.
 
-roomzone desc nest = The \|wnest\|n occupies the curved recess in the far wall — a deliberate construction, not an accident of the space. Its base is a compression of \|mprey hides\|n, some tanned and some not, laid in overlapping layers until they form a dense, warm pad. Over and through these are woven \|mpieces of clothing\|n: mostly undergarments, a few thinner fabrics, some items that still carry the shapes of the bodies that wore them. \|xThe whole structure is wide enough to hold a large wolf and several people without crowding, and its edges have been compressed and re-formed over time into a specific bowl shape that suggests long repeated use.\|n
+roomzone desc nest = The |wnest|n occupies the curved recess in the far wall — a deliberate construction, not an accident of the space. Its base is a compression of |mprey hides|n, some tanned and some not, laid in overlapping layers until they form a dense, warm pad. Over and through these are woven |mpieces of clothing|n: mostly undergarments, a few thinner fabrics, some items that still carry the shapes of the bodies that wore them. |xThe whole structure is wide enough to hold a large wolf and several people without crowding, and its edges have been compressed and re-formed over time into a specific bowl shape that suggests long repeated use.|n
 
-roomzone desc columns = Four \|xnatural stone columns\|n rise from the cavern floor to the ceiling, spaced irregularly but positioned so that moving between them requires deliberate navigation. \|xTheir surfaces are worn smooth at roughly waist height on all sides — a consistent band of polish that the rest of the stone does not share.\|n At the base of each column, set into the floor, is a single iron ring, aged to a near-black patina. The rings are large enough to pass a hand through and fixed deeply enough that they do not rattle when struck.
+roomzone desc columns = Four |xnatural stone columns|n rise from the cavern floor to the ceiling, spaced irregularly but positioned so that moving between them requires deliberate navigation. |xTheir surfaces are worn smooth at roughly waist height on all sides — a consistent band of polish that the rest of the stone does not share.|n At the base of each column, set into the floor, is a single iron ring, aged to a near-black patina. The rings are large enough to pass a hand through and fixed deeply enough that they do not rattle when struck.
 
 
 -- STEP 4: Zone details --
@@ -47,20 +47,20 @@ roomzone detail columns/rings = The floor ring at the base of the nearest column
 
 -- STEP 5: Zone study details --
 
-roomzone study paintings = The ochre pigment used in the transformation panels is a different compound from the pigment used in the claiming panel — the color is slightly warmer and the texture finer. The claiming panel may have been made later, or by a different hand working with different materials, or both.
-roomzone study paintings = The H.S. mark beneath the claiming panel is pressed deeper into the stone than the surrounding pigment — worked in rather than painted on. A fingertip run over it catches on its edges.
-roomzone study paintings = The unfinished paw print register on the eastern wall: the final few prints are slightly larger than the ones preceding them. The scaling is gradual, beginning about midway through the eastern register. By the point where the pigment runs out, each print is roughly a third larger than the first.
+roomzone study paintings + The ochre pigment used in the transformation panels is a different compound from the pigment used in the claiming panel — the color is slightly warmer and the texture finer. The claiming panel may have been made later, or by a different hand working with different materials, or both.
+roomzone study paintings + The H.S. mark beneath the claiming panel is pressed deeper into the stone than the surrounding pigment — worked in rather than painted on. A fingertip run over it catches on its edges.
+roomzone study paintings + The unfinished paw print register on the eastern wall: the final few prints are slightly larger than the ones preceding them. The scaling is gradual, beginning about midway through the eastern register. By the point where the pigment runs out, each print is roughly a third larger than the first.
 
-roomzone study pools = The stone between the second and third pool is worn into a shallow channel — a path, worn from repeated movement between them. The channel is narrow, consistent with being made by something that moved on four legs rather than two.
-roomzone study pools = The river stone at the small pool's rim has been there long enough that a faint mineral ring has formed beneath it, staining the stone a slightly darker color. It has not been moved in some time, but it has been moved before — the ring is older than the stone's current position.
-roomzone study pools = Looking down into the largest pool from the step-edge, the luminescence in the water appears to pulse at irregular intervals — too slow to call a flicker, more like a breath. Watching it for more than a few moments produces a mild and not unpleasant disorientation.
+roomzone study pools + The stone between the second and third pool is worn into a shallow channel — a path, worn from repeated movement between them. The channel is narrow, consistent with being made by something that moved on four legs rather than two.
+roomzone study pools + The river stone at the small pool's rim has been there long enough that a faint mineral ring has formed beneath it, staining the stone a slightly darker color. It has not been moved in some time, but it has been moved before — the ring is older than the stone's current position.
+roomzone study pools + Looking down into the largest pool from the step-edge, the luminescence in the water appears to pulse at irregular intervals — too slow to call a flicker, more like a breath. Watching it for more than a few moments produces a mild and not unpleasant disorientation.
 
-roomzone study nest = The bowl shape of the nest is asymmetrical: deeper on the left side than the right, suggesting whoever primarily occupies it does so in a particular orientation. The compressed left wall of the bowl is at a height consistent with the shoulder of a large wolf.
-roomzone study nest = Several of the clothing items are knotted together rather than simply layered — short lengths tied to adjacent items in a way that keeps them from migrating to the edges. The knots are simple but deliberate, done by someone who knew the nest would shift.
-roomzone study nest = The smell of the nest is layered: the dominant register is warm animal, underneath that is something that reads as human or near-human, and beneath both of those, oldest and faintest, is the mineral cold of the cave pools.
+roomzone study nest + The bowl shape of the nest is asymmetrical: deeper on the left side than the right, suggesting whoever primarily occupies it does so in a particular orientation. The compressed left wall of the bowl is at a height consistent with the shoulder of a large wolf.
+roomzone study nest + Several of the clothing items are knotted together rather than simply layered — short lengths tied to adjacent items in a way that keeps them from migrating to the edges. The knots are simple but deliberate, done by someone who knew the nest would shift.
+roomzone study nest + The smell of the nest is layered: the dominant register is warm animal, underneath that is something that reads as human or near-human, and beneath both of those, oldest and faintest, is the mineral cold of the cave pools.
 
-roomzone study columns = The worn band on each column is at a consistent height — approximately ninety centimeters from the floor on all four. Whatever produced it was always the same height and contacted the stone with the same part of itself: the smooth section is narrow and centered on each column face.
-roomzone study columns = The floor rings are not parallel to each other. Each is angled outward from the column it sits at, and the four of them together form a rough circle with the largest pool at its center.
+roomzone study columns + The worn band on each column is at a consistent height — approximately ninety centimeters from the floor on all four. Whatever produced it was always the same height and contacted the stone with the same part of itself: the smooth section is narrow and centered on each column face.
+roomzone study columns + The floor rings are not parallel to each other. Each is angled outward from the column it sits at, and the four of them together form a rough circle with the largest pool at its center.
 
 
 -- STEP 6: Zone inscriptions --
@@ -97,11 +97,11 @@ roomzone handle columns/rings = You crouch at the nearest ring and grip it in bo
 
 -- STEP 9: Ambient lines --
 
-rambient/add \|xOne of the spring pools shifts — the luminescence in the water brightens slightly, holds, then returns to its baseline without any visible cause.\|n
-rambient/add \|xThe nest settles with a quiet compression of hides, as if adjusting to a weight that is no longer present.\|n
-rambient/add \|xThe paintings catch the pool light at a low angle and for a moment the figures seem to exist at a slight depth beneath the stone surface rather than on it.\|n
-rambient/add \|xWarm mineral air drifts up from the small pool and disperses near the ceiling without reaching the floor.\|n
-rambient/add \|xOne of the floor rings at the base of a column shifts a fraction of a degree and stills — the sound it makes is a single low note, clear in the quiet of the cavern.\|n
-rambient/add \|xThe paw print register on the eastern wall catches the pool light and the final, larger prints stand out briefly before the light settles.\|n
-rambient/add \|xThe water in the large pool surfaces in one slow, complete pulse of light and then resumes its usual rhythm.\|n
-rambient/add \|xThe smell of the nest — warm hides, worn fabric, something more personal beneath both — reaches the center of the room for a moment before the cavern air absorbs it.\|n
+rambient/add |xOne of the spring pools shifts — the luminescence in the water brightens slightly, holds, then returns to its baseline without any visible cause.|n
+rambient/add |xThe nest settles with a quiet compression of hides, as if adjusting to a weight that is no longer present.|n
+rambient/add |xThe paintings catch the pool light at a low angle and for a moment the figures seem to exist at a slight depth beneath the stone surface rather than on it.|n
+rambient/add |xWarm mineral air drifts up from the small pool and disperses near the ceiling without reaching the floor.|n
+rambient/add |xOne of the floor rings at the base of a column shifts a fraction of a degree and stills — the sound it makes is a single low note, clear in the quiet of the cavern.|n
+rambient/add |xThe paw print register on the eastern wall catches the pool light and the final, larger prints stand out briefly before the light settles.|n
+rambient/add |xThe water in the large pool surfaces in one slow, complete pulse of light and then resumes its usual rhythm.|n
+rambient/add |xThe smell of the nest — warm hides, worn fabric, something more personal beneath both — reaches the center of the room for a moment before the cavern air absorbs it.|n

@@ -139,6 +139,37 @@ class CmdHandle(Command):
         # Show the full intimate sequence to the caller only
         caller.msg(handle_text)
 
+        # Fire any set_attr trigger attached to this detail
+        # Builders add triggers via @py on the zone mechanics dict:
+        #   zone['mechanics']['triggers'] = {
+        #       'detail_key': {
+        #           'type':       'set_attr',
+        #           'attr':       'has_found_lab',   # attribute name
+        #           'value':      1,
+        #           'msg_caller': '|x...|n',          # shown to caller (optional)
+        #           'msg_room':   '|x...|n',           # shown to room (optional)
+        #           'once':       True,               # only fires once per character
+        #       }
+        #   }
+        zones     = room.db.zones or {}
+        zone_data = zones.get(zone_name) if zone_name else None
+        if zone_data and hasattr(zone_data, "get"):
+            triggers = (zone_data.get("mechanics") or {}).get("triggers") or {}
+            trig = triggers.get(dkey)
+            if trig and trig.get("type") == "set_attr":
+                attr_name = trig.get("attr")
+                attr_val  = trig.get("value", 1)
+                if attr_name:
+                    already = caller.attributes.get(attr_name)
+                    if not already or not trig.get("once", True):
+                        caller.attributes.add(attr_name, attr_val)
+                        trig_msg = trig.get("msg_caller", "")
+                        if trig_msg:
+                            caller.msg(trig_msg)
+                        trig_room = trig.get("msg_room", "")
+                        if trig_room:
+                            room.msg_contents(trig_room, exclude=caller)
+
         # Show a brief, discreet version to the room
         room.msg_contents(
             f"|x{char_name} pauses at something on display, "

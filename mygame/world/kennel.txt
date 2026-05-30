@@ -4,7 +4,7 @@
 
 -- STEP 1: Room Description --
 
-@desc here = \|xKennel under the bed\|n/The space is low and close, the underside of the \|wbed frame\|n a ceiling two feet above, the \|cvertical bars\|n the only walls that matter. \|xLight filters down through the gaps in the floorboards above — dim and secondhand, the color of late afternoon in a room that doesn't quite belong to any particular hour.\|n The smell here is specific: \|xcrayon wax, the faint sourness of dried tears, something sweet and worn that has no clean name.\|n It is the smell of a space that has been occupied in private, for a long time, by someone who had nowhere else to go.//{zone:floor}//{zone:bars}//{zone:blanket}//{zone:eevee}
+@desc here = |xKennel under the bed|n/The space is low and close, the underside of the |wbed frame|n a ceiling two feet above, the |cvertical bars|n the only walls that matter. |xLight filters down through the gaps in the floorboards above — dim and secondhand, the color of late afternoon in a room that doesn't quite belong to any particular hour.|n The smell here is specific: |xcrayon wax, the faint sourness of dried tears, something sweet and worn that has no clean name.|n It is the smell of a space that has been occupied in private, for a long time, by someone who had nowhere else to go.//{zone:floor}//{zone:bars}//{zone:blanket}//{zone:eevee}
 
 
 -- STEP 2: Create zones --
@@ -17,13 +17,13 @@ roomzone add eevee
 
 -- STEP 3: Zone descriptions --
 
-roomzone desc floor = The \|wkennel floor\|n has been altered with deliberate, patient work. The deep claw gouges in the wood — the same marks that run through Helena's room above — have been filled here with \|xcrayon wax\|n pressed in by hand: reds, blues, yellows, oranges, packed into the grooves and smoothed more or less flat. It is not a repair. It is a reclamation, the marks of something feral turned into something a child would do on a rainy afternoon. \|xDrawings cover most of the remaining floor space, layered in places where earlier sheets have been drawn over or pushed aside.\|n
+roomzone desc floor = The |wkennel floor|n has been altered with deliberate, patient work. The deep claw gouges in the wood — the same marks that run through Helena's room above — have been filled here with |xcrayon wax|n pressed in by hand: reds, blues, yellows, oranges, packed into the grooves and smoothed more or less flat. It is not a repair. It is a reclamation, the marks of something feral turned into something a child would do on a rainy afternoon. |xDrawings cover most of the remaining floor space, layered in places where earlier sheets have been drawn over or pushed aside.|n
 
-roomzone desc bars = The \|ckennel bars\|n are standard steel — floor-mounted, ceiling-anchored, spaced close enough that nothing large passes between them. \|xDrawings are taped to the interior of the bars at irregular intervals, fixed with something sticky and reapplied often enough that the attachment points are layered and slightly opaque.\|n The bars themselves are cold to the touch and carry the room's history in their surface: polish at hand height on the inside, where someone gripped them; faint smudges of crayon at the lower sections, at child-height, where the bars were used as a surface to draw against.
+roomzone desc bars = The |ckennel bars|n are standard steel — floor-mounted, ceiling-anchored, spaced close enough that nothing large passes between them. |xDrawings are taped to the interior of the bars at irregular intervals, fixed with something sticky and reapplied often enough that the attachment points are layered and slightly opaque.|n The bars themselves are cold to the touch and carry the room's history in their surface: polish at hand height on the inside, where someone gripped them; faint smudges of crayon at the lower sections, at child-height, where the bars were used as a surface to draw against.
 
-roomzone desc blanket = The \|wblanket and pillow\|n are in the far corner of the kennel, pushed against the bars rather than centered in the space. \|xBoth are damp — not recently wet, but the kind of damp that sets in when fabric has absorbed moisture and not been given time to dry fully between uses.\|n The blanket is a plain fleece, pilled and worn thin at the edges from being clutched and folded. The pillow has a permanent depression in it from the same sleeping position.
+roomzone desc blanket = The |wblanket and pillow|n are in the far corner of the kennel, pushed against the bars rather than centered in the space. |xBoth are damp — not recently wet, but the kind of damp that sets in when fabric has absorbed moisture and not been given time to dry fully between uses.|n The blanket is a plain fleece, pilled and worn thin at the edges from being clutched and folded. The pillow has a permanent depression in it from the same sleeping position.
 
-roomzone desc eevee = In the corner nearest the blanket sits a \|wcrudely made stuffed animal\|n — brown fabric, hand-sewn, recognizable as an attempt at an Eevee from the long ears and the ruff stitched around its neck, though the proportions are approximate and the stitching is a child's stitching: uneven, enthusiastic, holding. \|mA pair of striped violet panties has been worked onto the stuffed animal's head\|n, fitted there like a hat or a crown, and they have been there long enough to have shaped themselves to the position. The panties are visibly worn — the fabric thinned at the crotch to the point of translucency, the elastic relaxed, the cloth full of small holes worked through by repeated handling.
+roomzone desc eevee = In the corner nearest the blanket sits a |wcrudely made stuffed animal|n — brown fabric, hand-sewn, recognizable as an attempt at an Eevee from the long ears and the ruff stitched around its neck, though the proportions are approximate and the stitching is a child's stitching: uneven, enthusiastic, holding. |mA pair of striped violet panties has been worked onto the stuffed animal's head|n, fitted there like a hat or a crown, and they have been there long enough to have shaped themselves to the position. The panties are visibly worn — the fabric thinned at the crotch to the point of translucency, the elastic relaxed, the cloth full of small holes worked through by repeated handling.
 
 
 -- STEP 4: Zone details --
@@ -44,26 +44,26 @@ roomzone detail blanket/wear = The blanket's edges show a specific kind of wear 
 
 roomzone detail eevee/construction = The stuffed animal is made from what appears to be brown felt and craft fleece, hand-cut and hand-sewn with embroidery thread in two colors — brown and cream. The ruff around its neck is the cream, a circle of fabric gathered and stitched on separately. The eyes are buttons: mismatched, one slightly larger than the other, both black, both sewn on with enough thread that they are not coming off. The seams are doubled in places where the original stitching pulled loose and was redone.
 
-roomzone detail eevee/panties = The \|mviolet-striped panties\|n on the Eevee's head are women's cut, small-sized, and have been worn and handled until the fabric has reached a state past simple wear. \|mThe crotch is nearly gone — the threads pulled to nothing by repeated handling and the particular form of comfort that leaves a thing used in a way that has no other name.\|n The elastic waistband retains its shape well enough to hold the panties in place on the stuffed animal's head. The stripes that remain visible are a deep violet against what was once white.
+roomzone detail eevee/panties = The |mviolet-striped panties|n on the Eevee's head are women's cut, small-sized, and have been worn and handled until the fabric has reached a state past simple wear. |mThe crotch is nearly gone — the threads pulled to nothing by repeated handling and the particular form of comfort that leaves a thing used in a way that has no other name.|n The elastic waistband retains its shape well enough to hold the panties in place on the stuffed animal's head. The stripes that remain visible are a deep violet against what was once white.
 
 
 -- STEP 5: Zone study details --
 
-roomzone study floor = The crayon fill in the gouge marks closest to the kennel door is the most recently applied — the wax has less dust in it and its surface is slightly less compressed. Someone was still doing this not long ago.
-roomzone study floor = One drawing near the center of the floor has been partially torn and then laid back flat, the torn section tucked under the edge of the drawing beside it. It is the three-figures scene. The tear runs through the center figure.
-roomzone study floor = Under the corner where the blanket has been pushed, there is a section of floor that has been cleaned — the crayon dust and paper debris swept away, leaving bare wood. Something was placed here that needed a clean surface.
+roomzone study floor + The crayon fill in the gouge marks closest to the kennel door is the most recently applied — the wax has less dust in it and its surface is slightly less compressed. Someone was still doing this not long ago.
+roomzone study floor + One drawing near the center of the floor has been partially torn and then laid back flat, the torn section tucked under the edge of the drawing beside it. It is the three-figures scene. The tear runs through the center figure.
+roomzone study floor + Under the corner where the blanket has been pushed, there is a section of floor that has been cleaned — the crayon dust and paper debris swept away, leaving bare wood. Something was placed here that needed a clean surface.
 
-roomzone study bars = The bar nearest the blanket corner has a series of small marks scratched into the metal at about knee height — not claw marks, too regular for that. Short horizontal lines in groups of four with a diagonal fifth, the universal count-mark. There are a great many of them.
-roomzone study bars = The drawing taped beside the kennel door, the most visible one when the door is open, is newer than the others — the paper has not yellowed and the colors are still bright. It shows only one figure: a small blonde girl, sitting alone, drawn very carefully.
-roomzone study bars = At the very bottom of one bar, near the floor, there is a section that has been polished brighter than anywhere else on the bar. The height is consistent with a forehead resting against the metal, repeatedly, over a long time.
+roomzone study bars + The bar nearest the blanket corner has a series of small marks scratched into the metal at about knee height — not claw marks, too regular for that. Short horizontal lines in groups of four with a diagonal fifth, the universal count-mark. There are a great many of them.
+roomzone study bars + The drawing taped beside the kennel door, the most visible one when the door is open, is newer than the others — the paper has not yellowed and the colors are still bright. It shows only one figure: a small blonde girl, sitting alone, drawn very carefully.
+roomzone study bars + At the very bottom of one bar, near the floor, there is a section that has been polished brighter than anywhere else on the bar. The height is consistent with a forehead resting against the metal, repeatedly, over a long time.
 
-roomzone study blanket = Pressed into the pillow, faintly visible in certain light, is the impression of a face — the rounded profile of someone who slept in the same position so many times that the foam has learned it.
-roomzone study blanket = The corner of the blanket most worn by gripping smells different from the rest of the fabric: the same sweet, specific scent that is present throughout this space but more concentrated here, absorbed through repeated close contact.
-roomzone study blanket = There are no other objects stored with the blanket and pillow — no toys, no extra clothing, nothing tucked away. The space has been kept spare, as if each visit was expected to be the last one.
+roomzone study blanket + Pressed into the pillow, faintly visible in certain light, is the impression of a face — the rounded profile of someone who slept in the same position so many times that the foam has learned it.
+roomzone study blanket + The corner of the blanket most worn by gripping smells different from the rest of the fabric: the same sweet, specific scent that is present throughout this space but more concentrated here, absorbed through repeated close contact.
+roomzone study blanket + There are no other objects stored with the blanket and pillow — no toys, no extra clothing, nothing tucked away. The space has been kept spare, as if each visit was expected to be the last one.
 
-roomzone study eevee = The Eevee has been held so often and so specifically that the fill inside its body has migrated — it is thinner at the middle from being gripped there, thicker at the head and tail where the fill has shifted. It has been carried under an arm, pressed against a body, held to a face.
-roomzone study eevee = The \|mpanties' elastic\|n has the faint marks of teeth on one section of the waistband — not destructive, but the marks of something held in the mouth. The fabric nearby shows the same wear pattern.
-roomzone study eevee = The Eevee's button eyes both face the kennel door. It has been set down facing that direction each time — or it has been turned to face it. The specific position is consistent enough to be intentional.
+roomzone study eevee + The Eevee has been held so often and so specifically that the fill inside its body has migrated — it is thinner at the middle from being gripped there, thicker at the head and tail where the fill has shifted. It has been carried under an arm, pressed against a body, held to a face.
+roomzone study eevee + The |mpanties' elastic|n has the faint marks of teeth on one section of the waistband — not destructive, but the marks of something held in the mouth. The fabric nearby shows the same wear pattern.
+roomzone study eevee + The Eevee's button eyes both face the kennel door. It has been set down facing that direction each time — or it has been turned to face it. The specific position is consistent enough to be intentional.
 
 
 -- STEP 6: Zone inscriptions --
@@ -85,12 +85,11 @@ use Kennel Blanket on blanket
 -- Kennel bars lock mechanic (capacity 0 — locks the kennel from outside) --
 -- Note: this uses the door mechanic to model 'inside the kennel' confinement. --
 -- Install on the bars zone; the latch is described as outside-operable only.    --
-@create Kennel Latch:typeclasses.door_mechanic.DoorMechanic
+@create Kennel Latch:typeclasses.door_mechanic.LockableDoor
 @set Kennel Latch/label = the kennel latch
-@set Kennel Latch/lock_msg = The kennel door swings shut and the latch drops into the bracket with a definitive sound.
-@set Kennel Latch/unlock_msg = The latch lifts free. The kennel door swings open.
-@set Kennel Latch/locked_traverse_msg = The kennel door is latched from outside. It does not open from within.
 use Kennel Latch on bars
+-- After install, update the lock message and knock messages via @py:
+@py z=dict(here.db.zones['bars']); m=dict(z.get('mechanics',{})); d=dict(m.get('door',{})); d['lock_msg']='The kennel door is latched from outside. It does not open from within.'; d['knock_room_msg']='A small sound from inside the kennel — fingertips against the bars.'; d['knock_caller_msg']='You press your fingers against the bars.'; m['door']=d; z['mechanics']=m; zones=dict(here.db.zones); zones['bars']=z; here.db.zones=zones
 
 
 -- STEP 8: Handle interactions --
@@ -103,15 +102,15 @@ roomzone handle bars/drawings_taped = You touch the edge of one of the taped dra
 
 roomzone handle blanket/wear = You pick up the blanket. It is lighter than it should be for its size — worn thin at the center, the fleece thinned to near-nothing at the grip corners. It holds the warmth of the kennel floor rather than resisting it. Holding the worn corner, you can feel where the thread count has dropped to almost nothing, the fabric between your fingers a memory of itself. You set it back exactly as it was.
 
-roomzone handle eevee/construction = You pick up the Eevee. It is lighter than a properly stuffed toy should be — the fill has shifted and compressed over years of use. The handmade seams are rougher than they look from a distance, the thread pulled tight in some places and loose in others. It smells like the blanket corner: the specific, private scent of this space, worked into the fabric through years of being held. The \|mviolet-striped panties\|n shift slightly on its head when you move it. You hold the Eevee for a moment, aware of the count marks on the bar beside you, aware of the drawings on the floor, aware of the kennel door at the foot of the bed above. Then you set it back down, facing the door.
+roomzone handle eevee/construction = You pick up the Eevee. It is lighter than a properly stuffed toy should be — the fill has shifted and compressed over years of use. The handmade seams are rougher than they look from a distance, the thread pulled tight in some places and loose in others. It smells like the blanket corner: the specific, private scent of this space, worked into the fabric through years of being held. The |mviolet-striped panties|n shift slightly on its head when you move it. You hold the Eevee for a moment, aware of the count marks on the bar beside you, aware of the drawings on the floor, aware of the kennel door at the foot of the bed above. Then you set it back down, facing the door.
 
 
 -- STEP 9: Ambient lines --
 
-rambient/add \|xA faint creak from the bed frame above — wood settling, or the memory of weight that has not been there for some time.\|n
-rambient/add \|xThe close air of the kennel does not circulate. Whatever scent is here has been here, layering, for a long time.\|n
-rambient/add \|xThe count marks on the nearest bar catch the dim light at a certain angle and are briefly, clearly visible.\|n
-rambient/add \|xOne of the drawings on the floor has a corner lifting where the paper has gone soft. It rises and settles with no particular cause.\|n
-rambient/add \|xThe light through the floorboards shifts incrementally — a door opening somewhere above, or the position of the sun, or nothing.\|n
-rambient/add \|xThe Eevee in the corner holds its position, both button eyes on the kennel door, waiting with the patience of objects.\|n
-rambient/add \|xThe damp in the blanket is a specific cold — not the cold of an unused thing but the cold of something that absorbed warmth once and has not had a chance to again.\|n
+rambient/add |xA faint creak from the bed frame above — wood settling, or the memory of weight that has not been there for some time.|n
+rambient/add |xThe close air of the kennel does not circulate. Whatever scent is here has been here, layering, for a long time.|n
+rambient/add |xThe count marks on the nearest bar catch the dim light at a certain angle and are briefly, clearly visible.|n
+rambient/add |xOne of the drawings on the floor has a corner lifting where the paper has gone soft. It rises and settles with no particular cause.|n
+rambient/add |xThe light through the floorboards shifts incrementally — a door opening somewhere above, or the position of the sun, or nothing.|n
+rambient/add |xThe Eevee in the corner holds its position, both button eyes on the kennel door, waiting with the patience of objects.|n
+rambient/add |xThe damp in the blanket is a specific cold — not the cold of an unused thing but the cold of something that absorbed warmth once and has not had a chance to again.|n

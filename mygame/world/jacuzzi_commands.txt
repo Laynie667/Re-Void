@@ -48,19 +48,19 @@ roomzone detail cables/hardware = The anchor hardware is flush with the tile —
 
 -- STEP 5: Zone study details --
 
-roomzone study window = The frame of the window has a barely visible tint at its uppermost edge — UV-filtering built into the glass, so the room gets full daylight without sun damage to the mural. Someone thought about the mural when they installed the window.
-roomzone study window = At night, if you look at the glass at the correct angle from across the room, you can see the jacuzzi's surface reflected in it, laid over the aurora outside. The effect is specific and was clearly planned.
-roomzone study window = The wolf's eyes in the mural's first panel, if you trace the angle of them, point to the exact position of the throne in the jacuzzi. This was not an accident in the installation.
+roomzone study window + The frame of the window has a barely visible tint at its uppermost edge — UV-filtering built into the glass, so the room gets full daylight without sun damage to the mural. Someone thought about the mural when they installed the window.
+roomzone study window + At night, if you look at the glass at the correct angle from across the room, you can see the jacuzzi's surface reflected in it, laid over the aurora outside. The effect is specific and was clearly planned.
+roomzone study window + The wolf's eyes in the mural's first panel, if you trace the angle of them, point to the exact position of the throne in the jacuzzi. This was not an accident in the installation.
 
-roomzone study mural = The grout lines vary in width by less than a millimeter across the entire surface. Whoever did this work was either very patient or had done it before at this scale.
-roomzone study mural = There is one tile in the final panel — upper right corner, above the wolf's shoulder — that does not quite match its neighbors. The color is close. It was replaced at some point. The original may have been damaged.
-roomzone study mural = The maiden's expression in the transition panel — the one that is being decided — was the most worked area of the entire mural. Under direct light you can see where earlier tile placements were removed and redone. The artist revised it at least twice.
+roomzone study mural + The grout lines vary in width by less than a millimeter across the entire surface. Whoever did this work was either very patient or had done it before at this scale.
+roomzone study mural + There is one tile in the final panel — upper right corner, above the wolf's shoulder — that does not quite match its neighbors. The color is close. It was replaced at some point. The original may have been damaged.
+roomzone study mural + The maiden's expression in the transition panel — the one that is being decided — was the most worked area of the entire mural. Under direct light you can see where earlier tile placements were removed and redone. The artist revised it at least twice.
 
-roomzone study pedestals = The ivy on the east pedestal has grown long enough to trail to the floor and double back. It was given a small hook to grip at some point. Someone has been tending these plants with attention.
-roomzone study pedestals = One of the pedestal bases has a wax ring pressed into accumulated drip residue — the circular base of a glass, set there and lifted again, many times.
+roomzone study pedestals + The ivy on the east pedestal has grown long enough to trail to the floor and double back. It was given a small hook to grip at some point. Someone has been tending these plants with attention.
+roomzone study pedestals + One of the pedestal bases has a wax ring pressed into accumulated drip residue — the circular base of a glass, set there and lifted again, many times.
 
-roomzone study cables = The cables are structural-grade — the load rating stamped on one of the anchor housings is significantly above anything decorative requires.
-roomzone study cables = One collar has been fastened and unfastened more than the others. The clasp is smoother, the leather at the contact points softer from use. It is the one closest to the jacuzzi.
+roomzone study cables + The cables are structural-grade — the load rating stamped on one of the anchor housings is significantly above anything decorative requires.
+roomzone study cables + One collar has been fastened and unfastened more than the others. The clasp is smoother, the leather at the contact points softer from use. It is the one closest to the jacuzzi.
 
 
 -- STEP 6: Zone inscriptions --
@@ -148,16 +148,16 @@ roomzone detail panel/controls = When open: the left dial controls temperature i
 
 -- STEP 5: Zone study details --
 
-roomzone study water = The water temperature is calibrated well above a standard hot tub. Whoever set the heating element either runs hot or was deliberate about the effect sustained heat has on sustained decision-making.
-roomzone study water = Even when the jets are off there is a baseline movement to the water from the heating elements themselves. The surface of this tub has never been still.
+roomzone study water + The water temperature is calibrated well above a standard hot tub. Whoever set the heating element either runs hot or was deliberate about the effect sustained heat has on sustained decision-making.
+roomzone study water + Even when the jets are off there is a baseline movement to the water from the heating elements themselves. The surface of this tub has never been still.
 
-roomzone study seats = The composite at the base of each toe seat is smoother at one small patch than the rest — wear from weight applied in the same position, many times. All four show it. The wear patterns are consistent.
-roomzone study seats = The knot dimensions on the dildo seats become apparent only at the point of full seating. By then the water temperature has been active for some time.
+roomzone study seats + The composite at the base of each toe seat is smoother at one small patch than the rest — wear from weight applied in the same position, many times. All four show it. The wear patterns are consistent.
+roomzone study seats + The knot dimensions on the dildo seats become apparent only at the point of full seating. By then the water temperature has been active for some time.
 
-roomzone study throne = The throne shows no wear at the seat center. The forward edge of both armrests shows significant wear. The host leans forward and stays there.
-roomzone study throne = The elevation of the throne relative to the toe seats places the host's eye level at approximately the same height as the seated guests' expressions. This is precise and was planned.
+roomzone study throne + The throne shows no wear at the seat center. The forward edge of both armrests shows significant wear. The host leans forward and stays there.
+roomzone study throne + The elevation of the throne relative to the toe seats places the host's eye level at approximately the same height as the seated guests' expressions. This is precise and was planned.
 
-roomzone study panel = The two dark indicators' wire traces run to mechanisms embedded in the seat bases. The panel does control the dildo fixtures directly. The green indicator's wire trace dead-ends inside the panel housing. It has been green since before the panel was installed.
+roomzone study panel + The two dark indicators' wire traces run to mechanisms embedded in the seat bases. The panel does control the dildo fixtures directly. The green indicator's wire trace dead-ends inside the panel housing. It has been green since before the panel was installed.
 
 
 -- STEP 6: Zone inscriptions --

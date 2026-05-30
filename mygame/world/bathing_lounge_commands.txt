@@ -1,0 +1,253 @@
+== Helena's Log Cabin — Bathing Lounge ==
+== Paste these commands in order while standing in the room ==
+== Exits: northwest to Common Room, In/through glass door to Cursed Shower ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = |yHelena's Log Cabin — Bathing Lounge|n/The door behind you is plain — simple wood, no ceremony — and the room it opens into is almost deliberately everything that door is not. |yCreamy macchiato tile|n covers floor and walls in continuous, unhurried planes, each piece shot through with |xblack and gold flecks|n that catch and release the light as you move. The |xgrout lines are perfect|n. The floor is warm underfoot in a way that suggests radiant heat running somewhere beneath.//{zone:storage}//{zone:vanity}//{zone:toilet}//{zone:door}//{zone:floor}
+
+
+-- STEP 2: Create zones --
+
+roomzone add storage
+roomzone add vanity
+roomzone add toilet
+roomzone add door
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc storage = To the left of the entrance, |wopen shelves|n occupy the wall between two flush-mounted cabinets with |xmatte black handles|n. The shelves hold |xbaskets of folded towels|n — thick, cream-colored, the kind that dry you properly — alongside |xbundles of dried flowers|n, a small dish of |xpotpourri|n that gives the room one of its undertones, and a row of |wcommon toiletries|n arranged without excessive order. The |wleft cabinet|n, when opened, is organized with the particular dedication of someone who uses these things daily: |xlotions, soaps, powders, razors|n, products for every surface of a body. The |wright cabinet|n is organized with the same dedication and a different purpose: |mwaterproof, varied, and clearly well-considered|n, its contents arranged by function rather than size.
+
+roomzone desc vanity = To the right of the entrance, a |wcrystalline wash basin|n sits on a narrow stone shelf, its surface catching light like water held still. Above it, a |wrounded mirror|n in an |xornate frame|n — dark metal cast with the clean-pressed tracks of wolves running its full circumference, unhurried, as though they simply chose to live there. A |xhand towel|n hangs from the ring at the basin's edge, slightly damp. The reflection in the mirror is honest and unfiltered. |xVanity lighting|n runs the top of the frame and knows what it's doing.
+
+roomzone desc toilet = Set into an alcove in the back wall — open to the room, no door, no pretense about what happens there — is a |wwhite porcelain squat toilet|n recessed flush into the floor. The alcove is |xtiled to match the room|n and offers more privacy than you might expect from the layout. Beside the base of the unit, a |wbidet sprayer|n on a short coiled hose waits with the quiet utility of something installed by someone who has opinions about hygiene. The alcove smells clean. The candles in this corner are |xyarrow and cedar|n.
+
+roomzone desc door = Centered in the back wall, a |wglass door|n in a |xbronzed frame|n leads into the shower. The glass is thick — the kind that suggests it has to be — and the panels flanking the door run floor to ceiling in a way that lets you see the space beyond without entering it. The |wdoor handle|n is bronzed, large, and shaped with a specificity of intent that communicates exactly what kind of room this is and what the person who designed it thought about it. Before the door, a |wplush bath mat|n in deep charcoal reads, in an embroidered script that someone took time with: |m"Magic showers, last for hours."|n Mounted above the frame, |wfour candles in a row|n burn slow and even, their wax an uninterrupted deep red.
+
+roomzone desc floor = The |wfloor tile|n is continuous — same plane as the walls, no transition — and the |xunderfloor heat|n makes it feel more like standing on something alive than something constructed. |wIn each corner, a candle on a metal stand|n burns at a different height, each a different color: |mdeep red|n near the door, |ywarm amber|n near the storage wall, |xsoft white|n near the vanity, |xmuted green|n near the toilet alcove. The room smells of all of them at once and somehow achieves coherence. Mounted between the candles, |xpaintings of flora and fauna|n in simple frames — botanicals, a wolf study, something abstract in blues — give the walls purpose between the hooks and rings.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail storage/towels = The towels are folded in thirds, stacked four deep in the baskets, and are the specific weight of a towel that someone spent money on. They are all the same color: a warm off-white that doesn't show water marks. Someone restocks them regularly. The basket is never less than half full.
+
+roomzone detail storage/left_cabinet = Organized with more intention than it first appears. The lotions are grouped by use — body, face, hands — and there are several of each type. The soaps are in a row, unwrapped, their scents distinguishable from a short distance: |yone is cedar and sandalwood|n, one is something floral and specific, one is |yunscented and heavy|n. The razors are proper ones, the kind with a handle, blades stored separately in a small magnetic case. There is a nail kit. There are several things you might not have thought to bring and are glad to find.
+
+roomzone detail storage/right_cabinet = Organized the same way the left one is — by use, by type, by occasion — which is its own kind of statement. The |mwaterproof items|n are arranged by size. The restraints are |msoft-lined|n, the kind made for extended use, in two colors: black and a deep burgundy. There are three grades of lubricant on the top shelf in descending order of viscosity. Nothing in this cabinet was an afterthought. Someone curated it.
+
+roomzone detail vanity/mirror = The wolf tracks in the frame are detailed enough to identify the gait — a walking pace, even spacing, neither hurrying nor fleeing. They complete one full circuit of the frame without interruption. If you look at where the circuit closes, there's a single deviation: one print slightly overlapping the next, a half-step, as though the wolf paused at exactly that point before continuing. The mirror itself is flawless. You look good in here. The lighting is responsible for some of that.
+
+roomzone detail vanity/basin = The basin is deep enough to fill properly. The taps are |xaged brass|n — not decorative-aged, actually worn — and run hot immediately, no waiting. Someone who uses this sink daily knows the exact angle of the hot tap that produces the temperature they want. There is a faint ring of use at the drain. The stone it's set in is cool and smooth and slightly translucent where the light hits it right.
+
+roomzone detail toilet/alcove = The squat position is not an accident. The toilet is set low, the |xsupport bars|n on each side are positioned to make the posture comfortable for extended use, and the tile around the base has a very slight inward grade toward the drain. Someone thought about this. The bidet sprayer has two settings and the hose is just long enough. The alcove is open but not particularly visible from the main room unless you're looking directly at it, which feels like a deliberate architectural choice.
+
+roomzone detail door/handle = The handle is |mbronzed, warm from the room, and shaped with considerable anatomical confidence|n. It is large enough to require a full grip and has been used enough to have a particular smoothness at the point of contact. It is not subtle. It was not intended to be. Whoever chose it chose it knowing exactly what it would communicate to everyone who opened that door.
+
+roomzone detail door/mat = The embroidery on the mat is |mdeep gold on charcoal|n, the letters in a script that's legible but takes a beat to parse. The mat is thick enough to stand on comfortably and has clearly been washed many times — the embroidery is still perfect, but the pile has softened in the way of something well-kept and frequently used. Standing on it, the glass door fills your view. The space beyond is visible. It is very large for a shower.
+
+roomzone detail floor/candles = Each candle is on a different schedule — the red ones near the door are half-burned, the white near the vanity is fresh, the amber near storage is nearly spent and fragrant with it, the green near the toilet alcove has barely been touched. They are all lit. Someone came through recently and made sure of it. The combined smell is complex: |xwarm, sweet at the edges, something mineral underneath|n. It changes slightly depending on where in the room you're standing.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study storage + The flowers in the shelf baskets are fresh. Not dried, not artificial — fresh, and recently replaced.
+roomzone study storage + The right cabinet's interior has a small mirror mounted to the inside of the door. It faces outward into the room when open. This is not an accident.
+roomzone study storage + The towel baskets are labeled on their undersides in the same neat handwriting as the fridge notes in the kitchen.
+
+roomzone study vanity + The vanity lighting has a dimmer. The switch is small and brass, set into the frame of the mirror at lower right. It is very worn.
+roomzone study vanity + There is a small dish on the stone shelf beside the basin containing: two hair ties, a lip balm, and a single earring. The earring has been there long enough to have a faint ring beneath it.
+
+roomzone study toilet + The support bars in the alcove are scratched in a pattern that suggests grip. Not from falling — from intention.
+roomzone study toilet + There is a small shelf cut into the tile of the alcove at arm height. On it: a candle stub and a spent match, a washcloth folded into thirds, and a hair clip.
+
+roomzone study door + The mat reads the same from both directions. Someone checked.
+roomzone study door + The candles above the shower door are the only ones in the room that have never burned lower than two thirds. They are replaced before they run out.
+roomzone study door + The glass panels flanking the door are not frosted. Whatever happens in the shower is visible from the right angle in the room. This is either an oversight or it is not.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable floor
+
+
+-- STEP 7: Seating / mechanic items --
+(none in the lounge itself — seating is inside the shower)
+
+
+-- STEP 8: Handle interactions --
+(players use: handle storage/right_cabinet, handle door/handle, etc.)
+
+roomzone handle storage/left_cabinet = You open the left cabinet. The organization is immediate and deliberate — lotions ranked by texture and use, soaps unwrapped and fragrant in a row, a full nail kit in a leather case, razors with their blades stored separately. Everything restocked before it runs out. You find what you need or realize you don't need anything at all.
+
+roomzone handle storage/right_cabinet = You open the right cabinet. Your hand finds the edge of the first shelf and you take a moment to actually look. The restraints are soft-lined and serious — the kind made for extended wear, not decoration. The toys are arranged by use in a way that implies whoever stocked this thought about the order of events. The lubricants are on the top shelf: three grades, labeled without euphemism. You stand there a beat longer than you intended.
+
+roomzone handle storage/towels = You pull a towel from the basket. It is the specific weight of something bought for exactly this purpose — thick, warm from the room's heat, the kind that absorbs without dragging. You hold it a moment before deciding what to do with it.
+
+roomzone handle door/handle = You close your hand around the door handle. It fills your grip completely — warm from the room, smooth from use, shaped with a deliberate anatomical confidence that leaves nothing ambiguous. The door opens easily when you pull. The mat beneath your feet reads what it reads. The shower is right there.
+
+roomzone handle vanity/mirror = You step close to the mirror. The vanity lighting is doing its job — honest but kind, the kind that shows you clearly without being unkind about it. You look at yourself for a moment in the way you don't usually let yourself. The wolf tracks in the frame run their circuit around your reflection without comment.
+
+roomzone handle floor/rings = The rings and hooks mounted to the walls are more varied up close — different sizes, different positions, a few at heights that don't have an obvious innocent explanation. They are all firmly anchored. None of them give when you test them. The tile around the mounting points is seamless.
+
+
+-- STEP 9: Candle state (future) --
+Room-level rather than per-candle — three states:
+  'light candles'  → room.db.candle_state = "lit"   (all four burning, full scent)
+  'dim candles'    → room.db.candle_state = "dim"   (half burning, softer light)
+  'snuff candles'  → room.db.candle_state = "unlit" (dark, scent fading)
+Ambient room messages and 'study floor' results shift with the state.
+The red candles above the shower door are exempt — they are always lit.
+
+
+-- STEP 10: Mirror fog (deferred) --
+Build alongside the shower state system. At shower steam >= 2 and door
+closed, room.db.mirror_fogged = True. 'study vanity/mirror' and
+'handle vanity/mirror' return fogged versions of their text. 'wipe mirror'
+clears it. Auto-clears on a delay after shower stops.
+
+
+
+== Helena's Log Cabin — Cursed Shower ==
+== Paste these commands in order while standing INSIDE the shower room ==
+== Exit: Out/through glass door to Bathing Lounge ==
+
+
+-- STEP 1: Room Description --
+
+@desc here = |mHelena's Log Cabin — The Cursed Shower|n/The glass door closes behind you with a sound like a decision being made. The space is |wlarge|n — genuinely large, large enough that the word |xshower|n doesn't quite cover it — with the same |ymacchiato tile|n as the lounge outside, though in here the |xblack and gold flecks catch differently|n. You look closer. |mThose are runes.|n They shift at the edge of attention, |xpresent when you're not focusing on them|n, gone when you try. The room breathes. You feel it.//{zone:walls}//{zone:ledges}//{zone:hoses}//{zone:center}//{zone:floor}
+
+
+-- STEP 2: Create zones --
+
+roomzone add walls
+roomzone add ledges
+roomzone add hoses
+roomzone add center
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc walls = The walls, floor, and ceiling are a continuous tiled surface — |xno interruption, no seam|n between vertical and horizontal — and from every position in the room, |mnozzles|n are visible: set into the ceiling above, spaced along the upper walls, angled with the particular precision of something designed to reach everything. Each can be adjusted independently. |xSteel rings|n — |mlarge, smooth-finished, anchored deep|n — are mounted at intervals that suggest they were placed with purpose: at height for standing restraint, at low height for kneeling, at a position in the center of the back wall that accommodates more than one configuration. The rings do not have the look of additions. They are part of the room.
+
+roomzone desc ledges = On each side wall, running the length of the enclosure, |wpadded ledges|n in |xblack waterproof material|n are built flush into the tile. They are wide enough to sit on properly, long enough to lie along, and the padding has the specific density of something that was specced rather than improvised. The material is textured where grip matters and smooth everywhere else. There are no arms or backs — the ledge is just a surface, which leaves every arrangement of a body on it to the occupant's discretion.
+
+roomzone desc hoses = In the two corners furthest from the glass door, |whoses|n hang in loose coils from hooks set into the tile — thick rubber, the kind made for pressure. Their |xspray heads|n are the adjustable type: narrow jet, wide fan, a pulse setting, and one marked with a symbol that may or may not be one of the runes from the walls. The hoses are long. Long enough to reach anywhere in the room with cord to spare.
+
+roomzone desc center = Standing at the center of the room, |xthere are no knobs, no controls, no visible mechanism|n of any kind. Then — gradually, as though becoming aware of your presence — |mtranslucent script rises through the glass of the nearest wall|n, gold-white and slightly warm to look at directly. It reads:/|m" A mimic once, but changed to please,/  provides the clean you may need./  Speak your thoughts or think your speak,/  and the cursed mimic will provide what you seek./  Whether water and heat, or a sticky treat —/  a tight wet hole or a mighty pole, it will always reach./  But don't think fast, oh my no —/  or this magic shower WILL last for hours. "|n/The words hold for a moment, then dim — not disappearing, just waiting.
+
+roomzone desc floor = The |wshower floor|n continues the tile uninterrupted, but slopes almost imperceptibly toward a |xcenter drain|n — large, brass-grated, capable of handling a great deal of water without comment. The floor is slightly roughened for grip. |xUnderfoot, the tile is warm|n, the same radiant heat as the lounge outside, perhaps slightly more. The drain sits exactly at the center of the room. Everything angles toward it.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail walls/rings = The rings are cold when you first touch them, then warm quickly. The finish is matte, not polished — it doesn't slip when wet. The anchor points are flush with the tile; there is no visible hardware on the surface, just the ring emerging from the wall as if the tile grew it. Each is rated for more than it will likely need to hold. |mThree at standing height. Two at kneeling height. One at the center of the back wall at hip height, positioned to face the glass door and the lounge beyond.|n
+
+roomzone detail walls/nozzles = There are eleven visible nozzles — four in the ceiling in a rough grid, seven in the walls at heights that cover the full volume of the space. Each has a small control dial set into the tile beside it, unobtrusive, that adjusts angle and pressure. They can be operated individually or together. When all eleven run at once, there is nowhere in the room that is not wet. This appears to have been the intention.
+
+roomzone detail walls/runes = The runes are in the tile itself — not painted, not etched, part of the material. They are only fully visible at the edge of your vision, which makes reading them impossible by direct examination. When you stop trying, a few resolve: one that looks like a spiral with a tail, one that resembles a knot that can't be untied, one that is just two parallel lines that somehow feel significant. The gold flecks in the tile between them suggest more. The walls are older than the cabin. The cabin was built around them.
+
+roomzone detail ledges/texture = The ledge material grips without being abrasive — the kind of texture that holds position without requiring active effort to maintain it. The edge is rolled, not sharp. The padding gives about two centimeters and then is firm beneath. Someone tested this. The surface dries quickly when the water stops, which means it can be used wet and won't be cold and damp after. This is a quality-of-life detail that was definitely considered.
+
+roomzone detail hoses/pulse = The pulse setting on the spray head produces a rhythm that is difficult to describe as anything other than deliberate. It is adjustable — the dial on the head changes both the intensity and the interval. The symbol beside this setting on the dial does not appear in any standard plumbing catalog. It does appear in the tile.
+
+roomzone detail center/script = If you stand very still after the script fades, you can feel the room paying attention. Not in a threatening way — in the way of something waiting to be useful. The warmth underfoot increases fractionally. The air is still. Whatever the mimic is, it has patience and does not rush. |mThis, the mat outside warned you about.|n Thinking slowly is not a weakness here. It is the protocol.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study walls + The nozzles are not symmetrical. They are positioned to cover every point in the room from multiple angles simultaneously — this was designed, not approximated.
+roomzone study walls + One of the rings on the back wall is slightly warmer than the others. It has been used more recently, or it is paying attention.
+roomzone study walls + The runes are not the same runes as the ones in the tile outside. The ones out there are decorative, or were at some point. These are not.
+
+roomzone study ledges + There are faint impressions in the ledge material at several points that suggest recurring contact — pressure marks, worn smooth. The ledge has been used the same way, by the same weight, many times.
+roomzone study ledges + The ledges are the same height as the rings at kneeling height on the walls. This is not a coincidence.
+
+roomzone study center + The script doesn't appear for everyone the first time they enter. Sometimes it waits. The room decides when you're ready.
+roomzone study center + If you speak aloud in the room before the mimic responds, the temperature of the air around you changes slightly — warmer, or cooler, depending on the word. The room is listening before it introduces itself.
+
+roomzone study floor + The drain is exactly centered. Not approximately — exactly. If you placed a level against any wall and drew a line to the opposite wall, the drain is at the intersection. The room was built around the drain, or the drain was placed with a precision that implies the builder had very good reasons.
+roomzone study floor + The floor is warm under foot, but there is one tile, third from the left wall, second from the drain, that is warmer than the others. The rune beneath it is not visible even at the edge of vision. It does not appear to be one of the others.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable center
+
+
+-- STEP 7: Restraint mechanic (rings) --
+
+@create Shower Rings:typeclasses.restrain_mechanic.RestrainMechanic
+@set Shower Rings/capacity = 4
+@set Shower Rings/label = the steel rings in the shower walls
+@set Shower Rings/blocker_msg = The rings hold. The mimic notices.
+use Shower Rings on walls
+
+
+-- STEP 8: Seating (ledges) --
+
+@create Shower Ledges:typeclasses.seat_mechanic.SeatMechanic
+@set Shower Ledges/capacity = 6
+@set Shower Ledges/zone_label = on the shower ledge
+@set Shower Ledges/sit_msg = You settle onto one of the ledges. The padding meets you correctly.
+@set Shower Ledges/sit_msg_others = settles onto one of the shower ledges.
+@set Shower Ledges/stand_msg = You rise from the ledge.
+@set Shower Ledges/stand_msg_others = rises from the ledge.
+use Shower Ledges on ledges
+
+
+-- STEP 9: Shower state (future) --
+
+room.db.shower_state = {
+    "running":     False,
+    "steam":       0,        # 0-3; +1/min running, -1/min after stop
+    "temp":        "warm",   # cold / warm / hot / scalding
+    "mimic_active": False,
+    "mimic_phase": None,     # "opening" / "rising" / "peak" / "climax" / None
+    "locked":      False,    # exit blocked while mimic is active
+}
+
+Commands: 'start shower', 'stop shower', 'adjust temp <setting>'
+Steam tick: Evennia repeat script. At steam >= 2 + door closed → lounge
+mirror fogs (room.db.mirror_fogged = True). Clears after shower stops.
+
+
+-- STEP 10: Mimic mechanic (future, standalone system) --
+
+ACTIVATION
+  When 'start shower' fires, roll against mimic_chance (default 30%).
+  On success: delay 20-30 seconds (shower runs normally first), then
+  mimic activates — script text rises on the glass walls, room locks
+  (exit returns a flavor message), mimic_active = True.
+  On miss: normal shower, no mimic, no lock.
+
+SCENE PROGRESSION
+  Scenes stored in world/mimic_scenes.yaml, organized by phase:
+    opening  — 1 scene, sets the mood, ~30-60 seconds in
+    rising   — pool of scenes, 2-3 drawn randomly, ~2 min apart
+    peak     — pool of scenes, 1-2 drawn, escalating
+    climax   — 1 scene, the resolution beat
+  Each phase draws randomly from its pool. Scenes are tagged by
+  manifest type so the pool can be extended without code changes.
+
+MANIFEST TYPES (tags for scene YAML entries)
+  The mimic can produce any of the following based on the scene:
+    cock      — any shape, size, species, or configuration
+    orifice   — same range; can be independent of a body
+    plug      — inserted/filling shapes, passive or active
+    tentacle  — prehensile, multiple, independent
+    combined  — two or more types simultaneously
+  Tags allow future filtering (e.g. room flag to exclude certain types)
+  but default behavior draws from all categories freely.
+
+CLIMAX AND RELEASE
+  After climax scene fires: 60-90 second cooldown, then release message,
+  shower turns off, lock drops, steam begins dissipating.
+  mimic_active = False, mimic_phase = None, locked = False.
+
+AMBIENT (separate from mimic, fires whenever shower is running)
+  A repeat script with randomized interval: 300-600 seconds (5-10 min).
+  Small sensory lines — steam, warmth, rune shimmer, drain sound, heat
+  on skin. Quiet background texture. Does not fire during mimic sequence
+  (mimic scenes replace ambient for that duration).

@@ -4,7 +4,7 @@
 
 -- STEP 1: Room Description --
 
-@desc here = \|cThe Disciplination Room\|n/\|xOak floors, polished until they carry the ceiling's bright strip-lights back up at you in long pale reflections — the room sees everything twice.\|n The \|wpurpose\|n of the space is legible within a single breath: \|ca discipline bench\|n stands in the center, the \|wrack\|n and the \|wshelf\|n positioned to either side with the particular arrangement of things kept in reach. Across the far wall, \|merotic paintings\|n offer the room's only warmth. The air is cool, still, and carries a faint undertone of leather and polish — the smell of a room that has been maintained with care and used with intention.//\|x\|n{zone:bench}//{zone:rack}//{zone:shelf}//{zone:paintings}//{zone:ceiling_collar}//{zone:pet_bed}
+@desc here = |cThe Disciplination Room|n/|xOak floors, polished until they carry the ceiling's bright strip-lights back up at you in long pale reflections — the room sees everything twice.|n The |wpurpose|n of the space is legible within a single breath: |ca discipline bench|n stands in the center, the |wrack|n and the |wshelf|n positioned to either side with the particular arrangement of things kept in reach. Across the far wall, |merotic paintings|n offer the room's only warmth. The air is cool, still, and carries a faint undertone of leather and polish — the smell of a room that has been maintained with care and used with intention.//|x|n{zone:bench}//{zone:rack}//{zone:shelf}//{zone:paintings}//{zone:ceiling_collar}//{zone:pet_bed}
 
 
 -- STEP 2: Create zones --
@@ -19,52 +19,52 @@ roomzone add pet_bed
 
 -- STEP 3: Zone descriptions --
 
-roomzone desc bench = The \|wdiscipline bench\|n at the room's center is a solid piece: dark-padded leather over a steel frame, the proportions designed to keep a prone body level and accessible. Built-in \|ccuff sets\|n are mounted on maneuverable arms — one near the head of the bench, one near the foot — each arm adjustable in angle and extension. The floor around the base is unmarked except for two sets of \|cankle shackles\|n mounted on short chains, their positions set to match someone kneeling at the bench's sides. To the left, a spreader bar leans against the frame, its length adjustable and its end-clips clean.
+roomzone desc bench = The |wdiscipline bench|n at the room's center is a solid piece: dark-padded leather over a steel frame, the proportions designed to keep a prone body level and accessible. Built-in |ccuff sets|n are mounted on maneuverable arms — one near the head of the bench, one near the foot — each arm adjustable in angle and extension. The floor around the base is unmarked except for two sets of |cankle shackles|n mounted on short chains, their positions set to match someone kneeling at the bench's sides. To the left, a spreader bar leans against the frame, its length adjustable and its end-clips clean.
 
-roomzone desc rack = The wall-mounted \|wrack\|n to one side of the bench holds the impact implements in an arrangement that is neither decorative nor haphazard — it is the arrangement of things organized for selection. A \|wcat-o'-nine-tails\|n hangs at the top, its falls clean and separated. Below it: two \|wcanes\|n, a heavy \|wflogger\|n, a lighter one, and at the bottom, two \|wpaddles\|n in graduated weight. All of them have been cleaned and maintained. None of them are new.
+roomzone desc rack = The wall-mounted |wrack|n to one side of the bench holds the impact implements in an arrangement that is neither decorative nor haphazard — it is the arrangement of things organized for selection. A |wcat-o'-nine-tails|n hangs at the top, its falls clean and separated. Below it: two |wcanes|n, a heavy |wflogger|n, a lighter one, and at the bottom, two |wpaddles|n in graduated weight. All of them have been cleaned and maintained. None of them are new.
 
-roomzone desc shelf = Against the opposite wall, a \|wshelf\|n carries the secondary equipment in orderly rows: \|mlube\|n in two formulations, \|mleather cuffs\|n in three sizes, a set of \|mbinds\|n, three \|wdildos\|n in ascending size, a matched set of \|mbutt plugs\|n, \|manal beads\|n, two \|mvibrators\|n. Everything sits in its place, labels facing forward. The shelf itself is fixed to the wall at a height that is convenient from a standing position. Nothing here is hidden.
+roomzone desc shelf = Against the opposite wall, a |wshelf|n carries the secondary equipment in orderly rows: |mlube|n in two formulations, |mleather cuffs|n in three sizes, a set of |mbinds|n, three |wdildos|n in ascending size, a matched set of |mbutt plugs|n, |manal beads|n, two |mvibrators|n. Everything sits in its place, labels facing forward. The shelf itself is fixed to the wall at a height that is convenient from a standing position. Nothing here is hidden.
 
-roomzone desc paintings = The far wall is given entirely to \|merotic paintings\|n — a continuous arrangement of framed works that covers the space from shoulder height to the ceiling. Most are figurative: lovers in the sustained intensity of physical intimacy, their faces caught in expressions of pleasure and attention. A few show positions of bondage — bodies in stress positions, restraints visible and purposeful. They are painted well enough that the faces matter, which is not always true of work like this.
+roomzone desc paintings = The far wall is given entirely to |merotic paintings|n — a continuous arrangement of framed works that covers the space from shoulder height to the ceiling. Most are figurative: lovers in the sustained intensity of physical intimacy, their faces caught in expressions of pleasure and attention. A few show positions of bondage — bodies in stress positions, restraints visible and purposeful. They are painted well enough that the faces matter, which is not always true of work like this.
 
-roomzone desc ceiling_collar = From the ceiling, a \|wcollar on a length of chain\|n descends to approximately standing height in the center of the room, its position putting whoever wears it in the open floor between the bench and the far wall. The chain feeds through a ceiling-mounted pulley and connects to a \|clever on the western wall\|n, which controls both height and tension. The collar itself is wide, stiff leather with a centered D-ring and a quick-release back. The chain above it shows the blue-grey sheen of steel that has been under tension many times.
+roomzone desc ceiling_collar = From the ceiling, a |wcollar on a length of chain|n descends to approximately standing height in the center of the room, its position putting whoever wears it in the open floor between the bench and the far wall. The chain feeds through a ceiling-mounted pulley and connects to a |clever on the western wall|n, which controls both height and tension. The collar itself is wide, stiff leather with a centered D-ring and a quick-release back. The chain above it shows the blue-grey sheen of steel that has been under tension many times.
 
-roomzone desc pet_bed = Near the floor chains, a \|wlarge circular pet bed\|n sits on the polished oak — oversized, heavily padded in a dark fabric, its diameter enough to hold three with some negotiation. The surface is indented from use, the fabric worn soft in a broad central area. It is the only soft thing on the floor of this room, and it sits in the shadow of the ceiling chain.
+roomzone desc pet_bed = Near the floor chains, a |wlarge circular pet bed|n sits on the polished oak — oversized, heavily padded in a dark fabric, its diameter enough to hold three with some negotiation. The surface is indented from use, the fabric worn soft in a broad central area. It is the only soft thing on the floor of this room, and it sits in the shadow of the ceiling chain.
 
 
 -- STEP 4: Zone details --
 
 roomzone detail bench/surface = The bench's padding is dark-brown leather, firm rather than yielding — the give in it is calibrated to support without absorbing. The surface shows the faint impression of extended use along the center: the leather there a shade darker, the grain compressed in the long axis. It is the specific wear of a surface that has carried weight repeatedly, in the same orientation, over a long period of time.
 
-roomzone detail bench/cuffs = The \|ccuff arms\|n are steel-jointed with multiple locking angles and a friction brake that holds whatever position is set. The \|ccuffs\|n themselves are leather-lined steel, sized to the larger end of average — the lining shows the compression-marks that mean they have been worn snug. The quick-release on each cuff requires two deliberate steps, which means it cannot be triggered accidentally.
+roomzone detail bench/cuffs = The |ccuff arms|n are steel-jointed with multiple locking angles and a friction brake that holds whatever position is set. The |ccuffs|n themselves are leather-lined steel, sized to the larger end of average — the lining shows the compression-marks that mean they have been worn snug. The quick-release on each cuff requires two deliberate steps, which means it cannot be triggered accidentally.
 
-roomzone detail bench/floor_shackles = The \|cankle shackles\|n in the floor are mounted on chains of about thirty centimeters, the attachment point set into the oak at a position carefully chosen relative to the bench. The shackles are the hinged steel type with a key lock. The floor around the mounts is unmarked — no scratches, no gouges, because the person who installed them measured correctly the first time.
+roomzone detail bench/floor_shackles = The |cankle shackles|n in the floor are mounted on chains of about thirty centimeters, the attachment point set into the oak at a position carefully chosen relative to the bench. The shackles are the hinged steel type with a key lock. The floor around the mounts is unmarked — no scratches, no gouges, because the person who installed them measured correctly the first time.
 
-roomzone detail bench/spreader_bar = The \|wspreader bar\|n leans against the bench frame in an easily accessible position. It telescopes between approximately sixty and one hundred and eighty centimeters, with locking end-clips that accept most standard restraint hardware. The central section has been compressed slightly from being gripped as a handle, the metal worn shiny at that point.
+roomzone detail bench/spreader_bar = The |wspreader bar|n leans against the bench frame in an easily accessible position. It telescopes between approximately sixty and one hundred and eighty centimeters, with locking end-clips that accept most standard restraint hardware. The central section has been compressed slightly from being gripped as a handle, the metal worn shiny at that point.
 
-roomzone detail rack/cat = The \|wcat-o'-nine-tails\|n at the top of the rack has falls of braided leather, each approximately forty centimeters, attached to a wrapped handle. The falls are clean and have been separated after the last use, which is correct care — tangled falls are imprecise. The handle wrapping is tight and shows no unraveling at the ends.
+roomzone detail rack/cat = The |wcat-o'-nine-tails|n at the top of the rack has falls of braided leather, each approximately forty centimeters, attached to a wrapped handle. The falls are clean and have been separated after the last use, which is correct care — tangled falls are imprecise. The handle wrapping is tight and shows no unraveling at the ends.
 
-roomzone detail rack/canes = The two \|wcanes\|n are rattan, the traditional material, in slightly different diameters — the thinner one cuts more sharply, the thicker one carries more weight. Both have been finished at the tips with a bound wrap to prevent splitting. There are faint surface marks on both of them, the kind that appear in rattan after repeated flex, but neither is close to the point of failure.
+roomzone detail rack/canes = The two |wcanes|n are rattan, the traditional material, in slightly different diameters — the thinner one cuts more sharply, the thicker one carries more weight. Both have been finished at the tips with a bound wrap to prevent splitting. There are faint surface marks on both of them, the kind that appear in rattan after repeated flex, but neither is close to the point of failure.
 
-roomzone detail rack/floggers = The heavy \|wflogger\|n has falls of thick leather, wide and flat — the sensation it produces is more thud than sting, more pressure than edge. The lighter one uses thinner, narrower falls. Both are balanced for extended use, the handles weighted to reduce wrist fatigue. The heavy one has been used more.
+roomzone detail rack/floggers = The heavy |wflogger|n has falls of thick leather, wide and flat — the sensation it produces is more thud than sting, more pressure than edge. The lighter one uses thinner, narrower falls. Both are balanced for extended use, the handles weighted to reduce wrist fatigue. The heavy one has been used more.
 
-roomzone detail rack/paddles = The two \|wpaddles\|n are at the bottom of the rack: one solid oak, one leather-wrapped over a wooden core. The leather paddle is the more worn of the two. Its handle grip shows the compression of a right-handed grip, the same hand, consistently applied.
+roomzone detail rack/paddles = The two |wpaddles|n are at the bottom of the rack: one solid oak, one leather-wrapped over a wooden core. The leather paddle is the more worn of the two. Its handle grip shows the compression of a right-handed grip, the same hand, consistently applied.
 
-roomzone detail shelf/restraints = The \|mleather cuffs\|n come in three matched pairs, the smallest clearly sized for narrow wrists. Each pair has two D-rings per cuff and a double-prong buckle. The binds are folded sections of wide leather with multiple attachment loops — they can be configured for a variety of positions. All of them have been resoled or re-stitched at some point, not replaced.
+roomzone detail shelf/restraints = The |mleather cuffs|n come in three matched pairs, the smallest clearly sized for narrow wrists. Each pair has two D-rings per cuff and a double-prong buckle. The binds are folded sections of wide leather with multiple attachment loops — they can be configured for a variety of positions. All of them have been resoled or re-stitched at some point, not replaced.
 
-roomzone detail shelf/toys = The \|wdildos\|n are arranged smallest to largest — the middle one is the most worn of the three at its base, the material there slightly lighter from handling. The vibrators are rechargeable, their cords coiled neatly beside them. The \|manal beads\|n are silicone, graduated, on a retrieval loop. None of this has been placed here for effect. It is here because it is used.
+roomzone detail shelf/toys = The |wdildos|n are arranged smallest to largest — the middle one is the most worn of the three at its base, the material there slightly lighter from handling. The vibrators are rechargeable, their cords coiled neatly beside them. The |manal beads|n are silicone, graduated, on a retrieval loop. None of this has been placed here for effect. It is here because it is used.
 
-roomzone detail shelf/lube = Two bottles of \|wlube\|n: one silicone-based in a pump dispenser, one water-based. The silicone bottle is more depleted. Someone has written a small 'S' and 'W' on each lid in permanent marker, so there is no confusion in low-visibility conditions.
+roomzone detail shelf/lube = Two bottles of |wlube|n: one silicone-based in a pump dispenser, one water-based. The silicone bottle is more depleted. Someone has written a small 'S' and 'W' on each lid in permanent marker, so there is no confusion in low-visibility conditions.
 
 roomzone detail paintings/scenes = The paintings cover a range of subjects: a pair of women in an embrace so detailed you can see the pressure of fingers on skin; a solo figure bound in a spread-eagle position, expression concentrated rather than distressed; a group of three in a configuration that requires trust and timing. The work is confident — these are not sketches or studies. They were made by someone who understood the subject from the inside.
 
 roomzone detail paintings/bondage_scenes = Several of the paintings depict positions that this room is specifically equipped to produce. One shows a figure at a bench very like the one in the center of the room, the cuffs in position, the angle of the hips precisely what the bench's design produces. Whether this is reference or record is not stated. The paint is older than the room's current arrangement.
 
-roomzone detail ceiling_collar/collar = The ceiling \|wcollar\|n is wide, stiff, pale leather with a single \|cD-ring\|n centered at the throat. The inside has been padded with a darker suede, softer than the exterior suggests. The back has a quick-release buckle — the kind that opens under load, not just at slack, which means it can be triggered by the person wearing it if they can reach it. It was designed with this in mind.
+roomzone detail ceiling_collar/collar = The ceiling |wcollar|n is wide, stiff, pale leather with a single |cD-ring|n centered at the throat. The inside has been padded with a darker suede, softer than the exterior suggests. The back has a quick-release buckle — the kind that opens under load, not just at slack, which means it can be triggered by the person wearing it if they can reach it. It was designed with this in mind.
 
-roomzone detail ceiling_collar/lever = The \|clever on the western wall\|n is a ratchet mechanism: advance it and the chain shortens, pulling the collar up. Release a catch and it descends. The lever is at a height convenient for someone standing. The ratchet positions are graduated in small increments. The current setting puts the collar at standing height for someone of average stature. The lever's handle has been gripped so many times the metal is smooth and slightly warm.
+roomzone detail ceiling_collar/lever = The |clever on the western wall|n is a ratchet mechanism: advance it and the chain shortens, pulling the collar up. Release a catch and it descends. The lever is at a height convenient for someone standing. The ratchet positions are graduated in small increments. The current setting puts the collar at standing height for someone of average stature. The lever's handle has been gripped so many times the metal is smooth and slightly warm.
 
-roomzone detail ceiling_collar/floor_chains = Two \|cwrist shackles\|n are mounted in the floor on short chains near the position of the ceiling collar — set to the floor at a spacing that puts them about shoulder-width apart when someone stands between them. The mounting is the same pattern as the ankle shackles at the bench: recessed, flush, installed with precision. The chains are heavy.
+roomzone detail ceiling_collar/floor_chains = Two |cwrist shackles|n are mounted in the floor on short chains near the position of the ceiling collar — set to the floor at a spacing that puts them about shoulder-width apart when someone stands between them. The mounting is the same pattern as the ankle shackles at the bench: recessed, flush, installed with precision. The chains are heavy.
 
 roomzone detail pet_bed/surface = The pet bed's fabric is a heavy woven dark material — not velvet, not cotton, something more durable than either. The center is permanently indented in a shape that suggests more than one person has occupied it at once, the impression distributed rather than singular. The edges of the bed are still firm. The center has been compressed over a long period of use.
 
@@ -73,29 +73,29 @@ roomzone detail pet_bed/placement = The bed sits in the shadow of the ceiling ch
 
 -- STEP 5: Zone study details --
 
-roomzone study bench = The center of the bench surface, beneath the darkened leather, has a very slight give that the edges do not — the padding compressed over time into the specific topography of a body at rest in the same position, repeatedly.
+roomzone study bench + The center of the bench surface, beneath the darkened leather, has a very slight give that the edges do not — the padding compressed over time into the specific topography of a body at rest in the same position, repeatedly.
 
-roomzone study bench = The quick-release on the head cuff arm has been triggered more than the foot cuff's release — the mechanism is smoother, the resistance slightly less. Whatever happens here, the head cuff comes off first.
+roomzone study bench + The quick-release on the head cuff arm has been triggered more than the foot cuff's release — the mechanism is smoother, the resistance slightly less. Whatever happens here, the head cuff comes off first.
 
-roomzone study bench = One of the floor shackles has a small, faint scratch on its inner surface — the kind left by a boot heel being worked back into a locked cuff rather than being placed into it willingly.
+roomzone study bench + One of the floor shackles has a small, faint scratch on its inner surface — the kind left by a boot heel being worked back into a locked cuff rather than being placed into it willingly.
 
-roomzone study rack = The heavy flogger's handle wrap has been re-done at some point — the current wrap is slightly different in color from the original, visible at the overlap. The original wrap is still there underneath. It was not removed, just covered.
+roomzone study rack + The heavy flogger's handle wrap has been re-done at some point — the current wrap is slightly different in color from the original, visible at the overlap. The original wrap is still there underneath. It was not removed, just covered.
 
-roomzone study rack = The leather paddle shows faint ghost-marks on its striking surface: the accumulated record of repeated impact, visible only at an angle in good light.
+roomzone study rack + The leather paddle shows faint ghost-marks on its striking surface: the accumulated record of repeated impact, visible only at an angle in good light.
 
-roomzone study shelf = The lube pump's head has been rotated slightly from its packaging orientation — someone turned it to a more accessible angle and it has stayed that way.
+roomzone study shelf + The lube pump's head has been rotated slightly from its packaging orientation — someone turned it to a more accessible angle and it has stayed that way.
 
-roomzone study shelf = The smallest pair of leather cuffs have been repaired at one buckle tongue, the stitching there in a slightly different thread than the rest — a careful repair, not a hasty one.
+roomzone study shelf + The smallest pair of leather cuffs have been repaired at one buckle tongue, the stitching there in a slightly different thread than the rest — a careful repair, not a hasty one.
 
-roomzone study paintings = One painting near the left edge of the wall has a very faint smudge at the lower-right corner — at finger height, at the specific location of a detail in the image. It has been touched there, more than once, by someone standing in front of it.
+roomzone study paintings + One painting near the left edge of the wall has a very faint smudge at the lower-right corner — at finger height, at the specific location of a detail in the image. It has been touched there, more than once, by someone standing in front of it.
 
-roomzone study paintings = The frames on the wall are aligned with a precision that looks casual but is not — someone has leveled each one and kept them level. The paintings are maintained.
+roomzone study paintings + The frames on the wall are aligned with a precision that looks casual but is not — someone has leveled each one and kept them level. The paintings are maintained.
 
-roomzone study ceiling_collar = The chain above the collar has a faint directional wear on one side of several links — the same side, consistently — from the collar swinging in a single preferred direction when under load.
+roomzone study ceiling_collar + The chain above the collar has a faint directional wear on one side of several links — the same side, consistently — from the collar swinging in a single preferred direction when under load.
 
-roomzone study ceiling_collar = The quick-release on the collar's back has been operated enough that the mechanism opens about a half-second faster than it should from the factory. This is not negligence. It is a safety modification made through use.
+roomzone study ceiling_collar + The quick-release on the collar's back has been operated enough that the mechanism opens about a half-second faster than it should from the factory. This is not negligence. It is a safety modification made through use.
 
-roomzone study pet_bed = The pet bed's fabric on one edge smells faintly different from the rest — a trace of something personal, not unpleasant, that no amount of cleaning has fully removed. This is the side that gets slept against.
+roomzone study pet_bed + The pet bed's fabric on one edge smells faintly different from the rest — a trace of something personal, not unpleasant, that no amount of cleaning has fully removed. This is the side that gets slept against.
 
 
 -- STEP 6: Zone inscriptions --
@@ -158,18 +158,18 @@ roomzone handle paintings/scenes = You step close enough to read the brushwork. 
 
 -- STEP 9: Ambient lines --
 
-rambient/add \|xThe ceiling lights reflect the length of the polished floor — two bright lines running to the far wall, perfectly parallel, perfectly still.\|n
+rambient/add |xThe ceiling lights reflect the length of the polished floor — two bright lines running to the far wall, perfectly parallel, perfectly still.|n
 
-rambient/add \|xThe ceiling collar turns on its chain by a degree or two, settles, stops — the chain above it making one brief, metallic note.\|n
+rambient/add |xThe ceiling collar turns on its chain by a degree or two, settles, stops — the chain above it making one brief, metallic note.|n
 
-rambient/add \|xThe smell of leather and wood polish moves through the room as the air shifts, muted and clean.\|n
+rambient/add |xThe smell of leather and wood polish moves through the room as the air shifts, muted and clean.|n
 
-rambient/add \|xThe cuff arm on the bench moves almost imperceptibly as the building settles, the friction brake holding it exactly where it was set.\|n
+rambient/add |xThe cuff arm on the bench moves almost imperceptibly as the building settles, the friction brake holding it exactly where it was set.|n
 
-rambient/add \|xThe pet bed's fabric catches a faint static charge in the cool air — the surface rising slightly before settling back to itself.\|n
+rambient/add |xThe pet bed's fabric catches a faint static charge in the cool air — the surface rising slightly before settling back to itself.|n
 
-rambient/add \|xOne of the paintings catches the ceiling light at a low angle, the brushwork visible for a moment before the angle passes.\|n
+rambient/add |xOne of the paintings catches the ceiling light at a low angle, the brushwork visible for a moment before the angle passes.|n
 
-rambient/add \|xThe room is quiet in the specific way of a room with polished floors and no soft surfaces to absorb sound — everything that happens here is audible.\|n
+rambient/add |xThe room is quiet in the specific way of a room with polished floors and no soft surfaces to absorb sound — everything that happens here is audible.|n
 
-rambient/add \|xThe chain above the collar has a slight torsion to it, turning slowly, the collar at the end completing a full rotation over the course of several minutes.\|n
+rambient/add |xThe chain above the collar has a slight torsion to it, turning slowly, the collar at the end completing a full rotation over the course of several minutes.|n
