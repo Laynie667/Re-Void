@@ -44,6 +44,7 @@ zone add groin/labia/labia_majora type=both intimate
 zone add groin/labia/labia_minora type=both intimate
 zone add groin/clit type=both intimate
 zone add groin/perineum type=surface intimate
+zone add groin/pussy type=orifice intimate
 zone add groin/anus type=orifice intimate
 zone add chest/nipples type=both intimate
 zone add abdomen/navel type=attachment
@@ -112,6 +113,8 @@ zone set clit = Small, hooded, and precisely located — the hood at rest keeps 
 
 zone set perineum = The bridge between, smooth and somewhat overlooked by casual attention — the territory that exists primarily in the awareness of people who know what they are doing. The skin is thin and notably sensitive in ways it does not advertise, and direct attention here tends to surprise even her.
 
+zone set pussy = Warm and close — the vaginal opening nestled within the inner lips, its entry softly gathered at rest. She is wet before she acknowledges it: the warmth and the give of it arrive ahead of her permission. The interior is smooth and yields in gradations, tighter at the entrance and deepening from there, and it takes to pressure the way something does when it has been thinking about this longer than it will admit.
+
 zone set anus = Tightly gathered and small, the skin around it a faintly deeper rose that fades back to pale within centimeters. It is not an area that receives casual attention and is correspondingly unfamiliar with it — reactive in ways that resolve neither toward welcome nor refusal until the moment itself decides.
 
 zone set hips = Wide and genuine — the body does not pretend to narrowness here. The flare begins at the waist's lowest point and widens through the swell of each hip before rounding into the upper thigh. When she walks, the movement is unhurried and reads from any angle.
@@ -159,6 +162,10 @@ zone detail labia_minora/color = At rest the color is a warm, moderate rose. Und
 
 zone detail clit/hood = The clitoral hood is soft and mobile — it retracts partially with arousal and fully with direct attention, leaving the glans exposed with a sensitivity that does not tolerate indirection well. Indirect stimulation through the hood is its own register; direct contact after retraction is entirely another.
 
+zone detail pussy/entrance = The entrance yields by degrees — the first resistance giving way steadily as something fills it, the ring of muscle at the opening calibrated to register every increment of pressure. She tightens involuntarily at the first contact and then releases, which is also involuntary, and the sequence communicates everything about her state regardless of what her expression is doing.
+zone detail pussy/interior = Inside, the walls are smooth and warm with a give that is both active and responsive — they grip with the particular reflex of something that has decided, regardless of what the rest of her is still pretending. The angle matters: certain directions find a rough patch of tissue along the front wall that produces responses she doesn't always have a word for.
+zone detail pussy/wetness = She does not require ceremony to become wet. Attention — visual, conversational, the sustained proximity of someone she has decided about — is sufficient. By the time anyone reaches her, the evidence is ahead of the action. When she is very aroused the wetness becomes audible.
+
 zone detail thighs/inner = The inner thigh is the softest place on her — the skin fine-textured and pale, unmarked, with a give that is entirely different from anywhere else. It is also the most temperature-sensitive: a cool hand there is felt immediately. The nerve density makes slow attention in this area produce disproportionate responses relative to the gentleness of the approach.
 
 zone detail playful_aura/behavior = The violet shimmer does not spread or pulse. It occupies the edges of her silhouette — her hands in particular — with a static presence that moves only when she moves, like something wearing her outline. When she reaches for an object with intent, it brightens very slightly, then returns to baseline. It does not appear to acknowledge being noticed.
@@ -188,6 +195,10 @@ zone study thighs = The backs of her thighs are slightly warmer than the fronts,
 
 zone study anus = The muscle is reflexive rather than managed — the response to unexpected pressure is a tightening rather than a yield, regardless of context. It responds to warmth and approach before it responds to contact. It requires more patience and more deliberateness than its size suggests.
 
+zone study pussy = The walls grip in a pattern that is not constant — there are moments, unpredictable, when they clench with a specificity that communicates something she may not have intended to. The response escalates faster once started than its initial presentation suggests.
+zone study pussy = The wetness is not localized — it distributes, and by a certain point the inner thighs carry the evidence of her state as well. She is not embarrassed by this. She is aware of it.
+zone study pussy = A sustained rhythm produces a characteristic change in her breathing — shallower and higher, the chest rising more visibly, a quality of suspense in the held spaces between exhales that arrives well before any other audible signal.
+
 zone study playful_aura = The shimmer brightens very slightly when she is being deliberate about something — when she reaches for an object with intent, or speaks a word she has chosen carefully. It dims when she is tired. At no point has it been fully absent in observation, only reduced.
 
 
@@ -195,99 +206,108 @@ zone study playful_aura = The shimmer brightens very slightly when she is being 
 -- These respond to: touch, caress, grope, stroke, grab, squeeze, kiss, bite, lick, taste, pull, pinch, nuzzle, hold, pet --
 -- Tokens: {actor} {actor_s} {actor_they} {actor_them} {actor_their} {target} {target_s} {target_they} {target_them} {target_their} --
 
-zone handle/add hair/touch = {actor_s} fingers enter {target_s} hair and meet its warmth directly — the strands fine and loose around {actor_them}, the wave disrupting easily before settling back. {target_they} notice without turning.
-zone handle/add hair/stroke = {actor} draws {actor_their} hand through {target_s} hair in a long, slow movement, the gold of it flowing over {actor_their} palm. {target_they} goes still for the length of it.
-zone handle/add hair/grab = {actor} gathers a fist of {target_s} hair at the nape — the strands gather with surprising ease, the warmth of the scalp reaching through. {target_s} breath shifts; {target_they} does not pull away.
-zone handle/add hair/pull = {actor} takes a grip and applies it — the angle communicating before the words do. {target_they} tilts {target_their} head back by the direction of it, eyes forward, waiting.
-zone handle/add hair/nuzzle = {actor} presses {actor_their} face into {target_s} hair at the crown and finds: warmth, the quiet vanilla-honey of {target_them}, the slight charge of static at the outer layer that comes and goes.
+zone handle hair/touch = {actor_s} fingers enter {target_s} hair and meet its warmth directly — the strands fine and loose around {actor_them}, the wave disrupting easily before settling back. {target_they} notice without turning.
+zone handle hair/stroke = {actor} draws {actor_their} hand through {target_s} hair in a long, slow movement, the gold of it flowing over {actor_their} palm. {target_they} goes still for the length of it.
+zone handle hair/grab = {actor} gathers a fist of {target_s} hair at the nape — the strands gather with surprising ease, the warmth of the scalp reaching through. {target_s} breath shifts; {target_they} does not pull away.
+zone handle hair/pull = {actor} takes a grip and applies it — the angle communicating before the words do. {target_they} tilts {target_their} head back by the direction of it, eyes forward, waiting.
+zone handle hair/nuzzle = {actor} presses {actor_their} face into {target_s} hair at the crown and finds: warmth, the quiet vanilla-honey of {target_them}, the slight charge of static at the outer layer that comes and goes.
 
-zone handle/add face/touch = {actor_s} hand finds {target_s} face — the jaw soft against {actor_their} palm, the skin warmer than expected. {target_they} permits it. The freckles across {target_their} nose are invisible at this angle.
-zone handle/add face/caress = {actor} traces the line of {target_s} jaw with a slow, deliberate motion, the pad of {actor_their} thumb angled toward the chin. {target_they} watches {actor} through it without expression, the attention of it acknowledged in the quality of {target_their} stillness.
-zone handle/add face/hold = {actor} takes {target_s} face between {actor_their} hands — palms against jaw, thumbs near the cheekbones. {target_they} allows {actor_them}self to be held still this way, meeting {actor_s} gaze with the full weight of those silver-flecked eyes.
+zone handle face/touch = {actor_s} hand finds {target_s} face — the jaw soft against {actor_their} palm, the skin warmer than expected. {target_they} permits it. The freckles across {target_their} nose are invisible at this angle.
+zone handle face/caress = {actor} traces the line of {target_s} jaw with a slow, deliberate motion, the pad of {actor_their} thumb angled toward the chin. {target_they} watches {actor} through it without expression, the attention of it acknowledged in the quality of {target_their} stillness.
+zone handle face/hold = {actor} takes {target_s} face between {actor_their} hands — palms against jaw, thumbs near the cheekbones. {target_they} allows {actor_them}self to be held still this way, meeting {actor_s} gaze with the full weight of those silver-flecked eyes.
 
-zone handle/add eyes/touch = {actor_s} thumb grazes the outer corner of {target_s} eye — the skin there thin and unhurried, the lashes brushing {actor_their} finger. {target_they} blinks once, slowly.
+zone handle eyes/touch = {actor_s} thumb grazes the outer corner of {target_s} eye — the skin there thin and unhurried, the lashes brushing {actor_their} finger. {target_they} blinks once, slowly.
 
-zone handle/add lips/touch = {actor_s} fingertip finds {target_s} lips and rests there — the lower lip fuller under pressure, the warmth immediate. {target_they} does not speak or move, the quiet between them weighted.
-zone handle/add lips/caress = {actor} traces {target_s} lips with a single finger, following the line of the upper and then the lower. {target_they} breathes steadily, the asymmetry of {target_their} resting expression visible up close.
-zone handle/add lips/kiss = {actor} kisses {target_s} lips and finds them warm, soft, and considered — {target_they} kisses back with a precision that communicates this is not the first time {target_they} has decided to do something.
-zone handle/add lips/bite = {actor} catches {target_s} lower lip between {actor_their} teeth — the sound is quiet, the pressure calibrated. A brief exhale from {target_them}. Not protest.
-zone handle/add lips/lick = {actor_s} tongue traces {target_s} lips — first the lower, then the upper at the philtrum. {target_they} opens {target_their} mouth by the smallest margin.
+zone handle lips/touch = {actor_s} fingertip finds {target_s} lips and rests there — the lower lip fuller under pressure, the warmth immediate. {target_they} does not speak or move, the quiet between them weighted.
+zone handle lips/caress = {actor} traces {target_s} lips with a single finger, following the line of the upper and then the lower. {target_they} breathes steadily, the asymmetry of {target_their} resting expression visible up close.
+zone handle lips/kiss = {actor} kisses {target_s} lips and finds them warm, soft, and considered — {target_they} kisses back with a precision that communicates this is not the first time {target_they} has decided to do something.
+zone handle lips/bite = {actor} catches {target_s} lower lip between {actor_their} teeth — the sound is quiet, the pressure calibrated. A brief exhale from {target_them}. Not protest.
+zone handle lips/lick = {actor_s} tongue traces {target_s} lips — first the lower, then the upper at the philtrum. {target_they} opens {target_their} mouth by the smallest margin.
 
-zone handle/add throat/touch = {actor_s} fingers rest at {target_s} throat, feeling the pulse there — slow, regular, the skin warm and fine-textured. {target_they} swallows once under the contact, the motion traveling through {actor_their} fingers.
-zone handle/add throat/caress = {actor} draws {actor_their} hand up the line of {target_s} throat, slow as a question being asked. {target_they} tilts {target_their} chin up by the direction of it without instruction.
-zone handle/add throat/kiss = {actor_s} lips find the soft hollow at the base of {target_s} throat and press there. {target_they} exhales through the nose, the pulse beneath {actor_them} quickening by several beats.
-zone handle/add throat/bite = {actor_s} teeth find the side of {target_s} throat — a grip, not a wound. {target_they} makes a very small sound and holds very still.
-zone handle/add throat/lick = {actor_s} tongue traces the line of {target_s} throat from the hollow upward, following the pulse. {target_s} head tilts back by a degree, involuntary.
-zone handle/add throat/nuzzle = {actor} presses {actor_their} nose to the side of {target_s} neck and breathes in — vanilla and honey, warmth, and something that is just {target_them}. {target_they} doesn't move.
+zone handle throat/touch = {actor_s} fingers rest at {target_s} throat, feeling the pulse there — slow, regular, the skin warm and fine-textured. {target_they} swallows once under the contact, the motion traveling through {actor_their} fingers.
+zone handle throat/caress = {actor} draws {actor_their} hand up the line of {target_s} throat, slow as a question being asked. {target_they} tilts {target_their} chin up by the direction of it without instruction.
+zone handle throat/kiss = {actor_s} lips find the soft hollow at the base of {target_s} throat and press there. {target_they} exhales through the nose, the pulse beneath {actor_them} quickening by several beats.
+zone handle throat/bite = {actor_s} teeth find the side of {target_s} throat — a grip, not a wound. {target_they} makes a very small sound and holds very still.
+zone handle throat/lick = {actor_s} tongue traces the line of {target_s} throat from the hollow upward, following the pulse. {target_s} head tilts back by a degree, involuntary.
+zone handle throat/nuzzle = {actor} presses {actor_their} nose to the side of {target_s} neck and breathes in — vanilla and honey, warmth, and something that is just {target_them}. {target_they} doesn't move.
 
-zone handle/add shoulders/touch = {actor_s} hands find {target_s} shoulders — the muscles there relaxed, the roundness of each easy under {actor_their} palms. {target_they} makes no particular response.
-zone handle/add shoulders/hold = {actor_s} hands rest on {target_s} shoulders with the particular weight of something establishing rather than requesting. {target_they} acknowledges it by remaining exactly where {target_they} is.
+zone handle shoulders/touch = {actor_s} hands find {target_s} shoulders — the muscles there relaxed, the roundness of each easy under {actor_their} palms. {target_they} makes no particular response.
+zone handle shoulders/hold = {actor_s} hands rest on {target_s} shoulders with the particular weight of something establishing rather than requesting. {target_they} acknowledges it by remaining exactly where {target_they} is.
 
-zone handle/add chest/touch = {actor_s} hand meets {target_s} chest and finds it: warm, full, the weight immediately present against {actor_their} palm. {target_they} watches {actor} with the quality of attention she reserves for things she is still deciding about.
-zone handle/add chest/caress = {actor} traces the upper curve of {target_s} breast with a slow hand — the skin pale and fine, warmth rising to meet {actor_them}. {target_they} breathes.
-zone handle/add chest/grope = {actor_s} hand takes a full grip of {target_s} breast — the weight of it substantial, the skin soft against {actor_their} palm. {target_they} permits a small sound at the back of {actor_their} throat and does not comment on it.
-zone handle/add chest/squeeze = {actor} squeezes {target_s} breast with deliberate pressure — the give genuine, the resistance following behind it. A breath from {target_them}: even, measuring.
-zone handle/add chest/stroke = {actor_s} hand moves over the full surface of {target_s} chest in slow passes, learning the weight and the curve of it. {target_they} closes {target_their} eyes by the third pass.
-zone handle/add chest/kiss = {actor_s} lips meet the swell of {target_s} chest and press there — warmth meeting warmth, the skin fine beneath {actor_them}. {target_they} says nothing. The quality of {target_their} silence is informative.
-zone handle/add chest/nuzzle = {actor} presses {actor_their} face to the soft inner curve between {target_s} breasts — finding warmth, the scent of {target_them} most concentrated here, the heartbeat faint and present.
+zone handle chest/touch = {actor_s} hand meets {target_s} chest and finds it: warm, full, the weight immediately present against {actor_their} palm. {target_they} watches {actor} with the quality of attention she reserves for things she is still deciding about.
+zone handle chest/caress = {actor} traces the upper curve of {target_s} breast with a slow hand — the skin pale and fine, warmth rising to meet {actor_them}. {target_they} breathes.
+zone handle chest/grope = {actor_s} hand takes a full grip of {target_s} breast — the weight of it substantial, the skin soft against {actor_their} palm. {target_they} permits a small sound at the back of {actor_their} throat and does not comment on it.
+zone handle chest/squeeze = {actor} squeezes {target_s} breast with deliberate pressure — the give genuine, the resistance following behind it. A breath from {target_them}: even, measuring.
+zone handle chest/stroke = {actor_s} hand moves over the full surface of {target_s} chest in slow passes, learning the weight and the curve of it. {target_they} closes {target_their} eyes by the third pass.
+zone handle chest/kiss = {actor_s} lips meet the swell of {target_s} chest and press there — warmth meeting warmth, the skin fine beneath {actor_them}. {target_they} says nothing. The quality of {target_their} silence is informative.
+zone handle chest/nuzzle = {actor} presses {actor_their} face to the soft inner curve between {target_s} breasts — finding warmth, the scent of {target_them} most concentrated here, the heartbeat faint and present.
 
-zone handle/add nipples/touch = {actor_s} fingertip finds {target_s} nipple — the response is immediate: it gathers, firms, and holds. {target_they} draws a small breath through {target_their} nose.
-zone handle/add nipples/pinch = {actor_s} fingers take {target_s} nipple between them and apply pressure — calibrated, sustained. {target_they} makes a sharp sound that does not quite become a word.
-zone handle/add nipples/squeeze = {actor} rolls {target_s} nipple between {actor_their} fingers, the firm gathering of it meeting steady pressure. {target_they} grips something nearby, or nothing, depending on what is available.
-zone handle/add nipples/kiss = {actor_s} lips close over {target_s} nipple — the warmth of {actor_them} surrounding it, the immediate response obvious under {actor_their} mouth. {target_they} makes an unhurried decision about whether to pretend otherwise. {target_they} does not pretend.
-zone handle/add nipples/bite = {actor_s} teeth graze {target_s} nipple — the edge of the sensation, held. {target_s} hand finds {actor_s} hair or shoulder, pressing rather than pulling.
-zone handle/add nipples/lick = {actor_s} tongue moves across {target_s} nipple — first flat and broad, then the tip tracing its outline. {target_they} says {actor_s} name very quietly, not as a question.
-zone handle/add nipples/taste = {actor_s} mouth closes over {target_s} nipple and stays — the deliberate study of it, warmth and texture and the specific response of this particular point under sustained attention. {target_they} exhales at length.
+zone handle nipples/touch = {actor_s} fingertip finds {target_s} nipple — the response is immediate: it gathers, firms, and holds. {target_they} draws a small breath through {target_their} nose.
+zone handle nipples/pinch = {actor_s} fingers take {target_s} nipple between them and apply pressure — calibrated, sustained. {target_they} makes a sharp sound that does not quite become a word.
+zone handle nipples/squeeze = {actor} rolls {target_s} nipple between {actor_their} fingers, the firm gathering of it meeting steady pressure. {target_they} grips something nearby, or nothing, depending on what is available.
+zone handle nipples/kiss = {actor_s} lips close over {target_s} nipple — the warmth of {actor_them} surrounding it, the immediate response obvious under {actor_their} mouth. {target_they} makes an unhurried decision about whether to pretend otherwise. {target_they} does not pretend.
+zone handle nipples/bite = {actor_s} teeth graze {target_s} nipple — the edge of the sensation, held. {target_s} hand finds {actor_s} hair or shoulder, pressing rather than pulling.
+zone handle nipples/lick = {actor_s} tongue moves across {target_s} nipple — first flat and broad, then the tip tracing its outline. {target_they} says {actor_s} name very quietly, not as a question.
+zone handle nipples/taste = {actor_s} mouth closes over {target_s} nipple and stays — the deliberate study of it, warmth and texture and the specific response of this particular point under sustained attention. {target_they} exhales at length.
 
-zone handle/add navel/touch = {actor_s} finger finds {target_s} navel stud — the crystal cool for a moment, then warmed. The skin around it is the softest on {target_s} abdomen, and {target_they} registers the contact differently than the surrounding surface: a flutter, unexplained.
-zone handle/add navel/lick = {actor_s} tongue traces the edge of {target_s} navel, circling the star stud before pressing briefly into the depression itself. {target_they} exhales through {target_their} teeth.
+zone handle navel/touch = {actor_s} finger finds {target_s} navel stud — the crystal cool for a moment, then warmed. The skin around it is the softest on {target_s} abdomen, and {target_they} registers the contact differently than the surrounding surface: a flutter, unexplained.
+zone handle navel/lick = {actor_s} tongue traces the edge of {target_s} navel, circling the star stud before pressing briefly into the depression itself. {target_they} exhales through {target_their} teeth.
 
-zone handle/add hands/touch = {actor_s} hand takes {target_s} hand — the careful, precise fingers of {target_them} receiving the contact and neither pulling away nor closing around it, simply present.
-zone handle/add hands/hold = {actor} holds {target_s} hand with both of {actor_their} own, the iridescent nails visible at the edges of the grip. {target_they} allows it. The warmth transfers quickly.
-zone handle/add hands/kiss = {actor_s} lips meet the back of {target_s} hand — the skin fine there, the faint impression of bones beneath it. {target_they} watches {actor} with the full weight of {target_their} attention.
+zone handle hands/touch = {actor_s} hand takes {target_s} hand — the careful, precise fingers of {target_them} receiving the contact and neither pulling away nor closing around it, simply present.
+zone handle hands/hold = {actor} holds {target_s} hand with both of {actor_their} own, the iridescent nails visible at the edges of the grip. {target_they} allows it. The warmth transfers quickly.
+zone handle hands/kiss = {actor_s} lips meet the back of {target_s} hand — the skin fine there, the faint impression of bones beneath it. {target_they} watches {actor} with the full weight of {target_their} attention.
 
-zone handle/add wrists/touch = {actor_s} fingers close around {target_s} wrist — the delicate architecture of it fully within {actor_their} grip, the pulse there quick and accessible. {target_they} notes the grip without commentary.
-zone handle/add wrists/hold = {actor} holds {target_s} wrist — not restricting, not directing, simply holding. {target_they} does not test it.
+zone handle wrists/touch = {actor_s} fingers close around {target_s} wrist — the delicate architecture of it fully within {actor_their} grip, the pulse there quick and accessible. {target_they} notes the grip without commentary.
+zone handle wrists/hold = {actor} holds {target_s} wrist — not restricting, not directing, simply holding. {target_they} does not test it.
 
-zone handle/add hips/touch = {actor_s} hands find {target_s} hips — wide and real under {actor_their} palms, the flare of them communicating itself immediately. {target_they} receives the contact without comment.
-zone handle/add hips/grab = {actor} takes {target_s} hips in {actor_their} hands — a grip that establishes rather than requests. {target_they} goes slightly more still, receiving the intent of it.
-zone handle/add hips/hold = {actor_s} hands rest at {target_s} hips with a weight that is mostly about position. {target_they} adjusts to accommodate it without being asked.
+zone handle hips/touch = {actor_s} hands find {target_s} hips — wide and real under {actor_their} palms, the flare of them communicating itself immediately. {target_they} receives the contact without comment.
+zone handle hips/grab = {actor} takes {target_s} hips in {actor_their} hands — a grip that establishes rather than requests. {target_they} goes slightly more still, receiving the intent of it.
+zone handle hips/hold = {actor_s} hands rest at {target_s} hips with a weight that is mostly about position. {target_they} adjusts to accommodate it without being asked.
 
-zone handle/add thighs/touch = {actor_s} hand meets {target_s} thigh — soft, warm, the inner surface the softest thing in the vicinity. {target_they} notes the location precisely.
-zone handle/add thighs/caress = {actor} draws {actor_their} hand along the inside of {target_s} thigh — slowly, from knee toward the join. {target_they} says nothing and opens no additional distance between them.
-zone handle/add thighs/stroke = {actor_s} palm moves over {target_s} inner thigh in long, unhurried passes. {target_they} breathes slower, not faster.
-zone handle/add thighs/grab = {actor_s} hand grips {target_s} inner thigh — the softness of it gathering under {actor_their} fingers, the warmth immediate. {target_they} exhales, a sound that is not a word.
-zone handle/add thighs/squeeze = {actor} squeezes {target_s} thigh with an authority that makes the softness of it part of the point. {target_they} makes a sound that resolves in the direction of the person making it.
+zone handle thighs/touch = {actor_s} hand meets {target_s} thigh — soft, warm, the inner surface the softest thing in the vicinity. {target_they} notes the location precisely.
+zone handle thighs/caress = {actor} draws {actor_their} hand along the inside of {target_s} thigh — slowly, from knee toward the join. {target_they} says nothing and opens no additional distance between them.
+zone handle thighs/stroke = {actor_s} palm moves over {target_s} inner thigh in long, unhurried passes. {target_they} breathes slower, not faster.
+zone handle thighs/grab = {actor_s} hand grips {target_s} inner thigh — the softness of it gathering under {actor_their} fingers, the warmth immediate. {target_they} exhales, a sound that is not a word.
+zone handle thighs/squeeze = {actor} squeezes {target_s} thigh with an authority that makes the softness of it part of the point. {target_they} makes a sound that resolves in the direction of the person making it.
 
-zone handle/add groin/touch = {actor_s} hand meets {target_s} groin — the warmth there specific and present, the soft structure of {target_them} greeting {actor_their} palm before {actor_they} have decided anything. {target_they} exhales.
-zone handle/add groin/caress = {actor_s} fingers move over {target_s} groin with a deliberate, unhurried attention that asks nothing and establishes everything about the direction of intent. {target_they} responds with an honesty that the rest of {target_them} occasionally declines to.
-zone handle/add groin/stroke = {actor_s} fingers trace the warm seam of {target_s} sex — the topography of it making itself known under the motion, softness and heat yielding to the line of pressure without resistance. {target_they} says {actor_s} name.
-zone handle/add groin/lick = {actor_s} mouth finds {target_s} groin, and {target_they} already knows what this is. The first touch is breath before lips, warmth before pressure. By the time {actor_s} tongue begins its work, {target_s} hands have found something to hold.
-zone handle/add groin/taste = {actor} takes time with {target_s} groin — learning it without hurry, the taste specific and warm and entirely {target_them}. {target_they} stops pretending to have opinions about the pace.
+zone handle groin/touch = {actor_s} hand meets {target_s} groin — the warmth there specific and present, the soft structure of {target_them} greeting {actor_their} palm before {actor_they} have decided anything. {target_they} exhales.
+zone handle groin/caress = {actor_s} fingers move over {target_s} groin with a deliberate, unhurried attention that asks nothing and establishes everything about the direction of intent. {target_they} responds with an honesty that the rest of {target_them} occasionally declines to.
+zone handle groin/stroke = {actor_s} fingers trace the warm seam of {target_s} sex — the topography of it making itself known under the motion, softness and heat yielding to the line of pressure without resistance. {target_they} says {actor_s} name.
+zone handle groin/lick = {actor_s} mouth finds {target_s} groin, and {target_they} already knows what this is. The first touch is breath before lips, warmth before pressure. By the time {actor_s} tongue begins its work, {target_s} hands have found something to hold.
+zone handle groin/taste = {actor} takes time with {target_s} groin — learning it without hurry, the taste specific and warm and entirely {target_them}. {target_they} stops pretending to have opinions about the pace.
 
-zone handle/add mons_pubis/touch = {actor_s} palm cups the rise of {target_s} mons — the soft golden curls brushing {actor_their} fingers, the warmth underneath immediate. {target_they} notes the hand's position with an awareness that precedes articulation.
-zone handle/add mons_pubis/stroke = {actor_s} fingers comb through the sparse golden curls, the motion slow and deliberate. {target_they} is still in a different way than {target_they} usually is still.
+zone handle mons_pubis/touch = {actor_s} palm cups the rise of {target_s} mons — the soft golden curls brushing {actor_their} fingers, the warmth underneath immediate. {target_they} notes the hand's position with an awareness that precedes articulation.
+zone handle mons_pubis/stroke = {actor_s} fingers comb through the sparse golden curls, the motion slow and deliberate. {target_they} is still in a different way than {target_they} usually is still.
 
-zone handle/add labia_majora/touch = {actor_s} fingers find the outer lips of {target_s} sex — full, warm, closing naturally around {actor_their} touch. {target_they} exhales.
-zone handle/add labia_majora/stroke = {actor_s} fingers trace the outer lips, learning their weight and temperature. {target_they} receives the attention with a quality of suspended decision.
-zone handle/add labia_majora/lick = {actor_s} tongue takes the outer lips of {target_s} sex, drawing along them slowly. {target_they} makes a sound at the back of {target_their} throat that is honest in ways the rest of {target_them} rarely is.
+zone handle labia_majora/touch = {actor_s} fingers find the outer lips of {target_s} sex — full, warm, closing naturally around {actor_their} touch. {target_they} exhales.
+zone handle labia_majora/stroke = {actor_s} fingers trace the outer lips, learning their weight and temperature. {target_they} receives the attention with a quality of suspended decision.
+zone handle labia_majora/lick = {actor_s} tongue takes the outer lips of {target_s} sex, drawing along them slowly. {target_they} makes a sound at the back of {target_their} throat that is honest in ways the rest of {target_them} rarely is.
 
-zone handle/add labia_minora/touch = {actor_s} fingers part {target_s} inner lips — soft, warm, already a shade deeper than their resting color. The heat between them is specific and direct. {target_they} makes no pretense about {target_their} response.
-zone handle/add labia_minora/lick = {actor_s} tongue traces {target_s} inner lips with a deliberate lightness that is worse, rather than better, than pressure would be. {target_they} grips something and says nothing and says everything.
+zone handle labia_minora/touch = {actor_s} fingers part {target_s} inner lips — soft, warm, already a shade deeper than their resting color. The heat between them is specific and direct. {target_they} makes no pretense about {target_their} response.
+zone handle labia_minora/lick = {actor_s} tongue traces {target_s} inner lips with a deliberate lightness that is worse, rather than better, than pressure would be. {target_they} grips something and says nothing and says everything.
 
-zone handle/add clit/touch = {actor_s} finger finds {target_s} clit with the accuracy of someone who knows exactly where it is — and the response is immediate, audible, and entirely unguarded. {target_they} was not prepared to not be prepared.
-zone handle/add clit/stroke = {actor} strokes {target_s} clit with a sustained, specific motion — not fast, not light, the pressure and the rhythm both chosen for effect. {target_they} makes it very clear this is working.
-zone handle/add clit/lick = {actor_s} tongue finds {target_s} clit and does not leave — the pressure and warmth of it specific and sustained. {target_they} makes a sound that is more honest than {target_they} usually permits.
-zone handle/add clit/suck = {actor_s} mouth closes over {target_s} clit — the suction gentle at first, then less so. {target_s} hands find {actor_s} hair and apply no particular direction, just presence.
+zone handle clit/touch = {actor_s} finger finds {target_s} clit with the accuracy of someone who knows exactly where it is — and the response is immediate, audible, and entirely unguarded. {target_they} was not prepared to not be prepared.
+zone handle clit/stroke = {actor} strokes {target_s} clit with a sustained, specific motion — not fast, not light, the pressure and the rhythm both chosen for effect. {target_they} makes it very clear this is working.
+zone handle clit/lick = {actor_s} tongue finds {target_s} clit and does not leave — the pressure and warmth of it specific and sustained. {target_they} makes a sound that is more honest than {target_they} usually permits.
+zone handle clit/suck = {actor_s} mouth closes over {target_s} clit — the suction gentle at first, then less so. {target_s} hands find {actor_s} hair and apply no particular direction, just presence.
 
-zone handle/add perineum/touch = {actor_s} finger finds the smooth territory between {target_s} sex and anus — the skin thin and warm there, and {target_they} registers the contact with a sound that was not authorized before it arrived.
-zone handle/add perineum/lick = {actor_s} tongue traces the perineum with a slowness that proves the point. {target_they} produces a sound that is entirely a surprise to {target_them}.
+zone handle perineum/touch = {actor_s} finger finds the smooth territory between {target_s} sex and anus — the skin thin and warm there, and {target_they} registers the contact with a sound that was not authorized before it arrived.
+zone handle perineum/lick = {actor_s} tongue traces the perineum with a slowness that proves the point. {target_they} produces a sound that is entirely a surprise to {target_them}.
 
-zone handle/add anus/touch = {actor_s} fingertip finds {target_s} anus — the ring of it reflexively tightening before anything has been requested of it, the skin warm and sensitive in ways it does not usually announce. {target_they} breathes.
-zone handle/add anus/lick = {actor_s} tongue meets {target_s} anus — warm, slow, circling before pressing. {target_they} makes a sound and grips something available. The tightening gives by degrees, and more slowly than most things give.
+zone handle pussy/touch = {actor_s} fingers find {target_s} pussy — warm, already wet, the soft entry greeting {actor_their} touch before anything has been asked. {target_they} makes a sound that is not quite contained.
+zone handle pussy/stroke = {actor_s} fingers move through {target_s} pussy — slow, reading the topography of it, the wetness easing every motion. {target_they} angles {target_their} hips the smallest degree, which is not nothing.
+zone handle pussy/lick = {actor_s} mouth finds {target_s} pussy and {target_they} was already wet enough that the first contact is immediate — warm, direct, the taste of {target_them} specific and close. {target_they} says nothing and holds very still, which is its own kind of answer.
+zone handle pussy/taste = {actor} takes time with {target_s} pussy — learning its particular warmth, the way the inner lips part under a careful tongue, the depth of the response that arrives before deliberate stimulation has really begun. {target_they} stops managing {target_their} expression.
+zone handle pussy/grope = {actor_s} hand cups {target_s} pussy fully — the wet heat of it meeting {actor_their} palm, the soft give of the whole of it against {actor_their} grip. {target_they} exhales through {target_their} nose and does not look away.
+zone handle pussy/squeeze = {actor} applies pressure to {target_s} pussy with the heel of {actor_their} hand — sustained, deliberate. {target_they} makes a sharp sound and then a quieter, longer one that is less easy to describe.
+zone handle pussy/finger = {actor_s} finger enters {target_s} pussy — the entrance parting to accept it, warm and close around {actor_them} from the first contact. The grip is immediate. {target_they} says {actor_s} name.
+zone handle pussy/bite = {actor_s} teeth find the skin around {target_s} pussy — the inner lip, the soft inner thigh, not the orifice itself — a graze that makes its point. {target_they} inhales and holds it.
 
-zone handle/add feet/touch = {actor_s} hands take {target_s} foot and find: smaller than expected, well-arched, the purple nails meticulous at the toes. {target_they} notes the attention with a slight tilt of the head.
-zone handle/add feet/hold = {actor} holds {target_s} foot — the weight of it negligible, the arch responsive to pressure in the middle. {target_they} decides not to comment.
+zone handle anus/touch = {actor_s} fingertip finds {target_s} anus — the ring of it reflexively tightening before anything has been requested of it, the skin warm and sensitive in ways it does not usually announce. {target_they} breathes.
+zone handle anus/lick = {actor_s} tongue meets {target_s} anus — warm, slow, circling before pressing. {target_they} makes a sound and grips something available. The tightening gives by degrees, and more slowly than most things give.
+
+zone handle feet/touch = {actor_s} hands take {target_s} foot and find: smaller than expected, well-arched, the purple nails meticulous at the toes. {target_they} notes the attention with a slight tilt of the head.
+zone handle feet/hold = {actor} holds {target_s} foot — the weight of it negligible, the arch responsive to pressure in the middle. {target_they} decides not to comment.
 
 
 -- STEP 7: Outfit via Wear Commands --
@@ -370,7 +390,7 @@ setfluid/flavor Witch's Milk Glands = warm and faintly sweet, with the particula
 --   zone detail — 2-4 details per key zone       --
 --   zone study — 2-3 study observations per zone --
 --              (uses = separator, unlike roomzone) --
---   zone handle/add — full verb coverage for all --
+--   zone handle— full verb coverage for all --
 --              intimate and sensory zones        --
 --   zone ambient — 9 ambient lines across 5 zones --
 --                                                --
