@@ -1,0 +1,389 @@
+== Character Build: Witch ==
+== Paste these commands while PUPPETED as Witch ==
+== Or prefix each with: @py self.execute_cmd("<command>") while staffing ==
+==                                                                         ==
+== This script is a living demo of the full zone system:                   ==
+==   - All default zones described                                         ==
+==   - Intimate zones added under groin + chest                            ==
+==   - zone detail / study / handle per key zone                           ==
+==   - Outfit via wear commands                                             ==
+==   - Zone ambient messages                                                ==
+==   - BreastItem + MilkProductionItem installed for {size} token demo      ==
+== ======================================================================= ==
+
+
+-- STEP 1: Standard Character Description Fields --
+
+setname Witch
+
+setdesc = |mWitch|n//The first impression is deliberate — something designed to occupy a specific role so completely that the role starts to look like her natural state. She is early twenties, the proportions generous, and she carries all of it with the ease of someone who grew up in this body and made peace with what it decided to be. Whatever she is projecting — magic worker, difficult student, the particular kind of danger that wears a pleated skirt — the projection lands cleanly.//{zone:hair}//{zone:face}//{zone:eyes}//{zone:chest}//{zone:hands}//{zone:playful_aura}
+
+setbodylang standing at her full height with the particular ease of someone comfortable being looked at — weight shifted slightly to her left, one hand free at her side, the other at rest or occupied.
+
+setmoodtell There is a quality of attention that precedes her mood: she is either noticing something or deciding something, and both states look the same from the outside until the moment they resolve.
+
+setpresence present with the specific weight of someone who chose to be in this room and has not reconsidered.
+
+setproxtell Up close, the scent of vanilla and warm honey is unmistakable — the particular warmth of someone whose perfume reads as body temperature rather than application. Her eyes, at this distance, show the silver in them: individual flecks distributed through the blue, catching light with the brief precision of something that knows it is being looked for.
+
+setscent vanilla and warm honey, layered over the particular clean-warm scent of someone who smells like themselves — not heavy, not sparse, exactly the right amount for the space she is occupying.
+
+setvoice a melodic contralto that sits low in the register and makes room for itself without effort — the kind of voice that does not need to be raised to carry. When she speaks quietly the effect is different from a whisper: it is chosen rather than reduced.
+
+settouch Warm. The particular warmth of someone who runs a few degrees above average, the skin soft throughout and most giving at the inner surfaces — forearm, wrist, inner thigh. Her hands are precise and not careless.
+
+setintimate She does not make noise until she decides to — and when she does, it is specific to the action that produced it, not theatrical. The warmth is consistent and her responses arrive at their own schedule: occasionally immediate, occasionally suspended in a way that suggests she is considering them first.
+
+
+-- STEP 2: Add Freeform and Intimate Zones --
+-- NOTE: Add parents before children. groin already exists as a default zone. --
+
+zone add groin/mons_pubis type=surface intimate
+zone add groin/labia type=surface intimate
+zone add groin/labia/labia_majora type=both intimate
+zone add groin/labia/labia_minora type=both intimate
+zone add groin/clit type=both intimate
+zone add groin/perineum type=surface intimate
+zone add groin/anus type=orifice intimate
+zone add chest/nipples type=both intimate
+zone add abdomen/navel type=attachment
+zone add playful_aura type=attachment
+
+
+-- STEP 3: Zone Descriptions --
+-- NOTE: zone set uses = separator. These are nude/base descriptions. --
+-- Outfit is layered on top via wear commands in Step 7. --
+
+zone set head = The overall shape of her head is well-proportioned without being extraordinary — it is the face and the hair that carry the impression, not the structure beneath. Her expression governs the reading; at rest, it suggests occupation rather than vacancy.
+
+zone set hair = Golden-blonde and worn in waves that reach mid-back — not styled into discipline but attended to, the kind of hair that falls where it's asked and stays. The color runs warm throughout: deep honey-gold at the roots, brighter at the ends, as if the light finds it preferentially. In motion it shifts as a single mass; in stillness, individual strands catch separately. It occasionally acquires a faint static charge when she is working, the outer layers lifting without wind.
+
+zone set face = Heart-shaped, the jaw soft and the chin pointed, with cheekbones high enough to give the face architecture without severity. The skin is fair and clear — a small constellation of freckles crosses the bridge of her nose, faint enough to require proximity, otherwise unmarked. Her expression at rest is considering rather than open: not cold, but occupied, as if whatever she is thinking is more interesting than whatever you are doing.
+
+zone set eyes = A saturated cerulean that reads as intentional from any distance — the kind of blue that looks chosen rather than inherited. At close range, a distributed scatter of silver flecks becomes visible, individual points catching light with a brief luminous quality that shifts depending on angle. Her gaze rests on things with attention. When it settles on you specifically, the sensation is legible: she is not assessing, she is noting.
+
+zone set lips = Full and naturally rosy, slightly more curved on the left than the right even at rest — a faint asymmetry that becomes readable only at proximity. She keeps them lightly parted when thinking, closed when she has decided something. When she speaks, the movement is precise; when she is amused, the curve arrives before the sound does.
+
+zone set mouth = Warm, and the warmth is unmistakable at close range — the sort that suggests rather than announces. Her voice originates here with more resonance than her frame implies, a low projection that carries without effort. The interior is soft-pink and unhurried.
+
+zone set tongue = The color of the inside of a flower, and it moves with the precision of something she has learned to use with deliberation. The tip is slightly pointed. She licks her lips when she is thinking about something specific, and it is not a performance.
+
+zone set ears = Small and neatly set, usually partially visible through her hair. A tiny silver crescent-moon stud occupies the lobe of each ear — exactly matched, backed flush. She wears nothing else there. The outer rim of each ear colors a faint rose when she is embarrassed, which is rarer than it should be.
+
+zone set neck = Long and unhurried, the arch between jaw and shoulder carrying a quality of extension that makes whatever she wears above the collar appear intentional. The skin is fair and carries a visible pulse in still moments.
+
+zone set throat = The hollow at the base of her throat is deeper than average — the kind of notch that collects shadow in low light. Pressing attention to it in quiet moments reveals her pulse: slow and deliberate, not nervous. The skin here is fine-textured and warmer than her shoulders, and it responds to breath before it responds to touch.
+
+zone set nape = Where her hair meets her neck at the back, the style allows shorter strands to drift free — the place where warmth collects most readily. The skin is pale and responsive: a breath at the right angle raises the fine hairs there before she has had time to decide whether she wants it to.
+
+zone set shoulders = Round and carried without tension, the blouse cut just low enough to show where each shoulder rounds before the arm begins. The line is soft without being fragile and she wears it with the ease of someone who has never had to think about her posture.
+
+zone set chest = Full breasts of {size} size, rounding the front of whatever she is wearing with the calm authority of something that cannot be incidentally overlooked. The weight is natural, the shape consistent whether clothed or not — a figure that was given this and organized itself around it without apology. The skin between and above is pale and fine, soft at the touch, warmer than the shoulder, and quick to mark with pressure.
+
+zone set nipples = Deep rose, gathered at their tips and responsive in ways she does not always choose to be. A cold draft, direct attention, the angle of a gaze held long enough — and they make their presence known through fabric. The areolae are a slightly darker shade, their texture distinct at contact: soft at the outer ring, firmer toward the center, and the nipple itself hardens to a precise point when circumstances ask for it.
+
+zone set abdomen = Gently curved, the kind of abdomen that suggests warmth and ease rather than tension. The skin is smooth and pale with no marks that were not cosmetic choices. The small star stud at the navel catches light with a brief flash when she moves. Below it, a subtle narrowing announces the downward geography while her waist redirects the eye.
+
+zone set navel = A small, neat depression currently occupied by a four-pointed silver star — the studs pressed flush to the skin, the center a clear crystal that catches and releases light with a brief precision. The stud has been in place long enough that the skin around it has softened and settled around the backing with complete acceptance.
+
+zone set back = Smooth and undemanding — the kind of back that is rarely the focus but is always present. The lines from her shoulders carry down through a clean arc to the lumbar, the skin fine throughout. In certain lights, the suggestion of a spine and the flanking musculature describes itself without emphasis.
+
+zone set lower_back = The curve at the small of her back is natural rather than cinched — the lumbar creating a shelf before the hips begin their return. The skin here is softer than her shoulders and responds to pressure differently: a palm rested flat meets warmth and a very slight give, the kind of give that comes from the absence of tension.
+
+zone set waist = Small without the severity of structure — the bodice follows the curve rather than creating it. From any angle, the waist is a narrowing between two fuller territories, present and felt more than displayed.
+
+zone set arms = The line from shoulder to wrist is smooth and unbroken, carrying its own proportion without excess. The skin is pale throughout, fine-textured at the inner surface, where the blue of veins at the inner wrist is faintly legible.
+
+zone set wrists = Delicate-boned and usually occupied. Silver bracelets cluster at her right wrist — three of them, none the same design. A single heavier braided-silver cuff sits on the left. The pulse at the inner wrist is present and quick when things are interesting.
+
+zone set hands = Long-fingered without being graceful about it, and currently finished in iridescent purple nail lacquer that shifts between deep violet and plum depending on light and angle. The nails are grown to a tapered point and are sharp enough to be a deliberate choice rather than an oversight. The hands move with precision — she does not gesticulate unnecessarily, and when she reaches for something she does not overshoot.
+
+zone set groin = The covered center — a territory that announces itself by the architecture that surrounds it: the skirt hem, the garter clips, the thigh-highs pulled taut. Without the clothing, the groin presents the soft junction of thigh and pelvis, the mons set against the pale inner join of her legs, the whole of it close and warm and notably less indifferent to attention than the rest of her tends to be.
+
+zone set mons_pubis = Softly risen, the skin fine over the structure beneath, carrying a sparse and deliberately maintained coverage of golden-blonde curls — the color matching exactly what grows above. The mound is full without heaviness, and at its crest the downward geography begins its quiet announcement.
+
+zone set labia = The outer geography of her sex — the labia giving structure and enclosure to what lies between before the inner topography opens.
+
+zone set labia_majora = Full and soft, the outer lips closing naturally, their surface the pale skin of the inner thigh where they meet it. In certain positions or under pressure they carry their own weight with a sleek passivity that makes them responsive to even slight differential — a breath, a brush, the change in temperature of an approaching hand.
+
+zone set labia_minora = Finer-textured and warmer than their outer counterpart, deeper in shade — a rose that darkens and plumps under attention with a reliability that makes restraint a choice rather than a default. They are responsive well before contact: a change in breath near enough reaches them before touch does, and the sensation is specific.
+
+zone set clit = Small, hooded, and precisely located — the hood at rest keeps it sheltered, but arousal lifts it with a precision that makes the covering a formality. It is the most responsive point in her geography, and a direct, steady, specific touch here produces results that tend to be audible. It does not require significant pressure; it requires accuracy.
+
+zone set perineum = The bridge between, smooth and somewhat overlooked by casual attention — the territory that exists primarily in the awareness of people who know what they are doing. The skin is thin and notably sensitive in ways it does not advertise, and direct attention here tends to surprise even her.
+
+zone set anus = Tightly gathered and small, the skin around it a faintly deeper rose that fades back to pale within centimeters. It is not an area that receives casual attention and is correspondingly unfamiliar with it — reactive in ways that resolve neither toward welcome nor refusal until the moment itself decides.
+
+zone set hips = Wide and genuine — the body does not pretend to narrowness here. The flare begins at the waist's lowest point and widens through the swell of each hip before rounding into the upper thigh. When she walks, the movement is unhurried and reads from any angle.
+
+zone set thighs = Full and soft, usually occupied by the striped thigh-highs she favors — black and purple, the elastic just below mid-thigh, garter clips holding each stocking in place. Without the stockings, the inner thigh is its own argument: the softest territory on her, pale and warm, and not a place she is accustomed to having attended to at length.
+
+zone set ankles = Slender, visible between the boot top and the stocking end — a strip of skin where the proportions narrow from calf to foot. The ankle itself is fine-boned, the line of the Achilles tendon visible from behind.
+
+zone set feet = Small and neat. In the boots: a pointed toe, low heel, a series of small metal buckles up the outer ankle. Without them: well-arched, the toenails painted the same iridescent purple as her hands, the sole of each foot paler than the rest of her.
+
+zone set playful_aura = Not always present. It appears when she finds something genuinely amusing, or when she is working on something that requires it — a faint violet luminescence at the edge of her silhouette, not attached to any specific part of her but concentrated near the hands and at the periphery of her hair. It moves against drafts. It does not appear to be decorative.
+
+
+-- STEP 4: Zone Details --
+
+zone detail hair/texture = The individual strands are fine — the kind of fine that tends toward static and tangles and gets caught in things. The wave is not a perm or a curl, but a natural looseness that organizes itself differently each day within a recognizable family of arrangements. At the ends, the color is slightly sun-bleached: warmer, drier, the particular tone of hair that has been outdoors.
+
+zone detail hair/static = When she is working — or sometimes for no apparent reason — the outer layers of her hair lift slightly and resettles with the sensation of light charge against the hand. The effect is brief and seems involuntary. After it passes, the hair falls back exactly as it was.
+
+zone detail eyes/silver_flecks = The silver flecks in her irises are not uniform — they cluster slightly toward the outer ring and are distributed unevenly throughout. Under direct light, each one is individually visible as a distinct point rather than a general shimmer. There are more of them than a first look suggests. They do not appear natural, though there is no way to identify what about them is not.
+
+zone detail eyes/gaze = Her gaze does not drift or scan. When she looks at something, she looks at it — a quality of deliberate focus that makes being its target feel like a distinct condition. When she shifts from looking at a thing to looking at you, there is a small interval of transition that is somehow legible, like turning the page from one chapter to another.
+
+zone detail lips/asymmetry = The slight leftward curl of her natural resting expression is most visible at three-quarter profile. In photographs or sustained looking, the asymmetry becomes comfortable rather than odd — the way a face reads as itself once you have spent enough time in it. When she smiles fully, the asymmetry disappears; when she is amused without showing it, the left corner carries it alone.
+
+zone detail lips/color = The natural color is a warm rose without being red — the kind that doesn't require contrast cosmetics but benefits from them. She tends to wear either nothing on them or a shade that deepens the existing color rather than replacing it. The upper lip's philtrum is well-defined; the lower lip is slightly heavier in proportion, which is the majority of why the expression defaults to considered rather than severe.
+
+zone detail throat/pulse = The pulse at her throat is visible in stillness — a small, regular motion at the soft notch just above the collarbone. At rest it is slow. It changes faster than her expression does, which occasionally constitutes information.
+
+zone detail chest/sternum = The line of the sternum between her breasts is a shallow valley — the skin there softer and more sensitive than the outer curves, and slightly warmer. Following it downward, the topography flattens into abdomen before the navel interrupts the line.
+
+zone detail nipples/response = They respond to temperature, to proximity, to the direction of attention — the response is not fully voluntary and she does not pretend it is. A cold room or a considering gaze and they make their awareness known with a precision that fabric does not entirely contain. They respond to stimulation faster than almost any other part of her and sustain that response longer.
+
+zone detail navel/stud = The star stud sits at the four cardinal points of the navel, each arm ending in a rounded head pressed flush to the skin. The center crystal is cut with small facets that break light into individual points. When she is warm the metal is warm. When the room is cold it stays warm slightly longer than the surrounding skin, as if the metal remembers a warmer temperature and holds it.
+
+zone detail navel/sensitivity = The skin of the navel is softer than the surrounding abdomen, particularly at the interior of the depression. Pressure there — a fingertip, a tongue, air exhaled close — produces a response that is difficult to categorize: not quite ticklish, not quite arousal, something adjacent to both that resolves slowly.
+
+zone detail hands/nails = The nails are grown to the point of genuine capability — long enough to trace a line without effort, sharp enough at the tip to catch and mark. The lacquer is applied cleanly, no chips, the color shifting with movement from deep plum to violet to a near-iridescent purple that is not quite any single hue. They are attended to. They are not accidental.
+
+zone detail hands/precision = Watching her hands perform a task — picking something up, writing, arranging objects — reveals a degree of fine control that her overall affect doesn't necessarily announce. There is no wasted motion. When her hands are idle they rest rather than fidget; when occupied, each movement arrives and resolves cleanly.
+
+zone detail mons_pubis/curls = The blonde curls are present but maintained — clipped rather than cleared, close to the skin but unmistakably there. The color is a warm golden-blonde that is identifiably the same as her hair, and the texture is softer than it looks: fine, not coarse, lying flat against the swell.
+
+zone detail labia_minora/color = At rest the color is a warm, moderate rose. Under arousal it deepens to something closer to ruby — a change that is gradual rather than sudden, starting at the inner edges and working outward. The transition is the most reliable indicator of her actual state that does not require asking.
+
+zone detail clit/hood = The clitoral hood is soft and mobile — it retracts partially with arousal and fully with direct attention, leaving the glans exposed with a sensitivity that does not tolerate indirection well. Indirect stimulation through the hood is its own register; direct contact after retraction is entirely another.
+
+zone detail thighs/inner = The inner thigh is the softest place on her — the skin fine-textured and pale, unmarked, with a give that is entirely different from anywhere else. It is also the most temperature-sensitive: a cool hand there is felt immediately. The nerve density makes slow attention in this area produce disproportionate responses relative to the gentleness of the approach.
+
+zone detail playful_aura/behavior = The violet shimmer does not spread or pulse. It occupies the edges of her silhouette — her hands in particular — with a static presence that moves only when she moves, like something wearing her outline. When she reaches for an object with intent, it brightens very slightly, then returns to baseline. It does not appear to acknowledge being noticed.
+
+
+-- STEP 5: Zone Study Observations --
+-- NOTE: Character zone study uses = separator (unlike roomzone study which uses +) --
+
+zone study hair = The hair closest to the nape of her neck is finer than the rest — a slightly different texture that lies flatter and retains warmth. It is the part that gets warm first when she flushes, and stays warm longest.
+zone study hair = The wave is not a daily choice. In high humidity it tightens to something close to a curl; in dry cold it lies nearly straight. The warmth of a room determines which version of the hair appears.
+
+zone study eyes = In profile, the silver of the eye is not visible at all — it reads as purely blue from the side. The silver only appears when seen head-on, when the pupil is neither maximally contracted nor fully dilated. It disappears in very bright light.
+zone study eyes = When she is tired, the silver flecks appear more prominent rather than less — the eyes have a quality of luminosity under fatigue that is counterintuitive and not flattering in the way flattering things are, but striking.
+zone study eyes = There is a small detail at the outer corner of her left eye: the faintest darker line, as if a single lash fell and left its mark, or as if the skin there has been pressed into that impression by some repeated expression. It is not a scar. It is not cosmetic. It has simply always been there.
+
+zone study chest = The skin at the upper curve of each breast is paler than the rest — the lightest point of an already fair complexion, the sort of pale that comes from an area that almost never sees sun. Under certain lighting it takes on a faint blue-white quality that makes the veins beneath just barely legible.
+zone study chest = The weight of her breasts shifts predictably with gravity — lying back, they fall outward and apart; leaning forward, they fall forward and together; standing, they rest in their natural position without architectural assistance. The movement carries its own specific momentum.
+
+zone study nipples = After sustained cold or stimulation, they remain erect for longer than one might expect — not indefinitely, but persistently. The return to a resting state is gradual and visible.
+
+zone study lips = Her lips dry slightly when she is concentrating — the lick she uses to re-wet them is unconscious and entirely unconsidered, which is possibly why it lands differently than if she were aware of it.
+
+zone study hands = The middle finger of her right hand has a very small callus at the knuckle — the kind left by sustained writing with a pen held in a particular grip. It is barely visible and found only by running a thumb across the joint.
+zone study hands = Her nails catch occasionally on fabric when she reaches past something — silk especially. She notices and does not apologize.
+
+zone study thighs = The backs of her thighs are slightly warmer than the fronts, and slightly softer in a way that is entirely positional: the skin that rests and the skin that moves. Sitting, the inner thigh softens further against whatever it rests on. It is a difference that is found rather than seen.
+
+zone study anus = The muscle is reflexive rather than managed — the response to unexpected pressure is a tightening rather than a yield, regardless of context. It responds to warmth and approach before it responds to contact. It requires more patience and more deliberateness than its size suggests.
+
+zone study playful_aura = The shimmer brightens very slightly when she is being deliberate about something — when she reaches for an object with intent, or speaks a word she has chosen carefully. It dims when she is tired. At no point has it been fully absent in observation, only reduced.
+
+
+-- STEP 6: Zone Handle Interactions --
+-- These respond to: touch, caress, grope, stroke, grab, squeeze, kiss, bite, lick, taste, pull, pinch, nuzzle, hold, pet --
+-- Tokens: {actor} {actor_s} {actor_they} {actor_them} {actor_their} {target} {target_s} {target_they} {target_them} {target_their} --
+
+zone handle/add hair/touch = {actor_s} fingers enter {target_s} hair and meet its warmth directly — the strands fine and loose around {actor_them}, the wave disrupting easily before settling back. {target_they} notice without turning.
+zone handle/add hair/stroke = {actor} draws {actor_their} hand through {target_s} hair in a long, slow movement, the gold of it flowing over {actor_their} palm. {target_they} goes still for the length of it.
+zone handle/add hair/grab = {actor} gathers a fist of {target_s} hair at the nape — the strands gather with surprising ease, the warmth of the scalp reaching through. {target_s} breath shifts; {target_they} does not pull away.
+zone handle/add hair/pull = {actor} takes a grip and applies it — the angle communicating before the words do. {target_they} tilts {target_their} head back by the direction of it, eyes forward, waiting.
+zone handle/add hair/nuzzle = {actor} presses {actor_their} face into {target_s} hair at the crown and finds: warmth, the quiet vanilla-honey of {target_them}, the slight charge of static at the outer layer that comes and goes.
+
+zone handle/add face/touch = {actor_s} hand finds {target_s} face — the jaw soft against {actor_their} palm, the skin warmer than expected. {target_they} permits it. The freckles across {target_their} nose are invisible at this angle.
+zone handle/add face/caress = {actor} traces the line of {target_s} jaw with a slow, deliberate motion, the pad of {actor_their} thumb angled toward the chin. {target_they} watches {actor} through it without expression, the attention of it acknowledged in the quality of {target_their} stillness.
+zone handle/add face/hold = {actor} takes {target_s} face between {actor_their} hands — palms against jaw, thumbs near the cheekbones. {target_they} allows {actor_them}self to be held still this way, meeting {actor_s} gaze with the full weight of those silver-flecked eyes.
+
+zone handle/add eyes/touch = {actor_s} thumb grazes the outer corner of {target_s} eye — the skin there thin and unhurried, the lashes brushing {actor_their} finger. {target_they} blinks once, slowly.
+
+zone handle/add lips/touch = {actor_s} fingertip finds {target_s} lips and rests there — the lower lip fuller under pressure, the warmth immediate. {target_they} does not speak or move, the quiet between them weighted.
+zone handle/add lips/caress = {actor} traces {target_s} lips with a single finger, following the line of the upper and then the lower. {target_they} breathes steadily, the asymmetry of {target_their} resting expression visible up close.
+zone handle/add lips/kiss = {actor} kisses {target_s} lips and finds them warm, soft, and considered — {target_they} kisses back with a precision that communicates this is not the first time {target_they} has decided to do something.
+zone handle/add lips/bite = {actor} catches {target_s} lower lip between {actor_their} teeth — the sound is quiet, the pressure calibrated. A brief exhale from {target_them}. Not protest.
+zone handle/add lips/lick = {actor_s} tongue traces {target_s} lips — first the lower, then the upper at the philtrum. {target_they} opens {target_their} mouth by the smallest margin.
+
+zone handle/add throat/touch = {actor_s} fingers rest at {target_s} throat, feeling the pulse there — slow, regular, the skin warm and fine-textured. {target_they} swallows once under the contact, the motion traveling through {actor_their} fingers.
+zone handle/add throat/caress = {actor} draws {actor_their} hand up the line of {target_s} throat, slow as a question being asked. {target_they} tilts {target_their} chin up by the direction of it without instruction.
+zone handle/add throat/kiss = {actor_s} lips find the soft hollow at the base of {target_s} throat and press there. {target_they} exhales through the nose, the pulse beneath {actor_them} quickening by several beats.
+zone handle/add throat/bite = {actor_s} teeth find the side of {target_s} throat — a grip, not a wound. {target_they} makes a very small sound and holds very still.
+zone handle/add throat/lick = {actor_s} tongue traces the line of {target_s} throat from the hollow upward, following the pulse. {target_s} head tilts back by a degree, involuntary.
+zone handle/add throat/nuzzle = {actor} presses {actor_their} nose to the side of {target_s} neck and breathes in — vanilla and honey, warmth, and something that is just {target_them}. {target_they} doesn't move.
+
+zone handle/add shoulders/touch = {actor_s} hands find {target_s} shoulders — the muscles there relaxed, the roundness of each easy under {actor_their} palms. {target_they} makes no particular response.
+zone handle/add shoulders/hold = {actor_s} hands rest on {target_s} shoulders with the particular weight of something establishing rather than requesting. {target_they} acknowledges it by remaining exactly where {target_they} is.
+
+zone handle/add chest/touch = {actor_s} hand meets {target_s} chest and finds it: warm, full, the weight immediately present against {actor_their} palm. {target_they} watches {actor} with the quality of attention she reserves for things she is still deciding about.
+zone handle/add chest/caress = {actor} traces the upper curve of {target_s} breast with a slow hand — the skin pale and fine, warmth rising to meet {actor_them}. {target_they} breathes.
+zone handle/add chest/grope = {actor_s} hand takes a full grip of {target_s} breast — the weight of it substantial, the skin soft against {actor_their} palm. {target_they} permits a small sound at the back of {actor_their} throat and does not comment on it.
+zone handle/add chest/squeeze = {actor} squeezes {target_s} breast with deliberate pressure — the give genuine, the resistance following behind it. A breath from {target_them}: even, measuring.
+zone handle/add chest/stroke = {actor_s} hand moves over the full surface of {target_s} chest in slow passes, learning the weight and the curve of it. {target_they} closes {target_their} eyes by the third pass.
+zone handle/add chest/kiss = {actor_s} lips meet the swell of {target_s} chest and press there — warmth meeting warmth, the skin fine beneath {actor_them}. {target_they} says nothing. The quality of {target_their} silence is informative.
+zone handle/add chest/nuzzle = {actor} presses {actor_their} face to the soft inner curve between {target_s} breasts — finding warmth, the scent of {target_them} most concentrated here, the heartbeat faint and present.
+
+zone handle/add nipples/touch = {actor_s} fingertip finds {target_s} nipple — the response is immediate: it gathers, firms, and holds. {target_they} draws a small breath through {target_their} nose.
+zone handle/add nipples/pinch = {actor_s} fingers take {target_s} nipple between them and apply pressure — calibrated, sustained. {target_they} makes a sharp sound that does not quite become a word.
+zone handle/add nipples/squeeze = {actor} rolls {target_s} nipple between {actor_their} fingers, the firm gathering of it meeting steady pressure. {target_they} grips something nearby, or nothing, depending on what is available.
+zone handle/add nipples/kiss = {actor_s} lips close over {target_s} nipple — the warmth of {actor_them} surrounding it, the immediate response obvious under {actor_their} mouth. {target_they} makes an unhurried decision about whether to pretend otherwise. {target_they} does not pretend.
+zone handle/add nipples/bite = {actor_s} teeth graze {target_s} nipple — the edge of the sensation, held. {target_s} hand finds {actor_s} hair or shoulder, pressing rather than pulling.
+zone handle/add nipples/lick = {actor_s} tongue moves across {target_s} nipple — first flat and broad, then the tip tracing its outline. {target_they} says {actor_s} name very quietly, not as a question.
+zone handle/add nipples/taste = {actor_s} mouth closes over {target_s} nipple and stays — the deliberate study of it, warmth and texture and the specific response of this particular point under sustained attention. {target_they} exhales at length.
+
+zone handle/add navel/touch = {actor_s} finger finds {target_s} navel stud — the crystal cool for a moment, then warmed. The skin around it is the softest on {target_s} abdomen, and {target_they} registers the contact differently than the surrounding surface: a flutter, unexplained.
+zone handle/add navel/lick = {actor_s} tongue traces the edge of {target_s} navel, circling the star stud before pressing briefly into the depression itself. {target_they} exhales through {target_their} teeth.
+
+zone handle/add hands/touch = {actor_s} hand takes {target_s} hand — the careful, precise fingers of {target_them} receiving the contact and neither pulling away nor closing around it, simply present.
+zone handle/add hands/hold = {actor} holds {target_s} hand with both of {actor_their} own, the iridescent nails visible at the edges of the grip. {target_they} allows it. The warmth transfers quickly.
+zone handle/add hands/kiss = {actor_s} lips meet the back of {target_s} hand — the skin fine there, the faint impression of bones beneath it. {target_they} watches {actor} with the full weight of {target_their} attention.
+
+zone handle/add wrists/touch = {actor_s} fingers close around {target_s} wrist — the delicate architecture of it fully within {actor_their} grip, the pulse there quick and accessible. {target_they} notes the grip without commentary.
+zone handle/add wrists/hold = {actor} holds {target_s} wrist — not restricting, not directing, simply holding. {target_they} does not test it.
+
+zone handle/add hips/touch = {actor_s} hands find {target_s} hips — wide and real under {actor_their} palms, the flare of them communicating itself immediately. {target_they} receives the contact without comment.
+zone handle/add hips/grab = {actor} takes {target_s} hips in {actor_their} hands — a grip that establishes rather than requests. {target_they} goes slightly more still, receiving the intent of it.
+zone handle/add hips/hold = {actor_s} hands rest at {target_s} hips with a weight that is mostly about position. {target_they} adjusts to accommodate it without being asked.
+
+zone handle/add thighs/touch = {actor_s} hand meets {target_s} thigh — soft, warm, the inner surface the softest thing in the vicinity. {target_they} notes the location precisely.
+zone handle/add thighs/caress = {actor} draws {actor_their} hand along the inside of {target_s} thigh — slowly, from knee toward the join. {target_they} says nothing and opens no additional distance between them.
+zone handle/add thighs/stroke = {actor_s} palm moves over {target_s} inner thigh in long, unhurried passes. {target_they} breathes slower, not faster.
+zone handle/add thighs/grab = {actor_s} hand grips {target_s} inner thigh — the softness of it gathering under {actor_their} fingers, the warmth immediate. {target_they} exhales, a sound that is not a word.
+zone handle/add thighs/squeeze = {actor} squeezes {target_s} thigh with an authority that makes the softness of it part of the point. {target_they} makes a sound that resolves in the direction of the person making it.
+
+zone handle/add groin/touch = {actor_s} hand meets {target_s} groin — the warmth there specific and present, the soft structure of {target_them} greeting {actor_their} palm before {actor_they} have decided anything. {target_they} exhales.
+zone handle/add groin/caress = {actor_s} fingers move over {target_s} groin with a deliberate, unhurried attention that asks nothing and establishes everything about the direction of intent. {target_they} responds with an honesty that the rest of {target_them} occasionally declines to.
+zone handle/add groin/stroke = {actor_s} fingers trace the warm seam of {target_s} sex — the topography of it making itself known under the motion, softness and heat yielding to the line of pressure without resistance. {target_they} says {actor_s} name.
+zone handle/add groin/lick = {actor_s} mouth finds {target_s} groin, and {target_they} already knows what this is. The first touch is breath before lips, warmth before pressure. By the time {actor_s} tongue begins its work, {target_s} hands have found something to hold.
+zone handle/add groin/taste = {actor} takes time with {target_s} groin — learning it without hurry, the taste specific and warm and entirely {target_them}. {target_they} stops pretending to have opinions about the pace.
+
+zone handle/add mons_pubis/touch = {actor_s} palm cups the rise of {target_s} mons — the soft golden curls brushing {actor_their} fingers, the warmth underneath immediate. {target_they} notes the hand's position with an awareness that precedes articulation.
+zone handle/add mons_pubis/stroke = {actor_s} fingers comb through the sparse golden curls, the motion slow and deliberate. {target_they} is still in a different way than {target_they} usually is still.
+
+zone handle/add labia_majora/touch = {actor_s} fingers find the outer lips of {target_s} sex — full, warm, closing naturally around {actor_their} touch. {target_they} exhales.
+zone handle/add labia_majora/stroke = {actor_s} fingers trace the outer lips, learning their weight and temperature. {target_they} receives the attention with a quality of suspended decision.
+zone handle/add labia_majora/lick = {actor_s} tongue takes the outer lips of {target_s} sex, drawing along them slowly. {target_they} makes a sound at the back of {target_their} throat that is honest in ways the rest of {target_them} rarely is.
+
+zone handle/add labia_minora/touch = {actor_s} fingers part {target_s} inner lips — soft, warm, already a shade deeper than their resting color. The heat between them is specific and direct. {target_they} makes no pretense about {target_their} response.
+zone handle/add labia_minora/lick = {actor_s} tongue traces {target_s} inner lips with a deliberate lightness that is worse, rather than better, than pressure would be. {target_they} grips something and says nothing and says everything.
+
+zone handle/add clit/touch = {actor_s} finger finds {target_s} clit with the accuracy of someone who knows exactly where it is — and the response is immediate, audible, and entirely unguarded. {target_they} was not prepared to not be prepared.
+zone handle/add clit/stroke = {actor} strokes {target_s} clit with a sustained, specific motion — not fast, not light, the pressure and the rhythm both chosen for effect. {target_they} makes it very clear this is working.
+zone handle/add clit/lick = {actor_s} tongue finds {target_s} clit and does not leave — the pressure and warmth of it specific and sustained. {target_they} makes a sound that is more honest than {target_they} usually permits.
+zone handle/add clit/suck = {actor_s} mouth closes over {target_s} clit — the suction gentle at first, then less so. {target_s} hands find {actor_s} hair and apply no particular direction, just presence.
+
+zone handle/add perineum/touch = {actor_s} finger finds the smooth territory between {target_s} sex and anus — the skin thin and warm there, and {target_they} registers the contact with a sound that was not authorized before it arrived.
+zone handle/add perineum/lick = {actor_s} tongue traces the perineum with a slowness that proves the point. {target_they} produces a sound that is entirely a surprise to {target_them}.
+
+zone handle/add anus/touch = {actor_s} fingertip finds {target_s} anus — the ring of it reflexively tightening before anything has been requested of it, the skin warm and sensitive in ways it does not usually announce. {target_they} breathes.
+zone handle/add anus/lick = {actor_s} tongue meets {target_s} anus — warm, slow, circling before pressing. {target_they} makes a sound and grips something available. The tightening gives by degrees, and more slowly than most things give.
+
+zone handle/add feet/touch = {actor_s} hands take {target_s} foot and find: smaller than expected, well-arched, the purple nails meticulous at the toes. {target_they} notes the attention with a slight tilt of the head.
+zone handle/add feet/hold = {actor} holds {target_s} foot — the weight of it negligible, the arch responsive to pressure in the middle. {target_they} decides not to comment.
+
+
+-- STEP 7: Outfit via Wear Commands --
+-- Each wear command covers a zone with a clothing descriptor. --
+-- These are temporary. Save to wardrobe with: wardrobe save <zone> "<name>" --
+
+wear neck a |wsilver choker|n fitted close, the chain fine enough to almost lose against the light — present when she turns her head, the small clasp sitting at the nape
+wear shoulders a |wwhite linen blouse|n, the collar unfastened, the sleeves fitted to the wrist and closed with small pearlescent buttons — worn open at the throat and tucked into the bodice
+wear chest a |mviolet bodice|n worn over the blouse, fitted from underbust to collarbone, its boning providing clean structure — laced at the back with deep purple cord, the front smooth
+wear back the |wwhite blouse|n pulls smooth across her back, the fabric fine enough to suggest what moves beneath it when she reaches
+wear waist the bodice ends here, the |mpleated skirt|n beginning at the hip — the waist is its narrowest, the boundary between structure and movement
+wear hips a |mpleated skirt|n in alternating panels of deep purple and near-black, the hem short enough to reveal the garter clips and stocking tops — longer at the back than the front by an inch
+wear thighs |cblack and purple striped thigh-highs|n, elastic sitting just below mid-thigh, four silver-hardware garter clips holding each stocking taut to the belt above
+wear ankles a strip of |xmatte black|n fabric between stocking edge and boot top — the ankle itself briefly visible, fine-boned
+wear feet |xankle boots|n in matte black, pointed toe, a modest heel, a series of small metal buckles up the outer ankle
+wear wrists |wsilver bracelets|n — a cluster of three on the right wrist in mixed designs, a heavier braided-silver cuff on the left
+wear hands |miridescent purple nail lacquer|n, tapered nails, the color shifting between deep plum and violet depending on the light
+wear abdomen/navel a |wfour-pointed silver star stud|n, crystal center, flush to the skin at the navel
+
+
+-- STEP 8: Zone Ambient Messages --
+-- These fire periodically as atmospheric action lines in the room --
+
+zone ambient eyes add The silver in |mWitch|n's irises catches the light for a moment — there and then not, a brief interior flash that resolves into ordinary cerulean.
+zone ambient eyes add |mWitch|n's gaze passes through the room and comes to rest somewhere across it, then returns to the immediate without comment.
+
+zone ambient hands add |mWitch|n runs a coin across her knuckles — index to pinky and back — without looking at it, the motion automatic and unhurried.
+zone ambient hands add The faint violet shimmer at the edges of |mWitch|n's hands brightens briefly as she reaches for something, then subsides.
+zone ambient hands add |mWitch|n's iridescent nails catch the light as her hand moves — a brief flash of purple-to-violet that arrives and resolves before it requires acknowledgment.
+
+zone ambient hair add A few strands of |mWitch|n's hair lift slightly and resettle, as if charged, though there is no wind to account for it.
+
+zone ambient lips add |mWitch|n wets her lower lip absently, gaze elsewhere, the motion unconsidered.
+
+zone ambient playful_aura add The violet shimmer at the edges of |mWitch|n's silhouette brightens for a moment — concentrated near her hands — then returns to its usual quiet presence.
+zone ambient playful_aura add The luminescence around |mWitch|n dims very slightly, then holds. She doesn't appear to notice.
+
+
+-- STEP 9: Body Mod Test Items --
+-- Demonstrates the {size} token in zone descriptions and the install system. --
+-- @create runs as staff / in-game builder command --
+-- @create syntax: @create <name>:<typeclass_path> --
+
+@create Witch's Breast Enhancement:typeclasses.body_mod_item.BreastItem
+@create Witch's Milk Glands:typeclasses.production_item.MilkProductionItem
+
+-- Install the BreastItem on the chest zone. This populates {size} in zone desc. --
+install Witch's Breast Enhancement on chest
+
+-- Install the MilkProductionItem on the chest zone. This enables milking. --
+install Witch's Milk Glands on chest
+
+-- Set a flavor for the milk. --
+setfluid/flavor Witch's Milk Glands = warm and faintly sweet, with the particular honey-vanilla of her scent translated into something tangible — richer than expected, not ungentle
+
+-- NOTE: After installing, zone set chest will now render {size} dynamically. --
+-- To demonstrate: look witch chest — the {size} token resolves to the BreastItem's current size. --
+-- To adjust size: lotion <zone> (with lotion item in inventory) or inject (with syringe) --
+
+
+-- STEP 10: Jewelry and Placed Accessories --
+-- These are already applied via the wear commands in Step 7. --
+-- To save the full outfit as a reusable preset: --
+--   wardrobe save neck "silver choker"        --
+--   wardrobe save chest "violet bodice"       --
+--   wardrobe save hips "pleated skirt"        --
+--   wardrobe save thighs "striped thigh-highs" --
+--   wardrobe save feet "ankle boots"          --
+--   outfit save "witch schoolgirl"            --
+--   (then: outfit wear "witch schoolgirl" to restore everything at once) --
+
+
+-- === SUMMARY: What This Script Demonstrates === --
+--                                                --
+-- ZONE SYSTEM:                                   --
+--   zone add — added 10 new zones under groin,   --
+--              chest, abdomen (with type + intimate flags) --
+--   zone set — all default zones described in    --
+--              prose, nude state                 --
+--   zone detail — 2-4 details per key zone       --
+--   zone study — 2-3 study observations per zone --
+--              (uses = separator, unlike roomzone) --
+--   zone handle/add — full verb coverage for all --
+--              intimate and sensory zones        --
+--   zone ambient — 9 ambient lines across 5 zones --
+--                                                --
+-- OUTFIT:                                        --
+--   wear — 12 zones dressed; clothing shows in   --
+--          zone view + {zone:} tokens in setdesc  --
+--                                                --
+-- BODY MOD DEMO:                                 --
+--   BreastItem on chest — {size} token in desc   --
+--   MilkProductionItem on chest — enables milking --
+--   setfluid flavor — custom milk description    --
+--                                                --
+-- CHARACTER FIELDS:                              --
+--   setdesc, setbodylang, setmoodtell, setpresence --
+--   setproxtell, setscent, setvoice, settouch,   --
+--   setintimate                                  --
