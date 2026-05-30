@@ -1,0 +1,178 @@
+# world/milking_messages.yaml
+#
+# Message pools for the milking machine session system.
+#
+# Token: {target} is replaced with the target character's RP name.
+# All running/stop messages broadcast to the room.
+# Fullness threshold messages are private to the character only.
+#
+# Add as many messages to any pool as you like — more = better variety.
+# Pools: start, running, first_empty, running_empty, stop
+
+speeds:
+
+  slow:
+    interval_seconds: 60
+    ml_per_session_tick: 4.0
+
+    start:
+      - "The machine hums to life at its lowest setting — a patient, quiet sound. The cups settle against {target} and seal, the first draw barely a suggestion."
+      - "Slow speed establishes itself without announcement. The cups compress gently against {target} and the suction builds to a steady, unhurried minimum."
+      - "The machine begins with the patience of something in no hurry whatsoever. The cups find {target} and the first pull is even and barely felt."
+      - "A soft mechanical breath — the cups seal to {target} at slow speed and the draw begins at its most gentle. Present, but not pressing."
+
+    running:
+      - "The machine maintains its slow, even draw — the cups holding {target} in a steady rhythm, each cycle complete before the next begins. The hum is low."
+      - "A quiet, patient pull through the cups. {target}'s body gives a little with each slow cycle. The machine takes it and continues."
+      - "Slow suction holds its rhythm. The motor is barely audible at this setting. The cups stay close against {target}, the draw unchanged."
+      - "The cups work at the machine's lowest pace — each pull gentle, each release measured. Against {target}, the suction barely rises above comfortable."
+      - "Low and steady: the rhythm is almost meditative at this speed. The cups press and release against {target} in their slow, patient count."
+      - "The hum of the machine at its gentlest setting. The cups draw from {target} with the unhurried certainty of something that has all the time it needs."
+
+    first_empty:
+      - "The draw comes and finds little. {target} is running dry at this pace, but the machine's slow rhythm doesn't adjust — the cups continue as before."
+      - "The pull finds less than it expected. {target} is nearly empty, but the slow rhythm persists. The cups maintain their seal and keep cycling."
+
+    running_empty:
+      - "The slow draw continues. The cups hold {target} and cycle through as before — finding little now, but unhurried about the absence of output."
+      - "Nothing comes, but the patient rhythm doesn't acknowledge it. The cups press and release against {target} in the same slow count as before."
+      - "The machine continues its gentle cycle against {target} through the empty return. The hum is unchanged. The cups maintain their seal."
+
+    stop:
+      - "The machine's hum fades by degrees — the suction easing before the cups release {target}. A slow decompression, then quiet."
+      - "Slow speed winds down in stages. The pressure releases, the cups loosen from {target}, the motor settles."
+
+  steady:
+    interval_seconds: 30
+    ml_per_session_tick: 11.0
+
+    start:
+      - "The machine settles into its working rhythm — steady suction, the cups fitting to {target} with the confidence of equipment that knows its purpose."
+      - "Steady speed: the cups compress against {target} and the draw begins immediately. Measured, reliable, consistent."
+      - "The machine finds its pace quickly at steady setting. The cups seal to {target} and the rhythm establishes itself without ceremony."
+      - "A working hum as the machine starts at steady. The cups hold {target} in an even, purposeful pull — neither demanding nor gentle."
+
+    running:
+      - "Steady suction — the cups working {target} in a measured rhythm, each draw taking what has accumulated since the last. The motor holds its note."
+      - "The cups press and pull against {target} in the machine's working rhythm. Consistent. Purposeful. Not asking permission."
+      - "The motor holds its working frequency. The cups maintain their seal and draw from {target} at steady intervals, the rhythm unchanged."
+      - "A regular pull through each cycle. {target}'s body answers the machine's steady draw honestly."
+      - "Steady extraction: the cups work {target} in an even rhythm that leaves little ambiguity about what is happening here."
+      - "The machine at its working speed draws from {target} with the reliability of something designed for exactly this — consistent pressure, consistent pace."
+
+    first_empty:
+      - "The draw comes and finds {target} nearly empty. The machine doesn't slow — the rhythm continues at steady pace through the diminishing return."
+      - "Running dry. The cups find less than before with each cycle, but the steady rhythm doesn't adjust for it."
+
+    running_empty:
+      - "Steady pull, empty return. The cups cycle against {target} with the same even rhythm, drawing what little remains or nothing at all."
+      - "The machine continues its steady draw against {target} through the empty cycles — consistent pressure, unchanged rhythm."
+      - "Nothing comes now, but the steady rhythm persists against {target}. The cups stay sealed and cycle as before."
+
+    stop:
+      - "The machine completes its cycle and powers down — suction easing, cups releasing {target} in a smooth decompression."
+      - "Steady speed ends cleanly — a brief deceleration, the cups loosening from {target}, the motor dropping to quiet."
+
+  fast:
+    interval_seconds: 15
+    ml_per_session_tick: 22.0
+
+    start:
+      - "The machine accelerates — the motor climbs to a higher note, the cups lock to {target} with firmer compression, and the draw comes quickly."
+      - "Fast: the rhythm tightens immediately. The cups press hard against {target} and the suction arrives in rapid cycles. More insistent than steady."
+      - "The machine goes to fast speed with a rise in the motor's pitch. The cups find {target} and draw in quick, firm pulls."
+      - "A sharper hum. The cups seal harder to {target} and the rhythm quickens — each draw rapid, each cycle leaving less time than the last."
+
+    running:
+      - "The cups pull hard and quickly — the machine working {target} at fast speed, the draw coming faster than the body fully refills between cycles."
+      - "Fast suction leaves little interval between pulls. The cups press against {target} with a firmness that makes the setting's name accurate."
+      - "The motor runs at its higher register. The cups work {target} in rapid, firm compression — insistent, thorough, quick."
+      - "Each cycle draws faster than the last gave. The cups press against {target} in quick succession, the pull demanding."
+      - "The machine's rhythm is tight now — rapid cycles, firm compression, the draw insistent against {target}."
+      - "At fast speed the suction doesn't pause long enough to allow reconsideration. The cups lock to {target} and draw with urgency."
+
+    first_empty:
+      - "The fast pull hits empty. {target} has little left, but the machine's rapid rhythm doesn't slow for it. The cups continue pressing."
+      - "Running dry at fast speed — the rapid cycles find less with each pass, but the pace doesn't adjust. The cups drive on."
+
+    running_empty:
+      - "Fast and relentless against empty. The cups press hard to {target} in rapid cycles, pulling through the absence of output as if it hasn't registered."
+      - "The rhythm doesn't adjust for empty at this speed — the cups work {target} with the same fast, firm draw, finding nothing but maintaining the pace."
+      - "Full speed, empty return. The cups continue their rapid pull against {target}, the motor at its higher note, indifferent."
+
+    stop:
+      - "The machine drops quickly from fast speed — suction cutting, cups releasing {target} with a sharp decompression. The room drops in volume."
+      - "Fast speed ends decisively: a few rapid deceleration cycles, the cups loosening their grip on {target}, the motor falling."
+
+  intense:
+    interval_seconds: 10
+    ml_per_session_tick: 38.0
+
+    start:
+      - "The machine goes to maximum — the motor climbs to a high, sustained note, the cups lock to {target} with full pressure, and the draw is deep and immediate."
+      - "Intense: the cups compress to {target} with force that isn't a question. The suction comes in rapid, deep cycles. The motor is loud at this setting."
+      - "Full draw from the first moment. The cups seal hard to {target} and the machine runs at maximum — rapid, deep, unrelenting."
+      - "The motor reaches its top note. The cups lock against {target} and the rhythm is tight and deep and does not spare anything."
+
+    running:
+      - "Deep, persistent suction at maximum intensity — the cups driving against {target} in rapid succession, the draw pulling ahead of accumulation."
+      - "Maximum draw: the cups press against {target} in rapid, deep compression. The rhythm leaves no ambiguity about intent or pace."
+      - "At full intensity the draw is constant and demanding — the cups working {target} in deep, fast cycles, the motor loud, the output consistent."
+      - "The cups drive against {target} with maximum pressure, rapid cycling, the pull taking everything available and reaching for more."
+      - "Intense speed doesn't negotiate. The cups lock to {target} and the machine runs at full extraction — deep, rapid, thorough."
+      - "Full intensity against {target}: deep compression, rapid rhythm, the suction at its heaviest. The machine is working at capacity."
+
+    first_empty:
+      - "The intense draw hits empty — {target} has nothing left, but the machine's full-speed rhythm doesn't acknowledge this. Maximum pressure continues."
+      - "Maximum draw, nothing remaining. The cups hammer against {target} at full intensity through the first empty cycle. The motor stays at pitch."
+
+    running_empty:
+      - "Intense and empty: the cups drive against {target} at maximum force through each dry cycle — deep compression, rapid rhythm, no reduction."
+      - "The machine runs at full intensity against {target} through the empty cycles. The motor loud, the rhythm relentless, the output absent."
+      - "Full draw on nothing. The cups work {target} at maximum suction through the dry cycles, the speed unchanged, the pressure unchanged."
+
+    stop:
+      - "The machine cuts from intense speed sharply — the motor drops, the cups release {target} in a hard decompression. The room is noticeably quieter."
+      - "Intense ends with a cut: motor down, suction off, the cups releasing {target}. The silence after this setting has a quality to it."
+
+# ---------------------------------------------------------------------------
+# Fullness threshold messages — private to the character only.
+# Fired once per threshold crossing per fill cycle (reset on extraction).
+# ---------------------------------------------------------------------------
+
+fullness:
+  thresholds:
+    - ml: 100
+      private: true
+      messages:
+        - "A faint awareness settles in — not discomfort yet, just a presence. Something has been accumulating and your body has noticed."
+        - "The first edge of fullness arrives without urgency. It's simply there now, at the edge of attention."
+        - "There's a fullness beginning that hasn't demanded anything yet. Your body has filed it under 'noted.'"
+
+    - ml: 300
+      private: true
+      messages:
+        - "The fullness has weight to it now — heavier than before, occupying a corner of your attention whether you invite it or not."
+        - "It's become harder to ignore. The pressure has moved from presence to something that sits with you consistently."
+        - "A noticeable heaviness. Not uncomfortable exactly, but past the point of simply going unnoticed."
+
+    - ml: 600
+      private: true
+      messages:
+        - "Discomfort has made itself a permanent fixture now. The pressure is real and steady, and your thoughts turn unbidden toward the milking machine."
+        - "Concentration on other things is a conscious effort. The fullness presses with a consistency that wants attention."
+        - "The fullness has shifted from background to foreground. The milking machine is a specific thought rather than an abstract one."
+
+    - ml: 900
+      private: true
+      messages:
+        - "The pressure is pronounced enough now that it shapes how you hold yourself — insistent, constant, hard to work around. The milking machine is a destination."
+        - "It's difficult to concentrate through. The fullness at this level wants specific attention and has stopped being subtle about it."
+        - "Urgent now in a way that has nothing to do with preference. Your body has made its position clear and is not interested in negotiation."
+
+    - ml: 1200
+      private: true
+      messages:
+        - "Past the point of comfort by a significant margin. Every movement registers against the fullness. Resolution is the only coherent direction your thoughts are moving."
+        - "The pressure is a constant, occupying thing. Your attention cannot leave it and your body has stopped being quiet about it."
+        - "At this volume the milking machine exists in your awareness as the single most relevant object in the room. Your body has reached a conclusion."

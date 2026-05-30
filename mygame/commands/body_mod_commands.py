@@ -589,26 +589,30 @@ class CmdMilk(MuxCommand):
     Operate the milking machine in the room.
 
     Usage:
-      milk <target> [<zone>]            — milk a target (all fluid types)
-      milk/speed slow|steady|fast|intense — change the machine speed
-      milk/stop                         — stop an active session
-      milk/status                       — show current speed and session output
+      milk <target> [<zone>]              — start a milking session
+      milk/speed slow|steady|fast|intense — change speed mid-session
+      milk/stop                           — stop the active session
+      milk/status                         — show current speed and output
 
-    The room must have a milking machine mechanic installed in one of its zones.
+    The room must have a milking machine mechanic installed.
     The target must have at least one production item installed.
 
-    Output is deposited into FluidBottle objects created in the room — one
-    bottle per fluid type found. The bottles can be picked up, drunk from,
-    or stocked in the fridge.
+    Sessions run continuously at the set speed, extracting a small amount
+    per tick and broadcasting messages from the room. When the target runs
+    empty the machine stays on, running dry, until stopped with milk/stop.
 
-    Speed multipliers affect the volume extracted:
-      slow     — 75% of accumulated volume
-      steady   — 100% (default)
-      fast     — 135%
-      intense  — 175%
+    Output appears as FluidBottle objects on the machine tray. Bottles for
+    the same producer and fluid type accumulate across ticks.
+
+    Speed affects both extraction rate and message tone:
+      slow    — gentle, patient. 4ml/tick, 60-second intervals.
+      steady  — working rhythm. 11ml/tick, 30-second intervals.
+      fast    — insistent pull. 22ml/tick, 15-second intervals.
+      intense — maximum draw. 38ml/tick, 10-second intervals.
 
     Examples:
       milk Helena
+      milk/self
       milk/speed intense
       milk/stop
     """
@@ -616,7 +620,7 @@ class CmdMilk(MuxCommand):
     key     = "milk"
     locks   = "cmd:all()"
     help_category = "Body Mod"
-    switch_options = ("speed", "stop", "status")
+    switch_options = ("speed", "stop", "status", "self")
 
     def func(self):
         caller   = self.caller
@@ -624,9 +628,11 @@ class CmdMilk(MuxCommand):
         switches = self.switches
         room     = caller.location
 
-        from typeclasses.milking_machine_mechanic import (
-            MilkingMachineMechanic, SPEED_MULTIPLIERS, SPEED_DESCRIPTIONS
-        )
+        from typeclasses.milking_machine_mechanic import MilkingMachineMechanic
+        from typeclasses.milking_session_script import MilkingSessionScript
+        from world.milking_loader import get_speed_config, pick_message
+
+        VALID_SPEEDS = list(get_speed_config().keys())
 
         # Find the machine in the room
         zone_name, state = MilkingMachineMechanic.find_in_room(room)
@@ -634,106 +640,143 @@ class CmdMilk(MuxCommand):
             caller.msg("|xThere's no milking machine here.|n")
             return
 
-        # -- /speed switch --
+        # ── Helper: find any running session script in room ───────────
+        def _find_session():
+            """Return (target, script) if a session is active, else (None, None)."""
+            target_dbref = (state or {}).get("target")
+            if not target_dbref:
+                return None, None
+            from evennia import search_object
+            results = search_object(target_dbref, exact=True)
+            if not results:
+                return None, None
+            tgt = results[0]
+            for script in tgt.scripts.all():
+                if isinstance(script, MilkingSessionScript):
+                    return tgt, script
+            return tgt, None
+
+        # ── /stop ─────────────────────────────────────────────────────
+        if "stop" in switches:
+            tgt, script = _find_session()
+            if script:
+                speed = script.db.speed or "steady"
+                tgt_name = tgt.db.rp_name or tgt.name
+                stop_msg = pick_message(speed, "stop")
+                if stop_msg:
+                    room.msg_contents(stop_msg.replace("{target}", tgt_name))
+                script.stop()
+            else:
+                room.msg_contents("|xThe milking machine cycles down and falls quiet.|n")
+                MilkingMachineMechanic.set_state(
+                    room, zone_name, active=False, operator=None, target=None
+                )
+            return
+
+        # ── /speed ────────────────────────────────────────────────────
         if "speed" in switches:
             speed = args.lower().strip()
-            if speed not in SPEED_MULTIPLIERS:
-                caller.msg(
-                    f"|xValid speeds: {', '.join(SPEED_MULTIPLIERS.keys())}|n"
-                )
+            if speed not in VALID_SPEEDS:
+                caller.msg(f"|xValid speeds: {', '.join(VALID_SPEEDS)}|n")
                 return
             MilkingMachineMechanic.set_state(room, zone_name, speed=speed)
+            tgt, script = _find_session()
+            if script:
+                script.set_speed(speed)
             room.msg_contents(
-                f"|x{caller.db.rp_name or caller.name} adjusts the machine "
-                f"to {speed} speed.\|n\n{SPEED_DESCRIPTIONS[speed]}"
+                f"|x{caller.db.rp_name or caller.name} adjusts the machine to {speed} speed.|n"
             )
             return
 
-        # -- /stop switch --
-        if "stop" in switches:
-            MilkingMachineMechanic.set_state(
-                room, zone_name, active=False, operator=None, target=None
-            )
-            room.msg_contents(
-                f"|xThe milking machine cycles down and falls quiet.|n"
-            )
-            return
-
-        # -- /status switch --
+        # ── /status ───────────────────────────────────────────────────
         if "status" in switches:
-            speed = state.get("speed", "steady")
+            speed  = state.get("speed", "steady")
             active = state.get("active", False)
             out_ml = state.get("session_output_ml", 0.0)
             from typeclasses.production_item import format_volume
             caller.msg(
-                f"|wMilking Machine Status|n\n"
-                f"  Speed:   {speed}\n"
-                f"  Active:  {'yes' if active else 'no'}\n"
+                f"|wMilking Machine|n\n"
+                f"  Speed:          {speed}\n"
+                f"  Active session: {'yes' if active else 'no'}\n"
                 f"  Session output: {format_volume(out_ml)}"
             )
             return
 
-        # -- Default: run a milking session --
-        if not args:
-            caller.msg("|xUsage: milk <target> [<zone>]|n")
-            return
+        # ── Start session ─────────────────────────────────────────────
+        if "self" in switches:
+            target      = caller
+            zone_filter = args.replace(" ", "_").lower() if args else None
+        else:
+            if not args:
+                caller.msg("|xUsage: milk <target> [<zone>] or milk/self [<zone>]|n")
+                return
+            parts      = args.split(None, 1)
+            found_char = None
+            for obj in room.contents:
+                if hasattr(obj, "db") and (
+                    (obj.db.rp_name or obj.name or "").lower().startswith(parts[0].lower())
+                ):
+                    found_char = obj
+                    break
+            if not found_char:
+                caller.msg(f"|xCan't find '{parts[0]}' here.|n")
+                return
+            target      = found_char
+            zone_filter = parts[1].replace(" ", "_").lower() if len(parts) > 1 else None
 
-        # Parse target and optional zone filter
-        parts    = args.split(None, 1)
-        target   = None
+        target_name = target.db.rp_name or target.name
 
-        found_char = None
-        for obj in room.contents:
-            if hasattr(obj, "db") and (
-                (obj.db.rp_name or obj.name or "").lower().startswith(parts[0].lower())
-            ):
-                found_char = obj
-                break
-
-        if not found_char:
-            caller.msg(f"|xCan't find '{parts[0]}' here.|n")
-            return
-
-        target     = found_char
-        zone_filter = parts[1].replace(" ", "_").lower() if len(parts) > 1 else None
-
-        # Scan target zones for production items
-        from typeclasses.production_item import ProductionItem, format_volume
-        from typeclasses.fluid_bottle import FluidBottle
-        from evennia import search_object, create_object
-
-        zones = getattr(target.db, "zones", None) or {}
-        production_items = []
-
+        # Verify target has production items
+        from evennia import search_object
+        from typeclasses.production_item import ProductionItem
+        zones      = getattr(target.db, "zones", None) or {}
+        found_prod = False
         for zn, zd in zones.items():
             if zone_filter and zn != zone_filter:
                 continue
-            mechanics = (zd.get("mechanics", {}) or {})
+            mechanics = zd.get("mechanics", {}) or {}
             entry     = mechanics.get("production")
-            if not entry:
-                continue
-            results = search_object(entry.get("item_dbref", ""), exact=True)
-            if results and isinstance(results[0], ProductionItem):
-                production_items.append((zn, results[0]))
+            if entry:
+                results = search_object(entry.get("item_dbref", ""), exact=True)
+                if results and isinstance(results[0], ProductionItem):
+                    found_prod = True
+                    break
 
-        if not production_items:
-            target_name = target.db.rp_name or target.name
+        if not found_prod:
             caller.msg(
                 f"|x{target_name} has no production items installed"
                 + (f" on '{zone_filter}'" if zone_filter else "") + ".|n"
             )
             return
 
-        speed      = state.get("speed", "steady")
-        multiplier = SPEED_MULTIPLIERS.get(speed, 1.0)
-        target_name = target.db.rp_name or target.name
+        # Stop any existing session on this target first
+        for script in target.scripts.all():
+            if isinstance(script, MilkingSessionScript):
+                script.stop()
 
-        # Announce start
-        room.msg_contents(
-            f"{caller.db.rp_name or caller.name} connects the milking machine "
-            f"to {target_name}. The machine begins at {speed} speed.\n"
-            f"{SPEED_DESCRIPTIONS[speed]}"
+        speed  = state.get("speed", "steady")
+        config = get_speed_config()
+        if speed not in config:
+            speed = "steady"
+
+        # Start message
+        start_msg = pick_message(speed, "start")
+        if start_msg:
+            room.msg_contents(start_msg.replace("{target}", target_name))
+
+        # Create and start the session script
+        from evennia.utils import create
+        script = create.create_script(
+            MilkingSessionScript,
+            obj=target,
+            autostart=False,
+            persistent=True,
         )
+        script.db.speed          = speed
+        script.db.operator_dbref = caller.dbref
+        script.db.zone_filter    = zone_filter
+        script.interval          = config[speed]["interval_seconds"]
+        script.start()
 
         # Mark machine active
         MilkingMachineMechanic.set_state(
@@ -742,56 +785,6 @@ class CmdMilk(MuxCommand):
             operator=caller.dbref,
             target=target.dbref,
             session_output_ml=0.0,
-        )
-
-        # Extract from each production item — collect by fluid type
-        by_type = {}   # fluid_type → (ml, flavor, prod_item)
-
-        for zn, prod in production_items:
-            extracted = prod.extract(speed_multiplier=multiplier)
-            ft     = prod.db.fluid_type   or "fluid"
-            flavor = prod.db.fluid_flavor
-
-            if ft not in by_type:
-                by_type[ft] = [0.0, flavor]
-            by_type[ft][0] += extracted
-            # If multiple zones produce the same type, combine volume;
-            # use the first non-None flavor found
-            if by_type[ft][1] is None and flavor:
-                by_type[ft][1] = flavor
-
-        # Create one bottle per fluid type
-        total_ml = 0.0
-        for ft, (ml, flavor) in by_type.items():
-            total_ml += ml
-            if ml <= 0:
-                continue
-            bottle = create_object(
-                FluidBottle,
-                key=f"bottle of {target_name}'s {ft}",
-                location=room,
-            )
-            bottle.db.producer_name = target_name
-            bottle.db.fluid_type    = ft
-            bottle.db.fluid_flavor  = flavor
-            bottle.db.volume_ml     = ml
-
-            from typeclasses.production_item import format_volume
-            room.msg_contents(
-                f"The machine deposits a |wbottle of {target_name}'s {ft}|n "
-                f"({format_volume(ml)}) onto the tray."
-            )
-
-        # Update session output and mark idle
-        MilkingMachineMechanic.set_state(
-            room, zone_name,
-            active=False,
-            session_output_ml=total_ml,
-        )
-
-        from typeclasses.production_item import format_volume as fv
-        room.msg_contents(
-            f"The machine cycles down. Session total: {fv(total_ml)}."
         )
 
 

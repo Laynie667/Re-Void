@@ -109,6 +109,7 @@ class ProductionItem(DefaultObject):
         self.db.installed_on_zone       = None
         self.db.is_installed            = False
         self.db.lifetime_produced_ml    = 0.0
+        self.db.notified_thresholds     = []      # ml values already notified this fill
 
     # ------------------------------------------------------------------
     # Passive tick
@@ -117,9 +118,44 @@ class ProductionItem(DefaultObject):
     def tick_production(self):
         """Called by PassiveAccumulationScript every 15 minutes."""
         multiplier = self._get_body_mod_multiplier()
-        amount = (self.db.base_rate_ml_per_tick or 50.0) * multiplier
-        self.db.current_volume_ml    = (self.db.current_volume_ml or 0.0) + amount
+        amount     = (self.db.base_rate_ml_per_tick or 50.0) * multiplier
+        old_vol    = self.db.current_volume_ml or 0.0
+        new_vol    = old_vol + amount
+        self.db.current_volume_ml    = new_vol
         self.db.lifetime_produced_ml = (self.db.lifetime_produced_ml or 0.0) + amount
+        # Fire private fullness messages when crossing new thresholds
+        self._check_fullness_thresholds(old_vol, new_vol)
+
+    def _check_fullness_thresholds(self, old_vol: float, new_vol: float):
+        """
+        Send a private fullness message to the installed character when
+        current_volume_ml crosses a new threshold for the first time this cycle.
+        Thresholds are cleared on extraction (reset_fullness_notifications).
+        """
+        char = self.db.installed_on_char
+        if not char:
+            return
+        try:
+            from world.milking_loader import get_fullness_thresholds
+        except ImportError:
+            return
+
+        notified = set(self.db.notified_thresholds or [])
+
+        for threshold_ml, messages in get_fullness_thresholds():
+            if old_vol < threshold_ml <= new_vol and threshold_ml not in notified:
+                import random
+                char.msg(f"|x{random.choice(messages)}|n")
+                notified.add(threshold_ml)
+
+        self.db.notified_thresholds = list(notified)
+
+    def reset_fullness_notifications(self):
+        """
+        Clear the notified threshold set so messages fire again on the
+        next fill cycle. Called by MilkingSessionScript after extraction.
+        """
+        self.db.notified_thresholds = []
 
     def _get_body_mod_multiplier(self) -> float:
         """
