@@ -26,6 +26,7 @@ MILK_GLANDS_PRICE   = 300   # shards — MilkProductionItem, enables milk comman
 PENIS_MOD_PRICE     = 400   # shards — PenisItem, installs to groin/penis zone
 TESTICLE_MOD_PRICE  = 350   # shards — TesticleItem, installs to groin/testicles zone
 SEMEN_GLANDS_PRICE  = 300   # shards — SemenProductionItem, enables semen production
+GROWTH_SERUM_PRICE  = 350   # shards — GrowthSerumItem, 3 doses, perm size + production boost
 
 
 # ---------------------------------------------------------------------------
@@ -239,7 +240,8 @@ DURGIN_TRIGGERS = {
             f"  Milk glands          — {MILK_GLANDS_PRICE} shards\n"
             f"  Penis enhancement    — {PENIS_MOD_PRICE} shards\n"
             f"  Testicle enhancement — {TESTICLE_MOD_PRICE} shards\n"
-            f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n\n"
+            f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n"
+            f"  Growth serum (3 doses) — {GROWTH_SERUM_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -265,7 +267,8 @@ DURGIN_TRIGGERS = {
             f"  Milk glands          — {MILK_GLANDS_PRICE} shards\n"
             f"  Penis enhancement    — {PENIS_MOD_PRICE} shards\n"
             f"  Testicle enhancement — {TESTICLE_MOD_PRICE} shards\n"
-            f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n\n"
+            f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n"
+            f"  Growth serum (3 doses) — {GROWTH_SERUM_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -591,6 +594,40 @@ DURGIN_TRIGGERS = {
 
     "buy semen glands": {
         "response": "_HANDLE_PURCHASE_SEMEN_GLANDS",
+        "type": "action",
+    },
+
+    # ── Growth serum ──────────────────────────────────────────────────────
+    "growth serum": {
+        "response": [
+            f"Durgin reaches under the counter and sets a small vial on the surface "
+            f"— dark glass, sealed with wax, the contents not quite visible through it. "
+            f"'Growth serum,' he says, with the measured tone of a man who has made "
+            f"peace with the product range. 'Three doses. Permanent. Each one gives "
+            f"a half-size increment to whatever body mod is on the zone, "
+            f"and adds fifteen millilitres per tick to any production item on the same zone.' "
+            f"He sets it flat. 'Unlike the syringe, there's no temporary component. "
+            f"What goes in stays in. First dose, last dose, same effect.' "
+            f"A pause. 'I don't manufacture this one either. "
+            f"I source it. The supplier doesn't answer questions and neither do I.' "
+            f"'{GROWTH_SERUM_PRICE} shards. Say |wbuy growth serum|n.'",
+
+            f"Durgin produces the vial without fanfare. 'Growth serum. "
+            f"Permanent size boost and permanent production rate increase, "
+            f"both in one dose.' He sets it on the counter. "
+            f"'Use it with |winject/serum <target> [zone]|n — or |winject/serum/self|n '— "
+            f"'for yourself. Three doses per vial.' "
+            f"He meets your eyes with the steady composure of a man who has "
+            f"categorically stopped being surprised by his own inventory. "
+            f"'Half a size step per dose. Fifteen ml per tick production bonus per dose. "
+            f"Stacks.' He picks up his ledger. '{GROWTH_SERUM_PRICE} shards. "
+            f"|wbuy growth serum|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy growth serum": {
+        "response": "_HANDLE_PURCHASE_GROWTH_SERUM",
         "type": "action",
     },
 
@@ -1191,6 +1228,53 @@ def handle_purchase(caller, npc, purchase_type):
             f"Professional interest.' He does not elaborate.",
         ]
         npc.location.msg_contents(random.choice(_semen_responses))
+        return
+
+    # ── Growth serum purchase ──────────────────────────────────────────────
+    if purchase_type == "growth_serum":
+        if shards < GROWTH_SERUM_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, the growth serum is {GROWTH_SERUM_PRICE} shards. "
+                f"You've got {shards}. Short by {GROWTH_SERUM_PRICE - shards}."
+            )
+            return
+
+        char.db.shards = shards - GROWTH_SERUM_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=GROWTH_SERUM_PRICE,
+            reason="purchase",
+            note="Growth serum from Durgin Ironwood",
+        )
+
+        from typeclasses.growth_serum_item import GrowthSerumItem
+        serum = create.create_object(
+            typeclass=GrowthSerumItem,
+            key="growth serum",
+            location=char,
+        )
+
+        import random
+        _serum_responses = [
+            f"Durgin slides the vial across the counter to {char_name} "
+            f"with the careful handling of something that warrants it. "
+            f"'|winject/serum <target> [zone]|n — or |winject/serum/self [zone]|n. '— "
+            f"'Three doses. Each one is permanent: half a size step on the body mod, "
+            f"plus fifteen millilitres per tick on any production item in the same zone.' "
+            f"He goes back to his ledger. 'No reversal. No ceiling warning. "
+            f"That's the product.' He does not look up again.",
+
+            f"Durgin pockets the shards and hands the vial over with both hands "
+            f"— a brief, deliberate presentation that is the closest he gets to ceremony. "
+            f"'Three doses. |winject/serum|n command.' "
+            f"He holds {char_name}'s eyes for a moment. "
+            f"'First dose is the same as the third. Permanent from the start. "
+            f"It also boosts production rate if there's a production item on the zone — "
+            f"fifteen ml per tick, stacks per dose.' "
+            f"He sets his hands flat on the counter. 'Ironwood standard. Use it well.'",
+        ]
+        npc.location.msg_contents(random.choice(_serum_responses))
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────

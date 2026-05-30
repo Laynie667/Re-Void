@@ -477,14 +477,61 @@ class CmdInject(MuxCommand):
     key     = "inject"
     locks   = "cmd:all()"
     help_category = "Body Mod"
-    switch_options = ("self",)
+    switch_options = ("self", "serum")
 
     def func(self):
         caller   = self.caller
         args     = self.args.strip()
         switches = self.switches
 
-        # Find syringe in inventory
+        # ── /serum branch — permanent growth serum ────────────────────
+        if "serum" in switches:
+            from typeclasses.growth_serum_item import GrowthSerumItem
+            serums = [obj for obj in caller.contents if isinstance(obj, GrowthSerumItem)]
+            if not serums:
+                caller.msg("|xYou don't have a growth serum.|n")
+                return
+            serum = serums[0]
+
+            if "self" in switches:
+                target   = caller
+                zone_arg = args.strip()
+            else:
+                parts = args.split(None, 1)
+                if not parts:
+                    caller.msg("|xUsage: inject/serum <target> [<zone>]|n")
+                    return
+                found = _find_char_in_room(caller, parts[0])
+                if not found:
+                    caller.msg(f"|xCan't find '{parts[0]}' in the room.|n")
+                    return
+                target   = found
+                zone_arg = parts[1].strip() if len(parts) > 1 else ""
+
+            zone_name = zone_arg.replace(" ", "_").lower() if zone_arg else None
+            if not zone_name:
+                zones = getattr(target.db, "zones", None) or {}
+                for zn, zd in zones.items():
+                    mech = (zd.get("mechanics", {}) or {}).get("body_mod")
+                    if mech:
+                        zone_name = zn
+                        break
+
+            if not zone_name:
+                caller.msg(
+                    f"|x{target.db.rp_name or target.name} has no zones with "
+                    f"an installed body mod item.|n"
+                )
+                return
+
+            ok, msg = serum.administer(caller, target, zone_name)
+            if ok:
+                caller.location.msg_contents(msg, exclude=[])
+            else:
+                caller.msg(f"|x{msg}|n")
+            return
+
+        # ── Standard syringe branch ───────────────────────────────────
         from typeclasses.syringe_item import SyringeItem
         syringes = [obj for obj in caller.contents if isinstance(obj, SyringeItem)]
         if not syringes:
@@ -509,11 +556,9 @@ class CmdInject(MuxCommand):
             zone_arg = parts[1].strip() if len(parts) > 1 else ""
 
         # Resolve zone
-        from typeclasses.body_mod_item import BodyModItem
         zone_name = zone_arg.replace(" ", "_").lower() if zone_arg else None
 
         if not zone_name:
-            # Auto-detect: find first zone with an installed body mod
             zones = getattr(target.db, "zones", None) or {}
             for zn, zd in zones.items():
                 mech = (zd.get("mechanics", {}) or {}).get("body_mod")
