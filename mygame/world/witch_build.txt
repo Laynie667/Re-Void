@@ -6,9 +6,11 @@
 ==   - All default zones described                                         ==
 ==   - Intimate zones added under groin + chest                            ==
 ==   - zone detail / study / handle per key zone                           ==
-==   - Outfit via wear commands                                             ==
+==   - Outfit via wear commands (prose paragraphs, not labels)             ==
 ==   - Zone ambient messages                                                ==
 ==   - BreastItem + MilkProductionItem installed for {size} token demo      ==
+==   - Cascading zone tokens: {zone:chest} nude desc embeds                ==
+==     {zone:chest/nipples}, which resolves only when unclothed            ==
 == ======================================================================= ==
 
 
@@ -16,7 +18,7 @@
 
 setname Witch
 
-setdesc = |mWitch|n//The first impression is deliberate — something designed to occupy a specific role so completely that the role starts to look like her natural state. She is early twenties, the proportions generous, and she carries all of it with the ease of someone who grew up in this body and made peace with what it decided to be. Whatever she is projecting — magic worker, difficult student, the particular kind of danger that wears a pleated skirt — the projection lands cleanly.//{zone:hair}//{zone:face}//{zone:eyes}//{zone:chest}//{zone:hands}//{zone:playful_aura}
+setdesc = |mWitch|n//The first impression is deliberate — something designed to occupy a specific role so completely that the role starts to look like her natural state. She is early twenties, the proportions generous, and she carries all of it with the ease of someone who grew up in this body and made peace with what it decided to be. Whatever she is projecting — magic worker, difficult student, the particular kind of danger that wears a pleated skirt — the projection lands cleanly.//{zone:hair}//{zone:face}//{zone:eyes}//{zone:neck}//{zone:chest}//{zone:hands}//{zone:playful_aura}
 
 setbodylang standing at her full height with the particular ease of someone comfortable being looked at — weight shifted slightly to her left, one hand free at her side, the other at rest or occupied.
 
@@ -79,7 +81,7 @@ zone set nape = Where her hair meets her neck at the back, the style allows shor
 
 zone set shoulders = Round and carried without tension, the blouse cut just low enough to show where each shoulder rounds before the arm begins. The line is soft without being fragile and she wears it with the ease of someone who has never had to think about her posture.
 
-zone set chest = Full breasts of {size} size, rounding the front of whatever she is wearing with the calm authority of something that cannot be incidentally overlooked. The weight is natural, the shape consistent whether clothed or not — a figure that was given this and organized itself around it without apology. The skin between and above is pale and fine, soft at the touch, warmer than the shoulder, and quick to mark with pressure.
+zone set chest = Full breasts of {size} size, rounding the front of whatever she is wearing with the calm authority of something that cannot be incidentally overlooked. The weight is natural, the shape consistent whether clothed or not — a figure that was given this and organized itself around it without apology. The skin between and above is pale and fine, soft at the touch, warmer than the shoulder, and quick to mark with pressure. {zone:chest/nipples}
 
 zone set nipples = Deep rose, gathered at their tips and responsive in ways she does not always choose to be. A cold draft, direct attention, the angle of a gaze held long enough — and they make their presence known through fabric. The areolae are a slightly darker shade, their texture distinct at contact: soft at the outer ring, firmer toward the center, and the nipple itself hardens to a precise point when circumstances ask for it.
 
@@ -99,7 +101,7 @@ zone set wrists = Delicate-boned and usually occupied. Silver bracelets cluster 
 
 zone set hands = Long-fingered without being graceful about it, and currently finished in iridescent purple nail lacquer that shifts between deep violet and plum depending on light and angle. The nails are grown to a tapered point and are sharp enough to be a deliberate choice rather than an oversight. The hands move with precision — she does not gesticulate unnecessarily, and when she reaches for something she does not overshoot.
 
-zone set groin = The covered center — a territory that announces itself by the architecture that surrounds it: the skirt hem, the garter clips, the thigh-highs pulled taut. Without the clothing, the groin presents the soft junction of thigh and pelvis, the mons set against the pale inner join of her legs, the whole of it close and warm and notably less indifferent to attention than the rest of her tends to be.
+zone set groin = The covered center — a territory that announces itself by the architecture that surrounds it: the skirt hem, the garter clips, the thigh-highs pulled taut. Without the clothing, the groin presents the soft junction of thigh and pelvis, close and warm and notably less indifferent to attention than the rest of her tends to be. {zone:groin/mons_pubis}
 
 zone set mons_pubis = Softly risen, the skin fine over the structure beneath, carrying a sparse and deliberately maintained coverage of golden-blonde curls — the color matching exactly what grows above. The mound is full without heaviness, and at its crest the downward geography begins its quiet announcement.
 
@@ -311,21 +313,23 @@ zone handle feet/hold = {actor} holds {target_s} foot — the weight of it negli
 
 
 -- STEP 7: Outfit via Wear Commands --
--- Each wear command covers a zone with a clothing descriptor. --
+-- Each wear command covers a zone with a clothing descriptor.            --
+-- The worn_desc IS the zone token output — write it as a full prose      --
+-- paragraph that reads naturally inline with the character description.  --
 -- These are temporary. Save to wardrobe with: wardrobe save <zone> "<name>" --
 
-wear neck a |wsilver choker|n fitted close, the chain fine enough to almost lose against the light — present when she turns her head, the small clasp sitting at the nape
-wear shoulders a |wwhite linen blouse|n, the collar unfastened, the sleeves fitted to the wrist and closed with small pearlescent buttons — worn open at the throat and tucked into the bodice
-wear chest a |mviolet bodice|n worn over the blouse, fitted from underbust to collarbone, its boning providing clean structure — laced at the back with deep purple cord, the front smooth
-wear back the |wwhite blouse|n pulls smooth across her back, the fabric fine enough to suggest what moves beneath it when she reaches
-wear waist the bodice ends here, the |mpleated skirt|n beginning at the hip — the waist is its narrowest, the boundary between structure and movement
-wear hips a |mpleated skirt|n in alternating panels of deep purple and near-black, the hem short enough to reveal the garter clips and stocking tops — longer at the back than the front by an inch
-wear thighs |cblack and purple striped thigh-highs|n, elastic sitting just below mid-thigh, four silver-hardware garter clips holding each stocking taut to the belt above
-wear ankles a strip of |xmatte black|n fabric between stocking edge and boot top — the ankle itself briefly visible, fine-boned
-wear feet |xankle boots|n in matte black, pointed toe, a modest heel, a series of small metal buckles up the outer ankle
-wear wrists |wsilver bracelets|n — a cluster of three on the right wrist in mixed designs, a heavier braided-silver cuff on the left
-wear hands |miridescent purple nail lacquer|n, tapered nails, the color shifting between deep plum and violet depending on the light
-wear abdomen/navel a |wfour-pointed silver star stud|n, crystal center, flush to the skin at the navel
+wear neck A |wsilver choker|n sits close at her throat — the chain fine enough to nearly disappear against her skin, catching light only when she turns her head or it catches the angle directly. The clasp sits at the nape, tucked beneath her hair.
+wear shoulders A |wwhite linen blouse|n, collar left open at the throat, sleeves fitted to the wrist and finished with small pearlescent buttons. The fabric is light and unheavy, worn tucked into the bodice below — it moves with her, which it does without announcement.
+wear chest A |mviolet bodice|n structures her chest from underbust to collarbone — its boning holding a clean, uncompromising line, the front smooth and unornamented, the back laced tight with deep purple cord. It presents her figure directly: generous, self-evident, and entirely unashamed of either quality.
+wear back The |wblouse|n pulls smooth across her back, the fabric fine enough that the suggestion of what moves beneath arrives before the motion itself does.
+wear waist The |mpleated skirt|n begins where the bodice ends — the waist marking the hand-off between structure and movement, the narrowing between them present and felt.
+wear hips A |mpleated skirt|n in alternating panels of deep purple and near-black falls from the hip — short enough at the front to expose the garter clips and stocking tops, an inch longer at the back, the hem moving with each step in a way that is not accidental.
+wear thighs |cBlack and purple striped thigh-highs|n climb her legs to just below mid-thigh, held there by four silver-hardware garter clips per leg. The stripes are horizontal, the pattern confident enough to read from across the room.
+wear ankles A strip of pale skin between stocking-edge and boot top — briefly legible, the ankle itself fine-boned, a seam in the otherwise continuous arrangement of fabric and leather.
+wear feet Matte black ankle boots, pointed toe, low heel, a column of small metal buckles climbing the outer ankle.
+wear wrists Three |wsilver bracelets|n cluster at her right wrist — each a different design, worn loosely against each other. Her left wrist carries a heavier |wbraided-silver cuff|n, fitted rather than loose, that does not shift when her hand moves.
+wear hands |mIridescent purple nail lacquer|n covers nails tapered to a sharp point — the color shifts between deep plum and violet as the angle changes, applied cleanly, attended to. The shift is not accidental.
+wear abdomen/navel A |wfour-pointed silver star stud|n occupies the navel — crystal center, flush to the skin, sending a small flash of light forward whenever she moves.
 
 
 -- STEP 8: Zone Ambient Messages --

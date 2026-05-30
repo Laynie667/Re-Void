@@ -23,7 +23,7 @@ from evennia.objects.objects import DefaultCharacter
 from evennia.utils import logger
 from .objects import ObjectParent
 
-_ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_]+)\}')
+_ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_/]+)\}')
 
 
 # -------------------------------------------------------------------
@@ -1644,47 +1644,6 @@ class Character(ObjectParent, DefaultCharacter):
             from world.freeform_manager import render_zone_tokens
             physical = render_zone_tokens(physical, self)
             parts.append(physical)
-
-        # --- Layer 4: Outfit summary (non-tokenized zones only) ---
-        # Zones that appear via {zone:X} tokens in physical_desc are already
-        # shown inline — skip them here to avoid duplication.
-        # Non-tokenized zones: render worn desc as a clean prose paragraph,
-        # no preposition prefix.  Each item gets its own blank-separated line.
-        _outfit_zones = self._get_zones()
-        _freeform_items = self.db.freeform_items or {}
-        _outfit_lines = []
-
-        for _zname in self.get_zone_order():
-            if _zname in _tokenized:
-                continue  # shown inline via token
-            if _zname not in _outfit_zones:
-                continue
-            # Skip zones hidden under a parent's clothing
-            if self._is_covered_by_ancestor(_zname, _outfit_zones):
-                continue
-            _zdata = _outfit_zones[_zname]
-            _covered = _zdata.get("covered_by")
-            if _covered:
-                _worn = _covered.get(
-                    "worn_desc", _covered.get("desc", "")
-                )
-                if _worn:
-                    _outfit_lines.append(_worn)
-
-        # Freeform items on non-tokenized zones
-        for _iname, _idata in _freeform_items.items():
-            if not _idata:
-                continue
-            _izone = _idata.get("zone", "")
-            if _izone in _tokenized:
-                continue  # already shown via token
-            _idesc = _idata.get("desc", "")
-            if _idesc:
-                _outfit_lines.append(_idesc)
-
-        if _outfit_lines:
-            parts.append("")
-            parts.extend(_outfit_lines)
 
         # --- Layer 5: Body language ---
         body = self.db.body_language or ""

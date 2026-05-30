@@ -87,7 +87,8 @@ def _char_name(character):
 # Zone token renderer
 # ---------------------------------------------------------------------------
 
-_ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_]+)\}')
+# Matches {zone:name} where name can be a flat name (hair) or a path (chest/nipples)
+_ZONE_TOKEN_RE = re.compile(r'\{zone:([a-z_/]+)\}')
 
 
 def _ancestor_covered(zone_name, zones):
@@ -206,7 +207,21 @@ def render_zone_tokens(text, character):
 
         return base
 
-    return _ZONE_TOKEN_RE.sub(resolve, text)
+    # Multi-pass: zone descs may themselves contain {zone:subzone} tokens.
+    # We run up to 5 substitution passes so cascading descriptions resolve
+    # fully — e.g. {zone:chest} expands to text that contains {zone:chest/nipples},
+    # which is then resolved on the next pass.
+    # We stop early if a pass introduces no new tokens.
+    MAX_PASSES = 5
+    result = text
+    for _ in range(MAX_PASSES):
+        if '{zone:' not in result:
+            break
+        new_result = _ZONE_TOKEN_RE.sub(resolve, result)
+        if new_result == result:
+            break  # no change — all tokens either resolved or dead
+        result = new_result
+    return result
 
 
 def _resolve_size_token(zone_name: str, zone_data: dict) -> str:
