@@ -211,6 +211,21 @@ class CmdZoneInteract(Command):
     help_category = "RP Tools"
     switch_options = ("quiet", "private", "self")
 
+    def parse(self):
+        """
+        Extract /switches from the cmdstring before func() runs.
+        Base Command does not parse switches — we do it here so that
+        'kiss/quiet helena' works the same as it would on a MuxCommand.
+        """
+        super().parse()
+        if "/" in self.cmdstring:
+            parts = self.cmdstring.split("/")
+            # Leave cmdstring as just the verb (e.g. "kiss")
+            self.cmdstring = parts[0].strip()
+            self.switches = [s.strip().lower() for s in parts[1:] if s.strip()]
+        else:
+            self.switches = []
+
     def func(self):
         caller = self.caller
         verb   = self.cmdstring.lower()  # exact verb typed
