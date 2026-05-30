@@ -99,6 +99,12 @@ use Bed Cuffs Mechanic on bed
 @set Pillory Mechanic/blocker_msg = The stocks hold your neck and wrists fast.
 use Pillory Mechanic on pillory
 
+-- Milking machine mechanic --
+-- Creates the mechanic entry in the milking_machine zone that the milk command reads. --
+-- Usage once installed: milk <target> [zone] / milk/speed slow|steady|fast|intense / milk/stop --
+@create Milking Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+use Milking Machine on milking_machine
+
 
 -- STEP 8: Handle interactions --
 

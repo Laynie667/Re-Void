@@ -17,8 +17,12 @@ keyword triggers. He has... opinions on his customers' purchases.
 
 from web.housing.models import TENT_PRICE, ROOM_PACK_PRICES
 
-WAYPOST_PRICE  = 300   # shards — one waypost, one realm address
-CUSHION_PRICE  = 50    # shards — installs seating on a room zone (capacity 2)
+WAYPOST_PRICE       = 300   # shards — one waypost, one realm address
+CUSHION_PRICE       = 50    # shards — installs seating on a room zone (capacity 2)
+LOTION_PRICE        = 150   # shards — 10-use lotion bottle, +0.25 perm size per use
+SYRINGE_PRICE       = 200   # shards — 5-use syringe, +1.0 temp boost (escalating perm)
+BREAST_MOD_PRICE    = 400   # shards — BreastItem, installs to chest zone
+MILK_GLANDS_PRICE   = 300   # shards — MilkProductionItem, enables milk command on chest
 
 
 # ---------------------------------------------------------------------------
@@ -218,14 +222,18 @@ DURGIN_TRIGGERS = {
         "response": [
             f"Durgin slaps a laminated card on the counter and smooths it flat "
             f"with one thick hand:\n\n"
-            f"  Tent (1 room)   — {TENT_PRICE} shards\n"
-            f"  +1 room pack    — {ROOM_PACK_PRICES[1]} shards\n"
-            f"  +5 room pack    — {ROOM_PACK_PRICES[5]} shards\n"
-            f"  +10 room pack   — {ROOM_PACK_PRICES[10]} shards\n"
-            f"  +20 room pack   — {ROOM_PACK_PRICES[20]} shards\n"
-            f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n"
-            f"  Waypost         — {WAYPOST_PRICE} shards\n"
-            f"  Seat cushion    — {CUSHION_PRICE} shards\n\n"
+            f"  Tent (1 room)      — {TENT_PRICE} shards\n"
+            f"  +1 room pack       — {ROOM_PACK_PRICES[1]} shards\n"
+            f"  +5 room pack       — {ROOM_PACK_PRICES[5]} shards\n"
+            f"  +10 room pack      — {ROOM_PACK_PRICES[10]} shards\n"
+            f"  +20 room pack      — {ROOM_PACK_PRICES[20]} shards\n"
+            f"  +25 room pack      — {ROOM_PACK_PRICES[25]} shards\n"
+            f"  Waypost            — {WAYPOST_PRICE} shards\n"
+            f"  Seat cushion       — {CUSHION_PRICE} shards\n"
+            f"  Lotion (10 uses)   — {LOTION_PRICE} shards\n"
+            f"  Syringe (5 uses)   — {SYRINGE_PRICE} shards\n"
+            f"  Breast enhancement — {BREAST_MOD_PRICE} shards\n"
+            f"  Milk glands        — {MILK_GLANDS_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -237,14 +245,18 @@ DURGIN_TRIGGERS = {
         "response": [
             f"Durgin slaps a laminated card on the counter and smooths it flat "
             f"with one thick hand:\n\n"
-            f"  Tent (1 room)   — {TENT_PRICE} shards\n"
-            f"  +1 room pack    — {ROOM_PACK_PRICES[1]} shards\n"
-            f"  +5 room pack    — {ROOM_PACK_PRICES[5]} shards\n"
-            f"  +10 room pack   — {ROOM_PACK_PRICES[10]} shards\n"
-            f"  +20 room pack   — {ROOM_PACK_PRICES[20]} shards\n"
-            f"  +25 room pack   — {ROOM_PACK_PRICES[25]} shards\n"
-            f"  Waypost         — {WAYPOST_PRICE} shards\n"
-            f"  Seat cushion    — {CUSHION_PRICE} shards\n\n"
+            f"  Tent (1 room)      — {TENT_PRICE} shards\n"
+            f"  +1 room pack       — {ROOM_PACK_PRICES[1]} shards\n"
+            f"  +5 room pack       — {ROOM_PACK_PRICES[5]} shards\n"
+            f"  +10 room pack      — {ROOM_PACK_PRICES[10]} shards\n"
+            f"  +20 room pack      — {ROOM_PACK_PRICES[20]} shards\n"
+            f"  +25 room pack      — {ROOM_PACK_PRICES[25]} shards\n"
+            f"  Waypost            — {WAYPOST_PRICE} shards\n"
+            f"  Seat cushion       — {CUSHION_PRICE} shards\n"
+            f"  Lotion (10 uses)   — {LOTION_PRICE} shards\n"
+            f"  Syringe (5 uses)   — {SYRINGE_PRICE} shards\n"
+            f"  Breast enhancement — {BREAST_MOD_PRICE} shards\n"
+            f"  Milk glands        — {MILK_GLANDS_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -372,6 +384,118 @@ DURGIN_TRIGGERS = {
 
     "buy cushion": {
         "response": "_HANDLE_PURCHASE_CUSHION",
+        "type": "action",
+    },
+
+    # ── Lotion ────────────────────────────────────────────────────────────
+    "lotion": {
+        "response": [
+            f"Durgin reaches under the counter and sets a small unlabeled bottle "
+            f"on the surface with a quiet click. 'Lotion,' he says, with the "
+            f"professional detachment of a man who has decided not to inquire further. "
+            f"'Apply it to a zone with a body mod installed — the |wlotion <zone>|n command. "
+            f"Each application adds a permanent quarter-size increment. Ten uses per bottle.' "
+            f"He folds his hands. 'It works. Don't ask me how. "
+            f"{LOTION_PRICE} shards. Say |wbuy lotion|n when you're ready.'",
+
+            f"'Body mod supplies.' Durgin produces a bottle with the ease of someone "
+            f"who keeps a stock of everything. 'Lotion. Permanent size boost — "
+            f"applies to whatever's installed on the zone you target. "
+            f"Ten applications. Quarter increment each.' "
+            f"He sets it down. '{LOTION_PRICE} shards. |wbuy lotion|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy lotion": {
+        "response": "_HANDLE_PURCHASE_LOTION",
+        "type": "action",
+    },
+
+    # ── Syringe ───────────────────────────────────────────────────────────
+    "syringe": {
+        "response": [
+            f"Durgin produces a sealed syringe from under the counter and sets it "
+            f"on the surface with a crisp click. 'Temporary enhancement,' he says. "
+            f"'Inject it into a zone — the |winject <target> [zone]|n command. "
+            f"One full size increment, lasts six hours. Five uses.' He pauses. "
+            f"'Fair warning: repeated use starts leaving permanent changes. "
+            f"The first five are clean. After that...' He shrugs, which is not reassuring. "
+            f"'{SYRINGE_PRICE} shards. Say |wbuy syringe|n.'",
+
+            f"'Syringe.' Durgin holds one up briefly — sealed, clinical, clearly "
+            f"not from a hardware catalogue. 'Temporary size boost. Six hours. "
+            f"Five uses. Use the |winject|n command.' A pause. "
+            f"'Heavy use has escalating permanent side effects, which I am required "
+            f"to mention and which I personally consider a feature rather than a flaw.' "
+            f"He sets it down. '{SYRINGE_PRICE} shards. Say |wbuy syringe|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy syringe": {
+        "response": "_HANDLE_PURCHASE_SYRINGE",
+        "type": "action",
+    },
+
+    # ── Breast enhancement ────────────────────────────────────────────────
+    "breast enhancement": {
+        "response": [
+            f"Durgin opens a drawer under the counter and produces a small padded "
+            f"case, setting it down with the deliberate care of a craftsman handling "
+            f"precision work. 'Breast enhancement,' he says, which is exactly what it "
+            f"says on the case. 'Body mod item. Installs to your chest zone — "
+            f"|winstall breast enhancement|n — and from that point it tracks size, "
+            f"works with lotion and syringe, enables the milking system, and puts "
+            f"a size token in your zone description.' He slides it closer. "
+            f"'You'll want to set a zone description with a {{size}} token in it "
+            f"once it's installed. I can't help with the writing part.' "
+            f"'{BREAST_MOD_PRICE} shards. Say |wbuy breast enhancement|n.'",
+
+            f"'Breast enhancement.' Durgin says it the way a man says 'load-bearing "
+            f"anchor point' — with complete professional composure. He sets the case "
+            f"on the counter. 'Installs to chest zone. Tracks size float. "
+            f"Plugs into the lotion, syringe, and milking systems automatically. "
+            f"Your zone desc can use the {{size}} token once it's in.' "
+            f"He folds his hands. 'I don't ask what size you're starting from "
+            f"and I don't ask where you're trying to get to.' "
+            f"'{BREAST_MOD_PRICE} shards. |wbuy breast enhancement|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy breast enhancement": {
+        "response": "_HANDLE_PURCHASE_BREAST_MOD",
+        "type": "action",
+    },
+
+    # ── Milk glands ───────────────────────────────────────────────────────
+    "milk glands": {
+        "response": [
+            f"Durgin sets a second case on the counter beside the first — "
+            f"slightly larger, the same padded presentation. "
+            f"'Milk glands,' he says. 'Production item. Installs to chest zone alongside "
+            f"a breast enhancement. Once installed, it accumulates passively over time "
+            f"and the milking machine — or the |wmilk|n command — can extract it into "
+            f"bottles.' He taps the case. 'You'll want the breast enhancement in first. "
+            f"The production item uses the mod's size for its output multiplier.' "
+            f"A pause. 'You can also set a flavor profile on it with |wsetfluid/flavor|n. "
+            f"I cannot explain why that option exists. I do know it gets used.' "
+            f"'{MILK_GLANDS_PRICE} shards. Say |wbuy milk glands|n.'",
+
+            f"'Production item,' Durgin says. 'Installs to chest zone — use "
+            f"|winstall milk glands|n once you have it. Starts accumulating immediately. "
+            f"Extract with the milking machine or the milk command; output goes to bottles "
+            f"in the room.' He gives you a very steady look. "
+            f"'I recommend the breast enhancement first for best output. "
+            f"That's the professional recommendation. The personal one I will keep to myself.' "
+            f"'{MILK_GLANDS_PRICE} shards. |wbuy milk glands|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy milk glands": {
+        "response": "_HANDLE_PURCHASE_MILK_GLANDS",
         "type": "action",
     },
 
@@ -646,6 +770,194 @@ def handle_purchase(caller, npc, purchase_type):
 
         import random
         npc.location.msg_contents(random.choice(_cushion_responses))
+        return
+
+    # ── Lotion purchase ────────────────────────────────────────────────────
+    if purchase_type == "lotion":
+        if shards < LOTION_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, a lotion bottle is {LOTION_PRICE} shards. "
+                f"You've got {shards}. Come back when you're solvent."
+            )
+            return
+
+        char.db.shards = shards - LOTION_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=LOTION_PRICE,
+            reason="purchase",
+            note="Lotion bottle from Durgin Ironwood",
+        )
+
+        from typeclasses.lotion_item import LotionItem
+        lotion = create.create_object(
+            typeclass=LotionItem,
+            key="a lotion bottle",
+            location=char,
+        )
+        lotion.db.boost_amount   = 0.25
+        lotion.db.uses_remaining = 10
+        lotion.db.label          = "the lotion"
+
+        import random
+        _lotion_responses = [
+            f"Durgin slides the bottle across the counter to {char_name} "
+            f"with the brisk efficiency of a man who has done this before. "
+            f"'Apply with |wlotion <zone>|n. Ten uses. Each one's permanent.' "
+            f"He goes back to his ledger. 'No refunds on changes already made. "
+            f"That one's in the fine print.'",
+
+            f"Durgin sets the bottle in {char_name}'s hand with a decisive nod. "
+            f"'|wlotion <zone>|n — that's the command. Make sure you've got "
+            f"a body mod installed on the zone first or it won't have anything "
+            f"to work with.' A pause. 'I've never had to explain that twice "
+            f"to the same customer. They figure it out.'",
+        ]
+        npc.location.msg_contents(random.choice(_lotion_responses))
+        return
+
+    # ── Syringe purchase ───────────────────────────────────────────────────
+    if purchase_type == "syringe":
+        if shards < SYRINGE_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, a syringe is {SYRINGE_PRICE} shards. "
+                f"You've got {shards}. Not quite."
+            )
+            return
+
+        char.db.shards = shards - SYRINGE_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=SYRINGE_PRICE,
+            reason="purchase",
+            note="Syringe from Durgin Ironwood",
+        )
+
+        from typeclasses.syringe_item import SyringeItem
+        syringe = create.create_object(
+            typeclass=SyringeItem,
+            key="a syringe",
+            location=char,
+        )
+        syringe.db.boost_amount        = 1.0
+        syringe.db.temp_duration_hours = 6.0
+        syringe.db.uses_remaining      = 5
+        syringe.db.label               = "the syringe"
+
+        import random
+        _syringe_responses = [
+            f"Durgin hands the syringe to {char_name} sealed and professional. "
+            f"'|winject <target> [zone]|n — or |winject/self [zone]|n for yourself. "
+            f"One size up, six hours. Five uses.' He meets their eyes. "
+            f"'The permanent accumulation starts after the fifth use. "
+            f"I mention this every time. Nobody ever stops at five.' "
+            f"He goes back to his work.",
+
+            f"Durgin counts out {char_name}'s shards, produces the syringe, "
+            f"and sets it down with a precise click. 'Temporary. Six hours. "
+            f"Five uses. |winject|n command.' A beat. "
+            f"'The escalating permanent effects are documented in the product. "
+            f"I'd say read the fine print, but there isn't any. "
+            f"Consider this the fine print.' He nods once. 'Enjoy.'",
+        ]
+        npc.location.msg_contents(random.choice(_syringe_responses))
+        return
+
+    # ── Breast enhancement purchase ────────────────────────────────────────
+    if purchase_type == "breast_mod":
+        if shards < BREAST_MOD_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, a breast enhancement is {BREAST_MOD_PRICE} shards. "
+                f"You've got {shards}. Short by {BREAST_MOD_PRICE - shards}."
+            )
+            return
+
+        char.db.shards = shards - BREAST_MOD_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=BREAST_MOD_PRICE,
+            reason="purchase",
+            note="Breast enhancement from Durgin Ironwood",
+        )
+
+        from typeclasses.body_mod_item import BreastItem
+        mod = create.create_object(
+            typeclass=BreastItem,
+            key="Breast Enhancement",
+            location=char,
+        )
+
+        import random
+        _breast_responses = [
+            f"Durgin hands the case to {char_name} with the composed air of "
+            f"a man who has sold a very normal product. "
+            f"'|winstall Breast Enhancement|n — that puts it on your chest zone. "
+            f"After that, set a zone description using the {{size}} token and it "
+            f"renders dynamically.' He taps the counter. "
+            f"'Lotion and syringe work on it once it's in. "
+            f"Milk glands install alongside it. I've given you the whole ecosystem.' "
+            f"He raises his tankard. 'Build something impressive.'",
+
+            f"Durgin slides the case across the counter to {char_name}. "
+            f"'Install command: |winstall Breast Enhancement|n. Targets your chest zone.' "
+            f"He opens his ledger. 'It tracks its own size float. "
+            f"Put {{size}} in your zone's nude description and it fills in automatically.' "
+            f"A pause. 'I'd say good luck, but this product doesn't require luck. "
+            f"It requires patience and shards, both of which you've demonstrated.'",
+        ]
+        npc.location.msg_contents(random.choice(_breast_responses))
+        return
+
+    # ── Milk glands purchase ───────────────────────────────────────────────
+    if purchase_type == "milk_glands":
+        if shards < MILK_GLANDS_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, milk glands are {MILK_GLANDS_PRICE} shards. "
+                f"You've got {shards}. {MILK_GLANDS_PRICE - shards} short."
+            )
+            return
+
+        char.db.shards = shards - MILK_GLANDS_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=MILK_GLANDS_PRICE,
+            reason="purchase",
+            note="Milk glands from Durgin Ironwood",
+        )
+
+        from typeclasses.production_item import MilkProductionItem
+        glands = create.create_object(
+            typeclass=MilkProductionItem,
+            key="Milk Glands",
+            location=char,
+        )
+
+        import random
+        _milk_responses = [
+            f"Durgin produces the case and sets it before {char_name} "
+            f"with the brisk manner of a man completing a supply chain. "
+            f"'|winstall Milk Glands|n — chest zone, alongside a breast enhancement. "
+            f"Accumulation starts immediately. Extract with a milking machine "
+            f"or the |wmilk|n command.' He pauses. "
+            f"'Set a flavor profile with |wsetfluid/flavor Milk Glands = <desc>|n '— "
+            f"'if you want the bottles to have a tasting note. "
+            f"I ship product. What you put in the notes section is between you "
+            f"and whoever reads the label.'",
+
+            f"Durgin counts the shards and slides the case to {char_name} in one motion. "
+            f"'Install command: |winstall Milk Glands|n. Chest zone. "
+            f"It scales output with whatever breast enhancement you've got in.' "
+            f"He leans on the counter. 'You'll want the enhancement first "
+            f"if you haven't got it. The multiplier's worth it.' "
+            f"A pause. 'The fridge in Helena's place holds bottles, if you "
+            f"need somewhere to stock the output. Not my department, "
+            f"but I do comprehensive onboarding.'",
+        ]
+        npc.location.msg_contents(random.choice(_milk_responses))
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────

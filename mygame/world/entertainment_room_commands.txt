@@ -138,6 +138,19 @@ roomzone ambient floor + |xThe carpet carries a faint impression of where someon
 roomzone inscribe/enable east
 
 
+-- STEP 14: Create the dairy fridge --
+-- Makes the fridge an actual interactive game object, not just a description.   --
+-- Stock it with FluidBottle objects produced by the milking machine:            --
+--   put <bottle> in fridge                                                      --
+-- Retrieve bottles with:                                                        --
+--   get <bottle> from fridge                                                    --
+-- Inspect contents with:                                                        --
+--   look fridge                                                                 --
+
+@create Helena's Dairy Fridge:typeclasses.fluid_fridge.FluidFridge
+@desc Helena's Dairy Fridge = A small glass-door refrigerator, humming with the contentment of something kept cold and full. The interior lighting is clean and white; the bottles inside are arranged in a neat row, each labeled with Helena's Dairy Farms branding — the blonde and the auburn fae in matching cow-print, both thoroughly damp, both grinning. |xPut FluidBottle objects in with: put <bottle> in fridge|n
+
+
 -- STEP 11: Add drinks to the bar (east zone) --
 
 roomzone bar east + bourbon
