@@ -18,7 +18,7 @@
 
 setname Witch
 
-setdesc = |mWitch|n//The first impression is deliberate — something designed to occupy a specific role so completely that the role starts to look like her natural state. She is early twenties, the proportions generous, and she carries all of it with the ease of someone who grew up in this body and made peace with what it decided to be. Whatever she is projecting — magic worker, difficult student, the particular kind of danger that wears a pleated skirt — the projection lands cleanly.//{zone:hair}//{zone:face}//{zone:eyes}//{zone:neck}//{zone:chest}//{zone:hands}//{zone:playful_aura}
+setdesc = |mWitch|n//She's early twenties, with a figure that doesn't ask permission — full chest, wide hips, the kind of body that fills the space it needs and doesn't apologize for any of it. She carries it with the ease of someone who built a persona around it on purpose. Whatever she's running — magic worker, difficult student, the specific kind of trouble that wears a pleated skirt — it lands.//{zone:hair}//{zone:face}//{zone:eyes}//{zone:neck}//{zone:chest}//{zone:hands}//{zone:playful_aura}
 
 setbodylang standing at her full height with the particular ease of someone comfortable being looked at — weight shifted slightly to her left, one hand free at her side, the other at rest or occupied.
 
@@ -56,78 +56,80 @@ zone add playful_aura type=attachment
 -- STEP 3: Zone Descriptions --
 -- NOTE: zone set uses = separator. These are nude/base descriptions. --
 -- Outfit is layered on top via wear commands in Step 7. --
+-- Each desc identifies what it's describing, uses her/she throughout, --
+-- and is explicit where the zone calls for it. --
 
-zone set head = The overall shape of her head is well-proportioned without being extraordinary — it is the face and the hair that carry the impression, not the structure beneath. Her expression governs the reading; at rest, it suggests occupation rather than vacancy.
+zone set head = Her head is well-proportioned without being the thing you notice. The impression comes from her face and her hair, not the structure underneath.
 
-zone set hair = Golden-blonde and worn in waves that reach mid-back — not styled into discipline but attended to, the kind of hair that falls where it's asked and stays. The color runs warm throughout: deep honey-gold at the roots, brighter at the ends, as if the light finds it preferentially. In motion it shifts as a single mass; in stillness, individual strands catch separately. It occasionally acquires a faint static charge when she is working, the outer layers lifting without wind.
+zone set hair = Her hair is golden-blonde, worn in loose waves that fall to mid-back — not disciplined, but attended to. The color runs warm throughout: honey-gold at the roots, brightening toward the ends. It moves as a single mass and stays where she puts it. When she's working, the outer layer occasionally lifts with a faint static charge and settles back on its own.
 
-zone set face = Heart-shaped, the jaw soft and the chin pointed, with cheekbones high enough to give the face architecture without severity. The skin is fair and clear — a small constellation of freckles crosses the bridge of her nose, faint enough to require proximity, otherwise unmarked. Her expression at rest is considering rather than open: not cold, but occupied, as if whatever she is thinking is more interesting than whatever you are doing.
+zone set face = Her face is heart-shaped — soft jaw, pointed chin, cheekbones high enough to give it structure without making it severe. The skin is fair and clear, with a faint scatter of freckles across the bridge of her nose that only shows at proximity. Her expression at rest reads as occupied, not open: whatever she's thinking is more interesting than whatever you're doing, and she's not pretending otherwise.
 
-zone set eyes = A saturated cerulean that reads as intentional from any distance — the kind of blue that looks chosen rather than inherited. At close range, a distributed scatter of silver flecks becomes visible, individual points catching light with a brief luminous quality that shifts depending on angle. Her gaze rests on things with attention. When it settles on you specifically, the sensation is legible: she is not assessing, she is noting.
+zone set eyes = Her eyes are a saturated cerulean, the kind of blue that looks chosen rather than inherited. Up close, silver flecks scatter through the irises — individual points catching light briefly, distributed unevenly, more visible in certain angles than others. When she looks at something she looks at it properly. When she looks at you there's a specific quality to it: not assessment, notation.
 
-zone set lips = Full and naturally rosy, slightly more curved on the left than the right even at rest — a faint asymmetry that becomes readable only at proximity. She keeps them lightly parted when thinking, closed when she has decided something. When she speaks, the movement is precise; when she is amused, the curve arrives before the sound does.
+zone set lips = Her lips are full and naturally rosy, the lower heavier than the upper, with a faint leftward asymmetry in her resting expression that only reads at proximity. She keeps them slightly parted when she's thinking. When she smiles the asymmetry disappears; when she's only a little amused, the left corner carries it alone.
 
-zone set mouth = Warm, and the warmth is unmistakable at close range — the sort that suggests rather than announces. Her voice originates here with more resonance than her frame implies, a low projection that carries without effort. The interior is soft-pink and unhurried.
+zone set mouth = Her mouth is warm at close range — the kind of warmth that suggests rather than announces. Her voice carries more resonance than her frame implies, a low projection that doesn't need volume to reach. Inside: soft, unhurried, willing.
 
-zone set tongue = The color of the inside of a flower, and it moves with the precision of something she has learned to use with deliberation. The tip is slightly pointed. She licks her lips when she is thinking about something specific, and it is not a performance.
+zone set tongue = Her tongue is the color of the inside of a flower, the tip slightly pointed. It moves with the precision of something she's learned to use on purpose. She licks her lips when she's thinking about something specific and doesn't notice she's doing it.
 
-zone set ears = Small and neatly set, usually partially visible through her hair. A tiny silver crescent-moon stud occupies the lobe of each ear — exactly matched, backed flush. She wears nothing else there. The outer rim of each ear colors a faint rose when she is embarrassed, which is rarer than it should be.
+zone set ears = Her ears are small and neatly set, usually half-hidden by her hair. Each lobe carries a tiny silver crescent-moon stud, the backing flush to the skin. She wears nothing else there. The outer rim goes faint rose when she's embarrassed, which happens less than it should.
 
-zone set neck = Long and unhurried, the arch between jaw and shoulder carrying a quality of extension that makes whatever she wears above the collar appear intentional. The skin is fair and carries a visible pulse in still moments.
+zone set neck = Her neck is long and fair, the arch from jaw to shoulder making whatever she wears above it read as intentional. Her pulse is visible at the soft hollow of her throat in still moments.
 
-zone set throat = The hollow at the base of her throat is deeper than average — the kind of notch that collects shadow in low light. Pressing attention to it in quiet moments reveals her pulse: slow and deliberate, not nervous. The skin here is fine-textured and warmer than her shoulders, and it responds to breath before it responds to touch.
+zone set throat = The hollow at the base of her throat sits deeper than average — shadow collects there in low light. Her pulse there is slow and deliberate at rest, and it changes faster than her expression does, which constitutes information. The skin responds to breath before it responds to touch.
 
-zone set nape = Where her hair meets her neck at the back, the style allows shorter strands to drift free — the place where warmth collects most readily. The skin is pale and responsive: a breath at the right angle raises the fine hairs there before she has had time to decide whether she wants it to.
+zone set nape = Where her hair meets the back of her neck, shorter strands drift free. The skin there is pale, fine, and quick — a breath at the right angle raises the hairs before she's had time to decide if she wants it to.
 
-zone set shoulders = Round and carried without tension, the blouse cut just low enough to show where each shoulder rounds before the arm begins. The line is soft without being fragile and she wears it with the ease of someone who has never had to think about her posture.
+zone set shoulders = Her shoulders are round and carried without tension. The line from each shoulder into the arm is soft without being fragile, and she holds it with the ease of someone who has never had to think about her posture.
 
-zone set chest = Full breasts of {size} size, rounding the front of whatever she is wearing with the calm authority of something that cannot be incidentally overlooked. The weight is natural, the shape consistent whether clothed or not — a figure that was given this and organized itself around it without apology. The skin between and above is pale and fine, soft at the touch, warmer than the shoulder, and quick to mark with pressure. {zone:chest/nipples}
+zone set chest = Her tits are {size} — full, heavy, and real. They fill out whatever she wears with an authority that isn't asking anyone's permission, and without it they rest with their own natural weight, the shape the same. The skin between and above is the palest part of her, fine-textured and quick to mark. {zone:chest/nipples}
 
-zone set nipples = Deep rose, gathered at their tips and responsive in ways she does not always choose to be. A cold draft, direct attention, the angle of a gaze held long enough — and they make their presence known through fabric. The areolae are a slightly darker shade, their texture distinct at contact: soft at the outer ring, firmer toward the center, and the nipple itself hardens to a precise point when circumstances ask for it.
+zone set nipples = Her nipples are deep rose and easily stiffened — a cold room, attention held a beat too long, a specific kind of thought, and they're hard and showing through fabric. The areolae are a shade darker, the texture shifting from soft at the outer ring to firm toward the center. When circumstances ask for it, each nipple comes to a precise point.
 
-zone set abdomen = Gently curved, the kind of abdomen that suggests warmth and ease rather than tension. The skin is smooth and pale with no marks that were not cosmetic choices. The small star stud at the navel catches light with a brief flash when she moves. Below it, a subtle narrowing announces the downward geography while her waist redirects the eye.
+zone set abdomen = Her abdomen is gently curved, smooth, pale, unmarked except by cosmetic choice. The silver navel stud catches light when she moves. Below it, the narrowing announces the downward geography before anything else does.
 
-zone set navel = A small, neat depression currently occupied by a four-pointed silver star — the studs pressed flush to the skin, the center a clear crystal that catches and releases light with a brief precision. The stud has been in place long enough that the skin around it has softened and settled around the backing with complete acceptance.
+zone set navel = Her navel is a small neat depression occupied by a four-pointed silver star stud — crystal center, flush to the skin, warm with her body heat. The skin of the depression is the softest part of her abdomen and responds to a fingertip or a tongue with something between ticklish and arousal that takes a moment to locate.
 
-zone set back = Smooth and undemanding — the kind of back that is rarely the focus but is always present. The lines from her shoulders carry down through a clean arc to the lumbar, the skin fine throughout. In certain lights, the suggestion of a spine and the flanking musculature describes itself without emphasis.
+zone set back = Her back is smooth and undemanding — the line from her shoulders down through the lumbar is clean, the skin fine throughout. In certain light, the suggestion of her spine and the flanking muscle gives itself away without emphasis.
 
-zone set lower_back = The curve at the small of her back is natural rather than cinched — the lumbar creating a shelf before the hips begin their return. The skin here is softer than her shoulders and responds to pressure differently: a palm rested flat meets warmth and a very slight give, the kind of give that comes from the absence of tension.
+zone set lower_back = The small of her back curves naturally before the hips begin. The skin there is softer than her shoulders and responds to a flat palm with warmth and a slight give, the kind that comes from the absence of tension.
 
-zone set waist = Small without the severity of structure — the bodice follows the curve rather than creating it. From any angle, the waist is a narrowing between two fuller territories, present and felt more than displayed.
+zone set waist = Her waist is a genuine narrowing between two fuller territories — present and felt more than displayed.
 
-zone set arms = The line from shoulder to wrist is smooth and unbroken, carrying its own proportion without excess. The skin is pale throughout, fine-textured at the inner surface, where the blue of veins at the inner wrist is faintly legible.
+zone set arms = Her arms carry their own proportion without excess. The skin is pale throughout and fine-textured at the inner surface, where the blue of veins at the inner wrist shows faintly.
 
-zone set wrists = Delicate-boned and usually occupied. Silver bracelets cluster at her right wrist — three of them, none the same design. A single heavier braided-silver cuff sits on the left. The pulse at the inner wrist is present and quick when things are interesting.
+zone set wrists = Her wrists are delicate-boned. Three silver bracelets cluster at her right, each a different design. A heavier braided-silver cuff sits on her left. The pulse at the inner wrist is quick when things are interesting.
 
-zone set hands = Long-fingered without being graceful about it, and currently finished in iridescent purple nail lacquer that shifts between deep violet and plum depending on light and angle. The nails are grown to a tapered point and are sharp enough to be a deliberate choice rather than an oversight. The hands move with precision — she does not gesticulate unnecessarily, and when she reaches for something she does not overshoot.
+zone set hands = Her hands are long-fingered, the nails grown to a tapered point and kept in iridescent purple lacquer that shifts between deep plum and violet with the angle. They move precisely — no wasted motion, no overshoot. The nails are sharp enough to be a choice.
 
-zone set groin = The covered center — a territory that announces itself by the architecture that surrounds it: the skirt hem, the garter clips, the thigh-highs pulled taut. Without the clothing, the groin presents the soft junction of thigh and pelvis, close and warm and notably less indifferent to attention than the rest of her tends to be. {zone:groin/mons_pubis}
+zone set groin = Her groin announces itself through the architecture around it: the skirt hem, the garter clips, the thigh-highs held taut. Beneath all that, the soft junction of pelvis and inner thigh, close and warm and significantly less indifferent to attention than the rest of her tends to be. {zone:groin/mons_pubis}
 
-zone set mons_pubis = Softly risen, the skin fine over the structure beneath, carrying a sparse and deliberately maintained coverage of golden-blonde curls — the color matching exactly what grows above. The mound is full without heaviness, and at its crest the downward geography begins its quiet announcement.
+zone set mons_pubis = Her mons is softly risen, the skin fine over the structure beneath — a sparse, maintained covering of golden-blonde curls, the color exactly matching her hair. Full without being heavy. Below the crest, the rest of her sex begins.
 
-zone set labia = The outer geography of her sex — the labia giving structure and enclosure to what lies between before the inner topography opens.
+zone set labia = Her labia frame what's between them, closing naturally at rest, giving structure and enclosure to the inner geography before it opens.
 
-zone set labia_majora = Full and soft, the outer lips closing naturally, their surface the pale skin of the inner thigh where they meet it. In certain positions or under pressure they carry their own weight with a sleek passivity that makes them responsive to even slight differential — a breath, a brush, the change in temperature of an approaching hand.
+zone set labia_majora = Her outer lips are full and soft, the skin the pale of her inner thigh where they meet it. Under pressure or in certain positions they part with a sleek passivity — responsive to the slightest differential, a breath, a change in temperature, the approach of a hand.
 
-zone set labia_minora = Finer-textured and warmer than their outer counterpart, deeper in shade — a rose that darkens and plumps under attention with a reliability that makes restraint a choice rather than a default. They are responsive well before contact: a change in breath near enough reaches them before touch does, and the sensation is specific.
+zone set labia_minora = Her inner lips are finer-textured and warmer than the outer, deeper in color — a rose that darkens and plumps under attention with a reliability that makes restraint a choice rather than a default. They're responsive before contact; a change in breath near enough reaches them first.
 
-zone set clit = Small, hooded, and precisely located — the hood at rest keeps it sheltered, but arousal lifts it with a precision that makes the covering a formality. It is the most responsive point in her geography, and a direct, steady, specific touch here produces results that tend to be audible. It does not require significant pressure; it requires accuracy.
+zone set clit = Her clit is small, hooded, and direct about its function — arousal lifts the hood until there's nothing between it and contact. Touch it right and the response is immediate, audible, and entirely unguarded. It doesn't require pressure. It requires accuracy.
 
-zone set perineum = The bridge between, smooth and somewhat overlooked by casual attention — the territory that exists primarily in the awareness of people who know what they are doing. The skin is thin and notably sensitive in ways it does not advertise, and direct attention here tends to surprise even her.
+zone set perineum = The skin between her pussy and her ass — smooth, overlooked, and more sensitive than it looks. Direct attention there tends to surprise even her.
 
-zone set pussy = Warm and close — the vaginal opening nestled within the inner lips, its entry softly gathered at rest. She is wet before she acknowledges it: the warmth and the give of it arrive ahead of her permission. The interior is smooth and yields in gradations, tighter at the entrance and deepening from there, and it takes to pressure the way something does when it has been thinking about this longer than it will admit.
+zone set pussy = Her cunt is warm and already wet before anyone gets around to asking — she gets wet at suggestion, at proximity, at the right kind of attention sustained long enough. The entrance yields easily and grips immediately on first contact, and she tightens and then opens, which she can't help, and the sequence communicates everything her expression isn't. Inside, the walls are close and smooth and grip with the specific reflex of something that has already decided. There's a rough patch along the front wall that produces responses she doesn't always have words for.
 
-zone set anus = Tightly gathered and small, the skin around it a faintly deeper rose that fades back to pale within centimeters. It is not an area that receives casual attention and is correspondingly unfamiliar with it — reactive in ways that resolve neither toward welcome nor refusal until the moment itself decides.
+zone set anus = Her asshole is tight, small, and unaccustomed to attention — the muscle clenching reflexively before anything's been asked of it, the skin around it a faintly deeper rose. Warmth and proximity register before contact does. It requires patience and will not pretend otherwise.
 
-zone set hips = Wide and genuine — the body does not pretend to narrowness here. The flare begins at the waist's lowest point and widens through the swell of each hip before rounding into the upper thigh. When she walks, the movement is unhurried and reads from any angle.
+zone set hips = Her hips are wide and unqualified — the flare from the waist widening to a genuine swell before rounding into the upper thigh. When she walks, the movement is unhurried and reads from any angle.
 
-zone set thighs = Full and soft, usually occupied by the striped thigh-highs she favors — black and purple, the elastic just below mid-thigh, garter clips holding each stocking in place. Without the stockings, the inner thigh is its own argument: the softest territory on her, pale and warm, and not a place she is accustomed to having attended to at length.
+zone set thighs = Her thighs are full and soft. The inner surface is the softest skin on her — pale, unmarked, temperature-sensitive in a way that makes slow attention there produce disproportionate results.
 
-zone set ankles = Slender, visible between the boot top and the stocking end — a strip of skin where the proportions narrow from calf to foot. The ankle itself is fine-boned, the line of the Achilles tendon visible from behind.
+zone set ankles = Her ankles are slender, fine-boned, the line of the Achilles visible from behind.
 
-zone set feet = Small and neat. In the boots: a pointed toe, low heel, a series of small metal buckles up the outer ankle. Without them: well-arched, the toenails painted the same iridescent purple as her hands, the sole of each foot paler than the rest of her.
+zone set feet = Her feet are small and well-arched, the toenails painted the same iridescent purple as her hands. In the boots: pointed toe, low heel, a column of metal buckles. Without them: the sole of each foot is paler than the rest of her.
 
-zone set playful_aura = Not always present. It appears when she finds something genuinely amusing, or when she is working on something that requires it — a faint violet luminescence at the edge of her silhouette, not attached to any specific part of her but concentrated near the hands and at the periphery of her hair. It moves against drafts. It does not appear to be decorative.
+zone set playful_aura = Not always present — it appears when she's amused or working deliberately: a faint violet luminescence at the edges of her silhouette, concentrated at her hands and at the periphery of her hair. It moves against drafts. It is not decorative.
 
 
 -- STEP 4: Zone Details --
