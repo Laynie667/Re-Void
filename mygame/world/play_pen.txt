@@ -1,0 +1,102 @@
+== Helena's Log Cabin - The Play Pen of Adventure ==
+== Paste these commands in order while standing in the room ==
+== Exits: out → Helena's Log Cabin - Nursery ==
+
+-- STEP 1: Room Description --
+
+@desc here = |mThe Play Pen of Adventure|n/The wicker arch behind you frames the nursery — except the nursery, from this side, is |xgargantuan|n, its proportions belonging to a building and not a room. The realization settles in without fanfare: the room didn't get larger. You got smaller. The foam floor underfoot stretches in every direction, and from it have risen |wbiomes|n — a dense forest of foam trees at your scale with underbrush, a frost-capped mountain range in white and grey, a stretch of ochre desert with dunes that reach your chest. The population of each is fully occupied, every figurine at precisely your scale, and |mnone of them are dressed.|n The air smells of something warm and improbably organic for a room full of foam. A sound rises from the forest biome — not mechanical, not ambient noise, but conversational, the particular cadence of something social.//{zone:arch}//{zone:forest}//{zone:mountain}//{zone:desert}//{zone:figurines}
+
+
+-- STEP 2: Create zones --
+
+roomzone add arch
+roomzone add forest
+roomzone add mountain
+roomzone add desert
+roomzone add figurines
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc arch = The |wwicker arch|n stands where the entrance should be, and it does contain the entrance — the nursery visible through it, fully intact, its scale confirming what you already know. The arch itself is at your current height, its top curving overhead with woven willow pattern that no longer reads as decorative. From this side, the arch is the only familiar-proportioned thing in view. Stepping back through it would restore you. You are aware of this without it feeling like urgency.
+
+roomzone desc forest = The |wforest biome|n occupies the near left quarter of the pen — foam trees with actual branching canopy structure, the ground between them covered in low foam undergrowth that shifts when stepped through. The forest's population: |xtiger figurines|n with their orange-and-black coloring reproduced in accurate detail; |xape figurines|n with the specific heaviness of the form; |xelf figurines|n with pointed ears and expressions that seem aware rather than fixed. Each one is at your height. All of them have genitalia — not as afterthought but as deliberate primary feature, the detailing specific and at full scale. Several are currently occupied. The sound of conversation in the forest is low and ongoing.
+
+roomzone desc mountain = The |wfrost mountain zone|n dominates the back half of the pen, its peaks rising to twice your current height, the foam stone textured and cold when touched. The mountain population: |xyeti figurines|n with dense white fur that moves rather than sits fixed; |xsnow dragon figurines|n with their scale-and-wing construction rendered in careful greys and blues. The yetis are large even at your scale. The dragons are larger. All of them have the same deliberate anatomical completeness as the forest biome's inhabitants. The cold at the mountain's base is real — the foam radiates actual chill, though how is unclear.
+
+roomzone desc desert = The |xdesert biome|n runs along the right wall, its ochre dunes reaching chest height and its air warmer than the rest of the pen by a noticeable degree. The desert population is smaller in number but larger individually: |xdune figurines|n of ambiguous species, scaled heavy and wide, their forms designed for the dry heat they inhabit. The sand between the dunes is real sand, the fine powder that coats anything that passes through it. Tracks in it from previous visits are still partially preserved.
+
+roomzone desc figurines = The figurines throughout the pen are not static. They move with the deliberateness of living things — not mechanical motion, not the loop of automata, but genuine engaged movement, negotiated between them. |mSeveral groups in the forest biome are actively engaged.|n A pair near the mountain base are examining each other with the patient intensity of something with time. The desert's large inhabitants are reclining in the warmth. Near your current position, an |morc figurine|n with a heavy build and an expression that contains the word |xgrunts|n in it is looking at you with the specific attentiveness of something that has noticed you and assessed you and arrived at a conclusion it hasn't shared yet.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail arch/threshold = The threshold of the arch, examined at your current scale, has a worn path through the wicker base — the kind that forms when something passes repeatedly. From this side, passing through would mean stepping into a room that is very large, or resuming being someone who fits it. Both descriptions are accurate. The choice appears simple.
+
+roomzone detail arch/inscription = Woven into the wicker at eye height on the interior arch: text in a script that is not quite any alphabet you know but that resolves, when you hold your attention on it, into something close to: |mYou are the right size now.|n Whether this is encouragement or description is unclear.
+
+roomzone detail forest/tiger = The tiger figurine nearest the path into the forest biome is watching you. It has the density of real muscle at this scale — its shoulders are at your shoulder height, the mass of the body behind them substantial. Its expression is the particular expression of a predator that is not hungry and does not need to be. Its anatomical features are at full scale, which at this size means something specific. It makes a sound: not a roar, something lower. Conversational.
+
+roomzone detail forest/elf = The elf figurines in the forest have the quality of things built to observe. They occupy the trees — seated on branches, standing at trunks — and they watch the activity below with the relaxed attention of something that has seen this before and found it worthwhile. One, sitting at eye level in a branch above the path, has an expression that could be described as welcoming. It is dressed in leaves and not much else. It is looking at you.
+
+roomzone detail mountain/yeti = The yeti figurines on the mountain's lower slopes are enormous at your scale — a head and shoulders above you, their white fur actually warm when you press a hand into it, the material giving like real fur rather than foam. One near the mountain path stops moving when you approach and regards you. Its expression is patient. Its anatomy is as specifically rendered as everything else in the pen, the scale of it at this proximity impossible to mistake.
+
+roomzone detail mountain/dragon = One of the snow dragons is coiled at the mountain's mid-slope, its scale structure visible at close range — each scale individually formed, the color graduating from slate at the back to almost white at the underbelly. It is asleep, or doing a complete impression of asleep. Its breathing moves its sides. The underside anatomy, visible from where it rests, is at the same scale of careful production as every other inhabitant of this pen.
+
+roomzone detail desert/sand = The desert sand is real fine powder and it adheres. Walking through the dunes coats your feet and lower legs. The tracks already present in the sand are of several different shapes — some human-proportioned, some not. Several sets of tracks converge on one point in the center of the largest dune cluster and do not diverge from it. Something happened there and the sand still holds the evidence.
+
+roomzone detail figurines/orc = The |morc figurine|n who has been watching you since you oriented has not moved, but it has registered your attention. Up close: it is a head taller than you, heavy-shouldered, the figurine construction detailed in the way of something that was built to specific requirements. Its expression has the quality of someone who has made a decision and is waiting for the appropriate moment to share it with you. It makes a sound. It is not a question.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study forest + The conversational sound in the forest biome, when listened to carefully, has structure — rhythm and response, the cadence of multiple voices. One of them might be familiar. The identification doesn't resolve, but the pattern does.
+roomzone study forest + The undergrowth between the forest trees has been compressed in several places into distinct depressions. They are body-sized and oriented in pairs or groups, the foam slow to return to its original shape.
+
+roomzone study mountain + The cold at the mountain's base originates from the foam itself. Pressing a hand flat against the mountain surface: the chill is consistent and deep, as if the biome maintains its own internal temperature. This is not possible. It is nonetheless happening.
+roomzone study mountain + One of the snow dragon's scales, at the very edge of the coiled form, has a faint impression that is not part of the figurine's design — a handprint, pressed into the scale from outside, sized for someone approximately your current dimensions.
+
+roomzone study desert + The sand tracks that converge without diverging: at their center, the sand has been smoothed flat, then disturbed again, then smoothed. Something happened multiple times at the same point. The smoothings are at different depths of preservation, which means they happened at different times.
+roomzone study desert + The air in the desert biome is warm in a way that settles into skin rather than sitting on top of it. Standing here long enough, the warmth becomes ambient — no longer distinguishable from your own body temperature.
+
+roomzone study figurines + The orc figurine's expression, examined when its attention is elsewhere for a moment: it contains certainty. Not aggression, not performance. Certainty. The expression of something that already knows what is going to happen and is not concerned about the sequence getting there.
+roomzone study figurines + The figurines throughout the pen occasionally regard the arch. Briefly, without stopping what they are doing. They appear aware that there is an exit and appear indifferent to it.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable arch
+roomzone inscribe/enable desert
+
+
+-- STEP 7: Mechanic items --
+-- The pen is a narrative space — no functional mechanics. The magic does the work.
+-- (No SeatMechanic or RestrainMechanic: the figurines "hold" diegetically.)
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle arch/threshold = You put your hand through the arch threshold. On the other side, your hand is full-sized again — normal scale, normal weight, the cuff of your sleeve suddenly enormous against the wicker frame from this side. You pull it back. The transition is immediate and seamless, your hand returning to current dimensions as it crosses the plane back. The arch holds this open without apparent mechanism: just the threshold, and the choice.
+
+roomzone handle forest/tiger = You step toward the tiger. It doesn't retreat. Up close, the fur is not foam — the texture under your hand is something warmer, denser, the specific give of something that breathes. It makes the low sound again, closer now, the vibration of it present in your chest as much as heard. It is not threatening you. It is waiting. What it is waiting for is legible.
+
+roomzone handle mountain/yeti = You put your hand into the yeti's fur and it turns toward you — not quickly, not startled, just orienting. The fur is warm. The mass behind it is real. It looks down at you with the patient expression it had when you were farther away, and at this proximity its anatomical features are at a scale that has implications for you personally. It doesn't move toward you. It is giving you the decision.
+
+roomzone handle figurines/orc = The orc figurine stops waiting when you approach and reaches for you — not a grab, more the confident taking-hold of something that has been offered. Its grip is full-handed and certain, and it exerts not force but direction: downward. It makes the sound again. Closer, it has more texture — low, resonant, the kind of sound that comes before words in a language that doesn't need them. You are on your knees before you registered choosing to be. The figurine's other hand comes to rest on the back of your head. It is in no hurry.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |mThe forest biome produces a sound — low, ongoing, the particular register of multiple conversations proceeding simultaneously.|n
+rambient/add |xThe desert sand shifts in its dunes, redistributing incrementally with no detectable wind source.|n
+rambient/add |xThe mountain cold is a presence at the far end of the pen — steady, not increasing, not decreasing.|n
+rambient/add |mSomething in the forest biome laughs — short, genuine, the sound of something that found what it expected.|n
+rambient/add |xThe arch behind you frames the nursery. From this distance, the crib in the nursery is visible: very large.|n
+rambient/add |xThe orc figurine, from wherever it currently is, is aware of you.|n
+rambient/add |mA snow dragon on the mountain slope shifts in its sleep, resettling its coil, the scale-sound of it carrying across the whole pen.|n
+rambient/add |xThe desert's warm air reaches the pen's center in slow pulses, a degree warmer each time, as if the biome is breathing.|n
+
+
+-- STEP 10: Exit --
+
+@open nursery;out = [#dbref of Nursery]

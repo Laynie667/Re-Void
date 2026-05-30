@@ -1,0 +1,135 @@
+== Helena's Log Cabin - Nursery ==
+== Paste these commands in order while standing in the room ==
+== Exits: south → Helena's Room | southwest → Auria's Room | in → The Play Pen of Adventure ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yNursery|n/The walls are |wyellow wallpaper|n patterned with small animals — fluffy rabbits, songbirds mid-flight, and winding between them wolves, their expressions fond rather than fierce. The floor is a |xsquished foam material|n that gives with every step, the kind that would catch a fall without complaint, and at the center of the room the foam has been printed with the alphabet in oversized rounded letters. |xA large window in the far wall frames the snow-covered forest outside, serene and still except for a set of wolf tracks running through it — no entry point visible from here, no exit, just the middle section of a path.|n The room smells of clean fabric and something faintly powdery, the smell of a space that has been prepared for use.//{zone:crib}//{zone:window}//{zone:changing_table}//{zone:nursing_chair}//{zone:shelves}
+
+
+-- STEP 2: Create zones --
+
+roomzone add crib
+roomzone add window
+roomzone add changing_table
+roomzone add nursing_chair
+roomzone add shelves
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc crib = The |wcrib|n is adult-sized — its dimensions more generous than the word suggests, the bars spaced wide enough for air but close enough for purpose. |xWarm blankets are folded thick inside it|n, layered in the way of a bed made by someone who expects the person sleeping there to want to disappear into the softness rather than simply rest on top. Nestled at various positions among the blankets are stuffed animals: a bear, a rabbit, a small plush wolf with a red ribbon. The mattress is deep and the whole assembly is solid — no flex in the bars when pressed.
+
+roomzone desc window = The |wwindow|n is large, double-paned against the cold, and gives an unobstructed view of the snow-covered trees outside. The |xwindow seat|n below it is laden with cushions — enough that sitting becomes more of a settling-in. The wolf tracks visible in the snow outside are clear and deliberate: a straight line crossing the visible portion of the yard, neither hurried nor wandering. No prints disturb the snow on either side of them. Just the track, passing through.
+
+roomzone desc changing_table = The |wchanging table|n stands opposite the wardrobe, fully stocked — a raised padded surface with safety sides, and below the main surface, shelves holding folded cloth covers, a stack of wipe containers, and a neat pile of thick, |mcrinkling diapers|n, the packaging open and the stack held in shape by the shelf. Beside the table's base, a group of colorful wooden blocks have been left in a loose arrangement, and a large soft teddy bear sits propped against the table's leg with the undemanding patience of a thing left in place.
+
+roomzone desc nursing_chair = A |wgliding nursing chair|n is positioned to one side, its motion smooth when tested — the rocker mechanism maintained and quiet. A matching |xfootstool|n sits just forward of it, and the cushion on the seat has the gentle depression of something used often in the same way. The chair is positioned deliberately relative to the window: a view of the snow when sitting, the right amount of ambient light for a long quiet sit. The arm on the left side has a slight worn patch where something — a hand, or a head — rests habitually.
+
+roomzone desc shelves = The |wcolourful shelves|n mount the walls in a band around the room, holding toys of every kind — blocks, soft balls, small figures, puzzle pieces, things with sounds and things without. In one corner a |xlarge dollhouse|n takes up floor space, its rooms furnished in miniature with improbable detail. Before it are dozens of dolls in various states of arrangement. Nearby rests a |xsmall pink chest|n printed with Disney Princesses whose latch, when opened, releases a shift of fabric — hundreds of doll-sized outfits, folded and not quite folded, accumulated over time. On the wall above the shelves hangs a piece of child's colouring: a small pond, trees, plantlife in greens and purples, a dirt path leading away from the water.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail crib/bars = The crib bars are solid steel finished in white, the paint still fully intact at the tops where they're not touched but worn through to bare metal at the lower two-thirds where hands grip them from inside. The wear is not from assembly or storage. The bar spacing is consistent with comfort rather than maximum restriction: enough to feel present, not enough to feel punishing.
+
+roomzone detail crib/blankets = The blankets are flannel and fleece, layered in alternating textures — soft against skin regardless of which way a body is turned. The topmost blanket has a pattern of small moons and stars on a pale yellow ground. The stuffed wolf in the red ribbon has been placed at the head end, positioned upright against the inner bars, both eyes facing into the crib's center. It has been placed there consistently enough that the blanket beneath it shows the compression.
+
+roomzone detail crib/stuffed_animals = Beyond the wolf: a round brown bear whose ear seam has been repaired twice (the stitching is in two different thread colors at the same point), and a rabbit whose ribbon has been tied and retied many times, the ribbon fabric fraying at the knot area. The wolf is the newest addition — its ribbon is still crisp.
+
+roomzone detail window/wolf_tracks = Stepping close to the glass and looking out, the wolf tracks are clearer. They enter the visible area of the yard from the right edge — where the treeline starts — and exit to the left edge without veering. The stride length is long. The tracks are fresh enough that the pressed snow still holds the toe impression clearly. There is no corresponding track in the other direction. Whoever walked there walked in one direction and did not come back this way.
+
+roomzone detail window/seat = The window seat cushions compress unevenly from use — deepest at the center-left, where a body sits and leans toward the glass. The outermost cushion has a small hand-sized wear mark at its edge where the fabric has taken a grip repeatedly. From this seat, the wolf tracks are directly in the sightline. You have the distinct impression someone has sat here and watched the forest for a long time on multiple occasions.
+
+roomzone detail changing_table/diapers = The diaper stack is a thick, crinkle-heavy type — the kind with extra padding built in, the sort that can't be hidden under most clothing and is not designed to be. The top several show evidence of handling: the topmost is slightly offset from the stack, suggesting it has been picked up and set back at least once. The size printed on the packaging is not the smallest available, and not the largest.
+
+roomzone detail changing_table/teddy = The teddy bear propped against the table leg is large — the lap-sized kind rather than a shelf display. It is positioned upright, both arms resting on its thighs, its expression the standard flat-stitched smile of factory production but with a softness in the face from age that gives it a quality the factory didn't intend. It smells faintly of the room's powdery scent.
+
+roomzone detail nursing_chair/arm_wear = The worn patch on the chair's left arm is palm-width and at a height consistent with someone resting their arm while holding something against the right side of their chest. The fabric is soft there in a way it is not anywhere else — a genuine softness from compression, not wear. Sitting in the chair and resting your arm in this position, you find the height is exactly right without adjustment.
+
+roomzone detail shelves/colouring = The piece of colouring on the wall was done in crayon and marker. The pond is a careful blue oval, the trees rendered in the way children render trees — lollipop shapes, pressed hard enough that the crayon transferred fully. The plantlife is unusually specific: the greens are layered in two or three colors each, and the purples alongside them are a particular shade that was clearly chosen deliberately rather than grabbed at random. The dirt path leading away from the water disappears at the edge of the paper. Someone pressed very hard on the brown crayon to make the path feel solid.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study crib + The mattress in the crib has a faint impression consistent with a curled body — not the flat compression of storage but the shaped depression of a position taken many times. The deepest point is toward the center, not at the edges.
+roomzone study crib + The wolf plushie is always at the head end. Other stuffed animals shift position over time — they have been rearranged, moved, and returned. The wolf is always exactly there.
+
+roomzone study window + The wolf tracks outside are the only disturbance in a wide section of yard. The snow between the tracks and the treeline is perfectly flat — no additional footprints approach from the cabin side or from any angle other than the woods.
+roomzone study window + The window seat's inner cushion, the one closest to the glass, is very slightly damp on its underside. Not from rain or spill — from the glass's condensation transferring through long contact.
+
+roomzone study changing_table + The surface of the changing table's padding has a faint outline consistent with a body resting on it frequently — the foam has compressed in a shape that is larger than a standard infant and smaller than most adults. Someone between those sizes, or an adult in a particular configuration.
+roomzone study changing_table + The blocks scattered beside the base have been left in a specific incomplete shape — three colors in a partial tower, the fourth block beside it rather than on top. The same block colors appear in the incomplete position every time the room is tidied. Someone keeps leaving them like this.
+
+roomzone study nursing_chair + The footstool shows more wear at the front edge than the center — consistent with someone whose feet don't rest flat on it but dangle and press forward. The front edge wear is at the height of someone shorter than the chair was designed for.
+roomzone study nursing_chair + The left arm's worn patch, examined closely, has not one layer of wear but two — a larger area below and a smaller, concentrated mark on top of it. A hand, and on top of the hand, a cheek or forehead.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable crib
+roomzone inscribe/enable window
+
+
+-- STEP 7: Mechanic items --
+
+-- Crib mechanic (lying, capacity 2, allow lap-sitting) --
+@create Nursery Crib:typeclasses.seat_mechanic.SeatMechanic
+@set Nursery Crib/capacity = 2
+@set Nursery Crib/label = the crib
+@set Nursery Crib/position = lying
+@set Nursery Crib/allow_lap = 1
+use Nursery Crib on crib
+
+-- Window seat mechanic (seated, capacity 2) --
+@create Window Seat:typeclasses.seat_mechanic.SeatMechanic
+@set Window Seat/capacity = 2
+@set Window Seat/label = the window seat
+@set Window Seat/position = seated
+use Window Seat on window
+
+-- Nursing chair mechanic (seated, capacity 2, allow lap-sitting — for caretaker + little) --
+@create Nursing Chair:typeclasses.seat_mechanic.SeatMechanic
+@set Nursing Chair/capacity = 2
+@set Nursing Chair/label = the nursing chair
+@set Nursing Chair/position = seated
+@set Nursing Chair/allow_lap = 1
+use Nursing Chair on nursing_chair
+
+-- Changing table mechanic (lying, capacity 1) --
+@create Changing Table:typeclasses.seat_mechanic.SeatMechanic
+@set Changing Table/capacity = 1
+@set Changing Table/label = the changing table
+@set Changing Table/position = lying
+use Changing Table on changing_table
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle crib/bars = You put both hands on the crib bars and lean in. The structure doesn't flex — solid at the frame, solid at the floor mounts. The bars are cold at the top where they're untouched, and warmer than the rest of the room at the mid-height where the paint has been worn away from handling. You lower the side rail and step in, and the mattress takes your weight without sound. The blankets are exactly as warm as they look. The wolf plushie regards you from the pillow end without moving. From inside, the crib is larger than it appears from outside — the dimensions built for an adult in a specific state, not a child. You lie back, and the blankets settle around you.
+
+roomzone handle window/seat = You settle into the window seat and lean against the glass. The cold transfers through at once — pleasant rather than uncomfortable, a clean edge against your shoulder. The wolf tracks in the snow are directly ahead of you. From this position, at this distance, you can see that the stride is long and deliberate — not the irregular pattern of a dog or a domestic animal but something that knows exactly where it is going. The seat gives under you with the particular softness of something used in this exact way many times before you.
+
+roomzone handle changing_table/diapers = You pick up the top diaper from the stack and unfold it. The crinkling is immediate and specific — the sound designed to be discreet in the way that draws attention to itself by trying not to. The padding is thick, the tapes are wide, and the interior is lined with a material meant to be comfortable for extended wear. You refold it carefully and return it to the stack.
+
+roomzone handle nursing_chair/arm_wear = You sit in the nursing chair and rest your left arm where it has been rested before. The worn patch receives your arm at exactly the right height. The chair begins to glide — the mechanism so smooth it starts without intention, just the slight shift of weight. Sitting here, holding the right side of your chest as if there were something there, facing the window and the wolf tracks: you understand what this chair has been used for.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe nursing chair glides once, slightly — the mechanism responding to the building's settling — then stops.|n
+rambient/add |xOutside the window, the wolf tracks in the snow are unchanged. No new prints have joined them.|n
+rambient/add |xThe foam floor at the room's center bears the ABC letters in the slightly compressed state of material that has been stood and sat on for some time.|n
+rambient/add |xFrom inside the crib, the wolf plushie's eyes catch the window light and briefly hold it.|n
+rambient/add |xThe diapers in their stack make no sound. The room is very quiet.|n
+rambient/add |xA soft plush animal has shifted position on the shelf — not fallen, just moved, as if adjusted to face a different direction.|n
+rambient/add |xThe wallpaper wolves are small and numerous, winding between the rabbits and birds in a pattern that, examined long enough, reveals they are all traveling in the same direction.|n
+rambient/add |xThe powdery smell of the room rises and settles with no detectable cause — warmth moving, perhaps, or a door opening somewhere adjacent.|n
+
+
+-- STEP 10: Exits --
+-- Paste while standing in the Nursery. Replace [#dbref] values with actual room dbrefs. --
+
+@open helena;south;s = [#dbref of Helena's Room]
+@open auria;southwest;sw = [#dbref of Auria's Room]
+@open play_pen;in = [#dbref of The Play Pen of Adventure]

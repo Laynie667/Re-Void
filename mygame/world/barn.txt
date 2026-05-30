@@ -1,0 +1,160 @@
+== Helena's Log Cabin - The Barn ==
+== Paste these commands in order while standing in the room ==
+== Exits: east → Momo's Room | south → Cabin Front Yard (or wire as needed) ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yThe Barn|n/The structure is old and well-maintained — the contradiction that defines a working barn. The timber frame is the original construction, the boards darkened from decades and the smell layered: hay, animal warmth, leather, the faint clean-mineral scent of the milking equipment, and beneath all of it the base note that does not belong to any of those things individually. |xThe main floor is wide and open, with straw spread across the boards and two rows of |wstalls|n running the length of the south wall — each stall fitted and functional, the hardware in each consistent and specific.|n A |wloft|n above the stalls holds the hay, accessible by a fixed ladder at the east end. At the barn's north end, a |wtack wall|n runs floor to ceiling with everything that hangs, buckles, leads, and is used to manage what's kept here. The wide barn doors at the west face stand closed against the cold.//{zone:stalls}//{zone:stocks}//{zone:tack_wall}//{zone:hayloft}//{zone:entrance}
+
+
+-- STEP 2: Create zones --
+
+roomzone add stalls
+roomzone add stocks
+roomzone add tack_wall
+roomzone add hayloft
+roomzone add entrance
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc stalls = The |wstalls|n run the south wall in two pairs, each wide enough for comfort and fitted for purpose. Each stall has a |wmilking machine|n mounted to the interior wall — the mechanical kind, steady-speed capable, with a collection vessel that seals for storage. The stall dividers are solid timber, waist-high with a bar above for hands to grip, and each has a |ckneeling pad|n built into the floor, foam over timber, worn to the specific density of something used often. A |csmall labeled shelf|n inside each stall holds extra collection vessels and a card for noting content: name, date, fluid type, quantity.
+
+roomzone desc stocks = At the center of the barn floor, positioned for visibility from anywhere in the main space, stand the |wbreeding stocks|n: a heavy timber frame with an adjustable neck-and-wrist yoke at the top, adjustable knee and ankle bars at the bottom, and the full structure sized to accommodate a range of body proportions. The timber is smooth from handling at the grip points. Below the center of the frame, positioned with the same mechanical specificity as the milking stalls, are |mmounted fixtures|n — the spacing calibrated, the positioning deliberate. The frame locks independently at each point; releasing all of them requires someone standing outside.
+
+roomzone desc tack_wall = The |wtack wall|n at the barn's north end holds the working collection: rows of |xleather leads|n in graduated lengths, |xhalters|n in several sizes buckled and hung flat, |xchain leads|n coiled and hung by their clips, and one item given its own hook at eye height — a |xbranding iron|n with a decorative head, the letter |wR|n enclosed in a circle, the wood handle worn smooth and dark. It is hung for display as much as function, the metal head darkened from an old heating, not recent. Beside the tack wall, a barrel holds a collection of soft cotton ropes in various lengths, the ends neatly whipped.
+
+roomzone desc hayloft = The |whayloft|n sits above the stalls, accessed by a fixed timber ladder at the east end — the rungs worn to a polish from consistent use. The loft floor is scattered with hay, the bales stacked two-deep at the back wall, the loose hay in the forward area deep enough to lie in and not feel the boards. The smell here is the barn's base note made primary: hay and warmth and the animal heat that rises from the stalls below. A single lamp hangs from the center beam, its light warm and specific to the loft space.
+
+roomzone desc entrance = The barn's west-facing |wdoors|n are wide enough for a cart — two heavy panels on iron hinges, the latch a single thick bar that drops into iron brackets. Currently closed against the cold, they cut the wind entirely when shut. The door interior has been signed in places: names and dates carved into the timber in the lower sections, the oldest ones gone weathered grey. The gap between the doors, when the latch is set, is imperceptible.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail stalls/milking_machine = The milking machine in each stall is the mechanical, low-vibration type — designed for extended sessions at a consistent pull rate. The speed selector has four positions: |xslow, steady, fast, intense|n. The collection vessel seals airtight and labels from the inside: producer name, fluid type, date, quantity at seal. The vessel connects directly to the machine's output line and can be removed sealed for fridge storage. The kneeling pad in front of each machine is the same dense foam as the changing table in the nursery — enough give for long contact, not enough to be unstable.
+
+roomzone detail stalls/label_shelf = The label shelf inside each stall has a slot for the collection vessel's identification card and a small hook for the vessel seal cap. The cards are pre-printed with fields: Name, Date, Type, Notes. The notes field is the largest. The current cards in the shelves are blank.
+
+roomzone detail stocks/frame = The stocks' timber frame is pegged construction — no bolts, each joint a mortise-and-tenon with a draw peg, the whole structure assembled without metal fasteners except at the adjustment hardware. The adjustment points are machined steel: smooth-turning, calibrated to hold a set position without drift. Each adjustment locks with a pin that requires a key to release from the outside. The keys are on a ring hung at the tack wall, visible from the stocks.
+
+roomzone detail stocks/fixtures = The fixtures below the stocks' center are two mounted pieces on individual posts, the spacing between them adjustable across a two-inch range, each post adjustable for height. The pieces themselves are detailed in the same way as the pommel horse's mount — specific material, specific geometry. Positioned for someone held in the yoke above, weight forward.
+
+roomzone detail tack_wall/branding_iron = The |xbranding iron|n is decorative in current use — the metal head darkened from a single old heating, the wood handle smooth from display rather than active work. The design: the letter |wR|n in a circle, the linework clean. The iron is full weight, the handle the right length for one-handed use. It is on its own hook at eye height, given more space than the other items on the wall. Whether it has ever been used for its traditional purpose is not legible from the current surface.
+
+roomzone detail tack_wall/leads = The leather leads hang from graduated hooks: shortest at left, longest at right, the longest enough to allow movement across the barn's main floor with lead still in hand. The leather is conditioned — slightly glossy, flexible, not cracked. The snap clips at the lead ends are polished from use. Three of the leads have the particular wear at the snap end of something that has been clipped and unclipped many times, the spring mechanism smooth from repeated compression.
+
+roomzone detail hayloft/bales = The bales at the back of the loft are stacked with the end-grain out and the baling wire on top — proper storage, the kind that keeps the hay fresh longest. The loose hay in the forward area is a separate category: it has been distributed for use, not just left from a broken bale. The depth of it — eight inches, consistent across the space — is intentional. It is soft to lie in, warm from the trapped air in the straw, and it smells like the center of a warm afternoon in July transplanted to the middle of a cold night.
+
+roomzone detail entrance/carvings = The door interior carvings: names, dates, brief annotations. The oldest legible one is a name and a date from seventeen years back, the carving deep enough to have survived the weathering. Others more recent, shallower, some with small symbols beside them — a crescent moon, a paw print, a linked chain. Someone has been adding to this record for a long time.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study stalls + The kneeling pads in the stalls have compressed consistently — each one carrying the impression of a specific pair of knees in a specific position, the foam having learned the shape from repeated use.
+roomzone study stalls + The collection vessel seals in the labeled shelf of one stall have been used more than the others — the seal caps more worn, the card slot's card slightly more handled. That stall has seen more regular use.
+
+roomzone study stocks + The neck yoke of the stocks has worn contact marks on its interior face — the padded section more compressed at a specific height, consistent with someone of a specific build having been in the yoke many times. The wear is settled into the foam.
+roomzone study stocks + The adjustment pins, examined at the ankle bars: one pair has faint scratch marks from being inserted quickly, under conditions that didn't allow for careful placement. The other pairs show no such marks. The ankle adjustment is the one done when someone is already in the frame.
+
+roomzone study tack_wall + The branding iron's hook has a small hand-worn bright patch where the hook is lifted and the iron taken down. It has been taken down fairly often — the patch is not from settling into position.
+roomzone study tack_wall + The cotton ropes in the barrel have been sorted by length. This is not how a working barn's rope storage looks. This is how someone's specific organization looks.
+
+roomzone study hayloft + The hay in the loft's forward area has impressions in it that are slow to recover — the straw compressed into two or more body-shaped depressions, their orientation parallel. The hay recovers these impressions over a day or two. These are new.
+roomzone study hayloft + The lamp in the loft's center has a dimmer mechanism — the setting is currently at about a third of full output. Someone who uses the loft chooses a specific light level.
+
+roomzone study entrance + The door latch bar, on the inside, has a small secondary notch below the main bracket — a secondary catch position that holds the bar at half-lifted, leaving the door with a fraction of give but technically latched. Someone uses this setting regularly. The secondary notch is worn.
+roomzone study entrance + One of the door hinges has been recently oiled — the sound of the door, when swung, changes at the top of the arc where the other hinge is un-oiled. The oiled hinge is the lower one. Someone oiled it without doing both.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable entrance
+roomzone inscribe/enable tack_wall
+
+
+-- STEP 7: Mechanic items --
+
+-- Milking machines — use MilkingMachineMechanic in each stall zone (install once per stall) --
+-- NOTE: The MilkingMachineMechanic creates one machine per zone. Install all 4 via zone copies --
+-- or create 4 separate zones (stall_1/stall_2/stall_3/stall_4) if individual control is needed. --
+-- For now, all stalls share one 'stalls' zone and one machine: --
+@create Barn Milking Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+@set Barn Milking Machine/label = the milking machine
+use Barn Milking Machine on stalls
+
+-- Stall kneeling pad — SeatMechanic (kneeling, capacity 4 — all four stall pads) --
+@create Stall Pads:typeclasses.seat_mechanic.SeatMechanic
+@set Stall Pads/capacity = 4
+@set Stall Pads/label = a milking stall pad
+@set Stall Pads/position = kneeling
+use Stall Pads on stalls
+
+-- Breeding stocks — DildoSeatMechanic (forward-mounted, capacity 1) --
+@create Breeding Stocks:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
+@set Breeding Stocks/capacity = 1
+@set Breeding Stocks/label = the breeding stocks
+use Breeding Stocks on stocks
+
+-- Stocks yoke — RestrainMechanic (holds head and wrists, capacity 1) --
+@create Stocks Yoke:typeclasses.restrain_mechanic.RestrainMechanic
+@set Stocks Yoke/capacity = 1
+@set Stocks Yoke/label = the stocks yoke
+@set Stocks Yoke/blocker_msg = The yoke holds your neck and wrists. The pin is on the outside. You wait.
+use Stocks Yoke on stocks
+
+-- Hayloft — SeatMechanic (lying in the hay, capacity 4) --
+@create Hayloft Hay:typeclasses.seat_mechanic.SeatMechanic
+@set Hayloft Hay/capacity = 4
+@set Hayloft Hay/label = the hay
+@set Hayloft Hay/position = lying
+@set Hayloft Hay/allow_lap = 1
+use Hayloft Hay on hayloft
+
+-- Hayloft stair/ladder --
+@create Loft Ladder:typeclasses.stair_mechanic.StairMechanic
+@set Loft Ladder/label = the loft ladder
+use Loft Ladder on hayloft
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle stalls/milking_machine = You step into the stall and find the milking machine already at the kneeling pad. The controls are simple — the speed selector clicks through its four positions with a quality detent. You turn it to steady and the machine starts with a low mechanical sound, consistent and unhurried. The collection vessel is in place at the output, sealed, ready. The stall's walls are close on three sides — the right height, the right width — and the kneeling pad receives your weight with the passive certainty of something that has received this weight many times. You switch the machine back to off. The sound stops. The stall is quiet.
+
+roomzone handle stocks/frame = You approach the breeding stocks and test the yoke — it opens wide enough, the interior padded, the fit calibrated for a body to be in it without discomfort while not being able to remove themselves. You test the ankle bars next: they lock with the pin exactly as described, the mechanism smooth. Standing inside the open frame, looking at the tack wall across the barn with the key ring visible from here, you understand the specific experience the stocks are designed to provide: the keys visible, someone else holding the decision.
+
+roomzone handle tack_wall/branding_iron = You lift the branding iron from its hook. It is heavier than expected — the weight distributed forward into the metal head, the handle long enough to keep the user well clear of any heat. You turn it to see the |wR|n in its circle, the linework clean and deep. The metal head is cold. You hold it at the balance point, considering, then return it to the hook. The hook takes it back with a soft sound.
+
+roomzone handle hayloft/bales = You climb the ladder to the loft and press your hand into the loose hay at the forward area. The straw compresses and holds the shape of your palm, warm from the trapped air within. You lie back in it. The hay rises around you on both sides and the lamp above is at a third of its full output, the light warm and specific. Below, the barn sounds reach you diminished: the mechanical silence of the milking machines at rest, the timber's faint settling. The hay smells like summer preserved in winter. You stay longer than you intended.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe milking machines rest in their stalls, the mechanical silence of things designed for steady work and currently between uses.|n
+rambient/add |xThe hay in the loft shifts incrementally — settling under its own weight, a straw at a time.|n
+rambient/add |xThe branding iron on its hook catches the barn's dim light at a specific angle and holds the |wR|x for a moment before the light shifts.|n
+rambient/add |xThe barn doors are closed. The cold outside and the warmth inside maintain their agreement at the threshold.|n
+rambient/add |xThe stocks stand in the center of the floor, empty. The key ring at the tack wall is visible from them.|n
+rambient/add |xFrom the loft, faintly, the sound of hay shifting — settling into itself, patient, the sound of a thing that can wait.|n
+rambient/add |xThe leather leads on the tack wall hold their shapes — the curves of things that have been coiled and hung the same way many times.|n
+rambient/add |xThe barn holds warmth better than it should for its construction. The animal heat from the stalls rises and pools at the loft floor.|n
+
+
+-- STEP 10: Exits --
+
+@open momo;east;e = [#dbref of Momo's Room]
+@open cabin;south;s;out = [#dbref of Cabin Front Yard or wherever barn connects]
+
+
+-- TODO: Herd State System -----------------------------------------------
+-- A room script tracking which characters are currently 'in the herd':
+--   - Characters 'join herd' when they enter a stall and activate a milking machine
+--   - Herd roster displayed via 'herd' command (list of names, current stall, output stats)
+--   - Periodic ambient messages name current herd members: "The stall contains X."
+--   - CmdHerd: herd list | herd join | herd leave | herd status
+--   - HerdStateScript (DefaultScript, interval 60s): polls stall zones for active occupants
+--     and updates room.db.herd_roster = [{'name': str, 'stall': str, 'output_ml': float}]
+--   - At roster update, fires a room ambient with the current count
+--   - Integration with MilkingMachineMechanic: when machine extracts, adds to character's
+--     herd-session total
+-- This is deliberately deferred — build when the barn has active players.
+-- -------------------------------------------------------------------------

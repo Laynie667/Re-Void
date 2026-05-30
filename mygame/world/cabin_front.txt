@@ -1,0 +1,128 @@
+== Helena's Log Cabin - Front Porch and Yard ==
+== Paste these commands in order while standing in the room ==
+== Exits: south/in → Helena's Log Cabin - Common Area ==
+== (No forest trail exits yet — wire when ready) ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yFront of the Cabin|n/The porch is wide and covered, its planks the same hewn log construction as the cabin's walls — dark from age and weather, the surface worn smooth in the traffic paths and rough where no one ever walks. |xA swing hangs at one end of the porch, two rocking chairs stand at the other, and between them the cold comes freely; there is no wall here, just the porch rail and the yard beyond it.|n The yard is deep in snow — unbroken except for the tracks that cross it and the chopping block near the woodpile, the axe still standing in the last log it was set into. At the yard's edges, the treeline begins. The trees are old-growth, their canopy interlocked, the forest beneath them dark even at midday. Whatever is in there is not visible from here. |xThe fire pit in the center of the yard has ash in its stone ring — cold ash, but recent enough that the char smell still reaches the porch when the wind is right.|n//{zone:porch}//{zone:yard}//{zone:woodpile}//{zone:fire_pit}//{zone:treeline}
+
+
+-- STEP 2: Create zones --
+
+roomzone add porch
+roomzone add yard
+roomzone add woodpile
+roomzone add fire_pit
+roomzone add treeline
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc porch = The |wporch|n runs the full cabin frontage, wide enough to be useful and not just decorative. The |wporch swing|n at the east end is hung on old iron chain, its slats worn smooth from years of use, a faded cushion tied to the seat. The two |xrocking chairs|n at the west end are mismatched — one with a higher back, one with broader armrests — but both set with the particular angle of things placed for conversation. Between them and the cabin door is the open corridor of the porch: foot traffic worn into the planks, the knotholes darkened from decades of boots. The railing along the front is solid, the posts notched where ropes have been tied and tested.
+
+roomzone desc yard = The yard is deep in |xpacked snow|n, the surface undisturbed except where it has been. |xWolf tracks|n cross the yard from the treeline at the north edge and lead directly to the cabin's east wall, where they stop at the foundation. Boot tracks from the woodpile to the fire pit and back. A single shallow depression in the snow near the fire pit's ring that might be a knee print. The yard is large enough to feel like it belongs to the forest as much as to the cabin, and quiet enough that sounds from the trees arrive clearly.
+
+roomzone desc woodpile = The |wwoodpile|n is stacked against the cabin's south wall — a full cord, maybe more, the logs split clean and stacked with the end grain out the way someone does when they plan to be here through winter and past it. The |xchopping block|n stands before it, a section of old pine two feet across, its surface covered in the radiating marks of an axe used on it thousands of times. The axe itself is embedded in the block's center, set into a half-split log that hasn't been finished yet. The handle is smooth from a specific grip, worn brighter at the point where the right hand sits.
+
+roomzone desc fire_pit = The fire pit is a ring of |xfield stones|n mortared in place, the interior blackened deep from many fires. The ash inside is the layered grey of something burned and cooled and burned again over time — the bottom layer packed and fused, the top layer loose and recent. A metal grate rests across the ring, its bars corroded at the non-contact surfaces and clean where fire and use keep them bright. Beside the ring, a stack of split wood from the woodpile has been staged for the next fire, covered with a piece of oilcloth weighted at the corners with stones.
+
+roomzone desc treeline = The trees at the yard's north and west edges are |xold-growth fir and pine|n, their trunks wider than a person's arm span, their bark deeply furrowed and dark from the cold. The canopy begins ten feet up and closes completely overhead, the light beneath it a different quality than the open yard — dimmer, still, with the specific silence of a forest in winter. From the porch or yard the treeline is clearly a boundary, not an invitation. The tracks that enter and exit it do so at the same points each time, suggesting something that knows exactly where it is going.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail porch/railing = The porch rail shows a history of use that is not all foot traffic. Three of the posts on the north-facing rail have rope wear at the top — the fiber traces of something tied there and loaded against, the wood compressed in a groove that took years to form. The wear is at a height consistent with tying at the top and loading at waist level. The grooves are smooth and old.
+
+roomzone detail porch/swing = The porch swing's chain has been oiled recently — the links move without sound when tested. The slats are worn through the finish at the seating positions, the bare wood silvered from exposure. The cushion tie is fraying at both loops but holding. Sitting in the swing and pushing off slightly: it moves without creak, the arc long and slow, the chain sound entirely gone.
+
+roomzone detail porch/rocking_chairs = The two mismatched rocking chairs have been in this position long enough that their runner arcs are worn into the porch plank below each one: two paired crescents in the wood, dark from the contact. The chair on the left has a shallow dent in its armrest where something has rested there often — a cup, a hand, something the weight and temperature of use.
+
+roomzone detail yard/wolf_tracks = The wolf tracks that cross the yard from treeline to cabin foundation are a consistent stride — long, deliberate, not the scatter-track of a domestic animal but the straight-line efficiency of something that knows exactly where it is going and goes there directly. The tracks are several hours old: the impressions still clean-edged but the surface crust has begun to reform. Whatever made them came and did not leave by the same path.
+
+roomzone detail yard/knee_print = The shallow depression near the fire pit ring, examined at close range: it is a knee print, one knee, the impression consistent with someone who knelt there while tending the fire and pressed their weight forward onto one knee and one palm. The palm impression is just visible beside it. The print is older than the most recent ash layer.
+
+roomzone detail woodpile/axe = The axe in the chopping block is set in at a precise angle, the blade parallel to the grain of the half-split below it, ready for the next stroke to finish the job. The handle is hickory, the finish worn entirely away in the grip zone, the wood there darkened from hand oil and sweat. The blade is clean — not rusted, not notched, tended. The half-split log below the axe has been in this state — set up and not finished — since the last fire.
+
+roomzone detail fire_pit/ash = The ash in the fire pit: the bottom layer is fused gray stone — the residue of many fires compressed over years into a substrate. The middle layer is older char, packed. The top is last night's fire, the wood ash loose and fine and still carrying a faint heat deep down. Pressing a hand near the grate, not touching, the warmth is real at four inches.
+
+roomzone detail treeline/entry_points = The places where tracks enter and exit the treeline are not random. There are three entry points visible from the yard, each worn into the snow in the same grooves from repeated use. The center entry point is the widest — the stride that uses it is the largest. Inside the treeline at those points, the darkness is immediate. There is no visibility beyond the first tier of trunks.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study porch + The railing's rope grooves are in two different widths, suggesting two different rope thicknesses used at different times. The wider groove is older — the wood there has had more time to smooth.
+roomzone study porch + The porch planks show two distinct wear paths: one from the door to the steps (narrow, direct, boot-sized), and one from the door to the swing (wider, often, the tread of someone returning to the same place repeatedly).
+
+roomzone study yard + The tracks from the treeline to the cabin foundation end at the foundation's east wall. There is no corresponding return track in the visible snow. Whatever came from the trees to the cabin either went inside or left another way.
+roomzone study yard + The snow directly under the porch overhang is undisturbed — no tracks there. The overhang shadow has kept it from freezing into the harder outer surface. It is the softest snow in the visible yard.
+
+roomzone study woodpile + The top layer of logs on the woodpile shows handling marks — logs lifted and replaced, the bark disturbed. Someone has been going through the stack rather than just taking from the top. They are either looking for specific wood or specifically not choosing particular logs.
+roomzone study woodpile + The axe handle's wear pattern: the grip brightens at the lower hand position more than the upper, suggesting whoever swings it chokes up less than average. The swing comes from the shoulder more than the wrist.
+
+roomzone study fire_pit + The oilcloth weighted over the staged wood has been tucked under the stones on one side rather than just laid over them — tucked specifically to keep wind from getting under it. This is an old habit. The tuck is automatic.
+roomzone study fire_pit + The heat at the center of the ash ring, four inches above the grate, is consistent with a fire banked six to eight hours ago. Someone was here recently and put the fire down carefully rather than letting it burn out.
+
+roomzone study treeline + The wide center entry track into the forest: the stride within the forest, visible for the first few feet before the darkness closes, is three feet between steps. That is not a dog.
+roomzone study treeline + The trees at the yard's edge have bark compressed or marked at approximately seven feet height on the trunks that face the yard. The marks are not claw marks. They are consistent with something leaning against the trunk and watching the cabin.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable porch
+roomzone inscribe/enable fire_pit
+
+
+-- STEP 7: Mechanic items --
+
+-- Porch swing (seated, capacity 2, allow lap-sitting) --
+@create Porch Swing:typeclasses.seat_mechanic.SeatMechanic
+@set Porch Swing/capacity = 2
+@set Porch Swing/label = the porch swing
+@set Porch Swing/position = seated
+@set Porch Swing/allow_lap = 1
+use Porch Swing on porch
+
+-- Rocking chairs (seated, capacity 2) --
+@create Rocking Chairs:typeclasses.seat_mechanic.SeatMechanic
+@set Rocking Chairs/capacity = 2
+@set Rocking Chairs/label = the rocking chairs
+@set Rocking Chairs/position = seated
+use Rocking Chairs on porch
+
+-- Fire pit — uses the existing fireplace mechanic --
+@create Front Fire Pit:typeclasses.fireplace_script.FireplaceMechanic
+@set Front Fire Pit/label = the fire pit
+use Front Fire Pit on fire_pit
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle porch/swing = You sit in the porch swing and push off once with your heel. The swing begins its arc — long and slow, the chain silent from the recent oiling — and the view it gives you swings back and forth between the woodpile and the treeline. The cold air at the porch's edge reaches you on each forward arc. You can see the wolf tracks in the yard from here, end to end, the full straight line of them. The cushion under you is thin and slightly damp at the edges from ambient moisture, but the center is dry and worn to the specific softness of something used for sitting for long periods in cold air.
+
+roomzone handle woodpile/axe = You pull the axe from the block — it takes a small twist to free the blade from the split wood. The handle settles into the worn bright zone immediately, the grip finding the depression that decades of use have shaped into the hickory. The weight is forward and familiar, even if you've never swung this particular axe before. You set it back into the block with a single clean stroke, completing the split the original swing started. The two pieces separate and fall. You leave the axe standing in the empty block surface, reset for the next user.
+
+roomzone handle fire_pit/ash = You crouch beside the fire pit and hold your hand above the ash, working it lower until you feel the warmth — real residual heat, six to eight hours deep. The char smell from this close is specific: pine and hardwood mixed, the hardwood in the center of the pile where it lasts longest. You could restart this fire easily — the staging wood under the oilcloth is dry, and the ash bed is the kind that catches a spark without coaxing. You stand and leave the ash as you found it.
+
+roomzone handle treeline/entry_points = You walk to the center entry track and stand at the treeline's edge. Looking in: the darkness between the first row of trunks is not complete — there is depth in it, the shapes of more trees farther back, a suggestion of path. The snow inside the treeline is undisturbed except along the track itself. Whatever uses this route has used it enough times that the snow on either side of the track remains intact between passes. Standing here, facing the forest: the silence has a quality. Not empty. Occupied, and quiet about it.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe porch swing shifts slightly in the cold air — a half-rotation on its chain, then back to center.|n
+rambient/add |xThe fire pit's cold ash sends a faint char smell across the yard when the wind shifts from the north.|n
+rambient/add |xSomewhere in the treeline, a branch releases its snow load — the brief soft sound of it, then quiet.|n
+rambient/add |xThe chopping block axe stands in its half-split. The yard is still.|n
+rambient/add |xThe rocking chairs on the porch hold their position. One has its runner at the forward end of its arc — as if it was last occupied and left that way.|n
+rambient/add |xThe wolf tracks in the yard are unchanged. No new prints have appeared alongside them.|n
+rambient/add |xThe woodpile settles — one log shifting against another, brief, the sound of a well-stacked cord adjusting under its own weight.|n
+rambient/add |xFrom the treeline's direction: nothing moves, nothing sounds. The silence there is specific.|n
+
+
+-- STEP 10: Exits --
+-- No forest trail exits for now — wire when ready --
+
+@open cabin;south;s;in = [#dbref of Cabin Common Area / Main Hall]
+
+-- TODO: Wire forest trail exits when adjacent forest rooms are built --
+-- Suggested exits: north → Deep Forest | northwest → Forest Path | west → Barn Trail --

@@ -1,0 +1,171 @@
+== Helena's Log Cabin - Auria's Room ==
+== Paste these commands in order while standing in the room ==
+== Exits: northeast → Helena's Log Cabin - Nursery ==
+== Hidden exit (west, requires has_found_playroom attr): west → Auria's Playroom ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yAuria's Room|n/The floor is a deep |wpink carpet|n that gives underfoot — the room small in the way of spaces genuinely used, its faint smell of fabric softener and something more personal layered into the walls and cushions from time spent in here. |xPillows and cushions cover most of the floor in loose drifts, the densest pile against the southern wall shaped into a proper nest.|n From the wall above it, two fine-linked chains depend — long enough for someone curled inside to reach — ending in |cpadded shackles|n and a |csteel collar|n with a single name pressed into the metal.//{zone:bed}//{zone:eevee}//{zone:nest}//{zone:bookcase}//{zone:wardrobe}
+
+
+-- STEP 2: Create zones --
+
+roomzone add bed
+roomzone add eevee
+roomzone add nest
+roomzone add bookcase
+roomzone add wardrobe
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc bed = The |wbed|n is made up with quiet precision — a |wpale purple bedspread|n pulled flat, corners tucked, the pillow centered as if placed rather than tossed. Perched in the exact middle is the |wEevee plushie|n, positioned with the quiet authority of an object that belongs exactly there, and gathered loosely around it: a |xpurple dragon|n, a pocket-sized |xSquirtle|n, a small |xChikorita|n, and a hand-painted raccoon with a slightly crooked grin. The other plushies are arranged around the Eevee; the Eevee does not appear to have been moved.
+roomzone desc eevee = The |wEevee|n is larger than a display piece — made for holding. Its |xbrown fur|n has been worked to softness all over from years of handling, the pile laid down in consistent grain lines along the neck and back. The |wcream ruff|n around its throat retains its shape despite being pressed flat on one side from being carried. Its eyes are polished dark glass rather than buttons, set at a slight upward angle, and they catch light with an almost reflective depth. Tucked half into the ruff at the base of its throat is a tiny |mviolet collar|n, hand-stitched, with a small silver crescent moon tag.
+
+roomzone desc nest = Against the southern wall, a gathered mass of |wcushions and pillows|n has been arranged into something past a pile — different sizes and colors, some worn, some newer, the whole thing shaped by repeated use into a body-sized hollow. From the wall directly above hang two |cfine-linked chains|n, their length calibrated so someone lying in the hollow's deepest point can reach them. Each terminates in a padded cuff; between them hangs a |csteel collar|n, the name |mAuria|n pressed into its face in careful letters.
+
+roomzone desc bookcase = The |wbookcase|n fills most of the wall, its shelves packed without the precision of display — spines of different heights, a few lying sideways where the shelf ran short, a bookmark in one and not in the rest. A |xnote|n is pinned to the frame: |xFeel free to add something! Just let me know which is yours!|n One spine, slightly more worn than those around it, reads |wWhere the Wild Things Submit|n in a font that manages to be both playful and pointed. It sits at a slight forward angle, not pushed flush, as if regularly pulled and returned.
+
+roomzone desc wardrobe = The |wwardrobe|n is narrow enough to be personal, its door latched simply, the wood softer at handle height from use. Beside it on the floor rests a |xclosed trunk|n, its latches shut but not locked, the lid's slight roundness suggesting it has been packed full and closed around its contents rather than leaving space.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail bed/plushies = The other plushies arranged around the Eevee have a territorial quality — not scattered but positioned. The purple dragon's wing overlaps the Eevee's near side. The Squirtle and Chikorita sit at the foot of the arrangement, sized so small relative to the Eevee that the grouping reads as deliberate hierarchy. The raccoon faces outward, away from the rest, its slightly crooked grin aimed at the room rather than at the center.
+
+roomzone detail bed/spread = The bedspread is a fine weave with a faint sheen — not utility cotton. Running a hand across it, the texture is almost imperceptible, closer to skin than to cloth. At the left corner where the tuck has been done and redone many times, the thread count has compressed into a very slight ridge only visible from a low angle and only present on that one corner.
+
+roomzone detail eevee/fur = The fur is not uniform. The body has been stroked so consistently in the same directions that grain lines are pressed into it — laid flat along the neck and back, compressed through the middle where hands grip. The belly fur is different: slightly springier, as if this area is handled more gently or less often, the fill inside keeping it from compressing the same way. The tail fur stands almost fully upright, the least-handled section, original pile texture largely preserved.
+
+roomzone detail eevee/collar = The violet collar is handmade — the edges turned and hand-stitched with thread slightly lighter than the fabric, visible at close range. The small snap has been opened and closed many times: smooth at the contact points. The silver tag — crescent moon, the metal bright — has a flat reverse with engraving too small to read without bringing it close. The letters, when you angle it toward the light: |mA.R.|n, in the same careful font as the collar in the nest.
+
+roomzone detail eevee/eyes = The eyes are convex dark glass, not the standard flat button, set at an angle so they appear to look slightly upward. Both are secured absolutely — reinforced at the backing — and they catch light with a brief impression of reflection rather than an inert surface. From where the Eevee currently sits, they are aimed directly at the door.
+
+roomzone detail eevee/ruff = The cream ruff is a gathered circle of fabric stitched separately and attached at the base of the neck, the seam visible from below. It is full relative to the body fur, less compressed, the pile still close to its original state. One side shows a persistent press-flat — the shape of a hand faintly legible in how the fabric has learned to fall, from being carried in the same way many times.
+
+roomzone detail nest/chains = The chains are fine-linked — the grade used for restraint rather than load — and they pay out with a quiet sound, each link catching and releasing. The padded cuffs are dense foam covered in smooth fabric, polished at the contact edges from use. The length has been calibrated precisely: lying fully inside the nest, they reach with almost exactly enough to allow comfort in the deepest position and no further slack.
+
+roomzone detail nest/collar = The collar is heavier than the wrist cuffs — a solid steel band, the inner face lined with the same dense padding. The name is pressed into the outer face in clean, even letters: |mAuria|n. The impression is uniform in depth, the spacing considered. The clasp is a side-release with a secondary safety latch, the kind that requires two deliberate movements to open and cannot be accidentally undone.
+
+roomzone detail nest/cushions = The cushions in the nest are not matched — throw pillow sizes, a flat floor cushion, a bolster at the outer edge as a side wall. Some covers are worn; one has been repaired at a seam. The arrangement is not random: larger, firmer pieces at the base and sides, softest ones concentrated at the head position. The inner hollow smells most strongly of the room — fabric, warmth, and the particular scent of something used for comfort in private.
+
+roomzone detail bookcase/wild_things = |wWhere the Wild Things Submit|n — the spine is worn at thumb-grip height from being pulled from the shelf many times. The cover, when angled toward light, shows a small figure in a paper crown surrounded by creatures with bright, knowing expressions. The font manages whimsical and pointed at once. Inside, the spine crease opens easily to a page a third of the way through — where the book has been read most often. There is a passage marked only by the compression of the page.
+
+roomzone detail bookcase/note = The note is pinned with a small silver pin, the paper slightly wavy from age but held flat. The handwriting is neat and informal. Below the original message, in different handwriting: |xAdded one. You'll know which.|n No further annotation.
+
+roomzone detail bookcase/collection = Other titles visible: |xThe Lion, the Witch and the Wardrobe|n; |xThe Painted Man|n; |xThe Black Prism|n; |xThe Way of Kings|n — alongside several with plain spines and a few with handwritten labels too small to read standing. The overall impression: someone who reads heavily across categories, with a preference for things that happen in other worlds.
+
+roomzone detail wardrobe/trunk = The trunk latches are flip-closures, shut but not locked. The lid has slight resistance — fully packed — and the exterior is worn smooth at the handles and front face from years of hands. Whatever is inside gives no sound when shifted: fabric, dense, not loose objects.
+
+roomzone detail wardrobe/inside = The wardrobe opens on clothes on a rod and a shelf above. Mostly casual: sweaters, soft shirts, a few dresses. The faint inside smell is fabric softener and the warmth of a small enclosed space. One hook on the inside door holds a single item given individual attention: a |mshort pale purple dress|n with a satin ribbon at the waist, positioned at eye height, the only thing hung separately from the rest.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study eevee + The Eevee's position on the bed is precise: centered, equidistant from both edges, oriented to face the door. The bedspread shows the faint impression of the base from being set and reset in this exact spot.
+roomzone study eevee + The tail fur has been smoothed into its upright position recently. The fur along the back still shows faint track marks where fingers were drawn through it, the pile holding the direction.
+roomzone study eevee + The silver crescent moon tag on the collar has engraving on the reverse. Held to the light: |mA.R.|n — the same careful lettering as the name on the collar in the nest, done by the same hand.
+
+roomzone study nest + The chain lengths have been adjusted: the adjusting hardware shows fine scratch marks from a tool used on it, the metal brighter there than at the rest of the link. Someone measured this deliberately at some point.
+roomzone study nest + The hollow at the center of the nest has compressed into a specific shape — the foam has learned one body in one position, and the bolster at the side shows a depression at a consistent height where a head has rested against it.
+roomzone study nest + The collar inscription — |mAuria|n — shows the fine pitting that happens when metal is touched repeatedly at the same spot, the letters microscopically worn at their highest points.
+
+roomzone study bookcase + |wWhere the Wild Things Submit|n is not pushed flush to the back of the shelf. Every other book on the same shelf has been pressed back. This one maintains a gap, as if pulled out and returned rather than pushed all the way in.
+roomzone study bookcase + The shelf at eye height, nearest the note, has a faint ring in the wood — the outline of something placed many times in the same position, circular, mug-diameter. The wood has darkened slightly at the edge.
+
+roomzone study bed + The bedspread has a faint body-length depression along the right side — as if someone lies there on top of the covers often. The left side shows no comparable wear. The Eevee occupies the center, undisturbed by either.
+roomzone study bed + The raccoon's current position is slightly off from the worn impression it usually occupies — recently adjusted. The Eevee has not moved.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable nest
+roomzone inscribe/enable bookcase
+
+
+-- STEP 7: Mechanic items --
+
+-- Bed mechanic (lying, capacity 2, allow lap-sitting) --
+@create Auria Bed:typeclasses.seat_mechanic.SeatMechanic
+@set Auria Bed/capacity = 2
+@set Auria Bed/label = the bed
+@set Auria Bed/position = lying
+@set Auria Bed/allow_lap = 1
+use Auria Bed on bed
+
+-- Nest cushions mechanic (lying, capacity 3, allow lap-sitting) --
+@create Nest Cushions:typeclasses.seat_mechanic.SeatMechanic
+@set Nest Cushions/capacity = 3
+@set Nest Cushions/label = the nest
+@set Nest Cushions/position = lying
+@set Nest Cushions/allow_lap = 1
+use Nest Cushions on nest
+
+-- Chains above nest — restrain mechanic --
+@create Nest Chains:typeclasses.restrain_mechanic.RestrainMechanic
+@set Nest Chains/capacity = 2
+@set Nest Chains/label = the chains
+@set Nest Chains/blocker_msg = The chains hold you in the nest. You cannot leave until released.
+use Nest Chains on nest
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle eevee/fur = You pick up the Eevee. It is lighter than a properly stuffed piece of this size should be — the fill has migrated over years, concentrated at the head and tail, thinner through the body where hands grip. The fur yields under your palm in grain lines laid down by thousands of passes in the same direction. It smells faintly of the bed, the room, of repeated use. You are briefly, clearly aware of handling something that belongs here in a specific way — something that has been held often, and returned to the same position each time. You set it back in the center of the bed, facing the door.
+
+roomzone handle eevee/collar = You work the tiny violet collar out from where it is half-tucked in the ruff, using your fingertips — it is small enough that anything less precise catches. The snap is smooth from many openings. You turn the tag to find the reverse. |mA.R.|n — two letters and a period, smaller than the name on the nest's collar, done by the same hand. You fasten the collar back and tuck it into position.
+
+roomzone handle nest/chains = You step into the nest and sit in the hollow at its center, then reach for the chains. They pay out with a soft chain-sound, each link catching and releasing in sequence. The cuffs fit correctly — the padding dense enough that the metal edge is imperceptible when closed. Holding them over your wrists without fastening, you are aware of how precisely the length has been set. There is exactly enough chain to be comfortable in the deepest part of the nest, and nothing beyond that. You set the chains aside and stand.
+
+roomzone handle nest/collar = The steel is cool when you lift it — not dramatically so, just the ambient cool that mass holds. You press the padded inner face against your throat without closing the clasp. The padding is exactly the right density: present enough to feel, soft enough to be only that. The clasp requires two deliberate motions: safety latch, then the collar. You close it again in reverse and let it hang between the chains.
+
+roomzone handle bookcase/wild_things = You pull |wWhere the Wild Things Submit|n from the shelf. It comes out easily — the gap already maintained. The cover shows a small figure in a paper crown, arms spread, surrounded by creatures twice its height who look down with an expression that is not quite predatory and not quite benevolent. The spine crease opens without resistance to a page a third through, where the book has been read most often. You read the passage. Halfway through, you become aware that the bookcase is not flush against the wall — a narrow gap at the left edge where the stone shows behind it. You push gently. The bookcase gives inward, smoothly, on a hinge that has been maintained.
+
+roomzone handle wardrobe/trunk = You open the trunk's latches — both snap cleanly — and lift the lid. The resistance gives to a smell: the same fabric softener as the rest of the room, with the accumulated warmth of soft things compressed together. The trunk is full of clothing: cottons, fleeces, a few silks, most casual and comfortable. Some pieces are sized smaller than standard adult — proportioned for someone between sizes, or for adult play. You close the lid carefully and re-latch both closures.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe chains above the nest shift with a faint sound — a link settling against another — though nothing has moved them.|n
+rambient/add |xThe Eevee's dark glass eyes catch a shift in the room's light and hold it briefly before it passes.|n
+rambient/add |xOne of the nest's cushions has been slightly displaced from its usual position. It stays where it is.|n
+rambient/add |xThe bookcase settles with a faint wood-pop, the way old furniture does when temperature shifts.|n
+rambient/add |xThe room's smell — fabric, warmth, something faintly personal — is more present at certain moments, as if it breathes.|n
+rambient/add |xSomewhere in the wardrobe, fabric shifts against itself — nothing falling, just settling.|n
+rambient/add |xThe trunk's latches hold without prompting. Both closures fully engaged.|n
+rambient/add |xThe Eevee faces the door. It has always faced the door.|n
+
+
+-- STEP 10: Exits and hidden bookcase passage --
+-- Paste while standing in Auria's Room. Replace [#dbref] with actual room dbrefs. --
+
+-- 10a. Wire the bookcase/wild_things handle to set 'has_found_playroom' attr on trigger --
+@py z=dict(here.db.zones['bookcase']); m=dict(z.get('mechanics',{})); m['triggers']={'wild_things':{'type':'set_attr','attr':'has_found_playroom','value':1,'msg_caller':'|xThe bookcase has given. The passage is there now.|n','once':True}}; z['mechanics']=m; zones=dict(here.db.zones); zones['bookcase']=z; here.db.zones=zones
+
+-- 10b. Create the hidden west exit to Auria's Playroom --
+@open bookcase;passage;west = [#dbref of Auria's Playroom]
+@lock bookcase = view:perm(Builder) OR attr(has_found_playroom)
+@lock bookcase = traverse:perm(Builder) OR attr(has_found_playroom)
+
+-- 10c. Create the exit to the Nursery --
+@open nursery;northeast;ne = [#dbref of Nursery]
+
+-- Staff can manually reveal playroom for a player: --
+-- @py [player].attributes.add('has_found_playroom', 1) --
+
+
+-- TODO: Eevee Wandering System -----------------------------------------------
+-- Trigger phrase: "aww its so cute" (said in any room where the Eevee is located)
+-- When triggered, the Eevee should come alive and:
+--   1. Begin wandering between connected rooms (Helena's, Nursery, Auria's, Kennel)
+--   2. Drag willing players between rooms like a canine pulling its mate
+-- Implementation requires:
+--   - typeclasses/eevee.py: EeveePlushie(DefaultObject) with movement capability
+--     and zone attributes (fur, collar, eyes, tail, ruff) persistent on the typeclass
+--   - Trigger in rp_commands.py: pattern-match "aww its so cute" in say/emote,
+--     fire activation if Eevee is present in room
+--   - WanderScript (DefaultScript, interval=5min): moves Eevee between allowed rooms
+--   - "Attached" character state: moves the attached player with the Eevee each tick
+--   - Zones on EeveePlushie typeclass carry forward from this build script's details
+-- The current plushie's zones and details are written to survive the upgrade.
+-- -------------------------------------------------------------------------------

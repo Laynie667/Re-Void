@@ -1,0 +1,165 @@
+== Helena's Log Cabin - Auria's Playroom ==
+== Paste these commands in order while standing in the room ==
+== Exits: east → Auria's Room ==
+== (This room is accessed from Auria's bookshelf, requires has_found_playroom attr) ==
+
+-- STEP 1: Room Description --
+
+@desc here = |mAuria's Playroom|n/The lighting here is dim and deliberate — the floor |xdark polished wood|n underfoot, the walls padded in |xdeep purple|n that absorbs rather than reflects sound. One section of the padding is replaced by a |wlarge mirror|n, floor to ceiling, positioned to catch every angle of the room's center. The air is cool and specific: the particular temperature that is maintained, not ambient. A |csteel pole|n extends from the center of the low stage to the ceiling, |xchrome-bright in the dim room|n. Against one wall, hung on fine chain, is a titanium collar with |mAuria|n pulsing in quiet blue letters — it has been here long enough to feel like it belongs there.//{zone:collar_wall}//{zone:horses}//{zone:overhead}//{zone:stage}//{zone:accessories}
+
+
+-- STEP 2: Create zones --
+
+roomzone add collar_wall
+roomzone add horses
+roomzone add overhead
+roomzone add stage
+roomzone add accessories
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc collar_wall = The |wcollars and mirror section|n occupies the east wall. The |cfloor-length mirror|n is fixed and positioned at a slight angle — not to face the door but to face the stage's center, giving a full lateral view of anyone on the steps or the platform. Below the mirror, mounted on fine chain to the wall, is the |ctitanium collar|n: the letters |mAuria|n etched into the metal with a blue luminescent fill that pulses at the rhythm of a resting heart. Flanking it on the chain are matched wrist and ankle |cshackles|n in the same titanium, the same blue-filled lettering. They catch what dim light there is and hold it.
+
+roomzone desc horses = The |whorses|n occupy opposite corners. The |xgymnastics pommel horse|n is standard competition height with padded leather handles and padded cuffs fixed to each — the hardware clean and well-maintained, the cuffs worn smooth at the contact edges. Mounted at the center of the leather, precisely centered and positioned low, is a |mtwin dildo|n: a split piece designed to fill both at once, the spacing calibrated. Across the room, the |xrocking horse|n carries the same careful preparation: two |mdildos|n mounted to the saddle, positioned for forward and rear, with padded handlebar cuffs to hold what is on top steady.
+
+roomzone desc overhead = Bolted to the ceiling — the bolts countersunk and large, the hardware not decorative — is a |chorizontal titanium bar|n at approximately shoulder height when standing beneath it. From the bar hang two |cshackle sets|n at arm-spread distance, each attached by a short drop-chain. The shackles are heavy, the lock mechanisms keyed. Across the room from the bar, on a mount fixed to the opposite wall, hangs a |mblack sex swing|n — straps and buckles, adjustable, the webbing reinforced at the load points, the whole assembly at working height with no gap between the buckle positions and their intended use.
+
+roomzone desc stage = Three |xshort steps|n descend from the room's main level to a low circular |wstage|n, the platform edged in |xclear lighting set into the floor|n so the stage is slightly brighter than the surrounding room. Around the stage, positioned at careful angles, are plush leather couches — facing inward, their cushions compressed with use. The |csteel pole|n at the stage's center extends floor to ceiling, |xchrome-smooth|n, the base plate bolted through the platform into the subfloor. The entire setup faces the mirror on the far wall.
+
+roomzone desc accessories = Against the east wall: a |xcloset|n with a simple latch, a |xspreader bar|n of polished steel propped against its side, padded at the ankle holds. Beside the closet, mounted on a pegboard, are a row of |xhooks|n holding paddles of different weights, a slender cane, and a leather crop. Off to one side, a low |wtable|n holds a selection in organized arrangement: |mdildos|n in graduated sizes, vibrators with control units beside them, plugs in a line, a string of beads coiled in a shallow dish. Each item is placed with a specificity that implies it is returned to exactly this position.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail collar_wall/collar = The titanium collar is heavier than it looks — the metal actual grade titanium, not alloy — and the clasp on its back is a two-stage mechanism: a locking ring and a secondary bar, both requiring tools to open from the outside, both designed so that once the collar is on, it stays on until someone with the right tool and the right authority decides otherwise. The blue pulsing of the letters |mAuria|n is not a battery — the material is photoluminescent, charged by the room's light. In the dark, it pulses on its own for hours.
+
+roomzone detail collar_wall/shackles = The wrist and ankle shackles are matched to the collar — same titanium, same blue-luminescent lettering, |mAuria|n on each. The interior of each shackle is lined with neoprene, compressible but firm — not padded for comfort as an afterthought but engineered for extended wear. The lock mechanisms are the same two-stage type as the collar. There are no keys visible in the room.
+
+roomzone detail collar_wall/mirror = The mirror is fixed at a specific angle rather than true perpendicular to the wall. Standing at the stage's center, you see yourself from a three-quarter view that makes assessment easy and accurate. Standing at the pommel horse's position, the mirror reflects the stage. Standing anywhere else in the room, it reflects at least one of the restraint positions. The angle was chosen.
+
+roomzone detail horses/pommel = The pommel horse's padded surface shows the compression of weight applied over time — the leather center slightly more yielding than it was when new. The cuff hardware on the handles is polished from use: the pivot points smooth, the adjustment mechanisms calibrated and quick. The twin dildo at the center is mounted on a post with a slight forward angle, the precise geometry of which becomes evident when you understand the intended posture.
+
+roomzone detail horses/rocking_horse = The rocking horse has a painted face — stylized, mane in silver and white, expression the standard artistic rendering — and beneath this the saddle carries two mounted pieces, the spacing between them suited to the physical distance of a body seated with weight forward. The handle cuffs lock rather than just close, the locking mechanism flush with the handle so it cannot be reached by the hands they hold.
+
+roomzone detail overhead/bar = The ceiling bar's bolts, examined: they are 20mm structural hardware, set in the joist. This bar will not come down. The shackle chains drop exactly to wrist height for the average adult standing below — the calculation is in the chain length, not the bar height. The shackle mechanisms open with a key. No keys are visible on the bar or near it.
+
+roomzone detail overhead/swing = The sex swing's webbing is reinforced at the four load points with doubled material and stainless steel rings. The straps adjust across a full range of body proportions. The positioning of the buckles means that once someone is in it, the adjustment points are out of reach of the hands that would need to reach them. The entire assembly has been rigged once and not taken down: the tension in the mounts shows settled use.
+
+roomzone detail stage/pole = The steel pole is chrome-finished and cold to the touch, the surface smooth to the point where it has almost no friction. The base plate is flush with the stage floor, the mounting through the platform to a structural anchor below — this pole is in the load-path of the floor. It will not flex. The stage lighting set into the floor at the pole's base is a warm white that brightens the bottom third of the pole and casts long shadows from anyone standing at it.
+
+roomzone detail accessories/table = Each item on the toy table is placed with the care of a tool collection rather than a storage situation. The arrangement is size-graduated left to right. The plugs are cleaned and oiled — the silicone surface slightly glossy. The vibrators have their control units beside them in a specific orientation, power switches accessible. The beads in the dish are loose but coiled, the last bead of the string tied off in a knot that is meant to hold.
+
+roomzone detail accessories/paddles = The paddles on the pegboard are arranged by weight — lightest at left, a flat-leather piece; a rubber paddle with holes at center; a heavier wooden paddle at right with a slight flex to the strike face. The cane is thin, spiral-cut, the kind that marks rather than bruises. The crop is the longest item on the wall, its loop end worn at the edge. All items are within arm's reach of each other but arranged so each one can be taken without disturbing the others.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study collar_wall + The collar has been taken from the wall and returned many times — the chain holding it has a wear mark where it drapes against the wall mounting from being lifted and let back down. The wear is at an angle consistent with the motion of removing the collar and putting it on someone's neck.
+roomzone study collar_wall + The mirror's angle, traced carefully: it is positioned so that someone kneeling at the collar wall can see the stage in the reflection without turning. This was not an accident.
+
+roomzone study horses + The pommel horse's leather shows more compression on the front half of the surface than the rear — consistent with weight applied with the body angled forward, elbows down, hips up. The geometry of the twin dildo mount becomes more legible from this orientation.
+roomzone study horses + The rocking horse's handle cuff locks are keyless — they open with a specific thumb-press sequence rather than a key. The sequence is not labeled. It is something that must be shown.
+
+roomzone study overhead + The ceiling bar's chain links, at the point closest to the bar, are very slightly more worn than at the shackle end — consistent with hands gripping the chain rather than the shackles when the restraint is first applied, before the shackles close.
+roomzone study overhead + The sex swing's straps carry faint impressions at the main load points — compressed and released many times, the material remembering the dimensions of whoever occupies it most often.
+
+roomzone study stage + The pole at the stage's center shows hand-height polishing at two points: one at standard grip height for a standing person, and one lower — consistent with a grip used in a kneeling or crouched position. Both are worn equally. Both positions are used about the same amount.
+roomzone study stage + The couch cushions' compression patterns: the center-facing positions are most worn, but the edge positions have been used too. Someone watches from the edges occasionally.
+
+roomzone study accessories + The toy table's items carry individual histories. The smallest plug has its silicone slightly duller than the others from more frequent cleaning cycles. The largest item on the table has a slight lean to it from being taken and returned at the same angle repeatedly — the lean has become its resting position.
+roomzone study accessories + The cane on the pegboard has a faint set to it — a slight permanent curve from being used rather than stored. A cane that is stored keeps its straightness. This one has forgotten it.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable stage
+roomzone inscribe/enable collar_wall
+
+
+-- STEP 7: Mechanic items --
+
+-- Pommel horse — DildoSeatMechanic (twin dildo, capacity 1) --
+@create Pommel Horse:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
+@set Pommel Horse/capacity = 1
+@set Pommel Horse/label = the pommel horse
+use Pommel Horse on horses
+
+-- Rocking horse — DildoSeatMechanic (dual dildo saddle, capacity 1) --
+@create Rocking Horse:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
+@set Rocking Horse/capacity = 1
+@set Rocking Horse/label = the rocking horse
+use Rocking Horse on horses
+
+-- Ceiling bar shackles — RestrainMechanic (capacity 2) --
+@create Ceiling Shackles:typeclasses.restrain_mechanic.RestrainMechanic
+@set Ceiling Shackles/capacity = 2
+@set Ceiling Shackles/label = the ceiling shackles
+@set Ceiling Shackles/blocker_msg = The shackles overhead hold your wrists fast. You cannot move until released.
+use Ceiling Shackles on overhead
+
+-- Sex swing — RestrainMechanic (capacity 1) --
+@create Sex Swing:typeclasses.restrain_mechanic.RestrainMechanic
+@set Sex Swing/capacity = 1
+@set Sex Swing/label = the swing
+@set Sex Swing/blocker_msg = The swing's buckles hold you in position. You cannot leave until they are undone.
+use Sex Swing on overhead
+
+-- Collar and shackle set — RestrainMechanic (the Auria set, capacity 1) --
+@create Auria Collar Set:typeclasses.restrain_mechanic.RestrainMechanic
+@set Auria Collar Set/capacity = 1
+@set Auria Collar Set/label = the collar and shackles
+@set Auria Collar Set/blocker_msg = The collar and shackles hold. The titanium does not flex. You wait.
+use Auria Collar Set on collar_wall
+
+-- Spreader bar — RestrainMechanic (capacity 1, for ankle hold) --
+@create Spreader Bar:typeclasses.restrain_mechanic.RestrainMechanic
+@set Spreader Bar/capacity = 1
+@set Spreader Bar/label = the spreader bar
+@set Spreader Bar/blocker_msg = The spreader bar holds your ankles apart and wide. Movement is minimal.
+use Spreader Bar on accessories
+
+-- Stage — SeatMechanic (kneeling at the pole, capacity 2) --
+@create Stage Floor:typeclasses.seat_mechanic.SeatMechanic
+@set Stage Floor/capacity = 2
+@set Stage Floor/label = the stage
+@set Stage Floor/position = kneeling
+use Stage Floor on stage
+
+-- Couches — SeatMechanic (watching, capacity 4) --
+@create Stage Couches:typeclasses.seat_mechanic.SeatMechanic
+@set Stage Couches/capacity = 4
+@set Stage Couches/label = the couches
+@set Stage Couches/position = seated
+use Stage Couches on stage
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle collar_wall/collar = You lift the titanium collar from its chain. It is heavier than jewelry, lighter than structural metal — the weight that means something was built to a purpose. The blue letters pulse against your palm. You bring it to your throat and hold it there, not closing the clasp, and in the mirror across the room you can see yourself doing this. The collar's interior neoprene is at body temperature. You close it with the two-stage mechanism — ring, then bar — and for a moment there is the very clear knowledge that you cannot open it from this side. You stand there with the knowledge for a moment, then release the bar and ring in sequence and set it back on the chain.
+
+roomzone handle horses/pommel = You approach the pommel horse and run a hand along the center leather. The surface is smooth in the way of something kept conditioned. You find the twin dildo mount beneath your palm — the forward angle of it orienting your hand correctly for the geometry the device is designed for. The cuffs on the handles are within reach from this position. You understand the intended posture without anyone explaining it. You step back.
+
+roomzone handle overhead/bar = You reach up and grip the ceiling bar. The chrome is cool, the surface giving nothing for friction — hands slip slightly when grip is not deliberate. You look at the shackles. At arm-spread, at this height, wrists locked in those shackles would leave you suspended with your feet just clearing the floor. The calculation is in the chain length. Someone was specific.
+
+roomzone handle stage/pole = You step down to the stage and put your hand on the pole. The chrome is mirror-smooth, the temperature neutral. You turn with it, and in the mirror you see the room behind you: the horses, the swing, the collar wall, the couches facing the stage. From down here, everything in the room is positioned to face this platform. You put your back to the pole and look at the couches. They are empty. The stage lighting is on your face.
+
+roomzone handle accessories/paddles = You take the rubber paddle from its hook. The balance point is forward — the weight is in the face. You test it against your own palm once, light: the sound is specific, the sensation specific. You return it to the hook exactly where it was. The cane from its hook: you flex it once, feeling the spring, the set that has developed in it from use. It gives and returns. You put it back. The arrangement is undisturbed.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe collar on the wall pulses its blue letters once at regular intervals, consistent as a resting heartbeat.|n
+rambient/add |xThe stage lighting brightens by a degree in the floor strips, then returns — a warming cycle, not a signal.|n
+rambient/add |xThe swing shifts in its rigging — a small rotation, the load settling — then stills.|n
+rambient/add |xThe mirror reflects a room that is very still. The stillness has a quality of readiness.|n
+rambient/add |xSomething on the toy table catches the stage light at the right angle and holds it briefly.|n
+rambient/add |xThe padded walls absorb the sound of the room so completely that the silence here is different from elsewhere in the cabin — denser, more deliberate.|n
+rambient/add |xThe rocking horse holds its position without rocking. The saddle hardware is visible and specific from across the room.|n
+rambient/add |xThe collar pulses: |mAuria|x. Then continues its interval. Steady.|n
+
+
+-- STEP 10: Exit --
+-- The only exit is east back to Auria's Room (through the bookcase passage) --
+
+@open auria;east;e = [#dbref of Auria's Room]
