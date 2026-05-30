@@ -12,7 +12,7 @@
 speeds:
 
   slow:
-    interval_seconds: 60
+    interval_seconds: 120
     ml_per_session_tick: 4.0
 
     start:
@@ -43,7 +43,7 @@ speeds:
       - "Slow speed winds down in stages. The pressure releases, the cups loosen from {target}, the motor settles."
 
   steady:
-    interval_seconds: 30
+    interval_seconds: 60
     ml_per_session_tick: 11.0
 
     start:
@@ -74,7 +74,7 @@ speeds:
       - "Steady speed ends cleanly — a brief deceleration, the cups loosening from {target}, the motor dropping to quiet."
 
   fast:
-    interval_seconds: 15
+    interval_seconds: 30
     ml_per_session_tick: 22.0
 
     start:

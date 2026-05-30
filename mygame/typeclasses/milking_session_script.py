@@ -51,15 +51,22 @@ class MilkingSessionScript(DefaultScript):
     # ------------------------------------------------------------------
 
     def set_speed(self, speed: str):
-        """Update speed setting and restart the interval timer."""
+        """
+        Update speed and reset the interval timer.
+
+        Evennia's DefaultScript has no restart() method — we stop/start
+        manually, using ndb._restarting to signal at_stop() to skip cleanup.
+        """
         from world.milking_loader import get_speed_config
         config = get_speed_config()
         if speed not in config:
             return
-        self.db.speed = speed
-        self.interval = config[speed]["interval_seconds"]
-        # Restart to apply new interval — Evennia resets the countdown
-        self.restart()
+        self.db.speed    = speed
+        self.interval    = config[speed]["interval_seconds"]
+        self.ndb._restarting = True
+        self.stop()
+        self.ndb._restarting = False
+        self.start()
 
     # ------------------------------------------------------------------
     # Per-tick extraction
@@ -160,6 +167,14 @@ class MilkingSessionScript(DefaultScript):
         if msg:
             room.msg_contents(msg.replace("{target}", target_name))
 
+        # ── Session tally line ────────────────────────────────────────
+        if total_ml > 0:
+            from typeclasses.production_item import format_volume
+            room.msg_contents(
+                f"|x  +{format_volume(total_ml)} this cycle — "
+                f"session total: {format_volume(self.db.session_ml)}|n"
+            )
+
         # ── Update machine state ──────────────────────────────────────
         MilkingMachineMechanic.set_state(
             room, machine_zone,
@@ -217,7 +232,12 @@ class MilkingSessionScript(DefaultScript):
     # ------------------------------------------------------------------
 
     def at_stop(self):
-        """Mark the machine inactive when session ends for any reason."""
+        """
+        Mark the machine inactive when the session fully ends.
+        Skipped during set_speed() stop/start cycles (ndb._restarting=True).
+        """
+        if getattr(self.ndb, "_restarting", False):
+            return   # just a speed change restart — don't clean up
         target = self.obj
         if not target:
             return
