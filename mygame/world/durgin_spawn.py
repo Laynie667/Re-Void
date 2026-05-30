@@ -23,6 +23,9 @@ LOTION_PRICE        = 150   # shards — 10-use lotion bottle, +0.25 perm size p
 SYRINGE_PRICE       = 200   # shards — 5-use syringe, +1.0 temp boost (escalating perm)
 BREAST_MOD_PRICE    = 400   # shards — BreastItem, installs to chest zone
 MILK_GLANDS_PRICE   = 300   # shards — MilkProductionItem, enables milk command on chest
+PENIS_MOD_PRICE     = 400   # shards — PenisItem, installs to groin/penis zone
+TESTICLE_MOD_PRICE  = 350   # shards — TesticleItem, installs to groin/testicles zone
+SEMEN_GLANDS_PRICE  = 300   # shards — SemenProductionItem, enables semen production
 
 
 # ---------------------------------------------------------------------------
@@ -233,7 +236,10 @@ DURGIN_TRIGGERS = {
             f"  Lotion (10 uses)   — {LOTION_PRICE} shards\n"
             f"  Syringe (5 uses)   — {SYRINGE_PRICE} shards\n"
             f"  Breast enhancement — {BREAST_MOD_PRICE} shards\n"
-            f"  Milk glands        — {MILK_GLANDS_PRICE} shards\n\n"
+            f"  Milk glands          — {MILK_GLANDS_PRICE} shards\n"
+            f"  Penis enhancement    — {PENIS_MOD_PRICE} shards\n"
+            f"  Testicle enhancement — {TESTICLE_MOD_PRICE} shards\n"
+            f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -256,7 +262,10 @@ DURGIN_TRIGGERS = {
             f"  Lotion (10 uses)   — {LOTION_PRICE} shards\n"
             f"  Syringe (5 uses)   — {SYRINGE_PRICE} shards\n"
             f"  Breast enhancement — {BREAST_MOD_PRICE} shards\n"
-            f"  Milk glands        — {MILK_GLANDS_PRICE} shards\n\n"
+            f"  Milk glands          — {MILK_GLANDS_PRICE} shards\n"
+            f"  Penis enhancement    — {PENIS_MOD_PRICE} shards\n"
+            f"  Testicle enhancement — {TESTICLE_MOD_PRICE} shards\n"
+            f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -496,6 +505,92 @@ DURGIN_TRIGGERS = {
 
     "buy milk glands": {
         "response": "_HANDLE_PURCHASE_MILK_GLANDS",
+        "type": "action",
+    },
+
+    # ── Penis enhancement ─────────────────────────────────────────────────
+    "penis enhancement": {
+        "response": [
+            f"Durgin produces a padded case and sets it on the counter with the "
+            f"same composed professionalism he brings to every product. "
+            f"'Penis enhancement,' he says. 'Body mod item. Installs to your penis zone — "
+            f"|winstall penis enhancement|n. Tracks size on a length-and-girth scale, "
+            f"works with lotion and syringe, puts a {{size}} token in your zone description.' "
+            f"He folds his hands. 'Starts at average. Where it ends up is between you "
+            f"and the lotion. {PENIS_MOD_PRICE} shards. Say |wbuy penis enhancement|n.'",
+
+            f"'Body mod.' Durgin opens a drawer and produces the case without ceremony. "
+            f"'Penis enhancement. Same install system as the breast item — "
+            f"|winstall|n command, targets your penis zone. {{size}} token shows "
+            f"length-and-girth descriptor in the zone description.' "
+            f"He taps the counter. 'Lotion gives permanent quarter increments. "
+            f"Syringe gives a full increment for six hours, escalating permanent effects "
+            f"past the fifth use.' A pause. 'I say the same thing to everyone. "
+            f"Nobody stops at five.' {PENIS_MOD_PRICE} shards. |wbuy penis enhancement|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy penis enhancement": {
+        "response": "_HANDLE_PURCHASE_PENIS_MOD",
+        "type": "action",
+    },
+
+    # ── Testicle enhancement ──────────────────────────────────────────────
+    "testicle enhancement": {
+        "response": [
+            f"Durgin reaches under the counter and sets a small case on the surface. "
+            f"'Testicle enhancement,' he says, with the flat composure of a man who "
+            f"has said this sentence many times and has no feelings about it. "
+            f"'Body mod item. Installs to your testicles zone. Tracks volume on a "
+            f"descriptor scale — pea-sized up through load-bearing and beyond.' "
+            f"He slides it forward. 'Works with lotion and syringe. Pairs with semen "
+            f"glands — testicle items give a one-point-five-times multiplier on semen "
+            f"production. Worth noting if that's the direction you're going.' "
+            f"'{TESTICLE_MOD_PRICE} shards. Say |wbuy testicle enhancement|n.'",
+
+            f"'Testicle enhancement.' Durgin produces the case and sets it down. "
+            f"'Same system as the others. Install it on your testicles zone, "
+            f"it tracks size, the {{size}} token shows the descriptor in your zone description.' "
+            f"He taps the case. 'Particularly useful if you're also running semen glands — "
+            f"the production multiplier scales well with this one.' "
+            f"A short pause. 'I've sold a surprising number of these. "
+            f"I mention this only as a data point.' "
+            f"'{TESTICLE_MOD_PRICE} shards. |wbuy testicle enhancement|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy testicle enhancement": {
+        "response": "_HANDLE_PURCHASE_TESTICLE_MOD",
+        "type": "action",
+    },
+
+    # ── Semen glands ──────────────────────────────────────────────────────
+    "semen glands": {
+        "response": [
+            f"Durgin sets a case on the counter. 'Semen glands,' he says. "
+            f"'Production item. Installs to your penis or testicles zone — "
+            f"|winstall semen glands|n. Accumulates over time, extracted with "
+            f"the |wmilk|n command or a milking machine, output goes to bottles.' "
+            f"He pauses. 'Lower base rate than milk glands, but scales well with size. "
+            f"Testicle items give a one-point-five-times multiplier on semen production "
+            f"specifically. The two are designed to pair.' "
+            f"He sets it flat. '{SEMEN_GLANDS_PRICE} shards. Say |wbuy semen glands|n.'",
+
+            f"'Production item.' Durgin slides the case over. "
+            f"'Installs to penis or testicles zone. Accumulates passively, "
+            f"extracts with |wmilk|n or a machine, bottles up in the room.' "
+            f"He folds his hands. 'Set a flavor note with |wsetfluid/flavor|n if you want "
+            f"the bottles to have character. That is a feature that exists and that "
+            f"I did not ask questions about when I was told to include it.' "
+            f"'{SEMEN_GLANDS_PRICE} shards. |wbuy semen glands|n.'",
+        ],
+        "type": "emote",
+    },
+
+    "buy semen glands": {
+        "response": "_HANDLE_PURCHASE_SEMEN_GLANDS",
         "type": "action",
     },
 
@@ -958,6 +1053,144 @@ def handle_purchase(caller, npc, purchase_type):
             f"but I do comprehensive onboarding.'",
         ]
         npc.location.msg_contents(random.choice(_milk_responses))
+        return
+
+    # ── Penis enhancement purchase ─────────────────────────────────────────
+    if purchase_type == "penis_mod":
+        if shards < PENIS_MOD_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, a penis enhancement is {PENIS_MOD_PRICE} shards. "
+                f"You've got {shards}. Short by {PENIS_MOD_PRICE - shards}."
+            )
+            return
+
+        char.db.shards = shards - PENIS_MOD_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=PENIS_MOD_PRICE,
+            reason="purchase",
+            note="Penis enhancement from Durgin Ironwood",
+        )
+
+        from typeclasses.body_mod_item import PenisItem
+        mod = create.create_object(
+            typeclass=PenisItem,
+            key="Penis Enhancement",
+            location=char,
+        )
+
+        import random
+        _penis_responses = [
+            f"Durgin hands the case to {char_name} with complete professional composure. "
+            f"'|winstall Penis Enhancement|n — targets your penis zone. "
+            f"{{size}} token in the zone description renders the length-and-girth descriptor.' "
+            f"He makes a note in his ledger. 'Lotion for permanent increments, "
+            f"syringe for temporary boost. Semen glands pair with it if production "
+            f"is the direction you're going.' He nods once. 'Ironwood standard. Enjoy.'",
+
+            f"Durgin pockets the shards and slides the case across the counter. "
+            f"'Starts at average. Install it with |winstall Penis Enhancement|n, "
+            f"put {{size}} in your zone description, and it tracks from there.' "
+            f"A pause. 'I've been asked what the ceiling is. The answer is: "
+            f"architecturally significant, mythological, and beyond. "
+            f"I built the scale. I have no regrets.' He goes back to his ledger.",
+        ]
+        npc.location.msg_contents(random.choice(_penis_responses))
+        return
+
+    # ── Testicle enhancement purchase ──────────────────────────────────────
+    if purchase_type == "testicle_mod":
+        if shards < TESTICLE_MOD_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, a testicle enhancement is {TESTICLE_MOD_PRICE} shards. "
+                f"You've got {shards}. Not quite."
+            )
+            return
+
+        char.db.shards = shards - TESTICLE_MOD_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=TESTICLE_MOD_PRICE,
+            reason="purchase",
+            note="Testicle enhancement from Durgin Ironwood",
+        )
+
+        from typeclasses.body_mod_item import TesticleItem
+        mod = create.create_object(
+            typeclass=TesticleItem,
+            key="Testicle Enhancement",
+            location=char,
+        )
+
+        import random
+        _testicle_responses = [
+            f"Durgin produces the case and hands it to {char_name} "
+            f"with a brisk nod. '|winstall Testicle Enhancement|n — "
+            f"targets your testicles zone. Volume scale, pea-sized up through "
+            f"load-bearing and structurally significant.' He taps the counter. "
+            f"'Pairs with semen glands — the production multiplier is one-point-five "
+            f"times when this is in the zone. Worth the extra shards if you're "
+            f"running both.' He returns to his work.",
+
+            f"'Starts at average,' Durgin says, sliding the case over. "
+            f"'|winstall Testicle Enhancement|n on your testicles zone. "
+            f"{{size}} token shows the volume descriptor.' "
+            f"He pauses. 'I put \"load-bearing\" on the scale as a joke. "
+            f"Then I thought about it and decided it was actually useful information. "
+            f"Left it in.' He meets {char_name}'s eyes briefly. 'Lotion. Syringe. "
+            f"Same as everything else. Good luck.'",
+        ]
+        npc.location.msg_contents(random.choice(_testicle_responses))
+        return
+
+    # ── Semen glands purchase ──────────────────────────────────────────────
+    if purchase_type == "semen_glands":
+        if shards < SEMEN_GLANDS_PRICE:
+            npc.execute_cmd(
+                f"say {char_name}, semen glands are {SEMEN_GLANDS_PRICE} shards. "
+                f"You've got {shards}. {SEMEN_GLANDS_PRICE - shards} short."
+            )
+            return
+
+        char.db.shards = shards - SEMEN_GLANDS_PRICE
+        ShardTransaction.objects.create(
+            sender_id=char.id,
+            recipient_id=None,
+            amount=SEMEN_GLANDS_PRICE,
+            reason="purchase",
+            note="Semen glands from Durgin Ironwood",
+        )
+
+        from typeclasses.production_item import SemenProductionItem
+        glands = create.create_object(
+            typeclass=SemenProductionItem,
+            key="Semen Glands",
+            location=char,
+        )
+
+        import random
+        _semen_responses = [
+            f"Durgin hands the case to {char_name} and wipes the counter. "
+            f"'|winstall Semen Glands|n — penis or testicles zone. Accumulates "
+            f"passively, extracts with |wmilk|n or a machine.' "
+            f"He holds up a finger. 'Testicle enhancement in the same zone gives "
+            f"a one-point-five multiplier on output. The two are designed to work together.' "
+            f"He sets the case down. 'Set a flavor note with |wsetfluid/flavor Semen Glands = <desc>|n '— "
+            f"'if you want the bottles to say something. I ship the product. "
+            f"What goes on the label is not my department.'",
+
+            f"'Production item,' says Durgin, completing the handoff with "
+            f"professional efficiency. '|winstall|n command. Penis or testicles zone. "
+            f"It accumulates. It extracts. It bottles.' "
+            f"He opens his ledger. 'Lower base rate than milk glands, "
+            f"but scales harder with size — especially paired with testicle enhancement. "
+            f"The math works out.' A pause. 'I ran the numbers. "
+            f"I didn't need to run the numbers but I did anyway. "
+            f"Professional interest.' He does not elaborate.",
+        ]
+        npc.location.msg_contents(random.choice(_semen_responses))
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────
