@@ -178,32 +178,69 @@ zone detail playful_aura/behavior = The violet shimmer does not spread or pulse.
 -- STEP 5: Zone Study Observations --
 -- NOTE: Character zone study uses = separator (unlike roomzone study which uses +) --
 
-zone study hair = The hair closest to the nape of her neck is finer than the rest — a slightly different texture that lies flatter and retains warmth. It is the part that gets warm first when she flushes, and stays warm longest.
-zone study hair = The wave is not a daily choice. In high humidity it tightens to something close to a curl; in dry cold it lies nearly straight. The warmth of a room determines which version of the hair appears.
+zone study hair = The hair closest to the nape of her neck is finer than the rest — a slightly different texture that lies flatter and retains warmth. It gets warm first when she flushes, and stays warm longest.
+zone study hair = The wave is not a daily choice. In high humidity it tightens toward a curl; in dry cold it lies nearly straight. The room determines which version of her hair appears.
 
-zone study eyes = In profile, the silver of the eye is not visible at all — it reads as purely blue from the side. The silver only appears when seen head-on, when the pupil is neither maximally contracted nor fully dilated. It disappears in very bright light.
-zone study eyes = When she is tired, the silver flecks appear more prominent rather than less — the eyes have a quality of luminosity under fatigue that is counterintuitive and not flattering in the way flattering things are, but striking.
-zone study eyes = There is a small detail at the outer corner of her left eye: the faintest darker line, as if a single lash fell and left its mark, or as if the skin there has been pressed into that impression by some repeated expression. It is not a scar. It is not cosmetic. It has simply always been there.
+zone study face = Her freckles are more visible in certain lights than others — direct sun brings them out clearly, indoor light nearly erases them. At close range they're legible regardless of the light.
+zone study face = The leftward asymmetry of her resting expression is not noticeable until you've looked at her long enough, and then it becomes comfortable — the way a face reads as itself once you've spent enough time in it.
 
-zone study chest = The skin at the upper curve of each breast is paler than the rest — the lightest point of an already fair complexion, the sort of pale that comes from an area that almost never sees sun. Under certain lighting it takes on a faint blue-white quality that makes the veins beneath just barely legible.
-zone study chest = The weight of her breasts shifts predictably with gravity — lying back, they fall outward and apart; leaning forward, they fall forward and together; standing, they rest in their natural position without architectural assistance. The movement carries its own specific momentum.
+zone study eyes = In profile, the silver in her eyes is not visible at all — they read as purely blue from the side. The silver only appears head-on, when the pupil is neither fully contracted nor dilated, and disappears entirely in very bright light.
+zone study eyes = When she is tired, the silver flecks appear more prominent rather than less — her eyes have a quality of luminosity under fatigue that is counterintuitive and not flattering in the way flattering things are, but striking.
+zone study eyes = There is a small detail at the outer corner of her left eye: the faintest darker line, as if a lash fell and left its mark, or as if the skin has been pressed into that impression by some repeated expression. It is not a scar, not cosmetic. It has simply always been there.
 
-zone study nipples = After sustained cold or stimulation, they remain erect for longer than one might expect — not indefinitely, but persistently. The return to a resting state is gradual and visible.
+zone study lips = Her lips dry slightly when she is concentrating — the lick she uses to re-wet them is unconscious and entirely unconsidered, which is possibly why it lands differently than if she were aware of doing it.
 
-zone study lips = Her lips dry slightly when she is concentrating — the lick she uses to re-wet them is unconscious and entirely unconsidered, which is possibly why it lands differently than if she were aware of it.
+zone study neck = A finger pressed lightly to the side of her neck finds her pulse before it finds resistance. The skin there is thinner than it looks and responds to pressure before she has processed the contact.
+zone study neck = The choker warms quickly to her body temperature — in close contact it becomes difficult to distinguish from her skin by anything except texture.
 
-zone study hands = The middle finger of her right hand has a very small callus at the knuckle — the kind left by sustained writing with a pen held in a particular grip. It is barely visible and found only by running a thumb across the joint.
-zone study hands = Her nails catch occasionally on fabric when she reaches past something — silk especially. She notices and does not apologize.
+zone study throat = The hollow at the base of her throat deepens when she swallows or speaks — a brief shadow that appears and disappears. Watching it during conversation constitutes a specific kind of attention she tends to notice.
 
-zone study thighs = The backs of her thighs are slightly warmer than the fronts, and slightly softer in a way that is entirely positional: the skin that rests and the skin that moves. Sitting, the inner thigh softens further against whatever it rests on. It is a difference that is found rather than seen.
+zone study nape = The hairs at the back of her neck lift on their own in moments of heightened attention or arousal — before she's acknowledged either. They settle again when the moment resolves, or when she decides to let it.
 
-zone study anus = The muscle is reflexive rather than managed — the response to unexpected pressure is a tightening rather than a yield, regardless of context. It responds to warmth and approach before it responds to contact. It requires more patience and more deliberateness than its size suggests.
+zone study shoulders = Her shoulders carry no tension even under sustained handling — the muscle beneath is present but unguarded. There is a faint warmth to the tops of her shoulders that isn't present on her arms.
 
-zone study pussy = The walls grip in a pattern that is not constant — there are moments, unpredictable, when they clench with a specificity that communicates something she may not have intended to. The response escalates faster once started than its initial presentation suggests.
-zone study pussy = The wetness is not localized — it distributes, and by a certain point the inner thighs carry the evidence of her state as well. She is not embarrassed by this. She is aware of it.
-zone study pussy = A sustained rhythm produces a characteristic change in her breathing — shallower and higher, the chest rising more visibly, a quality of suspense in the held spaces between exhales that arrives well before any other audible signal.
+zone study chest = The skin at the upper curve of each breast is the palest part of her — the sort of pale that comes from skin that almost never sees light. Under certain angles it takes on a faint blue-white quality that makes the veins beneath just barely legible.
+zone study chest = Her tits shift predictably with gravity — lying back they fall outward and apart; leaning forward they drop together; standing they rest in their natural position. The movement carries its own specific momentum and takes a moment to settle after she does.
 
-zone study playful_aura = The shimmer brightens very slightly when she is being deliberate about something — when she reaches for an object with intent, or speaks a word she has chosen carefully. It dims when she is tired. At no point has it been fully absent in observation, only reduced.
+zone study nipples = After sustained cold or stimulation, her nipples stay erect longer than expected — the return to resting is gradual and visible and takes its own time regardless of circumstance.
+zone study nipples = They're asymmetric when erect: her right nipple tilts slightly more upward than the left. The difference is small and consistent.
+zone study nipples = The boundary of the areola becomes sharper and more distinct under cold or stimulation — the edge between skin and darker tissue clearly drawn, more legible at the margins than at rest.
+
+zone study abdomen = The navel stud holds her body heat in the metal longer than the surrounding skin does — even in a cold room, the star itself stays warm.
+zone study abdomen = Pressed firmly, her abdomen is softer than it appears — there's a warmth beneath the surface and a give that is entirely involuntary.
+
+zone study navel = The inside of her navel is the most sensitive point on her abdomen. A breath directed there produces a response before touch would.
+
+zone study lower_back = The skin at the small of her back is distinctly softer than her shoulders or arms — a difference that becomes obvious under comparison. Pressure there is received differently than anywhere above it.
+
+zone study wrists = The pulse at her left wrist is more accessible than the right — the cuff shifts when she moves her hand, briefly exposing the inner surface. The rhythm there is quick and clearly visible.
+
+zone study hands = The middle finger of her right hand has a very small callus at the knuckle — the kind left by holding a pen in a particular grip for a long time. Barely visible, found only by running a thumb across the joint.
+zone study hands = Her nails catch on silk when she reaches past something. She notices and does not apologize.
+
+zone study thighs = The backs of her thighs are slightly warmer than the fronts, and slightly softer in a positional way: the skin that rests and the skin that moves are different. Sitting, the inner thigh softens further against whatever it rests on. It is a difference found rather than seen.
+
+zone study mons_pubis = The curls there are finer than they appear at any distance — closer in texture to her hair than to coarse growth, lying flat against the skin rather than standing away from it.
+
+zone study labia_minora = The color change under arousal begins at the inner edges and works outward — a deepening that starts fast at the center and slows as it spreads, leaving the full transition visible as a gradient.
+
+zone study clit = After direct stimulation, her clit stays sensitized well past the initial response — a breath of air across it is sufficient to produce a reaction when nothing else is happening.
+
+zone study perineum = The nerve distribution here is wider than the surface area suggests — a light touch on her perineum produces a response in the surrounding tissue before it produces one at the contact point itself.
+
+zone study anus = The muscle is reflexive rather than managed — the response to unexpected pressure is a tightening rather than a yield, regardless of context. It responds to warmth and approach before it responds to contact. It requires patience and more deliberateness than its size implies.
+
+zone study pussy = The walls grip in a pattern that is not constant — there are moments, unpredictable, when they clench with a specificity that communicates something she may not have intended to. The response escalates faster once started than the initial presentation suggests.
+zone study pussy = The wetness is not localized — it distributes, and by a certain point her inner thighs carry the evidence of her state as well. She is not embarrassed by this. She is aware of it.
+zone study pussy = A sustained rhythm produces a characteristic change in her breathing — shallower and higher, the chest rising more visibly, a quality of suspense in the held spaces between exhales that arrives well before any audible signal.
+
+zone study hips = The skin at the outer hip is firmer than the inner thigh — a contrast that only becomes clear through direct comparison. The surfaces she leans on and the surfaces she presents are different.
+
+zone study ankles = The Achilles tendon is clearly palpable from behind her ankle and responds to sustained pressure differently than the surrounding tissue — locating it produces an involuntary response in the sole of her foot.
+
+zone study feet = Her arch is more pronounced than it looks in boots — without footwear the line from heel to ball is steep enough that the middle of her foot barely contacts the floor.
+
+zone study playful_aura = The shimmer brightens very slightly when she is being deliberate — when she reaches for something with intent, or speaks a word she has chosen carefully. It dims when she is tired. At no point has it been fully absent in observation, only reduced.
 
 
 -- STEP 6: Zone Handle Interactions --
@@ -320,18 +357,18 @@ zone handle feet/hold = {actor} holds {target_s} foot — the weight of it negli
 -- paragraph that reads naturally inline with the character description.  --
 -- These are temporary. Save to wardrobe with: wardrobe save <zone> "<name>" --
 
-wear neck A |wsilver choker|n sits close at her throat — the chain fine enough to nearly disappear against her skin, catching light only when she turns her head or it catches the angle directly. The clasp sits at the nape, tucked beneath her hair.
-wear shoulders A |wwhite linen blouse|n, collar left open at the throat, sleeves fitted to the wrist and finished with small pearlescent buttons. The fabric is light and unheavy, worn tucked into the bodice below — it moves with her, which it does without announcement.
-wear chest A |mviolet bodice|n structures her chest from underbust to collarbone — its boning holding a clean, uncompromising line, the front smooth and unornamented, the back laced tight with deep purple cord. It presents her figure directly: generous, self-evident, and entirely unashamed of either quality.
-wear back The |wblouse|n pulls smooth across her back, the fabric fine enough that the suggestion of what moves beneath arrives before the motion itself does.
-wear waist The |mpleated skirt|n begins where the bodice ends — the waist marking the hand-off between structure and movement, the narrowing between them present and felt.
-wear hips A |mpleated skirt|n in alternating panels of deep purple and near-black falls from the hip — short enough at the front to expose the garter clips and stocking tops, an inch longer at the back, the hem moving with each step in a way that is not accidental.
-wear thighs |cBlack and purple striped thigh-highs|n climb her legs to just below mid-thigh, held there by four silver-hardware garter clips per leg. The stripes are horizontal, the pattern confident enough to read from across the room.
-wear ankles A strip of pale skin between stocking-edge and boot top — briefly legible, the ankle itself fine-boned, a seam in the otherwise continuous arrangement of fabric and leather.
-wear feet Matte black ankle boots, pointed toe, low heel, a column of small metal buckles climbing the outer ankle.
-wear wrists Three |wsilver bracelets|n cluster at her right wrist — each a different design, worn loosely against each other. Her left wrist carries a heavier |wbraided-silver cuff|n, fitted rather than loose, that does not shift when her hand moves.
-wear hands |mIridescent purple nail lacquer|n covers nails tapered to a sharp point — the color shifts between deep plum and violet as the angle changes, applied cleanly, attended to. The shift is not accidental.
-wear abdomen/navel A |wfour-pointed silver star stud|n occupies the navel — crystal center, flush to the skin, sending a small flash of light forward whenever she moves.
+wear neck Her throat wears a |wsilver choker|n — the chain fine enough to nearly lose against her skin, catching light only when she turns her head or the angle finds it. The clasp sits at the nape, tucked beneath her hair.
+wear shoulders Her shoulders and arms are in a |wwhite linen blouse|n — collar left open at the throat, sleeves fitted to the wrist and closed with small pearlescent buttons. Light fabric, worn tucked into the bodice. It moves with her without calling attention to the fact.
+wear chest Her tits are in a |mviolet bodice|n — fitted from underbust to collarbone, the boning holding a clean line, the front smooth and unornamented, the back laced tight with deep purple cord. The bodice doesn't minimize what it contains. It presents it.
+wear back The |wblouse|n pulls taut across her back — fine enough that the suggestion of what moves beneath arrives before the motion itself does.
+wear waist Her waist is where the |mpleated skirt|n begins — the bodice's end marking the boundary between structure and movement, the narrowing between them present and felt.
+wear hips Her hips carry a |mpleated skirt|n in alternating panels of deep purple and near-black — short enough at the front to expose the garter clips and stocking tops, an inch longer at the back. The hem moves with each step in a way that is not accidental, and the gap between hem and stocking top is enough to be a statement.
+wear thighs Her thighs are in |cblack and purple striped thigh-highs|n — elastic sitting just below mid-thigh, held there by four silver-hardware garter clips per leg. The stripes are horizontal, confident enough to read from across a room. Above the stocking tops, a strip of bare inner thigh shows before the skirt begins.
+wear ankles Her ankles show briefly between stocking-edge and boot top — a strip of pale, fine-boned skin, a seam in the otherwise continuous arrangement of fabric and leather.
+wear feet Her feet are in matte black ankle boots — pointed toe, low heel, a column of small metal buckles climbing the outer ankle.
+wear wrists Her right wrist carries three |wsilver bracelets|n — each a different design, worn loosely against each other. Her left wrist has a heavier |wbraided-silver cuff|n, fitted rather than loose, that does not shift when her hand moves.
+wear hands Her nails are in |miridescent purple lacquer|n — tapered to a sharp point, the color shifting between deep plum and violet with the angle. Applied cleanly, attended to. The shift is not accidental.
+wear abdomen/navel Her navel holds a |wfour-pointed silver star stud|n — crystal center, flush to the skin, sending a brief flash of light forward whenever she moves.
 
 
 -- STEP 8: Zone Ambient Messages --
