@@ -133,8 +133,19 @@ class CmdSetHome(Command):
         char = self.caller
         room = char.location
 
+        # Any room a builder has added the character to as a resident
+        residents = list(room.db.housing_residents or [])
+        if char.id in residents:
+            char.db.housing_home_id = room.id
+            self.msg(f"|w{room.key}|n is now set as your home.")
+            return
+
+        # Standard housing room ownership / friend check
         if not _is_housing_room(room):
-            self.msg("|xYou can only set a housing room as your home.|n")
+            self.msg(
+                "|xYou can only set home in a room you own, are friended to, "
+                "or have been added to as a resident.|n"
+            )
             return
 
         if not room.can_set_home(char):
@@ -196,16 +207,25 @@ class CmdHousing(MuxCommand):
     Manage your housing rooms.
 
     Usage:
-        housing                         — show your housing summary
-        housing list                    — list all your rooms
-        housing lock                    — lock this room (owner only)
-        housing unlock                  — unlock this room (owner only)
-        housing friend add <name>       — add someone to the friend list
-        housing friend remove <name>    — remove from friend list
-        housing builder add <name>      — grant build rights in this room
-        housing builder remove <name>   — revoke build rights
+        housing                          — show your housing summary
+        housing list                     — list all your rooms
+        housing lock                     — lock this room (owner only)
+        housing unlock                   — unlock this room (owner only)
+        housing friend add <name>        — add someone to the friend list
+        housing friend remove <name>     — remove from friend list
+        housing builder add <name>       — grant build rights in this room
+        housing builder remove <name>    — revoke build rights
+        housing residents                — list residents of current room (Builder)
+        housing residents add <name>     — add a resident (Builder, any room)
+        housing residents remove <name>  — remove a resident (Builder, any room)
+        housing add <name>               — shorthand for residents add (Builder)
+        housing remove <name>            — shorthand for residents remove (Builder)
         housing dig <direction> = <name> — spend a room slot, create + link a room
         housing exit <direction> = <new name> — rename/realias an exit here
+
+    Residents can sethome in any room a builder has added them to,
+    including grid rooms that are not part of the player housing system.
+    Only characters with Builder permissions can manage the residents list.
 
     Digging costs one room slot from your HousingPlot allocation.
     You must have remaining slots to dig.  Purchase more from Durgin Ironwood.
@@ -240,13 +260,16 @@ class CmdHousing(MuxCommand):
         rest = parts[1].strip() if len(parts) > 1 else ""
 
         dispatch = {
-            "list":    self._cmd_list,
-            "lock":    self._cmd_lock,
-            "unlock":  self._cmd_unlock,
-            "friend":  self._cmd_friend,
-            "builder": self._cmd_builder,
-            "dig":     self._cmd_dig,
-            "exit":    self._cmd_exit,
+            "list":      self._cmd_list,
+            "lock":      self._cmd_lock,
+            "unlock":    self._cmd_unlock,
+            "friend":    self._cmd_friend,
+            "builder":   self._cmd_builder,
+            "residents": self._cmd_residents,
+            "add":       lambda c, a: self._cmd_residents(c, f"add {a}"),
+            "remove":    lambda c, a: self._cmd_residents(c, f"remove {a}"),
+            "dig":       self._cmd_dig,
+            "exit":      self._cmd_exit,
         }
 
         handler = dispatch.get(subcmd)
@@ -453,6 +476,95 @@ class CmdHousing(MuxCommand):
 
         else:
             self.msg("Usage: housing builder add/remove <name>")
+
+    # ------------------------------------------------------------------ #
+    # Residents  (Builder-gated, works on any room)
+    # ------------------------------------------------------------------ #
+
+    def _cmd_residents(self, char, args):
+        """
+        housing residents [add|remove <name>]
+
+        Builder-level command. Works on any room — housing or grid.
+        Adds a character to room.db.housing_residents so they can sethome here.
+
+        Usage:
+            housing residents            — list current residents
+            housing residents add <name> — add a resident
+            housing residents remove <name> — remove a resident
+            housing add <name>           — shorthand for add
+            housing remove <name>        — shorthand for remove
+        """
+        if not char.permissions.check("Builder"):
+            self.msg(
+                "|xManaging residents requires Builder permissions.\n"
+                "Ask a staff member to add you as a resident instead.|n"
+            )
+            return
+
+        room = char.location
+        parts = args.split(None, 1) if args else []
+
+        # No args or 'list' → show current residents
+        if not parts or parts[0].lower() == "list":
+            residents = list(room.db.housing_residents or [])
+            if not residents:
+                self.msg(f"|w{room.key}|n has no residents.")
+                return
+            from evennia.objects.models import ObjectDB
+            lines = [f"|wResidents of {room.key}|n:"]
+            for cid in residents:
+                try:
+                    obj = ObjectDB.objects.get(pk=cid)
+                    lines.append(f"  |w{obj.key}|n #{cid}")
+                except Exception:
+                    lines.append(f"  |x[unknown #{cid}]|n")
+            self.msg("\n".join(lines))
+            return
+
+        if len(parts) < 2:
+            self.msg(
+                "Usage: housing residents add <name>\n"
+                "       housing residents remove <name>\n"
+                "       housing residents  (to list)"
+            )
+            return
+
+        action = parts[0].lower()
+        target_name = parts[1].strip()
+
+        target = char.search(target_name)
+        if not target:
+            return
+
+        residents = list(room.db.housing_residents or [])
+        tname = _char_name(target)
+
+        if action == "add":
+            if target.id in residents:
+                self.msg(f"|x{tname} is already a resident of {room.key}.|n")
+                return
+            residents.append(target.id)
+            room.db.housing_residents = residents
+            self.msg(f"|w{tname}|n added as a resident of |w{room.key}|n.")
+            target.msg(
+                f"You have been added as a resident of |w{room.key}|n. "
+                f"You can now |wsethome|n here."
+            )
+
+        elif action == "remove":
+            if target.id not in residents:
+                self.msg(f"|x{tname} is not a resident of {room.key}.|n")
+                return
+            residents.remove(target.id)
+            room.db.housing_residents = residents
+            self.msg(f"|w{tname}|n removed from the residents of |w{room.key}|n.")
+            target.msg(
+                f"You have been removed as a resident of |w{room.key}|n."
+            )
+
+        else:
+            self.msg("Usage: housing residents add/remove <name>")
 
     # ------------------------------------------------------------------ #
     # Dig
