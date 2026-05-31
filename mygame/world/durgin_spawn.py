@@ -1444,6 +1444,12 @@ def spawn_durgin(room_dbref=None):
     # Register purchase handler on the NPC so the trigger system can call it
     durgin.db.purchase_handler = "world.durgin_spawn.handle_purchase"
 
+    # Auto-sync triggers on every server reload — at_server_reload() reads these
+    durgin.db.npc_config = {
+        "trigger_module": "world.durgin_spawn",
+        "trigger_var":    "DURGIN_TRIGGERS",
+    }
+
     # -------------------------------------------------------------------
     # Zones — visible on examine / zone-targeted look
     # -------------------------------------------------------------------

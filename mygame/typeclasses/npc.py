@@ -913,3 +913,37 @@ a problem that has been solved.""",
     def announce_move_to(self, source_location, msg=None, **kwargs):
         """Suppress default movement messages for NPCs."""
         pass
+
+    # -------------------------------------------------------------------
+    # Server reload — auto-sync triggers from spawn module
+    # -------------------------------------------------------------------
+
+    def at_server_reload(self):
+        """
+        Re-import and apply the trigger table from the NPC's spawn module
+        on every server reload, so changes to the spawn file take effect
+        without manually running @py or re-spawning the NPC.
+
+        Requires two keys set in db.npc_config:
+            trigger_module  — dotted module path e.g. "world.durgin_spawn"
+            trigger_var     — name of the triggers dict, e.g. "DURGIN_TRIGGERS"
+        """
+        config = self.db.npc_config or {}
+        module_path = config.get("trigger_module")
+        var_name    = config.get("trigger_var")
+        if not module_path or not var_name:
+            return
+        try:
+            import importlib
+            mod      = importlib.import_module(module_path)
+            # Force reload so edits since last boot are picked up
+            importlib.reload(mod)
+            triggers = getattr(mod, var_name, None)
+            if isinstance(triggers, dict):
+                self.db.triggers = triggers
+        except Exception as e:
+            from evennia.utils import logger
+            logger.log_err(
+                f"NPC {self.key} trigger auto-sync failed "
+                f"({module_path}.{var_name}): {e}"
+            )
