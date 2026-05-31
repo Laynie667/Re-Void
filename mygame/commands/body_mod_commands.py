@@ -673,14 +673,25 @@ class CmdMilk(MuxCommand):
 
         # ── /stop ─────────────────────────────────────────────────────
         if "stop" in switches:
-            tgt, script = _find_session()
-            if script:
-                speed = script.db.speed or "steady"
-                tgt_name = tgt.db.rp_name or tgt.name
-                stop_msg = pick_message(speed, "stop")
+            # Stop ALL active MilkingSessionScript instances on every
+            # character in the room — cleans up stale/orphaned scripts
+            # regardless of machine state.
+            stopped   = []
+            for obj in room.contents:
+                if not hasattr(obj, "scripts"):
+                    continue
+                for scr in list(obj.scripts.all()):
+                    if isinstance(scr, MilkingSessionScript):
+                        stopped.append((obj, scr.db.speed or "steady"))
+                        scr.stop()
+
+            if stopped:
+                # Use the first stopped session for the stop message
+                first_tgt, first_speed = stopped[0]
+                tgt_name = first_tgt.db.rp_name or first_tgt.name
+                stop_msg = pick_message(first_speed, "stop")
                 if stop_msg:
                     room.msg_contents(stop_msg.replace("{target}", tgt_name))
-                script.stop()
             else:
                 room.msg_contents("|xThe milking machine cycles down and falls quiet.|n")
                 MilkingMachineMechanic.set_state(
