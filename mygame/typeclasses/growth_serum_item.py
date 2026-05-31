@@ -111,8 +111,14 @@ class GrowthSerumItem(DefaultObject):
             prod_item_found.db.base_rate_ml_per_tick = current_rate + rate_inc
 
         # ── Decrement uses ────────────────────────────────────────────
+        spent = False
         if uses > 0:
-            self.db.uses_remaining = uses - 1
+            new_uses = uses - 1
+            if new_uses <= 0:
+                # Last dose — mark for deletion after message is built
+                spent = True
+            else:
+                self.db.uses_remaining = new_uses
 
         # ── Build message ─────────────────────────────────────────────
         target_name = target.db.rp_name or target.name
@@ -135,17 +141,19 @@ class GrowthSerumItem(DefaultObject):
             msg += f", +{rate_inc:.0f}ml/tick production — permanent"
         msg += ")"
 
-        uses_after = self.db.uses_remaining
-        if uses > 0 and uses_after == 0:
-            msg += f"\n|x[{self.key} is now empty]|n"
+        if spent:
+            msg += f"\n|x[The last dose has been administered — the vial is spent and gone.]|n"
+            self.delete()
 
         return True, msg
 
     def get_display_name(self, looker=None, **kwargs):
         name = self.key
-        uses = self.db.uses_remaining or 0
-        if uses == 0:
-            name += " (unlimited)"
+        uses = self.db.uses_remaining
+        if uses is None or uses == 0:
+            name += " (unlimited)"   # staff/admin item with no use cap
+        elif uses < 0:
+            name += " (empty)"
         else:
             name += f" ({uses} dose{'s' if uses != 1 else ''} remaining)"
         return name

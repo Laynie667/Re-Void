@@ -1254,6 +1254,10 @@ def handle_purchase(caller, npc, purchase_type):
             key="growth serum",
             location=char,
         )
+        serum.db.uses_remaining    = 3
+        serum.db.perm_size_boost   = 0.5
+        serum.db.perm_rate_boost_ml = 15.0
+        serum.db.label             = "the growth serum"
 
         import random
         _serum_responses = [
