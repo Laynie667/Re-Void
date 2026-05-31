@@ -642,19 +642,34 @@ class CmdMilk(MuxCommand):
 
         # ── Helper: find any running session script in room ───────────
         def _find_session():
-            """Return (target, script) if a session is active, else (None, None)."""
+            """
+            Return (target, script) if a session is active, else (None, None).
+
+            First tries the machine state's stored target dbref.
+            Falls back to scanning everyone in the room for a
+            MilkingSessionScript — handles cases where the state was
+            cleared (e.g. after a speed-change restart).
+            """
+            # Primary: look up the stored target
             target_dbref = (state or {}).get("target")
-            if not target_dbref:
-                return None, None
-            from evennia import search_object
-            results = search_object(target_dbref, exact=True)
-            if not results:
-                return None, None
-            tgt = results[0]
-            for script in tgt.scripts.all():
-                if isinstance(script, MilkingSessionScript):
-                    return tgt, script
-            return tgt, None
+            if target_dbref:
+                from evennia import search_object
+                results = search_object(target_dbref, exact=True)
+                if results:
+                    tgt = results[0]
+                    for scr in tgt.scripts.all():
+                        if isinstance(scr, MilkingSessionScript):
+                            return tgt, scr
+
+            # Fallback: scan all characters in the room
+            for obj in room.contents:
+                if not hasattr(obj, "scripts"):
+                    continue
+                for scr in obj.scripts.all():
+                    if isinstance(scr, MilkingSessionScript):
+                        return obj, scr
+
+            return None, None
 
         # ── /stop ─────────────────────────────────────────────────────
         if "stop" in switches:
