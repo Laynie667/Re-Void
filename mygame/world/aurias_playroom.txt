@@ -5,15 +5,18 @@
 
 -- STEP 1: Room Description --
 
-@desc here = |mAuria's Playroom|n/The lighting here is dim and deliberate — the floor |xdark polished wood|n underfoot, the walls padded in |xdeep purple|n that absorbs rather than reflects sound. One section of the padding is replaced by a |wlarge mirror|n, floor to ceiling, positioned to catch every angle of the room's center. The air is cool and specific: the particular temperature that is maintained, not ambient. A |csteel pole|n extends from the center of the low stage to the ceiling, |xchrome-bright in the dim room|n. Against one wall, hung on fine chain, is a titanium collar with |mAuria|n pulsing in quiet blue letters — it has been here long enough to feel like it belongs there.//{zone:collar_wall}//{zone:horses}//{zone:overhead}//{zone:stage}//{zone:accessories}
+@desc here = |mAuria's Playroom|n/The lighting here is dim and deliberate — the floor |xdark polished wood|n underfoot, the walls padded in |xdeep purple|n that absorbs rather than reflects sound. One section of the padding is replaced by a |wlarge mirror|n, floor to ceiling, positioned to catch every angle of the room's center. The air is cool and specific: the particular temperature that is maintained, not ambient. A |csteel pole|n extends from the center of the low stage to the ceiling, |xchrome-bright in the dim room|n. Against one wall, hung on fine chain, is a titanium collar with |mAuria|n pulsing in quiet blue letters — it has been here long enough to feel like it belongs there.//{zone:collar_wall}//{zone:horses}//{zone:rocking_horse}//{zone:overhead}//{zone:swing}//{zone:stage}//{zone:couches}//{zone:accessories}
 
 
 -- STEP 2: Create zones --
 
 roomzone add collar_wall
 roomzone add horses
+roomzone add rocking_horse
 roomzone add overhead
+roomzone add swing
 roomzone add stage
+roomzone add couches
 roomzone add accessories
 
 
@@ -21,11 +24,17 @@ roomzone add accessories
 
 roomzone desc collar_wall = The |wcollars and mirror section|n occupies the east wall. The |cfloor-length mirror|n is fixed and positioned at a slight angle — not to face the door but to face the stage's center, giving a full lateral view of anyone on the steps or the platform. Below the mirror, mounted on fine chain to the wall, is the |ctitanium collar|n: the letters |mAuria|n etched into the metal with a blue luminescent fill that pulses at the rhythm of a resting heart. Flanking it on the chain are matched wrist and ankle |cshackles|n in the same titanium, the same blue-filled lettering. They catch what dim light there is and hold it.
 
-roomzone desc horses = The |whorses|n occupy opposite corners. The |xgymnastics pommel horse|n is standard competition height with padded leather handles and padded cuffs fixed to each — the hardware clean and well-maintained, the cuffs worn smooth at the contact edges. Mounted at the center of the leather, precisely centered and positioned low, is a |mtwin dildo|n: a split piece designed to fill both at once, the spacing calibrated. Across the room, the |xrocking horse|n carries the same careful preparation: two |mdildos|n mounted to the saddle, positioned for forward and rear, with padded handlebar cuffs to hold what is on top steady.
+roomzone desc horses = The |xgymnastics pommel horse|n stands at standard competition height with padded leather handles and padded cuffs fixed to each — the hardware clean and well-maintained, the cuffs worn smooth at the contact edges. Mounted at the center of the leather, precisely centered and positioned low, is a |mtwin dildo|n: a split piece designed to fill both at once, the spacing calibrated. The piece opposite it — the rocking horse — is visible across the room.
 
-roomzone desc overhead = Bolted to the ceiling — the bolts countersunk and large, the hardware not decorative — is a |chorizontal titanium bar|n at approximately shoulder height when standing beneath it. From the bar hang two |cshackle sets|n at arm-spread distance, each attached by a short drop-chain. The shackles are heavy, the lock mechanisms keyed. Across the room from the bar, on a mount fixed to the opposite wall, hangs a |mblack sex swing|n — straps and buckles, adjustable, the webbing reinforced at the load points, the whole assembly at working height with no gap between the buckle positions and their intended use.
+roomzone desc rocking_horse = The |xrocking horse|n carries the same careful preparation as its counterpart: two |mdildos|n mounted to the saddle, positioned for forward and rear, the spacing suited to the body seated weight-forward on the saddle. Padded handlebar |ccuffs|n lock rather than just close — the mechanism flush with the handle, unreachable by the hands they hold.
 
-roomzone desc stage = Three |xshort steps|n descend from the room's main level to a low circular |wstage|n, the platform edged in |xclear lighting set into the floor|n so the stage is slightly brighter than the surrounding room. Around the stage, positioned at careful angles, are plush leather couches — facing inward, their cushions compressed with use. The |csteel pole|n at the stage's center extends floor to ceiling, |xchrome-smooth|n, the base plate bolted through the platform into the subfloor. The entire setup faces the mirror on the far wall.
+roomzone desc overhead = Bolted to the ceiling — the bolts countersunk and large, the hardware not decorative — is a |chorizontal titanium bar|n at approximately shoulder height when standing beneath it. From the bar hang two |cshackle sets|n at arm-spread distance, each attached by a short drop-chain. The shackles are heavy, the lock mechanisms keyed.
+
+roomzone desc swing = Across from the bar, on a mount fixed to the opposite wall, hangs a |mblack sex swing|n — straps and buckles, adjustable, the webbing reinforced at the load points. The whole assembly sits at working height, the buckle positions placed so that once someone is in it, the adjustment points are out of reach of the hands that would need to reach them.
+
+roomzone desc stage = Three |xshort steps|n descend from the room's main level to a low circular |wstage|n, the platform edged in |xclear lighting set into the floor|n so the stage is slightly brighter than the surrounding room. The |csteel pole|n at the stage's center extends floor to ceiling, |xchrome-smooth|n, the base plate bolted through the platform into the subfloor. The entire setup faces the mirror on the far wall.
+
+roomzone desc couches = Around the stage, positioned at careful angles, are |wplush leather couches|n — facing inward toward the platform, their cushions compressed with use. The viewing angles are deliberate: each couch faces the stage and the pole directly, the mirror visible from the seated position.
 
 roomzone desc accessories = Against the east wall: a |xcloset|n with a simple latch, a |xspreader bar|n of polished steel propped against its side, padded at the ankle holds. Beside the closet, mounted on a pegboard, are a row of |xhooks|n holding paddles of different weights, a slender cane, and a leather crop. Off to one side, a low |wtable|n holds a selection in organized arrangement: |mdildos|n in graduated sizes, vibrators with control units beside them, plugs in a line, a string of beads coiled in a shallow dish. Each item is placed with a specificity that implies it is returned to exactly this position.
 
@@ -89,7 +98,7 @@ use Pommel Horse on horses
 @create Rocking Horse:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
 @set Rocking Horse/capacity = 1
 @set Rocking Horse/label = the rocking horse
-use Rocking Horse on horses
+use Rocking Horse on rocking_horse
 
 -- Ceiling bar shackles — RestrainMechanic (capacity 2) --
 @create Ceiling Shackles:typeclasses.restrain_mechanic.RestrainMechanic
@@ -103,7 +112,7 @@ use Ceiling Shackles on overhead
 @set Sex Swing/capacity = 1
 @set Sex Swing/label = the swing
 @set Sex Swing/blocker_msg = The swing's buckles hold you in position. You cannot leave until they are undone.
-use Sex Swing on overhead
+use Sex Swing on swing
 
 -- Collar and shackle set — RestrainMechanic (the Auria set, capacity 1) --
 @create Auria Collar Set:typeclasses.restrain_mechanic.RestrainMechanic
@@ -131,7 +140,7 @@ use Stage Floor on stage
 @set Stage Couches/capacity = 4
 @set Stage Couches/label = the couches
 @set Stage Couches/position = seated
-use Stage Couches on stage
+use Stage Couches on couches
 
 
 -- STEP 8: Handle interactions --
