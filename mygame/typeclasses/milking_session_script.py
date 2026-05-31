@@ -190,20 +190,35 @@ class MilkingSessionScript(DefaultScript):
 
     def _deposit_to_bottles(self, target, room, by_type, target_name):
         """
-        Add extracted fluid to an existing bottle in the room (by producer
-        and type) or create a new one if none exists.
+        Add extracted fluid into bottles.
+
+        Prefers a FluidFridge in the room — deposits straight into it so the
+        fridge fills live during the session.  Falls back to the room floor
+        if no fridge is present.
+
+        Reuses an existing bottle for the same producer+type before creating
+        a new one.
         """
         from typeclasses.fluid_bottle import FluidBottle
+        from typeclasses.fluid_fridge import FluidFridge
         from evennia import create_object
-        from typeclasses.production_item import format_volume
+
+        # Locate a fridge in the room (prefer it over the floor)
+        fridge = None
+        for obj in room.contents:
+            if isinstance(obj, FluidFridge):
+                fridge = obj
+                break
 
         for ft, (ml, flavor) in by_type.items():
             if ml <= 0:
                 continue
 
-            # Find an existing non-empty bottle for this target/type in the room
+            container = fridge or room
+
+            # Find an existing non-empty bottle in the container
             bottle = None
-            for obj in room.contents:
+            for obj in container.contents:
                 if (
                     isinstance(obj, FluidBottle)
                     and not obj.db.is_empty
@@ -220,15 +235,20 @@ class MilkingSessionScript(DefaultScript):
                 bottle = create_object(
                     FluidBottle,
                     key=f"bottle of {target_name}'s {ft}",
-                    location=room,
+                    location=container,
                 )
                 bottle.db.producer_name = target_name
                 bottle.db.fluid_type    = ft
                 bottle.db.fluid_flavor  = flavor
                 bottle.db.volume_ml     = ml
-                room.msg_contents(
-                    f"|xA bottle of {target_name}'s {ft} appears on the machine tray.|n"
-                )
+                if fridge:
+                    room.msg_contents(
+                        f"|xA new bottle of {target_name}'s {ft} is added to the fridge.|n"
+                    )
+                else:
+                    room.msg_contents(
+                        f"|xA bottle of {target_name}'s {ft} appears on the machine tray.|n"
+                    )
 
     # ------------------------------------------------------------------
     # Cleanup on stop
@@ -237,6 +257,7 @@ class MilkingSessionScript(DefaultScript):
     def at_stop(self):
         """
         Mark the machine inactive when the session fully ends.
+        Sweeps any loose FluidBottles from the room floor into the fridge.
         Skipped during set_speed() stop/start cycles (ndb._restarting=True).
         """
         if getattr(self.ndb, "_restarting", False):
@@ -247,6 +268,22 @@ class MilkingSessionScript(DefaultScript):
         room = target.location
         if not room:
             return
+
+        # Move any session bottles still on the floor into the fridge
+        try:
+            from typeclasses.fluid_bottle import FluidBottle
+            from typeclasses.fluid_fridge import FluidFridge
+            fridge = next(
+                (obj for obj in room.contents if isinstance(obj, FluidFridge)),
+                None,
+            )
+            if fridge:
+                for obj in list(room.contents):
+                    if isinstance(obj, FluidBottle):
+                        obj.location = fridge
+        except Exception:
+            pass
+
         from typeclasses.milking_machine_mechanic import MilkingMachineMechanic
         machine_zone, state = MilkingMachineMechanic.find_in_room(room)
         if state:
