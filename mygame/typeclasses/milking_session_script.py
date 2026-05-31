@@ -202,13 +202,24 @@ class MilkingSessionScript(DefaultScript):
         from typeclasses.fluid_bottle import FluidBottle
         from typeclasses.fluid_fridge import FluidFridge
         from evennia import create_object
+        from evennia.objects.models import ObjectDB
 
-        # Locate a fridge in the room (prefer it over the floor)
+        # Find a fridge anywhere in the game — prefer one in the same room,
+        # fall back to a global search so remote fridges still catch output.
         fridge = None
         for obj in room.contents:
             if isinstance(obj, FluidFridge):
                 fridge = obj
                 break
+        if fridge is None:
+            for obj in ObjectDB.objects.filter(
+                db_typeclass_path="typeclasses.fluid_fridge.FluidFridge"
+            ):
+                try:
+                    fridge = obj.typeclass
+                    break
+                except Exception:
+                    continue
 
         for ft, (ml, flavor) in by_type.items():
             if ml <= 0:
@@ -269,14 +280,27 @@ class MilkingSessionScript(DefaultScript):
         if not room:
             return
 
-        # Move any session bottles still on the floor into the fridge
+        # Move any session bottles still on the floor into the fridge.
+        # Search globally so the fridge doesn't need to be in the same room.
         try:
             from typeclasses.fluid_bottle import FluidBottle
             from typeclasses.fluid_fridge import FluidFridge
+            from evennia.objects.models import ObjectDB
+
             fridge = next(
                 (obj for obj in room.contents if isinstance(obj, FluidFridge)),
                 None,
             )
+            if fridge is None:
+                for obj in ObjectDB.objects.filter(
+                    db_typeclass_path="typeclasses.fluid_fridge.FluidFridge"
+                ):
+                    try:
+                        fridge = obj.typeclass
+                        break
+                    except Exception:
+                        continue
+
             if fridge:
                 for obj in list(room.contents):
                     if isinstance(obj, FluidBottle):
