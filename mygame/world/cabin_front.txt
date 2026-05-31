@@ -90,10 +90,13 @@ use Porch Swing on porch
 @set Rocking Chairs/position = seated
 use Rocking Chairs on porch
 
--- Fire pit — uses the existing fireplace mechanic --
-@create Front Fire Pit:typeclasses.fireplace_script.FireplaceMechanic
-@set Front Fire Pit/label = the fire pit
-use Front Fire Pit on fire_pit
+-- Fire pit — seated around the fire, capacity 4 --
+@create Fire Pit Seating:typeclasses.seat_mechanic.SeatMechanic
+@set Fire Pit Seating/capacity = 4
+@set Fire Pit Seating/label = the fire pit
+@set Fire Pit Seating/position = seated
+@set Fire Pit Seating/allow_lap = 1
+use Fire Pit Seating on fire_pit
 
 
 -- STEP 8: Handle interactions --

@@ -10,6 +10,10 @@
 -- STEP 2: Create zones --
 
 roomzone add stalls
+roomzone add stall_1
+roomzone add stall_2
+roomzone add stall_3
+roomzone add stall_4
 roomzone add stocks
 roomzone add tack_wall
 roomzone add hayloft
@@ -18,7 +22,15 @@ roomzone add entrance
 
 -- STEP 3: Zone descriptions --
 
-roomzone desc stalls = The |wstalls|n run the south wall in two pairs, each wide enough for comfort and fitted for purpose. Each stall has a |wmilking machine|n mounted to the interior wall — the mechanical kind, steady-speed capable, with a collection vessel that seals for storage. The stall dividers are solid timber, waist-high with a bar above for hands to grip, and each has a |ckneeling pad|n built into the floor, foam over timber, worn to the specific density of something used often. A |csmall labeled shelf|n inside each stall holds extra collection vessels and a card for noting content: name, date, fluid type, quantity.
+roomzone desc stalls = The |wstalls|n run the south wall in two pairs — |wstall one|n and |wstall two|n on the left, |wstall three|n and |wstall four|n on the right. Each stall is wide enough for comfort and fitted for purpose: a |wmilking machine|n mounted to the interior wall, a |ckneeling pad|n built into the floor, and a |csmall labeled shelf|n for collection vessels and cards. The dividers are solid timber, waist-high. Examine an individual stall for detail.
+
+roomzone desc stall_1 = The leftmost stall — the kneeling pad worn to a specific density, the machine's speed selector smooth from the most use of the four. The label shelf shows the most handling. A collection vessel sits in its slot, sealed and waiting. The timber divider to the right has a hand-worn bright patch at waist height.
+
+roomzone desc stall_2 = Second stall in — slightly cooler than the first, positioned where the loft floor overhead insulates differently. The kneeling pad carries the same wear pattern as stall one's, the foam compressed to a shape. The machine here runs at a marginally lower hum than the others. The collection vessel is empty and clean.
+
+roomzone desc stall_3 = Third stall, first of the right-hand pair. The label shelf card has a name that was erased but left an impression in the cardstock — the letters are just legible from the right angle. The kneeling pad is even with stall two's in compression. The machine's speed dial has a small mark scratched at the 'steady' position, made by someone who wanted to find it quickly.
+
+roomzone desc stall_4 = The rightmost stall — the kneeling pad the least compressed of the four, the foam still carrying some of its original give. Either used less than the others or used differently. The collection vessel here has a faint scratch on the glass that catches light at an angle. The machine is identical to the others. The stall smells faintly of the hay from the loft above.
 
 roomzone desc stocks = At the center of the barn floor, positioned for visibility from anywhere in the main space, stand the |wbreeding stocks|n: a heavy timber frame with an adjustable neck-and-wrist yoke at the top, adjustable knee and ankle bars at the bottom, and the full structure sized to accommodate a range of body proportions. The timber is smooth from handling at the grip points. Below the center of the frame, positioned with the same mechanical specificity as the milking stalls, are |mmounted fixtures|n — the spacing calibrated, the positioning deliberate. The frame locks independently at each point; releasing all of them requires someone standing outside.
 
@@ -74,20 +86,39 @@ roomzone inscribe/enable tack_wall
 
 -- STEP 7: Mechanic items --
 
--- Milking machines — use MilkingMachineMechanic in each stall zone (install once per stall) --
--- NOTE: The MilkingMachineMechanic creates one machine per zone. Install all 4 via zone copies --
--- or create 4 separate zones (stall_1/stall_2/stall_3/stall_4) if individual control is needed. --
--- For now, all stalls share one 'stalls' zone and one machine: --
-@create Barn Milking Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
-@set Barn Milking Machine/label = the milking machine
-use Barn Milking Machine on stalls
+-- Individual stall mechanics — one milking machine and one kneeling pad per stall --
 
--- Stall kneeling pad — SeatMechanic (kneeling, capacity 4 — all four stall pads) --
-@create Stall Pads:typeclasses.seat_mechanic.SeatMechanic
-@set Stall Pads/capacity = 4
-@set Stall Pads/label = a milking stall pad
-@set Stall Pads/position = kneeling
-use Stall Pads on stalls
+@create Stall 1 Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+use Stall 1 Machine on stall_1
+@create Stall 1 Pad:typeclasses.seat_mechanic.SeatMechanic
+@set Stall 1 Pad/capacity = 1
+@set Stall 1 Pad/label = the stall kneeling pad
+@set Stall 1 Pad/position = kneeling
+use Stall 1 Pad on stall_1
+
+@create Stall 2 Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+use Stall 2 Machine on stall_2
+@create Stall 2 Pad:typeclasses.seat_mechanic.SeatMechanic
+@set Stall 2 Pad/capacity = 1
+@set Stall 2 Pad/label = the stall kneeling pad
+@set Stall 2 Pad/position = kneeling
+use Stall 2 Pad on stall_2
+
+@create Stall 3 Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+use Stall 3 Machine on stall_3
+@create Stall 3 Pad:typeclasses.seat_mechanic.SeatMechanic
+@set Stall 3 Pad/capacity = 1
+@set Stall 3 Pad/label = the stall kneeling pad
+@set Stall 3 Pad/position = kneeling
+use Stall 3 Pad on stall_3
+
+@create Stall 4 Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+use Stall 4 Machine on stall_4
+@create Stall 4 Pad:typeclasses.seat_mechanic.SeatMechanic
+@set Stall 4 Pad/capacity = 1
+@set Stall 4 Pad/label = the stall kneeling pad
+@set Stall 4 Pad/position = kneeling
+use Stall 4 Pad on stall_4
 
 -- Breeding stocks — DildoSeatMechanic (forward-mounted, capacity 1) --
 @create Breeding Stocks:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
@@ -111,7 +142,7 @@ use Stocks Yoke on stocks
 use Hayloft Hay on hayloft
 
 -- Hayloft stair/ladder --
-@create Loft Ladder:typeclasses.stair_mechanic.StairMechanic
+@create Loft Ladder:typeclasses.stair_mechanic.CreakingStair
 @set Loft Ladder/label = the loft ladder
 use Loft Ladder on hayloft
 

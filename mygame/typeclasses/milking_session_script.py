@@ -130,9 +130,12 @@ class MilkingSessionScript(DefaultScript):
         was_empty       = self.db.running_empty
         all_empty_now   = True
 
+        import random
         for zn, prod in prod_items:
             available  = prod.db.current_volume_ml or 0.0
-            extract    = min(ml_per_tick, available)
+            # ±30% variance — the machine doesn't pull a perfectly constant amount
+            variance   = random.uniform(0.70, 1.30)
+            extract    = min(ml_per_tick * variance, available)
             if extract > 0:
                 prod.db.current_volume_ml = max(0.0, available - extract)
                 prod.reset_fullness_notifications()

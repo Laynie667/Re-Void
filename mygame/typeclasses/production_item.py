@@ -115,16 +115,49 @@ class ProductionItem(DefaultObject):
     # Passive tick
     # ------------------------------------------------------------------
 
+    def get_max_volume_ml(self) -> float:
+        """
+        Return the maximum accumulated volume allowed, based on the size of the
+        BodyModItem installed on the same zone.
+
+        Formula: 500 * 1.15^size   (capped at 500,000ml)
+          AA  (0):  500ml  (~0.5L)
+          D   (4):  875ml
+          H   (8): 1530ml
+          L  (12): 2670ml
+          T  (20): 8190ml
+          Z  (26):15350ml (~4 gal)
+          Monumental (30): 25200ml (~6.6 gal)
+          Architecturally Significant (34): 41600ml
+          Beyond Classification (40+): 135000ml+
+        No installed body mod → 500ml default (prevents runaway production
+        from bare production items).
+        """
+        char      = self.db.installed_on_char
+        zone_name = self.db.installed_on_zone
+        if not char or not zone_name:
+            return 500.0
+        zones     = getattr(char.db, "zones", None) or {}
+        bm_entry  = (zones.get(zone_name, {})
+                         .get("mechanics", {}) or {}).get("body_mod")
+        if not bm_entry:
+            return 500.0
+        size = float(bm_entry.get("size", 0.0))
+        return min(500.0 * (1.15 ** size), 500_000.0)
+
     def tick_production(self):
         """Called by PassiveAccumulationScript every 15 minutes."""
         multiplier = self._get_body_mod_multiplier()
         amount     = (self.db.base_rate_ml_per_tick or 50.0) * multiplier
         old_vol    = self.db.current_volume_ml or 0.0
-        new_vol    = old_vol + amount
+        # Cap at the size-appropriate maximum
+        new_vol    = min(old_vol + amount, self.get_max_volume_ml())
         self.db.current_volume_ml    = new_vol
         self.db.lifetime_produced_ml = (self.db.lifetime_produced_ml or 0.0) + amount
-        # Fire private fullness messages when crossing new thresholds
+        # Atmospheric checks
         self._check_fullness_thresholds(old_vol, new_vol)
+        self._check_size_ambient()
+        self._check_leaking()
         # Fire size-aware ambient and leaking messages (size + volume combined)
         self._check_size_messages(new_vol)
 
@@ -158,6 +191,94 @@ class ProductionItem(DefaultObject):
         next fill cycle. Called by MilkingSessionScript after extraction.
         """
         self.db.notified_thresholds = []
+
+    def _check_size_ambient(self):
+        """
+        Occasionally fire a room-visible atmospheric message based on the
+        current effective size of the installed BodyModItem.
+
+        Fires with ~20% probability per passive tick at the highest matching
+        tier. Does nothing if no body mod is installed or no character present.
+        """
+        import random
+        if random.random() > 0.20:
+            return
+
+        char = self.db.installed_on_char
+        if not char:
+            return
+        room = char.location
+        if not room:
+            return
+
+        zone_name = self.db.installed_on_zone
+        if not zone_name:
+            return
+        zones    = getattr(char.db, "zones", None) or {}
+        bm_entry = (zones.get(zone_name, {})
+                        .get("mechanics", {}) or {}).get("body_mod")
+        if not bm_entry:
+            return
+        size = float(bm_entry.get("size", 0.0))
+
+        try:
+            from world.milking_loader import get_size_ambient_tiers
+            tiers = get_size_ambient_tiers()   # [(min_size, msgs)], descending
+        except Exception:
+            return
+
+        for min_size, messages in tiers:
+            if size >= min_size:
+                msg = random.choice(messages)
+                room.msg_contents(
+                    msg.replace("{target}", char.db.rp_name or char.name)
+                )
+                break
+
+    def _check_leaking(self):
+        """
+        Fire a leaking message when size + accumulated volume cross a
+        configured threshold.  Room-visible above the lower tiers;
+        private at the lower/awareness tier.
+
+        Fires with ~30% probability per passive tick when conditions are met.
+        """
+        import random
+        if random.random() > 0.30:
+            return
+
+        char = self.db.installed_on_char
+        if not char:
+            return
+        room    = char.location
+        volume  = self.db.current_volume_ml or 0.0
+        zone_name = self.db.installed_on_zone
+        if not zone_name:
+            return
+
+        zones    = getattr(char.db, "zones", None) or {}
+        bm_entry = (zones.get(zone_name, {})
+                        .get("mechanics", {}) or {}).get("body_mod")
+        if not bm_entry:
+            return
+        size = float(bm_entry.get("size", 0.0))
+
+        try:
+            from world.milking_loader import get_leaking_conditions
+            conditions = get_leaking_conditions()  # [(min_size, min_vol, msgs, room_vis)]
+        except Exception:
+            return
+
+        for min_size, min_vol, messages, room_visible in conditions:
+            if size >= min_size and volume >= min_vol:
+                msg = random.choice(messages).replace(
+                    "{target}", char.db.rp_name or char.name
+                )
+                if room_visible and room:
+                    room.msg_contents(msg)
+                else:
+                    char.msg(f"|x{msg}|n")
+                break
 
     # ------------------------------------------------------------------
     # Size-aware ambient + leaking messages

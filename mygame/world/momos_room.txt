@@ -121,9 +121,9 @@ use Pillory Mechanic on pillory
 @set Bench Mechanic/allow_lap = 0
 use Bench Mechanic on bench_pedestal
 
--- NOTE: Milking machine (dairy mechanic) is present in the room description and the pillory zone --
--- but the DairyMechanic typeclass does not exist yet. Do not create it here. --
--- When implemented, it should be installed on the pillory zone and reference the milking_machine detail. --
+-- Milking machine — installed on the pillory zone (described in pillory/milking_machine detail) --
+@create Momo Milking Machine:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+use Momo Milking Machine on pillory
 
 
 -- STEP 8: Handle interactions --
