@@ -418,6 +418,21 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.watched_by = set()
 
         # ---------------------------------------------------------------
+        # Arousal system
+        # ---------------------------------------------------------------
+        self.db.arousal                = 0.0    # 0–100 float
+        self.db.last_arousal_activity  = 0.0    # unix timestamp of last gain
+        self.db.arousal_cooldown_until = 0.0    # gain halved until this time
+        self.db.penetrating            = None   # {target_dbref, zone_name} while engaged
+
+        # Install arousal decay script immediately
+        try:
+            from typeclasses.arousal_script import ensure_arousal_script
+            ensure_arousal_script(self)
+        except Exception:
+            pass
+
+        # ---------------------------------------------------------------
         # Communication
         # ---------------------------------------------------------------
         self.db.language = "common"

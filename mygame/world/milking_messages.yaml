@@ -306,3 +306,64 @@ leaking:
         - "A warmth at the tips — not yet visible, but felt. The pressure and the size together have brought you to the edge of passive escape."
         - "There's a dampness that wasn't there before. The fullness has reached the threshold where the size is no longer fully containing it."
         - "The pressure has begun to express itself. Not visible yet, but present — a warmth at the tips that will become more apparent if nothing changes."
+
+# ---------------------------------------------------------------------------
+# Milking phase pools — universal (not speed-specific).
+# Priming fires when a session starts and stock is high.
+# Tapering fires when stock drops below ~15%.
+# The session script picks from these instead of 'running' at those moments.
+# ---------------------------------------------------------------------------
+
+phases:
+
+  priming:
+    - "The machine finds its draw before full flow — the first pulls pulling from close to the surface. {target}'s body is building toward what the machine is asking for."
+    - "The session is finding itself — cups sealed, rhythm establishing, the flow beginning its slow build before it reaches working pressure."
+    - "The early draw: the machine pulls steadily and {target} gives into it by degrees, the flow still gathering rather than arrived."
+    - "First pulls, full seal. The suction has found {target} and the rhythm is establishing. The flow hasn't peaked yet."
+
+  tapering:
+    - "The draw is diminishing — the cups work {target} but each pull finds less than the last. The machine doesn't slow, but the output does."
+    - "Running down: the flow from {target} has begun its taper, the rhythm unchanged but the return growing thinner with each cycle."
+    - "The end of the supply is in sight. The cups still work {target} with the same pull, but the response has thinned. Nearly done."
+    - "Tapering — each draw from {target} yields a little less than the one before it. The cups hold their pressure, the machine holds its pace."
+
+# ---------------------------------------------------------------------------
+# Arousal threshold messages — private to the character only.
+# Fired as arousal crosses 75, 90, and 95.
+# ---------------------------------------------------------------------------
+
+arousal:
+
+  thresholds:
+    - value: 75
+      messages:
+        - "Something has shifted past background — an urgency that is no longer passive. You are aware of it with a specificity that is difficult to redirect."
+        - "The building pressure has crossed a line from present to insistent. It has an opinion now."
+        - "Seventy-five percent of the way to somewhere. Your body has its own momentum on this now."
+
+    - value: 90
+      messages:
+        - "The pressure has reached the point where managing it requires active attention. It is the primary thing your awareness is doing."
+        - "Very close. The specificity of what your body wants has resolved from general to exact."
+        - "Ninety. There is not a great deal of road left, and your body is fully aware of this."
+
+    - value: 95
+      messages:
+        - "The threshold is immediately ahead and your body is no longer pretending otherwise."
+        - "Five points from the end. The decision has been made. Only the timing remains."
+        - "Nearly there. The pressure has stopped taking suggestions about pace."
+
+  climax:
+    - "{target} reaches the threshold — the response immediate, specific, and entirely outside the range of things they can delay."
+    - "The pressure resolves for {target} — a release that lands exactly where it was building toward."
+    - "{target}'s body makes its conclusion. The evidence is not in question."
+    - "The climax arrives for {target} with the finality of something that has been coming for some time."
+
+  surface_deposit:
+    - "{actor} deposits onto {surface}. The evidence settles and remains."
+    - "{actor} releases onto {surface} — the deposit present and specific."
+
+  internal_deposit:
+    - "{actor} reaches the end inside {target}'s {zone}. The deposit is complete."
+    - "The climax resolves for {actor} — the release internal to {target}'s {zone}."

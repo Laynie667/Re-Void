@@ -299,6 +299,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_BODY_MOD_CMDS:
             self.add(cmd_cls())
 
+        # Arousal / penetration / deposit / suck / handmilk
+        from commands.penetration_commands import ALL_PENETRATION_CMDS
+        for cmd_cls in ALL_PENETRATION_CMDS:
+            self.add(cmd_cls())
+
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge
         self.add(CmdSetDairy())

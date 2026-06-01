@@ -713,6 +713,40 @@ class FreeformManager:
         return True, key
 
     # =======================================================================
+    # TTL degradation — called by PassiveAccumulationScript every 15 min
+    # =======================================================================
+
+    @staticmethod
+    def cleanup_expired_freeform(character):
+        """
+        Remove freeform items whose TTL has expired.
+
+        Items carry optional keys set at placement:
+            ttl_hours  (float)  — lifetime in hours
+            created_at (float)  — unix timestamp of creation
+
+        Items without both keys are permanent and are skipped.
+        """
+        import time
+        items = character.db.freeform_items or {}
+        if not items:
+            return
+
+        now     = time.time()
+        expired = [
+            k for k, v in items.items()
+            if v
+            and v.get("ttl_hours") is not None
+            and v.get("created_at") is not None
+            and (now - v["created_at"]) / 3600.0 >= v["ttl_hours"]
+        ]
+
+        if expired:
+            for k in expired:
+                items.pop(k, None)
+            character.db.freeform_items = items
+
+    # =======================================================================
     # Display helpers
     # =======================================================================
 

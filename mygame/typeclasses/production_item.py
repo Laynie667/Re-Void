@@ -79,6 +79,15 @@ class PassiveAccumulationScript(DefaultScript):
             return   # not installed — don't accumulate
         item.tick_production()
 
+        # TTL degradation — clean up expired surface-deposit freeform items
+        char = item.db.installed_on_char
+        if char:
+            try:
+                from world.freeform_manager import FreeformManager
+                FreeformManager.cleanup_expired_freeform(char)
+            except Exception:
+                pass
+
 
 # ---------------------------------------------------------------------------
 # ProductionItem base

@@ -45,6 +45,8 @@ class MilkingSessionScript(DefaultScript):
         self.db.zone_filter     = None   # optional zone name filter
         self.db.session_ml      = 0.0
         self.db.running_empty   = False  # True once all items are empty
+        self.db.initial_stock   = None   # set on first productive tick for phase %
+        self.db.primed          = False  # True once past priming phase
 
     # ------------------------------------------------------------------
     # Speed control
@@ -52,21 +54,16 @@ class MilkingSessionScript(DefaultScript):
 
     def set_speed(self, speed: str):
         """
-        Update speed and reset the interval timer.
-
-        Evennia's DefaultScript has no restart() method — we stop/start
-        manually, using ndb._restarting to signal at_stop() to skip cleanup.
+        Update speed setting in-place.  Just update db.speed and self.interval;
+        Evennia applies the new interval after the current countdown naturally.
+        No stop/start needed — that pattern was the source of duplicate scripts.
         """
         from world.milking_loader import get_speed_config
         config = get_speed_config()
         if speed not in config:
             return
-        self.db.speed    = speed
-        self.interval    = config[speed]["interval_seconds"]
-        self.ndb._restarting = True
-        self.stop()
-        self.ndb._restarting = False
-        self.start()
+        self.db.speed = speed
+        self.interval = config[speed]["interval_seconds"]
 
     # ------------------------------------------------------------------
     # Per-tick extraction
@@ -152,23 +149,69 @@ class MilkingSessionScript(DefaultScript):
         total_ml = sum(v[0] for v in by_type.values())
         self.db.session_ml = (self.db.session_ml or 0.0) + total_ml
 
-        # ── Deposit to bottles ────────────────────────────────────────
+        # ── Bank deposit (replaces direct fridge routing) ─────────────
         if total_ml > 0:
-            self._deposit_to_bottles(target, room, by_type, target_name)
+            try:
+                from typeclasses.fluid_bank import GlobalFluidBank
+                bank = GlobalFluidBank.get()
+                for ft, (ml, flavor) in by_type.items():
+                    if ml > 0:
+                        bank.deposit(target, ml, ft, flavor)
+            except Exception:
+                # Fallback to old bottle method if bank unavailable
+                self._deposit_to_bottles(target, room, by_type, target_name)
+
+        # ── Phase detection (priming / tapering / running) ────────────
+        # Track initial stock on first productive tick
+        if total_ml > 0 and self.db.initial_stock is None:
+            self.db.initial_stock = sum(
+                (p.db.current_volume_ml or 0.0) + total_ml
+                for _, p in prod_items
+            ) / max(len(prod_items), 1) * len(prod_items)
+
+        current_stock = sum(
+            (p.db.current_volume_ml or 0.0) for _, p in prod_items
+        )
+        initial = self.db.initial_stock or current_stock or 1.0
+        pct = current_stock / initial if initial > 0 else 0.0
 
         # ── Pick message pool ─────────────────────────────────────────
+        from world.milking_loader import pick_phase_message
         if all_empty_now and not was_empty:
-            pool = "first_empty"
+            pool_msg = pick_message(speed, "first_empty")
             self.db.running_empty = True
         elif all_empty_now:
-            pool = "running_empty"
+            pool_msg = pick_message(speed, "running_empty")
+        elif pct >= 0.80 and not self.db.primed:
+            # Still in priming phase
+            pool_msg = pick_phase_message("priming")
+        elif pct <= 0.15:
+            # Tapering toward empty
+            pool_msg = pick_phase_message("tapering")
+            self.db.primed = True
         else:
+            pool_msg = pick_message(speed, "running")
+            self.db.primed = True
             self.db.running_empty = False
-            pool = "running"
 
-        msg = pick_message(speed, pool)
-        if msg:
-            room.msg_contents(msg.replace("{target}", target_name))
+        if pool_msg:
+            room.msg_contents(pool_msg.replace("{target}", target_name))
+
+        # ── Arousal gain per tick ─────────────────────────────────────
+        # Only gain arousal when actually extracting (not running empty)
+        if not all_empty_now:
+            _AROUSAL_BY_SPEED = {
+                "slow":    0.5,
+                "steady":  1.5,
+                "fast":    3.5,
+                "intense": 6.0,
+            }
+            gain = _AROUSAL_BY_SPEED.get(speed, 1.5)
+            try:
+                from typeclasses.arousal_script import add_arousal
+                add_arousal(target, gain)
+            except Exception:
+                pass
 
         # ── Session tally line ────────────────────────────────────────
         if total_ml > 0:

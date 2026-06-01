@@ -105,6 +105,47 @@ def get_size_ambient_tiers():
     return result
 
 
+def pick_phase_message(phase: str) -> str | None:
+    """
+    Return a random message from the priming or tapering phase pool.
+    phase: "priming" | "tapering"
+    """
+    data = _load()
+    messages = data.get("phases", {}).get(phase, [])
+    if not messages:
+        return None
+    return random.choice(messages)
+
+
+def pick_arousal_threshold_message(threshold: float) -> str | None:
+    """Return a private threshold message for the given arousal value (75/90/95)."""
+    data  = _load()
+    items = data.get("arousal", {}).get("thresholds", [])
+    for entry in items:
+        if entry.get("value") == threshold:
+            msgs = entry.get("messages", [])
+            if msgs:
+                return random.choice(msgs)
+    return None
+
+
+def pick_climax_message() -> str | None:
+    """Return a room-visible climax message (uses {target} token)."""
+    data  = _load()
+    msgs  = data.get("arousal", {}).get("climax", [])
+    return random.choice(msgs) if msgs else None
+
+
+def pick_deposit_message(deposit_type: str) -> str | None:
+    """
+    deposit_type: "surface_deposit" | "internal_deposit"
+    Returns a message string using {actor}, {target}, {zone}, {surface} tokens.
+    """
+    data = _load()
+    msgs = data.get("arousal", {}).get(deposit_type, [])
+    return random.choice(msgs) if msgs else None
+
+
 def get_leaking_conditions():
     """
     Return leaking conditions sorted descending by min_size (highest first).
