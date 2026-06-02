@@ -198,6 +198,23 @@ def render_zone_tokens(text, character):
             size_str = _resolve_size_token(zname, zdata)
             base = base.replace('{size}', size_str)
 
+        # Resolve {inflation} token — shows current inflation state label.
+        if base and '{inflation}' in base:
+            try:
+                from typeclasses.inflation_item import (
+                    get_inflation_data, get_inflation_state
+                )
+                inf = (zdata.get("mechanics", {}) or {}).get("inflation") if hasattr(zdata, "get") else None
+                if inf:
+                    vol   = inf.get("volume_ml", 0.0)
+                    mx    = inf.get("max_volume_ml", 500.0)
+                    state = get_inflation_state(vol, mx)
+                    base  = base.replace("{inflation}", state)
+                else:
+                    base = base.replace("{inflation}", "")
+            except Exception:
+                base = base.replace("{inflation}", "")
+
         # cover-mode placed items, on-items, and in-items all append.
         all_parts = cover_items + on_items + in_items
 

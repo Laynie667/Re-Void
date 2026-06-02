@@ -88,6 +88,16 @@ class PassiveAccumulationScript(DefaultScript):
             except Exception:
                 pass
 
+            # Passive inflation drain
+            try:
+                from typeclasses.inflation_item import tick_drain
+                zones = getattr(char.db, "zones", None) or {}
+                for zn, zd in zones.items():
+                    if (zd.get("mechanics", {}) or {}).get("inflation"):
+                        tick_drain(char, zn)
+            except Exception:
+                pass
+
 
 # ---------------------------------------------------------------------------
 # ProductionItem base

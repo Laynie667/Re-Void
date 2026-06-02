@@ -308,6 +308,14 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         from commands.weather_commands import CmdWeather
         self.add(CmdWeather())
 
+        # Inflation
+        from commands.inflate_commands import CmdInflate
+        self.add(CmdInflate())
+
+        # Machine cycle
+        from commands.cycle_commands import CmdEndCycle
+        self.add(CmdEndCycle())
+
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge
         self.add(CmdSetDairy())

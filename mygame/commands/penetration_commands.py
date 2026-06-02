@@ -238,9 +238,27 @@ class CmdThrust(Command):
     key     = "thrust"
     locks   = "cmd:all()"
     help_category = "Interaction"
+    switch_options = ("repeat", "stop")
 
     def func(self):
         caller  = self.caller
+        switches = self.switches
+        room    = caller.location
+
+        if "stop" in switches:
+            _stop_repeat(caller, "thrust")
+            caller.msg("|xThrust repeat stopped.|n")
+            return
+
+        if "repeat" in switches:
+            engaged = caller.db.penetrating or {}
+            if not engaged.get("target_dbref"):
+                caller.msg("|xYou aren't currently engaged. Use 'penetrate' first.|n")
+                return
+            _start_repeat(caller, "thrust", None, None, 15)
+            caller.msg("|xThrust repeat started (every 15s). Type |wthrust/stop|n to end.|n")
+            return
+
         engaged = caller.db.penetrating
 
         if not engaged:
@@ -492,25 +510,42 @@ class CmdSuck(MuxCommand):
     Context-sensitive oral / nursing / drinking command.
 
     Usage:
-      suck <target>          — auto-detects context:
-                               • target has shaft zone → arousal event for them
-                               • target has breast production → slow extraction
-                               • target is a drinkable container → drink from it
-      suck <target> <zone>   — interact with a specific zone
-      suck/self <zone>       — self-interaction
+      suck <target>             — shaft zone → arousal; breast → slow extract; container → drink
+      suck <target> <zone>      — specific zone
+      suck/self <zone>          — self-interaction
+      suck/repeat <target>      — repeat automatically every 60s
+      suck/stop                 — stop a running repeat
 
     See also: handmilk, penetrate
     """
     key     = "suck"
     locks   = "cmd:all()"
     help_category = "Interaction"
-    switch_options = ("self",)
+    switch_options = ("self", "repeat", "stop")
 
     def func(self):
         caller   = self.caller
         args     = self.args.strip()
         switches = self.switches
         room     = caller.location
+
+        if "stop" in switches:
+            _stop_repeat(caller, "suck")
+            caller.msg("|xSuck repeat stopped.|n")
+            return
+
+        if "repeat" in switches:
+            if not args:
+                caller.msg("|xUsage: suck/repeat <target> [<zone>]|n")
+                return
+            parts   = args.split(None, 1)
+            target  = caller.search(parts[0], location=room)
+            if not target:
+                return
+            zone = parts[1].strip() if len(parts) > 1 else None
+            _start_repeat(caller, "suck", target, zone, 60)
+            caller.msg(f"|xSuck repeat started (every 60s). Type |wsuck/stop|n to end.|n")
+            return
 
         # Self-suck (own zone)
         if "self" in switches:
@@ -700,13 +735,35 @@ class CmdHandmilk(MuxCommand):
     key     = "handmilk"
     locks   = "cmd:all()"
     help_category = "Body Mod"
-    switch_options = ("self",)
+    switch_options = ("self", "repeat", "stop")
 
     def func(self):
         caller   = self.caller
         args     = self.args.strip()
         switches = self.switches
         room     = caller.location
+
+        if "stop" in switches:
+            _stop_repeat(caller, "handmilk")
+            caller.msg("|xHandmilk repeat stopped.|n")
+            return
+
+        if "repeat" in switches:
+            if "self" in switches:
+                target   = caller
+                zone_arg = args.strip()
+            else:
+                if not args:
+                    caller.msg("|xUsage: handmilk/repeat <target> [<zone>]|n")
+                    return
+                parts   = args.split(None, 1)
+                target  = caller.search(parts[0], location=room)
+                if not target:
+                    return
+                zone_arg = parts[1].strip() if len(parts) > 1 else None
+            _start_repeat(caller, "handmilk", target, zone_arg, 30)
+            caller.msg(f"|xHandmilk repeat started (every 30s). Type |whandmilk/stop|n to end.|n")
+            return
 
         if "self" in switches:
             target    = caller
@@ -795,6 +852,182 @@ class CmdHandmilk(MuxCommand):
 # ---------------------------------------------------------------------------
 # Export
 # ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Repeat helper functions — called by SimpleRepeatScript each tick
+# ---------------------------------------------------------------------------
+
+def _repeat_suck(char, target, zone, room) -> bool:
+    """One suck tick. Returns True if something happened."""
+    from evennia import search_object
+    from typeclasses.production_item import ProductionItem
+    from typeclasses.arousal_script import add_arousal
+
+    caller_name = char.db.rp_name or char.name
+    target_name = target.db.rp_name or target.name
+
+    # Shaft zone → arousal
+    if not zone:
+        shaft = _find_shaft_zone(target)
+        if shaft:
+            zone_disp = shaft.replace("_", " ")
+            room.msg_contents(f"{caller_name} — {target_name}'s {zone_disp}.")
+            add_arousal(target, 12.0)
+            add_arousal(char, 4.0)
+            return True
+
+    # Breast production → slow extraction
+    zones = getattr(target.db, "zones", None) or {}
+    prod_item = None
+    prod_zone = None
+    for zn, zd in zones.items():
+        if zone and zone not in zn and zn not in zone:
+            continue
+        entry = (zd.get("mechanics", {}) or {}).get("production")
+        if not entry:
+            continue
+        results = search_object(entry.get("item_dbref", ""), exact=True)
+        if results and isinstance(results[0], ProductionItem):
+            item = results[0]
+            if item.db.fluid_type == "milk" or prod_item is None:
+                prod_item = item
+                prod_zone = zn
+
+    if prod_item:
+        available = prod_item.db.current_volume_ml or 0.0
+        if available <= 0:
+            return False
+        extract = min(4.0, available)
+        prod_item.db.current_volume_ml = max(0.0, available - extract)
+        prod_item.reset_fullness_notifications()
+        zone_disp = prod_zone.replace("_", " ")
+        room.msg_contents(f"{caller_name} — {target_name}'s {zone_disp}.")
+        add_arousal(char, 3.0)
+        add_arousal(target, 4.0)
+        try:
+            from typeclasses.fluid_bank import GlobalFluidBank
+            GlobalFluidBank.get().deposit(target, extract, prod_item.db.fluid_type, prod_item.db.fluid_flavor)
+        except Exception:
+            pass
+        return True
+
+    return False
+
+
+def _repeat_handmilk(char, target, zone, room) -> bool:
+    """One handmilk tick. Returns True if extraction happened."""
+    import random as _r
+    from evennia import search_object
+    from typeclasses.production_item import ProductionItem, format_volume
+    from typeclasses.arousal_script import add_arousal
+
+    zones = getattr(target.db, "zones", None) or {}
+    prod_item = None
+    prod_zone = None
+    for zn, zd in zones.items():
+        if zone and zone not in zn and zn not in zone:
+            continue
+        entry = (zd.get("mechanics", {}) or {}).get("production")
+        if not entry:
+            continue
+        results = search_object(entry.get("item_dbref", ""), exact=True)
+        if results and isinstance(results[0], ProductionItem):
+            item = results[0]
+            if item.db.fluid_type == "milk" or prod_item is None:
+                prod_item = item
+                prod_zone = zn
+
+    if not prod_item:
+        return False
+    available = prod_item.db.current_volume_ml or 0.0
+    if available <= 0:
+        return False
+
+    extract = min(11.0 * _r.uniform(0.80, 1.20), available)
+    prod_item.db.current_volume_ml = max(0.0, available - extract)
+    prod_item.reset_fullness_notifications()
+
+    caller_name = char.db.rp_name or char.name
+    target_name = target.db.rp_name or target.name
+    zone_disp   = prod_zone.replace("_", " ")
+
+    room.msg_contents(
+        f"{caller_name} milks {target_name} by hand — "
+        f"{zone_disp} ({format_volume(extract)})."
+    )
+    add_arousal(target, 8.0)
+    if char != target:
+        add_arousal(char, 2.0)
+    try:
+        from typeclasses.fluid_bank import GlobalFluidBank
+        GlobalFluidBank.get().deposit(target, extract, prod_item.db.fluid_type, prod_item.db.fluid_flavor)
+    except Exception:
+        pass
+    return True
+
+
+def _repeat_thrust(char, engaged: dict, room):
+    """One thrust tick. Builds arousal and may trigger knot."""
+    from typeclasses.arousal_script import add_arousal
+
+    target_dbref = engaged.get("target_dbref")
+    zone_name    = engaged.get("zone_name", "")
+    caller_zone  = engaged.get("caller_zone")
+
+    from evennia import search_object
+    results = search_object(target_dbref, exact=True) if target_dbref else []
+    if not results:
+        return
+
+    target      = results[0]
+    caller_name = char.db.rp_name or char.name
+    target_name = target.db.rp_name or target.name
+    zone_disp   = zone_name.replace("_", " ")
+
+    room.msg_contents(f"{caller_name} — {target_name}'s {zone_disp}.")
+    add_arousal(char, 8.0)
+    add_arousal(target, 5.0)
+
+    if caller_zone:
+        try:
+            from typeclasses.knot_item import try_trigger_knot
+            try_trigger_knot(char, target, caller_zone, room)
+        except Exception:
+            pass
+
+
+# ---------------------------------------------------------------------------
+# /repeat and /stop wiring — added to CmdSuck, CmdHandmilk, CmdThrust below
+# ---------------------------------------------------------------------------
+
+def _start_repeat(char, action, target, zone, interval):
+    """Start a SimpleRepeatScript for the given action."""
+    # Stop any existing repeat of same action first
+    _stop_repeat(char, action)
+    from evennia.utils import create
+    from typeclasses.repeat_script import SimpleRepeatScript
+    script = create.create_script(
+        SimpleRepeatScript,
+        obj=char,
+        autostart=False,
+        persistent=True,
+    )
+    script.db.action       = action
+    script.db.target_dbref = target.dbref if target and target != char else None
+    script.db.zone_name    = zone
+    script.interval        = interval
+    script.start()
+    return script
+
+
+def _stop_repeat(char, action=None):
+    """Stop repeat scripts on char. If action is None, stop all."""
+    from typeclasses.repeat_script import SimpleRepeatScript
+    for scr in list(char.scripts.all()):
+        if isinstance(scr, SimpleRepeatScript):
+            if action is None or scr.db.action == action:
+                scr.stop()
+
 
 ALL_PENETRATION_CMDS = [
     CmdPenetrate,
