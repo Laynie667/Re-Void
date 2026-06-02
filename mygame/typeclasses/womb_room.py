@@ -305,22 +305,22 @@ class WombRoom(HousingRoom):
             resident.msg(msg)
 
     # ------------------------------------------------------------------
-    # Room description override — inject interior desc + flood state
+    # Room description — inject interior desc + flood state into db.desc
+    # so rooms.py return_appearance picks it up normally.
     # ------------------------------------------------------------------
 
-    def get_display_desc(self, looker=None, **kwargs):
+    def _build_desc(self) -> str:
         """
-        Returns the room description, built from:
-          1. Host's zone interior field (set via 'zone interior <zone> = <text>')
+        Assemble the current room description from:
+          1. Host's zone interior field
           2. Flood state prose appended if fluid present
         """
-        host = self._get_host()
+        host      = self._get_host()
         zone_name = self.db.womb_zone
 
-        # Pull interior desc from host's zone
         interior = ""
         if host and zone_name:
-            zones = getattr(host.db, "zones", None) or {}
+            zones    = getattr(host.db, "zones", None) or {}
             interior = (zones.get(zone_name) or {}).get("interior", "") or ""
 
         if not interior:
@@ -334,6 +334,11 @@ class WombRoom(HousingRoom):
         if flood_line:
             return f"{interior}\n\n{flood_line}"
         return interior
+
+    def return_appearance(self, looker, **kwargs):
+        """Refresh db.desc from interior + flood state, then call parent."""
+        self.db.desc = self._build_desc()
+        return super().return_appearance(looker, **kwargs)
 
     # ------------------------------------------------------------------
     # Entry control — residents + host only

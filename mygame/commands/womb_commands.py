@@ -189,7 +189,6 @@ class CmdLeaveWomb(Command):
     """
 
     key     = "leave"
-    aliases = ["exit"]
     locks   = "cmd:all()"
     help_category = "Interaction"
 
@@ -434,7 +433,6 @@ class CmdWombRoom(MuxCommand):
             if not desc:
                 caller.msg("|xDescription cannot be empty.|n")
                 return
-            # Set via zone interior
             ok = caller.set_zone_interior(zone_name, desc)
             if ok:
                 caller.msg("|wWombRoom interior description updated.|n")
@@ -442,24 +440,28 @@ class CmdWombRoom(MuxCommand):
                 caller.msg("|xCould not set description.|n")
         else:
             # Open multi-line editor
-            zones = getattr(caller.db, "zones", None) or {}
+            zones   = getattr(caller.db, "zones", None) or {}
             current = (zones.get(zone_name) or {}).get("interior", "") or ""
-            from world.text_editor import TextEditor
+            lines   = current.splitlines() if current else []
 
-            def _save(caller, buffer, **kwargs):
-                caller.set_zone_interior(kwargs["zone_name"], "\n".join(buffer))
-                caller.msg("|wWombRoom interior description saved.|n")
+            _zn = zone_name  # capture for closure
 
-            editor = TextEditor(
-                caller,
-                loadfunc=lambda caller, **kwargs: current.splitlines(),
-                savefunc=_save,
-                key=f"wombroom interior — {zone_name}",
-                persistent=True,
-                extra={"zone_name": zone_name},
+            def _setter(c, saved_lines):
+                c.set_zone_interior(_zn, "\n".join(saved_lines))
+                c.msg("|wWombRoom interior description saved.|n")
+
+            from world.text_editor import _enter_editor, EDITOR_TARGETS
+            EDITOR_TARGETS[f"_womb_{zone_name}"] = (
+                lambda c: lines,
+                _setter,
             )
-            caller.ndb._editor = editor
-            editor.load()
+            _enter_editor(
+                caller,
+                f"wombroom interior: {zone_name.replace('_', ' ')}",
+                f"_womb_{zone_name}",
+                lines,
+                extra={"setter": _setter},
+            )
 
     # -- Lock / Unlock -------------------------------------------------
 

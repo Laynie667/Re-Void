@@ -353,4 +353,4 @@ class CmdFridge(Command):
 # Export
 # ---------------------------------------------------------------------------
 
-ALL_DAIRY_CMDS = [CmdSetDairy, CmdMilk, CmdFridge]
+ALL_DAIRY_CMDS = [CmdSetDairy, CmdFridge]

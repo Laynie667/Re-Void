@@ -268,19 +268,18 @@ class PassiveAccumulationScript(DefaultScript):
     def at_repeat(self):
         """Process every online character."""
         try:
-            from evennia import SESSION_HANDLER
-            online_chars = []
-            for session in SESSION_HANDLER.get_sessions():
-                puppet = session.get_puppet()
-                if puppet and hasattr(puppet, "db"):
-                    online_chars.append(puppet)
-
+            from typeclasses.characters import Character
             seen = set()
-            for char in online_chars:
-                if char.id in seen:
-                    continue
-                seen.add(char.id)
-                self._process_char(char)
+            for char in Character.objects.all():
+                try:
+                    if char.sessions.count() == 0:
+                        continue
+                    if char.id in seen:
+                        continue
+                    seen.add(char.id)
+                    self._process_char(char)
+                except Exception:
+                    pass
         except Exception as e:
             logger.log_err(f"PassiveAccumulationScript error: {e}")
 
