@@ -195,6 +195,7 @@ class CmdRoomZone(default_cmds.MuxCommand):
         "game", "game/rm", "game/list",
         "pantry", "pantry/rm", "pantry/list",
         "summary",
+        "timedesc", "timedesc/rm", "timedesc/list",
     })
 
     def func(self):
@@ -261,6 +262,9 @@ class CmdRoomZone(default_cmds.MuxCommand):
             "pantry/rm":         self._do_pantry_rm,
             "pantry/list":       self._do_pantry_list,
             "summary":           self._do_summary,
+            "timedesc":          self._do_timedesc,
+            "timedesc/rm":       self._do_timedesc_rm,
+            "timedesc/list":     self._do_timedesc_list,
         }
 
         handler = dispatch.get(switch)
@@ -1149,6 +1153,169 @@ class CmdRoomZone(default_cmds.MuxCommand):
             self.caller.msg(f"|wSummary set for zone '{zone_name}':|n |x{text}|n")
         else:
             self.caller.msg(f"|xSummary cleared for zone '{zone_name}'.|n")
+
+    # ------------------------------------------------------------------
+    # timedesc — timedesc/rm — timedesc/list
+    # ------------------------------------------------------------------
+    # Valid IC time periods: dawn, morning, afternoon, dusk, evening, midnight
+    # These match world/gametime.py TIME_PERIODS.
+    #
+    # Usage:
+    #   roomzone timedesc <zone>/<period> = <description>
+    #   roomzone timedesc/rm <zone>/<period>
+    #   roomzone timedesc/list [<zone>]
+    #
+    # When a {zone:<name>} token is rendered in a room desc, the zone's
+    # time_descs dict is checked first.  If a desc exists for the current
+    # IC time period, it is used instead of the normal summary/desc.
+    # ------------------------------------------------------------------
+
+    _VALID_TIME_PERIODS = frozenset({
+        "dawn", "morning", "afternoon", "dusk", "evening", "midnight"
+    })
+
+    def _do_timedesc(self):
+        """
+        roomzone timedesc <zone>/<period> = <description>
+
+        Set a time-of-day specific description for a zone.  When the zone
+        token {zone:<name>} is rendered during that IC time period, this
+        description is shown instead of the normal summary or desc.
+
+        Valid periods: dawn, morning, afternoon, dusk, evening, midnight
+
+        Examples:
+          roomzone timedesc sky/dawn = The horizon has gone pale. Dark giving way.
+          roomzone timedesc sky/midnight = Full dark overhead. The stars are close.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n")
+            return
+
+        args = self.args.strip()
+        if "=" not in args or "/" not in args.split("=")[0]:
+            self.caller.msg(
+                "|xUsage: roomzone timedesc <zone>/<period> = <description>|n\n"
+                f"|xPeriods: {', '.join(sorted(self._VALID_TIME_PERIODS))}|n"
+            )
+            return
+
+        lhs, _, desc = args.partition("=")
+        lhs  = lhs.strip()
+        desc = desc.strip()
+
+        zone_part, _, period = lhs.rpartition("/")
+        zone_name  = zone_part.strip().lower()
+        time_period = period.strip().lower()
+
+        if not zone_name or not time_period:
+            self.caller.msg("|xUsage: roomzone timedesc <zone>/<period> = <description>|n")
+            return
+
+        if time_period not in self._VALID_TIME_PERIODS:
+            self.caller.msg(
+                f"|x'{time_period}' is not a valid time period.\n"
+                f"Valid: {', '.join(sorted(self._VALID_TIME_PERIODS))}|n"
+            )
+            return
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n")
+            return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        time_descs = dict(zone.get("time_descs") or {})
+        time_descs[time_period] = desc
+        zone["time_descs"] = time_descs
+        zones[zone_name] = zone
+        room.db.zones = zones
+
+        if desc:
+            self.caller.msg(
+                f"|wTime description set:|n {zone_name}/{time_period}\n"
+                f"|x{desc[:80]}{'...' if len(desc) > 80 else ''}|n"
+            )
+        else:
+            self.caller.msg(f"|xTime description cleared: {zone_name}/{time_period}|n")
+
+    def _do_timedesc_rm(self):
+        """
+        roomzone timedesc/rm <zone>/<period>
+
+        Remove the time-of-day description for a specific period.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n")
+            return
+
+        args = self.args.strip()
+        if "/" not in args:
+            self.caller.msg("|xUsage: roomzone timedesc/rm <zone>/<period>|n")
+            return
+
+        zone_part, _, period = args.rpartition("/")
+        zone_name   = zone_part.strip().lower()
+        time_period = period.strip().lower()
+
+        if zone_name not in zones:
+            self.caller.msg(f"|xZone '{zone_name}' not found.|n")
+            return
+
+        zone = dict(zones[zone_name]) if hasattr(zones[zone_name], "items") else {}
+        time_descs = dict(zone.get("time_descs") or {})
+
+        if time_period not in time_descs:
+            self.caller.msg(f"|xNo time description set for '{zone_name}/{time_period}'.|n")
+            return
+
+        del time_descs[time_period]
+        zone["time_descs"] = time_descs
+        zones[zone_name] = zone
+        room.db.zones = zones
+
+        self.caller.msg(f"|xTime description removed: {zone_name}/{time_period}|n")
+
+    def _do_timedesc_list(self):
+        """
+        roomzone timedesc/list [<zone>]
+
+        List all time-of-day descriptions set on zones in this room.
+        Optionally filter to a single zone.
+        """
+        room, zones = self._get_zones()
+        if room is None:
+            self.caller.msg("|xYou aren't in a room.|n")
+            return
+
+        filter_zone = self.args.strip().lower() or None
+        zone_names  = [filter_zone] if filter_zone else sorted(zones.keys())
+
+        lines  = [f"|wTime descriptions — {room.key}|n"]
+        found  = False
+
+        for zn in zone_names:
+            if zn not in zones:
+                self.caller.msg(f"|xZone '{zn}' not found.|n")
+                return
+            zone = zones[zn]
+            if not hasattr(zone, "get"):
+                continue
+            time_descs = zone.get("time_descs") or {}
+            if not time_descs:
+                continue
+            found = True
+            lines.append(f"\n  |w{zn}|n:")
+            for period in sorted(time_descs.keys()):
+                desc    = time_descs[period]
+                preview = desc[:70] + "..." if len(desc) > 70 else desc
+                lines.append(f"    |x{period:<12}|n {preview}")
+
+        if not found:
+            lines.append("  |xNo time descriptions set.|n")
+
+        self.caller.msg("\n".join(lines))
 
     # ------------------------------------------------------------------
     # pantry — pantry/rm — pantry/list

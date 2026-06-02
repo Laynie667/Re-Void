@@ -253,24 +253,53 @@ class Room(ObjectParent, DefaultRoom):
 
     def _resolve_zone_tokens(self, text):
         """
-        Replace {zone:<name>} tokens in text with the zone's inline text.
+        Replace tokens in room description text.
 
-        Rendering priority:
-          1. zone["summary"]  — a short one-liner set by the builder
-          2. zone["desc"]     — full description (fallback for existing rooms)
-          3. ""               — token removed if neither is set
-
-        This lets builders use {zone:name} tokens for brief inline mentions
-        while reserving the full desc for 'look <zone>'.
+        Handled tokens (in order):
+          {time}          — current IC time period (dawn/morning/afternoon/dusk/evening/midnight)
+          {weather}       — current weather state (clear/overcast/rain/heavy_rain/fog/storm/snow)
+          {zone:<name>}   — zone inline description with time_descs priority:
+            1. zone["time_descs"][current_period]  — time-of-day specific desc (Option C)
+            2. zone["summary"]                     — short one-liner
+            3. zone["desc"]                        — full description fallback
+            4. ""                                  — token removed if nothing set
         """
         import re
         zones = self.db.zones or {}
 
+        # Substitute {time} token
+        if "{time}" in text:
+            try:
+                text = text.replace("{time}", self.get_time_period())
+            except Exception:
+                text = text.replace("{time}", "")
+
+        # Substitute {weather} token
+        if "{weather}" in text:
+            try:
+                text = text.replace("{weather}", self.get_weather())
+            except Exception:
+                text = text.replace("{weather}", "")
+
+        # Zone tokens with optional time_descs support
         def _replace(match):
             zone_name = match.group(1).strip().lower()
             zone = zones.get(zone_name)
             if not zone or not hasattr(zone, "get"):
                 return ""
+
+            # Time-specific description takes priority (Option C)
+            time_descs = zone.get("time_descs") or {}
+            if time_descs:
+                try:
+                    current_time = self.get_time_period()
+                    time_desc = time_descs.get(current_time, "")
+                    if time_desc:
+                        return time_desc
+                except Exception:
+                    pass
+
+            # Fall back to summary, then full desc
             summary = zone.get("summary", "") or ""
             if summary:
                 return summary

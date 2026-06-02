@@ -1,41 +1,44 @@
 # world/weather_messages.yaml
 #
 # Message pools for the weather and time-of-day system.
-# Used by WeatherTimeScript to fire ambient messages into outdoor rooms
-# and provide descriptions for the 'weather' command.
+# State names MUST match the canonical sources:
+#   weather states — world/weather.py WEATHER_STATES
+#     clear, overcast, rain, heavy_rain, fog, storm, snow
+#   time periods   — world/gametime.py TIME_PERIODS
+#     dawn, morning, afternoon, dusk, evening, midnight
 #
-# Tokens: {location} — replaced with the room's name (optional)
+# The {time} and {weather} tokens in room/zone descriptions use these same keys.
+# Outdoor ambient messages fire into rooms with db.is_outdoor = True.
+#
+# Edit freely — no code changes needed after editing this file.
 
 # ---------------------------------------------------------------------------
-# Time-of-day descriptions — shown when players use 'weather' or 'time'
+# Time-of-day descriptions — shown by the 'weather' command
 # ---------------------------------------------------------------------------
 
 time_desc:
-  dawn:       "The sky is lightening — the dark giving way to pale grey at the horizon."
-  morning:    "Morning light has settled, clear and direct, the day fully begun."
-  midday:     "The sun is at its highest. The light is flat and unhesitating."
-  afternoon:  "The afternoon holds its warmth without urgency. The light has begun its long slide."
-  dusk:       "The sun is pulling back. The light has gone amber at the edges."
-  evening:    "The sky has gone to deep blue and the first stars are present."
-  night:      "Full dark. The sky is clear and the stars are close."
-  deep_night: "The deep hours. Nothing moves without purpose."
+  dawn:      "The sky is lightening — the dark giving way to pale grey at the horizon."
+  morning:   "Morning light has settled, clear and direct, the day fully begun."
+  afternoon: "The afternoon holds its warmth without urgency. The light has begun its long slide."
+  dusk:      "The sun is pulling back. The light has gone amber at the edges."
+  evening:   "The sky has gone to deep blue and the first stars are present."
+  midnight:  "The deep hours. Nothing moves without purpose."
 
 # ---------------------------------------------------------------------------
-# Weather state descriptions — shown in 'weather' command output
+# Weather state descriptions — shown by the 'weather' command
 # ---------------------------------------------------------------------------
 
 weather_desc:
   clear:      "The sky is clear overhead."
-  cloudy:     "Cloud cover has come in — the sky a consistent pale grey."
-  light_rain: "A light rain is falling — steady, fine, unremarkable."
+  overcast:   "Cloud cover has come in — the sky a consistent pale grey."
+  rain:       "A rain is falling — steady, fine, settling in."
   heavy_rain: "Heavy rain. The sound of it is constant and the visibility is reduced."
   storm:      "A storm has moved in. The wind is working and the rain comes sideways."
   fog:        "Fog. The visibility is low and the distances have disappeared."
   snow:       "Snow is falling — slow, even, accumulating without noise."
 
 # ---------------------------------------------------------------------------
-# Outdoor ambient messages by weather state
-# Fired at random into rooms with db.is_outdoor=True
+# Outdoor ambient messages — fired into rooms with db.is_outdoor = True
 # Token: {location} (optional)
 # ---------------------------------------------------------------------------
 
@@ -47,16 +50,16 @@ outdoor_ambient:
     - "The air is still and clear. A bird calls somewhere and does not repeat itself."
     - "The open sky holds the light evenly. The shadows fall exactly where they should."
 
-  cloudy:
+  overcast:
     - "The cloud cover holds — the light diffuse, even, casting no shadows."
     - "A grey sky. Not threatening, just present. The air is cool."
     - "The clouds have come in and settled. The world is quieter under them."
 
-  light_rain:
+  rain:
     - "The rain falls without drama — a fine, even pressure on every surface."
     - "Light rain. The sound of it on the ground is constant and low."
     - "A soft rain. The surfaces are dark with it and the air smells of wet earth."
-    - "The rain continues at its same light pace, neither building nor stopping."
+    - "The rain continues at its same pace, neither building nor stopping."
 
   heavy_rain:
     - "The rain is coming down hard. Everything beyond a few metres is indistinct."
@@ -65,7 +68,7 @@ outdoor_ambient:
 
   storm:
     - "A gust drives through — the kind that doesn't ask."
-    - "Lightning somewhere in the distance. The thunder arrives five seconds later."
+    - "Lightning somewhere in the distance. The thunder arrives a few seconds later."
     - "The storm has not lessened. The rain and wind work together against everything upright."
     - "The light changes briefly — a flash — then returns to the grey-dark of the storm."
 
@@ -93,9 +96,7 @@ time_ambient:
 
   morning:
     - "The morning has established itself. The light is direct and matter-of-fact."
-
-  midday:
-    - "The sun is directly overhead. There are no interesting shadows."
+    - "Full morning. The day is under way."
 
   afternoon:
     - "The afternoon light has gone longer and more golden."
@@ -109,9 +110,6 @@ time_ambient:
     - "The evening has settled. The first stars are clearly visible."
     - "Full evening. The air has cooled and the sky is properly dark at the zenith."
 
-  night:
+  midnight:
     - "The night is complete. The stars are sharp and undisturbed."
-
-  deep_night:
-    - "The deep hours. The world is at its quietest."
     - "Nothing stirs. The sky has turned, the stars have moved, and the night continues."
