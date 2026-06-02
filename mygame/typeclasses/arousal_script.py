@@ -14,7 +14,7 @@ Decay fires every 5 minutes if no arousal-gaining activity in that window.
 At 100, the climax event fires automatically:
   - Extracts from all installed ProductionItems whose mod_type is genital
     ('semen', 'urine', etc.) and deposits to the GlobalFluidBank
-  - Fires messages from world/arousal_messages.yaml (climax pool)
+  - Fires messages from world/milking_messages.yaml (arousal: section)
   - Resets arousal to 0
   - Applies post-climax cooldown (reduced gain for configurable period)
 

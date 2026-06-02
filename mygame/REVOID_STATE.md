@@ -307,17 +307,17 @@ Then `@reload` if code also changed.
 | forming.yaml locations | Need update after build | Replace `#2` placeholders with actual room dbrefs |
 | Room purchasing | Stubbed | Non-builder room ownership — currency/earning model TBD |
 | Language system | Stubbed (`world/language.py` exists) | Not wired to commands yet |
-| Economy | Stubbed (`world/economy.py` exists) | Not implemented |
+| Economy | Implemented | `web/economy/`, `commands/economy_commands.py`, wallet/pay/tip commands live |
 | Relationship system | Pending simplification | Contacts list per design session |
 | Freeform room props (text-only, no objects) | Not started | Separate from rp_tools `prop` (which creates real objects) |
-| `consent` command — plock flag | Needs check | Verify "plock" is in CmdConsent's recognized flag list |
+| `consent` command — plock flag | ✅ Done | "plock" is in TIER_TYPES in character_commands.py |
 
 ---
 
 ## Notes for Next Session
 
 - **Immediate action:** Run `build_all()` to create the five forming rooms, then update `forming.yaml` with the dbrefs it prints
-- The `consent` command (`CmdConsent` in `character_commands.py`) needs "plock" added to its recognized flags list so players can toggle it
+- ✅ The `consent` command already supports "plock" — it is in TIER_TYPES in character_commands.py
 - Builder commands exist but room purchasing for non-builders is a future design decision (Laynie is researching inspiration game model)
 - Helena (the main test character) has many pre-written descriptions waiting to go into the wardrobe system — the wardrobe exists and should be ready to receive them
 - Freeform room props (text-only, pinnable, scene-scoped) are a noted future addition — distinct from `rp_tools prop` which spawns real game objects
