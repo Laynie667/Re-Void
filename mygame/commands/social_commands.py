@@ -90,158 +90,427 @@ EMOTE_TABLE = {
 
     "smile": {
         "tier": "casual",
-        "solo": ("You smile quietly to yourself.", "{n} smiles quietly."),
-        "target": ("You smile at {t}.", "{n} smiles at {t}.", "{n} smiles at you."),
+        "solo": (
+            [
+                "You smile quietly to yourself.",
+                "You smile, just slightly.",
+                "Something makes you smile.",
+                "A smile crosses your face — small, genuine.",
+                "You smile to yourself and don't explain it.",
+            ],
+            [
+                "{n} smiles quietly.",
+                "{n} smiles — small, private.",
+                "Something makes {n} smile.",
+                "A smile crosses {n}'s face.",
+                "{n} smiles to {nr}self.",
+            ],
+        ),
+        "target": (
+            [
+                "You smile at {t}.",
+                "You give {t} a quiet smile.",
+                "You catch {t}'s eye and smile.",
+                "You smile at {t} — easy and unhurried.",
+            ],
+            [
+                "{n} smiles at {t}.",
+                "{n} catches {t}'s eye and smiles.",
+                "{n} gives {t} a quiet smile.",
+                "{n} smiles at {t} — easy, genuine.",
+            ],
+            [
+                "{n} smiles at you.",
+                "{n} catches your eye and smiles.",
+                "{n} gives you a quiet smile.",
+                "{n} smiles at you — easy and unhurried.",
+            ],
+        ),
     },
     "grin": {
         "tier": "casual",
-        "solo": ("You grin.", "{n} grins."),
-        "target": ("You grin at {t}.", "{n} grins at {t}.", "{n} grins at you."),
+        "solo": (
+            [
+                "You grin.",
+                "You grin to yourself.",
+                "You can't quite keep the grin off your face.",
+                "A grin spreads across your face.",
+            ],
+            [
+                "{n} grins.",
+                "{n} grins to {nr}self.",
+                "A grin spreads across {n}'s face.",
+                "{n} can't quite keep the grin off {np} face.",
+            ],
+        ),
+        "target": (
+            [
+                "You grin at {t}.",
+                "You flash {t} a grin.",
+                "You can't help grinning at {t}.",
+                "You grin at {t} — wide and unrepentant.",
+            ],
+            [
+                "{n} grins at {t}.",
+                "{n} flashes {t} a grin.",
+                "{n} grins at {t} — wide and unrepentant.",
+                "{n} can't help grinning at {t}.",
+            ],
+            [
+                "{n} grins at you.",
+                "{n} flashes you a grin.",
+                "{n} grins at you — wide and unrepentant.",
+                "{n} can't help grinning at you.",
+            ],
+        ),
     },
     "laugh": {
         "tier": "casual",
-        "solo": ("You laugh softly.", "{n} laughs."),
-        "target": ("You laugh at something {t} said.", "{n} laughs at something {t} said.", "{n} laughs at something you said."),
+        "solo": (
+            ["You laugh softly.", "You laugh.", "You laugh — quiet and genuine.", "Something makes you laugh."],
+            ["{n} laughs.", "{n} laughs softly.", "Something makes {n} laugh.", "{n} breaks into a laugh."],
+        ),
+        "target": (
+            ["You laugh at something {t} said.", "You laugh at {t}.", "{t} gets a laugh out of you."],
+            ["{n} laughs at something {t} said.", "{n} laughs at {t}.", "{t} gets a laugh out of {n}."],
+            ["{n} laughs at something you said.", "{n} laughs at you.", "You get a laugh out of {n}."],
+        ),
     },
     "chuckle": {
         "tier": "casual",
-        "solo": ("You chuckle under your breath.", "{n} chuckles."),
-        "target": ("You chuckle at {t}.", "{n} chuckles at {t}.", "{n} chuckles at you."),
+        "solo": (
+            ["You chuckle under your breath.", "You chuckle to yourself.", "A low chuckle escapes you."],
+            ["{n} chuckles.", "{n} chuckles under {np} breath.", "A low chuckle from {n}."],
+        ),
+        "target": (
+            ["You chuckle at {t}.", "You chuckle at something {t} did."],
+            ["{n} chuckles at {t}.", "{n} chuckles at something {t} did."],
+            ["{n} chuckles at you.", "{n} chuckles at something you did."],
+        ),
     },
     "snicker": {
         "tier": "casual",
-        "solo": ("You snicker to yourself.", "{n} snickers."),
-        "target": ("You snicker at {t}.", "{n} snickers at {t}.", "{n} snickers at you."),
+        "solo": (
+            ["You snicker to yourself.", "You snicker. You can't help it.", "A snicker slips out."],
+            ["{n} snickers.", "{n} snickers to {nr}self.", "A snicker slips out of {n}."],
+        ),
+        "target": (
+            ["You snicker at {t}.", "You snicker — at {t}'s expense.", "You can't help snickering at {t}."],
+            ["{n} snickers at {t}.", "{n} snickers — at {t}'s expense.", "{n} can't help snickering at {t}."],
+            ["{n} snickers at you.", "{n} snickers — at your expense.", "{n} can't help snickering at you."],
+        ),
     },
     "giggle": {
         "tier": "casual",
-        "solo": ("You giggle softly.", "{n} giggles."),
-        "target": ("You giggle at {t}.", "{n} giggles at {t}.", "{n} giggles at you."),
+        "solo": (
+            ["You giggle softly.", "You giggle and don't explain it.", "A soft giggle escapes you."],
+            ["{n} giggles.", "{n} giggles softly.", "A soft giggle from {n}."],
+        ),
+        "target": (
+            ["You giggle at {t}.", "You giggle at something {t} did.", "{t} makes you giggle."],
+            ["{n} giggles at {t}.", "{n} giggles at something {t} did.", "{t} makes {n} giggle."],
+            ["{n} giggles at you.", "{n} giggles at something you did.", "You make {n} giggle."],
+        ),
     },
     "snort": {
         "tier": "casual",
-        "solo": ("You snort.", "{n} snorts."),
-        "target": ("You snort at {t}.", "{n} snorts at {t}.", "{n} snorts at you."),
+        "solo": (
+            ["You snort.", "You snort — it surprises even you.", "A snort escapes you."],
+            ["{n} snorts.", "A snort from {n}.", "{n} snorts unexpectedly."],
+        ),
+        "target": (
+            ["You snort at {t}.", "You can't help snorting at {t}."],
+            ["{n} snorts at {t}.", "{n} can't help snorting at {t}."],
+            ["{n} snorts at you.", "{n} can't help snorting at you."],
+        ),
     },
     "huff": {
         "tier": "casual",
-        "solo": ("You huff.", "{n} huffs."),
-        "target": ("You huff at {t}.", "{n} huffs at {t}.", "{n} huffs at you."),
+        "solo": (
+            ["You huff.", "You huff — loudly.", "An audible huff from you."],
+            ["{n} huffs.", "{n} huffs — loudly.", "An audible huff from {n}."],
+        ),
+        "target": (
+            ["You huff at {t}.", "You huff in {t}'s direction.", "You huff — aimed squarely at {t}."],
+            ["{n} huffs at {t}.", "{n} huffs in {t}'s direction.", "{n} huffs — aimed squarely at {t}."],
+            ["{n} huffs at you.", "{n} huffs in your direction.", "{n} huffs — aimed squarely at you."],
+        ),
     },
     "sigh": {
         "tier": "casual",
-        "solo": ("You sigh.", "{n} sighs."),
-        "target": ("You sigh at {t}.", "{n} sighs at {t}.", "{n} sighs at you."),
+        "solo": (
+            ["You sigh.", "You sigh — long and slow.", "A slow sigh out of you.", "You breathe out something tired."],
+            ["{n} sighs.", "{n} sighs — long and slow.", "A slow sigh from {n}.", "{n} breathes out something tired."],
+        ),
+        "target": (
+            ["You sigh at {t}.", "You let out a sigh in {t}'s direction.", "You sigh — pointed, at {t}."],
+            ["{n} sighs at {t}.", "{n} lets out a sigh in {t}'s direction.", "{n} sighs — pointed, at {t}."],
+            ["{n} sighs at you.", "{n} lets out a sigh in your direction.", "{n} sighs — pointed, at you."],
+        ),
     },
     "groan": {
         "tier": "casual",
-        "solo": ("You groan.", "{n} groans."),
-        "target": ("You groan at {t}.", "{n} groans at {t}.", "{n} groans at you."),
+        "solo": (
+            ["You groan.", "You groan, low and pained.", "A groan out of you.", "You groan — not dramatically, just honestly."],
+            ["{n} groans.", "{n} groans, low and pained.", "A groan from {n}.", "{n} groans — honestly."],
+        ),
+        "target": (
+            ["You groan at {t}.", "You groan — {t}'s fault, probably.", "A groan aimed at {t}."],
+            ["{n} groans at {t}.", "{n} groans — {t}'s fault, probably.", "A groan aimed at {t} from {n}."],
+            ["{n} groans at you.", "{n} groans — your fault, probably.", "A groan from {n}, aimed at you."],
+        ),
     },
     "pout": {
         "tier": "casual",
-        "solo": ("You pout.", "{n} pouts."),
-        "target": ("You pout at {t}.", "{n} pouts at {t}.", "{n} pouts at you."),
+        "solo": (
+            ["You pout.", "You pout — deliberately.", "Your lower lip comes out just slightly."],
+            ["{n} pouts.", "{n} pouts — deliberately.", "{n}'s lower lip comes out just slightly."],
+        ),
+        "target": (
+            ["You pout at {t}.", "You turn a pout on {t}.", "You give {t} the full pout."],
+            ["{n} pouts at {t}.", "{n} turns a pout on {t}.", "{n} gives {t} the full pout."],
+            ["{n} pouts at you.", "{n} turns a pout on you.", "{n} gives you the full pout."],
+        ),
     },
     "beam": {
         "tier": "casual",
-        "solo": ("You beam.", "{n} beams."),
-        "target": ("You beam at {t}.", "{n} beams at {t}.", "{n} beams at you."),
+        "solo": (
+            ["You beam.", "Your whole face lights up.", "You beam — you can't help it."],
+            ["{n} beams.", "{n}'s whole face lights up.", "{n} beams — can't help it."],
+        ),
+        "target": (
+            ["You beam at {t}.", "You light up when you look at {t}.", "You beam — all of it aimed at {t}."],
+            ["{n} beams at {t}.", "{n} lights up when {ns} looks at {t}.", "{n} beams — all of it aimed at {t}."],
+            ["{n} beams at you.", "{n} lights up when {ns} looks at you.", "{n} beams — all of it aimed at you."],
+        ),
     },
     "smirk": {
         "tier": "casual",
-        "solo": ("You smirk.", "{n} smirks."),
-        "target": ("You smirk at {t}.", "{n} smirks at {t}.", "{n} smirks at you."),
+        "solo": (
+            ["You smirk.", "A smirk pulls at the corner of your mouth.", "You smirk — pleased about something."],
+            ["{n} smirks.", "A smirk pulls at the corner of {n}'s mouth.", "{n} smirks — pleased about something."],
+        ),
+        "target": (
+            ["You smirk at {t}.", "You direct a smirk at {t}.", "You look at {t} and smirk."],
+            ["{n} smirks at {t}.", "{n} directs a smirk at {t}.", "{n} looks at {t} and smirks."],
+            ["{n} smirks at you.", "{n} directs a smirk at you.", "{n} looks at you and smirks."],
+        ),
     },
     "frown": {
         "tier": "casual",
-        "solo": ("You frown.", "{n} frowns."),
-        "target": ("You frown at {t}.", "{n} frowns at {t}.", "{n} frowns at you."),
+        "solo": (
+            ["You frown.", "Your brow furrows.", "A frown settles on your face.", "You frown at nothing in particular."],
+            ["{n} frowns.", "{n}'s brow furrows.", "A frown settles on {n}'s face.", "{n} frowns at nothing in particular."],
+        ),
+        "target": (
+            ["You frown at {t}.", "You turn a frown on {t}.", "Something about {t} makes you frown."],
+            ["{n} frowns at {t}.", "{n} turns a frown on {t}.", "Something about {t} makes {n} frown."],
+            ["{n} frowns at you.", "{n} turns a frown on you.", "Something about you makes {n} frown."],
+        ),
     },
     "scowl": {
         "tier": "casual",
-        "solo": ("You scowl.", "{n} scowls."),
-        "target": ("You scowl at {t}.", "{n} scowls at {t}.", "{n} scowls at you."),
+        "solo": (
+            ["You scowl.", "You scowl at nothing.", "A scowl settles hard on your face."],
+            ["{n} scowls.", "{n} scowls at nothing.", "A scowl settles hard on {n}'s face."],
+        ),
+        "target": (
+            ["You scowl at {t}.", "You level a scowl at {t}.", "Your scowl lands on {t}."],
+            ["{n} scowls at {t}.", "{n} levels a scowl at {t}.", "{n}'s scowl lands on {t}."],
+            ["{n} scowls at you.", "{n} levels a scowl at you.", "{n}'s scowl lands on you."],
+        ),
     },
     "whimper": {
         "tier": "casual",
-        "solo": ("You whimper softly.", "{n} whimpers."),
-        "target": ("You whimper at {t}.", "{n} whimpers at {t}.", "{n} whimpers at you."),
+        "solo": (
+            ["You whimper softly.", "A soft whimper slips out.", "You whimper — small and quiet."],
+            ["{n} whimpers.", "A soft whimper from {n}.", "{n} whimpers — small, quiet."],
+        ),
+        "target": (
+            ["You whimper at {t}.", "You give {t} a small whimper.", "A whimper escapes you, aimed at {t}."],
+            ["{n} whimpers at {t}.", "{n} gives {t} a small whimper.", "A whimper from {n}, aimed at {t}."],
+            ["{n} whimpers at you.", "{n} gives you a small whimper.", "A whimper from {n}, aimed at you."],
+        ),
     },
     "nod": {
         "tier": "casual",
-        "solo": ("You nod.", "{n} nods."),
-        "target": ("You nod at {t}.", "{n} nods at {t}.", "{n} nods at you."),
+        "solo": (
+            ["You nod.", "You nod once.", "You nod — slow and deliberate.", "You give a small nod."],
+            ["{n} nods.", "{n} nods once.", "{n} nods — slow and deliberate.", "{n} gives a small nod."],
+        ),
+        "target": (
+            ["You nod at {t}.", "You give {t} a nod.", "You nod once in {t}'s direction."],
+            ["{n} nods at {t}.", "{n} gives {t} a nod.", "{n} nods once in {t}'s direction."],
+            ["{n} nods at you.", "{n} gives you a nod.", "{n} nods once in your direction."],
+        ),
     },
     "shake": {
         "tier": "casual",
-        "solo": ("You shake your head.", "{n} shakes {np} head."),
-        "target": ("You shake your head at {t}.", "{n} shakes {np} head at {t}.", "{n} shakes {np} head at you."),
+        "solo": (
+            ["You shake your head.", "You shake your head — no.", "A slow shake of your head."],
+            ["{n} shakes {np} head.", "{n} shakes {np} head — no.", "A slow shake of {n}'s head."],
+        ),
+        "target": (
+            ["You shake your head at {t}.", "You shake your head — at {t}, specifically.", "A slow headshake aimed at {t}."],
+            ["{n} shakes {np} head at {t}.", "{n} shakes {np} head — at {t}, specifically.", "A slow headshake from {n} aimed at {t}."],
+            ["{n} shakes {np} head at you.", "{n} shakes {np} head — at you, specifically.", "A slow headshake from {n} aimed at you."],
+        ),
     },
     "wink": {
         "tier": "casual",
-        "solo": ("You wink.", "{n} winks."),
-        "target": ("You wink at {t}.", "{n} winks at {t}.", "{n} winks at you."),
+        "solo": (
+            ["You wink.", "You wink at no one in particular."],
+            ["{n} winks.", "{n} winks at no one in particular."],
+        ),
+        "target": (
+            ["You wink at {t}.", "You give {t} a slow wink.", "One eye closes briefly — aimed at {t}."],
+            ["{n} winks at {t}.", "{n} gives {t} a slow wink.", "One of {n}'s eyes closes briefly — aimed at {t}."],
+            ["{n} winks at you.", "{n} gives you a slow wink.", "One of {n}'s eyes closes briefly — aimed at you."],
+        ),
     },
     "blink": {
         "tier": "casual",
-        "solo": ("You blink.", "{n} blinks."),
-        "target": ("You blink at {t}.", "{n} blinks at {t}.", "{n} blinks at you."),
+        "solo": (
+            ["You blink.", "You blink once.", "You blink — slow, processing something."],
+            ["{n} blinks.", "{n} blinks once.", "{n} blinks — slow, processing something."],
+        ),
+        "target": (
+            ["You blink at {t}.", "You blink at {t} — slowly.", "A long blink in {t}'s direction."],
+            ["{n} blinks at {t}.", "{n} blinks at {t} — slowly.", "A long blink from {n} in {t}'s direction."],
+            ["{n} blinks at you.", "{n} blinks at you — slowly.", "A long blink from {n} in your direction."],
+        ),
     },
     "squint": {
         "tier": "casual",
-        "solo": ("You squint.", "{n} squints."),
-        "target": ("You squint at {t}.", "{n} squints at {t}.", "{n} squints at you."),
+        "solo": (
+            ["You squint.", "Your eyes narrow slightly.", "You squint at nothing."],
+            ["{n} squints.", "{n}'s eyes narrow slightly.", "{n} squints at nothing."],
+        ),
+        "target": (
+            ["You squint at {t}.", "Your eyes narrow at {t}.", "You give {t} a slow squint."],
+            ["{n} squints at {t}.", "{n}'s eyes narrow at {t}.", "{n} gives {t} a slow squint."],
+            ["{n} squints at you.", "{n}'s eyes narrow at you.", "{n} gives you a slow squint."],
+        ),
     },
     "stare": {
         "tier": "casual",
-        "solo": ("You stare into the middle distance.", "{n} stares into the middle distance."),
-        "target": ("You stare at {t}.", "{n} stares at {t}.", "{n} stares at you."),
+        "solo": (
+            ["You stare into the middle distance.", "You stare at nothing.", "Your gaze goes somewhere far away."],
+            ["{n} stares into the middle distance.", "{n} stares at nothing.", "{n}'s gaze goes somewhere far away."],
+        ),
+        "target": (
+            ["You stare at {t}.", "You look at {t} and don't look away.", "Your eyes find {t} and stay there."],
+            ["{n} stares at {t}.", "{n} looks at {t} and doesn't look away.", "{n}'s eyes find {t} and stay there."],
+            ["{n} stares at you.", "{n} looks at you and doesn't look away.", "{n}'s eyes find you and stay there."],
+        ),
     },
     "glance": {
         "tier": "casual",
-        "solo": ("You glance around.", "{n} glances around."),
-        "target": ("You glance at {t}.", "{n} glances at {t}.", "{n} glances at you."),
+        "solo": (
+            ["You glance around.", "You glance about the room.", "Your eyes move briefly around the space."],
+            ["{n} glances around.", "{n} glances about the room.", "{n}'s eyes move briefly around the space."],
+        ),
+        "target": (
+            ["You glance at {t}.", "A quick look at {t}.", "Your eyes flick to {t} and away."],
+            ["{n} glances at {t}.", "A quick look from {n} at {t}.", "{n}'s eyes flick to {t} and away."],
+            ["{n} glances at you.", "A quick look from {n} at you.", "{n}'s eyes flick to you and away."],
+        ),
     },
     "tilt": {
         "tier": "casual",
-        "solo": ("You tilt your head.", "{n} tilts {np} head."),
-        "target": ("You tilt your head at {t}.", "{n} tilts {np} head at {t}.", "{n} tilts {np} head at you."),
+        "solo": (
+            ["You tilt your head.", "Your head tilts slightly.", "You tilt your head — curious."],
+            ["{n} tilts {np} head.", "{n}'s head tilts slightly.", "{n} tilts {np} head — curious."],
+        ),
+        "target": (
+            ["You tilt your head at {t}.", "You tilt your head toward {t}.", "Your head tilts, looking at {t}."],
+            ["{n} tilts {np} head at {t}.", "{n} tilts {np} head toward {t}.", "{n}'s head tilts, looking at {t}."],
+            ["{n} tilts {np} head at you.", "{n} tilts {np} head toward you.", "{n}'s head tilts, looking at you."],
+        ),
     },
     "cock": {
         "tier": "casual",
-        "solo": ("You cock your head.", "{n} cocks {np} head."),
-        "target": ("You cock your head at {t}.", "{n} cocks {np} head at {t}.", "{n} cocks {np} head at you."),
+        "solo": (
+            ["You cock your head.", "Your head cocks slightly to one side.", "You cock your head — weighing something."],
+            ["{n} cocks {np} head.", "{n}'s head cocks slightly to one side.", "{n} cocks {np} head — weighing something."],
+        ),
+        "target": (
+            ["You cock your head at {t}.", "Your head cocks at {t}.", "You cock your head toward {t}."],
+            ["{n} cocks {np} head at {t}.", "{n}'s head cocks at {t}.", "{n} cocks {np} head toward {t}."],
+            ["{n} cocks {np} head at you.", "{n}'s head cocks at you.", "{n} cocks {np} head toward you."],
+        ),
     },
     "avert": {
         "tier": "casual",
-        "solo": ("You avert your eyes.", "{n} averts {np} eyes."),
-        "target": ("You avert your eyes from {t}.", "{n} averts {np} eyes from {t}.", "{n} averts {np} eyes from you."),
+        "solo": (
+            ["You avert your eyes.", "Your eyes drop.", "You look away — deliberately."],
+            ["{n} averts {np} eyes.", "{n}'s eyes drop.", "{n} looks away — deliberately."],
+        ),
+        "target": (
+            ["You avert your eyes from {t}.", "You look away from {t}.", "Your eyes drop from {t}."],
+            ["{n} averts {np} eyes from {t}.", "{n} looks away from {t}.", "{n}'s eyes drop from {t}."],
+            ["{n} averts {np} eyes from you.", "{n} looks away from you.", "{n}'s eyes drop from you."],
+        ),
     },
     "meet": {
         "tier": "casual",
-        "solo": ("You meet no one's eyes in particular.", "{n} meets no one's eyes."),
-        "target": ("You meet {t}'s eyes.", "{n} meets {t}'s eyes.", "{n} meets your eyes."),
+        "solo": (
+            ["You meet no one's eyes in particular.", "Your gaze settles somewhere neutral.", "You don't quite meet anyone's eyes."],
+            ["{n} meets no one's eyes.", "{n}'s gaze settles somewhere neutral.", "{n} doesn't quite meet anyone's eyes."],
+        ),
+        "target": (
+            ["You meet {t}'s eyes.", "You look directly at {t}.", "Your eyes find {t}'s and hold."],
+            ["{n} meets {t}'s eyes.", "{n} looks directly at {t}.", "{n}'s eyes find {t}'s and hold."],
+            ["{n} meets your eyes.", "{n} looks directly at you.", "{n}'s eyes find yours and hold."],
+        ),
     },
     "liftchin": {
         "tier": "casual",
-        "solo": ("You lift your chin.", "{n} lifts {np} chin."),
-        "target": ("You lift your chin toward {t}.", "{n} lifts {np} chin toward {t}.", "{n} lifts {np} chin toward you."),
+        "solo": (
+            ["You lift your chin.", "Your chin comes up.", "You lift your chin — composed."],
+            ["{n} lifts {np} chin.", "{n}'s chin comes up.", "{n} lifts {np} chin — composed."],
+        ),
+        "target": (
+            ["You lift your chin toward {t}.", "Your chin tilts up toward {t}.", "You lift your chin in {t}'s direction."],
+            ["{n} lifts {np} chin toward {t}.", "{n}'s chin tilts up toward {t}.", "{n} lifts {np} chin in {t}'s direction."],
+            ["{n} lifts {np} chin toward you.", "{n}'s chin tilts up toward you.", "{n} lifts {np} chin in your direction."],
+        ),
     },
     "duckhead": {
         "tier": "casual",
-        "solo": ("You duck your head.", "{n} ducks {np} head."),
-        "target": ("You duck your head away from {t}.", "{n} ducks {np} head from {t}.", "{n} ducks {np} head away from you."),
+        "solo": (
+            ["You duck your head.", "Your head dips.", "You duck your head — away from something."],
+            ["{n} ducks {np} head.", "{n}'s head dips.", "{n} ducks {np} head — away from something."],
+        ),
+        "target": (
+            ["You duck your head away from {t}.", "Your head dips away from {t}.", "You duck your head from {t}'s gaze."],
+            ["{n} ducks {np} head from {t}.", "{n}'s head dips away from {t}.", "{n} ducks {np} head from {t}'s gaze."],
+            ["{n} ducks {np} head away from you.", "{n}'s head dips away from you.", "{n} ducks {np} head from your gaze."],
+        ),
     },
     "brow": {
         "tier": "casual",
-        "solo": ("You arch an eyebrow.", "{n} arches an eyebrow."),
-        "target": ("You arch an eyebrow at {t}.", "{n} arches an eyebrow at {t}.", "{n} arches an eyebrow at you."),
+        "solo": (
+            ["You arch an eyebrow.", "One eyebrow goes up.", "Your brow lifts — skeptical."],
+            ["{n} arches an eyebrow.", "One of {n}'s eyebrows goes up.", "{n}'s brow lifts — skeptical."],
+        ),
+        "target": (
+            ["You arch an eyebrow at {t}.", "One eyebrow goes up at {t}.", "You lift a brow at {t}."],
+            ["{n} arches an eyebrow at {t}.", "One of {n}'s eyebrows goes up at {t}.", "{n} lifts a brow at {t}."],
+            ["{n} arches an eyebrow at you.", "One of {n}'s eyebrows goes up at you.", "{n} lifts a brow at you."],
+        ),
     },
     "shrug": {
         "tier": "casual",
-        "solo": ("You shrug.", "{n} shrugs."),
-        "target": ("You shrug at {t}.", "{n} shrugs at {t}.", "{n} shrugs at you."),
+        "solo": (
+            ["You shrug.", "Your shoulders rise and fall.", "You shrug — what can you do.", "A small shrug."],
+            ["{n} shrugs.", "{n}'s shoulders rise and fall.", "{n} shrugs — what can {ns} do.", "A small shrug from {n}."],
+        ),
+        "target": (
+            ["You shrug at {t}.", "You give {t} a shrug.", "Your shoulders rise — aimed at {t}."],
+            ["{n} shrugs at {t}.", "{n} gives {t} a shrug.", "{n}'s shoulders rise — aimed at {t}."],
+            ["{n} shrugs at you.", "{n} gives you a shrug.", "{n}'s shoulders rise — aimed at you."],
+        ),
     },
     "stretch": {
         "tier": "casual",
@@ -373,14 +642,28 @@ EMOTE_TABLE = {
     "kiss": {
         "tier": "intimate",
         "prox": "near",
-        "solo": ("You press your lips briefly against nothing.", "{n} pauses, lips parted."),
-        "target": ("You kiss {t}.", "{n} kisses {t}.", "{n} kisses you."),
+        "solo": (
+            ["You press your lips briefly against nothing.", "You wet your lips.", "Your lips part slightly."],
+            ["{n} pauses, lips parted.", "{n} wets {np} lips.", "{n}'s lips part briefly."],
+        ),
+        "target": (
+            ["You kiss {t}.", "You lean in and kiss {t}.", "You kiss {t} — slow and deliberate.", "Your lips find {t}'s."],
+            ["{n} kisses {t}.", "{n} leans in and kisses {t}.", "{n} kisses {t} — slow and deliberate.", "{n}'s lips find {t}'s."],
+            ["{n} kisses you.", "{n} leans in and kisses you.", "{n} kisses you — slow and deliberate.", "{n}'s lips find yours."],
+        ),
     },
     "cheek": {
         "tier": "intimate",
         "prox": "near",
-        "solo": ("You touch your own cheek.", "{n} touches {np} cheek."),
-        "target": ("You kiss {t} on the cheek.", "{n} kisses {t} on the cheek.", "{n} kisses you on the cheek."),
+        "solo": (
+            ["You touch your own cheek.", "Your fingers brush your own cheek."],
+            ["{n} touches {np} cheek.", "{n}'s fingers brush {np} own cheek."],
+        ),
+        "target": (
+            ["You kiss {t} on the cheek.", "You press your lips to {t}'s cheek.", "A soft kiss to {t}'s cheek."],
+            ["{n} kisses {t} on the cheek.", "{n} presses {np} lips to {t}'s cheek.", "A soft kiss from {n} to {t}'s cheek."],
+            ["{n} kisses you on the cheek.", "{n} presses {np} lips to your cheek.", "A soft kiss from {n} to your cheek."],
+        ),
     },
     "embrace": {
         "tier": "intimate",
@@ -398,8 +681,15 @@ EMOTE_TABLE = {
     "nuzzle": {
         "tier": "intimate",
         "prox": "near",
-        "solo": ("You nuzzle into your own shoulder.", "{n} nuzzles into {np} own shoulder."),
-        "target": ("You nuzzle {t}.", "{n} nuzzles {t}.", "{n} nuzzles you."),
+        "solo": (
+            ["You nuzzle into your own shoulder.", "You press your face into your shoulder.", "You bury your nose in your own collar."],
+            ["{n} nuzzles into {np} own shoulder.", "{n} presses {np} face into {np} shoulder.", "{n} buries {np} nose in {np} collar."],
+        ),
+        "target": (
+            ["You nuzzle {t}.", "You press your nose into {t} and stay there.", "You nuzzle into {t} — warm and deliberate.", "Your nose finds {t}'s neck."],
+            ["{n} nuzzles {t}.", "{n} presses {np} nose into {t} and stays there.", "{n} nuzzles into {t} — warm and deliberate.", "{n}'s nose finds {t}'s neck."],
+            ["{n} nuzzles you.", "{n} presses {np} nose into you and stays there.", "{n} nuzzles into you — warm and deliberate.", "{n}'s nose finds your neck."],
+        ),
     },
     "pressagainst": {
         "tier": "intimate",
@@ -513,15 +803,29 @@ EMOTE_TABLE = {
     "nibble": {
         "tier": "mature",
         "prox": "with",
-        "solo": ("You bite softly at the air.", "{n} bites softly at the air."),
-        "target": ("You nibble at {t}.", "{n} nibbles at {t}.", "{n} nibbles at you."),
+        "solo": (
+            ["You bite softly at the air.", "Your teeth catch at nothing.", "You nip at the air."],
+            ["{n} bites softly at the air.", "{n}'s teeth catch at nothing.", "{n} nips at the air."],
+        ),
+        "target": (
+            ["You nibble at {t}.", "You catch {t} between your teeth — gentle.", "You nip at {t} softly."],
+            ["{n} nibbles at {t}.", "{n} catches {t} between {np} teeth — gentle.", "{n} nips at {t} softly."],
+            ["{n} nibbles at you.", "{n} catches you between {np} teeth — gentle.", "{n} nips at you softly."],
+        ),
         "zones": ["lips", "neck"],
     },
     "biteneck": {
         "tier": "mature",
         "prox": "with",
-        "solo": ("You tilt your head back.", "{n} tilts {np} head back."),
-        "target": ("You bite {t}'s neck.", "{n} bites {t}'s neck.", "{n} bites your neck."),
+        "solo": (
+            ["You tilt your head back.", "Your head drops back.", "You expose your throat."],
+            ["{n} tilts {np} head back.", "{n}'s head drops back.", "{n} exposes {np} throat."],
+        ),
+        "target": (
+            ["You bite {t}'s neck.", "Your teeth find {t}'s neck and press in.", "You bite down on {t}'s neck — firm.", "You sink your teeth into the curve of {t}'s neck."],
+            ["{n} bites {t}'s neck.", "{n}'s teeth find {t}'s neck and press in.", "{n} bites down on {t}'s neck — firm.", "{n} sinks {np} teeth into the curve of {t}'s neck."],
+            ["{n} bites your neck.", "{n}'s teeth find your neck and press in.", "{n} bites down on your neck — firm.", "{n} sinks {np} teeth into the curve of your neck."],
+        ),
         "zones": ["neck", "throat", "nape"],
     },
     "pullinlap": {
@@ -557,8 +861,15 @@ EMOTE_TABLE = {
     "shiverunder": {
         "tier": "mature",
         "prox": "with",
-        "solo": ("You shiver.", "{n} shivers."),
-        "target": ("You shiver under {t}'s touch.", "{n} shivers under {t}'s touch.", "{n} shivers under your touch."),
+        "solo": (
+            ["You shiver.", "A shiver runs through you.", "You shiver — can't stop it."],
+            ["{n} shivers.", "A shiver runs through {n}.", "{n} shivers — can't stop it."],
+        ),
+        "target": (
+            ["You shiver under {t}'s touch.", "You shiver when {t} touches you — a full body thing.", "{t} touches you and you shiver for it."],
+            ["{n} shivers under {t}'s touch.", "{n} shivers when {t} touches {no} — a full body thing.", "{t} touches {n} and {ns} shivers for it."],
+            ["{n} shivers under your touch.", "{n} shivers when you touch {no} — a full body thing.", "You touch {n} and {ns} shivers for it."],
+        ),
         "zones": [],
     },
     "breatheagainst": {
@@ -960,6 +1271,27 @@ class SocialEmoteCommand(MuxCommand):
     # Internal helpers
     # ---------------------------------------------------------------
 
+    def _pick_from_pool(self, char, slot, default):
+        """
+        Pick a message string, checking char's custom pool first.
+
+        Args:
+            char:    The acting character.
+            slot:    "self" | "room" | "recv"
+            default: str or list[str] — the EMOTE_TABLE default.
+
+        Custom pools stored on char.db.emote_customs:
+            {emote_key: {"self": [str,...], "room": [str,...], "recv": [str,...]}}
+        """
+        import random
+        customs = getattr(char.db, "emote_customs", None) or {}
+        pool = (customs.get(self.emote_key) or {}).get(slot)
+        if pool:
+            return random.choice(pool)
+        if isinstance(default, (list, tuple)):
+            return random.choice(default)
+        return default
+
     def _fire_solo(self, char, emote):
         """Fire the untargeted (solo) variant of the emote."""
         solo = emote.get("solo")
@@ -967,6 +1299,8 @@ class SocialEmoteCommand(MuxCommand):
             self.msg("Nothing happens.")
             return
         self_msg, room_msg = solo
+        self_msg = self._pick_from_pool(char, "self", self_msg)
+        room_msg = self._pick_from_pool(char, "room", room_msg)
         color = self._mood_color(char)
         name = char.db.rp_name or char.name
         pron = self._pronouns(char)
@@ -988,6 +1322,9 @@ class SocialEmoteCommand(MuxCommand):
             self._fire_solo(char, emote)
             return
         t_self, t_room, t_recv = target_data
+        t_self = self._pick_from_pool(char, "self", t_self)
+        t_room = self._pick_from_pool(char, "room", t_room)
+        t_recv = self._pick_from_pool(char, "recv", t_recv)
         color = self._mood_color(char)
         name = char.db.rp_name or char.name
         tname = target.db.rp_name or target.name
@@ -1364,6 +1701,159 @@ class CmdPermit(MuxCommand):
 
 
 # -------------------------------------------------------------------
+# CmdEmoteSet — player customization of emote message pools
+# -------------------------------------------------------------------
+
+class CmdEmoteSet(MuxCommand):
+    """
+    Customize the messages that fire when you use social emotes.
+
+    Usage:
+      emoteset                             — list emotes you have customized
+      emoteset <emote>                     — show your custom variants for an emote
+      emoteset <emote> <slot> add <text>   — add a variant to a slot
+      emoteset <emote> <slot> clear        — remove all your custom variants for a slot
+      emoteset <emote> clear               — remove all your customizations for an emote
+
+    Slots:
+      self   — what YOU see when you use the emote
+      room   — what everyone else in the room sees
+      recv   — what the TARGET specifically receives (targeted emotes)
+
+    Format tokens (same as the built-in emotes):
+      {n}   your display name
+      {t}   your target's display name
+      {ns}/{no}/{np}/{nr}   your pronouns (subject/object/possessive/reflexive)
+      {ts}/{to}/{tp}/{tr}   target pronouns
+
+    Examples:
+      emoteset smile room add {n} smiles — warm and a little too wide.
+      emoteset kiss recv add {n}'s lips find yours and stay there.
+      emoteset nod self add You give a slow, single nod.
+      emoteset smile clear
+
+    Your custom variants are mixed into the default pool and picked randomly.
+    The more variants you add, the more varied your emotes will feel.
+    Use 'emoteset <emote>' with no other args to preview an emote's current pools.
+    """
+
+    key     = "emoteset"
+    locks   = "cmd:all()"
+    help_category = "Social"
+    switch_options = ()
+
+    _SLOTS = ("self", "room", "recv")
+
+    def func(self):
+        caller = self.caller
+        char = (
+            caller.puppet
+            if hasattr(caller, "puppet") and caller.puppet
+            else caller
+        )
+        args = self.args.strip()
+
+        if not args:
+            self._do_list(char)
+            return
+
+        parts = args.split(None, 1)
+        emote_key = parts[0].lower()
+        rest = parts[1].strip() if len(parts) > 1 else ""
+
+        if emote_key not in EMOTE_TABLE:
+            char.msg(f"|xUnknown emote '{emote_key}'. Use 'emotes' to see the full list.|n")
+            return
+
+        # emoteset <emote> clear
+        if rest == "clear":
+            customs = dict(getattr(char.db, "emote_customs", None) or {})
+            customs.pop(emote_key, None)
+            char.db.emote_customs = customs
+            char.msg(f"|wCleared all custom variants for '{emote_key}'.|n")
+            return
+
+        # emoteset <emote> — show current
+        if not rest:
+            self._do_show(char, emote_key)
+            return
+
+        # emoteset <emote> <slot> add <text> | <slot> clear
+        slot_parts = rest.split(None, 2)
+        if not slot_parts:
+            char.msg("|xUsage: emoteset <emote> <slot> add <text> | <slot> clear|n")
+            return
+
+        slot = slot_parts[0].lower()
+        if slot not in self._SLOTS:
+            char.msg(f"|xUnknown slot '{slot}'. Use: self / room / recv|n")
+            return
+
+        subcmd = slot_parts[1].lower() if len(slot_parts) > 1 else ""
+        text   = slot_parts[2] if len(slot_parts) > 2 else ""
+
+        if subcmd == "clear":
+            customs = dict(getattr(char.db, "emote_customs", None) or {})
+            if emote_key in customs:
+                customs[emote_key] = dict(customs[emote_key])
+                customs[emote_key].pop(slot, None)
+                if not customs[emote_key]:
+                    customs.pop(emote_key)
+            char.db.emote_customs = customs
+            char.msg(f"|wCleared custom '{slot}' variants for '{emote_key}'.|n")
+
+        elif subcmd == "add":
+            if not text:
+                char.msg("|xNo message text provided.|n")
+                return
+            customs = dict(getattr(char.db, "emote_customs", None) or {})
+            customs.setdefault(emote_key, {})[slot] = (
+                list(customs.get(emote_key, {}).get(slot, [])) + [text]
+            )
+            char.db.emote_customs = customs
+            n = len(customs[emote_key][slot])
+            char.msg(f"|wAdded variant #{n} to '{emote_key}' / {slot}:|n {text}")
+
+        else:
+            char.msg("|xUsage: emoteset <emote> <slot> add <text> | <slot> clear|n")
+
+    def _do_list(self, char):
+        customs = getattr(char.db, "emote_customs", None) or {}
+        if not customs:
+            char.msg("|xYou have no custom emote variants set. Use 'emoteset <emote> <slot> add <text>' to add some.|n")
+            return
+        lines = ["|wYour customized emotes:|n"]
+        for key, slots in sorted(customs.items()):
+            counts = ", ".join(
+                f"{s}: {len(v)}" for s, v in slots.items() if v
+            )
+            lines.append(f"  |w{key}|n — {counts}")
+        char.msg("\n".join(lines))
+
+    def _do_show(self, char, emote_key):
+        customs = (getattr(char.db, "emote_customs", None) or {}).get(emote_key, {})
+        emote   = EMOTE_TABLE[emote_key]
+        lines   = [f"|wEmote: {emote_key}|n  (tier: {emote.get('tier', '?')})"]
+        for slot in self._SLOTS:
+            pool = customs.get(slot, [])
+            lines.append(f"\n  |w{slot}|n ({len(pool)} custom variant{'s' if len(pool) != 1 else ''}):")
+            if pool:
+                for i, v in enumerate(pool, 1):
+                    lines.append(f"    |x{i}.|n {v}")
+            else:
+                # Show the default
+                idx = {"self": 0, "room": 1, "recv": 2}[slot]
+                src = emote.get("target") if slot == "recv" else emote.get("solo")
+                if src and idx < len(src):
+                    default = src[idx]
+                    if isinstance(default, list):
+                        lines.append(f"    |x(default pool — {len(default)} variant(s))|n")
+                    else:
+                        lines.append(f"    |x(default: {default})|n")
+        char.msg("\n".join(lines))
+
+
+# -------------------------------------------------------------------
 # Export list for default_cmdsets.py
 #
 # In CharacterCmdSet.at_cmdset_creation, do:
@@ -1373,4 +1863,4 @@ class CmdPermit(MuxCommand):
 #         self.add(cmd_cls())
 # -------------------------------------------------------------------
 
-ALL_SOCIAL_CMDS = list(_EMOTE_CLASSES.values()) + [CmdPermit]
+ALL_SOCIAL_CMDS = list(_EMOTE_CLASSES.values()) + [CmdPermit, CmdEmoteSet]
