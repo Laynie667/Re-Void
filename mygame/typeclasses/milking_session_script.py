@@ -157,8 +157,13 @@ class MilkingSessionScript(DefaultScript):
                 for ft, (ml, flavor) in by_type.items():
                     if ml > 0:
                         bank.deposit(target, ml, ft, flavor)
-            except Exception:
-                # Fallback to old bottle method if bank unavailable
+            except Exception as _bank_err:
+                from evennia.utils import logger
+                logger.log_err(
+                    f"MilkingSessionScript bank deposit failed for "
+                    f"{target_name}: {_bank_err}"
+                )
+                # Fallback to old bottle method
                 self._deposit_to_bottles(target, room, by_type, target_name)
 
         # ── Phase detection (priming / tapering / running) ────────────
