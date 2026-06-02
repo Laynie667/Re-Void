@@ -197,13 +197,6 @@ class Account(DefaultAccount):
             f"|xYou drift into the world.|n"
         )
 
-        # Deliver any pending Ograms
-        try:
-            from commands.ogram_commands import deliver_ograms
-            deliver_ograms(self)
-        except Exception:
-            pass
-
         if room:
             self.msg(self._build_wisp_room_view(room))
         else:
@@ -211,6 +204,16 @@ class Account(DefaultAccount):
                 f"|xNo location found. "
                 f"Type 'ic <name>' to enter a character.|n"
             )
+
+        # Deliver any pending Ograms *after* the room renders.
+        # The 2-second delay lets the room view (and any immediate IC puppet)
+        # settle before the ogram notification appears as its own distinct message.
+        try:
+            from commands.ogram_commands import deliver_ograms
+            from evennia.utils import delay
+            delay(2, deliver_ograms, self)
+        except Exception:
+            pass
 
     def at_disconnect(self, reason=None, **kwargs):
         """
