@@ -27,6 +27,12 @@ PENIS_MOD_PRICE     = 400   # shards — PenisItem, installs to groin/penis zone
 TESTICLE_MOD_PRICE  = 350   # shards — TesticleItem, installs to groin/testicles zone
 SEMEN_GLANDS_PRICE  = 300   # shards — SemenProductionItem, enables semen production
 GROWTH_SERUM_PRICE  = 350   # shards — GrowthSerumItem, 3 doses, perm size + production boost
+KNOT_PRICE          = 300   # shards — KnotItem, installs knot on shaft zone
+CANI_AID_PRICE      = 150   # shards — CaniAid, 5 doses, +60s temp knot duration
+CANI_MAX_PRICE      = 300   # shards — CaniMax, 3 doses, +120s perm knot duration
+EQUINE_PRICE        = 450   # shards — EquineItem, equine-variant shaft mod
+PORCINE_PRICE       = 400   # shards — PorcineItem, porcine-variant shaft mod
+DRACONIC_PRICE      = 500   # shards — DraconicItem, draconic-variant shaft mod
 LACTAID_PRICE       = 200   # shards — mild perm size + production (milk-focused), 5 doses
 LACTMAX_PRICE       = 400   # shards — aggressive perm size + production, 3 doses
 LACTO_PRICE         = 150   # shards — temp production rate boost, 5 doses
@@ -255,7 +261,13 @@ DURGIN_TRIGGERS = {
             f"  Lact-O-max (3 doses)   — {LACTO_MAX_PRICE} shards\n"
             f"  Throbb (5 doses)       — {THROBB_PRICE} shards\n"
             f"  Cap-aid (3 uses)       — {CAP_AID_PRICE} shards\n"
-            f"  Cap-max (2 uses)       — {CAP_MAX_PRICE} shards\n\n"
+            f"  Cap-max (2 uses)       — {CAP_MAX_PRICE} shards\n"
+            f"  Knot                   — {KNOT_PRICE} shards\n"
+            f"  Cani-aid (5 doses)     — {CANI_AID_PRICE} shards\n"
+            f"  Cani-max (3 doses)     — {CANI_MAX_PRICE} shards\n"
+            f"  Equine enhancement     — {EQUINE_PRICE} shards\n"
+            f"  Porcine enhancement    — {PORCINE_PRICE} shards\n"
+            f"  Draconic enhancement   — {DRACONIC_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -289,7 +301,13 @@ DURGIN_TRIGGERS = {
             f"  Lact-O-max (3 doses)   — {LACTO_MAX_PRICE} shards\n"
             f"  Throbb (5 doses)       — {THROBB_PRICE} shards\n"
             f"  Cap-aid (3 uses)       — {CAP_AID_PRICE} shards\n"
-            f"  Cap-max (2 uses)       — {CAP_MAX_PRICE} shards\n\n"
+            f"  Cap-max (2 uses)       — {CAP_MAX_PRICE} shards\n"
+            f"  Knot                   — {KNOT_PRICE} shards\n"
+            f"  Cani-aid (5 doses)     — {CANI_AID_PRICE} shards\n"
+            f"  Cani-max (3 doses)     — {CANI_MAX_PRICE} shards\n"
+            f"  Equine enhancement     — {EQUINE_PRICE} shards\n"
+            f"  Porcine enhancement    — {PORCINE_PRICE} shards\n"
+            f"  Draconic enhancement   — {DRACONIC_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -735,6 +753,70 @@ DURGIN_TRIGGERS = {
         "type": "emote",
     },
     "buy cap-max": { "response": "_HANDLE_PURCHASE_CAP_MAX", "type": "action" },
+
+    # ── Knot / Cani-aid / Cani-max ────────────────────────────────────────
+    "knot": {
+        "response": [
+            f"Durgin sets a small case on the counter. 'Knot. Installs on any shaft zone — "
+            f"species doesn't matter. Triggers during a scene when arousal is high enough, "
+            f"blocks withdrawal for the base duration. Extend it with Cani-aid or Cani-max.' "
+            f"He taps it once. '|winstall Knot|n after purchase. {KNOT_PRICE} shards. |wbuy knot|n.'"
+        ],
+        "type": "emote",
+    },
+    "buy knot": { "response": "_HANDLE_PURCHASE_KNOT", "type": "action" },
+
+    "cani-aid": {
+        "response": [
+            f"'Cani-aid.' Durgin sets a vial down. 'Temporary knot duration — sixty seconds "
+            f"added for four hours. Five doses. |winject/knot <target> [zone]|n to apply.' "
+            f"He checks a ledger. '{CANI_AID_PRICE} shards. |wbuy cani-aid|n.'"
+        ],
+        "type": "emote",
+    },
+    "buy cani-aid": { "response": "_HANDLE_PURCHASE_CANI_AID", "type": "action" },
+
+    "cani-max": {
+        "response": [
+            f"'Cani-max.' Durgin produces a heavier vial. 'Permanent — two minutes added "
+            f"to base knot duration, stacks, three doses. Same command as Cani-aid.' "
+            f"He puts it down. '{CANI_MAX_PRICE} shards. |wbuy cani-max|n.'"
+        ],
+        "type": "emote",
+    },
+    "buy cani-max": { "response": "_HANDLE_PURCHASE_CANI_MAX", "type": "action" },
+
+    # ── Species shaft variants ────────────────────────────────────────────
+    "equine enhancement": {
+        "response": [
+            f"Durgin sets a padded case on the counter without ceremony. 'Equine enhancement. "
+            f"Shaft variant, equine scale. Starts at Striking — size four. Install with "
+            f"|winstall Equine Enhancement|n. Compatible with lotion, syringe, serum.' "
+            f"'{EQUINE_PRICE} shards. |wbuy equine enhancement|n.'"
+        ],
+        "type": "emote",
+    },
+    "buy equine enhancement": { "response": "_HANDLE_PURCHASE_EQUINE", "type": "action" },
+
+    "porcine enhancement": {
+        "response": [
+            f"'Porcine enhancement.' Durgin produces a case. 'Spiral scale. Starts Spiraled, "
+            f"size two. Install protocol same as everything else.' "
+            f"He sets it flat. '{PORCINE_PRICE} shards. |wbuy porcine enhancement|n.'"
+        ],
+        "type": "emote",
+    },
+    "buy porcine enhancement": { "response": "_HANDLE_PURCHASE_PORCINE", "type": "action" },
+
+    "draconic enhancement": {
+        "response": [
+            f"Durgin sets the heaviest case on the counter. 'Draconic enhancement. "
+            f"Ridged scale — shows a heat modifier at higher sizes. Rarest of the three. "
+            f"Starts Ridged.' He taps it once. '{DRACONIC_PRICE} shards. |wbuy draconic enhancement|n.'"
+        ],
+        "type": "emote",
+    },
+    "buy draconic enhancement": { "response": "_HANDLE_PURCHASE_DRACONIC", "type": "action" },
 
     # ── Lore / personality ────────────────────────────────────────────────
     "who are you": {
@@ -1500,6 +1582,81 @@ def handle_purchase(caller, npc, purchase_type):
         item.db.duration_hours    = 0.0
         item.db.label             = "Cap-max"
         import random; npc.location.msg_contents(f"Durgin sets the heavy applicator before {char_name}. 'Two doses. Six hundred millilitres each, permanent, stacks. |winject/cap|n.' He says nothing else.")
+        return
+
+    # ── Knot ──────────────────────────────────────────────────────────────────
+    if purchase_type == "knot":
+        if shards < KNOT_PRICE:
+            npc.execute_cmd(f"say {KNOT_PRICE} shards for the Knot, {char_name}. You have {shards}.")
+            return
+        char.db.shards = shards - KNOT_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=KNOT_PRICE, reason="purchase", note="Knot from Durgin Ironwood")
+        from typeclasses.knot_item import KnotItem
+        item = create.create_object(KnotItem, key="Knot", location=char)
+        import random
+        npc.location.msg_contents(f"Durgin hands the case to {char_name}. '|winstall Knot|n on your shaft zone. Base two-minute tie. Extend it with Cani-aid or Cani-max.'")
+        return
+
+    if purchase_type == "cani_aid":
+        if shards < CANI_AID_PRICE:
+            npc.execute_cmd(f"say {CANI_AID_PRICE} shards for Cani-aid, {char_name}. You have {shards}.")
+            return
+        char.db.shards = shards - CANI_AID_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=CANI_AID_PRICE, reason="purchase", note="Cani-aid from Durgin Ironwood")
+        from typeclasses.knot_item import CaniAid
+        item = create.create_object(CaniAid, key="Cani-aid", location=char)
+        item.db.temp_bonus = 60.0; item.db.duration_hours = 4.0; item.db.uses_remaining = 5; item.db.label = "Cani-aid"
+        import random
+        npc.location.msg_contents(f"Durgin slides the vial to {char_name}. '|winject/knot <target> [zone]|n. Sixty seconds, four hours, five doses.'")
+        return
+
+    if purchase_type == "cani_max":
+        if shards < CANI_MAX_PRICE:
+            npc.execute_cmd(f"say {CANI_MAX_PRICE} shards for Cani-max, {char_name}. You have {shards}.")
+            return
+        char.db.shards = shards - CANI_MAX_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=CANI_MAX_PRICE, reason="purchase", note="Cani-max from Durgin Ironwood")
+        from typeclasses.knot_item import CaniMax
+        item = create.create_object(CaniMax, key="Cani-max", location=char)
+        item.db.perm_bonus = 120.0; item.db.uses_remaining = 3; item.db.label = "Cani-max"
+        import random
+        npc.location.msg_contents(f"Durgin hands {char_name} the vial. 'Two minutes, permanent, stacks. Three doses. |winject/knot|n.'")
+        return
+
+    if purchase_type == "equine":
+        if shards < EQUINE_PRICE:
+            npc.execute_cmd(f"say {EQUINE_PRICE} shards for Equine Enhancement, {char_name}. You have {shards}.")
+            return
+        char.db.shards = shards - EQUINE_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=EQUINE_PRICE, reason="purchase", note="Equine Enhancement from Durgin Ironwood")
+        from typeclasses.body_mod_item import EquineItem
+        item = create.create_object(EquineItem, key="Equine Enhancement", location=char)
+        import random
+        npc.location.msg_contents(f"Durgin hands the case to {char_name}. '|winstall Equine Enhancement|n on your shaft zone. Starts at Striking.'")
+        return
+
+    if purchase_type == "porcine":
+        if shards < PORCINE_PRICE:
+            npc.execute_cmd(f"say {PORCINE_PRICE} shards for Porcine Enhancement, {char_name}. You have {shards}.")
+            return
+        char.db.shards = shards - PORCINE_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=PORCINE_PRICE, reason="purchase", note="Porcine Enhancement from Durgin Ironwood")
+        from typeclasses.body_mod_item import PorcineItem
+        item = create.create_object(PorcineItem, key="Porcine Enhancement", location=char)
+        import random
+        npc.location.msg_contents(f"Durgin sets the case before {char_name}. '|winstall Porcine Enhancement|n. Spiral scale.'")
+        return
+
+    if purchase_type == "draconic":
+        if shards < DRACONIC_PRICE:
+            npc.execute_cmd(f"say {DRACONIC_PRICE} shards for Draconic Enhancement, {char_name}. You have {shards}.")
+            return
+        char.db.shards = shards - DRACONIC_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=DRACONIC_PRICE, reason="purchase", note="Draconic Enhancement from Durgin Ironwood")
+        from typeclasses.body_mod_item import DraconicItem
+        item = create.create_object(DraconicItem, key="Draconic Enhancement", location=char)
+        import random
+        npc.location.msg_contents(f"Durgin passes the case to {char_name}. '|winstall Draconic Enhancement|n. Ridged scale. Rarest one I stock.'")
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────

@@ -187,10 +187,111 @@ def _penis_display(size: float) -> str:
 # Display dispatch
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Equine display table — large scale, flare modifier
+# ---------------------------------------------------------------------------
+
+_EQUINE_TABLE = [
+    (0.0,  "Modest"),
+    (1.0,  "Respectable"),
+    (2.0,  "Substantial"),
+    (3.0,  "Impressive"),
+    (4.0,  "Striking"),
+    (5.0,  "Commanding"),
+    (6.0,  "Formidable"),
+    (7.0,  "Demanding"),
+    (9.0,  "Imposing"),
+    (11.0, "Overwhelming"),
+    (14.0, "Legendary"),
+    (17.0, "Mythological"),
+    (20.0, "An Event"),
+    (24.0, "A Situation"),
+    (28.0, "Beyond Classification"),
+]
+
+
+def _equine_display(size: float) -> str:
+    size  = max(0.0, round(size, 2))
+    label = _EQUINE_TABLE[0][1]
+    for min_val, band_label in reversed(_EQUINE_TABLE):
+        if size >= min_val:
+            label = band_label
+            break
+    # Flare variant shows at 0.5 fractional step
+    frac = round(size % 1.0, 2)
+    if 0.5 <= frac < 0.75:
+        return f"{label} (flared)"
+    return label
+
+
+# ---------------------------------------------------------------------------
+# Porcine display table — spiral/corkscrew descriptors
+# ---------------------------------------------------------------------------
+
+_PORCINE_TABLE = [
+    (0.0,  "Slight"),
+    (1.0,  "Neat"),
+    (2.0,  "Spiraled"),
+    (3.0,  "Noticeably Coiled"),
+    (5.0,  "Impressively Coiled"),
+    (7.0,  "Deeply Coiled"),
+    (9.0,  "Extravagantly Coiled"),
+    (12.0, "Comprehensively Coiled"),
+    (16.0, "Architecturally Coiled"),
+    (20.0, "Beyond Reasonable Coiling"),
+]
+
+
+def _porcine_display(size: float) -> str:
+    size  = max(0.0, round(size, 2))
+    label = _PORCINE_TABLE[0][1]
+    for min_val, band_label in reversed(_PORCINE_TABLE):
+        if size >= min_val:
+            label = band_label
+            break
+    return label
+
+
+# ---------------------------------------------------------------------------
+# Draconic display table — ridged, heat modifier at high sizes
+# ---------------------------------------------------------------------------
+
+_DRACONIC_TABLE = [
+    (0.0,  "Slender"),
+    (1.0,  "Notable"),
+    (2.0,  "Ridged"),
+    (4.0,  "Prominently Ridged"),
+    (6.0,  "Heavily Ridged"),
+    (8.0,  "Formidably Ridged"),
+    (10.0, "Intricately Ridged"),
+    (13.0, "Comprehensively Ridged"),
+    (17.0, "Draconic"),
+    (22.0, "Mythological"),
+    (28.0, "Beyond Classification"),
+]
+
+
+def _draconic_display(size: float) -> str:
+    size  = max(0.0, round(size, 2))
+    label = _DRACONIC_TABLE[0][1]
+    for min_val, band_label in reversed(_DRACONIC_TABLE):
+        if size >= min_val:
+            label = band_label
+            break
+    return f"{label} (heated)" if size >= 8.0 else label
+
+
+# ---------------------------------------------------------------------------
+# Display dispatch
+# ---------------------------------------------------------------------------
+
 _DISPLAY_FUNCS = {
     "breast":   _breast_display,
     "testicle": _testicle_display,
     "penis":    _penis_display,
+    "equine":   _equine_display,
+    "porcine":  _porcine_display,
+    "draconic": _draconic_display,
 }
 
 # Production rate multipliers per size point above base (used by production items)
@@ -198,6 +299,9 @@ _PRODUCTION_MULTIPLIERS = {
     "breast":   0.12,   # +12% base rate per size point
     "testicle": 0.10,
     "penis":    0.08,
+    "equine":   0.07,
+    "porcine":  0.07,
+    "draconic": 0.09,
 }
 
 # Default starting size per type
@@ -205,6 +309,9 @@ _DEFAULT_SIZE = {
     "breast":   0.0,    # AA
     "testicle": 2.0,    # Average
     "penis":    2.0,    # Average
+    "equine":   4.0,    # Striking
+    "porcine":  2.0,    # Spiraled
+    "draconic": 2.0,    # Ridged
 }
 
 
@@ -452,3 +559,43 @@ class PenisItem(BodyModItem):
         self.db.mod_type = "penis"
         self.db.size     = _DEFAULT_SIZE["penis"]    # 2.0 = Average
         self.key         = "penis item"
+
+
+class EquineItem(BodyModItem):
+    """
+    Equine-variant shaft body mod.
+    Uses a large-scale descriptor table with a flare modifier at 0.5 steps.
+    Starts at Striking (4.0). Works with lotion / syringe / serums.
+    """
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.mod_type = "equine"
+        self.db.size     = 4.0    # Striking
+        self.key         = "Equine Enhancement"
+
+
+class PorcineItem(BodyModItem):
+    """
+    Porcine-variant shaft body mod.
+    Uses a spiral/corkscrew descriptor scale.
+    """
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.mod_type = "porcine"
+        self.db.size     = 2.0    # Spiraled
+        self.key         = "Porcine Enhancement"
+
+
+class DraconicItem(BodyModItem):
+    """
+    Draconic-variant shaft body mod.
+    Ridged scale; shows a (heated) modifier at size >= 8.0.
+    """
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.mod_type = "draconic"
+        self.db.size     = 2.0    # Ridged
+        self.key         = "Draconic Enhancement"

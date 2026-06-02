@@ -186,10 +186,12 @@ class CmdPenetrate(MuxCommand):
                 caller.msg("\n".join(lines))
                 return
 
-        # Set engagement state
+        # Set engagement state — include caller's shaft zone for knot lookup
+        shaft_zone = _find_shaft_zone(caller)
         caller.db.penetrating = {
             "target_dbref": target.dbref,
             "zone_name":    zone_name,
+            "caller_zone":  shaft_zone,
         }
 
         caller_name = caller.db.rp_name or caller.name
@@ -286,6 +288,15 @@ class CmdThrust(Command):
         add_arousal(caller, 8.0)
         add_arousal(target, 5.0)
 
+        # Try knot trigger (25% chance once arousal >= 70 and knot installed)
+        caller_zone = (caller.db.penetrating or {}).get("caller_zone")
+        if caller_zone:
+            try:
+                from typeclasses.knot_item import try_trigger_knot
+                try_trigger_knot(caller, target, caller_zone, room)
+            except Exception:
+                pass
+
 
 # ---------------------------------------------------------------------------
 # CmdWithdraw
@@ -312,6 +323,24 @@ class CmdWithdraw(Command):
 
         target_dbref = engaged.get("target_dbref")
         zone_name    = engaged.get("zone_name", "")
+        # Block withdrawal if knotted and tie hasn't expired
+        import time as _t
+        if engaged.get("knotted"):
+            expires = engaged.get("knot_expires_at", 0.0)
+            if _t.time() < expires:
+                remaining = max(0, int(expires - _t.time()))
+                caller.msg(f"|xThe knot holds — {remaining}s remaining.|n")
+                return
+            else:
+                # Natural release — fire message then continue with withdrawal
+                engaged["knotted"] = False
+                engaged["knot_expires_at"] = 0.0
+                caller.db.penetrating = engaged
+                room = caller.location
+                if room:
+                    c_name = caller.db.rp_name or caller.name
+                    room.msg_contents(f"|x{c_name} — the knot releases naturally.|n")
+
         caller.db.penetrating = None
 
         caller_name = caller.db.rp_name or caller.name

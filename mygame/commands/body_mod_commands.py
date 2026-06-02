@@ -146,17 +146,19 @@ class CmdInstall(Command):
         # Find the item in inventory
         from typeclasses.body_mod_item import BodyModItem
         from typeclasses.production_item import ProductionItem
+        from typeclasses.knot_item import KnotItem
 
         item = None
         for obj in caller.contents:
             if item_name.lower() in obj.key.lower():
-                if isinstance(obj, (BodyModItem, ProductionItem)):
+                if isinstance(obj, (BodyModItem, ProductionItem, KnotItem)):
                     item = obj
                     break
 
         if not item:
             caller.msg(
-                f"|xYou don't have a body mod or production item matching '{item_name}'.|n"
+                f"|xYou don't have a body mod, production item, or knot "
+                f"matching '{item_name}'.|n"
             )
             return
 
@@ -477,7 +479,7 @@ class CmdInject(MuxCommand):
     key     = "inject"
     locks   = "cmd:all()"
     help_category = "Body Mod"
-    switch_options = ("self", "serum", "prod", "cap")
+    switch_options = ("self", "serum", "prod", "cap", "knot")
 
     def func(self):
         caller   = self.caller
@@ -565,6 +567,52 @@ class CmdInject(MuxCommand):
                 caller.msg(
                     f"|x{target.db.rp_name or target.name} has no production zone for capacity.|n"
                 )
+                return
+
+            ok, msg = item.apply(caller, target, zone_name)
+            if ok:
+                caller.location.msg_contents(msg, exclude=[])
+            else:
+                caller.msg(f"|x{msg}|n")
+            return
+
+        # ── /knot branch — Cani-aid / Cani-max application ──────────────
+        if "knot" in switches:
+            from typeclasses.knot_item import CaniAid, CaniMax
+            items = [o for o in caller.contents if isinstance(o, (CaniAid, CaniMax))]
+            if not items:
+                caller.msg("|xYou don't have Cani-aid or Cani-max.|n")
+                return
+            item = items[0]
+
+            if "self" in switches:
+                target   = caller
+                zone_arg = args.strip()
+            else:
+                parts = args.split(None, 1)
+                if not parts:
+                    caller.msg("|xUsage: inject/knot <target> [<zone>]|n")
+                    return
+                found = _find_char_in_room(caller, parts[0])
+                if not found:
+                    caller.msg(f"|xCan't find '{parts[0]}' in the room.|n")
+                    return
+                target   = found
+                zone_arg = parts[1].strip() if len(parts) > 1 else ""
+
+            zone_name = zone_arg.replace(" ", "_").lower() if zone_arg else None
+            if not zone_name:
+                # Auto-detect: find shaft zone with a knot installed
+                zones = getattr(target.db, "zones", None) or {}
+                for zn, zd in zones.items():
+                    if (zd.get("zone_type") == "shaft" and
+                            (zd.get("mechanics", {}) or {}).get("knot")):
+                        zone_name = zn
+                        break
+
+            if not zone_name:
+                t_name = target.db.rp_name or target.name
+                caller.msg(f"|x{t_name} has no knot installed on a shaft zone.|n")
                 return
 
             ok, msg = item.apply(caller, target, zone_name)
