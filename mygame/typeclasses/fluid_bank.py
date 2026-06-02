@@ -47,20 +47,30 @@ class GlobalFluidBank(DefaultScript):
         """
         Return the singleton bank, creating it if it doesn't exist.
 
+        Uses evennia.search_script() — the proper Evennia-recommended way to
+        find scripts by key — rather than raw ScriptDB queries.
+
         Usage:
             bank = GlobalFluidBank.get()
         """
-        from evennia.scripts.models import ScriptDB
-        qs = ScriptDB.objects.filter(db_key="global_fluid_bank")
-        if qs.exists():
-            obj = qs.first()
-            try:
-                return obj.typeclass
-            except Exception:
-                pass
-        # Create it
+        from evennia import search_script
+        results = search_script("global_fluid_bank", exact=True)
+        if results:
+            for result in results:
+                if isinstance(result, cls):
+                    return result
+            # Found scripts with this key but wrong typeclass — return first anyway
+            if results:
+                return results[0]
+
+        # Not found — create with key set at creation time (more reliable)
         from evennia.utils import create
-        bank = create.create_script(cls, persistent=True)
+        bank = create.create_script(
+            cls,
+            key="global_fluid_bank",
+            persistent=True,
+            autostart=True,
+        )
         return bank
 
     # ------------------------------------------------------------------
