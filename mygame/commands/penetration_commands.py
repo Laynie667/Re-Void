@@ -215,9 +215,14 @@ class CmdPenetrate(MuxCommand):
             try:
                 msg = _resolve_tokens(random.choice(handles), caller, target, zone_disp)
             except Exception:
-                msg = f"{caller_name} and {target_name} — {zone_disp}."
+                msg = None
         else:
-            msg = f"{caller_name} and {target_name} — {zone_disp}."
+            msg = None
+
+        if not msg:
+            from world.milking_loader import pick_action_message
+            tmpl = pick_action_message("penetrate") or "{actor} and {target} — {zone}."
+            msg = tmpl.replace("{actor}", caller_name).replace("{target}", target_name).replace("{zone}", zone_disp)
 
         room.msg_contents(msg)
 
@@ -303,9 +308,14 @@ class CmdThrust(Command):
             try:
                 msg = _resolve_tokens(random.choice(handles), caller, target, zone_disp)
             except Exception:
-                msg = f"{caller_name} — {target_name}'s {zone_disp}."
+                msg = None
         else:
-            msg = f"{caller_name} — {target_name}'s {zone_disp}."
+            msg = None
+
+        if not msg:
+            from world.milking_loader import pick_action_message
+            tmpl = pick_action_message("thrust") or "{actor} — {target}'s {zone}."
+            msg = tmpl.replace("{actor}", caller_name).replace("{target}", target_name).replace("{zone}", zone_disp)
 
         room.msg_contents(msg)
 
@@ -414,8 +424,12 @@ class CmdWithdraw(Command):
             target_name = (
                 (results[0].db.rp_name or results[0].name) if results else "them"
             )
+            from world.milking_loader import pick_action_message
+            tmpl = pick_action_message("withdraw") or "{actor} withdraws from {target}'s {zone}."
             room.msg_contents(
-                f"{caller_name} withdraws from {target_name}'s {zone_disp}."
+                tmpl.replace("{actor}", caller_name)
+                    .replace("{target}", target_name)
+                    .replace("{zone}", zone_disp)
             )
 
 
@@ -633,8 +647,12 @@ class CmdSuck(MuxCommand):
             shaft = _find_shaft_zone(target)
             if shaft:
                 zone_disp = shaft.replace("_", " ")
+                from world.milking_loader import pick_action_message
+                tmpl = pick_action_message("suck_shaft") or "{actor} — {target}'s {zone}."
                 room.msg_contents(
-                    f"{caller_name} — {target_name}'s {zone_disp}."
+                    tmpl.replace("{actor}", caller_name)
+                        .replace("{target}", target_name)
+                        .replace("{zone}", zone_disp)
                 )
                 from typeclasses.arousal_script import add_arousal
                 add_arousal(target, 12.0)
@@ -676,8 +694,14 @@ class CmdSuck(MuxCommand):
             prod_item.reset_fullness_notifications()
             zone_disp = prod_zone.replace("_", " ")
 
+            from world.milking_loader import pick_action_message
+            from typeclasses.production_item import format_volume as _fv
+            tmpl = pick_action_message("suck_breast") or "{actor} nurses from {target}'s {zone}. {vol} taken."
             room.msg_contents(
-                f"{caller_name} — {target_name}'s {zone_disp}."
+                tmpl.replace("{actor}", caller_name)
+                    .replace("{target}", target_name)
+                    .replace("{zone}", zone_disp)
+                    .replace("{vol}", _fv(extract))
             )
             from typeclasses.arousal_script import add_arousal
             add_arousal(caller, 3.0)
@@ -873,9 +897,13 @@ class CmdHandmilk(MuxCommand):
         target_name = target.db.rp_name or target.name
         zone_disp   = prod_zone.replace("_", " ")
 
+        from world.milking_loader import pick_action_message
+        tmpl = pick_action_message("handmilk") or "{actor} milks {target}'s {zone} by hand — {vol}."
         room.msg_contents(
-            f"{caller_name} milks {target_name} by hand — "
-            f"{zone_disp} ({format_volume(extract)})."
+            tmpl.replace("{actor}", caller_name)
+                .replace("{target}", target_name)
+                .replace("{zone}", zone_disp)
+                .replace("{vol}", format_volume(extract))
         )
 
         # Bank deposit
@@ -914,7 +942,13 @@ def _repeat_suck(char, target, zone, room) -> bool:
         shaft = _find_shaft_zone(target)
         if shaft:
             zone_disp = shaft.replace("_", " ")
-            room.msg_contents(f"{caller_name} — {target_name}'s {zone_disp}.")
+            from world.milking_loader import pick_action_message
+            tmpl = pick_action_message("suck_shaft") or "{actor} — {target}'s {zone}."
+            room.msg_contents(
+                tmpl.replace("{actor}", caller_name)
+                    .replace("{target}", target_name)
+                    .replace("{zone}", zone_disp)
+            )
             add_arousal(target, 12.0)
             add_arousal(char, 4.0)
             return True
@@ -944,7 +978,15 @@ def _repeat_suck(char, target, zone, room) -> bool:
         prod_item.db.current_volume_ml = max(0.0, available - extract)
         prod_item.reset_fullness_notifications()
         zone_disp = prod_zone.replace("_", " ")
-        room.msg_contents(f"{caller_name} — {target_name}'s {zone_disp}.")
+        from world.milking_loader import pick_action_message
+        from typeclasses.production_item import format_volume as _fv2
+        tmpl = pick_action_message("suck_breast") or "{actor} nurses from {target}'s {zone}. {vol} taken."
+        room.msg_contents(
+            tmpl.replace("{actor}", caller_name)
+                .replace("{target}", target_name)
+                .replace("{zone}", zone_disp)
+                .replace("{vol}", _fv2(extract))
+        )
         add_arousal(char, 3.0)
         add_arousal(target, 4.0)
         try:
@@ -994,9 +1036,13 @@ def _repeat_handmilk(char, target, zone, room) -> bool:
     target_name = target.db.rp_name or target.name
     zone_disp   = prod_zone.replace("_", " ")
 
+    from world.milking_loader import pick_action_message
+    tmpl = pick_action_message("handmilk") or "{actor} milks {target}'s {zone} by hand — {vol}."
     room.msg_contents(
-        f"{caller_name} milks {target_name} by hand — "
-        f"{zone_disp} ({format_volume(extract)})."
+        tmpl.replace("{actor}", caller_name)
+            .replace("{target}", target_name)
+            .replace("{zone}", zone_disp)
+            .replace("{vol}", format_volume(extract))
     )
     add_arousal(target, 8.0)
     if char != target:
@@ -1027,7 +1073,13 @@ def _repeat_thrust(char, engaged: dict, room):
     target_name = target.db.rp_name or target.name
     zone_disp   = zone_name.replace("_", " ")
 
-    room.msg_contents(f"{caller_name} — {target_name}'s {zone_disp}.")
+    from world.milking_loader import pick_action_message
+    tmpl = pick_action_message("thrust") or "{actor} — {target}'s {zone}."
+    room.msg_contents(
+        tmpl.replace("{actor}", caller_name)
+            .replace("{target}", target_name)
+            .replace("{zone}", zone_disp)
+    )
     add_arousal(char, 8.0)
     add_arousal(target, 5.0)
 

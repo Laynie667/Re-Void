@@ -291,3 +291,19 @@ def pick_womb_message(pool: str) -> str | None:
     data = _load()
     msgs = data.get("womb", {}).get(pool, [])
     return random.choice(msgs) if msgs else None
+
+
+def pick_action_message(action: str) -> str | None:
+    """
+    Return a random action message for the given pool.
+
+    Args:
+        action: "penetrate" | "thrust" | "withdraw" |
+                "suck_shaft" | "suck_breast" | "handmilk"
+
+    Tokens in the returned string: {actor} {target} {zone} {vol}
+    ({vol} only present in suck_breast and handmilk pools)
+    """
+    data = _load()
+    msgs = data.get("actions", {}).get(action, [])
+    return random.choice(msgs) if msgs else None

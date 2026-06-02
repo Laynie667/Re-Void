@@ -634,3 +634,63 @@ womb:
     - "The space vibrates with {host}'s voice, close and total: \"{message}\""
     - "{host} speaks and the inside of them carries every word perfectly: \"{message}\""
     - "Nowhere to go that {host}'s voice doesn't reach in here: \"{message}\""
+
+# ---------------------------------------------------------------------------
+# Action message pools — fallback when a zone has no custom handle message.
+# Tokens: {actor} {target} {zone} {vol} (vol = extracted volume, suck/handmilk)
+#
+# penetrate  — actor first enters target's zone
+# thrust     — each thrust tick
+# withdraw   — actor pulls out
+# suck_shaft — actor sucking a shaft zone
+# suck_breast — actor nursing from a breast/production zone
+# handmilk   — actor milking by hand
+# ---------------------------------------------------------------------------
+
+actions:
+  penetrate:
+    - "{actor} pushes into {target}'s {zone} and seats themselves inside."
+    - "{actor} works their way into {target}'s {zone} — all the way in."
+    - "{actor} slides inside {target}'s {zone} and doesn't stop until they're buried."
+    - "{actor} forces {target}'s {zone} open and fills it up."
+    - "{actor} sinks into {target}'s {zone} — slow, deliberate, complete."
+    - "{actor} presses {target}'s {zone} open and pushes in deep."
+
+  thrust:
+    - "{actor} drives into {target}'s {zone}."
+    - "{actor} fucks {target}'s {zone} — hard and steady."
+    - "{actor} pounds {target}'s {zone}."
+    - "{actor} works {target}'s {zone} open with each thrust."
+    - "{actor} buries themselves in {target}'s {zone} again and again."
+    - "{actor} slams into {target}'s {zone}."
+    - "{actor} uses {target}'s {zone} — deep and relentless."
+    - "{actor} hammers {target}'s {zone}, pulling out almost all the way and driving back in."
+
+  withdraw:
+    - "{actor} pulls out of {target}'s {zone}."
+    - "{actor} withdraws from {target}'s {zone} — leaving it stretched and empty."
+    - "{actor} slides free of {target}'s {zone}."
+    - "{actor} pulls out of {target}'s {zone} and steps back."
+
+  suck_shaft:
+    - "{actor} goes down on {target}'s {zone}."
+    - "{actor} takes {target}'s {zone} in their mouth."
+    - "{actor} gets their mouth around {target}'s {zone} and gets to work."
+    - "{actor} wraps their lips around {target}'s {zone} and sucks."
+    - "{actor} drops down and takes {target}'s {zone} to the back of their throat."
+    - "{actor} mouths at {target}'s {zone} — wet and thorough."
+
+  suck_breast:
+    - "{actor} nurses from {target}'s {zone} — pulling {vol} free."
+    - "{actor} latches onto {target}'s {zone} and drinks. {vol} taken."
+    - "{actor} sucks {target}'s {zone} and swallows what comes. {vol}."
+    - "{actor} mouths at {target}'s {zone} and milks it with their lips. {vol} drawn out."
+    - "{actor} gets their mouth on {target}'s {zone} and nurses until they have {vol}."
+
+  handmilk:
+    - "{actor} milks {target}'s {zone} by hand — {vol} pulled free."
+    - "{actor} works {target}'s {zone} with both hands. {vol} extracted."
+    - "{actor} wraps their hands around {target}'s {zone} and milks them down. {vol}."
+    - "{actor} squeezes {target}'s {zone} — firm, practiced strokes — and takes {vol}."
+    - "{actor} milks {target}'s {zone} thoroughly. {vol} out."
+    - "{actor} gets their hands on {target}'s {zone} and doesn't stop until they've taken {vol}."
