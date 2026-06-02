@@ -235,3 +235,140 @@ class HousingExpiryScript(DefaultScript):
 
     def at_repeat(self):
         pass
+
+class PassiveAccumulationScript(DefaultScript):
+    """
+    Global 15-minute tick script.
+
+    Runs every 900 seconds and processes all online characters:
+      1. FreeformManager.cleanup_expired_freeform(char) — TTL item removal
+      2. inflation tick_drain on every inflation zone
+      3. WombRoom drain_tick on any installed WombRoom
+      4. Size-ambient messages (breast + testes) for oversized characters
+
+    Attach once to the global Limbo room (#2) at server start.
+    There should be exactly one of these running at any time.
+
+    To install (run once as superuser):
+        @py from typeclasses.scripts import PassiveAccumulationScript; \
+             from evennia.utils import create; \
+             from evennia import search_object; \
+             limbo = search_object("#2")[0]; \
+             create.create_script(PassiveAccumulationScript, obj=limbo, \
+                                  persistent=True, autostart=True)
+    """
+
+    def at_script_creation(self):
+        self.key        = "passive_accumulation"
+        self.desc       = "Global 15-min passive tick (freeform TTL, inflation drain, womb drain)"
+        self.persistent = True
+        self.repeats    = 0
+        self.interval   = 900   # 15 minutes
+
+    def at_repeat(self):
+        """Process every online character."""
+        try:
+            from evennia import SESSION_HANDLER
+            online_chars = []
+            for session in SESSION_HANDLER.get_sessions():
+                puppet = session.get_puppet()
+                if puppet and hasattr(puppet, "db"):
+                    online_chars.append(puppet)
+
+            seen = set()
+            for char in online_chars:
+                if char.id in seen:
+                    continue
+                seen.add(char.id)
+                self._process_char(char)
+        except Exception as e:
+            logger.log_err(f"PassiveAccumulationScript error: {e}")
+
+    def _process_char(self, char):
+        # 1. Freeform TTL cleanup
+        try:
+            from world.freeform_manager import FreeformManager
+            FreeformManager.cleanup_expired_freeform(char)
+        except Exception:
+            pass
+
+        zones = getattr(char.db, "zones", None) or {}
+
+        for zone_name, zone_data in zones.items():
+            mech = (zone_data or {}).get("mechanics") or {}
+
+            # 2. Inflation passive drain
+            if mech.get("inflation"):
+                try:
+                    from typeclasses.inflation_item import tick_drain
+                    tick_drain(char, zone_name)
+                except Exception:
+                    pass
+
+            # 3. WombRoom drain tick
+            wr_entry = mech.get("womb_room")
+            if wr_entry:
+                try:
+                    from evennia import search_object
+                    from typeclasses.womb_room import WombRoom
+                    results = search_object(
+                        wr_entry.get("room_dbref", ""), exact=True
+                    )
+                    if results and isinstance(results[0], WombRoom):
+                        results[0].drain_tick()
+                except Exception:
+                    pass
+
+            # 4. Size-ambient messages — breast and testes
+            bm = mech.get("body_mod")
+            if bm:
+                try:
+                    self._check_size_ambient(char, bm)
+                except Exception:
+                    pass
+
+    def _check_size_ambient(self, char, bm_entry: dict):
+        """Fire a size-ambient message if the character is oversized."""
+        import random
+        mod_type = bm_entry.get("mod_type", "breast")
+        size     = float(bm_entry.get("size", 0.0))
+
+        if mod_type in ("breast",):
+            from world.milking_loader import get_size_ambient_tiers
+            tiers = get_size_ambient_tiers()
+        elif mod_type == "testicle":
+            from world.milking_loader import get_testes_ambient_tiers
+            tiers = get_testes_ambient_tiers()
+        else:
+            return
+
+        # Find the highest matching tier
+        for min_size, messages in tiers:
+            if size >= min_size:
+                if random.random() < 0.30:   # 30% chance per tick
+                    char.msg(random.choice(messages))
+                break
+
+
+def ensure_passive_script():
+    """
+    Ensure exactly one PassiveAccumulationScript is running on Limbo.
+    Call from server startup or manually as a superuser.
+    """
+    from evennia import search_object
+    from evennia.utils import create
+
+    limbo_results = search_object("#2", exact=True)
+    if not limbo_results:
+        return
+
+    limbo = limbo_results[0]
+    existing = [s for s in limbo.scripts.all()
+                if s.key == "passive_accumulation"]
+    if not existing:
+        create.create_script(
+            PassiveAccumulationScript,
+            obj=limbo,
+            persistent=True,
+            autostart=True,
+        )

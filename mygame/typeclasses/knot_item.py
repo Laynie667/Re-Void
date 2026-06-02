@@ -110,11 +110,14 @@ def try_trigger_knot(caller, target, shaft_zone: str, room) -> bool:
 
     caller_name = caller.db.rp_name or caller.name
     target_name = target.db.rp_name or target.name
+    zone_disp   = shaft_zone.replace("_", " ")
 
-    # Message — [PLACEHOLDER: add pool to milking_messages.yaml under knot/trigger]
+    from world.milking_loader import pick_knot_message
+    msg = pick_knot_message("trigger") or "{actor} and {target} — the knot has engaged. Withdrawal is not immediately possible."
     room.msg_contents(
-        f"{caller_name} and {target_name} — the knot has engaged. "
-        f"Withdrawal is not immediately possible."
+        msg.replace("{actor}", caller_name)
+           .replace("{target}", target_name)
+           .replace("{zone}", zone_disp)
     )
 
     return True

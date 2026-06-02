@@ -1135,6 +1135,110 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.zones = zones
         return True
 
+    def _expand_zone_tokens(self, zone_name: str, zone_data: dict, text: str) -> str:
+        """
+        Expand dynamic tokens in a zone description string at render time.
+
+        Supported tokens
+        ────────────────
+        {size}      Body mod display label (cup size, length label, etc.)
+        {circ}      Circumference in inches — shaft zones only
+        {length}    Length in inches — shaft zones only
+        {vol}       Current milk volume (breast) or per-testicle volume (testes)
+        {diam}      Diameter — testes zones only
+        {inflation} Current inflation state label (empty/slight/notable/full/overfull)
+
+        Examples
+        ────────
+        zone set chest/left = Her breast is {size}, heavy and warm. ({vol} inside)
+        zone set groin/cock = {size} and {circ} around, {length} long.
+        zone set groin/balls = {size}, each one carrying {vol} — {diam} across.
+        zone set groin/pussy = She is {inflation} with what was left inside her.
+        """
+        if not text or "{" not in text:
+            return text
+
+        mechanics = zone_data.get("mechanics") or {}
+
+        # ── Body mod tokens ───────────────────────────────────────────────
+        body_mod = mechanics.get("body_mod")
+        if body_mod and any(t in text for t in
+                            ("{size}", "{circ}", "{length}", "{vol}", "{diam}")):
+            mod_type = body_mod.get("mod_type", "breast")
+            size     = float(body_mod.get("size", 0.0))
+
+            # Prefer live effective size from item object
+            item_dbref = body_mod.get("item_dbref")
+            if item_dbref:
+                try:
+                    from evennia import search_object
+                    res = search_object(item_dbref, exact=True)
+                    if res:
+                        size     = res[0].effective_size()
+                        mod_type = res[0].db.mod_type or mod_type
+                except Exception:
+                    pass
+
+            if "{size}" in text:
+                from typeclasses.body_mod_item import _DISPLAY_FUNCS, _breast_display
+                fn   = _DISPLAY_FUNCS.get(mod_type, _breast_display)
+                text = text.replace("{size}", fn(size))
+
+            if "{circ}" in text or "{length}" in text:
+                from typeclasses.body_mod_item import get_shaft_measurements
+                circ, length = get_shaft_measurements(mod_type, size)
+                text = text.replace("{circ}", circ).replace("{length}", length)
+
+            if "{vol}" in text:
+                from typeclasses.body_mod_item import (
+                    get_testicle_volume_ml, format_body_volume
+                )
+                if mod_type == "testicle":
+                    vol_str = format_body_volume(get_testicle_volume_ml(size))
+                elif mod_type == "breast":
+                    # Live milk volume from production item
+                    prod = mechanics.get("production") or {}
+                    vol_str = "empty"
+                    prod_dbref = prod.get("item_dbref")
+                    if prod_dbref:
+                        try:
+                            from evennia import search_object
+                            from typeclasses.production_item import format_volume
+                            res = search_object(prod_dbref, exact=True)
+                            if res:
+                                vol_str = format_volume(
+                                    res[0].db.current_volume_ml or 0.0
+                                )
+                        except Exception:
+                            pass
+                else:
+                    vol_str = ""
+                text = text.replace("{vol}", vol_str)
+
+            if "{diam}" in text:
+                from typeclasses.body_mod_item import get_testicle_diam_str
+                if mod_type == "testicle":
+                    text = text.replace("{diam}", get_testicle_diam_str(size))
+                else:
+                    text = text.replace("{diam}", "")
+
+        # ── Inflation token ───────────────────────────────────────────────
+        if "{inflation}" in text:
+            inflation = mechanics.get("inflation") or {}
+            if inflation:
+                try:
+                    from typeclasses.inflation_item import get_inflation_state
+                    vol = float(inflation.get("volume_ml", 0.0) or 0.0)
+                    mx  = float(inflation.get("max_volume_ml", 500.0) or 500.0)
+                    state = get_inflation_state(vol, mx)
+                except Exception:
+                    state = "empty"
+            else:
+                state = ""
+            text = text.replace("{inflation}", state)
+
+        return text
+
     def get_zone_display(self, zone_name, looker=None,
                          deep=False, proximity=False):
         """
@@ -1237,7 +1341,7 @@ class Character(ObjectParent, DefaultCharacter):
             else:
                 nude = zone.get("nude", "")
                 if nude:
-                    surface = nude
+                    surface = self._expand_zone_tokens(zone_name, zone, nude)
 
         return {
             "surface":  surface,

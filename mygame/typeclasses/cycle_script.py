@@ -138,9 +138,9 @@ class CycleScript(DefaultScript):
         target_name = target.db.rp_name or target.name
 
         if phase == "restrain":
-            room.msg_contents(
-                f"|xThe machine engages — restraints lock around {target_name}.|n"
-            )
+            from world.milking_loader import pick_cycle_message
+            msg = pick_cycle_message("restrain") or "The machine engages — restraints lock around {target}."
+            room.msg_contents(f"|x{msg.replace('{target}', target_name)}|n")
 
         elif phase == "milk":
             # Stop any existing milk session first
@@ -195,9 +195,10 @@ class CycleScript(DefaultScript):
         elif phase == "rest":
             self._stop_milk(target)
             cycle = self.db.cycle_count or 1
+            from world.milking_loader import pick_cycle_message
+            msg = pick_cycle_message("rest") or "The machine enters rest phase after cycle {cycle}. It will resume shortly."
             room.msg_contents(
-                f"|xThe machine enters rest phase after cycle {cycle}. "
-                f"It will resume shortly.|n"
+                f"|x{msg.replace('{target}', target_name).replace('{cycle}', str(cycle))}|n"
             )
 
     def _stop_milk(self, target):
@@ -233,9 +234,11 @@ class CycleScript(DefaultScript):
                     old_rate = results[0].db.base_rate_ml_per_tick or 8.0
                     results[0].db.base_rate_ml_per_tick = old_rate + rate_inc
 
+        from world.milking_loader import pick_cycle_message
+        msg = pick_cycle_message("boost") or "The machine administers a growth compound to {target}."
         room.msg_contents(
-            f"|xThe machine administers a growth compound to {target_name}. "
-            f"(+{size_inc:.2f} size, +{rate_inc:.1f}ml/tick — permanent)|n"
+            f"|x{msg.replace('{target}', target_name)}|n"
+            f"|x(+{size_inc:.2f} size, +{rate_inc:.1f}ml/tick — permanent)|n"
         )
 
     def _end(self, reason, room):
@@ -249,7 +252,9 @@ class CycleScript(DefaultScript):
             self._stop_milk(target)
             room = target.location
             if room:
+                target_name = target.db.rp_name or target.name
+                from world.milking_loader import pick_cycle_message
+                msg = pick_cycle_message("end") or "The machine cycle has ended for {target}."
                 room.msg_contents(
-                    f"|xThe machine cycle has ended for "
-                    f"{target.db.rp_name or target.name}.|n"
+                    f"|x{msg.replace('{target}', target_name)}|n"
                 )

@@ -31,6 +31,19 @@ def at_server_start():
     how it was shut down.
     """
     _ensure_all_ambient_scripts()
+    _ensure_passive_accumulation_script()
+
+
+def _ensure_passive_accumulation_script():
+    """
+    Ensure the global 15-min passive accumulation script is running.
+    Safe to call on every boot — idempotent.
+    """
+    try:
+        from typeclasses.scripts import ensure_passive_script
+        ensure_passive_script()
+    except Exception:
+        pass
 
 
 def _ensure_all_ambient_scripts():

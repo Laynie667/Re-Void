@@ -367,3 +367,270 @@ arousal:
   internal_deposit:
     - "{actor} reaches the end inside {target}'s {zone}. The deposit is complete."
     - "The climax resolves for {actor} — the release internal to {target}'s {zone}."
+
+
+# ---------------------------------------------------------------------------
+# Inflation system messages
+# Tokens: {target} {zone} {fluid} {volume}
+# Called by inflate_commands.py when volume state changes.
+# States: slight / notable / full / overfull / drain
+# ---------------------------------------------------------------------------
+
+inflation:
+  slight:
+    - "{target}'s {zone} holds the addition without protest — a new softness, a small weight that wasn't there before. The change is present but not pressing."
+    - "The first volume settles into {target}'s {zone} with the ease of something barely begun. Slight, but registered."
+    - "A faint fullness finds {target}'s {zone}. The {fluid} is there now — a beginning rather than a condition."
+    - "The {zone} accepts it without difficulty. A slight warmth distributed across the interior, {target}'s body cataloguing it without urgency."
+
+  notable:
+    - "{target}'s {zone} carries the volume clearly now — the fullness past the point where it might be overlooked. The {fluid} is present in a way the body doesn't ignore."
+    - "The {fluid} has reached a volume that registers specifically in {target}'s {zone}. Full enough to be felt distinctly with every movement."
+    - "The fullness in {target}'s {zone} has moved from presence to acknowledgement. {volume} of {fluid} inside is its own fact now."
+    - "Notable fullness: the {zone} holds {volume} and the shape of it is apparent. Not uncomfortable, but past subtle."
+
+  full:
+    - "{target}'s {zone} is at capacity — the {fluid} filling it completely, the pressure consistent and total. The fullness has resolved from notable to insistent."
+    - "Full. The {zone} holds every millilitre it can, the {fluid} pressing outward against the interior. {target}'s body has been made aware."
+    - "The {zone} has reached its limit. The pressure of {volume} of {fluid} inside {target} is past simple awareness — it shapes how they hold themselves."
+    - "At full capacity, {target}'s {zone} makes itself known with every breath. The {fluid} fills the space completely. There is no part of it that isn't occupied."
+
+  overfull:
+    - "Past full. {target}'s {zone} holds more than it was designed for, the {fluid} pressing outward beyond comfortable limits. The distension is visible."
+    - "The {zone} has been pushed past capacity — {volume} of {fluid} in a space that has made its objections clear. The surface gives where it can."
+    - "Overfull: {target}'s {zone} cannot maintain comfortable containment at this volume. The {fluid} presses outward insistently. The shape of it shows."
+    - "The capacity of {target}'s {zone} was exceeded some volume ago. The {fluid} fills it past its limit, the pressure constant and past negotiating."
+
+  drain:
+    - "The {fluid} drains from {target}'s {zone} in a controlled release — the pressure easing by degrees until the zone returns to its natural state."
+    - "The volume clears from {target}'s {zone}. The fullness recedes, the {fluid} leaving behind only the relief of a return to baseline."
+    - "Draining: the {fluid} exits {target}'s {zone} steadily, the pressure unwinding. The fullness retreats."
+    - "The {zone} releases its contents — {fluid} drawing away from {target} until the insistent fullness is simply gone."
+
+# ---------------------------------------------------------------------------
+# Insemination messages — machine deposits fluid into a zone.
+# source = machine: automated delivery, no human actor
+# source = bank: operator's banked contribution
+# source = random: anonymous contribution from storage
+# Tokens: {actor} {target} {zone} {fluid} {volume}
+# ---------------------------------------------------------------------------
+
+insemination:
+  machine:
+    - "The machine delivers its load — {volume} of {fluid} deposited into {target}'s {zone} in a single, unhurried release. The chamber empties. The zone does not."
+    - "The insemination cycle completes: {fluid} routed directly into {target}'s {zone}. The volume is {volume}. The machine logs it and resets."
+    - "A deep internal warmth as the machine deposits into {target}'s {zone} — {volume} of {fluid}, delivered without ceremony, now resident."
+    - "The deposit lands: {volume} of {fluid} inside {target}'s {zone}. The machine has completed its function. What remains, stays."
+
+  bank:
+    - "{actor}'s contribution reaches {target}'s {zone} — {volume} of {fluid}, drawn from storage and delivered warm. The origin is specific. So is the destination."
+    - "The banked deposit from {actor} reaches {target}'s {zone}: {volume} of {fluid}, intimate even at remove. The warmth of it is immediate."
+    - "{volume} of {actor}'s {fluid} is released into {target}'s {zone}. The source was stored. The delivery is direct."
+    - "The machine routes {actor}'s banked {fluid} into {target}'s {zone} — {volume}, a specific contribution from a specific source, now held inside."
+
+  random:
+    - "An anonymous contribution deposits into {target}'s {zone} — {volume} of {fluid} from storage, the source unspecified. What matters is that it arrives."
+    - "The random selection resolves to {volume} of {fluid}, deposited into {target}'s {zone}. The origin is undisclosed. The volume is not."
+    - "{volume} of {fluid} from the anonymous bank pool reaches {target}'s {zone}. Whatever it came from, it's there now."
+    - "Drawn from storage at random and delivered: {volume} of {fluid} inside {target}'s {zone}. The source is irrelevant. The presence is not."
+
+# ---------------------------------------------------------------------------
+# Knot mechanic messages
+# trigger: room-visible when knot engages — tokens: {actor} {target} {zone}
+# held:    private to target when withdrawing while tied — tokens: {actor} {duration}
+# release: room-visible when tie expires — tokens: {actor} {target}
+# ---------------------------------------------------------------------------
+
+knot:
+  trigger:
+    - "{actor} and {target} are tied — the knot has engaged at {actor}'s {zone}. Withdrawal is not immediately possible."
+    - "The knot locks — {actor} and {target} held together. Neither is going anywhere for the moment."
+    - "A sharp catch, and then the tie is established. {actor} and {target} are locked. The knot is not interested in urgency."
+    - "{actor}'s knot engages — {target} held fast, {actor} equally so. The tie has set. It will release in its own time."
+
+  held:
+    - "The knot holds. You and {actor} are tied — withdrawal isn't possible until the tie releases naturally. ({duration}s remaining)"
+    - "You try to withdraw. The knot has other ideas. You and {actor} stay where you are for now. ({duration}s remaining)"
+    - "The tie is firm. You aren't going anywhere yet, and neither is {actor}. The knot will release when it's ready. ({duration}s remaining)"
+    - "The knot has you. Withdrawal isn't an option right now — the tie will release on its own. ({duration}s remaining)"
+
+  release:
+    - "The knot between {actor} and {target} releases naturally — the tie easing until the connection breaks. Both are free."
+    - "The tie lets go. {actor} and {target} are free to separate."
+    - "The knot releases. {actor} and {target} are no longer held — the tie has run its course."
+    - "A slow release as the knot between {actor} and {target} eases. The tie is done."
+
+# ---------------------------------------------------------------------------
+# Cycle machine phase messages — all room-visible.
+# Tokens: {target} = target RP name, {cycle} = cycle number
+# Phases: restrain / rest / boost / end
+# ---------------------------------------------------------------------------
+
+cycle_machine:
+  restrain:
+    - "The machine engages — restraints close around {target}, securing them in place. The cycle is beginning."
+    - "Restraints extend from the machine and lock around {target}. The cycle has begun. {target} is not going anywhere."
+    - "The machine's harness engages — {target} held firmly as the cycle initialises. Movement is not currently on the table."
+    - "A mechanical click as the restraints find {target} and close. The machine has them now. The cycle is starting."
+
+  rest:
+    - "The machine enters rest phase — a brief interval between cycles. {target} remains secured. The next cycle begins shortly."
+    - "Rest phase after cycle {cycle}. The machine holds {target} in place and waits. It will resume."
+    - "Cycle {cycle} complete. The machine drops to its rest interval — {target} still in the harness, the equipment cooling before the next sequence."
+    - "The machine rests. {target} waits with it. Cycle {cycle} is logged. The next will begin in its own time."
+
+  boost:
+    - "The machine administers its growth compound to {target} — a deep internal warmth, brief and specific. The effect is permanent."
+    - "A dose from the machine's internal serum supply reaches {target}. The compound has been delivered. The changes are not reversible."
+    - "The growth phase: the machine administers to {target}. The serum is inside. What it does, it does permanently."
+    - "Internal administration — the machine delivers its compound to {target}. Quiet, efficient, and not something that will be undone."
+
+  end:
+    - "The machine cycle ends for {target} — restraints releasing, the equipment powering down. The session is complete."
+    - "Cycle end: the machine releases {target} from the harness and powers down. What happened, happened."
+    - "The machine completes its final phase and releases {target}. The cycle is over. The restraints open."
+    - "The machine stands down — {target} released from the harness, the cycle finished. The room is quieter for it."
+
+# ---------------------------------------------------------------------------
+# Extended size_ambient tiers for extreme testes sizes (34.0+)
+# Insert these into the size_ambient.tiers list above min_size: 38.0
+# (The loader sorts descending, so ordering here is just for readability)
+# ---------------------------------------------------------------------------
+
+testes_size_ambient:
+  tiers:
+    - min_size: 50.0   # Beyond All Frameworks
+      messages:
+        - "The concept of carrying them has stopped making linguistic sense. Your body reorganised itself around them so long ago that you have forgotten what the alternative felt like. They are the situation."
+        - "Every room you have ever entered has been entered by them first. The scale is not a descriptor anymore. It is a fact of geometry."
+        - "Beyond All Frameworks is accurate. You have moved past the point where language applies and into the territory where physics is having a quiet conversation with itself about you."
+
+    - min_size: 46.0   # A Continent of Intent
+      messages:
+        - "They precede you into every space by a margin that has stopped being metaphorical. Your body is organised entirely around them. The weight is tectonic."
+        - "A Continent of Intent. The description has become literal. The mass of what you carry is a matter of geography."
+        - "You have not experienced your own center of gravity for some time. Everything your body does is a negotiation with the weight. The weight is winning, comfortably."
+
+    - min_size: 42.0   # Cosmologically Impractical
+      messages:
+        - "Cosmologically Impractical is the label. Your body chose to continue existing around them rather than the other way around. This was not a negotiation."
+        - "The mass of what you carry has long since resolved from a physical sensation into a permanent condition of existing. Every movement is a structural decision."
+        - "They are simply the dominant fact of your physical reality. The weight, the volume, the presence — all of it constant, total, and entirely in charge of how you navigate space."
+
+    - min_size: 38.0   # Gravitationally Concerning
+      messages:
+        - "Gravitationally Concerning has stopped being hyperbole. The mass they carry is a real force in any room you enter. Objects nearby don't bend toward them — but your posture has been bending toward them for a long time."
+        - "At this scale they are not a feature of your body — they are the primary physical fact of it. Everything else is arranged around them."
+        - "The weight is its own weather system. You stopped negotiating with it some time ago and started simply existing within it."
+
+    - min_size: 34.0   # Architecturally Significant
+      messages:
+        - "Architecturally Significant has taken on a load-bearing quality. No position, no doorway, no movement fails to account for them first. They arrive before you do."
+        - "They are a structural consideration. The weight is total and the presence is constant and your body has reorganised itself around them as a baseline it no longer remembers choosing."
+        - "Every room you enter is immediately a smaller room. The weight arrives with you and stays at the centre of everything your body does."
+
+# ---------------------------------------------------------------------------
+# Extreme fullness threshold messages for testes — private to character.
+# These fire when accumulated volume crosses these thresholds.
+# Used alongside the existing milking machine thresholds.
+# ---------------------------------------------------------------------------
+
+testes_fullness:
+  thresholds:
+    - ml: 50000      # 50L — hot-tub scale
+      private: true
+      messages:
+        - "Fifty litres. The weight of what's accumulated inside you has passed from sensation into structural reality. Your body is doing its best."
+        - "The pressure at this volume has stopped being background and become the entire foreground. Fifty litres, distributed and insistent and not going anywhere on its own."
+
+    - ml: 200000     # 200L — small room scale
+      private: true
+      messages:
+        - "Two hundred litres of pressure and your body has been making its position clear for some time. The milking machine is not a thought. It is the only thought."
+        - "At this volume the usual language has stopped applying. Your body resolved the question of what it needs. It has been resolving it, loudly, for longer than is comfortable."
+
+    - ml: 1000000    # 1kL — room scale
+      private: true
+      messages:
+        - "A thousand litres. The physical reality of carrying this has stopped requiring description. It is simply the entire situation. The machine exists as the only remaining subject."
+        - "One kilolitre. You are aware of very little else. Your body stopped framing this as a preference some time ago."
+
+    - ml: 10000000   # 10kL — house-filling
+      private: true
+      messages:
+        - "Ten thousand litres. The concept of comfortable has been theoretical for a long time. Your body has had one clear position on this matter and has been expressing it without subtlety."
+        - "At this volume words like 'full' have stopped being adequate. You are carrying ten thousand litres and your body has moved past asking and into demanding."
+
+    - ml: 100000000  # 100kL — beyond
+      private: true
+      messages:
+        - "One hundred thousand litres. The idea of describing what this feels like has become academic. Your body's argument is total and has been total for longer than memory comfortably covers."
+        - "Past the point where this conversation can be had in normal language. The pressure is everything. The machine is not a thought — it is the only remaining physical fact that matters."
+
+# ---------------------------------------------------------------------------
+# WombRoom messages
+#
+# entry        — room-visible (inside) when someone enters through the zone
+#                tokens: {actor} {host} {zone}
+# exit         — room-visible (inside) when someone leaves
+#                tokens: {actor} {host} {zone}
+# flood_trace  — appended to room desc at trace fluid level
+#                tokens: {fluid} {volume}
+# flood_shallow — shallow level
+# flood_knee   — knee-deep
+# flood_chest  — chest-deep
+# flood_full   — at capacity
+# shaft_visible — private to residents when host's zone is penetrated
+#                tokens: {actor} {host} {zone}
+# pulse        — broadcast inward from host to residents
+#                tokens: {host} {message}
+# ---------------------------------------------------------------------------
+
+womb:
+  entry:
+    - "The walls shift around {actor} — a slow, warm pressure as they pass through {host}'s {zone} and settle into the interior. The space accepts them."
+    - "{actor} crosses the threshold and the world outside becomes distant and irrelevant. The warmth of {host}'s interior closes in around them."
+    - "A yielding resistance, then {actor} is through — inside {host}'s {zone}, the air close and warm and carrying the faint sound of a heartbeat."
+    - "{actor} slips inside. The passage through {host}'s {zone} is brief and unmistakable. The interior space settles around them."
+
+  exit:
+    - "{actor} passes back through {host}'s {zone} and is gone. The space contracts slightly in their absence."
+    - "The walls part for {actor} and close again behind them. {host}'s {zone} swallows the exit without ceremony."
+    - "{actor} makes their way out through {host}'s {zone}. The warmth remains. The space is a little emptier."
+    - "A brief parting, and {actor} is through. {host}'s {zone} settles back. The interior is quieter now."
+
+  flood_trace:
+    - "The floor is barely damp — a trace of {fluid} that settles in the lowest points and catches the light."
+    - "A faint warmth underfoot. {fluid} has begun to gather in the corners, shallow and still."
+
+  flood_shallow:
+    - "A shallow layer of {fluid} covers the floor — {volume} of warmth that shifts with every movement and carries a faint scent."
+    - "{volume} of {fluid} pools across the floor, warm and slow. The space smells of it. The level is rising."
+    - "The {fluid} comes to the ankle now. {volume} accumulated and unhurried, swirling faintly with movement."
+
+  flood_knee:
+    - "Knee-deep in {fluid} now — {volume} of slow warmth that resists movement and fills the lower half of the space entirely."
+    - "The {fluid} has risen to the knee. {volume}, warm and thick, that makes every step deliberate and slow."
+    - "{volume} of {fluid} at knee depth. The space is half-filled and still climbing. The warmth is total."
+
+  flood_chest:
+    - "Chest-deep. {volume} of {fluid} surrounds everything below the shoulders — warm and close, the current faint but constant."
+    - "The {fluid} reaches the chest now. {volume}. Movement requires effort. The warmth is complete and immersive."
+    - "{volume} of {fluid} at chest height. The buoyancy is real. The pressure of it against the body is constant and total."
+
+  flood_full:
+    - "The {fluid} fills this space entirely — {volume} at capacity, warm and still and complete. There is no surface to speak of."
+    - "Full. {volume} of {fluid} from floor to ceiling, the space saturated. Movement is swimming. The warmth is total."
+    - "Every millimetre occupied. {volume} of {fluid}, at capacity, pressing gently outward against the walls of {host}'s interior."
+
+  shaft_visible:
+    - "Something intrudes from outside — a shape pressing through {host}'s {zone} from the other direction. The space shifts to accommodate it."
+    - "The wall of {host}'s {zone} yields and something pushes through — {actor} making their presence felt from the outside in."
+    - "A blunt intrusion through {host}'s {zone} — {actor}'s presence arrives before they do. The space adjusts around it."
+    - "The passage through {host}'s {zone} is occupied from the other side now. {actor}'s shape is unmistakable through the wall."
+
+  pulse:
+    - "{host}'s voice carries inward — resonant and close, the words arriving from everywhere at once: \"{message}\""
+    - "A vibration through the walls, and then {host}'s voice fills the space: \"{message}\""
+    - "{host} speaks through the wall of the space and the sound of it is everywhere: \"{message}\""
+    - "From somewhere outside but impossibly close, {host}'s voice: \"{message}\""

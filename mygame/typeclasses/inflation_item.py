@@ -88,6 +88,15 @@ def add_inflation_volume(room_or_char, zone_name: str,
     room_or_char.db.zones = zones_copy
 
     state = get_inflation_state(inf["volume_ml"], inf.get("max_volume_ml", 500.0))
+
+    # Notify WombRoom if one is installed on this zone
+    try:
+        from typeclasses.womb_room import add_fluid_from_zone
+        add_fluid_from_zone(room_or_char, zone_name, amount,
+                            inf.get("fluid_type", "fluid"))
+    except Exception:
+        pass
+
     return inf["volume_ml"], state
 
 

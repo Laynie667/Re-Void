@@ -136,8 +136,14 @@ class CmdInflate(MuxCommand):
         # /drain
         if "drain" in switches:
             if drain_inflation(target, zone_name):
+                from world.milking_loader import pick_inflation_message
+                from typeclasses.production_item import format_volume as _fv
+                msg = pick_inflation_message("drain") or "{target}'s {zone} is drained."
                 room.msg_contents(
-                    f"{caller_name} drains {target_name}'s {zone_disp}."
+                    msg.replace("{target}", target_name)
+                       .replace("{zone}", zone_disp)
+                       .replace("{fluid}", "")
+                       .replace("{volume}", "")
                 )
             else:
                 caller.msg(f"|xNo inflation mechanic on '{zone_name}'.|n")
@@ -151,13 +157,13 @@ class CmdInflate(MuxCommand):
             caller.msg(f"|xNo inflation mechanic on '{zone_name}'.|n")
             return
 
-        if caller == target:
-            room.msg_contents(
-                f"{caller_name} inflates their own {zone_disp} with {fluid_type}. "
-                f"({state})"
-            )
-        else:
-            room.msg_contents(
-                f"{caller_name} inflates {target_name}'s {zone_disp} with "
-                f"{fluid_type}. ({state})"
-            )
+        from world.milking_loader import pick_inflation_message
+        from typeclasses.production_item import format_volume as _fv
+        prose_state = state if state in ("slight", "notable", "full", "overfull") else "notable"
+        msg = pick_inflation_message(prose_state) or f"{caller_name} inflates {target_name}'s {zone_disp} with {fluid_type}."
+        room.msg_contents(
+            msg.replace("{target}", target_name)
+               .replace("{zone}", zone_disp)
+               .replace("{fluid}", fluid_type)
+               .replace("{volume}", _fv(new_vol or 0))
+        )

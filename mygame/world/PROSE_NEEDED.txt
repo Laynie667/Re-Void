@@ -14,51 +14,38 @@ MILKING MACHINE — world/milking_messages.yaml
 
 ── arousal: section ─────────────────────────────────────────────────────────
 
-  thresholds.75.messages
-    Three private messages fired when arousal hits 75.
-    Current: Adequate placeholders — flesh out with specific internal-experience prose.
-
-  thresholds.90.messages
-    Three private messages at 90.
-    Current: Adequate placeholders — flesh out.
-
-  thresholds.95.messages
-    Three private messages at 95.
-    Current: Adequate placeholders.
+  thresholds.75/90/95.messages
+    ✅ DONE — fleshed out with internal-experience prose.
 
   climax
-    Four room-visible climax messages using {target} token.
-    Current: Minimal but functional.  Expand for tone.
+    ✅ DONE — four room-visible messages using {target}.
 
-  surface_deposit
-    Messages for surface deposit (not inside a zone).
-    Tokens: {actor}, {surface}
-    Current: Two placeholder lines.  Expand.
-
-  internal_deposit
-    Messages for internal deposit (inside a zone).
-    Tokens: {actor}, {target}, {zone}
-    Current: Two placeholder lines.  Expand.
+  surface_deposit / internal_deposit
+    ✅ DONE — functional prose. Add variety if desired.
 
 ── speeds: section ──────────────────────────────────────────────────────────
 
-  All four speeds (slow/steady/fast/intense) have functional pools:
+  All four speeds (slow/steady/fast/intense):
   start, running, first_empty, running_empty, stop, priming, tapering.
-  Current: Adequate for testing.  Add more variety as you run sessions.
+  ✅ DONE — full pools with varied prose.
 
-  Knot messages — NOT yet in YAML.  Currently hardcoded minimal strings:
-    "The knot has engaged. Withdrawal is not immediately possible."
-    "The knot holds — Xs remaining."
-    "The knot releases naturally."
-  When ready, move these to a knot: section in milking_messages.yaml
-  and update typeclasses/knot_item.py to call pick_message().
+  Knot messages — MOVED TO YAML (see knot: section below).
+    ✅ DONE — trigger, held, release all in milking_messages.yaml.
+    ✅ knot_item.py and penetration_commands.py now pull from YAML.
 
 
 ================================================================================
-INFLATION SYSTEM
+INFLATION SYSTEM — ✅ DONE
 ================================================================================
 
-── Zone description integration ─────────────────────────────────────────────
+  world/milking_messages.yaml — inflation: section added.
+  States: slight / notable / full / overfull / drain
+  Tokens: {target} {zone} {fluid} {volume}
+
+  commands/inflate_commands.py — now pulls from YAML pool via pick_inflation_message().
+  world/milking_loader.py — pick_inflation_message() added.
+
+  ── Zone description integration ─────────────────────────────────────────
 
   Use the {inflation} token in a zone's nude description to show dynamic state.
   The token resolves to one of: empty / slight / notable / full / overfull
@@ -67,87 +54,49 @@ INFLATION SYSTEM
   Example (in zone set command):
     zone set groin/pussy = Her cunt is warm and close. {inflation}
 
-  You need to add per-state expansion text to the zone if you want more than
-  just the label.  The cleanest approach: store an inflation_descs dict on
-  the zone and expand the token lookup in typeclasses/inflation_item.py
-  to return those strings.  Currently the token returns the bare state label.
-
-── Inflate command messages ──────────────────────────────────────────────────
-
-  commands/inflate_commands.py — the broadcast messages are minimal:
-    "[caller] inflates [target]'s [zone] with [fluid]. (state)"
-    "[caller] drains [target]'s [zone]."
-  These are functional but plain.  Write better prose here or add YAML pools.
-
-── Inflation YAML pools (not yet created) ────────────────────────────────────
-
-  Add an inflation: section to world/milking_messages.yaml when ready:
-    inflation:
-      slight:   ["[target]'s [zone] is slightly fuller than before..."]
-      notable:  ["..."]
-      full:     ["..."]
-      overfull: ["..."]
-      drain:    ["..."]
-  Then update inflate_commands.py to pick from these pools.
-
-  Tokens: {target} {zone} {fluid} {volume}
+  You can store per-state expansion text on the zone's inflation_descs dict
+  and expand via typeclasses/inflation_item.py for richer per-state output.
+  Currently the token returns the bare state label only.
 
 
 ================================================================================
-INSEMINATION ATTACHMENT
+INSEMINATION ATTACHMENT — ✅ DONE
 ================================================================================
 
-  typeclasses/insemination_item.py — do_inseminate() builds a message:
-    "The machine inseminates [target]'s [zone] with [fluid] (volume)."
-  Functional but clinical.  Write better prose or add a YAML pool.
+  world/milking_messages.yaml — insemination: section added.
+  Sources: machine / bank / random
+  Tokens: {actor} {target} {zone} {fluid} {volume}
 
-  Add an insemination: section to milking_messages.yaml:
-    insemination:
-      machine:  ["..."]   # source = machine
-      bank:     ["..."]   # source = bank (operator's fluid)
-      random:   ["..."]   # source = random (other player's contribution)
-  Tokens: {target} {zone} {fluid} {volume} {actor}
+  typeclasses/insemination_item.py — do_inseminate() now calls pick_insemination_message().
+  world/milking_loader.py — pick_insemination_message() added.
 
 
 ================================================================================
-CYCLE MACHINE
+CYCLE MACHINE — ✅ DONE
 ================================================================================
 
-  typeclasses/cycle_script.py — all phase transition messages are inline strings.
-  They work but are plain.  Write better prose or move to YAML when ready.
+  world/milking_messages.yaml — cycle_machine: section added.
+  Phases: restrain / rest / boost / end
+  Tokens: {target} {cycle}
 
-  Current messages (search the file to find them):
-    "The machine engages — restraints lock around [target]."
-    "The machine enters rest phase after cycle N."
-    "The machine administers a growth compound to [target]. (+size, +rate)"
-    "The machine cycle has ended for [target]."
-
-  Also: the milk phase uses the existing milking_messages.yaml start pool,
-  which is fine.
-
-  Machine flavor text — the "covered in dust, labeled experimental" aesthetic
-  is a roomzone desc, not a code issue.  Write it as a roomzone desc and detail
-  for wherever the cycle machine is installed (Princess' Private Space is the
-  intended location based on earlier conversation).
+  typeclasses/cycle_script.py — all four inline phase strings now call pick_cycle_message().
+  world/milking_loader.py — pick_cycle_message() added.
 
 
 ================================================================================
-KNOT MECHANIC
+KNOT MECHANIC — ✅ DONE
 ================================================================================
 
-  typeclasses/knot_item.py — try_trigger_knot() fires an inline message:
-    "[caller] and [target] — the knot has engaged. Withdrawal is not immediately possible."
-  CmdWithdraw fires:
-    "[caller] — the knot releases naturally."
+  world/milking_messages.yaml — knot: section added.
+  Pools: trigger / held / release
+  Tokens:
+    trigger  → {actor} {target} {zone}
+    held     → {actor} {duration}
+    release  → {actor} {target}
 
-  When you're ready, add a knot: section to milking_messages.yaml and
-  reference it from knot_item.py:
-    knot:
-      trigger:  ["..."]   # fires when knot engages during thrust
-      held:     ["..."]   # private to the person trying to withdraw while tied
-      release:  ["..."]   # room-visible when tie expires naturally
-
-  Tokens: {actor} {target} {zone} {duration}
+  typeclasses/knot_item.py — try_trigger_knot() now calls pick_knot_message("trigger").
+  commands/penetration_commands.py — held and release messages now call pick_knot_message().
+  world/milking_loader.py — pick_knot_message() added.
 
 
 ================================================================================
@@ -157,8 +106,8 @@ WOMBROOM (PLANNED — NOT YET IMPLEMENTED)
   The WombRoom system is paused for a dedicated design+implementation session.
   When it is built, the following prose will be needed:
 
-  1. Internal room desc (host writes this via 'wombdesc <text>' command)
-     There is no default — the host sets it.
+  1. Internal room desc (host writes via 'wombdesc <text>' command)
+     No default — the host sets it.
 
   2. Entry messages (room-visible when someone enters the WombRoom)
      Tokens: {actor} {host} {zone}
@@ -166,32 +115,31 @@ WOMBROOM (PLANNED — NOT YET IMPLEMENTED)
   3. Exit messages
      Tokens: {actor} {host} {zone}
 
-  4. Flood state descriptions (what the room looks like at each threshold)
+  4. Flood state descriptions (room look at each threshold)
      Thresholds: trace / shallow / knee-deep / chest-deep / full
      Tokens: {fluid} {volume}
 
-  5. Shaft-visible interior messages (when host is penetrated while others inside)
+  5. Shaft-visible interior messages (host penetrated while others inside)
      Tokens: {actor} {host} {zone}
 
   6. Pulse messages (host broadcasting inward)
      Tokens: {host} {message}
 
-  All of these will go in a womb: section of milking_messages.yaml once built.
+  All of these go in a womb: section of milking_messages.yaml once the system is built.
 
 
 ================================================================================
 SPECIES BODY MODS
 ================================================================================
 
-  typeclasses/body_mod_item.py contains the display tables for equine, porcine,
-  and draconic body mod variants.  The size label strings are written and functional.
+  typeclasses/body_mod_item.py — size label strings are written and functional.
 
   The one thing missing: zone descriptions for characters using these mods.
   The {size} token in a zone desc will show the species-appropriate label.
   Example for an equine character:
     zone set groin/penis = Her cock is {size} — [write appropriate desc here]
 
-  The display tables use these labels:
+  Size label tables:
     Equine:   Modest / Respectable / Substantial / Impressive / Striking /
               Commanding / Formidable / Demanding / Imposing / Overwhelming /
               Legendary / Mythological / An Event / A Situation / Beyond Classification
@@ -204,19 +152,21 @@ SPECIES BODY MODS
               Draconic / Mythological / Beyond Classification
               (+ "(heated)" suffix at size >= 8)
 
+  These zone descs are written by players/builders, not hardcoded.
+  No code work needed — just guide players on how to use {size} in their zone descs.
+
 
 ================================================================================
 REPEATING COMMANDS
 ================================================================================
 
-  All /repeat variants (suck/repeat, handmilk/repeat, thrust/repeat) use
-  the existing action logic and fire the same messages as the non-repeat
-  versions.  No additional prose needed.
+  ✅ All /repeat variants (suck/repeat, handmilk/repeat, thrust/repeat) use
+  existing action logic and fire the same messages as non-repeat versions.
+  No additional prose needed.
 
-  The repeat-start and repeat-stop system messages are:
+  Repeat-start/stop system messages are functional:
     "Suck/Handmilk/Thrust repeat started (every Xs). Type [cmd]/stop to end."
     "Suck/Handmilk/Thrust repeat stopped."
-  These are functional and don't need expansion.
 
 
 ================================================================================

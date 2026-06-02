@@ -167,3 +167,127 @@ def get_leaking_conditions():
             result.append((min_size, min_vol, msgs, room_vis))
     result.sort(key=lambda x: x[0], reverse=True)
     return result
+
+
+# ---------------------------------------------------------------------------
+# Inflation message accessors
+# ---------------------------------------------------------------------------
+
+def pick_inflation_message(state: str) -> str | None:
+    """
+    Return a random inflation message for the given volume state.
+
+    Args:
+        state: "slight" | "notable" | "full" | "overfull" | "drain"
+
+    Tokens in the returned string: {target} {zone} {fluid} {volume}
+    """
+    data = _load()
+    msgs = data.get("inflation", {}).get(state, [])
+    return random.choice(msgs) if msgs else None
+
+
+# ---------------------------------------------------------------------------
+# Insemination message accessors
+# ---------------------------------------------------------------------------
+
+def pick_insemination_message(source: str) -> str | None:
+    """
+    Return a random insemination message for the given source type.
+
+    Args:
+        source: "machine" | "bank" | "random"
+
+    Tokens in the returned string: {actor} {target} {zone} {fluid} {volume}
+    """
+    data = _load()
+    msgs = data.get("insemination", {}).get(source, [])
+    return random.choice(msgs) if msgs else None
+
+
+# ---------------------------------------------------------------------------
+# Knot mechanic message accessors
+# ---------------------------------------------------------------------------
+
+def pick_knot_message(pool: str) -> str | None:
+    """
+    Return a random knot message for the given pool.
+
+    Args:
+        pool: "trigger" | "held" | "release"
+
+    Tokens:
+        trigger  → {actor} {target} {zone}
+        held     → {actor} {duration}
+        release  → {actor} {target}
+    """
+    data = _load()
+    msgs = data.get("knot", {}).get(pool, [])
+    return random.choice(msgs) if msgs else None
+
+
+# ---------------------------------------------------------------------------
+# Cycle machine message accessors
+# ---------------------------------------------------------------------------
+
+def pick_cycle_message(phase: str) -> str | None:
+    """
+    Return a random cycle machine phase message.
+
+    Args:
+        phase: "restrain" | "rest" | "boost" | "end"
+
+    Tokens: {target} {cycle}
+    """
+    data = _load()
+    msgs = data.get("cycle_machine", {}).get(phase, [])
+    return random.choice(msgs) if msgs else None
+
+def get_testes_ambient_tiers():
+    """
+    Return testes-specific size ambient tiers, sorted descending by min_size.
+    Each entry: (min_size, messages_list).
+    """
+    data = _load()
+    tiers = data.get("testes_size_ambient", {}).get("tiers", [])
+    result = []
+    for entry in tiers:
+        min_size = entry.get("min_size", 0.0)
+        msgs     = entry.get("messages", [])
+        if msgs:
+            result.append((min_size, msgs))
+    result.sort(key=lambda x: x[0], reverse=True)
+    return result
+
+
+def get_testes_fullness_thresholds():
+    """
+    Return extreme testes fullness thresholds, sorted ascending.
+    Each entry: (ml_threshold, messages_list).
+    """
+    data = _load()
+    thresholds = data.get("testes_fullness", {}).get("thresholds", [])
+    result = []
+    for entry in thresholds:
+        ml   = entry.get("ml", 0)
+        msgs = entry.get("messages", [])
+        if msgs:
+            result.append((ml, msgs))
+    result.sort(key=lambda x: x[0])
+    return result
+
+
+def pick_womb_message(pool: str) -> str | None:
+    """
+    Return a random WombRoom message for the given pool.
+
+    Args:
+        pool: "entry" | "exit" | "flood_trace" | "flood_shallow" |
+              "flood_knee" | "flood_chest" | "flood_full" |
+              "shaft_visible" | "pulse"
+
+    Tokens vary by pool — see milking_messages.yaml womb: section.
+    """
+    data = _load()
+    msgs = data.get("womb", {}).get(pool, [])
+    return random.choice(msgs) if msgs else None

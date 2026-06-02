@@ -321,6 +321,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSetDairy())
         self.add(CmdFridge())
 
+        # WombRoom — enter/leave/pulse/wombroom management
+        from commands.womb_commands import ALL_WOMB_CMDS
+        for cmd_cls in ALL_WOMB_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """

@@ -136,10 +136,22 @@ def do_inseminate(operator, target, zone_name: str, config: dict) -> str | None:
                 entry["created_at"] = time.time()
                 target.db.freeform_items = items
 
+    # Notify WombRoom if one is installed on this zone
+    try:
+        from typeclasses.womb_room import add_fluid_from_zone
+        add_fluid_from_zone(target, zone_name, volume, fluid_type)
+    except Exception:
+        pass
+
     zone_disp = zone_name.replace("_", " ")
+    from world.milking_loader import pick_insemination_message
+    msg = pick_insemination_message(source) or "The machine inseminates {target}'s {zone} with {fluid} ({volume})."
     return (
-        f"The machine inseminates {target_name}'s {zone_disp} "
-        f"with {fluid_type} ({format_volume(volume)})."
+        msg.replace("{actor}", actor_name)
+           .replace("{target}", target_name)
+           .replace("{zone}", zone_disp)
+           .replace("{fluid}", fluid_type)
+           .replace("{volume}", format_volume(volume))
     )
 
 

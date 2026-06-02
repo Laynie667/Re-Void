@@ -122,6 +122,11 @@ _TESTICLE_TABLE = [
     (22.0, "Load-Bearing"),
     (26.0, "Structurally Significant"),
     (30.0, "Beyond Classification"),
+    (34.0, "Architecturally Significant"),
+    (38.0, "Gravitationally Concerning"),
+    (42.0, "Cosmologically Impractical"),
+    (46.0, "A Continent of Intent"),
+    (50.0, "Beyond All Frameworks"),
 ]
 
 
@@ -279,6 +284,82 @@ def _draconic_display(size: float) -> str:
             label = band_label
             break
     return f"{label} (heated)" if size >= 8.0 else label
+
+
+# ---------------------------------------------------------------------------
+# Testicle volume lookup — (size_float, volume_ml per testicle).
+# Linear interpolation between points. Pair volume = 2×.
+# ---------------------------------------------------------------------------
+
+_TESTICLE_VOL_TABLE = [
+    (0.0,  5),          (1.0,  12),         (2.0,  25),
+    (3.0,  60),         (4.0,  150),        (5.0,  350),
+    (7.0,  500),        (9.0,  2_000),      (11.0, 6_000),
+    (13.0, 20_000),     (15.0, 60_000),     (18.0, 200_000),
+    (22.0, 600_000),    (26.0, 2_000_000),  (30.0, 8_000_000),
+    (34.0, 30_000_000), (38.0, 100_000_000),(42.0, 500_000_000),
+    (46.0, 2_000_000_000), (50.0, 10_000_000_000),
+]
+
+
+def get_testicle_volume_ml(size: float) -> float:
+    """Return single-testicle volume in ml for the given size float."""
+    size  = max(0.0, size)
+    table = _TESTICLE_VOL_TABLE
+    if size <= table[0][0]:  return float(table[0][1])
+    if size >= table[-1][0]: return float(table[-1][1])
+    for i in range(len(table) - 1):
+        s0, v0 = table[i];  s1, v1 = table[i + 1]
+        if s0 <= size <= s1:
+            t = (size - s0) / (s1 - s0)
+            return v0 + t * (v1 - v0)
+    return float(table[-1][1])
+
+
+def format_body_volume(ml: float) -> str:
+    """Format a volume in ml into a human-readable string."""
+    if ml < 1_000:          return f"{ml:.0f}ml"
+    elif ml < 1_000_000:    return f"{ml / 1_000:.1f}L"
+    elif ml < 1_000_000_000: return f"{ml / 1_000_000:.1f}kL"
+    else:                   return f"{ml / 1_000_000_000:.2f}ML"
+
+
+def get_testicle_diam_str(size: float) -> str:
+    """Return testicle diameter as a readable string (sphere model)."""
+    import math
+    ml   = get_testicle_volume_ml(size)
+    r_cm = (3.0 * ml / (4.0 * math.pi)) ** (1.0 / 3.0)
+    d_cm = r_cm * 2.0
+    if d_cm < 100:       return f"{d_cm:.1f}cm"
+    elif d_cm < 100_000: return f"{d_cm / 100:.1f}m"
+    else:                return f"{d_cm / 100_000:.2f}km"
+
+
+# Shaft scale factors per mod type: (circ_scale, length_scale).
+_SHAFT_SCALE = {
+    "penis":    (1.00, 1.00),
+    "equine":   (2.40, 2.60),
+    "porcine":  (0.85, 1.20),
+    "draconic": (1.40, 1.55),
+}
+
+
+def get_shaft_measurements(mod_type: str, size: float) -> tuple:
+    """
+    Return (circumference_str, length_str) for a shaft body mod.
+    Human baseline: circ = 3.5 + size*0.50", length = 4.0 + size*1.10"
+    Scaled by mod_type.
+    """
+    def _fmt(inches: float) -> str:
+        if inches < 12:
+            return f'{inches:.1f}"'
+        feet = int(inches // 12);  rem = inches % 12
+        return f"{feet}'{rem:.1f}\""
+
+    cs, ls  = _SHAFT_SCALE.get(mod_type, (1.0, 1.0))
+    circ_in = max(1.0, (3.5 + size * 0.50) * cs)
+    len_in  = max(1.5, (4.0 + size * 1.10) * ls)
+    return _fmt(circ_in), _fmt(len_in)
 
 
 # ---------------------------------------------------------------------------

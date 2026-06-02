@@ -102,6 +102,13 @@ def _create_deposit_freeform(container, actor, fluid_type, fluid_flavor,
             entry["created_at"] = time.time()
             container.db.freeform_items = items
 
+        # Notify WombRoom if the target zone has one
+        try:
+            from typeclasses.womb_room import add_fluid_from_zone
+            add_fluid_from_zone(container, zone_name, volume_ml, fluid_type or "fluid")
+        except Exception:
+            pass
+
 
 # ---------------------------------------------------------------------------
 # CmdPenetrate
@@ -315,6 +322,22 @@ class CmdThrust(Command):
             except Exception:
                 pass
 
+        # Notify WombRoom if target's zone has one installed
+        engaged_zone = (caller.db.penetrating or {}).get("zone_name", "")
+        if engaged_zone:
+            try:
+                from typeclasses.womb_room import WombRoom
+                from evennia import search_object
+                zones = getattr(target.db, "zones", None) or {}
+                mech  = (zones.get(engaged_zone) or {}).get("mechanics") or {}
+                wr_entry = mech.get("womb_room")
+                if wr_entry:
+                    results = search_object(wr_entry.get("room_dbref", ""), exact=True)
+                    if results and isinstance(results[0], WombRoom):
+                        results[0].notify_shaft_visible(caller, caller_zone or engaged_zone)
+            except Exception:
+                pass
+
 
 # ---------------------------------------------------------------------------
 # CmdWithdraw
@@ -347,7 +370,17 @@ class CmdWithdraw(Command):
             expires = engaged.get("knot_expires_at", 0.0)
             if _t.time() < expires:
                 remaining = max(0, int(expires - _t.time()))
-                caller.msg(f"|xThe knot holds — {remaining}s remaining.|n")
+                from world.milking_loader import pick_knot_message
+                target_dbref_temp = engaged.get("target_dbref")
+                actor_name = ""
+                if target_dbref_temp:
+                    from evennia import search_object as _so
+                    _res = _so(target_dbref_temp, exact=True)
+                    actor_name = (_res[0].db.rp_name or _res[0].name) if _res else ""
+                held_msg = pick_knot_message("held") or "The knot holds — {actor} ({duration}s remaining)"
+                caller.msg(
+                    f"|x{held_msg.replace('{actor}', actor_name).replace('{duration}', str(remaining))}|n"
+                )
                 return
             else:
                 # Natural release — fire message then continue with withdrawal
@@ -357,7 +390,17 @@ class CmdWithdraw(Command):
                 room = caller.location
                 if room:
                     c_name = caller.db.rp_name or caller.name
-                    room.msg_contents(f"|x{c_name} — the knot releases naturally.|n")
+                    t_dbref = engaged.get("target_dbref", "")
+                    t_name = ""
+                    if t_dbref:
+                        from evennia import search_object as _so2
+                        _res2 = _so2(t_dbref, exact=True)
+                        t_name = (_res2[0].db.rp_name or _res2[0].name) if _res2 else ""
+                    from world.milking_loader import pick_knot_message
+                    rel_msg = pick_knot_message("release") or "The knot releases naturally."
+                    room.msg_contents(
+                        f"|x{rel_msg.replace('{actor}', c_name).replace('{target}', t_name)}|n"
+                    )
 
         caller.db.penetrating = None
 
