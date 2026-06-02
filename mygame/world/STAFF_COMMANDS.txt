@@ -1,0 +1,276 @@
+RE:VOID — STAFF COMMAND INDEX
+================================
+Keep this file updated whenever new systems are added.
+All commands run in-game via @py unless noted otherwise.
+
+================================================================================
+REGULAR MAINTENANCE
+================================================================================
+
+── After any git pull + @reload ─────────────────────────────────────────────
+
+  Sync Durgin's triggers (always do this after editing durgin_spawn.py):
+    @py from world.durgin_spawn import DURGIN_TRIGGERS; d = evennia.search_object("Durgin Ironwood")[0]; d.db.triggers = DURGIN_TRIGGERS; me.msg("Durgin synced.")
+
+  Verify fluid bank is a stable singleton (should return same id every run):
+    @py from typeclasses.fluid_bank import GlobalFluidBank; me.msg(f"Bank id: #{GlobalFluidBank.get().id}")
+
+  Clean up phantom bank scripts (if the above id changes between calls):
+    @py from evennia import search_script; banks = [b for b in (search_script("global_fluid_bank") or []) if b.key == "global_fluid_bank"]; me.msg(f"Found {len(banks)}: {[f'#{b.id}' for b in banks]}"); [b.delete() for b in banks[1:]]
+
+  Check for recent server errors after a code change:
+    (bash) grep -i "error\|traceback" /root/Re-Void/mygame/server/logs/server.log | tail -30
+
+── Periodically ──────────────────────────────────────────────────────────────
+
+  View bank deposit summary for a specific character:
+    @py from typeclasses.fluid_bank import GlobalFluidBank; me.msg(GlobalFluidBank.get().get_deposit_summary(me))
+
+  Install arousal script on a character missing it (run on each existing char once):
+    @py from typeclasses.arousal_script import ensure_arousal_script; ensure_arousal_script(me)
+
+  Migrate existing production items to get new rate attributes:
+    @py from typeclasses.production_item import ProductionItem; from evennia.objects.models import ObjectDB; [setattr(o.typeclass.db, "min_rate_ml_per_tick", 2.0) or setattr(o.typeclass.db, "max_rate_ml_per_tick", 30.0) for o in ObjectDB.objects.filter(db_typeclass_path__contains="MilkProductionItem")]; me.msg("Migrated milk items.")
+
+  Check how many milking session scripts are running (should be 0 when idle):
+    @py from typeclasses.milking_session_script import MilkingSessionScript; from evennia.scripts.models import ScriptDB; count = ScriptDB.objects.filter(db_typeclass_path__contains="MilkingSessionScript").count(); me.msg(f"Active session scripts: {count}")
+
+
+================================================================================
+ITEM CREATION & INSTALLATION
+================================================================================
+
+── Body mod items (purchase from Durgin is preferred — tests the shop flow) ──
+
+  Durgin sells: say "prices" to him to see the full list.
+  Key items and their install commands after purchase:
+
+    install Breast Enhancement           — installs to chest zone
+    install Milk Glands                  — installs to chest zone (alongside BreastItem)
+    install Penis Enhancement            — installs to groin/penis zone
+    install Testicle Enhancement         — installs to groin/testicles zone
+    install Semen Glands                 — installs to groin/penis or groin/testicles
+
+  Set fluid flavor after installing a production item:
+    setfluid/flavor Milk Glands = [flavor description]
+    setfluid/flavor Semen Glands = [flavor description]
+
+── Staff shortcut (if Durgin unavailable) ────────────────────────────────────
+
+  Create and install BreastItem directly:
+    @py from evennia import create_object; from typeclasses.body_mod_item import BreastItem; item = create_object(BreastItem, key="Breast Enhancement", location=me); ok, r = item.install(me, "chest"); me.msg(f"BreastItem: {ok} {r or 'OK'}")
+
+  Create and install MilkProductionItem:
+    @py from evennia import create_object; from typeclasses.production_item import MilkProductionItem; item = create_object(MilkProductionItem, key="Milk Glands", location=me); ok, r = item.install(me, "chest"); me.msg(f"MilkItem: {ok} {r or 'OK'}")
+
+  Create and install PenisItem:
+    @py from evennia import create_object; from typeclasses.body_mod_item import PenisItem; item = create_object(PenisItem, key="Penis Enhancement", location=me); ok, r = item.install(me, "groin/penis"); me.msg(f"PenisItem: {ok} {r or 'OK'}")
+
+  Create and install SemenProductionItem:
+    @py from evennia import create_object; from typeclasses.production_item import SemenProductionItem; item = create_object(SemenProductionItem, key="Semen Glands", location=me); ok, r = item.install(me, "groin/penis"); me.msg(f"SemenItem: {ok} {r or 'OK'}")
+
+── Consumable items (create and give to character) ───────────────────────────
+
+  Give lotion (10 uses, +0.25 perm size per use):
+    @py from evennia import create_object; from typeclasses.lotion_item import LotionItem; item = create_object(LotionItem, key="a lotion bottle", location=me); item.db.boost_amount=0.25; item.db.uses_remaining=10; item.db.label="the lotion"
+
+  Give syringe (5 uses, temp size boost):
+    @py from evennia import create_object; from typeclasses.syringe_item import SyringeItem; item = create_object(SyringeItem, key="a syringe", location=me); item.db.boost_amount=1.0; item.db.uses_remaining=5; item.db.label="the syringe"
+
+  Give growth serum (3 doses, perm size + production):
+    @py from evennia import create_object; from typeclasses.growth_serum_item import GrowthSerumItem; item = create_object(GrowthSerumItem, key="growth serum", location=me); item.db.uses_remaining=3; item.db.perm_size_boost=0.5; item.db.perm_rate_boost_ml=15.0; item.db.label="the growth serum"
+
+  Give Lactaid (5 doses, mild perm size + production):
+    @py from evennia import create_object; from typeclasses.growth_serum_item import GrowthSerumItem; item = create_object(GrowthSerumItem, key="Lactaid", location=me); item.db.uses_remaining=5; item.db.perm_size_boost=0.25; item.db.perm_rate_boost_ml=8.0; item.db.label="Lactaid"
+
+  Give Lact-O (5 doses, temp rate boost):
+    @py from evennia import create_object; from typeclasses.production_injection_item import ProductionInjectionItem; item = create_object(ProductionInjectionItem, key="Lact-O", location=me); item.db.uses_remaining=5; item.db.rate_boost_ml_per_tick=15.0; item.db.duration_hours=6.0; item.db.label="Lact-O"
+
+  Give Cap-aid (3 uses, temp capacity):
+    @py from evennia import create_object; from typeclasses.capacity_item import CapacityItem; item = create_object(CapacityItem, key="Cap-aid", location=me); item.db.uses_remaining=3; item.db.capacity_bonus_ml=300.0; item.db.is_permanent=False; item.db.duration_hours=6.0; item.db.label="Cap-aid"
+
+  Give Cap-max (2 uses, perm capacity):
+    @py from evennia import create_object; from typeclasses.capacity_item import CapacityItem; item = create_object(CapacityItem, key="Cap-max", location=me); item.db.uses_remaining=2; item.db.capacity_bonus_ml=600.0; item.db.is_permanent=True; item.db.label="Cap-max"
+
+
+================================================================================
+MECHANIC INSTALLATION (run in the room where the mechanic should go)
+================================================================================
+
+  Milking machine on a zone:
+    @create <Name>:typeclasses.milking_machine_mechanic.MilkingMachineMechanic
+    use <Name> on <zone>
+
+  Seat mechanic (players can sit/kneel/lie):
+    @create <Name>:typeclasses.seat_mechanic.SeatMechanic
+    @set <Name>/capacity = 2
+    @set <Name>/label = the seat
+    @set <Name>/position = seated          (or: kneeling, lying)
+    @set <Name>/allow_lap = 1              (optional, allows lap-sitting)
+    use <Name> on <zone>
+
+  Restraint mechanic:
+    @create <Name>:typeclasses.restrain_mechanic.RestrainMechanic
+    @set <Name>/capacity = 1
+    @set <Name>/label = the restraints
+    @set <Name>/blocker_msg = You are held fast. You cannot move.
+    use <Name> on <zone>
+
+  Dildo seat mechanic:
+    @create <Name>:typeclasses.dildo_seat_mechanic.DildoSeatMechanic
+    @set <Name>/capacity = 1
+    @set <Name>/label = the seat
+    use <Name> on <zone>
+
+  Pool mechanic (sitting in water):
+    @create <Name>:typeclasses.seat_mechanic.SeatMechanic
+    @set <Name>/capacity = 4
+    @set <Name>/label = the pool
+    @set <Name>/position = sitting
+    @set <Name>/allow_lap = 1
+    use <Name> on <zone>
+
+
+================================================================================
+ROOM / ZONE SETUP
+================================================================================
+
+  Create zones (run while standing in the room):
+    roomzone add <name>                    — standard zone
+    roomzone add <name> type=shaft         — penetration-capable zone
+    roomzone add <name> type=orifice       — orifice zone (receives penetrate)
+    roomzone add <name> type=both          — both surface and orifice
+
+  Character zones (while puppeted as the character):
+    zone add <name> type=surface intimate  — surface zone, intimate flag
+    zone add <name> type=orifice intimate  — orifice zone, intimate flag
+    zone add <name> type=shaft intimate    — shaft zone (for penetrate command)
+    zone add <name> type=both intimate     — both types
+
+  Set zone description:
+    zone set <name> = [description — nude/base state]
+
+  Set zone as worn (clothing layer):
+    wear <zone> [clothing description as a full prose paragraph]
+
+  Enable graffiti/inscription on a roomzone:
+    roomzone inscribe/enable <zone>
+
+
+================================================================================
+HOUSING
+================================================================================
+
+  Add a character as a resident (can sethome here):
+    housing add <character name>           — run while standing in the room
+
+  Remove a resident:
+    housing remove <character name>
+
+  List current residents of a room:
+    housing residents
+
+  Convert a room to housing (lets player dig off it):
+    @typeclass here = typeclasses.housing.HousingRoom
+    @py here.db.housing_owner_id = <char_id>
+    @py from web.housing.models import HousingPlot; HousingPlot.objects.create(character_id=<char_id>, rooms_total=1, rooms_used=1)
+
+  Grant a character extra room slots:
+    @py from web.housing.models import HousingPlot; p = HousingPlot.get_or_none(<char_id>); p.rooms_total += 5; p.save(); me.msg("Done.")
+
+
+================================================================================
+SHAFT ZONE SETUP (male / intersex characters)
+================================================================================
+
+  See the full reference at the bottom of world/witch_build.txt.
+
+  Quick reference:
+    zone add groin/penis type=shaft intimate
+    zone add groin/testicles type=both intimate
+    install Penis Enhancement          (purchase from Durgin first)
+    install Testicle Enhancement       (purchase from Durgin first)
+    install Semen Glands               (purchase from Durgin first)
+    setfluid/flavor Semen Glands = [description]
+
+  Penetrate command requirements:
+    — Caller: zone type=shaft with PenisItem installed
+    — Target: zone type=orifice or type=both
+    — Target: must have 'mature' consent flag enabled
+    — Both in same room
+
+
+================================================================================
+FLUID BANK & FRIDGE
+================================================================================
+
+  Force a manual test deposit (creates a bottle if >= 591ml):
+    @py from typeclasses.fluid_bank import GlobalFluidBank; b = GlobalFluidBank.get(); result = b.deposit(me, 600.0, "milk", None); me.msg(f"Bottles created: {len(result)}, Pending: {b.db.records.get(str(me.id), {}).get('deposit_ml', 0):.0f}ml")
+
+  Check bank records for a character:
+    @py from typeclasses.fluid_bank import GlobalFluidBank; b = GlobalFluidBank.get(); me.msg(b.get_deposit_summary(me))
+
+  Look inside the fridge:
+    look Helena's Dairy Fridge
+    (or just: look fridge — if in the entertainment room)
+
+  Stock the fridge with a bottle (manual):
+    put <bottle name> in fridge
+
+  Retrieve a bottle from the fridge:
+    get <bottle name> from fridge
+
+
+================================================================================
+MILKING MACHINE OPERATIONS
+================================================================================
+
+  Start a milking session:
+    milk <target>                  — operator milks a target
+    milk/self                      — milk yourself
+
+  Control the session:
+    milk/speed slow|steady|fast|intense   — change speed
+    milk/status                           — show current state
+    milk/stop                             — end session
+
+  Manual milking (no machine needed):
+    handmilk <target>              — single extraction at steady rate
+    handmilk/self                  — milk yourself by hand
+
+  Stop all orphaned session scripts on a character:
+    @py from typeclasses.milking_session_script import MilkingSessionScript; scripts = [s for s in me.scripts.all() if isinstance(s, MilkingSessionScript)]; [s.stop() for s in scripts]; me.msg(f"Stopped {len(scripts)} script(s).")
+
+
+================================================================================
+AROUSAL SYSTEM
+================================================================================
+
+  Check a character's arousal level:
+    @py me.msg(f"Arousal: {me.db.arousal or 0.0:.1f}/100")
+
+  Install arousal script on an existing character (run once per old char):
+    @py from typeclasses.arousal_script import ensure_arousal_script; ensure_arousal_script(me)
+
+  Reset arousal manually:
+    @py me.db.arousal = 0.0; me.db.arousal_cooldown_until = 0.0; me.msg("Arousal reset.")
+
+  Add arousal manually (for testing):
+    @py from typeclasses.arousal_script import add_arousal; add_arousal(me, 50.0); me.msg(f"Arousal now: {me.db.arousal:.1f}")
+
+
+================================================================================
+MESSAGE POOLS — YAML FILES TO KEEP UPDATED
+================================================================================
+
+  world/milking_messages.yaml
+    — speeds: slow/steady/fast/intense pools: start, running, first_empty,
+              running_empty, stop, priming, tapering
+    — arousal: thresholds (75/90/95), climax, surface_deposit, internal_deposit
+    — size_ambient: tiers by min_size
+    — fullness: thresholds by ml
+    — leaking: conditions by size + volume
+    STATUS: Pools exist, message content needs expansion
+
+  After editing milking_messages.yaml, the cache reloads automatically on
+  the next access — no @reload needed for YAML changes.

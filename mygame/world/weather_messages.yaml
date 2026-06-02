@@ -1,0 +1,117 @@
+# world/weather_messages.yaml
+#
+# Message pools for the weather and time-of-day system.
+# Used by WeatherTimeScript to fire ambient messages into outdoor rooms
+# and provide descriptions for the 'weather' command.
+#
+# Tokens: {location} — replaced with the room's name (optional)
+
+# ---------------------------------------------------------------------------
+# Time-of-day descriptions — shown when players use 'weather' or 'time'
+# ---------------------------------------------------------------------------
+
+time_desc:
+  dawn:       "The sky is lightening — the dark giving way to pale grey at the horizon."
+  morning:    "Morning light has settled, clear and direct, the day fully begun."
+  midday:     "The sun is at its highest. The light is flat and unhesitating."
+  afternoon:  "The afternoon holds its warmth without urgency. The light has begun its long slide."
+  dusk:       "The sun is pulling back. The light has gone amber at the edges."
+  evening:    "The sky has gone to deep blue and the first stars are present."
+  night:      "Full dark. The sky is clear and the stars are close."
+  deep_night: "The deep hours. Nothing moves without purpose."
+
+# ---------------------------------------------------------------------------
+# Weather state descriptions — shown in 'weather' command output
+# ---------------------------------------------------------------------------
+
+weather_desc:
+  clear:      "The sky is clear overhead."
+  cloudy:     "Cloud cover has come in — the sky a consistent pale grey."
+  light_rain: "A light rain is falling — steady, fine, unremarkable."
+  heavy_rain: "Heavy rain. The sound of it is constant and the visibility is reduced."
+  storm:      "A storm has moved in. The wind is working and the rain comes sideways."
+  fog:        "Fog. The visibility is low and the distances have disappeared."
+  snow:       "Snow is falling — slow, even, accumulating without noise."
+
+# ---------------------------------------------------------------------------
+# Outdoor ambient messages by weather state
+# Fired at random into rooms with db.is_outdoor=True
+# Token: {location} (optional)
+# ---------------------------------------------------------------------------
+
+outdoor_ambient:
+
+  clear:
+    - "The sky overhead is unobstructed. The light comes down clean."
+    - "A breeze moves through — slight, purposeless, carrying nothing."
+    - "The air is still and clear. A bird calls somewhere and does not repeat itself."
+    - "The open sky holds the light evenly. The shadows fall exactly where they should."
+
+  cloudy:
+    - "The cloud cover holds — the light diffuse, even, casting no shadows."
+    - "A grey sky. Not threatening, just present. The air is cool."
+    - "The clouds have come in and settled. The world is quieter under them."
+
+  light_rain:
+    - "The rain falls without drama — a fine, even pressure on every surface."
+    - "Light rain. The sound of it on the ground is constant and low."
+    - "A soft rain. The surfaces are dark with it and the air smells of wet earth."
+    - "The rain continues at its same light pace, neither building nor stopping."
+
+  heavy_rain:
+    - "The rain is coming down hard. Everything beyond a few metres is indistinct."
+    - "Heavy rain. The sound of it is loud and the ground is running with water."
+    - "The downpour shows no sign of slowing. Moving through it requires intent."
+
+  storm:
+    - "A gust drives through — the kind that doesn't ask."
+    - "Lightning somewhere in the distance. The thunder arrives five seconds later."
+    - "The storm has not lessened. The rain and wind work together against everything upright."
+    - "The light changes briefly — a flash — then returns to the grey-dark of the storm."
+
+  fog:
+    - "The fog has swallowed the distances. Nearby things are visible; beyond that, nothing."
+    - "The fog sits still and even. Sound carries strangely through it."
+    - "In the fog, the familiar becomes approximate — shapes rather than things."
+
+  snow:
+    - "Snow is still falling — the same slow pace, covering everything equally."
+    - "The snow has muffled the sounds of the world. The silence has a quality."
+    - "Fresh snow on every surface. It continues to fall, unhurried."
+    - "The snowfall has made the light strange — diffuse, coming from everywhere."
+
+# ---------------------------------------------------------------------------
+# Time-of-day outdoor ambient messages
+# Layered on top of weather ambients for outdoor rooms
+# ---------------------------------------------------------------------------
+
+time_ambient:
+
+  dawn:
+    - "The horizon has gone pale. The dark is releasing its grip on things."
+    - "The first birds have started. The light is still uncertain."
+
+  morning:
+    - "The morning has established itself. The light is direct and matter-of-fact."
+
+  midday:
+    - "The sun is directly overhead. There are no interesting shadows."
+
+  afternoon:
+    - "The afternoon light has gone longer and more golden."
+    - "The shadows have stretched out. The day has passed its peak."
+
+  dusk:
+    - "The sky at the horizon is burning out — orange into red into the first dark."
+    - "Dusk. The light is almost gone and the colours are all the same."
+
+  evening:
+    - "The evening has settled. The first stars are clearly visible."
+    - "Full evening. The air has cooled and the sky is properly dark at the zenith."
+
+  night:
+    - "The night is complete. The stars are sharp and undisturbed."
+
+  deep_night:
+    - "The deep hours. The world is at its quietest."
+    - "Nothing stirs. The sky has turned, the stars have moved, and the night continues."

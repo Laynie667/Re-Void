@@ -304,6 +304,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_PENETRATION_CMDS:
             self.add(cmd_cls())
 
+        # Weather and time of day
+        from commands.weather_commands import CmdWeather
+        self.add(CmdWeather())
+
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge
         self.add(CmdSetDairy())

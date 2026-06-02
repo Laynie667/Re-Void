@@ -389,21 +389,28 @@ zone ambient playful_aura add The violet shimmer at the edges of |mWitch|n's sil
 zone ambient playful_aura add The luminescence around |mWitch|n dims very slightly, then holds. She doesn't appear to notice.
 
 
--- STEP 9: Body Mod Test Items --
--- Demonstrates the {size} token in zone descriptions and the install system. --
--- Uses @py with me.puppet to target the Character (me alone is the Account). --
--- Calls item.install() directly — no need for the install command. --
+-- STEP 9: Body Mod Items --
+-- Purchase from Durgin Ironwood and install. This tests the full shop →    --
+-- install pipeline and ensures items work correctly end-to-end.             --
+-- Durgin sells: "breast enhancement" (400sh), "milk glands" (300sh),       --
+--               "lotion" (150sh), "syringe" (200sh), "growth serum" (350sh) --
+--               "lactaid" (200sh), "lact-max" (400sh), "cap-aid" (200sh)   --
 
-@py from evennia import create_object; from typeclasses.body_mod_item import BreastItem; item = create_object(BreastItem, key="Breast Enhancement", location=me); ok, reason = item.install(me, "chest"); me.msg(f"BreastItem: {ok} {reason or 'installed OK'}")
-
-@py from evennia import create_object; from typeclasses.production_item import MilkProductionItem; item = create_object(MilkProductionItem, key="Milk Glands", location=me); ok, reason = item.install(me, "chest"); me.msg(f"MilkProductionItem: {ok} {reason or 'installed OK'}")
+-- Purchase from Durgin, then run these install commands: --
+install Breast Enhancement
+install Milk Glands
 
 -- Set a flavor for the milk. --
 setfluid/flavor Milk Glands = warm and faintly sweet, with the particular honey-vanilla of her scent translated into something tangible — richer than expected, not ungentle
 
--- NOTE: After installing, zone set chest will now render {size} dynamically. --
--- To demonstrate: look witch chest — the {size} token resolves to the BreastItem's current size. --
--- To adjust size: lotion <zone> (with lotion item in inventory) or inject (with syringe) --
+-- NOTE: After installing, zone set chest renders {size} dynamically.       --
+-- To adjust size: lotion chest / inject chest / inject/serum chest          --
+-- To adjust production rate: inject/prod chest (with Lact-O in inventory)  --
+-- To adjust capacity: inject/cap chest (with Cap-aid in inventory)          --
+
+-- STAFF SHORTCUT: If Durgin is unavailable, create and install directly: --
+-- @py from evennia import create_object; from typeclasses.body_mod_item import BreastItem; item = create_object(BreastItem, key="Breast Enhancement", location=me); ok, reason = item.install(me, "chest"); me.msg(f"BreastItem: {ok} {reason or 'installed OK'}")
+-- @py from evennia import create_object; from typeclasses.production_item import MilkProductionItem; item = create_object(MilkProductionItem, key="Milk Glands", location=me); ok, reason = item.install(me, "chest"); me.msg(f"MilkProductionItem: {ok} {reason or 'installed OK'}")
 
 
 -- STEP 10: Jewelry and Placed Accessories --
@@ -445,3 +452,40 @@ setfluid/flavor Milk Glands = warm and faintly sweet, with the particular honey-
 --   setdesc, setbodylang, setmoodtell, setpresence --
 --   setproxtell, setscent, setvoice, settouch,   --
 --   setintimate                                  --
+
+
+-- ======================================================================= --
+-- SHAFT ZONE REFERENCE — for male / intersex character builds             --
+-- Not part of Witch's setup. Included as a template for other characters. --
+-- ======================================================================= --
+
+-- Step A: Add shaft and supporting zones --
+zone add groin/penis type=shaft intimate
+zone add groin/testicles type=both intimate
+
+-- Step B: Write zone descriptions with {size} token --
+zone set groin/penis = His cock is {size} — [write appropriate desc here]
+zone set groin/testicles = His balls are {size} — [write appropriate desc here]
+
+-- Step C: Purchase and install from Durgin --
+--   "penis enhancement"    — body mod, enables {size} token + lotion/syringe/serum --
+--   "testicle enhancement" — body mod, size scale, boosts semen production         --
+--   "semen glands"         — production item, passive accumulation, milkable        --
+--   "throbb"               — inject/serum item, permanent size + production boost   --
+install Penis Enhancement
+install Testicle Enhancement
+install Semen Glands
+
+-- Step D: Set semen flavor --
+setfluid/flavor Semen Glands = [flavor description here]
+
+-- Step E: Shaft zone interaction notes --
+-- The penetrate command works when:                                        --
+--   caller has zone type=shaft WITH a PenisItem installed on that zone    --
+--   target has zone type=orifice or type=both                              --
+--   target has consented to 'mature' interactions                          --
+-- Usage: penetrate <target>   — lists their orifice zones                 --
+--        penetrate <target> <zone or number>   — direct initiation        --
+--        thrust   — per-use arousal gain while engaged                    --
+--        withdraw — ends engagement                                        --
+--        deposit  — fluid deposit (surface or internal)                   --

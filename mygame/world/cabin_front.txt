@@ -127,5 +127,8 @@ rambient/add |xFrom the treeline's direction: nothing moves, nothing sounds. The
 
 @open cabin;south;s;in = [#dbref of Cabin Common Area / Main Hall]
 
+-- Mark this room as outdoor so the weather system fires ambient messages here --
+@set here/is_outdoor = True
+
 -- TODO: Wire forest trail exits when adjacent forest rooms are built --
 -- Suggested exits: north → Deep Forest | northwest → Forest Path | west → Barn Trail --
