@@ -338,35 +338,35 @@ arousal:
   thresholds:
     - value: 75
       messages:
-        - "Something has shifted past background — an urgency that is no longer passive. You are aware of it with a specificity that is difficult to redirect."
-        - "The building pressure has crossed a line from present to insistent. It has an opinion now."
-        - "Seventy-five percent of the way to somewhere. Your body has its own momentum on this now."
+        - "Something's been building and now it's loud about it. You can feel it specifically — not background noise, a need with a very clear opinion about what it wants."
+        - "Seventy-five and climbing. Your body has taken the wheel and it's not taking input right now."
+        - "The heat of it is past distracting and into demanding. Your body knows exactly what it wants and it's starting to make that a problem."
 
     - value: 90
       messages:
-        - "The pressure has reached the point where managing it requires active attention. It is the primary thing your awareness is doing."
-        - "Very close. The specificity of what your body wants has resolved from general to exact."
-        - "Ninety. There is not a great deal of road left, and your body is fully aware of this."
+        - "Almost there and your body is screaming it. Ninety percent and the machine is the only thing in your head."
+        - "You're close enough that close doesn't cover it. Your cunt — your cock — whatever it is, it's decided. The rest of you is just along for the ride."
+        - "Ninety. A little bit left and your body stopped caring about anything else a while ago."
 
     - value: 95
       messages:
-        - "The threshold is immediately ahead and your body is no longer pretending otherwise."
-        - "Five points from the end. The decision has been made. Only the timing remains."
-        - "Nearly there. The pressure has stopped taking suggestions about pace."
+        - "Right there. Your body stopped pretending there's anything else happening in the world."
+        - "Five points. You're going to come and you both know it. The only question is when."
+        - "Nearly there — the build is past the point of stopping and you're not trying to anymore."
 
   climax:
-    - "{target} reaches the threshold — the response immediate, specific, and entirely outside the range of things they can delay."
-    - "The pressure resolves for {target} — a release that lands exactly where it was building toward."
-    - "{target}'s body makes its conclusion. The evidence is not in question."
-    - "The climax arrives for {target} with the finality of something that has been coming for some time."
+    - "{target} comes — hard, and right when they couldn't have stopped it if they'd tried."
+    - "There it is. {target} hits the peak and the release takes everything with it."
+    - "{target} goes off — the whole body clenching, the conclusion landing exactly where the build said it would."
+    - "The climax takes {target} apart cleanly. That's been coming for a while."
 
   surface_deposit:
-    - "{actor} deposits onto {surface}. The evidence settles and remains."
-    - "{actor} releases onto {surface} — the deposit present and specific."
+    - "{actor} comes on {surface} — the mess landing and staying right where it is."
+    - "{actor} finishes on {surface}. Evidence left behind."
 
   internal_deposit:
-    - "{actor} reaches the end inside {target}'s {zone}. The deposit is complete."
-    - "The climax resolves for {actor} — the release internal to {target}'s {zone}."
+    - "{actor} comes inside {target}'s {zone} — the full load delivered deep where it belongs."
+    - "{actor} finishes inside {target}'s {zone}. {target} gets every drop."
 
 
 # ---------------------------------------------------------------------------
@@ -378,34 +378,34 @@ arousal:
 
 inflation:
   slight:
-    - "{target}'s {zone} holds the addition without protest — a new softness, a small weight that wasn't there before. The change is present but not pressing."
-    - "The first volume settles into {target}'s {zone} with the ease of something barely begun. Slight, but registered."
-    - "A faint fullness finds {target}'s {zone}. The {fluid} is there now — a beginning rather than a condition."
-    - "The {zone} accepts it without difficulty. A slight warmth distributed across the interior, {target}'s body cataloguing it without urgency."
+    - "{target}'s {zone} takes the first of it — {fluid} settling in, a warmth that wasn't there a moment ago. Just the beginning."
+    - "The {fluid} starts filling {target}'s {zone}. Not much yet. {target}'s body registers it and files it away."
+    - "A soft fullness starting up in {target}'s {zone}. The {fluid} is in there. It'll be more soon."
+    - "{target}'s {zone} accepts the first push of {fluid} without complaint. Slight for now. Won't stay that way."
 
   notable:
-    - "{target}'s {zone} carries the volume clearly now — the fullness past the point where it might be overlooked. The {fluid} is present in a way the body doesn't ignore."
-    - "The {fluid} has reached a volume that registers specifically in {target}'s {zone}. Full enough to be felt distinctly with every movement."
-    - "The fullness in {target}'s {zone} has moved from presence to acknowledgement. {volume} of {fluid} inside is its own fact now."
-    - "Notable fullness: the {zone} holds {volume} and the shape of it is apparent. Not uncomfortable, but past subtle."
+    - "{target}'s {zone} is noticeably fuller now — {volume} of {fluid} sitting in there and making itself known. Can't ignore it anymore."
+    - "The {fluid} has built up to something {target} can actually feel — {volume} inside their {zone} and pressing on everything around it."
+    - "Notable. {target}'s {zone} is stretched with {volume} of {fluid} and the shape of it is starting to show. Uncomfortable in the best way."
+    - "{target}'s body knows exactly how much {fluid} is packed into their {zone} right now. {volume}. It's past the point of pretending otherwise."
 
   full:
-    - "{target}'s {zone} is at capacity — the {fluid} filling it completely, the pressure consistent and total. The fullness has resolved from notable to insistent."
-    - "Full. The {zone} holds every millilitre it can, the {fluid} pressing outward against the interior. {target}'s body has been made aware."
-    - "The {zone} has reached its limit. The pressure of {volume} of {fluid} inside {target} is past simple awareness — it shapes how they hold themselves."
-    - "At full capacity, {target}'s {zone} makes itself known with every breath. The {fluid} fills the space completely. There is no part of it that isn't occupied."
+    - "Full — {target}'s {zone} packed tight with {volume} of {fluid}, walls stretched, nowhere left to put any more. {target} feels every bit of it."
+    - "{target}'s {zone} is stuffed. {volume} of {fluid} in there and the pressure is constant and total and not going anywhere."
+    - "At capacity. The {fluid} fills {target}'s {zone} completely — {volume} of it pressing outward from the inside. {target}'s posture says everything."
+    - "Filled up. {target}'s {zone} can't take any more {fluid} and doesn't need to — {volume} is already packed in there tight and making itself very known."
 
   overfull:
-    - "Past full. {target}'s {zone} holds more than it was designed for, the {fluid} pressing outward beyond comfortable limits. The distension is visible."
-    - "The {zone} has been pushed past capacity — {volume} of {fluid} in a space that has made its objections clear. The surface gives where it can."
-    - "Overfull: {target}'s {zone} cannot maintain comfortable containment at this volume. The {fluid} presses outward insistently. The shape of it shows."
-    - "The capacity of {target}'s {zone} was exceeded some volume ago. The {fluid} fills it past its limit, the pressure constant and past negotiating."
+    - "Past full and then some. {target}'s {zone} is bulging with {volume} of {fluid}, distended past what it was built for, and it shows."
+    - "{target}'s {zone} is stuffed beyond capacity — {volume} of {fluid} crammed into a space that's had enough and said so. The stretch is visible."
+    - "Way over limit. {volume} of {fluid} packed into {target}'s {zone} past the point of comfort and well into territory {target} will be feeling for a while."
+    - "Overfull and obvious about it. {target}'s {zone} is packed tight with {volume} of {fluid} and the body has run out of space to put it gracefully."
 
   drain:
-    - "The {fluid} drains from {target}'s {zone} in a controlled release — the pressure easing by degrees until the zone returns to its natural state."
-    - "The volume clears from {target}'s {zone}. The fullness recedes, the {fluid} leaving behind only the relief of a return to baseline."
-    - "Draining: the {fluid} exits {target}'s {zone} steadily, the pressure unwinding. The fullness retreats."
-    - "The {zone} releases its contents — {fluid} drawing away from {target} until the insistent fullness is simply gone."
+    - "The {fluid} drains out of {target}'s {zone} in a rush — all that pressure finally let go. The relief is immediate and total."
+    - "{target}'s {zone} empties — {fluid} pulled out until there's nothing left. The stretch eases. The ache of it fades."
+    - "Drained. The {fluid} clears out of {target}'s {zone} and the fullness that's been sitting in there just disappears."
+    - "All that {fluid} out of {target}'s {zone} at once — the pressure drops, the distension goes down. Back to empty. For now."
 
 # ---------------------------------------------------------------------------
 # Insemination messages — machine deposits fluid into a zone.
@@ -417,22 +417,22 @@ inflation:
 
 insemination:
   machine:
-    - "The machine delivers its load — {volume} of {fluid} deposited into {target}'s {zone} in a single, unhurried release. The chamber empties. The zone does not."
-    - "The insemination cycle completes: {fluid} routed directly into {target}'s {zone}. The volume is {volume}. The machine logs it and resets."
-    - "A deep internal warmth as the machine deposits into {target}'s {zone} — {volume} of {fluid}, delivered without ceremony, now resident."
-    - "The deposit lands: {volume} of {fluid} inside {target}'s {zone}. The machine has completed its function. What remains, stays."
+    - "The machine breeds {target} — {volume} of {fluid} pumped straight into {target}'s {zone}, no preamble, no stopping. The tank empties. {target} doesn't."
+    - "Insemination cycle complete. {volume} of {fluid} deposited deep in {target}'s {zone}. The machine doesn't care about comfort. The machine cares about filling {target} up."
+    - "{target}'s {zone} gets {volume} of {fluid} from the machine — hot and direct and exactly where it's supposed to go. That's what the attachment is for."
+    - "The machine finishes the job: {volume} of {fluid} seated inside {target}'s {zone}. It resets. {target} is bred. Those are the facts."
 
   bank:
-    - "{actor}'s contribution reaches {target}'s {zone} — {volume} of {fluid}, drawn from storage and delivered warm. The origin is specific. So is the destination."
-    - "The banked deposit from {actor} reaches {target}'s {zone}: {volume} of {fluid}, intimate even at remove. The warmth of it is immediate."
-    - "{volume} of {actor}'s {fluid} is released into {target}'s {zone}. The source was stored. The delivery is direct."
-    - "The machine routes {actor}'s banked {fluid} into {target}'s {zone} — {volume}, a specific contribution from a specific source, now held inside."
+    - "{actor}'s load is pumped into {target}'s {zone} — {volume} of {actor}'s own {fluid}, drawn from the bank and delivered where it counts. Personal."
+    - "{volume} of {actor}'s {fluid} reaches {target}'s {zone} from storage. Saved up and now inside {target}. The origin is specific. So is what it means."
+    - "The machine pulls {actor}'s banked {fluid} and breeds {target} with it — {volume} deposited directly into {target}'s {zone}. {actor}'s, specifically."
+    - "{target}'s {zone} gets filled with {actor}'s {fluid} — {volume} of it, drawn from storage warm and delivered properly. Bred with {actor}'s contribution."
 
   random:
-    - "An anonymous contribution deposits into {target}'s {zone} — {volume} of {fluid} from storage, the source unspecified. What matters is that it arrives."
-    - "The random selection resolves to {volume} of {fluid}, deposited into {target}'s {zone}. The origin is undisclosed. The volume is not."
-    - "{volume} of {fluid} from the anonymous bank pool reaches {target}'s {zone}. Whatever it came from, it's there now."
-    - "Drawn from storage at random and delivered: {volume} of {fluid} inside {target}'s {zone}. The source is irrelevant. The presence is not."
+    - "Something from the bank breeds {target} — {volume} of {fluid}, source anonymous, deposited into {target}'s {zone}. Unknown stud. Real load."
+    - "The random draw comes up and {target}'s {zone} gets {volume} of whoever's {fluid} was next in the bank. It's in there now. The source doesn't matter to the machine."
+    - "{volume} of {fluid} from the anonymous pool into {target}'s {zone}. Could be anyone's. That's the point of anonymous. It's real either way."
+    - "A mystery load for {target} — {volume} of {fluid} deposited into {target}'s {zone} from whatever was in rotation. Bred, just not by anyone in particular."
 
 # ---------------------------------------------------------------------------
 # Knot mechanic messages
@@ -443,22 +443,22 @@ insemination:
 
 knot:
   trigger:
-    - "{actor} and {target} are tied — the knot has engaged at {actor}'s {zone}. Withdrawal is not immediately possible."
-    - "The knot locks — {actor} and {target} held together. Neither is going anywhere for the moment."
-    - "A sharp catch, and then the tie is established. {actor} and {target} are locked. The knot is not interested in urgency."
-    - "{actor}'s knot engages — {target} held fast, {actor} equally so. The tie has set. It will release in its own time."
+    - "{actor}'s knot catches inside {target}'s {zone} and swells — lodged deep, sealing them together. Stud and bitch, tied. Neither of them is pulling free until it goes down on its own."
+    - "The knot swells up inside {target} the moment it catches — thick and immovable, locking {actor} in place. {target} isn't going anywhere and neither is {actor}. That's the point."
+    - "A sudden fullness as {actor}'s knot engorges inside {target}'s {zone} and sets. The swell is immediate and total. They're bred together now — tied until the knot decides otherwise."
+    - "{actor} is knotted inside {target} — the base swelling fat and firm against the inside of {target}'s {zone}, seating them together hard. The tie holds. It will hold for a while."
 
   held:
-    - "The knot holds. You and {actor} are tied — withdrawal isn't possible until the tie releases naturally. ({duration}s remaining)"
-    - "You try to withdraw. The knot has other ideas. You and {actor} stay where you are for now. ({duration}s remaining)"
-    - "The tie is firm. You aren't going anywhere yet, and neither is {actor}. The knot will release when it's ready. ({duration}s remaining)"
-    - "The knot has you. Withdrawal isn't an option right now — the tie will release on its own. ({duration}s remaining)"
+    - "The knot is still swollen. You can feel every bit of it from the inside — {actor} isn't going anywhere, and pulling would only make it worse. ({duration}s remaining)"
+    - "You try to pull free. The knot has other ideas — it's still thick and lodged and not ready to let you go. Stay put. ({duration}s remaining)"
+    - "You're tied. {actor}'s knot is still full and seated in you and withdrawal isn't happening right now. ({duration}s remaining)"
+    - "The knot is locked in tight. You're breeding-tied to {actor} until the swell goes down. Nothing to do but wait. ({duration}s remaining)"
 
   release:
-    - "The knot between {actor} and {target} releases naturally — the tie easing until the connection breaks. Both are free."
-    - "The tie lets go. {actor} and {target} are free to separate."
-    - "The knot releases. {actor} and {target} are no longer held — the tie has run its course."
-    - "A slow release as the knot between {actor} and {target} eases. The tie is done."
+    - "The knot finally softens — the swell easing by degrees until {actor} slips free of {target}. The tie breaks. Both of them are loose."
+    - "{actor}'s knot goes down at last, the lock releasing. {target} lets them pull free. Done."
+    - "The knot shrinks and the tie releases — {actor} and {target} separate cleanly after the wait."
+    - "A long slow exhale as {actor}'s knot finally deflates enough to pull clear of {target}. The breeding tie is over."
 
 # ---------------------------------------------------------------------------
 # Cycle machine phase messages — all room-visible.
@@ -468,28 +468,28 @@ knot:
 
 cycle_machine:
   restrain:
-    - "The machine engages — restraints close around {target}, securing them in place. The cycle is beginning."
-    - "Restraints extend from the machine and lock around {target}. The cycle has begun. {target} is not going anywhere."
-    - "The machine's harness engages — {target} held firmly as the cycle initialises. Movement is not currently on the table."
-    - "A mechanical click as the restraints find {target} and close. The machine has them now. The cycle is starting."
+    - "The machine grabs {target} — restraints snapping into place, locking them down. Cycle starting. {target} isn't going anywhere."
+    - "Straps and cuffs close around {target} with mechanical certainty. The harness has them. The machine is ready to work."
+    - "The restraints lock around {target} and don't give. That's the point. The machine owns {target} for the duration of this."
+    - "A series of clicks and {target} is locked into the harness. The machine has what it needs. The cycle begins."
 
   rest:
-    - "The machine enters rest phase — a brief interval between cycles. {target} remains secured. The next cycle begins shortly."
-    - "Rest phase after cycle {cycle}. The machine holds {target} in place and waits. It will resume."
-    - "Cycle {cycle} complete. The machine drops to its rest interval — {target} still in the harness, the equipment cooling before the next sequence."
-    - "The machine rests. {target} waits with it. Cycle {cycle} is logged. The next will begin in its own time."
+    - "Rest phase after cycle {cycle}. The machine holds {target} in place and idles. It's not done — just pausing before the next round."
+    - "Cycle {cycle} done. {target} is still strapped in while the machine cools down. The next cycle starts when the machine decides."
+    - "The machine takes its breather between cycles. {target} stays right where they are. Cycle {cycle} is logged. There's more coming."
+    - "Rest. The machine earned it. {target} didn't get a vote. Cycle {cycle} is over. The next one isn't far off."
 
   boost:
-    - "The machine administers its growth compound to {target} — a deep internal warmth, brief and specific. The effect is permanent."
-    - "A dose from the machine's internal serum supply reaches {target}. The compound has been delivered. The changes are not reversible."
-    - "The growth phase: the machine administers to {target}. The serum is inside. What it does, it does permanently."
-    - "Internal administration — the machine delivers its compound to {target}. Quiet, efficient, and not something that will be undone."
+    - "The machine doses {target} — growth compound straight in, hot and immediate. {target} will be bigger after this. That's permanent."
+    - "A shot of the machine's serum reaches {target} and the warmth of it spreads fast. The changes it makes don't reverse. That's the deal."
+    - "Growth phase. The compound hits {target}'s system and starts working. Whatever the machine decides to grow, it grows. Permanently."
+    - "The machine breeds {target} bigger — serum delivered internally, changes already underway. Won't shrink back. The machine doesn't do reversible."
 
   end:
-    - "The machine cycle ends for {target} — restraints releasing, the equipment powering down. The session is complete."
-    - "Cycle end: the machine releases {target} from the harness and powers down. What happened, happened."
-    - "The machine completes its final phase and releases {target}. The cycle is over. The restraints open."
-    - "The machine stands down — {target} released from the harness, the cycle finished. The room is quieter for it."
+    - "The machine finishes with {target} — restraints releasing, the harness opening up. {target}'s free. The cycle is done."
+    - "Last phase complete. The machine lets {target} go — harness opens, equipment powers down. Whatever happened, it happened."
+    - "The machine is done with {target} for now. Restraints off. Cycle over. {target} can move again."
+    - "The machine stands down and releases {target} from the harness. The room is quieter. The cycle's over and {target} has something to show for it."
 
 # ---------------------------------------------------------------------------
 # Extended size_ambient tiers for extreme testes sizes (34.0+)
@@ -588,49 +588,49 @@ testes_fullness:
 
 womb:
   entry:
-    - "The walls shift around {actor} — a slow, warm pressure as they pass through {host}'s {zone} and settle into the interior. The space accepts them."
-    - "{actor} crosses the threshold and the world outside becomes distant and irrelevant. The warmth of {host}'s interior closes in around them."
-    - "A yielding resistance, then {actor} is through — inside {host}'s {zone}, the air close and warm and carrying the faint sound of a heartbeat."
-    - "{actor} slips inside. The passage through {host}'s {zone} is brief and unmistakable. The interior space settles around them."
+    - "{actor} pushes through {host}'s {zone} and the body takes them — tight, slick, and absolutely certain about what's happening. The world outside is gone. They're inside now."
+    - "The flesh parts for {actor} and closes behind them. {host}'s {zone} doesn't let go so much as swallow them whole. It's warm in here. Very warm."
+    - "{actor} works through {host}'s {zone} and the body accepts every inch of them — not gently, but completely. Deep inside {host} now. That's where they stay."
+    - "A tight push and then {actor} is through, {host}'s {zone} gripping around them on the way in. Hot and close inside. Nowhere else to be."
 
   exit:
-    - "{actor} passes back through {host}'s {zone} and is gone. The space contracts slightly in their absence."
-    - "The walls part for {actor} and close again behind them. {host}'s {zone} swallows the exit without ceremony."
-    - "{actor} makes their way out through {host}'s {zone}. The warmth remains. The space is a little emptier."
-    - "A brief parting, and {actor} is through. {host}'s {zone} settles back. The interior is quieter now."
+    - "{actor} squeezes back out through {host}'s {zone} — the body gives reluctantly. Outside again. The space feels the absence immediately."
+    - "{host}'s {zone} lets {actor} go with some effort. They come out slick and the space closes back up behind them like they were never there."
+    - "{actor} pulls free of {host}'s {zone} and the body shuts behind them. The inside is quieter and emptier for it."
+    - "Out through {host}'s {zone} and back into the room — {actor} dripping from the passage. {host}'s body closes up behind them."
 
   flood_trace:
-    - "The floor is barely damp — a trace of {fluid} that settles in the lowest points and catches the light."
-    - "A faint warmth underfoot. {fluid} has begun to gather in the corners, shallow and still."
+    - "The floor is slick with the first of it — just a trace of {fluid}, pooled shallow and warm in the low spots."
+    - "A thin film of {fluid} across the floor. Not much. But it's started."
 
   flood_shallow:
-    - "A shallow layer of {fluid} covers the floor — {volume} of warmth that shifts with every movement and carries a faint scent."
-    - "{volume} of {fluid} pools across the floor, warm and slow. The space smells of it. The level is rising."
-    - "The {fluid} comes to the ankle now. {volume} accumulated and unhurried, swirling faintly with movement."
+    - "{volume} of {fluid} covering the floor now — ankle-deep, warm, and climbing. It moves when you do."
+    - "Shallow but real. {volume} of {fluid} pooled across the floor of {host}'s interior, thick with scent. The level is rising."
+    - "The {fluid} is up to the ankle. {volume} of it, warm and slow and going nowhere."
 
   flood_knee:
-    - "Knee-deep in {fluid} now — {volume} of slow warmth that resists movement and fills the lower half of the space entirely."
-    - "The {fluid} has risen to the knee. {volume}, warm and thick, that makes every step deliberate and slow."
-    - "{volume} of {fluid} at knee depth. The space is half-filled and still climbing. The warmth is total."
+    - "{volume} of {fluid} — knee-deep, heavy, thick. Moving through it takes real effort. {host} is filling up."
+    - "Knee-deep in {host}'s {fluid} now. {volume} of the stuff and it's still climbing. The warmth is total and inescapable."
+    - "The {fluid} is at the knee and it isn't stopping. {volume} in here and the walls show no sign of running out."
 
   flood_chest:
-    - "Chest-deep. {volume} of {fluid} surrounds everything below the shoulders — warm and close, the current faint but constant."
-    - "The {fluid} reaches the chest now. {volume}. Movement requires effort. The warmth is complete and immersive."
-    - "{volume} of {fluid} at chest height. The buoyancy is real. The pressure of it against the body is constant and total."
+    - "Chest-deep. {volume} of {host}'s {fluid} surrounding everything below the shoulders — hot, thick, holding you up whether you want it to or not."
+    - "{volume} of {fluid} to the chest. Moving takes real work. The smell of it is everywhere. {host} is nearly full."
+    - "Up to the chest in {fluid} — {volume} pressing in from every direction. The warmth is past comfortable and into something else entirely."
 
   flood_full:
-    - "The {fluid} fills this space entirely — {volume} at capacity, warm and still and complete. There is no surface to speak of."
-    - "Full. {volume} of {fluid} from floor to ceiling, the space saturated. Movement is swimming. The warmth is total."
-    - "Every millimetre occupied. {volume} of {fluid}, at capacity, pressing gently outward against the walls of {host}'s interior."
+    - "{host} is full. {volume} of {fluid} packed wall to wall in here, not an inch of dry space left. Swimming is the only option."
+    - "Full to capacity — {volume} of {host}'s {fluid} filling every part of this space completely. Breathe. Float. There's nothing else."
+    - "{volume} of {fluid} and nowhere for it to go. {host}'s interior is packed. The pressure is gentle but absolute and coming from every direction at once."
 
   shaft_visible:
-    - "Something intrudes from outside — a shape pressing through {host}'s {zone} from the other direction. The space shifts to accommodate it."
-    - "The wall of {host}'s {zone} yields and something pushes through — {actor} making their presence felt from the outside in."
-    - "A blunt intrusion through {host}'s {zone} — {actor}'s presence arrives before they do. The space adjusts around it."
-    - "The passage through {host}'s {zone} is occupied from the other side now. {actor}'s shape is unmistakable through the wall."
+    - "Something pushes through {host}'s {zone} from outside — {actor}'s cock forcing its way in from the other side. The space deforms around it. Everyone inside knows exactly what's happening out there."
+    - "{actor} is fucking {host} from the outside. You can feel it from in here — the shape of them pressing through the wall of {host}'s {zone}, rhythmic and insistent."
+    - "The wall of {host}'s {zone} bulges inward as {actor} drives through it — thick and deliberate. From inside you can feel every thrust."
+    - "{actor} is using {host} from the outside and you're on the inside of it. The flesh presses in around their shape. You feel it whether you want to or not."
 
   pulse:
-    - "{host}'s voice carries inward — resonant and close, the words arriving from everywhere at once: \"{message}\""
-    - "A vibration through the walls, and then {host}'s voice fills the space: \"{message}\""
-    - "{host} speaks through the wall of the space and the sound of it is everywhere: \"{message}\""
-    - "From somewhere outside but impossibly close, {host}'s voice: \"{message}\""
+    - "{host}'s voice hits from every direction at once — the walls carrying it inward: \"{message}\""
+    - "The space vibrates with {host}'s voice, close and total: \"{message}\""
+    - "{host} speaks and the inside of them carries every word perfectly: \"{message}\""
+    - "Nowhere to go that {host}'s voice doesn't reach in here: \"{message}\""
