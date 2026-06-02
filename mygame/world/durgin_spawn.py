@@ -27,6 +27,13 @@ PENIS_MOD_PRICE     = 400   # shards — PenisItem, installs to groin/penis zone
 TESTICLE_MOD_PRICE  = 350   # shards — TesticleItem, installs to groin/testicles zone
 SEMEN_GLANDS_PRICE  = 300   # shards — SemenProductionItem, enables semen production
 GROWTH_SERUM_PRICE  = 350   # shards — GrowthSerumItem, 3 doses, perm size + production boost
+LACTAID_PRICE       = 200   # shards — mild perm size + production (milk-focused), 5 doses
+LACTMAX_PRICE       = 400   # shards — aggressive perm size + production, 3 doses
+LACTO_PRICE         = 150   # shards — temp production rate boost, 5 doses
+LACTO_MAX_PRICE     = 300   # shards — aggressive temp production boost + small perm, 3 doses
+THROBB_PRICE        = 200   # shards — perm size + production for penis/testes, 5 doses
+CAP_AID_PRICE       = 200   # shards — temp capacity boost, 3 doses
+CAP_MAX_PRICE       = 400   # shards — permanent aggressive capacity boost, 2 doses
 
 
 # ---------------------------------------------------------------------------
@@ -241,7 +248,14 @@ DURGIN_TRIGGERS = {
             f"  Penis enhancement    — {PENIS_MOD_PRICE} shards\n"
             f"  Testicle enhancement — {TESTICLE_MOD_PRICE} shards\n"
             f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n"
-            f"  Growth serum (3 doses) — {GROWTH_SERUM_PRICE} shards\n\n"
+            f"  Growth serum (3 doses) — {GROWTH_SERUM_PRICE} shards\n"
+            f"  Lactaid (5 doses)      — {LACTAID_PRICE} shards\n"
+            f"  Lact-max (3 doses)     — {LACTMAX_PRICE} shards\n"
+            f"  Lact-O (5 doses)       — {LACTO_PRICE} shards\n"
+            f"  Lact-O-max (3 doses)   — {LACTO_MAX_PRICE} shards\n"
+            f"  Throbb (5 doses)       — {THROBB_PRICE} shards\n"
+            f"  Cap-aid (3 uses)       — {CAP_AID_PRICE} shards\n"
+            f"  Cap-max (2 uses)       — {CAP_MAX_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -268,7 +282,14 @@ DURGIN_TRIGGERS = {
             f"  Penis enhancement    — {PENIS_MOD_PRICE} shards\n"
             f"  Testicle enhancement — {TESTICLE_MOD_PRICE} shards\n"
             f"  Semen glands         — {SEMEN_GLANDS_PRICE} shards\n"
-            f"  Growth serum (3 doses) — {GROWTH_SERUM_PRICE} shards\n\n"
+            f"  Growth serum (3 doses) — {GROWTH_SERUM_PRICE} shards\n"
+            f"  Lactaid (5 doses)      — {LACTAID_PRICE} shards\n"
+            f"  Lact-max (3 doses)     — {LACTMAX_PRICE} shards\n"
+            f"  Lact-O (5 doses)       — {LACTO_PRICE} shards\n"
+            f"  Lact-O-max (3 doses)   — {LACTO_MAX_PRICE} shards\n"
+            f"  Throbb (5 doses)       — {THROBB_PRICE} shards\n"
+            f"  Cap-aid (3 uses)       — {CAP_AID_PRICE} shards\n"
+            f"  Cap-max (2 uses)       — {CAP_MAX_PRICE} shards\n\n"
             f"'All rooms built to Ironwood standards. Walls are load-bearing, "
             f"anchor points are reinforced, and I don't ask questions. "
             f"The last bit is included free of charge.'"
@@ -630,6 +651,90 @@ DURGIN_TRIGGERS = {
         "response": "_HANDLE_PURCHASE_GROWTH_SERUM",
         "type": "action",
     },
+
+    # ── Lactaid ───────────────────────────────────────────────────────
+    "lactaid": {
+        "response": [
+            f"Durgin sets a small vial on the counter. 'Lactaid. "
+            f"Permanent — quarter-size increment and eight millilitres per tick added to production, per dose. Five doses.' "
+            f"He taps it once. 'Mild. Reliable. Use |winject/serum <target> [zone]|n. "
+            f"{LACTAID_PRICE} shards. |wbuy lactaid|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy lactaid": { "response": "_HANDLE_PURCHASE_LACTAID", "type": "action" },
+
+    # ── Lact-max ──────────────────────────────────────────────────────
+    "lact-max": {
+        "response": [
+            f"Durgin produces a heavier vial and sets it down. 'Lact-max. "
+            f"Three-quarter size step, twenty millilitres per tick, permanent. Three doses.' "
+            f"He folds his hands. 'More aggressive than Lactaid. Same command — |winject/serum|n. "
+            f"{LACTMAX_PRICE} shards. |wbuy lact-max|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy lact-max": { "response": "_HANDLE_PURCHASE_LACT_MAX", "type": "action" },
+
+    # ── Lact-O ────────────────────────────────────────────────────────
+    "lact-o": {
+        "response": [
+            f"Durgin sets a syringe on the counter. 'Lact-O. Temporary — "
+            f"fifteen millilitres per tick added to base production rate for six hours. "
+            f"No size effect. Five doses.' He checks something in his ledger. "
+            f"'Use |winject/prod <target> [zone]|n. {LACTO_PRICE} shards. |wbuy lact-o|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy lact-o": { "response": "_HANDLE_PURCHASE_LACT_O", "type": "action" },
+
+    # ── Lact-O-max ────────────────────────────────────────────────────
+    "lact-o-max": {
+        "response": [
+            f"'Lact-O-max.' Durgin produces a marked syringe. 'Thirty-five millilitres per tick "
+            f"for eight hours — temporary. Three doses. It also carries a small permanent "
+            f"rate increment per use, two millilitres, which accumulates.' "
+            f"He puts it down. '|winject/prod|n command. {LACTO_MAX_PRICE} shards. |wbuy lact-o-max|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy lact-o-max": { "response": "_HANDLE_PURCHASE_LACT_O_MAX", "type": "action" },
+
+    # ── Throbb ────────────────────────────────────────────────────────
+    "throbb": {
+        "response": [
+            f"Durgin reaches under the counter and sets a vial down without ceremony. "
+            f"'Throbb. Equivalent of Lactaid — quarter-size step and eight millilitres per tick, "
+            f"permanent — but formulated for penis and testicle zones rather than breast. "
+            f"Five doses. |winject/serum|n command. {THROBB_PRICE} shards. |wbuy throbb|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy throbb": { "response": "_HANDLE_PURCHASE_THROBB", "type": "action" },
+
+    # ── Cap-aid ───────────────────────────────────────────────────────
+    "cap-aid": {
+        "response": [
+            f"Durgin produces a small applicator. 'Cap-aid. Temporary capacity expansion — "
+            f"three hundred millilitres added to your zone maximum for six hours. "
+            f"Three doses.' He sets it down. 'Use |winject/cap <target> [zone]|n. "
+            f"{CAP_AID_PRICE} shards. |wbuy cap-aid|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy cap-aid": { "response": "_HANDLE_PURCHASE_CAP_AID", "type": "action" },
+
+    # ── Cap-max ───────────────────────────────────────────────────────
+    "cap-max": {
+        "response": [
+            f"'Cap-max.' Durgin sets a heavier applicator on the counter. "
+            f"'Permanent capacity expansion. Six hundred millilitres per dose, stacks. "
+            f"Two doses per unit.' He meets your eyes. 'No expiry. No ceiling other than "
+            f"the hard limit. |winject/cap|n command. {CAP_MAX_PRICE} shards. |wbuy cap-max|n.'",
+        ],
+        "type": "emote",
+    },
+    "buy cap-max": { "response": "_HANDLE_PURCHASE_CAP_MAX", "type": "action" },
 
     # ── Lore / personality ────────────────────────────────────────────────
     "who are you": {
@@ -1279,6 +1384,122 @@ def handle_purchase(caller, npc, purchase_type):
             f"He sets his hands flat on the counter. 'Ironwood standard. Use it well.'",
         ]
         npc.location.msg_contents(random.choice(_serum_responses))
+        return
+
+    # ── Lactaid ────────────────────────────────────────────────────────
+    if purchase_type == "lactaid":
+        if shards < LACTAID_PRICE:
+            npc.execute_cmd(f"say {LACTAID_PRICE} shards for Lactaid, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - LACTAID_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=LACTAID_PRICE, reason="purchase", note="Lactaid from Durgin Ironwood")
+        from typeclasses.growth_serum_item import GrowthSerumItem
+        item = create.create_object(GrowthSerumItem, key="Lactaid", location=char)
+        item.db.uses_remaining      = 5
+        item.db.perm_size_boost     = 0.25
+        item.db.perm_rate_boost_ml  = 8.0
+        item.db.label               = "Lactaid"
+        import random; npc.location.msg_contents(f"Durgin slides the vial to {char_name}. 'Five doses. |winject/serum|n. Mild, permanent.' He goes back to his ledger.")
+        return
+
+    # ── Lact-max ──────────────────────────────────────────────────────
+    if purchase_type == "lact_max":
+        if shards < LACTMAX_PRICE:
+            npc.execute_cmd(f"say {LACTMAX_PRICE} shards for Lact-max, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - LACTMAX_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=LACTMAX_PRICE, reason="purchase", note="Lact-max from Durgin Ironwood")
+        from typeclasses.growth_serum_item import GrowthSerumItem
+        item = create.create_object(GrowthSerumItem, key="Lact-max", location=char)
+        item.db.uses_remaining      = 3
+        item.db.perm_size_boost     = 0.75
+        item.db.perm_rate_boost_ml  = 20.0
+        item.db.label               = "Lact-max"
+        import random; npc.location.msg_contents(f"Durgin hands the heavier vial to {char_name}. 'Three doses. Permanent. |winject/serum|n.' He does not elaborate.")
+        return
+
+    # ── Lact-O ────────────────────────────────────────────────────────
+    if purchase_type == "lact_o":
+        if shards < LACTO_PRICE:
+            npc.execute_cmd(f"say {LACTO_PRICE} shards for Lact-O, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - LACTO_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=LACTO_PRICE, reason="purchase", note="Lact-O from Durgin Ironwood")
+        from typeclasses.production_injection_item import ProductionInjectionItem
+        item = create.create_object(ProductionInjectionItem, key="Lact-O", location=char)
+        item.db.uses_remaining         = 5
+        item.db.rate_boost_ml_per_tick = 15.0
+        item.db.duration_hours         = 6.0
+        item.db.perm_rate_increment    = 0.0
+        item.db.label                  = "Lact-O"
+        import random; npc.location.msg_contents(f"Durgin hands the syringe to {char_name}. 'Five doses. Temp rate boost. |winject/prod|n command.' He checks his list.")
+        return
+
+    # ── Lact-O-max ────────────────────────────────────────────────────
+    if purchase_type == "lact_o_max":
+        if shards < LACTO_MAX_PRICE:
+            npc.execute_cmd(f"say {LACTO_MAX_PRICE} shards for Lact-O-max, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - LACTO_MAX_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=LACTO_MAX_PRICE, reason="purchase", note="Lact-O-max from Durgin Ironwood")
+        from typeclasses.production_injection_item import ProductionInjectionItem
+        item = create.create_object(ProductionInjectionItem, key="Lact-O-max", location=char)
+        item.db.uses_remaining         = 3
+        item.db.rate_boost_ml_per_tick = 35.0
+        item.db.duration_hours         = 8.0
+        item.db.perm_rate_increment    = 2.0
+        item.db.label                  = "Lact-O-max"
+        import random; npc.location.msg_contents(f"Durgin hands {char_name} the marked syringe. 'Three doses. Bigger boost, longer window, small permanent increment per use. |winject/prod|n.'")
+        return
+
+    # ── Throbb ────────────────────────────────────────────────────────
+    if purchase_type == "throbb":
+        if shards < THROBB_PRICE:
+            npc.execute_cmd(f"say {THROBB_PRICE} shards for Throbb, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - THROBB_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=THROBB_PRICE, reason="purchase", note="Throbb from Durgin Ironwood")
+        from typeclasses.growth_serum_item import GrowthSerumItem
+        item = create.create_object(GrowthSerumItem, key="Throbb", location=char)
+        item.db.uses_remaining      = 5
+        item.db.perm_size_boost     = 0.25
+        item.db.perm_rate_boost_ml  = 8.0
+        item.db.label               = "Throbb"
+        import random; npc.location.msg_contents(f"Durgin slides Throbb across to {char_name}. 'Five doses. Permanent. Target your penis or testicle zone with |winject/serum|n.' He moves on.")
+        return
+
+    # ── Cap-aid ───────────────────────────────────────────────────────
+    if purchase_type == "cap_aid":
+        if shards < CAP_AID_PRICE:
+            npc.execute_cmd(f"say {CAP_AID_PRICE} shards for Cap-aid, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - CAP_AID_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=CAP_AID_PRICE, reason="purchase", note="Cap-aid from Durgin Ironwood")
+        from typeclasses.capacity_item import CapacityItem
+        item = create.create_object(CapacityItem, key="Cap-aid", location=char)
+        item.db.uses_remaining    = 3
+        item.db.capacity_bonus_ml = 300.0
+        item.db.is_permanent      = False
+        item.db.duration_hours    = 6.0
+        item.db.label             = "Cap-aid"
+        import random; npc.location.msg_contents(f"Durgin hands the applicator to {char_name}. 'Three uses. Adds three hundred millilitres of capacity for six hours. |winject/cap|n command.'")
+        return
+
+    # ── Cap-max ───────────────────────────────────────────────────────
+    if purchase_type == "cap_max":
+        if shards < CAP_MAX_PRICE:
+            npc.execute_cmd(f"say {CAP_MAX_PRICE} shards for Cap-max, {char_name}. You've got {shards}.")
+            return
+        char.db.shards = shards - CAP_MAX_PRICE
+        ShardTransaction.objects.create(sender_id=char.id, recipient_id=None, amount=CAP_MAX_PRICE, reason="purchase", note="Cap-max from Durgin Ironwood")
+        from typeclasses.capacity_item import CapacityItem
+        item = create.create_object(CapacityItem, key="Cap-max", location=char)
+        item.db.uses_remaining    = 2
+        item.db.capacity_bonus_ml = 600.0
+        item.db.is_permanent      = True
+        item.db.duration_hours    = 0.0
+        item.db.label             = "Cap-max"
+        import random; npc.location.msg_contents(f"Durgin sets the heavy applicator before {char_name}. 'Two doses. Six hundred millilitres each, permanent, stacks. |winject/cap|n.' He says nothing else.")
         return
 
     # ── Room pack purchase ─────────────────────────────────────────────────

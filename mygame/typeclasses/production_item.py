@@ -119,6 +119,10 @@ class ProductionItem(DefaultObject):
         self.db.is_installed            = False
         self.db.lifetime_produced_ml    = 0.0
         self.db.notified_thresholds     = []      # ml values already notified this fill
+        self.db.min_rate_ml_per_tick    = None    # if set, randomise between min and max each tick
+        self.db.max_rate_ml_per_tick    = None
+        self.db.temp_rate_boost         = 0.0    # temporary addition to base rate
+        self.db.temp_rate_expires_at    = 0.0    # unix timestamp when temp boost expires
 
     # ------------------------------------------------------------------
     # Passive tick
@@ -152,18 +156,47 @@ class ProductionItem(DefaultObject):
         if not bm_entry:
             return 500.0
         size = float(bm_entry.get("size", 0.0))
-        return min(500.0 * (1.15 ** size), 500_000.0)
+        base_cap = min(500.0 * (1.15 ** size), 500_000.0)
+
+        # Add any installed capacity bonus (temp or permanent)
+        import time as _t
+        cap_data = (zones.get(zone_name, {}).get("mechanics", {}) or {}).get("capacity_bonus")
+        if cap_data:
+            expires = cap_data.get("expires_at")
+            if expires is None or _t.time() < expires:
+                base_cap += cap_data.get("bonus_ml", 0.0)
+
+        return min(base_cap, 500_000.0)
 
     def tick_production(self):
         """Called by PassiveAccumulationScript every 15 minutes."""
+        import random, time
+
+        # Randomised base rate if min/max are set; otherwise use fixed value
+        min_r = self.db.min_rate_ml_per_tick
+        max_r = self.db.max_rate_ml_per_tick
+        if min_r is not None and max_r is not None:
+            base_rate = random.uniform(float(min_r), float(max_r))
+        else:
+            base_rate = self.db.base_rate_ml_per_tick or 8.0
+
+        # Temporary production rate boost (from Lact-O / Lact-O-max etc.)
+        temp_boost = self.db.temp_rate_boost or 0.0
+        if temp_boost > 0:
+            expires = self.db.temp_rate_expires_at or 0.0
+            if time.time() < expires:
+                base_rate += temp_boost
+            else:
+                # Expired — clear it
+                self.db.temp_rate_boost       = 0.0
+                self.db.temp_rate_expires_at  = 0.0
+
         multiplier = self._get_body_mod_multiplier()
-        amount     = (self.db.base_rate_ml_per_tick or 50.0) * multiplier
+        amount     = base_rate * multiplier
         old_vol    = self.db.current_volume_ml or 0.0
-        # Cap at the size-appropriate maximum
         new_vol    = min(old_vol + amount, self.get_max_volume_ml())
         self.db.current_volume_ml    = new_vol
         self.db.lifetime_produced_ml = (self.db.lifetime_produced_ml or 0.0) + amount
-        # Atmospheric checks
         self._check_fullness_thresholds(old_vol, new_vol)
         self._check_size_ambient()
         self._check_leaking()
@@ -521,25 +554,28 @@ class ProductionItem(DefaultObject):
 # ---------------------------------------------------------------------------
 
 class MilkProductionItem(ProductionItem):
-    """Milk producer. Default 60ml per 15-min tick at multiplier 1.0."""
+    """Milk producer. Random 2–30ml per 15-min tick at multiplier 1.0."""
 
     def at_object_creation(self):
         super().at_object_creation()
         self.db.fluid_type            = "milk"
-        self.db.base_rate_ml_per_tick = 60.0
+        self.db.base_rate_ml_per_tick = 16.0   # midpoint — used as display fallback
+        self.db.min_rate_ml_per_tick  = 2.0
+        self.db.max_rate_ml_per_tick  = 30.0
         self.key                      = "milk production item"
 
 
 class SemenProductionItem(ProductionItem):
     """
-    Semen producer.  Lower base rate; higher size-based multiplier.
-    Default 15ml per 15-min tick at multiplier 1.0.
+    Semen producer.  Random 1–20ml per 15-min tick at multiplier 1.0.
     """
 
     def at_object_creation(self):
         super().at_object_creation()
         self.db.fluid_type            = "semen"
-        self.db.base_rate_ml_per_tick = 15.0
+        self.db.base_rate_ml_per_tick = 10.0   # midpoint fallback
+        self.db.min_rate_ml_per_tick  = 1.0
+        self.db.max_rate_ml_per_tick  = 20.0
         self.key                      = "semen production item"
 
     def _get_body_mod_multiplier(self) -> float:

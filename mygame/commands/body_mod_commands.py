@@ -477,12 +477,102 @@ class CmdInject(MuxCommand):
     key     = "inject"
     locks   = "cmd:all()"
     help_category = "Body Mod"
-    switch_options = ("self", "serum")
+    switch_options = ("self", "serum", "prod", "cap")
 
     def func(self):
         caller   = self.caller
         args     = self.args.strip()
         switches = self.switches
+
+        # ── /prod branch — production rate injection (Lact-O / Lact-O-max) ──
+        if "prod" in switches:
+            from typeclasses.production_injection_item import ProductionInjectionItem
+            items = [o for o in caller.contents if isinstance(o, ProductionInjectionItem)]
+            if not items:
+                caller.msg("|xYou don't have a production injection.|n")
+                return
+            item = items[0]
+
+            if "self" in switches:
+                target   = caller
+                zone_arg = args.strip()
+            else:
+                parts = args.split(None, 1)
+                if not parts:
+                    caller.msg("|xUsage: inject/prod <target> [<zone>]|n")
+                    return
+                found = _find_char_in_room(caller, parts[0])
+                if not found:
+                    caller.msg(f"|xCan't find '{parts[0]}' in the room.|n")
+                    return
+                target   = found
+                zone_arg = parts[1].strip() if len(parts) > 1 else ""
+
+            zone_name = zone_arg.replace(" ", "_").lower() if zone_arg else None
+            if not zone_name:
+                zones = getattr(target.db, "zones", None) or {}
+                for zn, zd in zones.items():
+                    if (zd.get("mechanics", {}) or {}).get("production"):
+                        zone_name = zn
+                        break
+
+            if not zone_name:
+                caller.msg(
+                    f"|x{target.db.rp_name or target.name} has no production items installed.|n"
+                )
+                return
+
+            ok, msg = item.inject(caller, target, zone_name)
+            if ok:
+                caller.location.msg_contents(msg, exclude=[])
+            else:
+                caller.msg(f"|x{msg}|n")
+            return
+
+        # ── /cap branch — capacity modifier (Cap-aid / Cap-max) ──────────
+        if "cap" in switches:
+            from typeclasses.capacity_item import CapacityItem
+            items = [o for o in caller.contents if isinstance(o, CapacityItem)]
+            if not items:
+                caller.msg("|xYou don't have a capacity item.|n")
+                return
+            item = items[0]
+
+            if "self" in switches:
+                target   = caller
+                zone_arg = args.strip()
+            else:
+                parts = args.split(None, 1)
+                if not parts:
+                    caller.msg("|xUsage: inject/cap <target> [<zone>]|n")
+                    return
+                found = _find_char_in_room(caller, parts[0])
+                if not found:
+                    caller.msg(f"|xCan't find '{parts[0]}' in the room.|n")
+                    return
+                target   = found
+                zone_arg = parts[1].strip() if len(parts) > 1 else ""
+
+            zone_name = zone_arg.replace(" ", "_").lower() if zone_arg else None
+            if not zone_name:
+                zones = getattr(target.db, "zones", None) or {}
+                for zn, zd in zones.items():
+                    if (zd.get("mechanics", {}) or {}).get("production"):
+                        zone_name = zn
+                        break
+
+            if not zone_name:
+                caller.msg(
+                    f"|x{target.db.rp_name or target.name} has no production zone for capacity.|n"
+                )
+                return
+
+            ok, msg = item.apply(caller, target, zone_name)
+            if ok:
+                caller.location.msg_contents(msg, exclude=[])
+            else:
+                caller.msg(f"|x{msg}|n")
+            return
 
         # ── /serum branch — permanent growth serum ────────────────────
         if "serum" in switches:
