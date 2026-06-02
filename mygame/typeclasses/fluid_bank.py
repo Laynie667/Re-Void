@@ -54,14 +54,13 @@ class GlobalFluidBank(DefaultScript):
             bank = GlobalFluidBank.get()
         """
         from evennia import search_script
-        results = search_script("global_fluid_bank", exact=True)
+        all_results = search_script("global_fluid_bank") or []
+        results = [s for s in all_results if s.key == "global_fluid_bank"]
         if results:
             for result in results:
                 if isinstance(result, cls):
                     return result
-            # Found scripts with this key but wrong typeclass — return first anyway
-            if results:
-                return results[0]
+            return results[0]
 
         # Not found — create with key set at creation time (more reliable)
         from evennia.utils import create
