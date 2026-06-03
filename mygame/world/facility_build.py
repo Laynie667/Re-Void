@@ -21,6 +21,7 @@ The reset is the real OOC safeword: it stops everything and restores baseline
 regardless of how deep the rig has gone.
 """
 
+import random
 import time
 
 
@@ -61,6 +62,16 @@ def run_facility(caller):
     for k in ("casual", "intimate", "mature", "bdsm", "restraint", "plock", "lead_follow"):
         flags[k] = True
     caller.db.consent_flags = flags
+
+    # Coin toss: is the convenient way out available now, or locked for days?
+    # Hidden outcome — the subject finds out only by reaching for it. (The
+    # superuser /force override always works regardless; this gates only the
+    # plain command on yourself.)
+    if random.random() < 0.5:
+        caller.db.facility_reset_locked_until = 0.0                 # heads — immediate
+    else:
+        days = random.randint(1, 4)                                # tails — locked
+        caller.db.facility_reset_locked_until = time.time() + days * 86400.0
 
     caller.db.arousal_floor       = max(float(getattr(caller.db, "arousal_floor", 0) or 0), 35.0)
     caller.db.stim_per_tick       = float(getattr(caller.db, "stim_per_tick", 0) or 0) + 5.0
@@ -290,6 +301,7 @@ def run_facility_reset(caller):
     caller.db.facility_active = False
     caller.db.facility_items  = []
     caller.db.facility_zone   = None
+    caller.db.facility_reset_locked_until = None
 
     caller.msg(
         f"|g  ✓ {removed} facility objects removed. Conditioning, triggers, breeding "
