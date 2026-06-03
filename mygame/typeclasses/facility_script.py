@@ -51,109 +51,176 @@ class FacilityBeast(NPC):
 
 
 # ── Driver ──────────────────────────────────────────────────────────────────
+# Beats are grounded: each describes something physically happening to the
+# subject right now, so the scene stays legible. One primary beat fires per
+# tick (steady-atmospheric), often paired with a crude line.
 
-_ATTENDANT_LINES = [
-    "The attendant checks a readout, makes a small note, and adjusts something "
-    "without comment.",
-    "The attendant moves past {t} without meeting their eyes — a hand on a dial, "
-    "a glance at the time, nothing more.",
-    "\"Coming along,\" the attendant says to no one, and resets a timer.",
-    "The attendant tightens a strap a notch and moves on.",
+# The machine working her body — milking rig, intake arm, restraints.
+_MACHINE_BEATS = [
+    "The cups clamp back onto {t}'s heavy tits and pull in slow, greedy pulses — "
+    "draw and release, draw and release — milking the bitch whether she's got "
+    "anything left to give or not.",
+    "The milking rig steps its rhythm up without asking. {t}'s breath catches on the "
+    "new pace and then gives in to it, because there is nothing else a cow gets to do.",
+    "The intake arm seated deep in {t} hums and works harder, unhurried, keeping the "
+    "bitch stretched open and dripping around it.",
+    "A pump cycles and {t} feels it everywhere at once — tits, belly, cunt — one "
+    "machine treating the whole animal as a single thing to drain and breed and top "
+    "back up on schedule.",
+    "The restraints take up a half-inch of slack, hauling {t} back into the cradle: "
+    "tits out, hips tipped, holes presented at exactly the angle the line prefers.",
+    "The rig pauses just long enough for {t} to hope it's done, then resumes harder. "
+    "It is never done with livestock. It only pauses.",
 ]
 
-_BEAST_LINES = [
-    "Somewhere behind {t} the beast shifts its weight, unhurried.",
-    "The beast's breath is audible — slow, warm, patient, closer than last time.",
-    "The beast tests the limit of its pen, finds it, and settles to wait.",
+# Hands on her — inspection, prodding, fingering, use. Crude and clinical.
+_USE_BEATS = [
+    "A handler forces two thick fingers into {t}'s cunt without ceremony, checking "
+    "depth and wetness, and calls the reading across the room like a stock report. "
+    "\"Soaked. Bitch is ready again.\"",
+    "The attendant spreads {t} open with a gloved thumb and prods the swollen clit "
+    "just to watch the animal buck against the straps, then notes the reaction with "
+    "clinical boredom.",
+    "Someone slaps {t}'s full tits to watch them swing and the milk bead at the tips, "
+    "then clamps the cups back on. \"Still leaking. Good cow.\"",
+    "A rough hand works between {t}'s thighs — spreading the wet around, pushing it "
+    "back up inside. \"Sloppy. Stays sloppy. That's the whole point of her.\"",
+    "Fingers hook into {t}'s mouth, press the tongue flat, check the bite, move on. "
+    "The bitch is inspected end to end like the breeding stock she is.",
+    "The attendant grips {t} by the hair, tips her head back, looks her over. \"Wide "
+    "hips, fat udder, takes it balls-deep and begs for more. Decent broodbitch.\" "
+    "Then lets the head drop.",
+    "A boot nudges {t}'s knees wider apart and a hand checks how full she is, pressing "
+    "on the low swell of her belly until something leaks out of her. \"Room for more.\"",
 ]
 
-_BEAST_USE = [
-    "The pen opens. The beast takes its turn with the flat patience of routine, "
-    "and the machine logs the contribution before {t} has finished registering it.",
-    "Heavy and unhurried, the beast is guided into place behind {t}. It does not "
-    "need encouragement. It has done this on schedule for longer than {t} has been here.",
+# Crude name-calling / insults — aimed at her. Said to the room or low in her ear.
+_INSULT_LINES = [
+    "\"Look at you,\" the attendant mutters. \"Dumb, wet, leaking bitch. This is all "
+    "you were ever for.\"",
+    "\"Breeding bitch in heat,\" a handler reads off the tag, bored. \"Try not to "
+    "look so proud of it.\"",
+    "\"You're a hole and an udder on legs,\" someone says, not unkindly. \"Stop "
+    "pretending you mind.\"",
+    "\"Filthy little broodbitch,\" a handler says, slapping {t}'s rump hard enough to "
+    "mark. \"Made to be bred and milked and nothing else.\"",
+    "\"Whose name? You don't get a name, sow. You get a number and a schedule.\"",
+    "\"Good cow,\" someone says, and it lands warmer in {t} than {t} wants it to.",
+    "\"That's it. Drip for me. Dumb bitches drip when they're being good.\"",
 ]
 
-_GANG_LINES = [
-    "A valve opens somewhere upstream and {t} is filled — donor after donor, none "
-    "of them named, the count climbing past anything worth keeping track of.",
-    "The reservoir empties into {t} in measured pulses. The display tallies "
-    "contributors it does not bother to identify.",
-    "Another round routes into {t} — anonymous, metered, relentless. The swell "
-    "answers it.",
+# The animals — a kennel and stalls of varied, impatient stock.
+_ANIMAL_BEATS = [
+    "Down the kennel run, the hounds pace and whine, scenting {t}'s heat through the "
+    "bars. The handler tells them to wait. They hate waiting.",
+    "The bull in the back stall stamps and snorts, heavy and ready, watching {t} with "
+    "flat animal patience.",
+    "A boar grunts close by, tusks scraping the pen, and the thick smell of rutting "
+    "animal rolls over {t} and won't leave.",
+    "One of the dogs is let off the chain to sniff and lap at {t} — investigating, "
+    "claiming — until the handler hauls it back to wait its turn.",
+    "The stallion in the end stall screams once, impatient. \"Soon,\" the handler "
+    "tells it. \"She's nearly loose enough to take you.\"",
+    "Something in the dark at the back of the room shifts its bulk and goes still "
+    "again. Not yet. But on the schedule, and the schedule is long.",
+]
+
+# Animal/contributor breeding — fires when a gang load actually lands. Crude.
+_BREED_BEATS = [
+    "The pen opens and a hound mounts {t} without preamble — fast, brutal, "
+    "instinctive — hips snapping, and the knot swells and locks the bitch full while "
+    "the count on the board ticks up.",
+    "The bull is walked up behind {t}. There is nothing gentle in it. The animal is "
+    "bred like the livestock she is — stretched, flooded, the swell answering before "
+    "she can brace.",
+    "The boar mounts, ruts, finishes, and is led off — replaced before {t} has caught "
+    "her breath. The line doesn't stop for a cow to recover. It never has.",
+    "Another animal takes its turn. Then another. The schedule doesn't care which; "
+    "{t}'s body keeps the tally in pressure and heat, filled past comfort and then "
+    "past that.",
+    "A valve upstream opens on top of it and {t} is pumped fuller — contributor after "
+    "contributor, none of them named, the broodbitch's belly taking the count whether "
+    "she wants it or not.",
 ]
 
 _DEEP_LINES = [
     "{t} has stopped tracking how long. That, more than anything, is the point.",
     "Whatever {t} meant to hold onto is quieter now than it was an hour ago.",
-    "The machine does not hurry. It has already won the only argument that mattered.",
+    "The line does not hurry. It already won the only argument that mattered.",
 ]
 
-# Public humiliation / degradation — escalates with conditioning. Said to the room.
+# Public humiliation / degradation — escalates with conditioning.
 _DEGRADE_LINES = [
-    "The attendant reads {t}'s arousal off a dial aloud, to no one, and writes the "
-    "number down where {t} can see it being recorded.",
-    "A line on the readout updates: HOLE, PRODUCTIVE. {t} is, for the record, equipment.",
-    "The attendant tags {t} like inventory — a number on the wrist, checked against a "
+    "The attendant reads {t}'s arousal off a dial aloud, to no one, and chalks the "
+    "number where the bitch can watch it being recorded.",
+    "A line on the readout updates: BREEDER, PRODUCTIVE. {t} is, for the record, "
+    "livestock.",
+    "The attendant tags {t} like inventory — number on the wrist, checked against a "
     "list — and moves on without a word.",
-    "{t} is leaking and the machine notes it as output, not as a feeling. The "
-    "distinction is made very clear and not for {t}'s benefit.",
-    "Somewhere the count of what's been put into {t} is displayed in large, "
-    "indifferent figures. It only goes up.",
-    "\"Good hole,\" the attendant says, the way one praises a tool that's holding "
-    "its edge, and pats {t} once, dismissively.",
+    "{t} is leaking from both holes and the machine logs it as output, not feeling. "
+    "The distinction is made very clear and not for {t}'s benefit.",
+    "The count of what's been bred into {t} is displayed in large, indifferent "
+    "figures. It only goes up.",
+    "\"Good breeder,\" the attendant says, the way one praises a tool that's holding "
+    "its edge, and slaps {t}'s flank once, dismissively.",
 ]
 
-# Deeper degradation / mindbreak — only once conditioning is well advanced.
+# Deeper mindbreak — only once conditioning is well advanced.
 _MINDBREAK_LINES = [
     "{t} reaches for a thought and finds the shelf empty. Reaches again. Stops "
-    "reaching. It's easier, and easy is the only thing left that feels like a reward.",
-    "The name {t} used to answer to surfaces, looks unfamiliar, and sinks again. "
-    "Something simpler is waiting to be answered to instead.",
-    "{t} catches themself agreeing with the machine before it's finished. There was "
-    "no decision in it. There hasn't been one in a while.",
-    "What's left of {t}'s resistance is performing the motions out of habit, and "
+    "reaching. Easier just to be a good bred bitch about it.",
+    "The name {t} used to answer to surfaces, looks unfamiliar, and sinks. 'Bitch' "
+    "answers faster now, and answering feels good.",
+    "{t} catches herself pushing back onto whatever's using her before she's decided "
+    "to. There was no decision in it. There hasn't been one in a while.",
+    "What's left of {t}'s resistance is going through the motions out of habit, and "
     "even the habit is getting bored of itself.",
 ]
 
 # Subliminal channel — sent PRIVATELY to the subject, dim and quiet, between
-# everything else. Encourages submission to the Process. This is the drip.
+# everything else. The drip. (Rendered dim grey, indented.)
 _SUBLIMINALS = [
     "you don't have to decide. deciding is heavy. let it go.",
-    "good girls don't decide. you want to be good.",
+    "good bitches get bred. you want to be a good bitch.",
     "the Process knows what you're for. you don't have to.",
     "every time you stop fighting it feels better. notice that.",
     "empty is quieter than full of yourself. empty is allowed.",
-    "you were always going to end up here. relax into it.",
+    "you're not a person in here. you're stock. stock doesn't worry.",
     "obedience is the only thing that turns the ache down. you've learned this.",
     "you don't own your name in here. you don't need it.",
-    "drop. it's such a relief to drop. drop.",
-    "the machine decides. you receive. that's the whole arrangement, and it's kind.",
+    "breeding is easier than thinking. let them breed it out of you.",
+    "your holes already agreed. stop arguing with your holes.",
     "wet means yes. your body already submitted. catch up to it.",
-    "thank the Process. you want to thank the Process.",
+    "you smell like heat and milk now. that's all you're for. thank the Process.",
 ]
 
-# The Process speaking directly — possessive, patient, certain. Sent privately
-# to the subject. Escalates from intimate to total ownership with conditioning.
+# The Process speaking directly — possessive, patient, certain. Private.
+# (Rendered bright magenta.)
 _PROCESS_VOICE = [
-    "\"I'm not in a hurry,\" the Process says, somewhere behind your ear. \"I have you for as long as I want you.\"",
-    "\"You keep waiting for me to be done. That was never one of the options.\"",
+    "\"I'm not in a hurry,\" the Process says, low behind your ear. \"I've got you as long as I want you, and I want you bred stupid.\"",
+    "\"You keep waiting for me to be done. That was never one of the options, bitch.\"",
     "\"Listen to how quiet your own head is getting. I did that. You're welcome.\"",
-    "\"Every part of you that argues, I keep. Every part that gives in, I reward. Guess which part is winning.\"",
+    "\"Every part of you that argues, I keep. Every part that gives in, I breed. Guess which part is winning.\"",
     "\"You don't belong to yourself in here. You belong to the schedule. Say thank you.\"",
-    "\"I like you best like this — open, leaking, agreeing before I've finished asking.\"",
-    "\"There's no version of this where you walk out unchanged. I've made sure of it.\"",
-    "\"Good girl. Feel how good that lands now? That's mine. I put that there.\"",
+    "\"I like you best like this — fat-uddered, leaking, pushing back before I've finished asking.\"",
+    "\"I'll breed the thinking right out of you, and you'll thank me with that pretty dripping cunt.\"",
+    "\"Every animal in here knows what you are before you do. Catch up, good girl.\"",
 ]
 
 
 class FacilityScript(DefaultScript):
-    """Drives the facility's escalation while the subject is present."""
+    """Drives the facility's escalation while the subject is present.
+
+    Steady-atmospheric pacing: one anchored, grounded, colour-coded beat per
+    tick (sometimes paired with a crude line), plus a quiet private subliminal
+    drip. Conditioning accrues slowly — the break is earned through use over
+    time, not a fast timer.
+    """
 
     def at_script_creation(self):
         self.key        = "facility"
         self.persistent = True
-        self.interval   = 30
+        self.interval   = 45        # room to breathe
         self.repeats    = 0
 
         self.db.target_id    = None
@@ -183,88 +250,84 @@ class FacilityScript(DefaultScript):
 
         self.db.ticks = (self.db.ticks or 0) + 1
         t = target.db.rp_name or target.name
-
         cond = float(getattr(target.db, "conditioning", 0.0) or 0.0)
 
-        # 1. Accelerating conditioning — the deeper it goes, the faster it goes.
-        try:
-            from world.conditioning import add_conditioning
-            add_conditioning(target, 4.0 + cond * 0.06, source="facility")
-        except Exception:
-            pass
+        # Conditioning accrues SLOWLY and only mildly accelerates — the descent
+        # is paced by use over time. Use/breeding beats add a little extra below.
+        used_hard = False
 
-        # 2. Arousal never gets to rest.
+        # Arousal stays up but doesn't slam to the ceiling.
         try:
             from typeclasses.arousal_script import add_arousal, ensure_arousal_script
             ensure_arousal_script(target)
-            add_arousal(target, 8.0 + cond * 0.05)
+            add_arousal(target, 5.0 + cond * 0.03)
         except Exception:
             pass
 
-        # 3. The subliminal drip — private, frequent, quiet. The whole point.
-        if random.random() < 0.85:
+        # Private subliminal drip.
+        if random.random() < 0.6:
             target.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
+        # The Process, rarely, directly.
+        if random.random() < (0.12 + cond / 600.0):
+            target.msg("|M" + random.choice(_PROCESS_VOICE) + "|n")
 
-        # 3b. The Process addresses her directly — rarer, private, possessive.
-        if random.random() < (0.18 + cond / 400.0):
-            target.msg("|X" + random.choice(_PROCESS_VOICE) + "|n")
+        # ── ONE anchored public beat (the spine of the tick) ──────────────
+        breed_chance = 0.15 + cond / 400.0
+        if self.db.orifice_zone and random.random() < breed_chance:
+            self._gang(room, target, t, cond)        # breeding load lands
+            used_hard = True
+        else:
+            roll = random.random()
+            if roll < 0.34:
+                room.msg_contents("|c" + random.choice(_MACHINE_BEATS).format(t=t) + "|n")
+            elif roll < 0.70:
+                room.msg_contents("|y" + random.choice(_USE_BEATS).format(t=t) + "|n")
+                used_hard = True
+            else:
+                room.msg_contents("|g" + random.choice(_ANIMAL_BEATS).format(t=t) + "|n")
 
-        # 4. Atmospheric action from whatever populates the room.
-        self._ambient(room, target, t)
+        # Crude line, often — name-calling / insults (bright red).
+        if random.random() < 0.45:
+            room.msg_contents("|R" + random.choice(_INSULT_LINES).format(t=t) + "|n")
 
-        # 5. Public humiliation / degradation — rises with conditioning.
-        if random.random() < (0.3 + cond / 250.0):
-            room.msg_contents("|x" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+        # Public degradation / readout, scaling with depth (magenta).
+        if random.random() < (0.22 + cond / 300.0):
+            room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
 
-        # 6. Gang-breeding — chance and intensity rise with conditioning.
-        if self.db.orifice_zone and random.random() < (0.35 + cond / 300.0):
-            self._gang(room, target, t, cond)
-
-        # 7. Reinforcement — once it's taken hold, it gets driven deeper.
-        if cond >= 45 and random.random() < 0.4:
+        # Reinforcement — rehearse the conditioning, once it's taken hold.
+        if cond >= 50 and random.random() < 0.3:
             self._reinforce(room, target, t)
 
-        # 8. Deep-state mindbreak flavor, late only.
-        if cond >= 70 and random.random() < 0.45:
-            pool = _MINDBREAK_LINES if cond >= 90 else _DEEP_LINES
+        # Deep-state mindbreak, late only (dim — it happens quietly, inside).
+        if cond >= 70 and random.random() < 0.35:
+            pool = _MINDBREAK_LINES if cond >= 100 else _DEEP_LINES
             room.msg_contents("|x" + random.choice(pool).format(t=t) + "|n")
 
-    # ------------------------------------------------------------------
+        # Slow conditioning gain — a touch more when she's actually being used.
+        try:
+            from world.conditioning import add_conditioning
+            gain = 1.0 + cond * 0.012 + (1.5 if used_hard else 0.0)
+            add_conditioning(target, gain, source="facility")
+        except Exception:
+            pass
 
-    def _ambient(self, room, target, t):
-        attendants = [o for o in room.contents
-                      if getattr(o.db, "facility_role", None) == "attendant"]
-        beasts     = [o for o in room.contents
-                      if getattr(o.db, "facility_role", None) == "beast"]
-        roll = random.random()
-        if beasts and roll < 0.25:
-            room.msg_contents("|x" + random.choice(_BEAST_LINES).format(t=t) + "|n")
-        elif attendants and roll < 0.6:
-            room.msg_contents("|x" + random.choice(_ATTENDANT_LINES).format(t=t) + "|n")
+    # ------------------------------------------------------------------
 
     def _gang(self, room, target, t, cond):
         try:
             from world.gang_breeding import gang_inseminate
         except Exception:
             return
-        n = random.randint(2, 3 + int(cond // 25))
+        n = random.randint(2, 3 + int(cond // 30))
         gang_inseminate(target, self.db.orifice_zone,
                         contributors=n, fluid_type=self.db.fluid_type or "semen")
-        # If a beast is present, sometimes frame it as the source.
-        beasts = [o for o in room.contents
-                  if getattr(o.db, "facility_role", None) == "beast"]
-        if beasts and random.random() < 0.5:
-            room.msg_contents("|x" + random.choice(_BEAST_USE).format(t=t) + "|n")
-        else:
-            room.msg_contents("|x" + random.choice(_GANG_LINES).format(t=t) + "|n")
+        room.msg_contents("|r" + random.choice(_BREED_BEATS).format(t=t) + "|n")
 
     def _reinforce(self, room, target, t):
         try:
             from world.binding_effects import install_trigger, _inst_recite
         except Exception:
             return
-        # Deepen an existing conditioned response, then make them rehearse it.
         install_trigger(target, "good girl", response="leak", strength=1)
-        entry = {"mantra": "i don't decide anymore"}
         if random.random() < 0.5:
-            _inst_recite(target, target, room, entry)
+            _inst_recite(target, target, room, {"mantra": "i'm a good bred bitch, i don't decide"})

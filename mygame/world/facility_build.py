@@ -97,7 +97,7 @@ def run_facility(caller):
         pass
     try:
         from world.conditioning import add_conditioning
-        add_conditioning(caller, 8.0, source="facility-seed")
+        add_conditioning(caller, 3.0, source="facility-seed")   # starts barely warm
     except Exception:
         pass
 
@@ -168,16 +168,49 @@ def run_facility(caller):
     except Exception:
         pass
 
-    # ── Populate the room ───────────────────────────────────────────────
+    # ── Populate the room — staff + a stock of varied animals ───────────
     try:
         from typeclasses.facility_script import FacilityAttendant, FacilityBeast
         from evennia.utils import create as _c
+
         att = _c.create_object(FacilityAttendant, key="attendant", location=room)
         att.db.rp_name = "the attendant"
+        att.db.physical_desc = (
+            "An attendant in a clean grey coverall, sleeves shoved up, clipboard in "
+            "hand, moving between the stations with the unbothered efficiency of "
+            "someone who stopped finding any of this remarkable a long time ago."
+        )
         track(att)
-        beast = _c.create_object(FacilityBeast, key="the beast", location=room)
-        beast.db.rp_name = "the beast"
-        track(beast)
+
+        handler = _c.create_object(FacilityAttendant, key="handler", location=room)
+        handler.db.rp_name = "the handler"
+        handler.db.facility_role = "attendant"
+        handler.db.physical_desc = (
+            "A broad handler in a rubber apron who works the animal end of the room — "
+            "leashing, unleashing, lining up the stock and deciding whose turn is next."
+        )
+        track(handler)
+
+        animals = [
+            ("the kennel", "beast",
+             "A long kennel run of heavy, rangy hounds, pacing and whining behind the "
+             "bars, noses working at the air whenever the heat in the room shifts."),
+            ("the bull", "beast",
+             "A great dull-eyed breeding bull in a back stall, shoulders like a wall, "
+             "stamping and snorting on its own slow schedule."),
+            ("the boar", "beast",
+             "A rank, tusked boar in a low pen, small-eyed and patient, the smell of it "
+             "filling the corner it's kept in."),
+            ("the stallion", "beast",
+             "A big-barreled stallion in the end stall, sheath heavy, screaming once in "
+             "a while just to remind the room it's waiting."),
+        ]
+        for key, role, desc in animals:
+            a = _c.create_object(FacilityBeast, key=key, location=room)
+            a.db.rp_name = key
+            a.db.facility_role = role
+            a.db.physical_desc = desc
+            track(a)
     except Exception:
         pass
 
@@ -197,17 +230,49 @@ def run_facility(caller):
         pass
 
     caller.db.facility_items = inst
+    n = caller.db.rp_name or caller.name
 
-    # ── Blind intro. No system names, no checklist. ─────────────────────
+    # ── Set the room's appearance so 'look' shows the facility (restored on
+    #    reset). Blind to MECHANICS, not to the SCENE.
+    if getattr(caller.db, "facility_room_desc_backup", None) is None:
+        caller.db.facility_room_desc_backup = room.db.desc or ""
+    room.db.desc = (
+        "|wA long, bright room that smells of warm milk, animal, and machine oil.|n "
+        "The walls are hung with coiled tubing and clean steel fixtures, the kind "
+        "that hose down easy. Down the centre runs the line: a row of padded "
+        "breeding stations, most of them empty, each fitted with restraints, a "
+        "milking rig, and a swing-mounted intake arm. One station is occupied. "
+        "Along one wall a kennel run of restless hounds; opposite, stalls and pens "
+        "holding a bull, a boar, a stallion — stock, waiting their turn on a "
+        "schedule that never seems to end. An attendant works the gauges; a handler "
+        "works the animals. Nothing in here is in a hurry. The room is built for "
+        "things that take exactly as long as they take."
+    )
+
+    # ── Establishing scene — vivid, legible, breeding-themed. ───────────
     room.msg_contents(
-        "\n|xThe door closes behind {n} with a sound like a decision being filed. "
-        "Lights come up, even and clinical. Somewhere a timer starts, and does not "
-        "show its number.|n".format(n=caller.db.rp_name or caller.name)
+        f"\n|wThe door seals behind {n} with a sound like a file drawer closing.|n "
+        "|xThe lights come up even and clinical; a timer starts somewhere and does "
+        "not show its number.|n"
     )
     caller.msg(
-        "|xThe restraints find you before you've agreed to anything. There is no "
-        "panel, no readout, no sense of how long. Whatever this is, it has already "
-        "started, and it does not seem to be in a hurry.|n"
+        "\n|yThe restraints find you before you've agreed to anything — a padded "
+        "cradle folding around you, hauling your chest up and out into the waiting "
+        "cups, tipping your hips back and your knees apart until you're presented "
+        "rather than seated.|n\n"
+        "|cThe milking rig settles onto your tits and takes hold; the intake arm "
+        "seats itself low and deep and stays there, and a slow, patient rhythm "
+        "starts up that treats your whole body as one thing to be drained and bred "
+        "and topped back up.|n\n"
+        "|gDown the wall a kennel of hounds catches your scent and starts to whine. "
+        "In the stalls a bull stamps, a boar grunts, a stallion screams once. The "
+        "handler glances at the clock and says, to no one, \"Give her a bit. She'll "
+        "loosen up.\"|n\n"
+        "|RThe attendant doesn't look at your face. They check a gauge, thumb a dial, "
+        "and write something down.|n\n"
+        "|xThere is no panel and no clock you can read. You can still speak. You can "
+        "still be spoken to. Reaching for the way out, you'll find, does nothing — "
+        "and the longer you're in here, the less you'll remember why you'd want to.|n"
     )
 
 
@@ -253,6 +318,11 @@ def run_facility_reset(caller, purge=False):
                 drain_inflation(caller, zn)
     except Exception:
         pass
+
+    # Restore the room's real description.
+    if room and getattr(caller.db, "facility_room_desc_backup", None) is not None:
+        room.db.desc = caller.db.facility_room_desc_backup
+        caller.db.facility_room_desc_backup = None
 
     # Clear the facility machine zone mechanics from the room.
     if room and getattr(caller.db, "facility_zone", None):
@@ -350,7 +420,7 @@ def _apply_persistent_marks(caller):
 
     # 4. The designation is still there, sitting just under the name.
     if not getattr(caller.db, "designation", None):
-        caller.db.designation = "the doll"
+        caller.db.designation = "the breeding bitch"
 
     # 5. A mark that doesn't come off, and an aura that doesn't fully come back.
     caller.db.facility_brand = (

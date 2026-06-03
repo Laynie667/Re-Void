@@ -52,7 +52,7 @@ _THRESHOLDS = [
 ]
 
 
-def deepen_on_climax(character, amount=14.0):
+def deepen_on_climax(character, amount=5.0):
     """Every release rewires a little more — called when a conditioned climax fires."""
     return add_conditioning(character, amount, source="climax")
 
@@ -123,13 +123,15 @@ def _cond_trigger(character):
 def _cond_designation(character):
     """Identity starts getting filed down to a label."""
     if not getattr(character.db, "designation", None):
-        character.db.designation = "the doll"
+        character.db.designation = "the breeding bitch"
     character.msg(_aura_line(
         character,
         "|xWhen you reach for your own name there's a short, smooth delay — like a page "
-        "that won't turn. The violet at your edges has gone dim and stays dim now.|n",
+        "that won't turn. The violet at your edges has gone dim and stays dim now. "
+        "Something shorter and cruder is waiting to be answered to instead.|n",
         "|xWhen you reach for your own name there's a short, smooth delay — like a page "
-        "that won't turn. It comes, eventually. It comes slower than it should.|n",
+        "that won't turn. It comes, eventually, slower than it should. Something "
+        "shorter and cruder answers faster.|n",
     ))
 
 
@@ -155,27 +157,27 @@ def _cond_permanent(character):
 
 
 def _cond_doll(character):
-    """The body is posed and held that way — pretty, placed, waiting."""
-    character.db.forced_posture = "posed and still — placed, not resting"
-    character.db.body_language  = "posed and still, waiting to be arranged"
+    """The body is held in a breeding presentation — offered, not resting."""
+    character.db.forced_posture = "presented for breeding — hips up, holes offered"
+    character.db.body_language  = "presented — hips tipped, ready to be used"
     character.msg(
-        "|xYour body settles into a shape you didn't pick and holds it. It feels "
-        "correct in a way that has nothing to do with comfort. You are easier to "
-        "arrange now than to ask.|n"
+        "|xYour body settles into a shape you didn't pick — hips up, back arched, "
+        "offered — and holds it. It feels correct in a way that has nothing to do "
+        "with comfort. You are easier to breed now than to ask.|n"
     )
 
 
 def _cond_identity(character):
     """She loses her name to the designation — restored only by a reset."""
     if not getattr(character.db, "designation", None):
-        character.db.designation = "the doll"
+        character.db.designation = "the breeding bitch"
     if not getattr(character.db, "facility_name_backup", None):
         character.db.facility_name_backup = character.db.rp_name or character.key
     character.db.rp_name = character.db.designation
     character.msg(
-        "|xSomeone says your name and it slides off — it belongs to a person who used "
-        f"to stand here. What answers now is {character.db.designation}. It answers "
-        "faster than the old name ever did.|n"
+        "|xSomeone says your name and it slides right off — it belongs to a person who "
+        f"used to stand here. What answers now is {character.db.designation}, and it "
+        "answers faster than the old name ever did. Faster, and a little grateful.|n"
     )
 
 

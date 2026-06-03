@@ -34,13 +34,13 @@ def _resist_backfire(caller):
         return
     try:
         from world.conditioning import add_conditioning
-        add_conditioning(caller, 6.0, source="resistance")
+        add_conditioning(caller, 3.0, source="resistance")
     except Exception:
         pass
     try:
         from typeclasses.arousal_script import add_arousal, ensure_arousal_script
         ensure_arousal_script(caller)
-        add_arousal(caller, 12.0)
+        add_arousal(caller, 10.0)
     except Exception:
         pass
     caller.msg(
