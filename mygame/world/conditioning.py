@@ -174,6 +174,12 @@ def _cond_identity(character):
     if not getattr(character.db, "facility_name_backup", None):
         character.db.facility_name_backup = character.db.rp_name or character.key
     character.db.rp_name = character.db.designation
+    # She can no longer say her own name, or refuse — the words catch and change.
+    filters = list(getattr(character.db, "active_speech_filters", None) or [])
+    for f in ("no_self_name", "no_negatives"):
+        if f not in filters:
+            filters.append(f)
+    character.db.active_speech_filters = filters
     character.msg(
         "|xSomeone says your name and it slides right off — it belongs to a person who "
         f"used to stand here. What answers now is {character.db.designation}, and it "

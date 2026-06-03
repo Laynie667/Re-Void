@@ -47,17 +47,34 @@ def gang_inseminate(target, zone_name, contributors=3,
         entry["current"] = int(entry.get("current", 0)) + 1
         quota[species] = entry
         target.db.breeding_quota = quota
-        # Milestone: a species quota completing earns a permanent processing brand.
-        if entry["current"] == int(entry.get("required", 0)):
-            marks = list(getattr(target.db, "facility_brands", None) or [])
-            marks.append(f"a stamp marking the {species} quota met — healed, permanent")
-            target.db.facility_brands = marks
-            tname = target.db.rp_name or target.name
-            if target.location:
-                target.location.msg_contents(
-                    f"|RA brand is pressed into {tname}'s skin — the {species} quota, "
-                    f"met and marked. It does not come off.|n"
-                )
+        tname = target.db.rp_name or target.name
+        # Productivity ratchet + milestone brand.
+        if int(entry["current"]) >= int(entry.get("required", 0)):
+            if not entry.get("ratcheted"):
+                # First time you reach it, meeting it IS the trigger to raise it.
+                bump = random.randint(3, 6)
+                entry["ratcheted"] = True
+                entry["required"] = int(entry["required"]) + bump
+                quota[species] = entry
+                target.db.breeding_quota = quota
+                if target.location:
+                    target.location.msg_contents(
+                        f"|mThe {species} quota is met — so the standard rises. Required "
+                        f"climbs by {bump}. Meeting it was only ever the signal to move it.|n"
+                    )
+            elif not entry.get("branded"):
+                # The raised bar is genuinely cleared — permanent brand.
+                entry["branded"] = True
+                quota[species] = entry
+                target.db.breeding_quota = quota
+                marks = list(getattr(target.db, "facility_brands", None) or [])
+                marks.append(f"a stamp marking the {species} quota cleared — healed, permanent")
+                target.db.facility_brands = marks
+                if target.location:
+                    target.location.msg_contents(
+                        f"|RA brand is pressed into {tname}'s skin — the {species} quota, "
+                        f"cleared at last and marked. It does not come off.|n"
+                    )
 
     # Offspring — purely the stud's line (never anonymous contributors). Enough
     # of one stud and she drops its get, which joins the roster and, in time,

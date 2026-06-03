@@ -55,6 +55,7 @@ def apply_speech_filters(character, text: str) -> tuple:
     _FILTER_FUNCS = {
         "third_person":       _filter_third_person,
         "no_names":           _filter_no_names,
+        "no_self_name":       _filter_no_self_name,
         "single_word":        _filter_single_word,
         "no_negatives":       _filter_no_negatives,
         "baby_talk":          _filter_baby_talk,
@@ -136,6 +137,28 @@ def _filter_no_names(char, text: str) -> str:
                     )
     except Exception:
         pass
+    return text
+
+
+def _filter_no_self_name(char, text: str) -> str:
+    """She can't speak her own name — it catches and comes out as her designation.
+
+    Targets her real name (held in facility_name_backup when forfeited), her
+    current rp_name, and her base key.
+    """
+    names = set()
+    for n in (getattr(char.db, "facility_name_backup", None),
+              getattr(char.db, "rp_name", None), char.key):
+        if n:
+            for part in str(n).split():
+                if len(part) > 2:
+                    names.add(part)
+    replacement = getattr(char.db, "designation", None) or "the bitch"
+    for part in sorted(names, key=len, reverse=True):
+        # don't rewrite the designation into itself
+        if part.lower() in replacement.lower():
+            continue
+        text = re.sub(rf"\b{re.escape(part)}\b", replacement, text, flags=re.IGNORECASE)
     return text
 
 

@@ -115,7 +115,7 @@ _CONTRACT_BINDING = {
     "continuous_stimulation": 3.0,
     "arousal_floor":          35.0,
     "forced_posture":         "presented for breeding — hips up, holes offered",
-    "speech_filter":          ["baby_talk", "animal_sounds"],
+    "speech_filter":          ["baby_talk", "animal_sounds", "no_negatives", "no_self_name"],
     "required_honorific":     "Handler",
     "pet_triggers":           True,
     "pet_type":               "puppy",

@@ -105,8 +105,25 @@ def penalize_quota_shortfall(character):
     milk_done = (not mq) or int(mq.get("current", 0)) >= int(mq.get("required", 0))
     if breeding_done and milk_done:
         return False
+
+    # Quota interest — every unmet quota compounds while you're behind.
+    quota = getattr(character.db, "breeding_quota", None)
+    if quota:
+        for sp, v in list(quota.items()):
+            cur = int(v.get("current", 0)); req = int(v.get("required", 0))
+            if cur < req:
+                e = dict(v); e["required"] = req + max(1, int(req * 0.08))
+                quota[sp] = e
+        character.db.breeding_quota = quota
+    if mq:
+        cur = int(mq.get("current", 0)); req = int(mq.get("required", 0))
+        if cur < req:
+            e = dict(mq); e["required"] = req + max(1, int(req * 0.08))
+            character.db.milk_quota = e
+
     character.msg(
-        "|R[quota review: behind. the facility does not accept 'behind'.]|n"
+        "|R[quota review: behind. the facility does not accept 'behind' — so the "
+        "targets accrue interest, and behind gets further away.]|n"
     )
     punish(character, reason="behind on quota", severity=1)
     return True
