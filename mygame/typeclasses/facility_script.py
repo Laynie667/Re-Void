@@ -56,43 +56,65 @@ class FacilityBeast(NPC):
 # subject right now, so the scene stays legible. One primary beat fires per
 # tick (steady-atmospheric), often paired with a crude line.
 
-# The machine working her body — milking rig, intake arm, restraints.
+# The machine working her body — paragraph-length milking scenes.
 _MACHINE_BEATS = [
-    "The cups clamp back onto {t}'s heavy tits and pull in slow, greedy pulses — "
-    "draw and release, draw and release — milking the bitch whether she's got "
-    "anything left to give or not.",
-    "The milking rig steps its rhythm up without asking. {t}'s breath catches on the "
-    "new pace and then gives in to it, because there is nothing else a cow gets to do.",
-    "The intake arm seated deep in {t} hums and works harder, unhurried, keeping the "
-    "bitch stretched open and dripping around it.",
-    "A pump cycles and {t} feels it everywhere at once — tits, belly, cunt — one "
-    "machine treating the whole animal as a single thing to drain and breed and top "
-    "back up on schedule.",
-    "The restraints take up a half-inch of slack, hauling {t} back into the cradle: "
-    "tits out, hips tipped, holes presented at exactly the angle the line prefers.",
-    "The rig pauses just long enough for {t} to hope it's done, then resumes harder. "
-    "It is never done with livestock. It only pauses.",
+    "The cups seal over {t}'s nipples with a wet click and the suction starts — not "
+    "gentle, never gentle, a deep rhythmic draw that pulls her whole breast into the "
+    "cone and then lets it go, again and again, dragging the milk out of her in thin "
+    "white streams she can watch spiral down the collection tube. Her nipples are "
+    "dragged out long and obscene with every pull, aching, oversensitive, and the "
+    "machine doesn't care whether she's empty or not — it keeps milking her past the "
+    "point of comfort because a productive animal is milked on schedule, not on mercy, "
+    "and the only sound she's allowed to make about it is the wet rhythmic suck of the "
+    "rig getting what it's owed.",
+    "The rig steps its pace up a notch without asking, the pulls coming faster and "
+    "harder, and {t} feels her let-down hit whether she wants it or not — that hot "
+    "prickling rush, milk flooding the cups, her body betraying her on the machine's "
+    "timetable. She arches into the restraints, helpless, as the suction works her "
+    "tits in greedy synchrony, draining her down to aching empty and then keeping right "
+    "on going, because the gauge says she's got more and the gauge is the only opinion "
+    "that counts in here.",
+    "Lower down, the intake arm seated deep in her hums and grinds and works itself a "
+    "little deeper, keeping {t} stretched and stuffed and dripping around it while the "
+    "cups milk her chest — the machine treating her as one continuous unit, top and "
+    "bottom both, draining one end while it fills and works the other, no part of her "
+    "left to herself, every hole and gland of her on the same indifferent schedule.",
+    "The restraints whir and take up a half-inch of slack, hauling {t} back into the "
+    "cradle and tipping her into perfect presentation — spine bowed, tits thrust up "
+    "into the waiting cups, hips canted, knees winched apart until everything she has "
+    "is offered at exactly the angle the line prefers. She's adjusted like equipment "
+    "because that's what she is now, and the cups descend the second she's positioned "
+    "right.",
 ]
 
-# Hands on her — inspection, prodding, fingering, use. Crude and clinical.
+# Hands on her — paragraph-length inspection / prodding / use.
 _USE_BEATS = [
-    "A handler forces two thick fingers into {t}'s cunt without ceremony, checking "
-    "depth and wetness, and calls the reading across the room like a stock report. "
-    "\"Soaked. Bitch is ready again.\"",
-    "The attendant spreads {t} open with a gloved thumb and prods the swollen clit "
-    "just to watch the animal buck against the straps, then notes the reaction with "
-    "clinical boredom.",
-    "Someone slaps {t}'s full tits to watch them swing and the milk bead at the tips, "
-    "then clamps the cups back on. \"Still leaking. Good cow.\"",
-    "A rough hand works between {t}'s thighs — spreading the wet around, pushing it "
-    "back up inside. \"Sloppy. Stays sloppy. That's the whole point of her.\"",
-    "Fingers hook into {t}'s mouth, press the tongue flat, check the bite, move on. "
-    "The bitch is inspected end to end like the breeding stock she is.",
-    "The attendant grips {t} by the hair, tips her head back, looks her over. \"Wide "
-    "hips, fat udder, takes it balls-deep and begs for more. Decent broodbitch.\" "
-    "Then lets the head drop.",
-    "A boot nudges {t}'s knees wider apart and a hand checks how full she is, pressing "
-    "on the low swell of her belly until something leaks out of her. \"Room for more.\"",
+    "The attendant pulls on a glove with a snap and works two thick fingers up into "
+    "{t}'s cunt without ceremony or warning, curling them, spreading them, checking "
+    "depth and slick and how readily she grips — and she does grip, helplessly, her "
+    "body answering the intrusion before her mind can object. \"Soaked,\" he calls "
+    "across the room, like a stock reading, scissoring his fingers wider just to feel "
+    "her clench and to watch her face do something she'd rather it didn't. \"Bitch is "
+    "ready again. She's always ready. That's the whole point of her.\" He wipes the "
+    "glove off on her thigh and moves to the next gauge.",
+    "A hand fists in {t}'s hair and tips her head back, and the attendant looks her "
+    "over the way you'd appraise a beast at market — thumb dragging her lower lip down "
+    "to check her teeth, then down the line of her, weighing one heavy tit in his palm, "
+    "rolling a fat nipple until milk beads and her breath stutters. \"Wide hips, full "
+    "udder, takes it to the root and pushes back for more,\" he recites to whoever's "
+    "logging it. \"Top-grade broodstock.\" He says it like she isn't there, because in "
+    "every way that counts to the facility, she isn't.",
+    "The attendant spreads {t} open with two gloved fingers and goes after her clit "
+    "with a clinical, merciless precision — not to please her, exactly, but to test the "
+    "response, rubbing tight fast circles over the swollen nub until she's bucking "
+    "against the straps and sobbing and right at the edge, and then he simply stops and "
+    "writes the number down. Denied. Logged. \"Good sensitivity,\" he notes, already "
+    "reaching for the next instrument while she shakes.",
+    "A boot nudges {t}'s knees wider and a broad hand presses flat on the low, tight "
+    "swell of her belly, pushing down until a thick rope of what's been pumped into her "
+    "leaks back out and runs down her crack. The handler watches it pool, unbothered. "
+    "\"Still room,\" he decides, and reaches over to open the next valve, because a "
+    "container that isn't completely full is a container that isn't done.",
 ]
 
 # Crude name-calling / insults — aimed at her. Said to the room or low in her ear.
@@ -126,42 +148,79 @@ _ANIMAL_BEATS = [
     "again. Not yet. But on the schedule, and the schedule is long.",
 ]
 
-# Animal/contributor breeding — fires when a successful breeding lands. Per species.
+# Animal/contributor breeding — paragraph-length, explicit, per species.
 _SPECIES_BREED = {
     "hound": [
-        "The pen opens and a hound mounts {t} without preamble — fast, brutal, "
-        "instinctive — hips snapping, and the knot swells and locks the bitch full "
-        "while the board logs another successful breeding.",
-        "A hound is loosed and takes {t} from behind in a frenzy, fucking fast and "
-        "deep, knotting tight and emptying into her before it's dragged off and the "
-        "count ticks up.",
+        "A handler unlatches the run and a heavy hound is on {t} before the gate's "
+        "fully open — forepaws hooking over her hips, claws scrabbling for grip on her "
+        "sweat-slick back, the blunt wet point of it already dragging through her folds "
+        "and then punching in. It fucks like the animal it is: fast, graceless, brutally "
+        "deep, hips jackhammering a pace no person could hold, each thrust knocking a "
+        "grunt out of her she never agreed to make. She feels the knot start to swell "
+        "against her stretched rim — catching, tugging, then forcing through with an "
+        "obscene pop that ties them — and only then does it start to pump, flooding her "
+        "in hot pulses with nowhere to go, her belly taking every drop while the board "
+        "logs one more breeding to the line.",
+        "The hound mounts {t} in a frenzy and rides her hard, snarling against the back "
+        "of her neck, its slick red length spearing in to the root over and over until "
+        "it slams deep and the knot locks them. She's pinned, stuffed, leaking around "
+        "the seal where she can't quite close, and the dog just keeps grinding and "
+        "spurting into her, painting her insides while a handler watches the clock and "
+        "ticks the count.",
     ],
     "bull": [
-        "The bull is walked up behind {t}. There is nothing gentle in it — the animal "
-        "breeds her like the livestock she is, stretched and flooded, the swell "
-        "answering before she can brace. One more logged against the bull's quota.",
-        "The bull mounts, enormous and dull and patient, and breeds {t} in a few "
-        "heavy thrusts that leave her dripping and counted.",
+        "The bull is walked up behind {t}, all dull-eyed patience and a wall of muscle, "
+        "and the handler lines that monstrous flared head up against her cunt and then "
+        "lets the animal do what it's for. One heave of its hips and she's split open "
+        "around far too much, breath punched flat, hands fisting uselessly in the "
+        "restraints — and the bull doesn't care, just breeds the livestock under it in "
+        "a few enormous strokes and then floods her with a volume that has her belly "
+        "visibly swelling, cum forced back out around the seal of her own stretched "
+        "rim. Logged. Counted. The animal is led off before she's stopped shaking.",
+        "The bull mounts and ruts into {t} with a brute, mechanical rhythm, balls the "
+        "size of fists drawing up, and when it finishes it empties what feels like a "
+        "bucket straight into her womb. She's left gaping, dripping, dazed, the gauge "
+        "on her belly climbing — one more against the bull's quota, and the quota only "
+        "ever climbs to meet it.",
     ],
     "boar": [
-        "The boar mounts, ruts, and floods {t} with a hot rush, then is led off — "
-        "replaced before she's caught her breath. Another against the boar's tally.",
-        "The boar's corkscrew prick works into {t} and spills deep, the smell of it "
-        "all over her, and the handler marks one more successful breeding.",
+        "The boar is grunting before it's even on her, the rank musk of it rolling over "
+        "{t} as the handler guides its corkscrew prick to her hole. It screws in — "
+        "literally, the spiralled length working deeper with every jerk of its hips — "
+        "and then it locks up and unloads, frothy and endless, the strange ridged shape "
+        "of it spurting against every wall inside her at once. It rides through its own "
+        "orgasm in twitching shoves, fills her past comfort, and is dragged off still "
+        "dripping. She's replaced on the schedule before she's caught her breath.",
+        "The boar mounts {t} and ruts with single-minded animal greed, tusks scraping "
+        "her flank, that obscene twisting cock churning her open and then flooding her "
+        "with a hot froth that won't stop coming. The handler marks one more, indifferent.",
     ],
     "stallion": [
-        "The stallion is backed up to {t} and breeds her in long brutal strokes, far "
-        "too much animal for her to do anything but take it, flagging and flooding "
-        "and leaving her gaping and logged.",
-        "The stallion mounts with a scream, buries itself in {t}, and empties in "
-        "pulses she can feel climb her belly. One more against its quota.",
+        "It takes two handlers to back the stallion up to {t}, and there's a held breath "
+        "in the room because everyone knows what's coming. The flared head alone makes "
+        "her sob as it spreads her, and then the animal drives in regardless, far too "
+        "much for her body to do anything but accept, balls-deep in strokes that lift "
+        "her onto her toes. When it flags and comes she can feel it — actual pulses "
+        "climbing her belly, jet after jet of it, the stallion emptying itself into her "
+        "in a flood that leaves her gaping wide and pouring it back out, ruined and "
+        "logged and already due for the next.",
+        "The stallion screams once and mounts, and {t} is bred like a mare — that "
+        "enormous cock hammering into her, flaring, locking, and then flooding her with "
+        "a volume no human hole was built for. It pumps and pumps, her belly rounding "
+        "with it, and when it pulls free she's left spread open and leaking a river. "
+        "One more against its quota. The bar moves up to meet it.",
     ],
     "contributor": [
-        "A valve upstream opens and {t} is pumped fuller — contributor after "
-        "contributor, none of them named, her belly taking the count whether she "
-        "wants it or not.",
-        "The reservoir empties into {t} in long measured pulses, anonymous donors "
-        "logged but not identified, the contributor count climbing.",
+        "A valve upstream opens and {t} is simply pumped full — load after anonymous "
+        "load routed into her in measured pulses, donor after donor she'll never see, "
+        "the reservoir emptying into her cunt and womb until her belly is round and "
+        "tight with it and still the count climbs. None of them are named on the board. "
+        "She is just the hole they're metered into, and the metering does not stop "
+        "because she's full; full is the resting state they want her at.",
+        "The intake floods {t} with the collected output of contributors she'll never "
+        "meet — thick, anonymous, relentless, pumped in under pressure until it's "
+        "backing up out of her and running down her thighs, the tally ticking up with "
+        "every pulse while the machine treats her belly as a container to be topped off.",
     ],
 }
 
@@ -271,7 +330,7 @@ class FacilityScript(DefaultScript):
     def at_script_creation(self):
         self.key        = "facility"
         self.persistent = True
-        self.interval   = 45        # room to breathe
+        self.interval   = 180       # a few minutes between beats — drawn out
         self.repeats    = 0
 
         self.db.target_id    = None
@@ -295,8 +354,9 @@ class FacilityScript(DefaultScript):
 
     # Phase machine — the facility runs as a repeating cycle. Phases are long
     # and drawn out: one sustained beat per tick, building across the phase.
+    # At ~3 min/tick these lengths make a full cycle roughly 40-45 minutes.
     _PHASE_ORDER = ["restrain", "milk", "breed", "condition", "rest"]
-    _PHASE_LEN   = {"restrain": 3, "milk": 7, "breed": 7, "condition": 5, "rest": 3}
+    _PHASE_LEN   = {"restrain": 1, "milk": 4, "breed": 4, "condition": 3, "rest": 2}
 
     def at_repeat(self):
         room   = self.obj
@@ -384,7 +444,11 @@ class FacilityScript(DefaultScript):
 
     def _phase_beat(self, room, target, t, cond, phase, ptick):
         if phase == "restrain":
-            room.msg_contents("|y" + random.choice(_USE_BEATS).format(t=t) + "|n")
+            # Intake sometimes means a permanent procedure done to her on the table.
+            if random.random() < 0.5:
+                self._procedure(room, target, t)
+            else:
+                room.msg_contents("|y" + random.choice(_USE_BEATS).format(t=t) + "|n")
 
         elif phase == "milk":
             # Mid-phase, the dosing/procedure goes in — permanent, varied, real.
@@ -455,7 +519,9 @@ class FacilityScript(DefaultScript):
     # Experimental drug menu — each dose applies one or two of these. All real,
     # all permanent (cleared only by the reset). Effects are deliberately mixed.
     _DRUGS = ["swell", "yield", "sensitize", "capacity", "brood",
-              "compliance", "bimbo", "dependence"]
+              "compliance", "bimbo", "dependence", "estrus", "lactation", "solvent"]
+    _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
+                   "tail", "fertility_implant", "tongue"]
 
     def _dose(self, room, target, t):
         room.msg_contents("|G" + random.choice(_DRUG_BEATS).format(t=t) + "|n")
@@ -572,6 +638,134 @@ class FacilityScript(DefaultScript):
         room.msg_contents(
             f"|G  ▸ DEPENDENCE DOSE — {t}'s body learns to need the next one. Between doses "
             f"now there's a craving, and the craving has its own leash. (dependence {dep})|n")
+
+    def _drug_estrus(self, room, target, t):
+        target.db.perpetual_heat = True
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 60.0)
+        try:
+            from typeclasses.heat_script import HeatScript
+            if not any(isinstance(s, HeatScript) or getattr(s, "key", "") == "perpetual_heat"
+                       for s in target.scripts.all()):
+                from evennia.utils import create
+                create.create_script(HeatScript, obj=target, persistent=True, autostart=True)
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G  ▸ ESTRUS LOCK — {t} is forced into a permanent rut, dripping and aching and "
+            f"presenting at anything that moves. Her heat never breaks now. (perpetual heat, deepened)|n")
+
+    def _drug_lactation(self, room, target, t):
+        self._boost_production(target, 5.0)
+        target.db.lactation_locked = True
+        room.msg_contents(
+            f"|G  ▸ LACTATION OVERRIDE — {t}'s tits are switched permanently on; she'll make "
+            f"milk whether she's milked or not, leaking and swelling and aching to be drained. "
+            f"(production way up, can't switch off)|n")
+
+    def _drug_solvent(self, room, target, t):
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, random.uniform(12, 20), source="drug")
+            from world.binding_effects import install_trigger
+            install_trigger(target, random.choice(["good girl", "empty", "breed"]),
+                            response=random.choice(["blank", "leak", "kneel"]),
+                            strength=2, permanent=True)
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G  ▸ PERSONALITY SOLVENT — something dissolves a little more of whoever {t} "
+            f"used to be and leaves room for whatever the facility writes in its place. "
+            f"(deep conditioning + a trigger set)|n")
+
+    # ── Procedures (intake phase) — surgical/permanent, with a lasting mark ──
+    def _mark(self, target, text):
+        marks = list(getattr(target.db, "facility_brands", None) or [])
+        marks.append(text)
+        target.db.facility_brands = marks
+
+    def _procedure(self, room, target, t):
+        name = random.choice(self._PROCEDURES)
+        try:
+            getattr(self, f"_proc_{name}")(room, target, t)
+        except Exception:
+            pass
+
+    def _proc_pierce(self, room, target, t):
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 45.0)
+        target.db.stim_per_tick = float(getattr(target.db, 'stim_per_tick', 0) or 0) + 1.5
+        self._mark(target, "heavy rings pierced through both nipples, clit hood, and cunt — permanent")
+        room.msg_contents(
+            f"|GA tray of needles is wheeled to {t}'s station and they pierce her without "
+            f"anaesthetic — both nipples, the hood of her clit, the rim of her cunt — threading "
+            f"thick steel rings through each fresh hole and tugging to seat them. Everything is "
+            f"louder now: every pull of the cups, every drip down her thighs, sings through the "
+            f"new metal. (permanent piercings — sensitivity up)|n")
+
+    def _proc_brand(self, room, target, t):
+        spot = random.choice(["one hip", "the swell of her ass", "her lower belly, over the womb"])
+        self._mark(target, f"a facility ownership brand seared into {spot} — permanent")
+        room.msg_contents(
+            f"|GA brand is drawn glowing from the coals and pressed to {spot} — a hiss, the smell "
+            f"of it, a scream {t} bites down on — and then a mark of ownership burned into her for "
+            f"good, set where she'll see it every time she's bent over and used. (permanent brand)|n")
+
+    def _proc_stim_implant(self, room, target, t):
+        target.db.stim_per_tick = float(getattr(target.db, 'stim_per_tick', 0) or 0) + 3.0
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 50.0)
+        self._mark(target, "a stimulation implant seated at the base of her spine — permanent, can't be dug out")
+        room.msg_contents(
+            f"|GA small device is implanted under the skin at the base of {t}'s spine and switched "
+            f"on — a constant low buzz wired straight into her nerves, never off, that she'll feel "
+            f"every second of the term and can't reach to remove. (permanent implant — constant stim)|n")
+
+    def _proc_ring_fit(self, room, target, t):
+        target.db.cum_receptacle = True
+        self._drug_capacity(room, target, t)  # also raises inflation max
+        self._mark(target, "steel gauging rings fitted in cunt and ass, holding her permanently open")
+        room.msg_contents(
+            f"|GThey fit {t}'s holes with steel — a wide gauging ring worked into her cunt and "
+            f"another into her ass, cranked open notch by notch and locked there, propping her "
+            f"permanently gaping and slack so nothing ever has to work to get into her again. "
+            f"(permanently fitted open)|n")
+
+    def _proc_milk_port(self, room, target, t):
+        self._boost_production(target, 4.0)
+        self._mark(target, "surgical milk ports set under each areola — permanent")
+        room.msg_contents(
+            f"|GA milking port is surgically set under each of {t}'s areolae — clean valves her "
+            f"body is re-plumbed around, that she'll leak from on command for the rest of the term. "
+            f"(permanent — production up)|n")
+
+    def _proc_tail(self, room, target, t):
+        target.db.pet_type = target.db.pet_type or "puppy"
+        self._mark(target, "a locked tail-plug and pinned ears — kept as livestock in form, not just function")
+        room.msg_contents(
+            f"|GA thick plug with a tail is seated deep in {t}'s ass and locked there, and a "
+            f"matching set of ears is pinned into her hair. On the record she's livestock now in "
+            f"form as well as function, and she moves like it before the cycle's out. (pet imprint)|n")
+
+    def _proc_fertility_implant(self, room, target, t):
+        prog = dict(getattr(target.db, "offspring_progress", None) or {})
+        for sp in ("hound", "bull", "boar", "stallion"):
+            prog[sp] = int(prog.get(sp, 0)) + 2
+        target.db.offspring_progress = prog
+        self._mark(target, "a fertility implant seated in her cervix — tuned for breeding")
+        room.msg_contents(
+            f"|GA fertility implant is pushed up through {t}'s cervix and seated, flooding her "
+            f"with whatever makes a body take faster and drop sooner. She's tuned for one output "
+            f"now, and her own get will come due that much quicker. (fertility up)|n")
+
+    def _proc_tongue(self, room, target, t):
+        filters = list(getattr(target.db, "active_speech_filters", None) or [])
+        for f in ("baby_talk", "animal_sounds"):
+            if f not in filters:
+                filters.append(f)
+        target.db.active_speech_filters = filters
+        self._mark(target, "tongue 'trained' — mouth reshaped for sounds, not words")
+        room.msg_contents(
+            f"|G{t}'s tongue is clamped out and worked over with a device they call training — and "
+            f"afterward her mouth is shaped for sounds rather than words, the language drained out "
+            f"of her a little more. (speech filtered)|n")
 
     def _gang(self, room, target, t, cond):
         try:

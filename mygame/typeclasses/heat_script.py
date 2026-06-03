@@ -34,7 +34,7 @@ class HeatScript(DefaultScript):
     def at_script_creation(self):
         self.key        = "perpetual_heat"
         self.persistent = True
-        self.interval   = 60
+        self.interval   = 150
         self.repeats    = 0
 
     def at_repeat(self):
