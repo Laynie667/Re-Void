@@ -274,3 +274,325 @@ MESSAGE POOLS — YAML FILES TO KEEP UPDATED
 
   After editing milking_messages.yaml, the cache reloads automatically on
   the next access — no @reload needed for YAML changes.
+
+
+================================================================================
+CATALOG ITEM SPAWNING (all new systems — use item_loader)
+================================================================================
+
+  Spawn any catalog item into your inventory:
+    @py from world.item_loader import spawn_item; spawn_item(me, "KEY")
+
+  List entire catalog:
+    @py from world.item_loader import list_catalog; list_catalog(me)
+
+  ── PLUGS ────────────────────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "plain_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "glass_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "metal_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "knotted_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "flared_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "inflatable_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "spiral_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "tail_plug_fox")
+    @py from world.item_loader import spawn_item; spawn_item(me, "tail_plug_bunny")
+    @py from world.item_loader import spawn_item; spawn_item(me, "tail_plug_equine")
+    @py from world.item_loader import spawn_item; spawn_item(me, "small_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "large_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "extreme_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "vibrating_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "vibrating_egg")
+
+  Insert a plug after spawning:
+    insert <plug name> [zone]
+    -- Example: insert Metal Plug groin/pussy
+
+  ── COLLARS ──────────────────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "day_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "training_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "posture_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "metal_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "latex_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chain_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "spiked_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "ceremony_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "puppy_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "kitty_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "pony_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "hucow_collar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "degrading_leather")
+    @py from world.item_loader import spawn_item; spawn_item(me, "degrading_silk")
+    @py from world.item_loader import spawn_item; spawn_item(me, "degrading_chain")
+
+  Wear a collar after spawning:
+    wear <collar name>
+    -- Example: wear Training Collar
+
+  ── PERMANENT BINDING COLLARS ─────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "permanent_leather_puppy")
+    @py from world.item_loader import spawn_item; spawn_item(me, "permanent_silk_kitty")
+    @py from world.item_loader import spawn_item; spawn_item(me, "permanent_hucow")
+    @py from world.item_loader import spawn_item; spawn_item(me, "soul_binding_collar")
+
+  ── LEASHES ───────────────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "leather_leash")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chain_leash")
+    @py from world.item_loader import spawn_item; spawn_item(me, "silk_ribbon")
+    @py from world.item_loader import spawn_item; spawn_item(me, "temp_leash_1h")
+    @py from world.item_loader import spawn_item; spawn_item(me, "temp_leash_4h")
+    @py from world.item_loader import spawn_item; spawn_item(me, "magic_binding_leash")
+    @py from world.item_loader import spawn_item; spawn_item(me, "puppy_leash")
+    @py from world.item_loader import spawn_item; spawn_item(me, "soul_binding_leash")
+
+  Attach a leash (target must wear a collar first):
+    attach leash <target>
+    detach leash
+
+  ── CHASTITY DEVICES ──────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_belt_leather")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_belt_metal")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_belt_pink")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_belt_timed_8h")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_belt_timed_24h")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_cage_small")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_cage_standard")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_cage_metal")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_cage_pink")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_cage_timed_8h")
+    @py from world.item_loader import spawn_item; spawn_item(me, "chastity_cage_timed_48h")
+
+  Wear chastity:
+    wear <chastity name> [zone]
+    -- Example: wear Timed Chastity Belt (8h)
+
+  Force-remove any chastity (staff override):
+    @py [find item in me.contents]; item.remove(force=True)
+
+  ── VIBRATING ITEMS ───────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "vibrating_plug")
+    @py from world.item_loader import spawn_item; spawn_item(me, "vibrating_egg")
+    @py from world.item_loader import spawn_item; spawn_item(me, "standard_remote")
+    @py from world.item_loader import spawn_item; spawn_item(me, "long_range_remote")
+
+  Pair remote to vibrating item after spawning both:
+    @py remote = [find remote in me.contents]; vib = [find vibrating item]; remote.db.paired_item = vib.dbref
+
+  Control vibration (target must have vibrating item inserted):
+    vibrate <target> [low/medium/high/random]
+    vibrate/stop <target>
+    vibrate/pulse <target>
+
+  ── WEARABLES / CAMOUFLAGE OUTFITS ────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "schoolgirl_uniform")
+    @py from world.item_loader import spawn_item; spawn_item(me, "maid_outfit")
+    @py from world.item_loader import spawn_item; spawn_item(me, "latex_catsuit")
+    @py from world.item_loader import spawn_item; spawn_item(me, "simple_dress")
+    @py from world.item_loader import spawn_item; spawn_item(me, "lab_coat")
+    @py from world.item_loader import spawn_item; spawn_item(me, "towel")
+    @py from world.item_loader import spawn_item; spawn_item(me, "fantasy_robe")
+    @py from world.item_loader import spawn_item; spawn_item(me, "formal_dress")
+    @py from world.item_loader import spawn_item; spawn_item(me, "latex_nurse")
+    @py from world.item_loader import spawn_item; spawn_item(me, "harness")
+    @py from world.item_loader import spawn_item; spawn_item(me, "exhibition_collar_dress")
+
+  Wear wearable:
+    wear <item name> [zone]
+
+  Manage camouflage manually:
+    camouflage = <desc text>
+    camouflage/clear
+
+  ── PIERCINGS ─────────────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "nipple_ring")
+    @py from world.item_loader import spawn_item; spawn_item(me, "nipple_bar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "nipple_shield")
+    @py from world.item_loader import spawn_item; spawn_item(me, "clit_ring")
+    @py from world.item_loader import spawn_item; spawn_item(me, "clit_bar")
+    @py from world.item_loader import spawn_item; spawn_item(me, "labial_ring")
+    @py from world.item_loader import spawn_item; spawn_item(me, "prince_albert")
+    @py from world.item_loader import spawn_item; spawn_item(me, "apadravya")
+    @py from world.item_loader import spawn_item; spawn_item(me, "navel_ring")
+    @py from world.item_loader import spawn_item; spawn_item(me, "ear_ring")
+    @py from world.item_loader import spawn_item; spawn_item(me, "nose_ring")
+    @py from world.item_loader import spawn_item; spawn_item(me, "nipple_chain")
+
+  Wear piercing:
+    wear <piercing name> [zone]   -- zone default is set per item
+
+  ── APHRODISIACS ─────────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "mild_aphrodisiac")
+    @py from world.item_loader import spawn_item; spawn_item(me, "strong_aphrodisiac")
+    @py from world.item_loader import spawn_item; spawn_item(me, "room_candle")
+    @py from world.item_loader import spawn_item; spawn_item(me, "wolf_bait_mild")
+    @py from world.item_loader import spawn_item; spawn_item(me, "wolf_bait_strong")
+
+  Use an aphrodisiac (currently just Python, command TBD):
+    @py [find item]; item.use(me)
+
+  Check wolf bait status:
+    @py from typeclasses.aphrodisiac_item import check_wolf_bait; me.msg(str(check_wolf_bait(me)))
+
+  ── BRANDS / MARKS ───────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "temp_brand")
+    @py from world.item_loader import spawn_item; spawn_item(me, "permanent_brand")
+    @py from world.item_loader import spawn_item; spawn_item(me, "soul_brand")
+    @py from world.item_loader import spawn_item; spawn_item(me, "womb_tattoo_temp")
+    @py from world.item_loader import spawn_item; spawn_item(me, "womb_tattoo_permanent")
+    @py from world.item_loader import spawn_item; spawn_item(me, "ownership_brand")
+
+  Apply a brand:
+    brand <target> [zone]     -- requires BrandItem in your inventory
+    brand/list                 -- show brands on yourself
+    brand/list <target>        -- show brands on target
+    brand/remove <mark_name>   -- remove temporary brand from yourself
+
+  ── MILKING CONTRACTS ────────────────────────────────────────────────────
+    @py from world.item_loader import spawn_item; spawn_item(me, "standard_milking_contract")
+    @py from world.item_loader import spawn_item; spawn_item(me, "extended_milking_contract")
+
+  Work with a contract (hold it in inventory):
+    contract/read <contract>            -- read visible clauses
+    contract/read/all <contract>        -- read ALL clauses (author only)
+    contract/sign <contract>            -- sign and activate effects
+    contract/addend <contract> = <text> -- add visible addendum
+    contract/addend/hidden <contract> = <text> -- add hidden addendum
+    contract/reveal <contract> [id]     -- reveal a hidden clause
+    contract/reveal/all <contract>      -- reveal all hidden clauses
+    contract/status <contract>          -- show signing status
+
+  ── WOMB ROOM ────────────────────────────────────────────────────────────
+    Install on your own zone:
+      wombroom/install <zone>        -- e.g.: wombroom/install groin/womb
+      wombroom/desc = <interior text>
+      wombroom/resident add <name>
+      wombroom/resident remove <name>
+      wombroom/resident list
+      wombroom/lock
+      wombroom/unlock
+      wombroom/drain
+      wombroom/uninstall
+
+    Enter a WombRoom:
+      enter <host> [zone]
+      leave
+
+    Pulse inward (as host):
+      pulse <message>
+
+  ── BINDING EFFECTS (apply directly to a character) ─────────────────────
+    Manually set orgasm denial:
+      @py me.db.orgasm_denial = True; me.db.orgasm_release_word = "release"
+
+    Manually set speech filter (one or many):
+      @py me.db.active_speech_filters = ["third_person"]
+      @py me.db.active_speech_filters = ["third_person", "no_names", "stutter"]
+
+    Set arousal floor:
+      @py me.db.arousal_floor = 40.0
+
+    Set continuous stimulation:
+      @py me.db.stim_per_tick = 5.0
+
+    Lock navigation:
+      @py me.db.navigation_locked = True
+
+    Apply forced posture:
+      @py me.db.forced_posture = "kneeling"; me.db.body_language = "kneeling"
+
+    Apply exhibition:
+      @py me.db.exhibition_active = True; me.db.outfit_camouflage = ""
+
+    Clear ALL binding effects manually:
+      @py me.db.orgasm_denial=False; me.db.arousal_floor=0.0; me.db.stim_per_tick=0.0; me.db.navigation_locked=False; me.db.forced_posture=None; me.db.exhibition_active=False; me.db.active_speech_filters=[]; me.db.room_bound=None; me.db.say_locked_until=0; me.msg("Effects cleared.")
+
+  ── ANIMATED FURNITURE ───────────────────────────────────────────────────
+    Edge machine (in a room with a zone):
+      @set here/edge_machine_zone = <zone_name>
+      @set here/edge_release_word = release
+      edgestart
+      edgestop
+
+    Milking stanchion:
+      @set here/stanchion_zone = <zone_name>
+      @set here/stanchion_speed = steady
+      stanchionstart
+      stanchionrelease
+
+    Display pedestal:
+      @set here/pedestal_zone = <zone_name>
+      @py from typeclasses.furniture_scripts import DisplayPedestalScript; from evennia.utils import create; create.create_script(DisplayPedestalScript, obj=here, persistent=True, autostart=True)
+
+    Sensory deprivation:
+      deprive <target>
+      deprive/pulse <message>
+      deprive/release
+
+    Rocking horse:
+      @set here/horse_zone = <zone_name>
+      @set here/horse_pace = steady
+      @py from typeclasses.rocking_horse_script import RockingHorseScript; from evennia.utils import create; create.create_script(RockingHorseScript, obj=here, persistent=True, autostart=False)
+      horseupgrade add motorized
+      horseupgrade add vibrating
+      horseupgrade add milking
+      horseupgrade add restrained
+      horseupgrade add knot
+      horseupgrade add inflation
+      horsemount [forward/backward]
+      horsestart
+      horsepace <slow/steady/fast/intense>
+      horsestop
+      horsedismount
+      horsestatus
+
+  ── PASSIVE ACCUMULATION SCRIPT (global 15-min tick) ─────────────────────
+    Install once (server startup handles it automatically, but if missing):
+      @py from typeclasses.scripts import ensure_passive_script; ensure_passive_script()
+
+    Verify it's running:
+      @scripts                    -- look for "passive_accumulation" on Limbo
+
+    Force an immediate tick for testing:
+      @py from typeclasses.scripts import PassiveAccumulationScript; from evennia.scripts.models import ScriptDB; scripts=ScriptDB.objects.filter(db_key="passive_accumulation"); [s.typeclass.at_repeat() for s in scripts]; me.msg("Passive tick forced.")
+
+  ── VARIANT POOLS (emote and prose) ──────────────────────────────────────
+    Check variant pool sections:
+      @py from world.variant_loader import _load; me.msg(str(list(_load().keys())))
+
+    Pick a test message from a pool:
+      @py from world.variant_loader import pick_pet_beg; me.msg(str(pick_pet_beg("puppy","say")))
+      @py from world.variant_loader import pick_collar_beg; me.msg(str(pick_collar_beg("leather_puppy","pose")))
+
+    Test forced emote engine:
+      @py from world.forced_emote import forced_emote; forced_emote(me, "You are testing the forced emote system.", "self")
+      @py from world.forced_emote import forced_emote; forced_emote(me, "tests the forced pose emote.", "pose")
+
+  ── SOUL-BOUND EFFECTS ────────────────────────────────────────────────────
+    Apply soul-bound effects from a soul-binding collar:
+      @py from world.soul_bound import apply_soul_bound_effects; [collar] = [o for o in me.contents if o.key=="Soul-Binding Collar"]; apply_soul_bound_effects(me.account, collar)
+
+    Sync soul-bound effects to a character on login:
+      @py from world.soul_bound import sync_soul_bound_effects; sync_soul_bound_effects(me)
+
+    View soul-bound brands on an account:
+      @py me.msg(str(me.account.db.soul_bound_brands or {}))
+
+  ── SPEECH FILTERS ────────────────────────────────────────────────────────
+    Apply a filter:
+      @py me.db.active_speech_filters = ["third_person"]
+
+    Test that it works (say something, it transforms):
+      say I am testing the speech filter.
+
+    Set honorific (for honorific_required filter):
+      @py me.db.required_honorific = "Miss"
+
+    Clear all filters:
+      @py me.db.active_speech_filters = []
+
+  ── DEGRADING COLLAR TICK (force for testing) ─────────────────────────────
+    Force a tick on your degrading collar:
+      @py [collar] = [o for o in me.contents if hasattr(o.db,'state') and o.db.is_worn]; collar.tick(); me.msg(f"State: {collar.db.state}")
+
+    Force break the collar:
+      @py [collar] = [o for o in me.contents if hasattr(o.db,'state') and o.db.is_worn]; collar._advance_state(me, collar.db.state or "pristine", "broken")
+
