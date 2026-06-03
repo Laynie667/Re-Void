@@ -201,25 +201,50 @@ class AdjudicatorNPC(NPC):
     def _run_pet_triggers(self, subject, room):
         """Fire each pet trigger word on the subject with a short delay between."""
         from evennia.utils import delay
-        from world.binding_effects import check_trigger
 
-        subject_name = subject.db.rp_name or subject.name
+        # Map trigger words directly to handler functions so we don't need
+        # the leading relationship — Adjudicator is the authority here
+        from world.binding_effects import (
+            _trigger_stay, _trigger_sit, _trigger_beg,
+            _trigger_paw, _trigger_roll, _trigger_speak, _trigger_free,
+            _trigger_kitty_purr, _trigger_kitty_knead, _trigger_kitty_nap,
+            _trigger_bunny_thump, _trigger_bunny_binky,
+            _trigger_pony_present, _trigger_pony_rest,
+            _trigger_fox_yip, _trigger_fox_curl,
+            _trigger_piggy_oink, _trigger_piggy_wallow, _trigger_piggy_root,
+        )
+
+        pet_type = getattr(subject.db, "pet_type", "puppy") or "puppy"
+
+        # Per-type sequence with direct handler calls
+        _SEQUENCES = {
+            "puppy":  [_trigger_stay, _trigger_sit, _trigger_beg, _trigger_paw, _trigger_roll, _trigger_speak, _trigger_free],
+            "kitty":  [_trigger_stay, _trigger_kitty_purr, _trigger_kitty_knead, _trigger_sit, _trigger_kitty_nap, _trigger_free],
+            "bunny":  [_trigger_stay, _trigger_sit, _trigger_bunny_thump, _trigger_beg, _trigger_bunny_binky, _trigger_free],
+            "pony":   [_trigger_stay, _trigger_pony_present, _trigger_beg, _trigger_pony_rest, _trigger_free],
+            "fox":    [_trigger_stay, _trigger_fox_yip, _trigger_beg, _trigger_fox_curl, _trigger_free],
+            "piggy":  [_trigger_stay, _trigger_piggy_wallow, _trigger_piggy_root, _trigger_piggy_oink, _trigger_beg, _trigger_free],
+        }
+        sequence = _SEQUENCES.get(pet_type, _SEQUENCES["puppy"])
+
         room.msg_contents(
             f"|xThe Adjudicator sets down the ledger. "
-            f"\"Pet trigger sequence,\" they say. \"Pay attention.\"|n"
+            f"\"Pet trigger sequence — {pet_type}. Pay attention.\"|n"
         )
 
         def _fire(index):
-            if index >= len(_PET_TRIGGER_SEQUENCE):
+            if index >= len(sequence):
                 subject.db.test_flag_pet = True
                 room.msg_contents(
                     "|xThe Adjudicator retrieves the ledger. "
-                    "\"Pet trigger calibration: verified.\"|n"
+                    f"\"Pet trigger calibration — {pet_type}: verified.\"|n"
                 )
                 return
-            word = _PET_TRIGGER_SEQUENCE[index]
-            check_trigger(self, word, room, target=subject)
-            delay(2, lambda: _fire(index + 1))
+            try:
+                sequence[index](subject, self, room)
+            except Exception as e:
+                pass
+            delay(2.5, lambda: _fire(index + 1))
 
         delay(1, lambda: _fire(0))
 

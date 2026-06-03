@@ -388,7 +388,9 @@ def _run_blind_build(caller, room):
         adj.db.adjudicator_caller_id = caller.id
         adj.db.adjudicator_active    = True
         adj.db.adjudicator_notes     = notes
-        caller.db.led_by = adj.id   # echo_holder routes to adjudicator
+        # Wire the lead relationship both ways so check_trigger works
+        caller.db.led_by  = adj.id
+        adj.db.leading    = caller.id   # Adjudicator leads caller → triggers fire
     except Exception:
         pass
 
