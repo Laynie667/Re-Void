@@ -70,7 +70,11 @@ class AdjudicatorNPC(NPC):
         if not room:
             return
 
-        if any(w in t for w in ("status", "flags", "report", "progress", "list")):
+        if any(w in t for w in ("what am i wearing", "what's on me", "what did you",
+                               "reveal", "inventory", "what do i have", "what have you")):
+            self._reveal_uniform(speaker, room)
+
+        elif any(w in t for w in ("status", "flags", "report", "progress", "list")):
             self._report_status(speaker, room)
 
         elif any(w in t for w in ("help", "explain", "how", "what do")):
@@ -102,6 +106,22 @@ class AdjudicatorNPC(NPC):
                 room.msg_contents(random.choice(_AMBIENT_COMMENTS))
 
     # ── Status report ──────────────────────────────────────────────────
+
+    def _reveal_uniform(self, subject, room):
+        """Tell the subject what was applied to them by the blind build."""
+        notes = getattr(self.db, "adjudicator_notes", None) or \
+                getattr(subject.db, "test_adjudicator_notes", None) or []
+        if not notes:
+            room.msg_contents(
+                "|xThe Adjudicator looks at the ledger. "
+                "\"Nothing recorded here. Run: testuniform first.\"|n"
+            )
+            return
+        lines = ["|wThe Adjudicator reads from the ledger.|n\n"]
+        for note in notes:
+            lines.append(f"  |x{note}|n")
+        lines.append("\n|x\"That is what you're wearing. Any questions.\"|n")
+        room.msg_contents("\n".join(lines))
 
     def _report_status(self, subject, room):
         flags = [(k, l, getattr(subject.db, k, False)) for k, l in _FLAG_LABELS]

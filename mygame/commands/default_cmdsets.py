@@ -356,6 +356,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_HORSE_CMDS:
             self.add(cmd_cls())
 
+        # Test uniform command
+        from commands.test_uniform_command import CmdTestUniform
+        self.add(CmdTestUniform())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
