@@ -317,6 +317,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_CYCLE_CMDS:
             self.add(cmd_cls())
 
+        # Facility rig reset (OOC safeword — Developer/Admin only)
+        from commands.facility_commands import CmdFacilityReset
+        self.add(CmdFacilityReset())
+
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge
         self.add(CmdSetDairy())

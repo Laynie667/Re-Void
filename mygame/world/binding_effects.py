@@ -413,6 +413,11 @@ def check_trigger(speaker, text: str, room, target=None):
         if char.location != room:
             continue
 
+        # Installed (conditioned) triggers fire for ANY speaker in the room —
+        # not just a holder. That is the whole point of conditioning: the
+        # response no longer belongs to the person who installed it.
+        _check_installed_triggers(char, speaker, room, text)
+
         # Is this character pet-trigger-bound?
         if not getattr(char.db, "pet_trigger_sources", None):
             continue
@@ -439,6 +444,149 @@ def check_trigger(speaker, text: str, room, target=None):
             release_word = (char.db.orgasm_release_word or "come").lower()
             if release_word in words:
                 _trigger_orgasm_release(char, speaker, room)
+
+
+# ---------------------------------------------------------------------------
+# Installed triggers — conditioning / brainwashing
+#
+# Unlike pet triggers (which only fire for the holder), an installed trigger
+# fires for ANY speaker in the room. Conditioning writes them over time. They
+# live on the character as:
+#     character.db.installed_triggers = [
+#         {"phrase": str, "response": str, "strength": int,
+#          "permanent": bool, "mantra": str (optional)}
+#     ]
+# ---------------------------------------------------------------------------
+
+def install_trigger(character, phrase, response="kneel",
+                    strength=1, permanent=False, mantra=None):
+    """Write or reinforce an installed trigger on `character`.
+
+    Reinforcing an existing phrase raises its strength (deeper conditioning).
+    Returns the trigger entry dict.
+    """
+    phrase = (phrase or "").strip().lower()
+    if not phrase:
+        return None
+    triggers = list(getattr(character.db, "installed_triggers", None) or [])
+    for entry in triggers:
+        if entry.get("phrase") == phrase:
+            entry["strength"] = int(entry.get("strength", 0)) + int(strength)
+            if response:
+                entry["response"] = response
+            if mantra:
+                entry["mantra"] = mantra
+            if permanent:
+                entry["permanent"] = True
+            character.db.installed_triggers = triggers
+            return entry
+    entry = {
+        "phrase": phrase, "response": response,
+        "strength": int(strength), "permanent": bool(permanent),
+    }
+    if mantra:
+        entry["mantra"] = mantra
+    triggers.append(entry)
+    character.db.installed_triggers = triggers
+    return entry
+
+
+def _check_installed_triggers(char, speaker, room, text):
+    triggers = list(getattr(char.db, "installed_triggers", None) or [])
+    if not triggers:
+        return
+    padded = f" {(text or '').lower()} "
+    # Longest phrase first so a multi-word trigger wins over a substring.
+    for entry in sorted(triggers, key=lambda e: len(e.get("phrase", "")), reverse=True):
+        phrase = (entry.get("phrase") or "").strip().lower()
+        if phrase and f" {phrase} " in padded:
+            handler = _INSTALLED_RESPONSES.get(entry.get("response", "kneel"), _inst_kneel)
+            handler(char, speaker, room, entry)
+            break   # one installed trigger per utterance
+
+
+def _inst_kneel(char, speaker, room, entry):
+    char.db.body_language = "kneeling, head bowed"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} drops — knees to the floor, head bowing — before the thought "
+        f"of doing otherwise has time to arrive.|n"
+    )
+    char.msg("|xThe word lands somewhere underneath thought. You are already kneeling.|n")
+
+
+def _inst_beg(char, speaker, room, entry):
+    char.db.body_language = "begging"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} rises onto their knees — hands lifting, breath climbing into a plea "
+        f"that started before any decision to make it.|n"
+    )
+    char.msg("|xYou hear yourself begging, and you did not choose to start.|n")
+
+
+def _inst_orgasm(char, speaker, room, entry):
+    try:
+        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+        ensure_arousal_script(char)
+        add_arousal(char, 60.0)
+    except Exception:
+        pass
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} shudders hard — the word reaches in and pulls, and there is no "
+        f"part of {cname} that gets a say in what answers.|n"
+    )
+    char.msg("|xThe word goes straight through you. Your body answers it on its own.|n")
+
+
+def _inst_blank(char, speaker, room, entry):
+    char.db.body_language = "blank, waiting"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname}'s face smooths out — present, attentive, and entirely empty. "
+        f"Waiting to be told the next thing.|n"
+    )
+    char.msg("|xThought thins to a clean, quiet readiness. You are waiting to be instructed.|n")
+
+
+def _inst_freeze(char, speaker, room, entry):
+    char.db.room_bound = room.dbref
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} goes rigid — caught mid-motion, held in place by nothing but a word.|n"
+    )
+    char.msg("|xYou cannot move. The word holds you exactly where you are.|n")
+
+
+def _inst_leak(char, speaker, room, entry):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname}'s body answers the word before anything else can — a visible flush, "
+        f"a helpless clench, wetness arriving first.|n"
+    )
+    char.msg("|xThe word finds the place it was trained into. Your body gives you away.|n")
+
+
+def _inst_recite(char, speaker, room, entry):
+    mantra = entry.get("mantra") or "good girls don't decide"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f'|x{cname} recites, voice gone flat and automatic: "{mantra}."|n'
+    )
+    char.msg("|xThe words leave your mouth before you can examine whether you mean them.|n")
+
+
+_INSTALLED_RESPONSES = {
+    "kneel":  _inst_kneel,
+    "beg":    _inst_beg,
+    "orgasm": _inst_orgasm,
+    "blank":  _inst_blank,
+    "obey":   _inst_blank,
+    "freeze": _inst_freeze,
+    "leak":   _inst_leak,
+    "recite": _inst_recite,
+}
 
 
 # ---------------------------------------------------------------------------
