@@ -70,8 +70,9 @@ class AdjudicatorNPC(NPC):
         if not room:
             return
 
-        if any(w in t for w in ("what am i wearing", "what's on me", "what did you",
-                               "reveal", "inventory", "what do i have", "what have you")):
+        if any(w in t for w in ("wearing", "reveal", "inventory",
+                               "what did you", "what have you", "what do i have",
+                               "what am", "on me", "equipped")):
             self._reveal_uniform(speaker, room)
 
         elif any(w in t for w in ("status", "flags", "report", "progress", "list")):

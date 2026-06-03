@@ -36,7 +36,7 @@ def at_server_start():
 
 def _ensure_passive_accumulation_script():
     """
-    Ensure the global 15-min passive accumulation script is running.
+    Ensure the global 15-min passive tick (GlobalPassiveTick) is running.
     Safe to call on every boot — idempotent.
     """
     try:

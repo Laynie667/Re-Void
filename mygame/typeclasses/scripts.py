@@ -236,7 +236,7 @@ class HousingExpiryScript(DefaultScript):
     def at_repeat(self):
         pass
 
-class PassiveAccumulationScript(DefaultScript):
+class GlobalPassiveTick(DefaultScript):
     """
     Global 15-minute tick script.
 
@@ -259,7 +259,7 @@ class PassiveAccumulationScript(DefaultScript):
     """
 
     def at_script_creation(self):
-        self.key        = "passive_accumulation"
+        self.key        = "global_passive_tick"
         self.desc       = "Global 15-min passive tick (freeform TTL, inflation drain, womb drain)"
         self.persistent = True
         self.repeats    = 0
@@ -391,7 +391,7 @@ class PassiveAccumulationScript(DefaultScript):
 
 def ensure_passive_script():
     """
-    Ensure exactly one PassiveAccumulationScript is running on Limbo.
+    Ensure exactly one GlobalPassiveTick is running on Limbo.
     Call from server startup or manually as a superuser.
     """
     from evennia import search_object
@@ -403,10 +403,10 @@ def ensure_passive_script():
 
     limbo = limbo_results[0]
     existing = [s for s in limbo.scripts.all()
-                if s.key == "passive_accumulation"]
+                if s.key in ("global_passive_tick", "passive_accumulation")]
     if not existing:
         create.create_script(
-            PassiveAccumulationScript,
+            GlobalPassiveTick,
             obj=limbo,
             persistent=True,
             autostart=True,
