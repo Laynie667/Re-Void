@@ -65,6 +65,33 @@ class CycleScript(DefaultScript):
 
     # ------------------------------------------------------------------
 
+    @classmethod
+    def find(cls, char):
+        """Return cycle scripts on `char`, matched by class OR key.
+
+        Matching by key too catches a persistent script whose typeclass failed
+        to resolve (loads as DefaultScript but keeps the 'cycle_machine' key).
+        """
+        if not char:
+            return []
+        return [
+            s for s in char.scripts.all()
+            if isinstance(s, cls) or getattr(s, "key", "") == "cycle_machine"
+        ]
+
+    @classmethod
+    def stop_all(cls, char):
+        """Stop every cycle on `char`. Returns the count stopped."""
+        scripts = cls.find(char)
+        for s in scripts:
+            try:
+                s.stop()
+            except Exception:
+                pass
+        return len(scripts)
+
+    # ------------------------------------------------------------------
+
     def at_repeat(self):
         target = self.obj
         if not target or not hasattr(target, "db"):

@@ -865,6 +865,7 @@ permanent_collars:
       lock_self_remove: true
       auto_consent: true
       lock_navigation: true
+      block_endcycle: true
       continuous_stimulation: 2.2
       arousal_floor: 22.0
 

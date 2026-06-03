@@ -79,6 +79,11 @@ def apply_effects(character, item):
     if effects.get("lock_self_cmds"):
         character.db.self_cmds_locked = True
 
+    # block_endcycle — locks out the wearer's own 'endcycle'/'cycle stop'.
+    # The machine can only be ended for them by someone else's 'cycle release'.
+    if effects.get("block_endcycle"):
+        character.db.endcycle_blocked = True
+
     # orgasm_denial
     if effects.get("orgasm_denial"):
         character.db.orgasm_denial = True
@@ -184,6 +189,11 @@ def remove_effects(character, item):
     if effects.get("lock_self_cmds"):
         if not _other_item_has(character, item, "lock_self_cmds"):
             character.db.self_cmds_locked = False
+
+    # block_endcycle
+    if effects.get("block_endcycle"):
+        if not _other_item_has(character, item, "block_endcycle"):
+            character.db.endcycle_blocked = False
 
     # orgasm_denial
     if effects.get("orgasm_denial"):

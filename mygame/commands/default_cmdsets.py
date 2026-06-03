@@ -313,8 +313,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdInflate())
 
         # Machine cycle
-        from commands.cycle_commands import CmdEndCycle
-        self.add(CmdEndCycle())
+        from commands.cycle_commands import ALL_CYCLE_CMDS
+        for cmd_cls in ALL_CYCLE_CMDS:
+            self.add(cmd_cls())
 
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge
