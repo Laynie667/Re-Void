@@ -128,7 +128,7 @@ _CONTRACT_BINDING = {
     "mark_signed":            True,
     "breeding_quota":         {"hound": 30, "bull": 12, "boar": 12,
                                "stallion": 10, "contributor": 80},
-    "milk_quota":             40,
+    "milk_quota":             8,
     "compliance_threshold":   5,
     "install_triggers":       _CONTRACT_TRIGGERS,
 }
@@ -202,6 +202,14 @@ def run_facility(caller):
 
     # Make sure the subject is fully wired for every system before we start.
     _ensure_compatible(caller, orifice, chest, track)
+
+    # Baseline her banked milk so the milk quota counts only this session's yield.
+    try:
+        from typeclasses.fluid_bank import GlobalFluidBank
+        rec = (GlobalFluidBank.get().db.records or {}).get(str(caller.id)) or {}
+        caller.db.milk_baseline_ml = float(rec.get("lifetime_ml", 0) or 0)
+    except Exception:
+        caller.db.milk_baseline_ml = 0.0
 
     # ── Subject state ───────────────────────────────────────────────────
     caller.db.facility_active = True
@@ -675,6 +683,7 @@ def run_facility_reset(caller, purge=False):
     caller.db.bladder_ml                = 0.0
     caller.db.lactation_locked          = False
     caller.db.cum_craving               = False
+    caller.db.milk_baseline_ml          = 0.0
 
     # Stop perpetual heat and clear the flag.
     caller.db.perpetual_heat = False

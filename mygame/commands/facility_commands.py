@@ -449,3 +449,124 @@ class CmdMount(_FacilityVerb):
 
 
 ALL_FACILITY_VERBS = [CmdPresent, CmdBeg, CmdThank, CmdSubmit, CmdStruggle, CmdMount]
+
+
+# ───────────────────────────────────────────────────────────────────────────
+# Multiplayer handler — another player (or staff) can step in and actually run
+# a facility subject through the real systems. The subject being facility_active
+# is the opt-in; the facility has already opened her for use.
+# ───────────────────────────────────────────────────────────────────────────
+
+class CmdProcess(Command):
+    """
+    Handle a facility subject — run them through the line yourself.
+
+    Usage:
+      process <subject> [action]
+
+    Actions: breed (use a hole), milk, dose (experimental drug), pierce,
+             punish, condition, reward, inspect.  Default is 'breed'.
+
+    The subject must be in the facility (it's their opt-in). Everything you do
+    drives the real systems — real deposits, real milking, real conditioning.
+    """
+    key           = "process"
+    aliases       = ["tend"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        parts = self.args.strip().split(None, 1)
+        if not parts:
+            caller.msg("|xUsage: process <subject> [breed|milk|dose|pierce|punish|"
+                       "condition|reward|inspect]|n")
+            return
+        target = caller.search(parts[0])
+        if not target:
+            return
+        action = (parts[1].strip().lower() if len(parts) > 1 else "breed")
+        if not getattr(target.db, "facility_active", False):
+            caller.msg(f"|x{target.db.rp_name or target.name} isn't in the facility — there's "
+                       f"nothing to handle.|n")
+            return
+        room = caller.location
+        fs   = _fac_script(room)
+        t    = target.db.rp_name or target.name
+        cn   = caller.db.rp_name or caller.name
+        cond = float(getattr(target.db, "conditioning", 0) or 0)
+
+        if action in ("breed", "fuck", "use"):
+            if fs:
+                try: fs._gang(room, target, t, cond)
+                except Exception: pass
+            tally = list(getattr(target.db, "bred_by", None) or [])
+            tally.append((caller.id, cn)); target.db.bred_by = tally
+            room.msg_contents(f"|r{cn} takes a turn with {t}, using her the way the facility "
+                              f"intends its stock to be used.|n", exclude=[target, caller])
+            caller.msg(f"|rYou use {t}. The line logs your contribution.|n")
+            target.msg(f"|r{cn} steps up and uses you. You're logged as bred, again.|n")
+
+        elif action == "milk":
+            if fs:
+                try: fs._start_milking(target)
+                except Exception: pass
+            room.msg_contents(f"|c{cn} clamps the cups onto {t} and sets her milking.|n",
+                              exclude=[caller])
+            caller.msg(f"|cYou put {t} on the milker.|n")
+
+        elif action in ("dose", "drug"):
+            if fs:
+                try: fs._dose(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou dose {t}.|n")
+
+        elif action == "pierce":
+            try:
+                from world.gang_breeding import add_piercing
+                d = add_piercing(target)
+                if d:
+                    room.msg_contents(f"|G{cn} pierces {t}: {d}.|n")
+                else:
+                    caller.msg("|xNothing left to pierce.|n")
+            except Exception:
+                pass
+
+        elif action in ("punish",):
+            try:
+                from world.compliance import punish
+                punish(target, reason=f"handled by {cn}", severity=1)
+            except Exception:
+                pass
+            caller.msg(f"|RYou punish {t}.|n")
+
+        elif action in ("condition", "break"):
+            try:
+                from world.conditioning import add_conditioning
+                add_conditioning(target, 8.0, source="handler")
+            except Exception:
+                pass
+            room.msg_contents(f"|M{cn} works {t}'s head a while — murmuring, repeating, "
+                              f"pressing it deeper — and a little more of her gives.|n",
+                              exclude=[caller])
+            caller.msg(f"|MYou condition {t} deeper.|n")
+
+        elif action in ("reward", "praise"):
+            try:
+                from world.compliance import register_compliance
+                register_compliance(target, reward=True)
+            except Exception:
+                pass
+            room.msg_contents(f"|M{cn} praises {t} — 'good girl' — and lets her have a little "
+                              f"relief for it. She'll chase it.|n", exclude=[caller])
+            caller.msg(f"|MYou reward {t}.|n")
+
+        elif action in ("inspect", "board", "check"):
+            caller.execute_cmd(f"board {parts[0]}")
+
+        else:
+            caller.msg("|xUnknown action. Try: breed / milk / dose / pierce / punish / "
+                       "condition / reward / inspect|n")
+
+
+ALL_FACILITY_VERBS.append(CmdProcess)

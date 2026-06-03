@@ -1725,10 +1725,20 @@ class FacilityScript(DefaultScript):
             return None
 
     def _log_milk(self, target):
+        # Real milk quota: count bottles actually banked this session.
         mq = getattr(target.db, "milk_quota", None)
-        if mq and random.random() < 0.5:
-            e = dict(mq); e["current"] = int(e.get("current", 0)) + 1
+        if not mq:
+            return
+        try:
+            from typeclasses.fluid_bank import GlobalFluidBank, BOTTLE_SIZE_ML
+            rec = (GlobalFluidBank.get().db.records or {}).get(str(target.id)) or {}
+            lifetime = float(rec.get("lifetime_ml", 0) or 0)
+            base = float(getattr(target.db, "milk_baseline_ml", 0) or 0)
+            produced = max(0.0, lifetime - base)
+            e = dict(mq); e["current"] = int(produced // BOTTLE_SIZE_ML)
             target.db.milk_quota = e
+        except Exception:
+            pass
 
     def _quota_board(self, target):
         parts = []
