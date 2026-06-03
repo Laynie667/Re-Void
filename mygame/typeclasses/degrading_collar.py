@@ -44,32 +44,49 @@ _FLOOR_SCALE = {"pristine": 1.0, "worn": 1.2, "frayed": 1.5, "cracked": 2.0}
 # Room-visible transition messages
 _TRANSITION_MSGS = {
     "worn": (
-        "The collar around {name}'s throat is starting to show its age — "
-        "the material creasing where it sits."
+        "The collar at {name}'s throat is starting to show wear — the leather "
+        "creasing soft where it sits, like it's been gripped and pulled at."
     ),
     "frayed": (
-        "The collar around {name}'s throat is fraying. "
-        "The edges are coming apart. Everyone can see it."
+        "The collar at {name}'s throat is fraying, edges coming apart thread by "
+        "thread — and everyone can see it, and {name} can feel everyone seeing it. "
+        "Their breathing's already gone uneven."
     ),
     "cracked": (
-        "The collar around {name}'s throat has cracked — it sits crooked, "
-        "held together by what little remains. It won't last."
+        "The collar at {name}'s throat has cracked — sitting crooked, barely "
+        "holding, and the way {name} keeps touching it, squirming, flushed, "
+        "tells the whole room exactly how hard it's working on them."
     ),
     "broken": (
-        "The collar around {name}'s throat gives out entirely — it falls away "
-        "in pieces, its work done. Whatever it held in {name} while it lasted, "
-        "it leaves its mark."
+        "The collar at {name}'s throat gives out all at once — falling away in "
+        "pieces, its work done. Whatever it wound up tight inside {name} while it "
+        "lasted has nowhere left to go now, and every flushed, wrecked inch of "
+        "them shows it."
     ),
 }
 
 # Forced beg messages (fires at cracked stage every ~20 min)
 _BEG_MSGS = [
-    "{name} is compelled by the cracking collar — hands raised, voice rough: "
-    "\"Please. Fix it. Replace it. Please.\"",
-    "The cracked collar digs in and {name} can't hold the words back: "
-    "\"It's breaking. Please. Someone fix it.\"",
-    "{name} looks down at the collar and back up again — the request comes "
-    "before they can stop it: \"Please. It's almost gone.\"",
+    "{name}'s hands fly to the cracking collar, voice cracking right along with "
+    "it: \"Please — please fix it, I'll be so good, I'll do anything, just "
+    "don't let it come off me, please—\"",
+    "The collar digs in and the words spill out of {name} before they can "
+    "swallow them: \"I need it. I need it on me. Fix it, replace it, please, I "
+    "can't — I can't be without it—\"",
+    "{name} sinks down, thighs pressed tight together, the begging shaking loose "
+    "with every breath: \"Please. Please. I can feel it slipping and it's — "
+    "please, I'm begging, just put it back—\"",
+    "It claws at {name} from the inside out and the plea comes out raw: \"Fix "
+    "it, I'll earn it, I'll be good, I'll be so good, please don't make me feel "
+    "it come off—\"",
+    "{name} can't hold still, can't hold quiet, the need rolling up hot through "
+    "every word: \"Replace it. Please. I'll do anything you want, anything, just "
+    "keep it locked on me—\"",
+    "Past shame now, {name} is reaching, pleading, pupils blown: \"It's almost "
+    "gone, it's almost gone, please, I'll crawl, I'll beg, just fix it, please—\"",
+    "{name}'s voice drops to something wrecked and wanting: \"I don't care how "
+    "it looks. I'll get on my knees right here. Just put it back on me — and "
+    "don't you dare take it off again.\"",
 ]
 
 
