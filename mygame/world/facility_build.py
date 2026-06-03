@@ -335,23 +335,24 @@ def run_facility(caller):
         track(handler)
 
         animals = [
-            ("the kennel", "beast",
+            ("the kennel", "hound",
              "A long kennel run of heavy, rangy hounds, pacing and whining behind the "
              "bars, noses working at the air whenever the heat in the room shifts."),
-            ("the bull", "beast",
+            ("the bull", "bull",
              "A great dull-eyed breeding bull in a back stall, shoulders like a wall, "
              "stamping and snorting on its own slow schedule."),
-            ("the boar", "beast",
+            ("the boar", "boar",
              "A rank, tusked boar in a low pen, small-eyed and patient, the smell of it "
              "filling the corner it's kept in."),
-            ("the stallion", "beast",
+            ("the stallion", "stallion",
              "A big-barreled stallion in the end stall, sheath heavy, screaming once in "
              "a while just to remind the room it's waiting."),
         ]
-        for key, role, desc in animals:
+        for key, species, desc in animals:
             a = _c.create_object(FacilityBeast, key=key, location=room)
             a.db.rp_name = key
-            a.db.facility_role = role
+            a.db.facility_role = "beast"
+            a.db.species = species
             a.db.physical_desc = desc
             track(a)
     except Exception:
