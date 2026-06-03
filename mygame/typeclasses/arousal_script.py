@@ -62,8 +62,11 @@ class ArousalScript(DefaultScript):
         if now - last < self.interval:
             return
 
+        # Arousal floor — don't decay below minimum
+        floor = float(char.db.arousal_floor or 0.0)
+
         # Decay 3 points per tick while inactive
-        new_arousal = max(0.0, arousal - 3.0)
+        new_arousal = max(floor, arousal - 3.0)
         char.db.arousal = new_arousal
 
 
@@ -93,15 +96,23 @@ def add_arousal(char, amount: float):
         amount *= 0.5
 
     old_arousal = char.db.arousal or 0.0
-    new_arousal = min(100.0, old_arousal + amount)
+
+    # Orgasm denial — cap at 99.0 unless denial has been lifted
+    denial_active = getattr(char.db, "orgasm_denial", False)
+    denial_lifted = getattr(char.db, "orgasm_denial_lifted", False)
+    cap = 100.0 if (not denial_active or denial_lifted) else 99.0
+
+    new_arousal = min(cap, old_arousal + amount)
     char.db.arousal = new_arousal
     char.db.last_arousal_activity = now
 
     # Threshold messages (private)
     _check_arousal_thresholds(char, old_arousal, new_arousal)
 
-    # Climax
-    if new_arousal >= 100.0:
+    # Climax — only if denial is not active or has been lifted
+    if new_arousal >= 100.0 and (not denial_active or denial_lifted):
+        if denial_lifted:
+            char.db.orgasm_denial_lifted = False   # one use only
         _trigger_climax(char)
 
     return new_arousal

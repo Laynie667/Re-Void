@@ -331,6 +331,21 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_ITEM_CMDS:
             self.add(cmd_cls())
 
+        # Vibration remote control
+        from commands.vibrate_commands import ALL_VIBRATE_CMDS
+        for cmd_cls in ALL_VIBRATE_CMDS:
+            self.add(cmd_cls())
+
+        # Brand/mark commands
+        from typeclasses.brand_item import ALL_BRAND_CMDS
+        for cmd_cls in ALL_BRAND_CMDS:
+            self.add(cmd_cls())
+
+        # Milking contract commands
+        from typeclasses.milking_contract import ALL_CONTRACT_CMDS
+        for cmd_cls in ALL_CONTRACT_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """

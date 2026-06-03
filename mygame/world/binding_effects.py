@@ -3,42 +3,32 @@ world/binding_effects.py
 
 BindingEffects — a mixin and engine for devious item effects.
 
-Items can carry any combination of the following effect flags:
+Effect flags (any combination per item):
 
-  auto_consent      bool  — sets all consent flags True on activation;
-                            restores previous state on deactivation
-  lock_navigation   bool  — disables waystone, jump, summon, home commands
-  lock_self_remove  bool  — requires another character to remove the item;
-                            the wearer's own remove command is rejected
-  lock_self_cmds    bool  — prevents self-targeted emotes and self-modify
-                            commands (consent changes, zone desc changes, etc.)
-  pet_triggers      bool  — enables spoken trigger responses from holder
-  room_bound        bool  — when True via 'stay' trigger, blocks all exits;
-                            cleared by 'come/heel/free/release' or item removal
+  auto_consent          bool    — opens all consent flags; restores on removal
+  lock_navigation       bool    — disables waystones / jump / summon
+  lock_self_remove      bool    — requires another character to remove the item
+  lock_self_cmds        bool    — blocks self-modify commands
+  pet_triggers          bool    — enables spoken trigger responses from holder
+  pet_type              str     — "puppy"(default)/"kitty"/"bunny"/"pony"/"fox"
+  room_bound            bool    — movement blocked (set by 'stay' trigger)
+  orgasm_denial         bool    — caps arousal at 99, blocks climax; released
+                                  by holder saying the configured release word
+  orgasm_release_word   str     — word that lifts denial for one climax (default "come")
+  continuous_stimulation float  — arousal added per passive tick (15 min) while worn
+  arousal_floor         float   — arousal cannot decay below this value
+  forced_posture        str     — body_language locked to this string; wearer can't change it
+  exhibition            bool    — strips and prevents camouflage; all zones always visible
+  anti_clothing         bool    — prevents WearableItems covering zones while active
+  broadcast_sensation   str     — dbref of character who shares sensation messages
+  speech_filter         list    — list of active speech filter names (see speech_filters.py)
 
-Pet trigger words (holder says them in the same room as the bound character):
-  stay              bind to current room
-  come / heel / here / free / release    clear room bound
-  sit               set body_language to 'sitting'
-  down / floor      set body_language to 'on all fours'
-  beg               set body_language to 'begging' + fire emote
-  roll / rollover   fire forced roll-over emote
-  speak / bark      fire a bark/whimper response message
-  quiet / shush     lock say for 5 minutes
-  paw / shake       fire paw-raise emote
-  heel              clear room_bound + set body_language to 'at heel'
-
-Usage:
-    from world.binding_effects import apply_effects, remove_effects, check_trigger
-
-    # When item is equipped:
-    apply_effects(character, item)
-
-    # When item is removed:
-    remove_effects(character, item)
-
-    # In rp_commands.CmdSay, after broadcasting:
-    check_trigger(speaker, text, room)
+Pet types and their trigger sets:
+  puppy   stay/come/heel/sit/down/beg/roll/speak/quiet/paw/free/release
+  kitty   still/here/up/down/knead/purr/hiss/pounce/quiet/nap/free/release
+  bunny   freeze/hop/thump/still/groom/binky/quiet/free/release
+  pony    halt/walk/trot/canter/stand/present/rest/quiet/free/release
+  fox     sneak/pounce/yip/still/curl/groom/quiet/free/release
 """
 
 import time
@@ -89,12 +79,76 @@ def apply_effects(character, item):
     if effects.get("lock_self_cmds"):
         character.db.self_cmds_locked = True
 
+    # orgasm_denial
+    if effects.get("orgasm_denial"):
+        character.db.orgasm_denial = True
+        character.db.orgasm_release_word = (
+            effects.get("orgasm_release_word") or "come"
+        )
+        character.msg(
+            "|xThe binding settles into place. Release is not yours to decide.|n"
+        )
+
+    # continuous_stimulation
+    stim = effects.get("continuous_stimulation", 0.0) or 0.0
+    if stim > 0:
+        current = float(character.db.stim_per_tick or 0.0)
+        character.db.stim_per_tick = current + stim
+
+    # arousal_floor
+    floor = effects.get("arousal_floor", 0.0) or 0.0
+    if floor > 0:
+        existing = float(character.db.arousal_floor or 0.0)
+        character.db.arousal_floor = max(existing, floor)
+
+    # forced_posture
+    posture = effects.get("forced_posture")
+    if posture:
+        character.db.forced_posture = posture
+        character.db.body_language  = posture
+        character.msg(f"|xYour posture is fixed: {posture}.|n")
+
+    # exhibition — strip camouflage, mark as exhibited
+    if effects.get("exhibition"):
+        character.db.exhibition_active = True
+        character.db.outfit_camouflage = ""
+        character.msg(
+            "|xThe binding strips your concealment. You are on display.|n"
+        )
+
+    # anti_clothing
+    if effects.get("anti_clothing"):
+        character.db.anti_clothing_active = True
+
+    # broadcast_sensation
+    bcast = effects.get("broadcast_sensation")
+    if bcast:
+        targets = list(character.db.sensation_broadcast_targets or [])
+        if bcast not in targets:
+            targets.append(bcast)
+        character.db.sensation_broadcast_targets = targets
+
+    # speech_filter
+    filters = effects.get("speech_filter") or []
+    if filters:
+        active = list(character.db.active_speech_filters or [])
+        for f in filters:
+            if f not in active:
+                active.append(f)
+        character.db.active_speech_filters = active
+        character.msg(
+            f"|xSpeech filter active: {', '.join(filters)}.|n"
+        )
+
     # pet_triggers — mark which item is the trigger source
     if effects.get("pet_triggers"):
         sources = list(character.db.pet_trigger_sources or [])
         if item.dbref not in sources:
             sources.append(item.dbref)
         character.db.pet_trigger_sources = sources
+        # Store pet type on the character so trigger engine uses right map
+        pet_type = effects.get("pet_type", "puppy")
+        character.db.pet_type = pet_type
 
 
 def remove_effects(character, item):
@@ -131,6 +185,70 @@ def remove_effects(character, item):
         if not _other_item_has(character, item, "lock_self_cmds"):
             character.db.self_cmds_locked = False
 
+    # orgasm_denial
+    if effects.get("orgasm_denial"):
+        if not _other_item_has(character, item, "orgasm_denial"):
+            character.db.orgasm_denial       = False
+            character.db.orgasm_release_word = ""
+            character.msg("|xThe denial lifts.|n")
+
+    # continuous_stimulation — subtract this item's contribution
+    stim = effects.get("continuous_stimulation", 0.0) or 0.0
+    if stim > 0:
+        current = float(character.db.stim_per_tick or 0.0)
+        character.db.stim_per_tick = max(0.0, current - stim)
+
+    # arousal_floor — recalculate from remaining items
+    if effects.get("arousal_floor"):
+        new_floor = 0.0
+        for obj in character.contents:
+            if obj == item:
+                continue
+            e = _get_effects(obj)
+            f = e.get("arousal_floor", 0.0) or 0.0
+            if f > new_floor:
+                new_floor = f
+        character.db.arousal_floor = new_floor
+
+    # forced_posture
+    if effects.get("forced_posture"):
+        if not _other_item_has(character, item, "forced_posture"):
+            character.db.forced_posture = None
+
+    # exhibition
+    if effects.get("exhibition"):
+        if not _other_item_has(character, item, "exhibition"):
+            character.db.exhibition_active = False
+            character.msg("|xYour concealment returns.|n")
+
+    # anti_clothing
+    if effects.get("anti_clothing"):
+        if not _other_item_has(character, item, "anti_clothing"):
+            character.db.anti_clothing_active = False
+
+    # broadcast_sensation
+    bcast = effects.get("broadcast_sensation")
+    if bcast:
+        targets = list(character.db.sensation_broadcast_targets or [])
+        if bcast in targets:
+            targets.remove(bcast)
+        character.db.sensation_broadcast_targets = targets
+
+    # speech_filter — remove this item's filters if no other item still sets them
+    filters = effects.get("speech_filter") or []
+    if filters:
+        active = list(character.db.active_speech_filters or [])
+        for f in filters:
+            # Only remove if no other item also requests this filter
+            still_needed = any(
+                f in (_get_effects(obj).get("speech_filter") or [])
+                for obj in character.contents
+                if obj != item and _is_active(obj)
+            )
+            if not still_needed and f in active:
+                active.remove(f)
+        character.db.active_speech_filters = active
+
     # room_bound — clear on removal
     if effects.get("room_bound") or effects.get("pet_triggers"):
         character.db.room_bound = None
@@ -141,32 +259,99 @@ def remove_effects(character, item):
         if item.dbref in sources:
             sources.remove(item.dbref)
         character.db.pet_trigger_sources = sources
+        if not sources:
+            character.db.pet_type = None
 
 
 # ---------------------------------------------------------------------------
 # Pet trigger engine
 # ---------------------------------------------------------------------------
 
-# Map of trigger words to handler function names
-_TRIGGER_MAP = {
-    "stay":     "_trigger_stay",
-    "come":     "_trigger_free",
-    "heel":     "_trigger_heel",
-    "here":     "_trigger_free",
-    "free":     "_trigger_free",
-    "release":  "_trigger_free",
-    "sit":      "_trigger_sit",
-    "down":     "_trigger_down",
-    "floor":    "_trigger_down",
-    "beg":      "_trigger_beg",
-    "roll":     "_trigger_roll",
-    "rollover": "_trigger_roll",
-    "speak":    "_trigger_speak",
-    "bark":     "_trigger_speak",
-    "quiet":    "_trigger_quiet",
-    "shush":    "_trigger_quiet",
-    "paw":      "_trigger_paw",
-    "shake":    "_trigger_paw",
+# ---------------------------------------------------------------------------
+# Pet trigger maps — one per pet type, maps trigger word → handler name
+# ---------------------------------------------------------------------------
+
+_PET_TRIGGER_MAPS = {
+
+    "puppy": {
+        "stay":     "_trigger_stay",
+        "come":     "_trigger_free",
+        "heel":     "_trigger_heel",
+        "here":     "_trigger_free",
+        "free":     "_trigger_free",
+        "release":  "_trigger_free",
+        "sit":      "_trigger_sit",
+        "down":     "_trigger_down",
+        "floor":    "_trigger_down",
+        "beg":      "_trigger_beg",
+        "roll":     "_trigger_roll",
+        "rollover": "_trigger_roll",
+        "speak":    "_trigger_speak",
+        "bark":     "_trigger_speak",
+        "quiet":    "_trigger_quiet",
+        "shush":    "_trigger_quiet",
+        "paw":      "_trigger_paw",
+        "shake":    "_trigger_paw",
+    },
+
+    "kitty": {
+        "still":    "_trigger_stay",
+        "here":     "_trigger_free",
+        "free":     "_trigger_free",
+        "release":  "_trigger_free",
+        "up":       "_trigger_kitty_up",
+        "down":     "_trigger_kitty_down",
+        "knead":    "_trigger_kitty_knead",
+        "purr":     "_trigger_kitty_purr",
+        "hiss":     "_trigger_kitty_hiss",
+        "pounce":   "_trigger_kitty_pounce",
+        "quiet":    "_trigger_quiet",
+        "shush":    "_trigger_quiet",
+        "nap":      "_trigger_kitty_nap",
+        "come":     "_trigger_free",
+    },
+
+    "bunny": {
+        "freeze":   "_trigger_stay",
+        "still":    "_trigger_stay",
+        "hop":      "_trigger_bunny_hop",
+        "thump":    "_trigger_bunny_thump",
+        "groom":    "_trigger_bunny_groom",
+        "binky":    "_trigger_bunny_binky",
+        "quiet":    "_trigger_quiet",
+        "shush":    "_trigger_quiet",
+        "free":     "_trigger_free",
+        "release":  "_trigger_free",
+        "come":     "_trigger_free",
+    },
+
+    "pony": {
+        "halt":     "_trigger_stay",
+        "stand":    "_trigger_stay",
+        "walk":     "_trigger_pony_walk",
+        "trot":     "_trigger_pony_trot",
+        "canter":   "_trigger_pony_canter",
+        "present":  "_trigger_pony_present",
+        "rest":     "_trigger_pony_rest",
+        "quiet":    "_trigger_quiet",
+        "free":     "_trigger_free",
+        "release":  "_trigger_free",
+        "come":     "_trigger_free",
+    },
+
+    "fox": {
+        "still":    "_trigger_stay",
+        "sneak":    "_trigger_fox_sneak",
+        "pounce":   "_trigger_fox_pounce",
+        "yip":      "_trigger_fox_yip",
+        "curl":     "_trigger_fox_curl",
+        "groom":    "_trigger_fox_groom",
+        "quiet":    "_trigger_quiet",
+        "shush":    "_trigger_quiet",
+        "free":     "_trigger_free",
+        "release":  "_trigger_free",
+        "come":     "_trigger_free",
+    },
 }
 
 
@@ -209,14 +394,23 @@ def check_trigger(speaker, text: str, room, target=None):
         if leading_id != char.id:
             continue
 
-        # Find matching trigger — first word wins
+        # Find matching trigger using pet-type-specific map
+        pet_type   = getattr(char.db, "pet_type", "puppy") or "puppy"
+        trigger_map = _PET_TRIGGER_MAPS.get(pet_type, _PET_TRIGGER_MAPS["puppy"])
+
         for word in sorted(words, key=len, reverse=True):
-            handler_name = _TRIGGER_MAP.get(word)
+            handler_name = trigger_map.get(word)
             if handler_name:
                 handler = globals().get(handler_name)
                 if handler:
                     handler(char, speaker, room)
                 break   # one trigger per say per target
+
+        # Orgasm denial release word check
+        if getattr(char.db, "orgasm_denial", False):
+            release_word = (char.db.orgasm_release_word or "come").lower()
+            if release_word in words:
+                _trigger_orgasm_release(char, speaker, room)
 
 
 # ---------------------------------------------------------------------------
@@ -313,6 +507,183 @@ def _trigger_paw(char, holder, room):
     char.msg("|xPaw.|n")
 
 
+# ── Kitty triggers ────────────────────────────────────────────────────────
+
+def _trigger_kitty_up(char, holder, room):
+    char.db.body_language = "perched upright"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|x{cname} sits up — straight, alert, ears forward.|n")
+    char.msg("|xUp.|n")
+
+def _trigger_kitty_down(char, holder, room):
+    char.db.body_language = "low and flat"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|x{cname} flattens down — belly low, chin to the floor.|n")
+    char.msg("|xDown.|n")
+
+def _trigger_kitty_knead(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} kneads — slow rhythmic press of hands into whatever surface is nearest, eyes half-closed.|n"
+    )
+    char.msg("|xKnead.|n")
+
+def _trigger_kitty_purr(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} makes a low continuous sound in their throat — steady, warm, involuntary.|n"
+    )
+    char.msg("|xPurr.|n")
+
+def _trigger_kitty_hiss(char, holder, room):
+    cname = char.db.rp_name or char.name
+    hname = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{cname} hisses at {hname} — teeth showing, ears back, entirely serious.|n"
+    )
+    char.msg("|xHiss.|n")
+
+def _trigger_kitty_pounce(char, holder, room):
+    char.db.body_language = "coiled to spring"
+    cname = char.db.rp_name or char.name
+    hname = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{cname} drops into a crouch and pounces toward {hname} — fast and deliberate.|n"
+    )
+    char.msg("|xPounce.|n")
+
+def _trigger_kitty_nap(char, holder, room):
+    char.db.body_language = "curled up asleep"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|x{cname} curls up and closes their eyes. Napping.|n")
+    char.msg("|xNap.|n")
+
+
+# ── Bunny triggers ───────────────────────────────────────────────────────
+
+def _trigger_bunny_hop(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} hops — small quick movements, nose twitching.|n"
+    )
+    char.msg("|xHop.|n")
+
+def _trigger_bunny_thump(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} thumps one foot against the floor — loud, emphatic, clearly displeased.|n"
+    )
+    char.msg("|xThump.|n")
+
+def _trigger_bunny_groom(char, holder, room):
+    char.db.body_language = "grooming"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} grooms — small precise movements, licking and smoothing.|n"
+    )
+    char.msg("|xGroom.|n")
+
+def _trigger_bunny_binky(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} does a full-body binky — a sudden joyful leap and twist mid-air, landing light.|n"
+    )
+    char.msg("|xBinky.|n")
+
+
+# ── Pony triggers ────────────────────────────────────────────────────────
+
+def _trigger_pony_walk(char, holder, room):
+    char.db.body_language = "walking in place"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|x{cname} begins a slow, measured walk — chin up, gait even.|n")
+    char.msg("|xWalk.|n")
+
+def _trigger_pony_trot(char, holder, room):
+    char.db.body_language = "trotting"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|x{cname} moves into a trot — high-stepping, precise, rhythmic.|n")
+    char.msg("|xTrot.|n")
+
+def _trigger_pony_canter(char, holder, room):
+    char.db.body_language = "cantering"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} breaks into a canter — flowing and fast, making the circuit of the room.|n"
+    )
+    char.msg("|xCanter.|n")
+
+def _trigger_pony_present(char, holder, room):
+    char.db.body_language = "presented"
+    cname  = char.db.rp_name or char.name
+    hname  = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{cname} stops and presents — weight forward, back arched, everything on display for {hname}.|n"
+    )
+    char.msg("|xPresent.|n")
+
+def _trigger_pony_rest(char, holder, room):
+    char.db.body_language = "at rest"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|x{cname} comes to rest — weight settled, breathing steady, waiting.|n")
+    char.msg("|xRest.|n")
+
+
+# ── Fox triggers ─────────────────────────────────────────────────────────
+
+def _trigger_fox_sneak(char, holder, room):
+    char.db.body_language = "sneaking"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} drops low and begins moving — quiet, deliberate, barely visible.|n"
+    )
+    char.msg("|xSneak.|n")
+
+def _trigger_fox_pounce(char, holder, room):
+    cname = char.db.rp_name or char.name
+    hname = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{cname} pounces — launching fast and landing close, playful and sharp.|n"
+    )
+    char.msg("|xPounce.|n")
+
+def _trigger_fox_yip(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} yips — a sharp, bright sound, entirely without apology.|n"
+    )
+    char.msg("|xYip.|n")
+
+def _trigger_fox_curl(char, holder, room):
+    char.db.body_language = "curled up tight"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} curls up — tight and compact, tail tucked in if they have one.|n"
+    )
+    char.msg("|xCurl.|n")
+
+def _trigger_fox_groom(char, holder, room):
+    char.db.body_language = "grooming"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} grooms — methodical, unbothered, licking their hands and smoothing their hair.|n"
+    )
+    char.msg("|xGroom.|n")
+
+
+# ── Orgasm denial release ─────────────────────────────────────────────────
+
+def _trigger_orgasm_release(char, holder, room):
+    """Holder says the release word — lifts denial for one climax."""
+    char.db.orgasm_denial_lifted = True
+    cname = char.db.rp_name or char.name
+    char.msg("|xThe denial lifts — just once.|n")
+    room.msg_contents(
+        f"|x{cname} is given permission.|n",
+        exclude=[char],
+    )
+
+
 # ---------------------------------------------------------------------------
 # Movement block check — call from character.at_before_move
 # ---------------------------------------------------------------------------
@@ -398,22 +769,74 @@ def _get_effects(item) -> dict:
     return getattr(item.db, "binding_effects", None) or {}
 
 
-def _other_item_has(character, exclude_item, flag: str) -> bool:
-    """Return True if any other worn/inserted item on character has this effect flag."""
-    from typeclasses.plug_item    import PlugItem
-    from typeclasses.collar_item  import CollarItem, LeashItem
-    from typeclasses.wearable_item import WearableItem
+def _is_active(obj) -> bool:
+    """Return True if the item is currently worn/inserted."""
+    try:
+        from typeclasses.plug_item     import PlugItem
+        from typeclasses.collar_item   import CollarItem, LeashItem
+        from typeclasses.wearable_item import WearableItem
+        from typeclasses.piercing_item import PiercingItem
+        return (
+            (isinstance(obj, PlugItem)     and bool(obj.db.is_inserted)) or
+            (isinstance(obj, (CollarItem, PiercingItem, WearableItem))
+             and bool(obj.db.is_worn)) or
+            (isinstance(obj, LeashItem)    and bool(obj.db.is_attached))
+        )
+    except Exception:
+        return False
 
+
+def _other_item_has(character, exclude_item, flag: str) -> bool:
+    """Return True if any other active item on character has this effect flag."""
     for obj in character.contents:
         if obj == exclude_item:
             continue
-        is_active = (
-            (isinstance(obj, PlugItem)     and obj.db.is_inserted) or
-            (isinstance(obj, CollarItem)   and obj.db.is_worn)     or
-            (isinstance(obj, WearableItem) and obj.db.is_worn)
-        )
-        if is_active:
+        if _is_active(obj):
             effects = _get_effects(obj)
             if effects.get(flag):
                 return True
     return False
+
+
+# ---------------------------------------------------------------------------
+# Passive tick helpers — called by PassiveAccumulationScript
+# ---------------------------------------------------------------------------
+
+def passive_tick(character):
+    """
+    Apply passive binding effects per 15-min tick.
+    Called from PassiveAccumulationScript._process_char().
+    """
+    # Continuous stimulation
+    stim = float(character.db.stim_per_tick or 0.0)
+    if stim > 0:
+        try:
+            from typeclasses.arousal_script import add_arousal
+            add_arousal(character, stim)
+        except Exception:
+            pass
+
+    # Forced posture enforcement
+    posture = character.db.forced_posture
+    if posture and character.db.body_language != posture:
+        character.db.body_language = posture
+
+
+# ---------------------------------------------------------------------------
+# Anti-clothing check — called from WearableItem.wear()
+# ---------------------------------------------------------------------------
+
+def check_anti_clothing(character) -> tuple:
+    """Returns (True, "") if clothing is allowed, (False, reason) if locked."""
+    if getattr(character.db, "anti_clothing_active", False):
+        return False, "|xThe binding prevents you from covering yourself.|n"
+    return True, ""
+
+
+# ---------------------------------------------------------------------------
+# Exhibition check — used by return_appearance to bypass camouflage
+# ---------------------------------------------------------------------------
+
+def is_exhibition_active(character) -> bool:
+    """Return True if exhibition effect is stripping camouflage."""
+    return bool(getattr(character.db, "exhibition_active", False))

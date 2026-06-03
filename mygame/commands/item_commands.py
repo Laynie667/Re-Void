@@ -221,6 +221,19 @@ class CmdWear(Command):
         if not item:
             return
 
+        # Anti-clothing check before wearing
+        from typeclasses.collar_item   import CollarItem
+        from typeclasses.wearable_item import WearableItem
+        if isinstance(item, WearableItem) and item.get_worn_desc():
+            try:
+                from world.binding_effects import check_anti_clothing
+                ok2, reason2 = check_anti_clothing(caller)
+                if not ok2:
+                    caller.msg(reason2)
+                    return
+            except Exception:
+                pass
+
         if isinstance(item, CollarItem):
             ok, reason = item.wear(caller, zone_arg)
         elif isinstance(item, WearableItem):

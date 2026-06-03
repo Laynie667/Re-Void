@@ -193,6 +193,18 @@ class CmdPenetrate(MuxCommand):
                 caller.msg("\n".join(lines))
                 return
 
+        # Chastity block check on target zone
+        try:
+            from typeclasses.chastity_item import is_chastity_locked
+            if is_chastity_locked(target, zone_name):
+                caller.msg(
+                    f"|x{target.db.rp_name or target.name}'s {zone_name.replace('_', ' ')} "
+                    f"is sealed — a chastity device blocks entry.|n"
+                )
+                return
+        except Exception:
+            pass
+
         # Set engagement state — include caller's shaft zone for knot lookup
         shaft_zone = _find_shaft_zone(caller)
         caller.db.penetrating = {

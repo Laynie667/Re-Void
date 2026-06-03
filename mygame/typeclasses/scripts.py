@@ -326,6 +326,45 @@ class PassiveAccumulationScript(DefaultScript):
                 except Exception:
                     pass
 
+        # 5. Binding effects passive tick (stimulation, posture)
+        try:
+            from world.binding_effects import passive_tick
+            passive_tick(char)
+        except Exception:
+            pass
+
+        # 6. Vibrating items tick
+        try:
+            from typeclasses.vibration_item import VibratingPlugItem
+            for obj in list(char.contents):
+                if isinstance(obj, VibratingPlugItem) and obj.db.is_inserted:
+                    obj.vibe_tick(char)
+        except Exception:
+            pass
+
+        # 7. Degrading collar tick
+        try:
+            from typeclasses.degrading_collar import DegradingCollar
+            for obj in list(char.contents):
+                if isinstance(obj, DegradingCollar) and obj.db.is_worn:
+                    obj.tick()
+        except Exception:
+            pass
+
+        # 8. Chastity timed release check
+        try:
+            from typeclasses.chastity_item import passive_chastity_check
+            passive_chastity_check(char)
+        except Exception:
+            pass
+
+        # 9. Aphrodisiac expiration check
+        try:
+            from typeclasses.aphrodisiac_item import passive_aphrodisiac_check
+            passive_aphrodisiac_check(char)
+        except Exception:
+            pass
+
     def _check_size_ambient(self, char, bm_entry: dict):
         """Fire a size-ambient message if the character is oversized."""
         import random

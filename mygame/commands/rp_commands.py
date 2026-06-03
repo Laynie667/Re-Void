@@ -536,6 +536,16 @@ class CmdSay(MuxCommand):
         except Exception:
             pass
 
+        # Speech filters
+        try:
+            from world.speech_filters import apply_speech_filters
+            text, blocked, block_reason = apply_speech_filters(char, text)
+            if blocked:
+                self.msg(block_reason)
+                return
+        except Exception:
+            pass
+
         name = _name(char)
         color = _mood_color(char)
         verb = char.db.say_verb or "says"

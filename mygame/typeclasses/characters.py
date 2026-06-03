@@ -489,13 +489,25 @@ class Character(ObjectParent, DefaultCharacter):
         # ---------------------------------------------------------------
         # Binding effects state
         # ---------------------------------------------------------------
-        self.db.navigation_locked      = False   # disables waystones/jump/home
-        self.db.room_bound             = None    # dbref of room; blocks movement
-        self.db.self_cmds_locked       = False   # prevents self-modify commands
-        self.db.say_locked_until       = 0       # unix timestamp; blocks say until
-        self.db.pet_trigger_sources    = []      # list of item dbrefs with pet triggers
-        self.db.binding_consent_backup = {}      # saved consent flags for auto_consent
-        self.db.outfit_camouflage      = ""      # active camouflage description
+        self.db.navigation_locked           = False   # disables waystones/jump/home
+        self.db.room_bound                  = None    # dbref of room; blocks movement
+        self.db.self_cmds_locked            = False   # prevents self-modify commands
+        self.db.say_locked_until            = 0       # unix timestamp; blocks say until
+        self.db.pet_trigger_sources         = []      # list of item dbrefs with pet triggers
+        self.db.pet_type                    = None    # "puppy"/"kitty"/"bunny"/"pony"/"fox"
+        self.db.binding_consent_backup      = {}      # saved consent flags for auto_consent
+        self.db.outfit_camouflage           = ""      # active camouflage description
+        self.db.orgasm_denial               = False   # climax blocked
+        self.db.orgasm_denial_lifted        = False   # one-use climax permission
+        self.db.orgasm_release_word         = ""      # word that lifts denial
+        self.db.stim_per_tick               = 0.0     # arousal added per passive tick
+        self.db.arousal_floor               = 0.0     # minimum arousal level
+        self.db.forced_posture              = None    # locked body_language value
+        self.db.exhibition_active           = False   # camouflage stripped
+        self.db.anti_clothing_active        = False   # prevents zone covering
+        self.db.sensation_broadcast_targets = []      # dbrefs to mirror sensations to
+        self.db.active_speech_filters       = []      # active filter names
+        self.db.required_honorific          = ""      # for honorific_required filter
 
     def at_init(self):
         """Called every time the character loads into memory."""
@@ -1796,6 +1808,13 @@ class Character(ObjectParent, DefaultCharacter):
         # the camouflage desc instead of the real physical/zone desc.
         camouflage = getattr(self.db, "outfit_camouflage", "") or ""
         is_self = (looker == self)
+        # Exhibition overrides camouflage — always show real zones
+        try:
+            from world.binding_effects import is_exhibition_active
+            if is_exhibition_active(self):
+                camouflage = ""
+        except Exception:
+            pass
         if camouflage and not is_self:
             parts.append(camouflage)
         else:
