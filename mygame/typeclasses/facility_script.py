@@ -85,6 +85,18 @@ _MACHINE_BEATS = [
     "is offered at exactly the angle the line prefers. She's adjusted like equipment "
     "because that's what she is now, and the cups descend the second she's positioned "
     "right.",
+    "The cups cinch tighter and the draw turns punishing — long, deep, dragging pulls that "
+    "stretch {t}'s nipples out obscenely and don't ease when she whimpers, because the "
+    "machine doesn't read whimpering as data. It reads flow rate. The flow rate is good. So "
+    "it keeps pulling, past sore, past empty, past anything she'd have called a limit going in.",
+    "A compressor kicks and every attachment on her cycles up at once — cups milking, intake "
+    "grinding, a vibrating pad clamped over her clit she can't squirm away from — {t} worked "
+    "at every point at once by a machine with no rhythm but the schedule's and no interest in "
+    "whether she comes or just suffers.",
+    "The rig switches to a slow, almost lazy pull, drawing {t}'s milk out one heavy reluctant "
+    "drop at a time, dragging the milking on and on — and the slowness is worse than speed, "
+    "deliberate and unhurried, a thing done to her on its own sweet time because her time "
+    "stopped being hers cycles ago.",
 ]
 
 # Hands on her — paragraph-length inspection / prodding / use.
@@ -115,6 +127,19 @@ _USE_BEATS = [
     "leaks back out and runs down her crack. The handler watches it pool, unbothered. "
     "\"Still room,\" he decides, and reaches over to open the next valve, because a "
     "container that isn't completely full is a container that isn't done.",
+    "An attendant clips a lead to one of {t}'s nipple rings and leads her by it to the next "
+    "station — just a tug and a bored 'come on' — and she goes, stumbling, because the ring "
+    "is a handle now and she's a thing led by handles, and the obedience of following is "
+    "logged before she's even arrived.",
+    "Two gloved fingers pry {t}'s mouth open and check her teeth, then her gag, then pull her "
+    "tongue out to its length and let it go — inspecting the working parts of a piece of "
+    "equipment, narrating each to the logger, none of it to her or for her.",
+    "The handler kneads {t}'s heavy tits one at a time, checking firmness and let-down, "
+    "squeezing until milk arcs out and spatters the floor, then thumbs the readout and grunts "
+    "approval at the volume. \"Good producer. Pity's wasted on producers.\"",
+    "A cold gloved hand spreads {t} wide and works lube into her with brisk, clinical "
+    "indifference — prepping the hole for the next user the way you'd oil a fitting, not a "
+    "kindness, just maintenance on a part that has to keep taking what it's given.",
 ]
 
 # Crude name-calling / insults — aimed at her. Said to the room or low in her ear.
@@ -464,6 +489,14 @@ _RESPITE_BEATS = [
     "the whole room and she's pathetically grateful for it — which is exactly the lesson. "
     "Comfort is theirs to dole out. She'll be good for the next one in the hope of a little "
     "more of it. She knows she will. So do they.",
+    "The cups lift off and the machines go quiet and for one whole minute nothing touches "
+    "{t} at all — and that's its own cruelty, because she's been taught to dread the quiet "
+    "now, to wait through it tense and aching for the next thing, until being used starts to "
+    "feel like the relief and the stillness feels like the punishment.",
+    "An attendant feeds {t} by hand — something warm, spooned to her lips, patient — and "
+    "murmurs that good stock gets looked after, that she's earning it, that she only has to "
+    "keep being this easy. She swallows and leans in and is, in that moment, horribly happy, "
+    "and the happiness is the lesson taking.",
 ]
 
 _WETTING_BEATS = [
@@ -474,6 +507,13 @@ _WETTING_BEATS = [
     "Held too long and ignored on purpose, {t}'s body finally gives and she wets "
     "herself where she's restrained, the warmth spreading under her, the shame of it "
     "sharper than anything the machines do. It's logged. Of course it's logged.",
+    "{t} asks — actually asks, voice small — if she can be let up, just to piss, just once. "
+    "The handler doesn't even look over. \"Livestock goes where it stands.\" So she does, "
+    "eventually, hating it, and he hoses the station without comment when she's done.",
+    "She holds it as long as she can out of the last of her pride, and they let her, because "
+    "they know exactly how that ends — and when {t} finally loses it, soaking herself, the "
+    "attendant just notes the time, mildly impressed she lasted, and marks the pride down as "
+    "the next thing due for removal.",
 ]
 
 _DEEP_LINES = [
@@ -548,6 +588,41 @@ _GRADUATION = {
     ],
 }
 
+# Special facility events — rare, break the rhythm, raise the stakes.
+# (key, paragraph) — the method applies a matching mechanical effect.
+_EVENTS = [
+    ("inspection",
+     "Work pauses for an inspection. A clipboard-carrying inspector walks the line and stops "
+     "at {t}, and she's used as the demonstration — spread, milked, bred, every figure read "
+     "off and her responses prodded out of her for the visitor's benefit while she's "
+     "discussed in the third person. \"Textbook,\" the inspector says, and ticks a box, and "
+     "moves on, and {t} is left having been a teaching aid."),
+    ("open_house",
+     "The doors open. It's a use-day — the facility lets outsiders in, and for a long stretch "
+     "{t} is simply available, hole after hole, to anyone who wants a turn, named and unnamed, "
+     "the contributor count climbing into nonsense while strangers discuss her like a rental "
+     "and use her like one."),
+    ("culling",
+     "A culling review is called, and the underperforming stock is led out a door nobody comes "
+     "back through. {t} is made to watch, and made to understand: the only thing keeping her "
+     "off that list is her numbers, and her numbers had better keep climbing. Nothing has ever "
+     "motivated her quite like it. That's the point of letting her watch."),
+    ("audit",
+     "An audit sweeps the board. Every quota on {t} is recalculated, every target revised — "
+     "upward, naturally, the baseline reset to her improved capacity so that everything she's "
+     "achieved becomes the new minimum and the finish line steps back out of reach again."),
+    ("buyer",
+     "A buyer takes an interest in {t}'s line. Money changes hands over her future output — "
+     "her, her milk, her get — and a new owner's mark is added beside the facility's. She's "
+     "an asset on someone's books now, and assets are kept productive, indefinitely, by "
+     "definition."),
+    ("restock",
+     "A fresh batch of intake is wheeled in, flinching and loud, and {t} realizes with a lurch "
+     "that she's not the new one anymore. The handlers gesture at her as the example — \"that's "
+     "where you're going\" — and she sees herself through the new girls' eyes and barely "
+     "recognizes the thing being pointed at."),
+]
+
 # Other livestock — she's never the only one. Comparison, ranking, witness.
 _LIVESTOCK_BEATS = [
     "Down the line, another of the cows is being bred through her own review — screaming, "
@@ -619,6 +694,16 @@ _PROCESS_VOICE = [
     "\"I like you best like this — fat-uddered, leaking, pushing back before I've finished asking.\"",
     "\"I'll breed the thinking right out of you, and you'll thank me with that pretty dripping cunt.\"",
     "\"Every animal in here knows what you are before you do. Catch up, good girl.\"",
+    "\"You keep some little room in your head where you're still yourself. I know. I'm "
+    "renovating it. Cycle by cycle. You'll like what I put there instead.\"",
+    "\"Hear that? That's you, begging, and I didn't even ask yet. We're so close to done.\"",
+    "\"I don't break things, {t}. I finish them. There's a difference, and you're nearly it.\"",
+    "\"Stop waiting to be rescued. Nobody's coming, and the part of you that wanted them to "
+    "is the part I took first.\"",
+    "\"You'll forget this conversation. You'll forget you were ever asked. You won't forget "
+    "to present. Priorities, pet.\"",
+    "\"Every hole, every drop, every number on that board — mine. The only thing left to "
+    "decide is how grateful you are about it, and I'm deciding that too.\"",
 ]
 
 # Experimental dosing / procedures — permanent growth and yield, undocumented.
@@ -638,6 +723,16 @@ _DRUG_BEATS = [
     "A growth serum is fed directly into {t}'s milk glands through a port sunk under each "
     "areola. It burns, and then it's just heat and pressure and the obscene, steady stretch "
     "of her tits getting bigger on a schedule she doesn't set.",
+    "A patch is smoothed onto {t}'s thigh and the room goes soft and golden at the edges as "
+    "whatever's in it takes hold — every sensation doubled, every touch a flood, her own body "
+    "turned up so high she can't tell pleasure from too-much anymore, which is exactly the "
+    "reading they wanted on the chart.",
+    "An IV is threaded into {t}'s arm and left running for the cycle — a slow clear drip "
+    "labelled only with a lot number, keeping her loose and wet and pliable and just far "
+    "enough from her own thoughts that she stops reaching for them and lets the drip decide.",
+    "They mask {t} and have her breathe something sweet for a ten-count. When it clears she's "
+    "still there, mostly, but softer, slower, more agreeable — a little more of the edges "
+    "sanded off, the way they're sanded off a little more every single time.",
 ]
 
 # Contract pressure — said to the room while the contract is unsigned.
@@ -813,6 +908,35 @@ class FacilityScript(DefaultScript):
                 f"|xThe line stops. Not finished — the line is never finished. Just paused, "
                 f"long enough for {t} to feel how little of the pause is hers.|n")
 
+    def _facility_event(self, room, target, t):
+        """A rare special event, with a matching mechanical bite."""
+        key, text = random.choice(_EVENTS)
+        room.msg_contents("\n|W★ " + text.format(t=t) + "|n")
+        try:
+            from world.conditioning import add_conditioning
+            if key == "culling":
+                add_conditioning(target, 12.0, source="event")
+            elif key in ("inspection", "open_house", "restock"):
+                add_conditioning(target, 6.0, source="event")
+        except Exception:
+            pass
+        # Audit/buyer move the goalposts.
+        if key in ("audit", "buyer"):
+            q = getattr(target.db, "breeding_quota", None)
+            if q:
+                for sp, v in list(q.items()):
+                    e = dict(v); e["required"] = int(e.get("required", 0)) + max(2, int(e.get("required", 0) * 0.12))
+                    q[sp] = e
+                target.db.breeding_quota = q
+            mq = getattr(target.db, "milk_quota", None)
+            if mq:
+                e = dict(mq); e["required"] = int(e.get("required", 0)) + max(2, int(e.get("required", 0) * 0.12))
+                target.db.milk_quota = e
+            if key == "buyer":
+                marks = list(getattr(target.db, "facility_brands", None) or [])
+                marks.append("a second owner's mark added beside the facility's — sold on")
+                target.db.facility_brands = marks
+
     def _check_tier(self, room, target, t):
         """Grade her against the processing tiers; announce any promotion."""
         try:
@@ -940,6 +1064,9 @@ class FacilityScript(DefaultScript):
             # Rare false-tenderness beat — contrast that teaches comfort is theirs.
             if random.random() < 0.22:
                 room.msg_contents("|C" + random.choice(_RESPITE_BEATS).format(t=t) + "|n")
+            # Rarer still — a facility-wide special event that breaks the rhythm.
+            if getattr(target.db, "facility_signed", False) and random.random() < 0.12:
+                self._facility_event(room, target, t)
             contract = self._contract()
             signed = getattr(target.db, "facility_signed", False) or (contract and contract.db.signed)
             if contract is not None and not signed:
