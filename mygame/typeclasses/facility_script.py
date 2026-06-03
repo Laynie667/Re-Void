@@ -391,14 +391,22 @@ class FacilityScript(DefaultScript):
                      and getattr(o.db, "species", None) == species]
         if offspring and random.random() < 0.4:
             ob = random.choice(offspring)
-            # Steep penalty: her own get breeding her inflates the very quota it serves.
+            gen = int(getattr(ob.db, "generation", 1) or 1)
+            # Steep penalty: her own get breeding her inflates the very quota it
+            # serves — and steeper the deeper the generation.
             penalty = 0
             q = getattr(target.db, "breeding_quota", None)
             if q and species in q:
-                penalty = random.randint(4, 9)
+                penalty = random.randint(4, 9) + (gen - 1) * 3
                 e = dict(q[species]); e["required"] = int(e.get("required", 0)) + penalty
                 q[species] = e
                 target.db.breeding_quota = q
+            # And it can get her with the NEXT generation.
+            try:
+                from world.gang_breeding import maybe_lineage_offspring
+                maybe_lineage_offspring(target, species, gen)
+            except Exception:
+                pass
             room.msg_contents(
                 f"|r{ob.key} — {t}'s own get by the {species} line — mounts the bitch that "
                 f"bore it and breeds her in turn. The roster has closed its loop... and the "

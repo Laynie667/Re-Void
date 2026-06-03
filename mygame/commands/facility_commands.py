@@ -15,7 +15,107 @@ So the genuine emergency exit is never gated — only the convenient one.
 """
 
 import time
+from evennia import Command
 from evennia.commands.default.muxcommand import MuxCommand
+
+
+_COND_STAGES = [
+    (250, "imprinted livestock"), (200, "no self-modification"), (160, "name lost"),
+    (130, "doll-state"), (100, "set (point of no return passed)"), (80, "designated"),
+    (60, "triggers installed"), (40, "speech drifting"), (20, "floor raised"), (0, "warming"),
+]
+
+
+def _stage(cond):
+    for v, label in _COND_STAGES:
+        if cond >= v:
+            return label
+    return "warming"
+
+
+class CmdBoard(Command):
+    """
+    Read the facility's status board for a resident.
+
+    Usage:
+        board [<resident>]
+
+    Shows the live processing record: conditioning, heat, quotas, brands,
+    freedom status, and brood. With no argument, reads your own.
+    """
+
+    key           = "board"
+    aliases       = ["quota", "facilitystatus"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        who = caller
+        if self.args.strip():
+            found = caller.search(self.args.strip())
+            if not found:
+                return
+            who = found
+
+        d = who.db
+        name = who.db.rp_name or who.name
+        lines = ["|w" + "═" * 46 + "|n",
+                 f"|wFACILITY BOARD — {name}|n",
+                 "|w" + "═" * 46 + "|n"]
+
+        cond = float(getattr(d, "conditioning", 0) or 0)
+        perm = " |R[SET]|n" if getattr(d, "conditioning_permanent", False) else ""
+        lines.append(f"  Conditioning:   {cond:6.0f}  ({_stage(cond)}){perm}")
+        if getattr(d, "designation", None):
+            lines.append(f"  Designation:    {d.designation}")
+        lines.append(f"  Heat:           {'|rPERPETUAL|n' if getattr(d,'perpetual_heat',False) else 'off'}")
+
+        # Freedom / compliance
+        if getattr(d, "compliance_threshold", 0):
+            if getattr(d, "freedom_forfeited", False):
+                from world.compliance import EARN_BACK_STREAK
+                streak = int(getattr(d, "compliance_streak", 0) or 0)
+                lines.append(f"  Freedom:        |RFORFEITED|n  (earn-back streak {streak}/{EARN_BACK_STREAK})")
+            else:
+                lines.append(f"  Compliance:     defiance {int(getattr(d,'defiance',0) or 0)}/{int(d.compliance_threshold)}")
+
+        # Quotas
+        try:
+            from world.gang_breeding import summarize_quota
+            qb = summarize_quota(who)
+            if qb:
+                lines.append("")
+                lines.append(qb)
+        except Exception:
+            pass
+        mq = getattr(d, "milk_quota", None)
+        if mq:
+            cur = int(mq.get("current", 0)); req = int(mq.get("required", 0))
+            done = "|gMET|n" if cur >= req else "|rNOT MET|n"
+            lines.append(f"|wMILK QUOTA:|n  {cur}/{req} bottles   {done}")
+
+        # Brood
+        counts = getattr(d, "offspring_counts", None) or {}
+        if counts:
+            brood = ", ".join(f"{v} {k}" for k, v in counts.items())
+            lines.append(f"|wBROOD:|n  {brood}")
+
+        # Brands
+        brands = getattr(d, "facility_brands", None) or []
+        if getattr(d, "facility_brand", None):
+            brands = [d.facility_brand] + list(brands)
+        if brands:
+            lines.append(f"|wBRANDS:|n  {len(brands)}")
+            for b in brands:
+                lines.append(f"    • {b}")
+
+        trig = len(getattr(d, "installed_triggers", None) or [])
+        if trig:
+            lines.append(f"  Installed responses: {trig}")
+
+        lines.append("|w" + "═" * 46 + "|n")
+        caller.msg("\n".join(lines))
 
 
 class CmdFacilityReset(MuxCommand):

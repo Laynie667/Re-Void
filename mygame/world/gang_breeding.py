@@ -193,16 +193,27 @@ _OFFSPRING_VARIANT = [
 OFFSPRING_THRESHOLD = 8   # successful breedings of a stud line before she drops its get
 
 
-def _maybe_offspring(target, species):
+def _maybe_offspring(target, species, generation=1):
+    """Accumulate breedings of a line toward dropping its (next-gen) get.
+
+    Each generation matures faster than the last — the brood accelerates.
+    """
+    key = species if generation == 1 else f"{species}_g{generation}"
     prog = dict(getattr(target.db, "offspring_progress", None) or {})
-    prog[species] = int(prog.get(species, 0)) + 1
-    if prog[species] >= OFFSPRING_THRESHOLD:
-        prog[species] = 0
-        _birth_offspring(target, species)
+    prog[key] = int(prog.get(key, 0)) + 1
+    threshold = max(3, OFFSPRING_THRESHOLD - (generation - 1) * 2)
+    if prog[key] >= threshold:
+        prog[key] = 0
+        _birth_offspring(target, species, generation=generation)
     target.db.offspring_progress = prog
 
 
-def _birth_offspring(target, species):
+def maybe_lineage_offspring(target, species, parent_generation):
+    """An offspring breeding her can produce the next generation of get."""
+    _maybe_offspring(target, species, generation=int(parent_generation) + 1)
+
+
+def _birth_offspring(target, species, generation=1):
     room = target.location
     if not room:
         return
@@ -218,27 +229,34 @@ def _birth_offspring(target, species):
     variant = random.choice(_OFFSPRING_VARIANT)
     term    = _OFFSPRING_TERM.get(species, "get")
     tname   = target.db.rp_name or target.name
-    key     = f"a {variant} {species} {term}"
+    gen_tag = "" if generation <= 1 else f" (gen {generation})"
+    key     = f"a {variant} {species} {term}{gen_tag}"
 
     o = create.create_object(FacilityBeast, key=key, location=room)
     o.db.rp_name       = key
     o.db.facility_role = "beast"
     o.db.species       = species
     o.db.is_offspring  = True
+    o.db.generation    = generation
+    lineage = ("by the facility's stud line" if generation <= 1
+               else f"out of her own {species} get, {generation} generations deep")
     o.db.physical_desc = (
-        f"A {variant} {term} — {tname}'s own get by the {species} line, inheriting "
-        f"nothing of her but the womb it grew in. Already restless, already learning "
-        f"the schedule it will keep, and the use it will be put to."
+        f"A {variant} {term}{gen_tag} — {tname}'s own get {lineage}, inheriting nothing "
+        f"of her but the womb it grew in. Already restless, already learning the "
+        f"schedule it will keep, and the use it will be put to."
     )
     # Track for cleanup so the reset removes the whole brood.
     items = list(getattr(target.db, "facility_items", None) or [])
     items.append(o.dbref)
     target.db.facility_items = items
 
+    born = (f"After enough of the {species} line, {tname} drops a {variant} {term}"
+            if generation <= 1 else
+            f"Her own {species} get breeds true, and {tname} drops a {variant} {term}{gen_tag}")
     room.msg_contents(
-        f"|RAfter enough of the {species} line, {tname} drops a {variant} {term} — its "
-        f"get, not hers. It's logged, tagged, and added to the roster. In time it will "
-        f"breed her too, and the line will breed itself through her.|n"
+        f"|R{born} — its get, not hers. It's logged, tagged, and added to the roster. "
+        f"In time it will breed her too, and the line will breed itself through her, "
+        f"deeper every generation.|n"
     )
 
 
