@@ -101,6 +101,9 @@ def gang_inseminate(target, zone_name, contributors=3,
     except Exception:
         pass
 
+    # Stretch the hole — and past a point it stays stretched, permanently.
+    add_gape(target, zone_name, random.uniform(0.6, 1.6))
+
     return donors
 
 
@@ -286,6 +289,44 @@ def _birth_offspring(target, species, generation=1):
         f"In time it will breed her too, and the line will breed itself through her, "
         f"deeper every generation.|n"
     )
+
+
+GAPE_PERMANENT_AT = 18.0
+
+
+def add_gape(target, zone_name, amount):
+    """Stretch a hole with use. Past a threshold it gapes permanently — a mark."""
+    if not target or not zone_name:
+        return
+    gape = dict(getattr(target.db, "gape", None) or {})
+    g = float(gape.get(zone_name, 0.0)) + float(amount)
+    gape[zone_name] = g
+    target.db.gape = gape
+    perm = list(getattr(target.db, "permanent_gape", None) or [])
+    if g >= GAPE_PERMANENT_AT and zone_name not in perm:
+        perm.append(zone_name)
+        target.db.permanent_gape = perm
+        disp = zone_name.split("/")[-1].replace("_", " ")
+        marks = list(getattr(target.db, "facility_brands", None) or [])
+        marks.append(f"her {disp} stretched permanently slack and gaping — it won't close right again")
+        target.db.facility_brands = marks
+        if target.location:
+            tname = target.db.rp_name or target.name
+            target.location.msg_contents(
+                f"|R{tname}'s {disp} has been used past the point of recovery — it stays open "
+                f"now, slack and gaping and dripping, ruined for good and logged as an "
+                f"improvement.|n")
+
+
+def gape_word(target, zone_name):
+    """A descriptor for a hole's current state, for prose."""
+    g = float((getattr(target.db, "gape", None) or {}).get(zone_name, 0.0))
+    if zone_name in (getattr(target.db, "permanent_gape", None) or []):
+        return "permanently gaping"
+    if g >= 12: return "gaping"
+    if g >= 6:  return "stretched loose"
+    if g >= 2:  return "used and puffy"
+    return "tight"
 
 
 def summarize_quota(target):

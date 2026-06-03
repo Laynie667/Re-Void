@@ -528,6 +528,11 @@ def run_facility_reset(caller, purge=False):
             res = search_object(dbref, exact=True)
             if res:
                 obj = res[0]
+                # Delete anything installed on/carried by the object too (e.g. a
+                # beast's penis/knot anatomy items), so nothing orphans.
+                for sub in list(getattr(obj, "contents", []) or []):
+                    try: sub.delete()
+                    except Exception: pass
                 for m in ("uninstall", "remove"):
                     if hasattr(obj, m):
                         try: getattr(obj, m)()
@@ -597,6 +602,9 @@ def run_facility_reset(caller, purge=False):
     caller.db.offspring_counts          = None
     caller.db.facility_signed           = False
     caller.db.drug_dependence           = 0
+    caller.db.gape                      = None
+    caller.db.bladder_ml                = 0.0
+    caller.db.lactation_locked          = False
 
     # Stop perpetual heat and clear the flag.
     caller.db.perpetual_heat = False
@@ -650,6 +658,7 @@ def run_facility_reset(caller, purge=False):
         caller.db.aura_dimmed            = False
         caller.db.facility_brand         = None
         caller.db.facility_brands        = []
+        caller.db.permanent_gape         = []
         tail = "Purged. Nothing kept — restored to true baseline."
     else:
         # Normal reset: she walks out, but she does not walk out clean.

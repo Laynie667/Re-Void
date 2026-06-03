@@ -224,6 +224,91 @@ _SPECIES_BREED = {
     ],
 }
 
+# Oral use — mouth/throat. Paragraph-length, explicit.
+_ORAL_BEATS = [
+    "A handler fists {t}'s hair and hauls her head back, and the next animal is lined "
+    "up with her open mouth — there's no asking, just the blunt push past her lips and "
+    "then deeper, into her throat, until her nose is in fur and she's gagging around "
+    "something far too big to swallow. It fucks her face on the same indifferent "
+    "schedule as everything else, balls slapping her chin, and when it finishes it does "
+    "it down her throat, holding her nose so she has to take every drop before she's "
+    "allowed to cough. Her throat's logged as another working hole.",
+    "They feed the next load to {t} the short way — cock shoved down her throat, hips "
+    "snapping, her swallowing on reflex around it while it pumps straight into her gut. "
+    "She's used at both ends on rotation now, and her own gagging is just one more wet "
+    "sound the room doesn't react to.",
+]
+
+# All-holes aggressive moments — mouth, pussy, and ass at once. Brutal.
+_ALLHOLE_BEATS = [
+    "It all happens at once this time. {t} is hauled up and stuffed from every side — "
+    "one animal rutting into her cunt, another forcing into her ass, a third fucking "
+    "down her throat — until she's airtight, skewered on three cocks at once with no "
+    "hole left to call her own, no breath that isn't shared with whatever's using her "
+    "mouth. They don't coordinate; they just take, all of them, the rhythm a brutal "
+    "uneven hammering that lifts her off the cradle. And when they finish they finish "
+    "together, flooding all three of her holes at the same moment, pumping her so full "
+    "from both ends that it backs up out of everything at once. Every count on the "
+    "board ticks up. She is, for that long minute, nothing but a thing being filled.",
+    "The handlers stop pretending it's one at a time. {t} is mounted front and back "
+    "and her head's dragged onto a third, and then she's just a hole-on-each-end held "
+    "in place and fucked raw in three places at once — cunt, ass, throat — stretched "
+    "and gagging and leaking, the animals rutting into her with no regard for the body "
+    "between them. They breed all three of her at the same time and leave her airtight, "
+    "stuffed, dripping from every hole, and already logged for the next round.",
+]
+
+# Double penetration — two in one hole.
+_DOUBLE_BEATS = [
+    "Two of them crowd up at once and force into the same hole — {t}'s cunt stretched "
+    "obscenely wide around both at the same time, the rims of her straining white as she "
+    "takes far more than she was built to. They don't take turns; they rut into her "
+    "together, grinding against each other inside her, splitting her open wider with "
+    "every shove until she's just a seam barely holding around them — and then they "
+    "flood her at once, double the load packed into a hole already too full.",
+    "They double up on her ass this time, two cocks wedged into the one hole, forcing it "
+    "gaping and slack as they piston into {t} together. She's stretched past sense, "
+    "stuffed and split and drooling, and they breed her ass in tandem until it won't "
+    "close around the gush they leave behind.",
+]
+
+# Bukkake — many finishing on her, outside, to mark and humiliate.
+_BUKKAKE_BEATS = [
+    "They line up around {t} instead of in her this time. One after another the "
+    "handlers and the stock finish on her face, her tits, her open waiting mouth — rope "
+    "after rope of it until she's dripping, plastered, painted in it, blinking through "
+    "what won't wipe off. She's made to kneel there and take it as decoration, a "
+    "surface to be marked, while the count of who's used her climbs and the attendant "
+    "notes that she's presenting nicely for it.",
+    "A dozen of them ring {t} and jerk off onto her, aiming for her face, and she's "
+    "ordered to keep her eyes up and her mouth open and thank each one. By the end she's "
+    "a glazed, dripping mess, cum sliding off her chin in strings, and the room treats "
+    "the state of her as the expected result of a job done right.",
+]
+
+# Golden showers / watersports — used as a toilet, humiliation.
+_GOLDEN_BEATS = [
+    "The handler unzips and pisses on {t} without ceremony — across her face, into her "
+    "open mouth, down her tits — and a couple of the others join in, hosing her down "
+    "where she kneels until she's soaked and reeking and dripping. She's a drain to "
+    "them, a place to empty, and she's made to hold her mouth open for the stream and "
+    "swallow what lands in it. \"Good toilet,\" someone says, and zips up.",
+    "They water the stock. {t} is hosed in piss from more than one of them at once, hot "
+    "and stinking, told to open wide and take a mouthful, and left dripping and "
+    "humiliated in the puddle of it while the cycle rolls on like nothing happened.",
+]
+
+# Bladder desperation / forced wetting — they don't let livestock up to piss.
+_WETTING_BEATS = [
+    "{t} can't hold it any longer — and there's no one going to let her up, no break "
+    "coming, so it just happens, hot and humiliating, soaking the cradle and running "
+    "down her thighs while she sobs through it. The attendant glances over, notes the "
+    "puddle as output, and hoses the station down around her without a word.",
+    "Held too long and ignored on purpose, {t}'s body finally gives and she wets "
+    "herself where she's restrained, the warmth spreading under her, the shame of it "
+    "sharper than anything the machines do. It's logged. Of course it's logged.",
+]
+
 _DEEP_LINES = [
     "{t} has stopped tracking how long. That, more than anything, is the point.",
     "Whatever {t} meant to hold onto is quieter now than it was an hour ago.",
@@ -532,6 +617,18 @@ class FacilityScript(DefaultScript):
                     "|G  the pause is the worst part now — your body claws for the next dose, "
                     "the craving louder than any thought, and you'd take anything to make it "
                     "the milk phase again.|n")
+            # Bladder fills across the cycle; they never let livestock up to piss.
+            bl = float(getattr(target.db, "bladder_ml", 0) or 0) + random.uniform(150, 320)
+            if bl >= 700:
+                target.db.bladder_ml = 0.0
+                room.msg_contents("|y" + random.choice(_WETTING_BEATS).format(t=t) + "|n")
+            else:
+                target.db.bladder_ml = bl
+                if bl >= 400:
+                    target.msg(
+                        "|y  your bladder aches, full to bursting and ignored — there's no "
+                        "break coming, no one's going to let you up, and holding it is just one "
+                        "more thing being done to you.|n")
             contract = self._contract()
             signed = getattr(target.db, "facility_signed", False) or (contract and contract.db.signed)
             if contract is not None and not signed:
@@ -801,48 +898,201 @@ class FacilityScript(DefaultScript):
             f"afterward her mouth is shaped for sounds rather than words, the language drained out "
             f"of her a little more. (speech filtered)|n")
 
-    def _gang(self, room, target, t, cond):
+    # ── Orifices / breeders ──
+    def _orifices(self, target):
+        zones = getattr(target.db, "zones", None) or {}
+        found = [zn for zn in zones if any(k in zn.lower() for k in
+                 ("pussy", "cunt", "vagina", "anus", "asshole", "mouth", "throat"))]
+        return found or ([self.db.orifice_zone] if self.db.orifice_zone else [])
+
+    def _holes_only(self, target):
+        return [z for z in self._orifices(target) if not self._is_oral(z)]
+
+    def _is_oral(self, zone):
+        return any(k in zone.lower() for k in ("mouth", "throat"))
+
+    def _find_breeder(self, room, species):
+        cands = [o for o in room.contents if getattr(o.db, "facility_role", None) == "beast"]
+        match = [o for o in cands if getattr(o.db, "species", None) == species]
+        pool = match or cands
+        return random.choice(pool) if pool else None
+
+    def _provision_beast(self, npc, species):
+        """Build the NPC with real anatomy: a shaft zone + penis (+ knot for canines)."""
+        if not npc or getattr(npc.db, "facility_anatomy", False):
+            return
         try:
-            from world.gang_breeding import gang_inseminate
+            from evennia.utils import create
+            from typeclasses.body_mod_item import BodyModItem
         except Exception:
             return
-        # Pick which kind is breeding her — prefer species still short of quota.
-        species = self._pick_species(target)
-        n = random.randint(2, 3 + int(cond // 30))
-        gang_inseminate(target, self.db.orifice_zone, contributors=n,
-                        fluid_type=self.db.fluid_type or "semen", species=species)
-
-        # If her own grown get of this line is on the roster, sometimes IT breeds her.
-        offspring = [o for o in room.contents
-                     if getattr(o.db, "is_offspring", False)
-                     and getattr(o.db, "species", None) == species]
-        if offspring and random.random() < 0.4:
-            ob = random.choice(offspring)
-            gen = int(getattr(ob.db, "generation", 1) or 1)
-            # Steep penalty: her own get breeding her inflates the very quota it
-            # serves — and steeper the deeper the generation.
-            penalty = 0
-            q = getattr(target.db, "breeding_quota", None)
-            if q and species in q:
-                penalty = random.randint(4, 9) + (gen - 1) * 3
-                e = dict(q[species]); e["required"] = int(e.get("required", 0)) + penalty
-                q[species] = e
-                target.db.breeding_quota = q
-            # And it can get her with the NEXT generation.
+        zones = dict(getattr(npc.db, "zones", None) or {})
+        if "shaft" not in zones:
+            zones["shaft"] = {"zone_type": "shaft", "desc": "", "mechanics": {},
+                              "visibility": "look", "intimate": True,
+                              "covered_by": None, "contents": []}
+            npc.db.zones = zones
+        size = {"hound": 7.0, "bull": 13.0, "boar": 9.0, "stallion": 15.0}.get(species, 8.0)
+        try:
+            p = create.create_object(BodyModItem, key=f"{species} cock", location=npc)
+            p.db.mod_type = "penis"; p.db.size = size
+            p.install(npc, "shaft")
+        except Exception:
+            pass
+        if species == "hound":
             try:
-                from world.gang_breeding import maybe_lineage_offspring
-                maybe_lineage_offspring(target, species, gen)
+                from typeclasses.knot_item import KnotItem
+                k = create.create_object(KnotItem, key="knot", location=npc)
+                if hasattr(k, "install"):
+                    k.install(npc, "shaft")
             except Exception:
                 pass
-            room.msg_contents(
-                f"|r{ob.key} — {t}'s own get by the {species} line — mounts the bitch that "
-                f"bore it and breeds her in turn. The roster has closed its loop... and the "
-                f"{species} quota climbs by {penalty} for it. The loop doesn't just grow — "
-                f"it moves the finish line further every time it turns.|n"
-            )
-        else:
-            pool = _SPECIES_BREED.get(species, _SPECIES_BREED["contributor"])
-            room.msg_contents("|r" + random.choice(pool).format(t=t) + "|n")
+        npc.db.facility_anatomy = True
+
+    def _real_penetrate(self, room, npc, target, zone, species):
+        """Drive the actual penetration engagement — real arousal, knot, womb-notify."""
+        if not npc:
+            return
+        self._provision_beast(npc, species)
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(target)
+        except Exception:
+            return
+        npc.db.penetrating = {"target_dbref": target.dbref, "zone_name": zone, "caller_zone": "shaft"}
+        for _ in range(random.randint(3, 6)):
+            try: add_arousal(target, 5.0)
+            except Exception: pass
+            try:
+                from typeclasses.knot_item import try_trigger_knot
+                try_trigger_knot(npc, target, "shaft", room)
+            except Exception: pass
+        try:
+            from typeclasses.womb_room import WombRoom
+            from evennia import search_object
+            mech = ((getattr(target.db, "zones", None) or {}).get(zone) or {}).get("mechanics") or {}
+            wr = mech.get("womb_room")
+            if wr:
+                res = search_object(wr.get("room_dbref", ""), exact=True)
+                if res and isinstance(res[0], WombRoom):
+                    res[0].notify_shaft_visible(npc, "shaft")
+        except Exception:
+            pass
+        npc.db.penetrating = None
+
+    def _breed_one(self, room, target, zone, species, cond, gape_mult=1.0):
+        """One real breeding of one hole: quota/offspring/deposit + real penetration."""
+        n = random.randint(2, 3 + int(cond // 30))
+        try:
+            from world.gang_breeding import gang_inseminate
+            gang_inseminate(target, zone, contributors=n, fluid_type="semen", species=species)
+        except Exception:
+            pass
+        oral = self._is_oral(zone)
+        npc = self._find_breeder(room, species)
+        if npc and not oral:
+            self._real_penetrate(room, npc, target, zone, species)
+        if gape_mult != 1.0:
+            try:
+                from world.gang_breeding import add_gape
+                add_gape(target, zone, random.uniform(0.6, 1.6) * (gape_mult - 1.0))
+            except Exception:
+                pass
+        return npc, oral
+
+    # ── Scene picker — the breeding phase rolls one of these each beat ──
+    def _gang(self, room, target, t, cond):
+        orifices = self._orifices(target)
+        if not orifices:
+            return
+        heat = getattr(target.db, "perpetual_heat", False)
+        scenes = ["single", "single", "single", "double", "bukkake", "golden", "offspring"]
+        if len([z for z in orifices if self._is_oral(z)]):
+            scenes.append("oral")
+        if len(orifices) >= 3 and (heat or random.random() < 0.5):
+            scenes += ["allholes", "allholes"]
+        getattr(self, f"_scene_{random.choice(scenes)}")(room, target, t, cond, orifices)
+
+    def _scene_single(self, room, target, t, cond, orifices):
+        zone = random.choice(self._holes_only(target) or orifices)
+        species = self._pick_species(target)
+        self._breed_one(room, target, zone, species, cond)
+        room.msg_contents("|r" + random.choice(_SPECIES_BREED.get(
+            species, _SPECIES_BREED["contributor"])).format(t=t) + "|n")
+
+    def _scene_oral(self, room, target, t, cond, orifices):
+        zone = next((z for z in orifices if self._is_oral(z)), None)
+        if not zone:
+            return self._scene_single(room, target, t, cond, orifices)
+        self._breed_one(room, target, zone, self._pick_species(target), cond, gape_mult=1.3)
+        room.msg_contents("|r" + random.choice(_ORAL_BEATS).format(t=t) + "|n")
+
+    def _scene_double(self, room, target, t, cond, orifices):
+        zone = random.choice(self._holes_only(target) or orifices)
+        species = self._pick_species(target)
+        # Two breeders, one hole — extra stretch.
+        self._breed_one(room, target, zone, species, cond, gape_mult=2.2)
+        self._breed_one(room, target, zone, self._pick_species(target), cond, gape_mult=2.2)
+        room.msg_contents("|r" + random.choice(_DOUBLE_BEATS).format(t=t) + "|n")
+
+    def _scene_allholes(self, room, target, t, cond, orifices):
+        used = []
+        holes = orifices[:]
+        random.shuffle(holes)
+        for zone in holes[:3]:
+            self._breed_one(room, target, zone, self._pick_species(target), cond, gape_mult=1.5)
+            used.append(zone)
+        room.msg_contents("|R" + random.choice(_ALLHOLE_BEATS).format(t=t) + "|n")
+
+    def _scene_bukkake(self, room, target, t, cond, orifices=None):
+        # External — no deposit inside; arousal + humiliation only.
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(target); add_arousal(target, 12.0)
+        except Exception:
+            pass
+        room.msg_contents("|R" + random.choice(_BUKKAKE_BEATS).format(t=t) + "|n")
+
+    def _scene_golden(self, room, target, t, cond, orifices=None):
+        # Watersports — urine deposit + humiliation; she's used as a drain.
+        for zone in self._orifices(target):
+            if self._is_oral(zone):
+                try:
+                    from typeclasses.insemination_item import do_inseminate
+                    do_inseminate(None, target, zone, {
+                        "source": "machine", "fluid_type": "urine",
+                        "volume_per_tick": random.uniform(150, 400), "ttl_hours": 6.0})
+                except Exception:
+                    pass
+                break
+        room.msg_contents("|y" + random.choice(_GOLDEN_BEATS).format(t=t) + "|n")
+
+    def _scene_offspring(self, room, target, t, cond, orifices):
+        species = self._pick_species(target)
+        offspring = [o for o in room.contents if getattr(o.db, "is_offspring", False)
+                     and getattr(o.db, "species", None) == species]
+        if not offspring:
+            return self._scene_single(room, target, t, cond, orifices)
+        zone = random.choice(self._holes_only(target) or orifices)
+        ob = random.choice(offspring)
+        gen = int(getattr(ob.db, "generation", 1) or 1)
+        self._breed_one(room, target, zone, species, cond, gape_mult=1.4)
+        penalty = 0
+        q = getattr(target.db, "breeding_quota", None)
+        if q and species in q:
+            penalty = random.randint(4, 9) + (gen - 1) * 3
+            e = dict(q[species]); e["required"] = int(e.get("required", 0)) + penalty
+            q[species] = e; target.db.breeding_quota = q
+        try:
+            from world.gang_breeding import maybe_lineage_offspring
+            maybe_lineage_offspring(target, species, gen)
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|r{ob.key} — {t}'s own get by the {species} line — mounts the bitch that bore "
+            f"it and breeds her in turn. The loop closes... and the {species} quota climbs "
+            f"by {penalty} for it. The line breeds itself through her, and the finish line "
+            f"only moves further away.|n")
 
     def _addendum(self, contract, target, t):
         """Clause 11: the facility amends the contract with new hidden pages."""
