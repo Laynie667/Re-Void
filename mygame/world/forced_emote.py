@@ -88,10 +88,18 @@ def forced_emote(char, text: str, emote_type: str = "pose"):
                 pass
 
     else:  # pose (default)
-        # Add period if needed
-        if text and not text.rstrip().endswith((".", "!", "?", "—", "...")):
-            text = text.rstrip() + "."
-        msg = f"{color}{name} {text}|n"
+        # Pool messages use {n} as a name token.
+        # If text contains {n}, resolve it — that IS the full pose.
+        # Otherwise prepend name as normal.
+        if "{n}" in text:
+            text = text.replace("{n}", name)
+            if not text.rstrip().endswith((".", "!", "?", "—", "...")):
+                text = text.rstrip() + "."
+            msg = f"{color}{text}|n"
+        else:
+            if text and not text.rstrip().endswith((".", "!", "?", "—", "...")):
+                text = text.rstrip() + "."
+            msg = f"{color}{name} {text}|n"
         if room:
             room.msg_contents(msg)
             try:
