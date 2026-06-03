@@ -119,6 +119,16 @@ class CmdWayback(MuxCommand):
     def func(self):
         caller = self.caller
 
+        # Navigation lock check (binding items)
+        try:
+            from world.binding_effects import check_navigation_allowed
+            ok, reason = check_navigation_allowed(caller)
+            if not ok:
+                caller.msg(reason)
+                return
+        except Exception:
+            pass
+
         # Find the stone/post in the current room
         hub_room = None
         for obj in caller.location.contents:

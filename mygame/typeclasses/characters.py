@@ -486,9 +486,27 @@ class Character(ObjectParent, DefaultCharacter):
         # ---------------------------------------------------------------
         self.db.wisp_mood_carry = True
 
+        # ---------------------------------------------------------------
+        # Binding effects state
+        # ---------------------------------------------------------------
+        self.db.navigation_locked      = False   # disables waystones/jump/home
+        self.db.room_bound             = None    # dbref of room; blocks movement
+        self.db.self_cmds_locked       = False   # prevents self-modify commands
+        self.db.say_locked_until       = 0       # unix timestamp; blocks say until
+        self.db.pet_trigger_sources    = []      # list of item dbrefs with pet triggers
+        self.db.binding_consent_backup = {}      # saved consent flags for auto_consent
+        self.db.outfit_camouflage      = ""      # active camouflage description
+
     def at_init(self):
         """Called every time the character loads into memory."""
         super().at_init()
+
+    def at_before_move(self, destination, **kwargs):
+        """Block movement if room_bound is active."""
+        if self.db.room_bound:
+            self.msg("|xStay. You cannot leave.|n")
+            return False
+        return super().at_before_move(destination, **kwargs)
 
     def msg(self, text=None, from_obj=None, session=None,
             options=None, **kwargs):
@@ -1348,6 +1366,14 @@ class Character(ObjectParent, DefaultCharacter):
                     plug_text = get_plug_append(self, zone_name)
                     if plug_text:
                         surface = f"{surface} {plug_text}" if surface else plug_text
+                except Exception:
+                    pass
+                # Append piercing descs for this zone
+                try:
+                    from typeclasses.piercing_item import get_piercing_appends
+                    piercing_text = get_piercing_appends(self, zone_name)
+                    if piercing_text:
+                        surface = f"{surface}  {piercing_text}" if surface else piercing_text
                 except Exception:
                     pass
 

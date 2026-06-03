@@ -526,6 +526,16 @@ class CmdSay(MuxCommand):
             self.msg("Say what?")
             return
 
+        # Say-lock check (pet trigger quiet effect)
+        try:
+            from world.binding_effects import check_say_allowed
+            ok, reason = check_say_allowed(char)
+            if not ok:
+                self.msg(reason)
+                return
+        except Exception:
+            pass
+
         name = _name(char)
         color = _mood_color(char)
         verb = char.db.say_verb or "says"
@@ -546,6 +556,13 @@ class CmdSay(MuxCommand):
                         obj.on_hear_say(char, text)
                     except Exception:
                         pass
+
+            # Pet trigger check — fires for bound characters led by this speaker
+            try:
+                from world.binding_effects import check_trigger
+                check_trigger(char, text, char.location)
+            except Exception:
+                pass
 
 
 # -------------------------------------------------------------------
@@ -1416,8 +1433,89 @@ class CmdExamine(MuxCommand):
 # Exports
 # -------------------------------------------------------------------
 
+class CmdSayTo(MuxCommand):
+    """
+    Speak directly to a specific character in the room.
+    Room-visible, but clearly directed — and fires pet triggers only for them.
+
+    Usage:
+      sayto <target> <message>
+
+    Examples:
+      sayto Laynie stay
+      sayto Laynie good girl.
+      sayto Ara heel.
+
+    The room sees: Name says to Target, "message."
+    Target sees the same with a directional cue.
+    Pet triggers (stay/heel/sit/quiet etc.) only fire for the named target.
+
+    See also: say, whisper
+    """
+
+    key     = "sayto"
+    locks   = "cmd:all()"
+    help_category = "RP"
+
+    def func(self):
+        char = self.caller
+        args = self.args.strip()
+
+        if not args:
+            self.msg('Usage: sayto <target> <message>')
+            return
+
+        # Say-lock check
+        try:
+            from world.binding_effects import check_say_allowed
+            ok, reason = check_say_allowed(char)
+            if not ok:
+                self.msg(reason)
+                return
+        except Exception:
+            pass
+
+        parts = args.split(None, 1)
+        if len(parts) < 2:
+            self.msg('Usage: sayto <target> <message>')
+            return
+
+        target_name, text = parts[0], parts[1].strip().strip('"').strip("'")
+        if not text:
+            self.msg("Say what?")
+            return
+
+        room   = char.location
+        target = char.search(target_name, location=room)
+        if not target:
+            return
+
+        name   = _name(char)
+        tname  = target.db.rp_name or target.name
+        color  = _mood_color(char)
+        verb   = char.db.say_verb or "says"
+
+        room_msg  = f'{color}{name} {verb} to {tname}, "{text}"|n'
+        self_msg  = f'{color}You {_second_person_verb(verb)} to {tname}, "{text}"|n'
+        recv_msg  = f'{color}{name} {verb} to you, "{text}"|n'
+
+        self.msg(self_msg)
+        target.msg(recv_msg)
+        if room:
+            room.msg_contents(room_msg, exclude=[char, target])
+            room.append_scene_log(name, room_msg)
+
+            # Pet triggers — targeted, only fires for the named target
+            try:
+                from world.binding_effects import check_trigger
+                check_trigger(char, text, room, target=target)
+            except Exception:
+                pass
+
+
 ALL_RP_CMDS = [
     CmdSay,
+    CmdSayTo,
     CmdPose,
     CmdEmote,
     CmdPmote,

@@ -1,0 +1,435 @@
+# world/item_catalog.yaml
+#
+# Item catalog for Re:Void.
+# Staff spawns items with:
+#   @py from world.item_loader import spawn_item; spawn_item(me, "metal_plug")
+#
+# Each entry defines all db attributes set on the item at creation.
+# typeclass must be the full dotted path.
+#
+# Fields common to all items:
+#   key           str    — display name
+#   desc          str    — brief description (held in inventory)
+#   typeclass     str    — typeclass path
+#   binding_effects dict — binding effect flags (optional)
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# PLUGS
+# typeclass: typeclasses.plug_item.PlugItem
+# ─────────────────────────────────────────────────────────────────────────────
+
+plugs:
+
+  plain_plug:
+    key: "Plain Plug"
+    desc: "A smooth silicone plug, modest in size. The base is flared and flat."
+    worn_desc: "A plain silicone plug fills the space — smooth, snug, unassuming."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  glass_plug:
+    key: "Glass Plug"
+    desc: "A solid glass plug, clear and heavy. Cold to the touch until worn."
+    worn_desc: "A glass plug — smooth and dense and notably heavier than expected."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  metal_plug:
+    key: "Metal Plug"
+    desc: "A polished steel plug, weighty and cold, with a flat jeweled base."
+    worn_desc: "A steel plug, dense and unyielding, seated firmly and going nowhere."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  knotted_plug:
+    key: "Knotted Plug"
+    desc: "A silicone plug with a pronounced swollen knot midway up the shaft."
+    worn_desc: "A knotted plug — the knot seated fully inside, wide and insistent."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  flared_plug:
+    key: "Flared Plug"
+    desc: "A plug with a dramatic equine flare head, broad and unmistakable."
+    worn_desc: "The flared plug fills the space completely — the flare spreading wide inside."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  inflatable_plug:
+    key: "Inflatable Plug"
+    desc: "A silicone plug with an internal bladder. Use with 'inflate' to expand it."
+    worn_desc: "An inflatable plug, seated inside — current fill level: {inflation}."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  spiral_plug:
+    key: "Spiral Plug"
+    desc: "A plug with deep corkscrew ridging along its length, porcine-inspired."
+    worn_desc: "A spiraled plug fills the space, its ridges pressing at every turn."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  tail_plug:
+    key: "Tail Plug"
+    desc: "A smooth plug with a long decorative tail attached to the base. Currently curled."
+    worn_desc: "A tail plug, the base seated and the tail hanging free behind."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  small_plug:
+    key: "Small Plug"
+    desc: "A slim, tapered plug — easy entry, stays in place without much effort."
+    worn_desc: "A small plug, barely noticeable but definitely there."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  large_plug:
+    key: "Large Plug"
+    desc: "A substantial plug — wide through the middle and not subtle about it."
+    worn_desc: "A large plug, filling the space thoroughly. The stretch is real."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  extreme_plug:
+    key: "Extreme Plug"
+    desc: "An oversized plug that makes no compromises. For the serious wearer."
+    worn_desc: "An extreme plug seated fully inside — the stretch past comfortable and into something else entirely."
+    typeclass: "typeclasses.plug_item.PlugItem"
+
+  vibrating_plug:
+    key: "Vibrating Plug"
+    desc: "A silicone plug with a small motor inside. Currently inert — vibration system pending."
+    worn_desc: "A vibrating plug, seated firmly inside. The motor is quiet for now."
+    typeclass: "typeclasses.plug_item.PlugItem"
+    extra:
+      vibrates: true   # flag for future vibration system
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COLLARS
+# typeclass: typeclasses.collar_item.CollarItem
+# ─────────────────────────────────────────────────────────────────────────────
+
+collars:
+
+  day_collar:
+    key: "Day Collar"
+    desc: "A thin leather band with a small silver ring — subtle enough to pass as jewelry."
+    worn_desc: "A thin leather day collar with a silver ring, sitting close around the throat."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+  training_collar:
+    key: "Training Collar"
+    desc: "A plain leather collar with a sturdy D-ring at the front. No frills."
+    worn_desc: "A plain training collar — leather, D-ring forward, functional."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+  posture_collar:
+    key: "Posture Collar"
+    desc: "A high, rigid leather collar that holds the chin up. Limits head movement."
+    worn_desc: "A posture collar forces the chin up and keeps it there. Head movement is limited."
+    typeclass: "typeclasses.collar_item.CollarItem"
+    extra:
+      posture_modifier: "chin lifted, head still"
+
+  metal_collar:
+    key: "Metal Collar"
+    desc: "A heavy steel collar with no visible clasp. It looks welded shut."
+    worn_desc: "A heavy steel collar — no clasp visible, no obvious way to remove it without help."
+    typeclass: "typeclasses.collar_item.CollarItem"
+    binding_effects:
+      lock_self_remove: true
+
+  latex_collar:
+    key: "Latex Collar"
+    desc: "A shiny black latex collar, close-fit and smooth."
+    worn_desc: "A latex collar, close and shiny, fitted snug around the throat."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+  lace_collar:
+    key: "Lace Collar"
+    desc: "A delicate lace collar — decorative, not restraining."
+    worn_desc: "A lace collar sits at the throat, decorative and light."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+  chain_collar:
+    key: "Chain Collar"
+    desc: "A collar made of fine metal links, cold and audible."
+    worn_desc: "A chain collar — each link cold against the skin, audible when the wearer moves."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+  spiked_collar:
+    key: "Spiked Collar"
+    desc: "A wide leather collar with blunt exterior spikes. Makes a statement."
+    worn_desc: "A spiked collar — leather, wide, spikes pointing outward. A statement piece."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+  ceremony_collar:
+    key: "Ceremony Collar"
+    desc: "A formal ownership collar, engraved and polished. Meant to be permanent."
+    worn_desc: "A ceremony collar — engraved, polished, worn close. The kind meant to stay."
+    typeclass: "typeclasses.collar_item.CollarItem"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LEASHES
+# typeclass: typeclasses.collar_item.LeashItem
+# ─────────────────────────────────────────────────────────────────────────────
+
+leashes:
+
+  leather_leash:
+    key: "Leather Leash"
+    desc: "A plain leather leash with a clip at one end."
+    worn_desc: "a leather leash"
+    typeclass: "typeclasses.collar_item.LeashItem"
+
+  chain_leash:
+    key: "Chain Leash"
+    desc: "A leash of fine metal links. Heavy and audible."
+    worn_desc: "a chain leash — each link cold, its sound marking every movement"
+    typeclass: "typeclasses.collar_item.LeashItem"
+
+  silk_ribbon:
+    key: "Silk Ribbon"
+    desc: "A length of silk ribbon knotted as a leash. Delicate but unmistakable."
+    worn_desc: "a silk ribbon — delicate, deliberate, wrapped from collar to hand"
+    typeclass: "typeclasses.collar_item.LeashItem"
+
+  magic_binding_leash:
+    key: "Magic-Binding Leash"
+    desc: "A leash that glows faintly with a cold light. Once attached, only the holder can release it."
+    worn_desc: "a luminous leash — the light of it trailing from collar to holder's hand, unbreakable from the wearing end"
+    typeclass: "typeclasses.collar_item.LeashItem"
+    binding_effects:
+      auto_consent: true
+      lock_navigation: true
+      lock_self_remove: true
+      lock_self_cmds: true
+      pet_triggers: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEARABLES / CAMOUFLAGE OUTFITS
+# typeclass: typeclasses.wearable_item.WearableItem
+# ─────────────────────────────────────────────────────────────────────────────
+
+wearables:
+
+  schoolgirl_uniform:
+    key: "Schoolgirl Uniform"
+    desc: "A plaid skirt, white blouse, and knee socks. Perfectly pressed."
+    worn_desc: "A plaid skirt, white blouse, knee socks. She looks the part entirely."
+    camouflage_desc: "She is wearing a schoolgirl uniform — plaid skirt, white blouse, knee socks pulled straight. She looks young and neat and entirely put together."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  maid_outfit:
+    key: "Maid Outfit"
+    desc: "A black dress with white apron and frilled headpiece. Crisp and proper."
+    worn_desc: "A maid's dress — black, white apron, frilled cap. Pressed perfectly."
+    camouflage_desc: "She is in a maid's uniform — black dress, white apron, frilled cap. Her hands are folded. She is waiting to be useful."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  latex_catsuit:
+    key: "Latex Catsuit"
+    desc: "A full-body latex suit, high gloss. Covers everything from neck to ankle."
+    worn_desc: "Head to ankle in latex — every curve mapped, nothing hidden, everything covered."
+    camouflage_desc: "She is wearing a full-body latex catsuit — high gloss, skin-tight, covering everything from the neck down. Every line is visible. Nothing is."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  simple_dress:
+    key: "Simple Dress"
+    desc: "A plain dress, unremarkable and modest. Nothing to see."
+    worn_desc: "A plain dress — nothing remarkable about it."
+    camouflage_desc: "She is wearing a simple dress. There is nothing particularly notable about it or about her, as far as casual observation goes."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  lab_coat:
+    key: "Lab Coat"
+    desc: "A white lab coat, buttoned to the collar. Clinical and professional."
+    worn_desc: "A white lab coat, buttoned, professional."
+    camouflage_desc: "She is wearing a white lab coat — buttoned closed, professional bearing. Nothing about her appearance invites closer attention."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  towel:
+    key: "Towel"
+    desc: "A bath towel wrapped around the body and tucked at the chest. Barely covering."
+    worn_desc: "A towel, tucked at the chest, covering the essentials and not much else."
+    camouflage_desc: "She is wrapped in a towel — tucked at the chest, barely long enough. She looks like she was interrupted mid-bath."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  fantasy_robe:
+    key: "Fantasy Robe"
+    desc: "A floor-length hooded robe in deep fabric. It covers everything completely."
+    worn_desc: "A floor-length hooded robe, everything from head to heel obscured."
+    camouflage_desc: "She is wearing a floor-length hooded robe — deep fabric, hood drawn forward, nothing visible beneath it."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  formal_dress:
+    key: "Formal Dress"
+    desc: "An elegant gown, floor-length, fitted at the waist."
+    worn_desc: "An elegant floor-length gown, fitted and formal."
+    camouflage_desc: "She is wearing a formal gown — floor-length, elegant, fitted at the waist. She looks composed and appropriate for any occasion."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  latex_nurse:
+    key: "Latex Nurse Uniform"
+    desc: "A latex nurse uniform — white, short skirt, red cross on the cap."
+    worn_desc: "A latex nurse uniform — white, fitted, short-skirted, cap in place."
+    camouflage_desc: "She is wearing a latex nurse uniform — white, fitted through the body, skirt short, red cross on the cap. Precise and clinical and unmistakable."
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+  harness:
+    key: "Body Harness"
+    desc: "A leather body harness — straps that frame without covering, decorating without hiding."
+    worn_desc: "A leather harness — straps at the shoulders, chest, and hips. Decorative. Nothing is covered."
+    camouflage_desc: ""
+    typeclass: "typeclasses.wearable_item.WearableItem"
+    default_zone: "body"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIERCINGS
+# typeclass: typeclasses.piercing_item.PiercingItem
+# ─────────────────────────────────────────────────────────────────────────────
+
+piercings:
+
+  simple_ear_ring:
+    key: "Simple Ear Ring"
+    desc: "A plain silver ring through the earlobe."
+    worn_desc: "A silver ring through the lobe."
+    default_zone: "ear"
+    slot: "left"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.0
+      display: true
+
+  nose_ring:
+    key: "Nose Ring"
+    desc: "A small gold ring through the left nostril."
+    worn_desc: "A small gold ring through the nostril."
+    default_zone: "face"
+    slot: "nose"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.0
+      display: true
+
+  nipple_ring_left:
+    key: "Nipple Ring"
+    desc: "A captive bead ring through the nipple. Cold and precise."
+    worn_desc: "A nipple ring — a captive bead ring, cold against the skin."
+    default_zone: "chest"
+    slot: "left"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.20
+      display: true
+
+  nipple_bar:
+    key: "Nipple Bar"
+    desc: "A straight bar through the nipple with small balls at each end."
+    worn_desc: "A nipple bar — straight, with small silver balls at each end."
+    default_zone: "chest"
+    slot: "bar"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.20
+      display: true
+
+  nipple_shield:
+    key: "Nipple Shield"
+    desc: "A decorative shield-style nipple piercing, ornate and visible."
+    worn_desc: "A nipple shield — decorative metalwork framing the nipple, impossible to miss."
+    default_zone: "chest"
+    slot: "shield"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.15
+      display: true
+
+  navel_ring:
+    key: "Navel Ring"
+    desc: "A curved bar through the navel with a dangling jewel."
+    worn_desc: "A curved navel bar with a small jewel that catches the light."
+    default_zone: "abdomen"
+    slot: "navel"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.05
+      display: true
+
+  clit_ring:
+    key: "Clit Ring"
+    desc: "A small captive ring through the clitoral hood. Discreet but present."
+    worn_desc: "A small ring through the hood — discreet, but felt with every movement."
+    default_zone: "groin"
+    slot: "hood"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.35
+      display: false
+
+  clit_bar:
+    key: "Clit Bar"
+    desc: "A straight bar through the clitoral hood. Very present."
+    worn_desc: "A bar through the hood — pressing just enough to be constantly noticed."
+    default_zone: "groin"
+    slot: "bar"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.40
+      display: false
+
+  labial_ring:
+    key: "Labial Ring"
+    desc: "A ring through one of the inner lips. Decorative and sensitive."
+    worn_desc: "A ring through the inner lip — delicate, present, reactive to attention."
+    default_zone: "groin"
+    slot: "labia"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.25
+      display: false
+
+  frenulum_bar:
+    key: "Frenulum Bar"
+    desc: "A bar through the frenulum, on the underside of the shaft. Increases sensitivity."
+    worn_desc: "A bar through the frenulum — present on every thrust, impossible to ignore."
+    default_zone: "groin"
+    slot: "frenulum"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.30
+      display: false
+
+  prince_albert:
+    key: "Prince Albert"
+    desc: "A ring entering the urethra and exiting through the frenulum. Classic."
+    worn_desc: "A PA ring — entering the tip, exiting beneath, heavy and unmistakable."
+    default_zone: "groin"
+    slot: "pa"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.30
+      display: false
+
+  apadravya:
+    key: "Apadravya"
+    desc: "A vertical bar through the head of the shaft — top to bottom."
+    worn_desc: "An apadravya — a vertical bar through the glans, top to bottom. Significant."
+    default_zone: "groin"
+    slot: "apadravya"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.35
+      display: false
+
+  nipple_chain:
+    key: "Nipple Chain"
+    desc: "A delicate chain connecting two nipple piercings. Requires both nipple piercings already worn."
+    worn_desc: "A fine chain connects the two nipple rings, swaying with every movement."
+    default_zone: "chest"
+    slot: "chain"
+    typeclass: "typeclasses.piercing_item.PiercingItem"
+    effect:
+      sensitivity: 0.10
+      display: true
+      linked: true   # visual connection between zones

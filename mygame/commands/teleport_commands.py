@@ -157,6 +157,17 @@ class CmdJump(Command):
             self.msg("Usage: jump <name> or jump #<dbref>")
             return
 
+        # Navigation lock check
+        if not char.is_superuser and not char.check_permstring("Admin"):
+            try:
+                from world.binding_effects import check_navigation_allowed
+                ok, reason = check_navigation_allowed(char)
+                if not ok:
+                    self.msg(reason)
+                    return
+            except Exception:
+                pass
+
         target, err = _find_target(char, args)
         if err:
             self.msg(err)

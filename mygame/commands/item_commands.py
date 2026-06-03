@@ -233,6 +233,13 @@ class CmdWear(Command):
             caller.msg(f"|x{reason}|n")
             return
 
+        # Apply binding effects if item has them
+        try:
+            from world.binding_effects import apply_effects
+            apply_effects(caller, item)
+        except Exception:
+            pass
+
         caller_name = caller.db.rp_name or caller.name
         zone_disp   = (item.db.worn_on_zone or "").replace("_", " ")
         caller.msg(f"|wYou put on {item.key}{'  on your ' + zone_disp if zone_disp else ''}.|n")
@@ -282,8 +289,25 @@ class CmdRemoveItem(Command):
         if isinstance(item, PlugItem):
             ok, reason = item.remove()
         elif isinstance(item, CollarItem):
+            # Check self-remove lock
+            try:
+                from world.binding_effects import check_self_remove_allowed
+                ok2, reason2 = check_self_remove_allowed(caller, item)
+                if not ok2:
+                    caller.msg(reason2)
+                    return
+            except Exception:
+                pass
             ok, reason = item.remove()
         elif isinstance(item, WearableItem):
+            try:
+                from world.binding_effects import check_self_remove_allowed
+                ok2, reason2 = check_self_remove_allowed(caller, item)
+                if not ok2:
+                    caller.msg(reason2)
+                    return
+            except Exception:
+                pass
             ok, reason = item.remove()
         else:
             caller.msg(f"|x{item.key} can't be removed that way.|n")
@@ -292,6 +316,13 @@ class CmdRemoveItem(Command):
         if not ok:
             caller.msg(f"|x{reason}|n")
             return
+
+        # Remove binding effects
+        try:
+            from world.binding_effects import remove_effects
+            remove_effects(caller, item)
+        except Exception:
+            pass
 
         caller_name = caller.db.rp_name or caller.name
         caller.msg(f"|wYou remove {item.key}.|n")
@@ -377,6 +408,13 @@ class CmdAttachLeash(Command):
             caller.msg(f"|x{reason}|n")
             return
 
+        # Apply binding effects to the leashed character
+        try:
+            from world.binding_effects import apply_effects
+            apply_effects(target, leash)
+        except Exception:
+            pass
+
         caller_name = caller.db.rp_name or caller.name
         target_name_disp = target.db.rp_name or target.name
         caller.msg(f"|wYou attach {leash.key} to {target_name_disp}'s collar.|n")
@@ -439,6 +477,14 @@ class CmdDetachLeash(Command):
         if not ok:
             caller.msg(f"|x{reason}|n")
             return
+
+        # Remove binding effects from leashed character
+        if target:
+            try:
+                from world.binding_effects import remove_effects
+                remove_effects(target, leash)
+            except Exception:
+                pass
 
         caller_name = caller.db.rp_name or caller.name
         caller.msg(f"|wYou detach {leash.key}.|n")
