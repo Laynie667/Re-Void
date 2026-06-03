@@ -215,6 +215,20 @@ def apply_effects(character, item):
     if effects.get("cum_receptacle"):
         character.db.cum_receptacle = True
 
+    # perpetual_heat — keeps her permanently in heat via a self-sustaining script
+    if effects.get("perpetual_heat"):
+        character.db.perpetual_heat = True
+        character.db.arousal_floor = max(float(getattr(character.db, "arousal_floor", 0) or 0), 45.0)
+        try:
+            from typeclasses.heat_script import HeatScript
+            running = any(isinstance(s, HeatScript) or getattr(s, "key", "") == "perpetual_heat"
+                          for s in character.scripts.all())
+            if not running:
+                from evennia.utils import create
+                create.create_script(HeatScript, obj=character, persistent=True, autostart=True)
+        except Exception:
+            pass
+
     # pet_triggers — mark which item is the trigger source
     if effects.get("pet_triggers"):
         sources = list(character.db.pet_trigger_sources or [])

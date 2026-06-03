@@ -47,6 +47,23 @@ def gang_inseminate(target, zone_name, contributors=3,
         entry["current"] = int(entry.get("current", 0)) + 1
         quota[species] = entry
         target.db.breeding_quota = quota
+        # Milestone: a species quota completing earns a permanent processing brand.
+        if entry["current"] == int(entry.get("required", 0)):
+            marks = list(getattr(target.db, "facility_brands", None) or [])
+            marks.append(f"a stamp marking the {species} quota met — healed, permanent")
+            target.db.facility_brands = marks
+            tname = target.db.rp_name or target.name
+            if target.location:
+                target.location.msg_contents(
+                    f"|RA brand is pressed into {tname}'s skin — the {species} quota, "
+                    f"met and marked. It does not come off.|n"
+                )
+
+    # Offspring — purely the stud's line (never anonymous contributors). Enough
+    # of one stud and she drops its get, which joins the roster and, in time,
+    # breeds her too.
+    if species in ("hound", "bull", "boar", "stallion"):
+        _maybe_offspring(target, species)
 
     # Route the combined volume into the zone as cumflation.
     total = volume_each * len(donors)
@@ -165,6 +182,64 @@ def quota_met(target):
         return False
     return all(int(v.get("current", 0)) >= int(v.get("required", 0))
                for v in quota.values())
+
+
+_OFFSPRING_TERM = {"hound": "pup", "bull": "calf", "boar": "piglet", "stallion": "foal"}
+_OFFSPRING_VARIANT = [
+    "leggy", "oversized", "pale", "dark-coated", "twin-born", "heavy-shouldered",
+    "quick", "feral", "golden-eyed", "silver-marked", "violet-eyed", "runtish-but-vicious",
+    "broad-skulled", "long-bodied", "early-maturing",
+]
+OFFSPRING_THRESHOLD = 8   # successful breedings of a stud line before she drops its get
+
+
+def _maybe_offspring(target, species):
+    prog = dict(getattr(target.db, "offspring_progress", None) or {})
+    prog[species] = int(prog.get(species, 0)) + 1
+    if prog[species] >= OFFSPRING_THRESHOLD:
+        prog[species] = 0
+        _birth_offspring(target, species)
+    target.db.offspring_progress = prog
+
+
+def _birth_offspring(target, species):
+    room = target.location
+    if not room:
+        return
+    try:
+        from typeclasses.facility_script import FacilityBeast
+        from evennia.utils import create
+    except Exception:
+        return
+    counts = dict(getattr(target.db, "offspring_counts", None) or {})
+    counts[species] = int(counts.get(species, 0)) + 1
+    target.db.offspring_counts = counts
+
+    variant = random.choice(_OFFSPRING_VARIANT)
+    term    = _OFFSPRING_TERM.get(species, "get")
+    tname   = target.db.rp_name or target.name
+    key     = f"a {variant} {species} {term}"
+
+    o = create.create_object(FacilityBeast, key=key, location=room)
+    o.db.rp_name       = key
+    o.db.facility_role = "beast"
+    o.db.species       = species
+    o.db.is_offspring  = True
+    o.db.physical_desc = (
+        f"A {variant} {term} — {tname}'s own get by the {species} line, inheriting "
+        f"nothing of her but the womb it grew in. Already restless, already learning "
+        f"the schedule it will keep, and the use it will be put to."
+    )
+    # Track for cleanup so the reset removes the whole brood.
+    items = list(getattr(target.db, "facility_items", None) or [])
+    items.append(o.dbref)
+    target.db.facility_items = items
+
+    room.msg_contents(
+        f"|RAfter enough of the {species} line, {tname} drops a {variant} {term} — its "
+        f"get, not hers. It's logged, tagged, and added to the roster. In time it will "
+        f"breed her too, and the line will breed itself through her.|n"
+    )
 
 
 def summarize_quota(target):

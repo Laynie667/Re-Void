@@ -23,6 +23,7 @@ def register_defiance(character, amount=1, reason=""):
         return
     cur = int(getattr(character.db, "defiance", 0) or 0) + int(amount)
     character.db.defiance = cur
+    character.db.compliance_streak = 0   # a slip breaks any earn-back streak
 
     # Every rule-break is punished immediately, clause or no clause.
     punish(character, reason=reason or "rule broken", severity=1)
@@ -111,13 +112,71 @@ def penalize_quota_shortfall(character):
     return True
 
 
-def register_compliance(character):
-    """Optional: a compliant act eases the defiance count slightly."""
+EARN_BACK_STREAK = 12   # compliant acts in a row (no slips) toward earning freedom back
+
+
+def register_compliance(character, reward=True):
+    """A compliant act: ease defiance, build the streak, sometimes reward — and
+    check whether forfeited freedom has been earned back."""
     if not character:
         return
     cur = int(getattr(character.db, "defiance", 0) or 0)
     if cur > 0:
         character.db.defiance = cur - 1
+    streak = int(getattr(character.db, "compliance_streak", 0) or 0) + 1
+    character.db.compliance_streak = streak
+
+    # Good-girl reward loop: compliance occasionally buys a brief, granted
+    # climax — which deepens conditioning. The relief is the leash.
+    if reward and random.random() < 0.3:
+        _grant_climax(character)
+
+    check_earn_back(character)
+
+
+def _grant_climax(character):
+    """Lift denial for one release — and rewire a little for the privilege."""
+    try:
+        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+        ensure_arousal_script(character)
+        add_arousal(character, 80.0)
+    except Exception:
+        pass
+    try:
+        from world.conditioning import deepen_on_climax
+        deepen_on_climax(character, 6.0)
+    except Exception:
+        pass
+    character.msg(
+        "|MGood girl. Permission — just this once.|n |xThe denial lifts exactly long "
+        "enough to let you fall, hard and grateful, and a little deeper than before. "
+        "The ease is the leash, and you take it every time.|n"
+    )
+
+
+def check_earn_back(character):
+    """If freedom was forfeited, restore it only when every quota is met AND a
+    long compliance streak is held with no slips. The hard in-fiction way out."""
+    if not getattr(character.db, "freedom_forfeited", False):
+        return False
+    try:
+        from world.gang_breeding import quota_met
+    except Exception:
+        return False
+    mq = getattr(character.db, "milk_quota", None)
+    milk_ok = (not mq) or int(mq.get("current", 0)) >= int(mq.get("required", 0))
+    streak  = int(getattr(character.db, "compliance_streak", 0) or 0)
+    if quota_met(character) and milk_ok and streak >= EARN_BACK_STREAK:
+        character.db.freedom_forfeited = False
+        character.db.facility_reset_locked_until = 0.0
+        character.msg(
+            "|gEvery quota met. Every test passed. Not one slip in a long, long "
+            "stretch. The board flips back: FREEDOM — RESTORED. The way out will "
+            "open to your hand again. Whether you still want it is your own problem "
+            "now, and you're not sure of the answer.|n"
+        )
+        return True
+    return False
 
 
 def forfeit_freedom(character):

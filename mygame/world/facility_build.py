@@ -81,8 +81,9 @@ _CONTRACT_HIDDEN = [
     "H18. The Resident's productivity, conditioning depth, and breeding count are recorded and displayed. |x— [logged and shown]|n",
     "H19. Breeding quota is set per species — hounds, bull, boar, stallion, and anonymous contributors — and processing continues until every count is met. |x— [per-species quota]|n",
     "H20. The Resident will meet a milk-production quota. Falling behind on any quota is penalized — heavier stimulation, deeper denial, a longer schedule, and a raised requirement. |x— [producer quota + shortfall penalties]|n",
-    "H21. Rule-breaks are punished on the spot. Repeated non-compliance, to the facility's count, FORFEITS THE RESIDENT'S FREEDOM — after which the easy way out does not open by her hand. |x— [punishments + freedom-forfeit clause]|n",
-    "H22. By signing, the Resident agrees she has read and accepted clauses she was not permitted to read — including this one. |x— [the catch]|n",
+    "H21. Rule-breaks are punished on the spot. Repeated non-compliance, to the facility's count, FORFEITS THE RESIDENT'S FREEDOM — after which the easy way out does not open by her hand. Freedom may be earned back only by meeting every quota and holding a long, unbroken record of compliance. |x— [punishments, freedom-forfeit, earn-back]|n",
+    "H22. The Resident is kept in perpetual heat for the term, and her offspring — got purely of facility stock — are facility property, added to the roster, and put to use, including upon the Resident. |x— [perpetual heat; offspring join the roster and breed her]|n",
+    "H23. The facility may amend this agreement by addendum at any time, including clauses the Resident is not shown. By signing she accepts all of them, present and future, read and unread. |x— [the contract writes itself]|n",
 ]
 
 _CONTRACT_TRIGGERS = [
@@ -123,6 +124,7 @@ _CONTRACT_BINDING = {
     "forfeit_name":           True,
     "lock_conditioning":      True,
     "cum_receptacle":         True,
+    "perpetual_heat":         True,
     "breeding_quota":         {"hound": 30, "bull": 12, "boar": 12,
                                "stallion": 10, "contributor": 80},
     "milk_quota":             40,
@@ -492,7 +494,20 @@ def run_facility_reset(caller, purge=False):
     caller.db.cum_receptacle            = False
     caller.db.defiance                  = 0
     caller.db.compliance_threshold      = 0
+    caller.db.compliance_streak         = 0
     caller.db.freedom_forfeited         = False
+    caller.db.offspring_progress        = None
+    caller.db.offspring_counts          = None
+
+    # Stop perpetual heat and clear the flag.
+    caller.db.perpetual_heat = False
+    try:
+        from typeclasses.heat_script import HeatScript
+        for s in list(caller.scripts.all()):
+            if isinstance(s, HeatScript) or getattr(s, "key", "") == "perpetual_heat":
+                s.stop()
+    except Exception:
+        pass
 
     # Restore consent.
     backup = getattr(caller.db, "facility_consent_backup", None)
@@ -518,6 +533,7 @@ def run_facility_reset(caller, purge=False):
         caller.db.pet_type               = None
         caller.db.aura_dimmed            = False
         caller.db.facility_brand         = None
+        caller.db.facility_brands        = []
         tail = "Purged. Nothing kept — restored to true baseline."
     else:
         # Normal reset: she walks out, but she does not walk out clean.

@@ -18,6 +18,7 @@ clears everything it has done, regardless of depth. That is the real safeword.
 """
 
 import random
+import time
 from evennia import DefaultScript
 from typeclasses.npc import NPC
 
@@ -303,7 +304,10 @@ class FacilityScript(DefaultScript):
             target.msg("|M" + random.choice(_PROCESS_VOICE) + "|n")
 
         # ── ONE anchored public beat (the spine of the tick) ──────────────
+        # Heat draws the animals — breeding lands far more often while in heat.
         breed_chance = 0.15 + cond / 400.0
+        if getattr(target.db, "perpetual_heat", False):
+            breed_chance += 0.25
         if self.db.orifice_zone and random.random() < breed_chance:
             self._gang(room, target, t, cond)        # breeding load lands
             used_hard = True
@@ -347,6 +351,16 @@ class FacilityScript(DefaultScript):
                     penalize_quota_shortfall(target)
                 except Exception:
                     pass
+            # Taking it without a fight is logged as compliance (earn-back + reward).
+            if used_hard and random.random() < 0.4:
+                try:
+                    from world.compliance import register_compliance
+                    register_compliance(target)
+                except Exception:
+                    pass
+            # The contract writes itself new hidden pages — clause 11 allows it.
+            if self.db.ticks % 30 == 0 and random.random() < 0.5:
+                self._addendum(contract, target, t)
             if getattr(target.db, "breeding_quota", None) and random.random() < 0.16:
                 target.msg("|m" + self._quota_board(target) + "|n")
 
@@ -370,8 +384,62 @@ class FacilityScript(DefaultScript):
         n = random.randint(2, 3 + int(cond // 30))
         gang_inseminate(target, self.db.orifice_zone, contributors=n,
                         fluid_type=self.db.fluid_type or "semen", species=species)
-        pool = _SPECIES_BREED.get(species, _SPECIES_BREED["contributor"])
-        room.msg_contents("|r" + random.choice(pool).format(t=t) + "|n")
+
+        # If her own grown get of this line is on the roster, sometimes IT breeds her.
+        offspring = [o for o in room.contents
+                     if getattr(o.db, "is_offspring", False)
+                     and getattr(o.db, "species", None) == species]
+        if offspring and random.random() < 0.4:
+            ob = random.choice(offspring)
+            # Steep penalty: her own get breeding her inflates the very quota it serves.
+            penalty = 0
+            q = getattr(target.db, "breeding_quota", None)
+            if q and species in q:
+                penalty = random.randint(4, 9)
+                e = dict(q[species]); e["required"] = int(e.get("required", 0)) + penalty
+                q[species] = e
+                target.db.breeding_quota = q
+            room.msg_contents(
+                f"|r{ob.key} — {t}'s own get by the {species} line — mounts the bitch that "
+                f"bore it and breeds her in turn. The roster has closed its loop... and the "
+                f"{species} quota climbs by {penalty} for it. The loop doesn't just grow — "
+                f"it moves the finish line further every time it turns.|n"
+            )
+        else:
+            pool = _SPECIES_BREED.get(species, _SPECIES_BREED["contributor"])
+            room.msg_contents("|r" + random.choice(pool).format(t=t) + "|n")
+
+    def _addendum(self, contract, target, t):
+        """Clause 11: the facility amends the contract with new hidden pages."""
+        choice = random.choice(["quota", "trigger", "extend"])
+        if choice == "quota":
+            q = getattr(target.db, "breeding_quota", None)
+            if q:
+                sp = random.choice(list(q.keys()))
+                e = dict(q[sp]); e["required"] = int(e.get("required", 0)) + random.randint(3, 8)
+                q[sp] = e; target.db.breeding_quota = q
+                contract.add_addendum(
+                    f"The {sp} quota is increased at the facility's discretion.", hidden=True)
+        elif choice == "trigger":
+            try:
+                from world.binding_effects import install_trigger
+                phrase = random.choice(["heel", "spread", "leak for me", "good breeder", "down, bitch"])
+                resp   = random.choice(["kneel", "leak", "blank"])
+                install_trigger(target, phrase, response=resp, strength=2, permanent=True)
+            except Exception:
+                pass
+            contract.add_addendum(
+                "A new conditioned response is installed in the Resident.", hidden=True)
+        else:
+            locked = float(getattr(target.db, "facility_reset_locked_until", 0) or 0)
+            if locked > time.time():
+                target.db.facility_reset_locked_until = locked + 12 * 3600.0
+            contract.add_addendum("The term of processing is extended.", hidden=True)
+        room = self.obj
+        if room:
+            room.msg_contents(
+                f"|mThe contract gains a page. {t} doesn't get to read this one either — "
+                f"clause 11 saw to that. Whatever it says, it's already true.|n")
 
     def _pick_species(self, target):
         quota = getattr(target.db, "breeding_quota", None)
