@@ -9,95 +9,95 @@
 plugs:
   plain_plug:
     key: "Plain Plug"
-    desc: "A smooth silicone plug, modest in size."
-    worn_desc: "A plain silicone plug fills the space — smooth, snug, unassuming."
+    desc: "A smooth silicone plug, modest in size — nothing flashy, just does the job."
+    worn_desc: "A plain silicone plug, seated snug and smooth. Unassuming, but you know it's there."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   glass_plug:
     key: "Glass Plug"
-    desc: "A solid glass plug, clear and heavy."
-    worn_desc: "A glass plug — smooth and dense and notably heavier than expected."
+    desc: "A solid glass plug, clear and heavier than it looks."
+    worn_desc: "A glass plug — smooth, dense, and a good deal heavier inside than you'd expect."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   metal_plug:
     key: "Metal Plug"
-    desc: "A polished steel plug with a flat jeweled base."
-    worn_desc: "A steel plug, dense and unyielding, seated firmly."
+    desc: "A polished steel plug with a flat, jeweled base."
+    worn_desc: "A steel plug, dense and unyielding, seated firm and slowly warming from the skin."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   knotted_plug:
     key: "Knotted Plug"
-    desc: "A silicone plug with a pronounced swollen knot."
-    worn_desc: "A knotted plug — the knot seated fully inside, wide and insistent."
+    desc: "A silicone plug swelling out to a fat, pronounced knot."
+    worn_desc: "A knotted plug — the knot seated fully inside, wide and insistent and impossible to forget."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   flared_plug:
     key: "Flared Plug"
-    desc: "A plug with a dramatic equine flare head."
-    worn_desc: "The flared plug fills the space completely — the flare spreading wide inside."
+    desc: "A plug with a dramatic equine flare to the head."
+    worn_desc: "The flared plug fills the space completely, the flare spreading them wide and holding them there."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   inflatable_plug:
     key: "Inflatable Plug"
-    desc: "A silicone plug with an internal bladder. Use 'inflate' to expand it."
-    worn_desc: "An inflatable plug, seated inside — current fill: {inflation}."
+    desc: "A silicone plug with an internal bladder. Use 'inflate' to pump it bigger."
+    worn_desc: "An inflatable plug, seated inside and stretching to fill — current fill: {inflation}."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   spiral_plug:
     key: "Spiral Plug"
-    desc: "A plug with deep corkscrew ridging, porcine-inspired."
-    worn_desc: "A spiraled plug fills the space, its ridges pressing at every turn."
+    desc: "A plug with deep corkscrew ridging, porcine-inspired and proud of it."
+    worn_desc: "A spiraled plug fills the space, its ridges dragging and pressing at every turn."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   tail_plug_fox:
     key: "Fox Tail Plug"
-    desc: "A plug with a bushy red fox tail attached to the base."
-    worn_desc: "A tail plug seated firmly; the fox tail hangs free behind."
+    desc: "A plug with a bushy red fox tail bouncing off the base."
+    worn_desc: "A tail plug seated firm, the fox tail swishing free behind every step."
     typeclass: "typeclasses.plug_item.PlugItem"
     default_zone: "groin"
 
   tail_plug_bunny:
     key: "Bunny Tail Plug"
-    desc: "A small smooth plug with a fluffy white puff tail."
-    worn_desc: "A bunny tail plug — the puff tail sits above the base, soft and white."
+    desc: "A small, smooth plug topped with a fluffy white puff of a tail."
+    worn_desc: "A bunny tail plug — the puff sits soft and white above the base, twitching with every move."
     typeclass: "typeclasses.plug_item.PlugItem"
     default_zone: "groin"
 
   tail_plug_equine:
     key: "Horse Tail Plug"
-    desc: "A large plug with a long flowing horse tail attached."
-    worn_desc: "A horse tail plug — large base seated, the tail cascading behind."
+    desc: "A large plug with a long, flowing horse tail trailing from it."
+    worn_desc: "A horse tail plug — the big base seated deep, the tail cascading down behind."
     typeclass: "typeclasses.plug_item.PlugItem"
     default_zone: "groin"
 
   small_plug:
     key: "Small Plug"
-    desc: "A slim tapered plug — easy entry."
-    worn_desc: "A small plug, barely noticeable but definitely there."
+    desc: "A slim, tapered plug — slips in easy."
+    worn_desc: "A small plug, barely a stretch but very much there."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   large_plug:
     key: "Large Plug"
-    desc: "A substantial plug — wide through the middle."
-    worn_desc: "A large plug filling the space thoroughly. The stretch is real."
+    desc: "A substantial plug, wide through the middle and not shy about it."
+    worn_desc: "A large plug filling them thoroughly. The stretch is real and constant."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   extreme_plug:
     key: "Extreme Plug"
-    desc: "An oversized plug that makes no compromises."
-    worn_desc: "An extreme plug seated fully — the stretch past comfortable and into something else."
+    desc: "An oversized plug that makes absolutely no compromises."
+    worn_desc: "An extreme plug seated to the hilt — the stretch is well past comfortable and into something else entirely."
     typeclass: "typeclasses.plug_item.PlugItem"
 
   vibrating_plug:
     key: "Vibrating Plug"
-    desc: "A silicone plug with a small motor inside. Requires a remote control."
-    worn_desc: "A vibrating plug, seated firmly."
+    desc: "A silicone plug with a little motor humming inside. Needs a remote to drive it."
+    worn_desc: "A vibrating plug, seated firm and waiting for someone's thumb on the remote."
     typeclass: "typeclasses.vibration_item.VibratingPlugItem"
 
   vibrating_egg:
     key: "Vibrating Egg"
-    desc: "A smooth egg-shaped vibrating insert. Controlled remotely."
-    worn_desc: "A vibrating egg settled inside — quiet for now."
+    desc: "A smooth, egg-shaped vibrating insert, run from a remote."
+    worn_desc: "A vibrating egg tucked away inside — quiet for now."
     typeclass: "typeclasses.vibration_item.VibratingPlugItem"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -106,66 +106,66 @@ plugs:
 collars:
   day_collar:
     key: "Day Collar"
-    desc: "A thin leather band with a small silver ring."
-    worn_desc: "A thin day collar with a silver ring, sitting close around the throat."
+    desc: "A thin leather band with a small silver ring — subtle, but it means something."
+    worn_desc: "A thin day collar with a silver ring, sitting close and quiet around the throat."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   training_collar:
     key: "Training Collar"
-    desc: "Plain leather, D-ring at front. No frills."
-    worn_desc: "A plain training collar — leather, D-ring forward."
+    desc: "Plain leather, D-ring at the front. No frills, no nonsense."
+    worn_desc: "A plain training collar — leather, D-ring forward, all business."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   posture_collar:
     key: "Posture Collar"
-    desc: "A high rigid collar that holds the chin up."
-    worn_desc: "A posture collar forces the chin up. Head movement is limited."
+    desc: "A high, rigid collar built to keep the chin up and the head still."
+    worn_desc: "A posture collar holds the chin up and the head still. There's no slouching out of this one."
     typeclass: "typeclasses.collar_item.CollarItem"
     binding_effects:
       forced_posture: "chin lifted, head still"
 
   metal_collar:
     key: "Metal Collar"
-    desc: "A heavy steel collar with no visible clasp."
-    worn_desc: "A heavy steel collar — no clasp visible."
+    desc: "A heavy steel collar with no clasp you can find."
+    worn_desc: "A heavy steel collar, no clasp in sight — once it's on, it's on."
     typeclass: "typeclasses.collar_item.CollarItem"
     binding_effects:
       lock_self_remove: true
 
   latex_collar:
     key: "Latex Collar"
-    desc: "A shiny black latex collar, close-fit."
-    worn_desc: "A latex collar, close and shiny, fitted snug."
+    desc: "A shiny black latex collar, close-fit and glossy."
+    worn_desc: "A latex collar, snug and shining, hugging the throat."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   lace_collar:
     key: "Lace Collar"
-    desc: "A delicate lace collar — decorative."
-    worn_desc: "A lace collar sits at the throat, light and decorative."
+    desc: "A delicate lace collar — pretty, decorative, all show."
+    worn_desc: "A lace collar sits light at the throat, soft and purely decorative."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   chain_collar:
     key: "Chain Collar"
-    desc: "A collar of fine metal links, cold and audible."
-    worn_desc: "A chain collar — each link cold, audible when the wearer moves."
+    desc: "A collar of fine metal links — cold to the touch and audible with every move."
+    worn_desc: "A chain collar, each link cold, chiming softly whenever the wearer shifts."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   spiked_collar:
     key: "Spiked Collar"
-    desc: "Wide leather with blunt exterior spikes."
-    worn_desc: "A spiked collar — leather, wide, spikes pointing outward."
+    desc: "Wide leather studded with blunt exterior spikes. All bark."
+    worn_desc: "A spiked collar — wide leather, blunt spikes bristling outward, more warning than weapon."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   ceremony_collar:
     key: "Ceremony Collar"
-    desc: "A formal ownership collar, engraved and polished."
-    worn_desc: "A ceremony collar — engraved, polished. The kind meant to stay."
+    desc: "A formal ownership collar, engraved and polished to a shine."
+    worn_desc: "A ceremony collar — engraved, gleaming. The kind that's meant to stay on for good."
     typeclass: "typeclasses.collar_item.CollarItem"
 
   puppy_collar:
     key: "Puppy Collar"
-    desc: "A sturdy leather collar with a tag and a D-ring. Very much a pet collar."
-    worn_desc: "A puppy collar, snug at the throat with a small dangling tag."
+    desc: "A sturdy leather collar with a tag and a D-ring. No mistaking what it's for."
+    worn_desc: "A puppy collar, snug at the throat, a little tag jingling at every step."
     typeclass: "typeclasses.collar_item.CollarItem"
     binding_effects:
       pet_triggers: true
@@ -175,8 +175,8 @@ collars:
 
   kitty_collar:
     key: "Kitty Collar"
-    desc: "A slim breakaway collar with a small bell."
-    worn_desc: "A kitty collar — slim, a tiny bell at the front, every movement announced."
+    desc: "A slim breakaway collar with a tiny bell that gives the game away."
+    worn_desc: "A kitty collar — slim, with a little bell up front that announces every single move."
     typeclass: "typeclasses.collar_item.CollarItem"
     binding_effects:
       pet_triggers: true
@@ -186,8 +186,8 @@ collars:
 
   pony_collar:
     key: "Pony Bit Collar"
-    desc: "A wide leather collar with a built-in bit. Pony play aesthetic."
-    worn_desc: "A pony collar with bit — wide leather, chin strap, posture forward."
+    desc: "A wide leather collar with a built-in bit. Full pony-play, no half measures."
+    worn_desc: "A pony collar with bit — wide leather, chin strap, the head held forward and proud."
     typeclass: "typeclasses.collar_item.CollarItem"
     binding_effects:
       pet_triggers: true
@@ -199,8 +199,8 @@ collars:
 
   hucow_collar:
     key: "Hucow Collar"
-    desc: "A wide leather collar with a cowbell. For the dairy herd."
-    worn_desc: "A wide hucow collar with a heavy cowbell that sounds with every movement."
+    desc: "A wide leather collar with a heavy cowbell. Welcome to the dairy herd."
+    worn_desc: "A wide hucow collar, the heavy cowbell clanking warm and dumb with every movement."
     typeclass: "typeclasses.collar_item.CollarItem"
     binding_effects:
       pet_triggers: true
@@ -212,7 +212,7 @@ collars:
 
   degrading_leather:
     key: "Worn Leather Collar"
-    desc: "A leather collar that's been through things. The stitching looks tired."
+    desc: "A leather collar that's clearly been through some things. The stitching's tired and so is the leather."
     lifespan_hours: 48.0
     base_stim: 1.5
     base_floor: 15.0
@@ -220,7 +220,7 @@ collars:
 
   degrading_silk:
     key: "Silk Collar"
-    desc: "A silk collar — beautiful, delicate, won't last."
+    desc: "A silk collar — gorgeous, delicate, and not built to last."
     lifespan_hours: 24.0
     base_stim: 1.0
     base_floor: 10.0
@@ -228,7 +228,7 @@ collars:
 
   degrading_chain:
     key: "Rusting Chain Collar"
-    desc: "A chain collar showing rust at the links. It'll hold — for a while."
+    desc: "A chain collar going to rust at the links. It'll hold a while yet — just don't push it."
     lifespan_hours: 72.0
     base_stim: 2.0
     base_floor: 20.0
@@ -240,40 +240,40 @@ collars:
 leashes:
   leather_leash:
     key: "Leather Leash"
-    desc: "A plain leather leash with a clip at one end."
+    desc: "A plain leather leash with a clip on the end. Does exactly what it says."
     worn_desc: "a leather leash"
     typeclass: "typeclasses.collar_item.LeashItem"
 
   chain_leash:
     key: "Chain Leash"
-    desc: "A leash of fine metal links. Heavy and audible."
-    worn_desc: "a chain leash — each link cold, its sound marking every movement"
+    desc: "A leash of fine metal links — heavy in the hand and loud in the room."
+    worn_desc: "a chain leash, each link cold, its rattle marking every step"
     typeclass: "typeclasses.collar_item.LeashItem"
 
   silk_ribbon:
     key: "Silk Ribbon"
-    desc: "A length of silk ribbon as a leash."
-    worn_desc: "a silk ribbon — delicate, deliberate, from collar to hand"
+    desc: "A length of silk ribbon, pressed into service as a leash."
+    worn_desc: "a silk ribbon — delicate and deliberate, running from collar to hand"
     typeclass: "typeclasses.collar_item.LeashItem"
 
   temp_leash_1h:
     key: "Temporary Leash (1h)"
-    desc: "A leash that dissolves after one hour."
-    worn_desc: "a leash that won't last — but it lasts long enough"
+    desc: "A leash that dissolves after an hour. Long enough to make a point."
+    worn_desc: "a leash that won't last — but it'll last long enough"
     ttl_hours: 1.0
     typeclass: "typeclasses.collar_item.LeashItem"
 
   temp_leash_4h:
     key: "Temporary Leash (4h)"
-    desc: "A leash that dissolves after four hours."
-    worn_desc: "a leash with a timer on it — four hours"
+    desc: "A leash with four hours on the clock before it gives out."
+    worn_desc: "a leash on a timer — four hours and counting"
     ttl_hours: 4.0
     typeclass: "typeclasses.collar_item.LeashItem"
 
   magic_binding_leash:
     key: "Magic-Binding Leash"
-    desc: "A glowing leash. Only the holder can release it."
-    worn_desc: "a luminous leash — unbreakable from the wearing end"
+    desc: "A faintly glowing leash. Only the one holding it can let go."
+    worn_desc: "a luminous leash — unbreakable from the wearing end, no matter how you pull"
     typeclass: "typeclasses.collar_item.LeashItem"
     binding_effects:
       auto_consent: true
@@ -285,8 +285,8 @@ leashes:
 
   puppy_leash:
     key: "Puppy Leash"
-    desc: "A cheerful leash with a paw print tag."
-    worn_desc: "a puppy leash — light, unmistakable in what it means"
+    desc: "A cheerful leash with a little paw-print tag. Unsubtle on purpose."
+    worn_desc: "a puppy leash — light, bright, and completely unmistakable in what it means"
     typeclass: "typeclasses.collar_item.LeashItem"
     binding_effects:
       pet_triggers: true
@@ -294,8 +294,8 @@ leashes:
 
   soul_binding_leash:
     key: "Soul-Binding Leash"
-    desc: "A leash that glows cold silver. It binds across all lives."
-    worn_desc: "a soul-binding leash — its light follows you everywhere you go"
+    desc: "A leash glowing cold silver. It binds across every life you'll ever live."
+    worn_desc: "a soul-binding leash — its cold light trailing you everywhere you go"
     typeclass: "typeclasses.collar_item.LeashItem"
     binding_effects:
       soul_bound: true
@@ -312,75 +312,75 @@ leashes:
 chastity:
   chastity_belt_leather:
     key: "Leather Chastity Belt"
-    desc: "A leather chastity belt, fitted around the hips with a flat front panel."
-    worn_desc: "A leather chastity belt, front panel sealed. Nothing gets through."
+    desc: "A leather chastity belt, fitted to the hips with a flat, sealed front panel."
+    worn_desc: "A leather chastity belt, front panel sealed tight. Nothing's getting through."
     typeclass: "typeclasses.chastity_item.ChastityBelt"
 
   chastity_belt_metal:
     key: "Metal Chastity Belt"
-    desc: "A steel chastity belt. Cold, heavy, thorough."
-    worn_desc: "A steel chastity belt fitted tight — cold at first, then warm from the body."
+    desc: "A steel chastity belt — cold, heavy, and thorough about it."
+    worn_desc: "A steel chastity belt fitted tight — cold at first, then warming sullenly from the skin."
     typeclass: "typeclasses.chastity_item.ChastityBelt"
     binding_effects:
       lock_self_remove: true
 
   chastity_belt_pink:
     key: "Pink Chastity Belt"
-    desc: "A glossy pink chastity belt. Cheerful about its purpose."
-    worn_desc: "A glossy pink chastity belt, buckled and bright."
+    desc: "A glossy pink chastity belt, downright cheerful about what it's doing to you."
+    worn_desc: "A glossy pink chastity belt, buckled bright and pleased with itself."
     typeclass: "typeclasses.chastity_item.ChastityBelt"
 
   chastity_belt_timed_8h:
     key: "Timed Chastity Belt (8h)"
-    desc: "A chastity belt with a timer lock. Releases in eight hours."
-    worn_desc: "A timed chastity belt — locked for eight hours."
+    desc: "A chastity belt with a timer lock. Eight hours, no early outs."
+    worn_desc: "A timed chastity belt — locked up for eight hours, like it or not."
     typeclass: "typeclasses.chastity_item.ChastityBelt"
     ttl_hours: 8.0
 
   chastity_belt_timed_24h:
     key: "Timed Chastity Belt (24h)"
-    desc: "A chastity belt locked for twenty-four hours."
-    worn_desc: "A timed chastity belt — locked for twenty-four hours."
+    desc: "A chastity belt locked down for a full twenty-four hours."
+    worn_desc: "A timed chastity belt — twenty-four hours on the clock and no key in reach."
     typeclass: "typeclasses.chastity_item.ChastityBelt"
     ttl_hours: 24.0
 
   chastity_cage_small:
     key: "Small Chastity Cage"
-    desc: "A compact cage for smaller shafts. Snug."
-    worn_desc: "A small chastity cage fitted tightly around the shaft."
+    desc: "A compact cage for smaller shafts. Snug doesn't quite cover it."
+    worn_desc: "A small chastity cage fitted tight around the shaft, leaving no room to grow."
     typeclass: "typeclasses.chastity_item.ChastiyCage"
 
   chastity_cage_standard:
     key: "Standard Chastity Cage"
-    desc: "A standard cage. Gets the job done."
-    worn_desc: "A standard chastity cage, fitted and locked."
+    desc: "A standard cage. Plain, dependable, and very much in the way."
+    worn_desc: "A standard chastity cage, fitted and locked, and not going anywhere."
     typeclass: "typeclasses.chastity_item.ChastiyCage"
 
   chastity_cage_metal:
     key: "Metal Chastity Cage"
-    desc: "A steel cage for the shaft. Cold, secure, unambiguous."
-    worn_desc: "A steel cage fitted over the shaft — cold and thorough."
+    desc: "A steel cage for the shaft — cold, secure, and completely unambiguous."
+    worn_desc: "A steel cage locked over the shaft, cold and thorough and impossible to ignore."
     typeclass: "typeclasses.chastity_item.ChastiyCage"
     binding_effects:
       lock_self_remove: true
 
   chastity_cage_pink:
     key: "Pink Chastity Cage"
-    desc: "A glossy pink cage. Humiliating in the nicest way."
-    worn_desc: "A glossy pink cage over the shaft. Unmissable."
+    desc: "A glossy pink cage. Humiliating in the nicest possible way."
+    worn_desc: "A glossy pink cage clamped over the shaft. Absolutely unmissable."
     typeclass: "typeclasses.chastity_item.ChastiyCage"
 
   chastity_cage_timed_8h:
     key: "Timed Chastity Cage (8h)"
-    desc: "A chastity cage locked for eight hours."
-    worn_desc: "A timed chastity cage. Eight hours."
+    desc: "A chastity cage locked for eight hours. The timer's the only key."
+    worn_desc: "A timed chastity cage. Eight hours, and the clock's not in a hurry."
     typeclass: "typeclasses.chastity_item.ChastiyCage"
     ttl_hours: 8.0
 
   chastity_cage_timed_48h:
     key: "Timed Chastity Cage (48h)"
-    desc: "A chastity cage locked for forty-eight hours."
-    worn_desc: "A timed chastity cage. Forty-eight hours."
+    desc: "A chastity cage locked for forty-eight long hours."
+    worn_desc: "A timed chastity cage. Forty-eight hours — settle in."
     typeclass: "typeclasses.chastity_item.ChastiyCage"
     ttl_hours: 48.0
 
@@ -390,12 +390,12 @@ chastity:
 remotes:
   standard_remote:
     key: "Remote Control"
-    desc: "A small device that controls a vibrating item. Requires pairing."
+    desc: "A small handset for driving a vibrating item. Pair it first."
     typeclass: "typeclasses.vibration_item.RemoteControlItem"
 
   long_range_remote:
     key: "Long Range Remote"
-    desc: "A remote control that works across any distance."
+    desc: "A remote that reaches a paired toy across any distance at all. No escaping it by walking away."
     typeclass: "typeclasses.vibration_item.RemoteControlItem"
     range_locked: false
 
@@ -405,88 +405,88 @@ remotes:
 wearables:
   schoolgirl_uniform:
     key: "Schoolgirl Uniform"
-    desc: "Plaid skirt, white blouse, knee socks. Perfectly pressed."
-    worn_desc: "A plaid skirt, white blouse, knee socks."
-    camouflage_desc: "She is wearing a schoolgirl uniform — plaid skirt, white blouse, knee socks. She looks young and neat."
+    desc: "Plaid skirt, white blouse, knee socks — pressed crisp and innocent-looking."
+    worn_desc: "A plaid skirt, white blouse, and knee socks, all very neat."
+    camouflage_desc: "She's in a schoolgirl uniform — plaid skirt, white blouse, knee socks. Young-looking and tidy, nothing out of place."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   maid_outfit:
     key: "Maid Outfit"
-    desc: "Black dress, white apron, frilled cap."
-    worn_desc: "A maid's dress — black, white apron, frilled cap."
-    camouflage_desc: "She is in a maid's uniform. Her hands are folded. She is waiting to be useful."
+    desc: "Black dress, white apron, frilled cap — the full set."
+    worn_desc: "A maid's dress, black with a white apron and a frilled little cap."
+    camouflage_desc: "She's in a maid's uniform, hands folded, waiting to be put to use."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   latex_catsuit:
     key: "Latex Catsuit"
-    desc: "Full-body latex, high gloss. Covers everything neck to ankle."
-    worn_desc: "Head to ankle in latex — every curve mapped."
-    camouflage_desc: "She is wearing a full-body latex catsuit. Everything visible. Nothing revealed."
+    desc: "Full-body latex, high gloss, neck to ankle — nothing left to the imagination except everything."
+    worn_desc: "Head to ankle in glossy latex, every curve mapped and on show."
+    camouflage_desc: "She's poured into a full-body latex catsuit. Everything on display; nothing actually revealed."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   simple_dress:
     key: "Simple Dress"
-    desc: "A plain, unremarkable dress."
-    worn_desc: "A plain dress. Nothing notable."
-    camouflage_desc: "She is wearing a simple dress. Nothing about her invites closer attention."
+    desc: "A plain, unremarkable dress. The whole point is that it isn't the point."
+    worn_desc: "A plain dress. Nothing about it asks for a second look."
+    camouflage_desc: "She's wearing a simple dress. Nothing about her invites a closer look."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   lab_coat:
     key: "Lab Coat"
-    desc: "A white lab coat, buttoned to the collar."
-    worn_desc: "A white lab coat, buttoned, professional."
-    camouflage_desc: "She is wearing a lab coat — buttoned closed, professional bearing."
+    desc: "A white lab coat, buttoned to the collar. Looks official enough."
+    worn_desc: "A white lab coat, buttoned and businesslike."
+    camouflage_desc: "She's in a lab coat, buttoned closed, all professional bearing."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   towel:
     key: "Towel"
-    desc: "A bath towel wrapped and tucked at the chest."
-    worn_desc: "A towel, tucked at the chest, covering the essentials."
-    camouflage_desc: "She is wrapped in a towel — barely long enough. Interrupted mid-bath."
+    desc: "A bath towel, wrapped and tucked at the chest. Barely."
+    worn_desc: "A towel, tucked at the chest, covering just the essentials and not a thing more."
+    camouflage_desc: "She's wrapped in a towel — barely long enough, clearly interrupted mid-bath."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   fantasy_robe:
     key: "Fantasy Robe"
-    desc: "A floor-length hooded robe. Covers everything."
-    worn_desc: "A floor-length hooded robe, everything obscured."
-    camouflage_desc: "She is wearing a floor-length hooded robe. Nothing visible beneath it."
+    desc: "A floor-length hooded robe that swallows everything underneath."
+    worn_desc: "A floor-length hooded robe, everything beneath it lost to the folds."
+    camouflage_desc: "She's in a floor-length hooded robe, nothing visible beneath it at all."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   formal_dress:
     key: "Formal Dress"
-    desc: "An elegant gown, floor-length, fitted at the waist."
-    worn_desc: "A floor-length gown, fitted and formal."
-    camouflage_desc: "She is wearing a formal gown — elegant, appropriate for any occasion."
+    desc: "An elegant floor-length gown, fitted at the waist and made to turn heads."
+    worn_desc: "A floor-length gown, fitted and formal and quietly expensive."
+    camouflage_desc: "She's in a formal gown — elegant, poised, dressed for any occasion."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   latex_nurse:
     key: "Latex Nurse Uniform"
-    desc: "Latex nurse uniform — white, short skirt, red cross cap."
-    worn_desc: "A latex nurse uniform, white and fitted."
-    camouflage_desc: "She is wearing a latex nurse uniform. Clinical and unmistakable."
+    desc: "A latex nurse uniform — white, short-skirted, red-cross cap. Bedside manner optional."
+    worn_desc: "A latex nurse uniform, white and fitted and gleaming."
+    camouflage_desc: "She's in a latex nurse uniform. Clinical, fitted, and completely unmistakable."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   harness:
     key: "Body Harness"
-    desc: "Leather straps that frame without covering."
-    worn_desc: "A leather harness — straps at shoulders, chest, hips. Nothing covered."
+    desc: "Leather straps that frame everything and cover nothing."
+    worn_desc: "A leather harness — straps crossing shoulders, chest, and hips, framing it all and hiding none of it."
     camouflage_desc: ""
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
 
   exhibition_collar_dress:
     key: "Exhibition Dress"
-    desc: "A dress that, despite appearances, puts everything on display."
-    worn_desc: "A dress that covers everything and hides nothing."
+    desc: "A dress that, for all its modest looks, leaves you on full display."
+    worn_desc: "A dress that covers everything and hides absolutely nothing."
     camouflage_desc: "She is wearing a dress."
     typeclass: "typeclasses.wearable_item.WearableItem"
     default_zone: "body"
@@ -499,8 +499,8 @@ wearables:
 piercings:
   nipple_ring:
     key: "Nipple Ring"
-    desc: "A captive bead ring through the nipple."
-    worn_desc: "A nipple ring — captive bead, cold against the skin."
+    desc: "A captive-bead ring through the nipple."
+    worn_desc: "A nipple ring — captive bead, cold against warm skin, tugged by every movement."
     default_zone: "chest"
     slot: "left"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -510,8 +510,8 @@ piercings:
 
   nipple_bar:
     key: "Nipple Bar"
-    desc: "A straight bar through the nipple."
-    worn_desc: "A nipple bar — straight, silver balls at each end."
+    desc: "A straight bar through the nipple, a silver ball at each end."
+    worn_desc: "A nipple bar — straight, with silver balls at each end that catch on everything."
     default_zone: "chest"
     slot: "bar"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -522,7 +522,7 @@ piercings:
   nipple_shield:
     key: "Nipple Shield"
     desc: "A decorative shield-style nipple piercing."
-    worn_desc: "A nipple shield — decorative metalwork framing the nipple."
+    worn_desc: "A nipple shield — ornate metalwork framing the nipple and showing it off."
     default_zone: "chest"
     slot: "shield"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -533,7 +533,7 @@ piercings:
   clit_ring:
     key: "Clit Ring"
     desc: "A small captive ring through the clitoral hood."
-    worn_desc: "A small ring through the hood — felt with every movement."
+    worn_desc: "A small ring through the hood — felt keenly with every single movement."
     default_zone: "groin"
     slot: "hood"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -543,7 +543,7 @@ piercings:
   clit_bar:
     key: "Clit Bar"
     desc: "A bar through the clitoral hood."
-    worn_desc: "A bar through the hood — pressing and constantly noticed."
+    worn_desc: "A bar through the hood — pressing constant, impossible to forget for a second."
     default_zone: "groin"
     slot: "bar"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -553,7 +553,7 @@ piercings:
   labial_ring:
     key: "Labial Ring"
     desc: "A ring through the inner lip."
-    worn_desc: "A labial ring — delicate, present, reactive."
+    worn_desc: "A labial ring — delicate, present, and quick to react to a touch."
     default_zone: "groin"
     slot: "labia"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -562,8 +562,8 @@ piercings:
 
   prince_albert:
     key: "Prince Albert"
-    desc: "A ring entering urethra and exiting at frenulum."
-    worn_desc: "A PA ring — entering the tip, exiting beneath, heavy."
+    desc: "A ring entering the urethra and exiting at the frenulum."
+    worn_desc: "A PA ring — in at the tip, out beneath, heavy and ever-present."
     default_zone: "groin"
     slot: "pa"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -572,8 +572,8 @@ piercings:
 
   apadravya:
     key: "Apadravya"
-    desc: "A vertical bar through the glans."
-    worn_desc: "An apadravya — vertical bar through the glans, top to bottom."
+    desc: "A vertical bar straight through the glans."
+    worn_desc: "An apadravya — a vertical bar through the glans, top to bottom, felt with everything."
     default_zone: "groin"
     slot: "apadravya"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -582,8 +582,8 @@ piercings:
 
   navel_ring:
     key: "Navel Ring"
-    desc: "A curved bar through the navel with a jewel."
-    worn_desc: "A curved navel bar with a small jewel."
+    desc: "A curved bar through the navel, set with a jewel."
+    worn_desc: "A curved navel bar, a small jewel winking at the belly."
     default_zone: "abdomen"
     slot: "navel"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -594,7 +594,7 @@ piercings:
   ear_ring:
     key: "Ear Ring"
     desc: "A plain silver ring through the earlobe."
-    worn_desc: "A silver ring through the lobe."
+    worn_desc: "A silver ring through the lobe, catching the light."
     default_zone: "ear"
     slot: "left"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -604,7 +604,7 @@ piercings:
   nose_ring:
     key: "Nose Ring"
     desc: "A small gold ring through the nostril."
-    worn_desc: "A gold ring through the nostril."
+    worn_desc: "A small gold ring through the nostril, bright against the skin."
     default_zone: "face"
     slot: "nose"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -613,8 +613,8 @@ piercings:
 
   nipple_chain:
     key: "Nipple Chain"
-    desc: "A chain connecting two nipple piercings."
-    worn_desc: "A fine chain connecting the two nipple rings, swaying with movement."
+    desc: "A fine chain strung between two nipple piercings."
+    worn_desc: "A fine chain linking the two nipple rings, swaying and tugging with every movement."
     default_zone: "chest"
     slot: "chain"
     typeclass: "typeclasses.piercing_item.PiercingItem"
@@ -628,7 +628,7 @@ piercings:
 aphrodisiacs:
   mild_aphrodisiac:
     key: "Mild Aphrodisiac"
-    desc: "A small vial. Something warm about it."
+    desc: "A small vial with something warm and insistent about it."
     variant: "personal"
     duration_hours: 2.0
     arousal_floor: 20.0
@@ -637,7 +637,7 @@ aphrodisiacs:
 
   strong_aphrodisiac:
     key: "Strong Aphrodisiac"
-    desc: "A larger vial. The warmth is obvious even holding it."
+    desc: "A larger vial — the warmth comes off it just holding the thing."
     variant: "personal"
     duration_hours: 4.0
     arousal_floor: 40.0
@@ -646,7 +646,7 @@ aphrodisiacs:
 
   room_candle:
     key: "Aphrodisiac Candle"
-    desc: "A candle that, when lit, releases something into the air."
+    desc: "A candle that, once lit, quietly fills the air with something."
     variant: "room"
     duration_hours: 2.0
     arousal_floor: 25.0
@@ -656,7 +656,7 @@ aphrodisiacs:
 
   wolf_bait_mild:
     key: "Wolf Bait (Mild)"
-    desc: "A vial of scent that anything with a nose will notice. Wolves especially."
+    desc: "A vial of scent that anything with a nose will catch. Wolves most of all."
     variant: "wolf_bait"
     duration_hours: 2.0
     arousal_floor: 30.0
@@ -665,7 +665,7 @@ aphrodisiacs:
 
   wolf_bait_strong:
     key: "Wolf Bait (Strong)"
-    desc: "A stronger wolf-bait variant. The scent is almost visible."
+    desc: "A stronger wolf-bait — the scent is so thick it's nearly visible."
     variant: "wolf_bait"
     duration_hours: 6.0
     arousal_floor: 50.0
@@ -678,8 +678,8 @@ aphrodisiacs:
 brands:
   temp_brand:
     key: "Temporary Brand"
-    desc: "A branding iron for temporary marks. Fades in 24 hours."
-    mark_desc: "A faint mark — fresh, warm, recent."
+    desc: "A branding iron for temporary marks. Fades inside a day."
+    mark_desc: "A faint mark — fresh, warm, and recent."
     durability: "temporary"
     ttl_hours: 24.0
     visibility: "intimate"
@@ -687,24 +687,24 @@ brands:
 
   permanent_brand:
     key: "Permanent Brand"
-    desc: "A branding iron for permanent marks."
-    mark_desc: "A mark that won't fade. Deliberate and lasting."
+    desc: "A branding iron for marks that stay."
+    mark_desc: "A mark that won't fade — deliberate and permanent."
     durability: "permanent"
     visibility: "mature"
     typeclass: "typeclasses.brand_item.BrandItem"
 
   soul_brand:
     key: "Soul Brand"
-    desc: "A brand that marks every version of someone."
-    mark_desc: "A mark that crosses lives — present on every character this player touches."
+    desc: "A brand that marks every version of someone, across every life."
+    mark_desc: "A mark that crosses lives — present on every character this player ever wears."
     durability: "soul_bound"
     visibility: "mature"
     typeclass: "typeclasses.brand_item.BrandItem"
 
   womb_tattoo_temp:
     key: "Womb Tattoo (Temp)"
-    desc: "A temporary tattoo applied to an orifice zone. Fades in 48h."
-    mark_desc: "A faint tattoo — intimate, placed deliberately."
+    desc: "A temporary tattoo for an orifice zone. Fades in 48h."
+    mark_desc: "A faint tattoo — intimate, placed with intent."
     durability: "temporary"
     ttl_hours: 48.0
     visibility: "mature"
@@ -713,8 +713,8 @@ brands:
 
   womb_tattoo_permanent:
     key: "Womb Tattoo (Permanent)"
-    desc: "A permanent tattoo for an orifice zone."
-    mark_desc: "A permanent tattoo, placed precisely. It will always be there."
+    desc: "A permanent tattoo for an orifice zone. There for good."
+    mark_desc: "A permanent tattoo, placed precisely. It's never coming off."
     durability: "permanent"
     visibility: "mature"
     default_zone: "groin"
@@ -722,8 +722,8 @@ brands:
 
   ownership_brand:
     key: "Ownership Brand"
-    desc: "A brand that marks ownership. Permanent and visible."
-    mark_desc: "An ownership brand — clean lines, deliberate placement."
+    desc: "A brand that marks ownership — permanent and meant to be seen."
+    mark_desc: "An ownership brand — clean lines, deliberate placement, no doubt about who's claimed."
     durability: "permanent"
     visibility: "casual"
     typeclass: "typeclasses.brand_item.BrandItem"
@@ -735,7 +735,7 @@ brands:
 contracts:
   standard_milking_contract:
     key: "Milking Contract"
-    desc: "A formal milking contract. Read the clauses before signing."
+    desc: "A formal milking contract. Read the clauses before you sign — they're binding."
     duration_hours: 24.0
     effect_arousal_floor: 20.0
     effect_stim_per_tick: 3.0
@@ -743,7 +743,7 @@ contracts:
 
   extended_milking_contract:
     key: "Extended Milking Contract"
-    desc: "A 72-hour milking contract with significant compounding effects."
+    desc: "A 72-hour milking contract with effects that stack up hard over time."
     duration_hours: 72.0
     effect_arousal_floor: 35.0
     effect_stim_per_tick: 6.0
@@ -755,7 +755,7 @@ contracts:
 permanent_collars:
   permanent_leather_puppy:
     key: "Permanent Puppy Collar"
-    desc: "A leather collar that holds its cracked state permanently. It will not break."
+    desc: "A leather collar locked in its cracked state for good. It will not break, ever."
     collar_variant: "leather_puppy"
     permanent_state: "cracked"
     beg_interval: 1800.0
@@ -770,7 +770,7 @@ permanent_collars:
 
   permanent_silk_kitty:
     key: "Permanent Kitty Collar"
-    desc: "A silk collar permanently frayed — it stayed."
+    desc: "A silk collar permanently frayed — it stayed on long past when it should've given out."
     collar_variant: "silk_kitty"
     permanent_state: "frayed"
     beg_interval: 1500.0
@@ -785,7 +785,7 @@ permanent_collars:
 
   permanent_hucow:
     key: "Permanent Hucow Collar"
-    desc: "A wide dairy collar that never falls off."
+    desc: "A wide dairy collar that simply never comes off."
     collar_variant: "hucow"
     permanent_state: "cracked"
     beg_interval: 1200.0
@@ -800,7 +800,7 @@ permanent_collars:
 
   soul_binding_collar:
     key: "Soul-Binding Collar"
-    desc: "A collar that glows cold at the edges. Its effects follow you everywhere you go."
+    desc: "A collar glowing cold at the edges. Its hold follows you everywhere, across every life."
     collar_variant: "leather_puppy"
     permanent_state: "cracked"
     beg_interval: 2400.0
