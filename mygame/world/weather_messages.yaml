@@ -17,25 +17,25 @@
 # ---------------------------------------------------------------------------
 
 time_desc:
-  dawn:      "The sky is lightening — the dark giving way to pale grey at the horizon."
-  morning:   "Morning light has settled, clear and direct, the day fully begun."
-  afternoon: "The afternoon holds its warmth without urgency. The light has begun its long slide."
-  dusk:      "The sun is pulling back. The light has gone amber at the edges."
-  evening:   "The sky has gone to deep blue and the first stars are present."
-  midnight:  "The deep hours. Nothing moves without purpose."
+  dawn:      "The sky's going light — the dark bleeding off toward pale grey at the horizon, slow and reluctant about it."
+  morning:   "Morning's settled in proper, the light clear and direct and the day well and truly started."
+  afternoon: "The afternoon holds onto its warmth, lazy about it, the light starting its long golden slide down the sky."
+  dusk:      "The sun's pulling back, the light gone amber and soft at the edges, everything warmer for a little while."
+  evening:   "The sky's deepened to dark blue and the first stars have come out to have a look."
+  midnight:  "The deep hours. The world's gone quiet and close, and nothing moves that doesn't mean to."
 
 # ---------------------------------------------------------------------------
 # Weather state descriptions — shown by the 'weather' command
 # ---------------------------------------------------------------------------
 
 weather_desc:
-  clear:      "The sky is clear overhead."
-  overcast:   "Cloud cover has come in — the sky a consistent pale grey."
-  rain:       "A rain is falling — steady, fine, settling in."
-  heavy_rain: "Heavy rain. The sound of it is constant and the visibility is reduced."
-  storm:      "A storm has moved in. The wind is working and the rain comes sideways."
-  fog:        "Fog. The visibility is low and the distances have disappeared."
-  snow:       "Snow is falling — slow, even, accumulating without noise."
+  clear:      "The sky's wide open overhead, clean and bright."
+  overcast:   "Cloud's rolled in — a low, even ceiling of pale grey, soft and close."
+  rain:       "Rain's falling, fine and steady, settling in to stay a while."
+  heavy_rain: "Heavy rain, loud and constant, dragging the far edges of the world out of view."
+  storm:      "A storm's moved in — the wind throwing its weight around and the rain coming in sideways."
+  fog:        "Fog. It's swallowed the distances whole and left the world close and hushed."
+  snow:       "Snow's coming down, slow and even, piling up soft and quiet on everything."
 
 # ---------------------------------------------------------------------------
 # Outdoor ambient messages — fired into rooms with db.is_outdoor = True
@@ -45,43 +45,43 @@ weather_desc:
 outdoor_ambient:
 
   clear:
-    - "The sky overhead is unobstructed. The light comes down clean."
-    - "A breeze moves through — slight, purposeless, carrying nothing."
-    - "The air is still and clear. A bird calls somewhere and does not repeat itself."
-    - "The open sky holds the light evenly. The shadows fall exactly where they should."
+    - "The sky's wide open overhead and the light pours down clean and warm."
+    - "A breeze drifts through, soft and aimless, just enough to stir the air."
+    - "The air's still and clear. A bird calls off somewhere and thinks better of doing it twice."
+    - "Open sky, even light, shadows pooling soft and exactly where they belong."
 
   overcast:
-    - "The cloud cover holds — the light diffuse, even, casting no shadows."
-    - "A grey sky. Not threatening, just present. The air is cool."
-    - "The clouds have come in and settled. The world is quieter under them."
+    - "The cloud holds — soft, even light with no shadow to it, the whole world gone gentle and grey."
+    - "A grey sky, low and close. Not menacing, just settled in, and the air's gone cool with it."
+    - "The clouds have come in and made themselves at home. Everything's quieter underneath them."
 
   rain:
-    - "The rain falls without drama — a fine, even pressure on every surface."
-    - "Light rain. The sound of it on the ground is constant and low."
-    - "A soft rain. The surfaces are dark with it and the air smells of wet earth."
-    - "The rain continues at its same pace, neither building nor stopping."
+    - "The rain comes down soft and even, a fine cool weight settling onto every surface."
+    - "Light rain, low and constant, whispering against the ground."
+    - "A soft rain. The world's gone dark and slick with it, and the air's rich with the smell of wet earth."
+    - "The rain keeps its pace, patient and unhurried, in no rush to build or quit."
 
   heavy_rain:
-    - "The rain is coming down hard. Everything beyond a few metres is indistinct."
-    - "Heavy rain. The sound of it is loud and the ground is running with water."
-    - "The downpour shows no sign of slowing. Moving through it requires intent."
+    - "The rain's hammering down now, dragging everything past a few metres into a grey blur."
+    - "Heavy rain, loud as anything, the ground running with it and the air thick and wet."
+    - "The downpour shows no mercy and no sign of slowing. Getting anywhere through it takes real want."
 
   storm:
-    - "A gust drives through — the kind that doesn't ask."
-    - "Lightning somewhere in the distance. The thunder arrives a few seconds later."
-    - "The storm has not lessened. The rain and wind work together against everything upright."
-    - "The light changes briefly — a flash — then returns to the grey-dark of the storm."
+    - "A gust slams through — the kind that doesn't bother asking first."
+    - "Lightning forks somewhere off in the dark, and the thunder comes rolling in a few heartbeats behind it."
+    - "The storm hasn't let up an inch. Wind and rain gang up on everything still standing."
+    - "The light flares white for a breath — then drops back into the heavy grey-dark of the storm."
 
   fog:
-    - "The fog has swallowed the distances. Nearby things are visible; beyond that, nothing."
-    - "The fog sits still and even. Sound carries strangely through it."
-    - "In the fog, the familiar becomes approximate — shapes rather than things."
+    - "The fog's eaten the distances whole. What's near you you can see; past that, the world just stops."
+    - "The fog sits thick and still, and sound moves through it strange and muffled and close."
+    - "In the fog the familiar goes soft and uncertain — shapes and suggestions where solid things used to be."
 
   snow:
-    - "Snow is still falling — the same slow pace, covering everything equally."
-    - "The snow has muffled the sounds of the world. The silence has a quality."
-    - "Fresh snow on every surface. It continues to fall, unhurried."
-    - "The snowfall has made the light strange — diffuse, coming from everywhere."
+    - "The snow keeps falling, soft and slow, laying itself down over everything alike."
+    - "The snow's hushed the whole world. The silence it leaves has a weight you can feel."
+    - "Fresh snow on every surface, and more drifting down, unhurried and quiet."
+    - "The snowfall's gone and made the light strange — soft and shadowless, glowing up from everywhere at once."
 
 # ---------------------------------------------------------------------------
 # Time-of-day outdoor ambient messages
@@ -91,25 +91,25 @@ outdoor_ambient:
 time_ambient:
 
   dawn:
-    - "The horizon has gone pale. The dark is releasing its grip on things."
-    - "The first birds have started. The light is still uncertain."
+    - "The horizon's gone pale and the dark's loosening its hold, grudging about every inch of it."
+    - "The first birds have struck up. The light's still soft and unsure of itself."
 
   morning:
-    - "The morning has established itself. The light is direct and matter-of-fact."
-    - "Full morning. The day is under way."
+    - "The morning's hit its stride — the light direct, bright, and entirely unbothered."
+    - "Full morning now, the day up and running."
 
   afternoon:
-    - "The afternoon light has gone longer and more golden."
-    - "The shadows have stretched out. The day has passed its peak."
+    - "The afternoon light's gone long and golden, warm across everything it touches."
+    - "The shadows have stretched themselves out lazy. The day's tipped past its peak."
 
   dusk:
-    - "The sky at the horizon is burning out — orange into red into the first dark."
-    - "Dusk. The light is almost gone and the colours are all the same."
+    - "The horizon's burning down — orange to red to the first creeping dark, putting on a show."
+    - "Dusk. The light's nearly spent and the colours have all melted into one warm blur."
 
   evening:
-    - "The evening has settled. The first stars are clearly visible."
-    - "Full evening. The air has cooled and the sky is properly dark at the zenith."
+    - "Evening's settled in soft, the first stars out clear and bright overhead."
+    - "Full evening now — the air's cooled, and the sky's gone properly dark straight up."
 
   midnight:
-    - "The night is complete. The stars are sharp and undisturbed."
-    - "Nothing stirs. The sky has turned, the stars have moved, and the night continues."
+    - "The night's complete. The stars sit sharp and still, keeping their own counsel."
+    - "Nothing stirs. The sky's wheeled on, the stars have drifted, and the long night rolls quietly along."

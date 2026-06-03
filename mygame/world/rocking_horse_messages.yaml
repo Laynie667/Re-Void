@@ -15,93 +15,93 @@ speeds:
     arousal_per_tick: 3.0
 
     start:
-      - "The horse begins its slow rock — a patient, even motion that establishes itself without urgency. {rider} settles into it."
-      - "A low creak of wood and the horse finds its rhythm at its slowest setting. {rider} moves with it."
-      - "Slow. The horse rocks with the patience of something designed to be ridden for as long as the rider needs."
+      - "The horse starts to rock, slow and lazy — a long, easy creak of wood, the seat working up into {rider} a little deeper at the top of every arc. No rush at all."
+      - "A low groan of timber and the horse finds its slowest pace. {rider} sinks down onto the seat and starts to ride, gentle and unhurried."
+      - "Slow. The horse rocks like it's got all day, the shaft of the seat sliding in and easing back with each patient arc. {rider} settles down onto it and lets it work."
 
     running:
-      - "The horse maintains its slow, even rhythm under {rider}. The creak of the wood is low and consistent."
-      - "A steady gentle sway. {rider} moves with each arc. The pace holds."
-      - "Slow and patient — the horse doesn't hurry {rider} and {rider} doesn't hurry the horse."
+      - "The horse keeps its slow, easy rock under {rider} — the seat dragging up deep at the peak of each arc and pulling back on the way down. The wood creaks low and steady."
+      - "A lazy, grinding sway. {rider} rides the seat up at the top of every arc, takes it deep, and rocks back down. Slow as you please."
+      - "Slow and patient — the horse works the seat into {rider} an inch at a time, in no hurry to finish, content to grind them open nice and gradual."
 
     stop:
-      - "The horse rocks to stillness under {rider}. The session ends at the pace it kept."
-      - "The motion eases to a stop. {rider} stills with it."
+      - "The horse rocks down to stillness under {rider}, the seat going quiet inside them. Whatever it was building, it leaves right where it is."
+      - "The motion eases off and stops. {rider} settles down onto the seat one last time and goes still with it."
 
   steady:
     interval_seconds: 45
     arousal_per_tick: 6.0
 
     start:
-      - "The horse settles into its working rhythm — steady, purposeful, each arc complete. {rider} has been committed to this."
-      - "Steady speed: the horse finds its pace and keeps it. {rider} rocks with it."
-      - "A working rhythm establishes itself. The horse is in no hurry and no longer slow."
+      - "The horse drops into its working rhythm — steady, purposeful arcs driving the seat up into {rider} and back, each one complete. {rider}'s in for it now."
+      - "Steady speed: the horse picks its pace and holds it, rocking the seat deep into {rider} on a reliable, even beat."
+      - "A solid working creak and the horse sets to it — the seat sliding up into {rider} at the top of every arc, firm and regular and not asking how they feel about it."
 
     running:
-      - "Steady rocking under {rider} — the arc is even, the creak of the frame a consistent note."
-      - "The horse keeps its rhythm. {rider} moves with it, seat finding the peak of each arc."
-      - "Each rock carries {rider} through the full motion. The pace doesn't break."
+      - "Steady rocking under {rider} — the seat driving up deep at the peak of each arc and dragging back down, the frame creaking out a consistent, insistent note."
+      - "The horse holds its rhythm, riding {rider} on the seat with every arc — up, deep, back, again. The pace doesn't break and neither does its grip on them."
+      - "Each rock carries {rider} through the full motion and takes the seat in to the root. The pace is steady, the grind relentless, and {rider} is along for every inch of it."
 
     stop:
-      - "The horse slows to stillness. {rider} comes to rest with it."
-      - "Steady speed settles — the motion decelerates and stops cleanly."
+      - "The horse rocks down to rest, the seat easing back out of {rider} as the arcs shorten and stop. The creak fades to nothing."
+      - "Steady speed winds down clean — the motion slowing, the seat settling, {rider} brought to a stop still seated on it."
 
   fast:
     interval_seconds: 20
     arousal_per_tick: 12.0
 
     start:
-      - "The horse accelerates into its faster pace — the arc sharper now, each rock driving {rider} through it quickly."
-      - "Fast: the rhythm tightens. The horse moves {rider} through the full arc in quick succession."
-      - "The frame picks up speed. The creak of it is more frequent, each rock arriving before the last has fully settled."
+      - "The horse kicks into its faster pace — the arcs sharp and quick now, each one slamming the seat up into {rider} and yanking it back before they can catch their breath."
+      - "Fast: the rhythm snaps tight. The horse drives the seat through {rider} in quick, hard arcs, the creak of the frame turning frantic."
+      - "The frame picks up speed and goes after {rider} in earnest — the seat ramming up deep in rapid succession, each rock landing before the last one's done with them."
 
     running:
-      - "Fast and insistent — the horse works {rider} through each arc without pausing at either end."
-      - "The motion is urgent now. {rider} is taken through each rock before they've finished the last one."
-      - "The horse at this pace leaves {rider} no room for anything except riding it."
+      - "Fast and merciless — the horse works the seat into {rider} hard at the top of every arc, never pausing at either end, just driving and pulling and driving again."
+      - "The motion's urgent now, the seat fucking up into {rider} on every quick arc, taking them through one before they've recovered from the last."
+      - "The horse at this pace leaves {rider} nothing to do but take it — the seat hammering deep, the frame creaking hard, the rhythm relentless."
 
     stop:
-      - "The horse drops from fast to stillness in a few decelerating arcs. {rider} stops with it."
-      - "Fast speed ends — the horse slows quickly and stops."
+      - "The horse drops from fast to still in a few hard decelerating arcs, the seat pulling free of {rider} as it goes. Sudden quiet."
+      - "Fast speed quits hard — the horse slowing in a rush and stopping, leaving {rider} breathless and seated."
 
   intense:
     interval_seconds: 8
     arousal_per_tick: 20.0
 
     start:
-      - "The horse goes to maximum — the arcs rapid and full and leaving no interval between them. {rider} is committed."
-      - "Intense: the frame moves {rider} through the full arc in rapid succession. There is nothing gradual about this setting."
-      - "Maximum speed establishes itself immediately. The horse does not ease into this."
+      - "The horse goes flat out — the arcs rapid and full and brutal, slamming the seat up into {rider} with no gap between, no mercy, no easing into it. {rider}'s committed now whether they like it or not."
+      - "Intense: the frame drives the seat through {rider} in rapid, deep arcs, hammering them open. Nothing gradual about this setting at all."
+      - "Maximum speed from the first beat. The horse doesn't ease into anything — it just starts pounding the seat up into {rider} and doesn't let up."
 
     running:
-      - "The horse runs at full intensity under {rider} — rapid, complete, relentless."
-      - "Each arc arrives before {rider} has processed the last one. The pace is total."
-      - "Intense and unwavering. The horse gives {rider} nothing to do except be ridden."
+      - "The horse runs wide open under {rider} — the seat driving up deep and rapid and relentless, fucking them on the frame's full arc over and over."
+      - "Each arc rams home before {rider}'s even processed the last one. The seat hammers in, drags back, hammers in again. The pace is total and it owns them."
+      - "Intense and unwavering — the horse gives {rider} nothing to do but get ridden by it, the seat pistoning deep on every brutal arc."
 
     stop:
-      - "The horse drops from intensity to stillness sharply. The room is quieter after."
-      - "Full speed ends decisively. {rider} comes to rest."
+      - "The horse drops from full speed to dead still sharp, the seat tearing free of {rider}. The quiet after has a weight to it."
+      - "Full speed ends all at once. {rider} comes to rest, wrecked and seated, as the frame goes silent."
 
 # Upgrade-specific messages
 
 upgrade:
 
   milking_start:
-    - "The suction cups engage against {rider}'s chest — the milking attachment settling into place as the horse begins its work."
-    - "The milking attachment activates. The suction finds {rider} and holds."
+    - "The suction cups clamp onto {rider}'s nipples — the milking attachment latching on and starting to pull as the horse rocks them through it. Now they're getting worked from both ends."
+    - "The milking attachment kicks on. The cups find {rider}'s tits, seal tight, and start sucking in time with the rocking."
 
   knot_engage:
-    - "Something catches inside {rider} — the seat's knot swelling, locking them onto the horse. They aren't going anywhere until it releases."
-    - "The knot engages. {rider} and the horse are now specifically committed to each other."
+    - "Something swells up inside {rider} — the seat's knot fattening at the base, locking them down onto the horse. They're not getting off this thing until it decides to let them."
+    - "The knot engages with a sudden, thick fullness. {rider} and the horse are tied together now, like it or not, and the rocking doesn't stop for it."
 
   knot_release:
-    - "The knot finally softens and releases {rider} from the horse. The session ends."
-    - "The seat's knot eases and lets go. {rider} is free to dismount."
+    - "The knot finally softens and lets {rider} up off the horse. The seat slips free. Session's done."
+    - "The seat's knot eases down and releases its grip. {rider}'s free to climb off — on shaky legs, probably."
 
   inflation_peak:
-    - "The seat has expanded to its maximum fill inside {rider}. The horse continues its pace around that."
-    - "Full inflation: the seat is at capacity inside {rider}, the rocking happening around the fullness."
+    - "The seat's swollen to its full size inside {rider} — packed in tight and stretching them wide, the horse rocking them through it regardless. There's no ignoring that."
+    - "Full inflation: the seat's at capacity inside {rider}, fat and unyielding, and the horse keeps grinding them on it around the stretch."
 
   restrained_mount:
-    - "The restraints engage — wrists to the handles, ankles to the stirrups. {rider} is on the horse and the horse has them."
-    - "Handles and stirrups lock. {rider} is in position and not getting off on their own."
+    - "The restraints snap shut — wrists strapped to the handles, ankles locked to the stirrups. {rider}'s on the horse and the horse has got them, no take-backs."
+    - "Handles and stirrups lock down tight. {rider}'s in position and going absolutely nowhere on their own."
