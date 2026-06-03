@@ -22,11 +22,13 @@ _ANON_NAMES = [
 
 
 def gang_inseminate(target, zone_name, contributors=3,
-                    fluid_type="semen", volume_each=DEFAULT_VOLUME_EACH):
+                    fluid_type="semen", volume_each=DEFAULT_VOLUME_EACH,
+                    species="contributor"):
     """Inseminate `target`'s `zone_name` from multiple contributors at once.
 
-    Returns a list of (donor_id_or_None, donor_name) for this round, or [] on
-    failure. Silent on its own — the caller narrates.
+    `species` attributes this successful breeding to a kind (hound/bull/boar/
+    stallion/contributor) for the per-species quota ledger. Returns the list of
+    (donor_id_or_None, donor_name) for this round, or [] on failure.
     """
     if not target or not zone_name or contributors <= 0:
         return []
@@ -37,6 +39,14 @@ def gang_inseminate(target, zone_name, contributors=3,
     tally = list(getattr(target.db, "bred_by", None) or [])
     tally.extend(donors)
     target.db.bred_by = tally
+
+    # Per-species quota: one successful breeding event logged for this species.
+    quota = getattr(target.db, "breeding_quota", None)
+    if quota and species in quota:
+        entry = dict(quota[species])
+        entry["current"] = int(entry.get("current", 0)) + 1
+        quota[species] = entry
+        target.db.breeding_quota = quota
 
     # Route the combined volume into the zone as cumflation.
     total = volume_each * len(donors)
@@ -140,6 +150,40 @@ def clear_fictional_donors():
         return True
     except Exception:
         return False
+
+
+_SPECIES_LABEL = {
+    "hound": "hounds", "bull": "the bull", "boar": "the boar",
+    "stallion": "the stallion", "contributor": "anonymous contributors",
+}
+
+
+def quota_met(target):
+    """True only if every species' logged count has reached its requirement."""
+    quota = getattr(target.db, "breeding_quota", None)
+    if not quota:
+        return False
+    return all(int(v.get("current", 0)) >= int(v.get("required", 0))
+               for v in quota.values())
+
+
+def summarize_quota(target):
+    """Multi-line per-species breeding-quota readout (logged on the board)."""
+    quota = getattr(target.db, "breeding_quota", None)
+    if not quota:
+        return ""
+    lines = ["|wBREEDING QUOTA — successful breedings logged:|n"]
+    order = ["hound", "bull", "boar", "stallion", "contributor"]
+    keys = [k for k in order if k in quota] + [k for k in quota if k not in order]
+    for sp in keys:
+        v = quota[sp]
+        cur = int(v.get("current", 0)); req = int(v.get("required", 0))
+        done = "|gMET|n" if cur >= req else "|rNOT MET|n"
+        bar = f"{cur}/{req}"
+        lines.append(f"   {_SPECIES_LABEL.get(sp, sp):<22} {bar:>8}   {done}")
+    lines.append("|wstatus: " + ("|gQUOTA COMPLETE|n" if quota_met(target)
+                                  else "|rINCOMPLETE — processing continues|n"))
+    return "\n".join(lines)
 
 
 def summarize_bred_by(target, recent=None):

@@ -47,6 +47,13 @@ def _resist_backfire(caller):
         "|xThe struggle registers somewhere as data, not protest — and the ache "
         "answers it by climbing. Fighting it is just another way of being trained.|n"
     )
+    # Reaching for the locked exit is itself a rule-break: punished, and counted
+    # toward forfeiting freedom if a contract clause is in force.
+    try:
+        from world.compliance import register_defiance
+        register_defiance(caller, 1, reason="reached for the locked exit")
+    except Exception:
+        pass
 
 
 class CmdCycle(MuxCommand):

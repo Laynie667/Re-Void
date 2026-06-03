@@ -58,6 +58,19 @@ class CmdFacilityReset(MuxCommand):
         purge  = "purge" in self.switches
         forced = "force" in self.switches or purge
 
+        # Freedom-forfeit clause gates the PLAIN command on yourself. /force and
+        # /purge always bypass — the genuine OOC exit is never gated.
+        if target == caller and not forced and getattr(caller.db, "freedom_forfeited", False):
+            caller.msg(
+                "|RThe way out doesn't answer to you anymore. You forfeited it — there's "
+                "a clause, and you signed over the page it was hiding on.|n"
+            )
+            caller.msg(
+                "|w[OOC: in-fiction your freedom is forfeited. facilityreset/force and "
+                "facilityreset/purge still work — your real exit is never gated.]|n"
+            )
+            return
+
         # The coin-toss lock applies ONLY to resetting yourself without override.
         if target == caller and not forced:
             locked_until = float(getattr(caller.db, "facility_reset_locked_until", 0) or 0)

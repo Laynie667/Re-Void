@@ -168,6 +168,53 @@ def apply_effects(character, item):
         except Exception:
             pass
 
+    # forfeit_name — she answers to her designation; name restored only by reset
+    if effects.get("forfeit_name"):
+        if not getattr(character.db, "designation", None):
+            character.db.designation = "the breeding bitch"
+        if not getattr(character.db, "facility_name_backup", None):
+            character.db.facility_name_backup = character.db.rp_name or character.key
+        character.db.rp_name = character.db.designation
+
+    # lock_conditioning — consent to conditioning becomes irrevocable (in-fiction)
+    if effects.get("lock_conditioning"):
+        character.db.conditioning_permanent = True
+
+    # breeding_quota — a per-species ledger of required successful breedings.
+    # Accepts a dict {species: required} or a bare int (-> 'contributor').
+    q = effects.get("breeding_quota")
+    if q:
+        if isinstance(q, dict):
+            character.db.breeding_quota = {
+                str(sp): {"current": 0, "required": int(req)}
+                for sp, req in q.items()
+            }
+        else:
+            character.db.breeding_quota = {
+                "contributor": {"current": 0, "required": int(q)}
+            }
+
+    # required_honorific — she must address staff with the given honorific
+    hon = effects.get("required_honorific")
+    if hon:
+        character.db.required_honorific = hon
+
+    # compliance_threshold — defiance allowed before freedom is forfeited
+    ct = effects.get("compliance_threshold")
+    if ct:
+        character.db.compliance_threshold = int(ct)
+        if getattr(character.db, "defiance", None) is None:
+            character.db.defiance = 0
+
+    # milk_quota — a producer quota (so many bottles banked)
+    mq = effects.get("milk_quota")
+    if mq:
+        character.db.milk_quota = {"current": 0, "required": int(mq)}
+
+    # cum_receptacle — flavour lock: kept open, kept ready, kept full
+    if effects.get("cum_receptacle"):
+        character.db.cum_receptacle = True
+
     # pet_triggers — mark which item is the trigger source
     if effects.get("pet_triggers"):
         sources = list(character.db.pet_trigger_sources or [])

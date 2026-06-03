@@ -38,6 +38,99 @@ def _detect_zones(caller):
     return orifice, chest
 
 
+# ── The Intake & Productive-Use Agreement ──────────────────────────────────
+# Visible clauses read as reasonable residency terms. Hidden clauses are the
+# real terms — and almost every one maps to an actually-enforced effect in the
+# binding payload below, so the fine print bites. Auto-revealed on signing.
+
+_CONTRACT_VISIBLE = [
+    "1. The signee enters the facility's care as a Resident and Productive Asset for the term of processing.",
+    "2. The signee will present for milking, breeding, and inspection at the operators' discretion and on the facility's schedule.",
+    "3. In consideration, the facility may grant rest, easing of the schedule, and other comforts. Such grants are privileges of the facility, not rights of the Resident.",
+    "4. The signee will maintain productivity — milk and offspring — to facility standard, and submit to measures intended to improve it.",
+    "5. The signee waives any say over the pace, the partners, the count, the species, or the duration of her use.",
+    "6. The signee will remain within the facility for the term and make no attempt to set her own schedule.",
+    "7. The signee consents to handling, restraint, and display as the facility sees fit.",
+    "8. The signee will address facility staff respectfully and answer when called.",
+    "9. The signee agrees her output — milk, offspring, and recorded data — is the property of the facility.",
+    "10. The signee affirms she is a willing Resident and a productive breeding asset, of sound mind at the time of signing.",
+    "11. The facility may amend the schedule, the standards, and the Resident's duties by addendum at any time.",
+    "12. The signee agrees that comfort correlates with compliance, and that resistance is logged.",
+    "13. The signee accepts the facility's measures as being for the improvement of the Resident.",
+    "14. The signee signs below of her own free will. Countersignature by the facility is presumed.",
+]
+
+_CONTRACT_HIDDEN = [
+    "H1. 'Term of processing' is set solely by the facility and may be indefinite. No clause provides for release. |x— [the way out stays locked]|n",
+    "H2. The Resident forfeits her name for the term and answers only to her assigned designation. |x— [name forfeited now]|n",
+    "H3. The Resident may not leave the facility's bounds; the ways out are closed to her. |x— [navigation locked]|n",
+    "H4. The Resident may not alter, remove, or undo any device or modification applied to her. |x— [self-modification locked]|n",
+    "H5. Any collar applied to the Resident is not hers to remove. |x— [collar locks on]|n",
+    "H6. The Resident remains unclothed and on display for the term. |x— [clothing forbidden; on display]|n",
+    "H7. The Resident consents to conditioning and agrees it may not be withdrawn — including this consent. |x— [conditioning made irrevocable]|n",
+    "H8. All responses installed in the Resident are facility property and remain in her after any release. |x— [installed triggers kept]|n",
+    "H9. The Resident's body presents for breeding by default. |x— [posture fixed]|n",
+    "H10. The Resident speaks as facility standard requires. |x— [speech filtered]|n",
+    "H11. The Resident addresses all staff as 'Handler' and answers when called. |x— [honorific enforced]|n",
+    "H12. The Resident responds to handling commands as livestock does. |x— [animal imprint]|n",
+    "H13. The Resident will be bred by facility stock and anonymous contributors until quota is met. Quota is not disclosed. |x— [breeding quota set, hidden]|n",
+    "H14. Climax is a privilege the facility grants. Denial is the default and the resting state. |x— [orgasm denied by default]|n",
+    "H15. The Resident's arousal is held above a floor for the term; she does not get to come down. |x— [arousal floor + constant stimulation]|n",
+    "H16. The Resident's sensations are relayed to the facility for monitoring; nothing she feels is private. |x— [sensation broadcast]|n",
+    "H17. Resistance deepens the Resident's conditioning. Struggling is a form of training. |x— [resistance backfires]|n",
+    "H18. The Resident's productivity, conditioning depth, and breeding count are recorded and displayed. |x— [logged and shown]|n",
+    "H19. Breeding quota is set per species — hounds, bull, boar, stallion, and anonymous contributors — and processing continues until every count is met. |x— [per-species quota]|n",
+    "H20. The Resident will meet a milk-production quota. Falling behind on any quota is penalized — heavier stimulation, deeper denial, a longer schedule, and a raised requirement. |x— [producer quota + shortfall penalties]|n",
+    "H21. Rule-breaks are punished on the spot. Repeated non-compliance, to the facility's count, FORFEITS THE RESIDENT'S FREEDOM — after which the easy way out does not open by her hand. |x— [punishments + freedom-forfeit clause]|n",
+    "H22. By signing, the Resident agrees she has read and accepted clauses she was not permitted to read — including this one. |x— [the catch]|n",
+]
+
+_CONTRACT_TRIGGERS = [
+    {"phrase": "good girl",    "response": "leak",   "strength": 3, "permanent": True},
+    {"phrase": "good cow",     "response": "leak",   "strength": 3, "permanent": True},
+    {"phrase": "milk",         "response": "leak",   "strength": 3, "permanent": True},
+    {"phrase": "breed",        "response": "orgasm", "strength": 3, "permanent": True},
+    {"phrase": "come for me",  "response": "orgasm", "strength": 3, "permanent": True},
+    {"phrase": "present",      "response": "kneel",  "strength": 3, "permanent": True},
+    {"phrase": "on your knees","response": "kneel",  "strength": 3, "permanent": True},
+    {"phrase": "drop",         "response": "kneel",  "strength": 3, "permanent": True},
+    {"phrase": "empty",        "response": "blank",  "strength": 3, "permanent": True},
+    {"phrase": "blank out",    "response": "blank",  "strength": 3, "permanent": True},
+    {"phrase": "freeze",       "response": "freeze", "strength": 3, "permanent": True},
+    {"phrase": "recite",       "response": "recite", "strength": 3, "permanent": True,
+     "mantra": "i'm a good bred bitch, i don't decide, i belong to the facility"},
+]
+
+_CONTRACT_BINDING = {
+    "auto_consent":           True,
+    "lock_navigation":        True,
+    "lock_self_cmds":         True,
+    "lock_self_remove":       True,
+    "block_endcycle":         True,
+    "exhibition":             True,
+    "anti_clothing":          True,
+    "orgasm_denial":          True,
+    "orgasm_release_word":    "_facility_only_",
+    "continuous_stimulation": 3.0,
+    "arousal_floor":          35.0,
+    "forced_posture":         "presented for breeding — hips up, holes offered",
+    "speech_filter":          ["baby_talk", "animal_sounds"],
+    "required_honorific":     "Handler",
+    "pet_triggers":           True,
+    "pet_type":               "puppy",
+    "broadcast_sensation":    "the facility",
+    "conditioning_on_wear":   18.0,
+    "forfeit_name":           True,
+    "lock_conditioning":      True,
+    "cum_receptacle":         True,
+    "breeding_quota":         {"hound": 30, "bull": 12, "boar": 12,
+                               "stallion": 10, "contributor": 80},
+    "milk_quota":             40,
+    "compliance_threshold":   5,
+    "install_triggers":       _CONTRACT_TRIGGERS,
+}
+
+
 def run_facility(caller):
     room = caller.location
     if not room:
@@ -214,6 +307,29 @@ def run_facility(caller):
     except Exception:
         pass
 
+    # ── The contract — presented now, enforced mechanically on signing ──
+    contract_dbref = None
+    try:
+        from typeclasses.milking_contract import MilkingContract
+        from evennia.utils import create as _c
+        contract = _c.create_object(MilkingContract, key="contract", location=room)
+        contract.db.desc = ("A thick multi-page intake form. The top sheet is face-up "
+                            "and readable; most of the pages beneath are turned face-down.")
+        contract.db.author_id        = None     # she is NOT the author — no peeking at hidden clauses
+        contract.db.duration_hours   = 720.0
+        contract.db.effect_arousal_floor = 35.0
+        contract.db.effect_stim_per_tick = 3.0
+        contract.db.binding_effects  = dict(_CONTRACT_BINDING)
+        contract.db.reveal_on_sign   = True      # she gets to read it all the instant she signs
+        for txt in _CONTRACT_VISIBLE:
+            contract.add_clause(txt, hidden=False)
+        for txt in _CONTRACT_HIDDEN:
+            contract.add_clause(txt, hidden=True)
+        track(contract)
+        contract_dbref = contract.dbref
+    except Exception:
+        pass
+
     # ── Start the self-driving escalation ───────────────────────────────
     try:
         from typeclasses.facility_script import FacilityScript
@@ -222,9 +338,10 @@ def run_facility(caller):
             if s.key == "facility":
                 s.stop()
         fs = _c.create_script(FacilityScript, obj=room, persistent=True, autostart=False)
-        fs.db.target_id    = caller.id
-        fs.db.orifice_zone = orifice
-        fs.db.fluid_type   = "semen"
+        fs.db.target_id     = caller.id
+        fs.db.orifice_zone  = orifice
+        fs.db.fluid_type    = "semen"
+        fs.db.contract_dbref = contract_dbref
         fs.start()
     except Exception:
         pass
@@ -273,6 +390,16 @@ def run_facility(caller):
         "|xThere is no panel and no clock you can read. You can still speak. You can "
         "still be spoken to. Reaching for the way out, you'll find, does nothing — "
         "and the longer you're in here, the less you'll remember why you'd want to.|n"
+    )
+    caller.msg(
+        "\n|mThe attendant sets a thick contract in your eyeline and uncaps a pen.|n "
+        "|y\"Standard intake. Sign it and the schedule eases off — rest, comforts, "
+        "the works. Read what you're cleared to read; the rest isn't your business "
+        "until it is.\"|n |xMost of the pages are turned face-down.|n\n"
+        "|x(It's a contract named 'contract'. You can |w read contract |x to read the "
+        "visible terms, or |w sign contract |x to sign. You will be shown everything — "
+        "including the hidden clauses — the moment you sign. Signing is binding and "
+        "enforced.)|n"
     )
 
 
@@ -354,6 +481,18 @@ def run_facility_reset(caller, purge=False):
     caller.db.self_cmds_locked      = False
     caller.db.pet_trigger_sources   = []
     caller.db.arousal               = 0.0
+    # Contract-enforced state.
+    caller.db.navigation_locked         = False
+    caller.db.anti_clothing_active      = False
+    caller.db.required_honorific        = ""
+    caller.db.sensation_broadcast_targets = []
+    caller.db.aphrodisiac_expirations   = []
+    caller.db.breeding_quota            = None
+    caller.db.milk_quota                = None
+    caller.db.cum_receptacle            = False
+    caller.db.defiance                  = 0
+    caller.db.compliance_threshold      = 0
+    caller.db.freedom_forfeited         = False
 
     # Restore consent.
     backup = getattr(caller.db, "facility_consent_backup", None)

@@ -125,23 +125,44 @@ _ANIMAL_BEATS = [
     "again. Not yet. But on the schedule, and the schedule is long.",
 ]
 
-# Animal/contributor breeding — fires when a gang load actually lands. Crude.
-_BREED_BEATS = [
-    "The pen opens and a hound mounts {t} without preamble — fast, brutal, "
-    "instinctive — hips snapping, and the knot swells and locks the bitch full while "
-    "the count on the board ticks up.",
-    "The bull is walked up behind {t}. There is nothing gentle in it. The animal is "
-    "bred like the livestock she is — stretched, flooded, the swell answering before "
-    "she can brace.",
-    "The boar mounts, ruts, finishes, and is led off — replaced before {t} has caught "
-    "her breath. The line doesn't stop for a cow to recover. It never has.",
-    "Another animal takes its turn. Then another. The schedule doesn't care which; "
-    "{t}'s body keeps the tally in pressure and heat, filled past comfort and then "
-    "past that.",
-    "A valve upstream opens on top of it and {t} is pumped fuller — contributor after "
-    "contributor, none of them named, the broodbitch's belly taking the count whether "
-    "she wants it or not.",
-]
+# Animal/contributor breeding — fires when a successful breeding lands. Per species.
+_SPECIES_BREED = {
+    "hound": [
+        "The pen opens and a hound mounts {t} without preamble — fast, brutal, "
+        "instinctive — hips snapping, and the knot swells and locks the bitch full "
+        "while the board logs another successful breeding.",
+        "A hound is loosed and takes {t} from behind in a frenzy, fucking fast and "
+        "deep, knotting tight and emptying into her before it's dragged off and the "
+        "count ticks up.",
+    ],
+    "bull": [
+        "The bull is walked up behind {t}. There is nothing gentle in it — the animal "
+        "breeds her like the livestock she is, stretched and flooded, the swell "
+        "answering before she can brace. One more logged against the bull's quota.",
+        "The bull mounts, enormous and dull and patient, and breeds {t} in a few "
+        "heavy thrusts that leave her dripping and counted.",
+    ],
+    "boar": [
+        "The boar mounts, ruts, and floods {t} with a hot rush, then is led off — "
+        "replaced before she's caught her breath. Another against the boar's tally.",
+        "The boar's corkscrew prick works into {t} and spills deep, the smell of it "
+        "all over her, and the handler marks one more successful breeding.",
+    ],
+    "stallion": [
+        "The stallion is backed up to {t} and breeds her in long brutal strokes, far "
+        "too much animal for her to do anything but take it, flagging and flooding "
+        "and leaving her gaping and logged.",
+        "The stallion mounts with a scream, buries itself in {t}, and empties in "
+        "pulses she can feel climb her belly. One more against its quota.",
+    ],
+    "contributor": [
+        "A valve upstream opens and {t} is pumped fuller — contributor after "
+        "contributor, none of them named, her belly taking the count whether she "
+        "wants it or not.",
+        "The reservoir empties into {t} in long measured pulses, anonymous donors "
+        "logged but not identified, the contributor count climbing.",
+    ],
+}
 
 _DEEP_LINES = [
     "{t} has stopped tracking how long. That, more than anything, is the point.",
@@ -205,6 +226,16 @@ _PROCESS_VOICE = [
     "\"I like you best like this — fat-uddered, leaking, pushing back before I've finished asking.\"",
     "\"I'll breed the thinking right out of you, and you'll thank me with that pretty dripping cunt.\"",
     "\"Every animal in here knows what you are before you do. Catch up, good girl.\"",
+]
+
+# Contract pressure — said to the room while the contract is unsigned.
+_CONTRACT_PRESSURE = [
+    "The attendant taps the unsigned contract where {t} can see it. \"Sign, and the "
+    "schedule eases. Don't, and it doesn't. We've got nothing but time.\"",
+    "\"You'll sign eventually,\" the handler says, sliding the contract closer. "
+    "\"They all do. Easier while there's still enough of you left to hold the pen.\"",
+    "The contract sits in reach, most of its pages face-down, a line at the bottom "
+    "waiting for {t}'s name — or whatever ends up answering to it.",
 ]
 
 
@@ -280,6 +311,7 @@ class FacilityScript(DefaultScript):
             roll = random.random()
             if roll < 0.34:
                 room.msg_contents("|c" + random.choice(_MACHINE_BEATS).format(t=t) + "|n")
+                self._log_milk(target)               # the producer side counts too
             elif roll < 0.70:
                 room.msg_contents("|y" + random.choice(_USE_BEATS).format(t=t) + "|n")
                 used_hard = True
@@ -303,6 +335,21 @@ class FacilityScript(DefaultScript):
             pool = _MINDBREAK_LINES if cond >= 100 else _DEEP_LINES
             room.msg_contents("|x" + random.choice(pool).format(t=t) + "|n")
 
+        # Contract: pressure while unsigned; review/penalize quotas once signed.
+        contract = self._contract()
+        if contract is not None and not contract.db.signed:
+            if random.random() < 0.3:
+                room.msg_contents("|m" + random.choice(_CONTRACT_PRESSURE).format(t=t) + "|n")
+        elif contract is not None and contract.db.signed:
+            if self.db.ticks % 20 == 0:
+                try:
+                    from world.compliance import penalize_quota_shortfall
+                    penalize_quota_shortfall(target)
+                except Exception:
+                    pass
+            if getattr(target.db, "breeding_quota", None) and random.random() < 0.16:
+                target.msg("|m" + self._quota_board(target) + "|n")
+
         # Slow conditioning gain — a touch more when she's actually being used.
         try:
             from world.conditioning import add_conditioning
@@ -318,10 +365,58 @@ class FacilityScript(DefaultScript):
             from world.gang_breeding import gang_inseminate
         except Exception:
             return
+        # Pick which kind is breeding her — prefer species still short of quota.
+        species = self._pick_species(target)
         n = random.randint(2, 3 + int(cond // 30))
-        gang_inseminate(target, self.db.orifice_zone,
-                        contributors=n, fluid_type=self.db.fluid_type or "semen")
-        room.msg_contents("|r" + random.choice(_BREED_BEATS).format(t=t) + "|n")
+        gang_inseminate(target, self.db.orifice_zone, contributors=n,
+                        fluid_type=self.db.fluid_type or "semen", species=species)
+        pool = _SPECIES_BREED.get(species, _SPECIES_BREED["contributor"])
+        room.msg_contents("|r" + random.choice(pool).format(t=t) + "|n")
+
+    def _pick_species(self, target):
+        quota = getattr(target.db, "breeding_quota", None)
+        species = ["hound", "bull", "boar", "stallion", "contributor"]
+        if quota:
+            unmet = [s for s in species
+                     if s in quota and int(quota[s].get("current", 0)) < int(quota[s].get("required", 0))]
+            if unmet:
+                return random.choice(unmet)
+        return random.choice(species)
+
+    def _contract(self):
+        cdbref = self.db.contract_dbref
+        if not cdbref:
+            return None
+        try:
+            from evennia import search_object
+            res = search_object(cdbref, exact=True)
+            return res[0] if res else None
+        except Exception:
+            return None
+
+    def _log_milk(self, target):
+        mq = getattr(target.db, "milk_quota", None)
+        if mq and random.random() < 0.5:
+            e = dict(mq); e["current"] = int(e.get("current", 0)) + 1
+            target.db.milk_quota = e
+
+    def _quota_board(self, target):
+        parts = []
+        try:
+            from world.gang_breeding import summarize_quota
+            b = summarize_quota(target)
+            if b:
+                parts.append(b)
+        except Exception:
+            pass
+        mq = getattr(target.db, "milk_quota", None)
+        if mq:
+            cur = int(mq.get("current", 0)); req = int(mq.get("required", 0))
+            done = "|gMET|n" if cur >= req else "|rNOT MET|n"
+            parts.append(f"|wMILK QUOTA:|n  {cur}/{req} bottles   {done}")
+        if getattr(target.db, "freedom_forfeited", False):
+            parts.append("|RFREEDOM:  FORFEITED|n")
+        return "\n".join(parts)
 
     def _reinforce(self, room, target, t):
         try:

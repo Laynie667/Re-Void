@@ -64,6 +64,11 @@ class MilkingContract(WrittenItem):
         self.db.effect_stim_per_tick = 0.0
         self.db.binding_effects      = {}   # hidden binding effects
 
+        # If True, all hidden clauses are revealed to the signee the instant
+        # they sign — and the full text is dropped on them. The classic payoff:
+        # you find out what you agreed to only once it's already binding.
+        self.db.reveal_on_sign       = False
+
         self.db.player_desc  = ""
         self.db.desc_locked  = False
 
@@ -206,6 +211,18 @@ class MilkingContract(WrittenItem):
             try:
                 from world.binding_effects import apply_effects
                 apply_effects(signee, self)
+            except Exception:
+                pass
+
+        # Auto-reveal the hidden clauses to the signee — they can read what they
+        # agreed to, now that agreeing is done. Drop the full text on them.
+        if self.db.reveal_on_sign:
+            self.reveal_clause(all_hidden=True)
+            try:
+                signee.msg(
+                    "\n|rThe pages turn face-up. Here is what you just agreed to:|n\n"
+                    + self.get_visible_text()
+                )
             except Exception:
                 pass
 
