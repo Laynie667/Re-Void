@@ -605,6 +605,7 @@ def run_facility_reset(caller, purge=False):
     caller.db.gape                      = None
     caller.db.bladder_ml                = 0.0
     caller.db.lactation_locked          = False
+    caller.db.cum_craving               = False
 
     # Stop perpetual heat and clear the flag.
     caller.db.perpetual_heat = False

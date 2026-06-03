@@ -70,6 +70,26 @@ class CmdBoard(Command):
         if getattr(d, "designation", None):
             lines.append(f"  Designation:    {d.designation}")
         lines.append(f"  Heat:           {'|rPERPETUAL|n' if getattr(d,'perpetual_heat',False) else 'off'}")
+        if getattr(d, "lactation_locked", False):
+            lines.append("  Lactation:      |rLOCKED ON|n")
+        dep = int(getattr(d, "drug_dependence", 0) or 0)
+        if dep:
+            lines.append(f"  Drug dependence: {dep}")
+
+        # Holes — gape state per orifice.
+        gape = getattr(d, "gape", None) or {}
+        if gape:
+            try:
+                from world.gang_breeding import gape_word
+                parts = [f"{zn.split('/')[-1].replace('_',' ')}: {gape_word(who, zn)}"
+                         for zn in gape]
+                lines.append("  Holes:          " + " | ".join(parts))
+            except Exception:
+                pass
+        bl = float(getattr(d, "bladder_ml", 0) or 0)
+        if bl > 0:
+            state = "|rBURSTING|n" if bl >= 500 else ("aching" if bl >= 350 else "filling")
+            lines.append(f"  Bladder:        {bl:.0f}ml ({state})")
 
         # Freedom / compliance
         if getattr(d, "compliance_threshold", 0):

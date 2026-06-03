@@ -629,6 +629,17 @@ class FacilityScript(DefaultScript):
                         "|y  your bladder aches, full to bursting and ignored — there's no "
                         "break coming, no one's going to let you up, and holding it is just one "
                         "more thing being done to you.|n")
+            # Cumslut conditioning: being empty in the pause is unbearable.
+            if getattr(target.db, "cum_craving", False) and random.random() < 0.5:
+                try:
+                    from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+                    ensure_arousal_script(target); add_arousal(target, 12.0)
+                except Exception:
+                    pass
+                target.msg(
+                    "|G  empty again, and empty is unbearable now — you clench around nothing, "
+                    "desperate to be filled, and the pause is its own special cruelty for it. "
+                    "you find yourself wishing the breeding phase would hurry back.|n")
             contract = self._contract()
             signed = getattr(target.db, "facility_signed", False) or (contract and contract.db.signed)
             if contract is not None and not signed:
@@ -650,9 +661,10 @@ class FacilityScript(DefaultScript):
     # Experimental drug menu — each dose applies one or two of these. All real,
     # all permanent (cleared only by the reset). Effects are deliberately mixed.
     _DRUGS = ["swell", "yield", "sensitize", "capacity", "brood",
-              "compliance", "bimbo", "dependence", "estrus", "lactation", "solvent"]
+              "compliance", "bimbo", "dependence", "estrus", "lactation",
+              "solvent", "cumslut"]
     _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
-                   "tail", "fertility_implant", "tongue"]
+                   "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood"]
 
     def _dose(self, room, target, t):
         room.msg_contents("|G" + random.choice(_DRUG_BEATS).format(t=t) + "|n")
@@ -793,6 +805,19 @@ class FacilityScript(DefaultScript):
             f"milk whether she's milked or not, leaking and swelling and aching to be drained. "
             f"(production way up, can't switch off)|n")
 
+    def _drug_cumslut(self, room, target, t):
+        target.db.cum_craving = True
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 45.0)
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 6.0, source="drug")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G  ▸ CUMSLUT COMPOUND — {t}'s body is rewired to read 'empty' as 'wrong'. Now "
+            f"the ache only quiets when she's freshly filled, and it comes back fast and loud. "
+            f"(craving to be bred — empties make her desperate)|n")
+
     def _drug_solvent(self, room, target, t):
         try:
             from world.conditioning import add_conditioning
@@ -885,6 +910,24 @@ class FacilityScript(DefaultScript):
             f"|GA fertility implant is pushed up through {t}'s cervix and seated, flooding her "
             f"with whatever makes a body take faster and drop sooner. She's tuned for one output "
             f"now, and her own get will come due that much quicker. (fertility up)|n")
+
+    def _proc_womb_tattoo(self, room, target, t):
+        self._mark(target, "a tattoo low on her belly — BRED · PROPERTY OF THE FACILITY — with a tally box filled in by hand")
+        room.msg_contents(
+            f"|GA needle gun is set to {t}'s lower belly, right over the womb, and inks a "
+            f"permanent mark into her: BRED, PROPERTY OF THE FACILITY, and a little tally box "
+            f"the handler fills in by hand each time she takes. She'll wear it under everything, "
+            f"forever. (permanent womb tattoo)|n")
+
+    def _proc_clit_hood(self, room, target, t):
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 55.0)
+        target.db.stim_per_tick = float(getattr(target.db, 'stim_per_tick', 0) or 0) + 2.5
+        self._mark(target, "clit hood removed — the glans left permanently bare and oversensitive")
+        room.msg_contents(
+            f"|GA small, precise procedure removes the hood of {t}'s clit entirely, leaving the "
+            f"glans permanently bare and exposed. Every breath of air, every drip, every brush "
+            f"of the cradle now drags across it raw. There's no covering it again. "
+            f"(permanent extreme sensitivity)|n")
 
     def _proc_tongue(self, room, target, t):
         filters = list(getattr(target.db, "active_speech_filters", None) or [])
