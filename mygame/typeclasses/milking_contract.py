@@ -291,16 +291,24 @@ class CmdContract(MuxCommand):
 
     def _find_contract(self, caller, name):
         from typeclasses.milking_contract import MilkingContract
-        results = caller.search(name, location=caller)
-        if not results:
+        # Search inventory AND the current room (the contract is often set in
+        # front of the signee rather than handed to them).
+        candidates = list(caller.contents)
+        if caller.location:
+            candidates += list(caller.location.contents)
+        contracts = [o for o in candidates if isinstance(o, MilkingContract)]
+        if not contracts:
+            caller.msg(f"|xThere's no contract here to {name and 'read' or 'use'}.|n"
+                       if False else "|xThere's no contract here.|n")
             return None
-        if not isinstance(results, list):
-            results = [results]
-        for obj in results:
-            if isinstance(obj, MilkingContract):
-                return obj
-        caller.msg(f"|x'{name}' is not a contract.|n")
-        return None
+        # If a name was given, prefer a key/alias match; else take the first.
+        if name:
+            named = [o for o in contracts
+                     if name.lower() in (o.key or "").lower()
+                     or name.lower() in [a.lower() for a in (o.aliases.all() or [])]]
+            if named:
+                return named[0]
+        return contracts[0]
 
     def _is_author(self, caller, contract):
         return (
