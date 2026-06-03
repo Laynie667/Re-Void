@@ -1,0 +1,255 @@
+# world/variant_pools.yaml
+#
+# Variant prose pools for pet types, shaft types, and zone-specific worship.
+# All messages are fired as the character's own pose/say via forced_emote().
+#
+# Tokens: {name} = character's RP name, {holder} = holder's name
+#         {zone} = zone name, {n} = character name in pose format
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# PET TYPE BEG POOLS
+# Fires as the character's own speech/pose — they own these words.
+# ─────────────────────────────────────────────────────────────────────────────
+
+pet_beg:
+
+  puppy:
+    say:
+      - "Please please please fix it. I'll be so good. I promise. Please."
+      - "I need it fixed. Please. I'll do anything. Please."
+      - "It's breaking. Please. Replace it. Please I'll be so good please."
+      - "Please — it's going to break. Please. Please."
+      - "Fix it please. I'm asking. I'm begging. Please please please."
+    pose:
+      - "{n} drops to their knees and presses their face against {holder}'s leg, whimpering. They are begging and they can't stop."
+      - "{n} paws at {holder}'s hand and looks up — eyes wide, tail-tuck visible in every line of their body. Please."
+      - "{n} makes a sound between a whine and a word, neither quite, and doesn't take their eyes off {holder}."
+      - "{n} sits back on their heels and raises both hands toward {holder}, shaking. Begging without words."
+      - "{n} noses at {holder}'s knee and looks up. The asking is completely visible. They have no dignity left about it."
+
+  kitty:
+    say:
+      - "Please. I'll be good. I'll be so good. Just fix it. Please."
+      - "Fix the collar. Please. I'm asking nicely. I'm asking as nicely as I can."
+      - "It's almost gone. Please. I know you see it. Please fix it."
+      - "Please — I'll purr for you. I'll behave. I'll do anything. Fix it please."
+    pose:
+      - "{n} winds around {holder}'s legs without stopping, head lowered, the asking in every pass."
+      - "{n} sits at {holder}'s feet and looks up through lowered lashes. The purr that starts is involuntary. They're still asking."
+      - "{n} butts their head slowly against {holder}'s hand and stays there — soft, repeated pressure, entirely a request."
+      - "{n} makes a small chirping sound in their throat — not quite a word, not quite not one — and doesn't move away."
+      - "{n} curls against {holder}'s ankle and goes still. The stillness is the begging. They are waiting to be answered."
+
+  bunny:
+    say:
+      - "Please. I'm asking. I'm asking very nicely and I would really like it fixed."
+      - "It's breaking and I can't — please. Just please."
+      - "Please fix it. Please. I'm being very still and very good and I'm asking please."
+    pose:
+      - "{n} goes absolutely still and stares at {holder}. Their foot hits the floor once. Then again. They are asking."
+      - "{n} presses against {holder}'s side and doesn't move. Their nose twitches. The whole body is the question."
+      - "{n} sits upright with their hands folded neatly in their lap and looks at {holder} with enormous composure and enormous need simultaneously."
+      - "{n} does a small involuntary binky — a full-body shudder of distress — and then looks immediately at {holder}. Mortified. Still begging."
+      - "{n} thumps their foot twice, stops, and looks at the floor. Then back up. The foot hits again. They can't help it."
+
+  pony:
+    say:
+      - "I'm — please. Please. I can't say it properly but you know what I'm asking."
+      - "Please — I'm presenting. I'm standing right. I'm asking correctly. Please fix it."
+    pose:
+      - "{n} steps in a tight circle, head tossing, unable to make the words come and saying it anyway in every movement."
+      - "{n} stops, plants their feet, and presents — weight back, back arched, completely correct — and looks at {holder} over their shoulder. Asking."
+      - "{n} stamps once, twice, and shakes their head hard enough that the collar shifts. They look at it. Look at {holder}. Look at it again."
+      - "{n} makes a sound in their throat that isn't a word and isn't not one. They go still. The asking is in every muscle."
+      - "{n} steps close to {holder} and drops their head against {holder}'s shoulder. Still. Just asking. Just that."
+
+  fox:
+    say:
+      - "Please. I'm asking nicely. I know I'm cute enough to get away with it. Fix it?"
+      - "Please please — I'll yip for you. I'll be clever. Just fix the collar please."
+      - "It's falling apart and I need it not to. Please. I'm being very charming about this. Please."
+    pose:
+      - "{n} pounces close to {holder}, pulls up short, sits. Their tail — if they have one — wraps around their feet. They look up sideways. Asking."
+      - "{n} circles {holder} once, twice, and curls at their feet with their chin on {holder}'s shoe. The asking is in the ear angle."
+      - "{n} yips — sharp, brief, impossible to ignore — and then looks immediately at the collar and back at {holder}."
+      - "{n} stands on their toes and cranes their neck toward {holder}, the collar stretched forward, the asking completely literal."
+      - "{n} grins at {holder} — all charm, no teeth — and then lets it slip. The asking comes through underneath."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SHAFT TYPE WORSHIP POOLS
+# Fires as the character's own pose/say — obsession specific to shaft type.
+# ─────────────────────────────────────────────────────────────────────────────
+
+shaft_worship:
+
+  canine:
+    say:
+      - "Please. I want to feel the knot. I need to feel it. Please."
+      - "I want you to breed me. I want to be tied. I want to feel it swell inside me and not be able to pull away. Please."
+      - "I'm asking to be knotted. I'm asking specifically. I know what I want and I want it to be yours."
+      - "Please fill me and lock it in and don't let me go until it's done. I'm asking. I want it."
+      - "I need to be bred. Properly. All the way. Please."
+    pose:
+      - "{n} presses back deliberately toward {holder}, hips up, spine down. The asking is anatomical."
+      - "{n} reaches back and touches where the knot will catch and looks at {holder}. 'There,' they say, and don't look away."
+      - "{n} drops to all fours and looks back over their shoulder. Their hips shift. They are not subtle."
+      - "{n} spreads and goes still and waits. The stillness says: I want this. I want all of this. Lock me in."
+      - "{n} presses their face against {holder}'s stomach and breathes them in. They want the scent as much as anything else. They want the whole of it."
+
+  equine:
+    say:
+      - "Please. I want to try. I want to feel it. I know how big it is and I'm asking anyway."
+      - "I want to be opened up. Slowly. However long it takes. Please."
+      - "Please fill me completely. I want to feel full everywhere at once. Please."
+      - "I want your cock. All of it. I'll take however long it takes. I want it."
+      - "Please — I want to feel the weight of it. I want to carry you. Please."
+    pose:
+      - "{n} stands with their legs wide and their hands on their own hips and looks at {holder} with complete clarity. 'Please,' they say. 'I can take it.'"
+      - "{n} touches themselves slowly, eyes on {holder}, showing what they want done to them in explicit, patient detail."
+      - "{n} presses against {holder}'s thigh and breathes hard. The size is the point. They are asking for the size."
+      - "{n} reaches back and spreads and looks over their shoulder. There is no ambiguity in this. They want to be mounted."
+      - "{n} slides to the floor and kneels and opens their mouth and looks up. They will start here and work toward the rest."
+
+  porcine:
+    say:
+      - "Please. The spiral — I want to feel the spiral. Please."
+      - "I want you to twist into me and stay there. I want every turn of it. Please."
+      - "Please fill me with the corkscrew. I've been thinking about it. I want to feel it unwind inside me."
+      - "I want the spiral cock. I want to feel every rotation of it. Please. I'm very specifically asking for this."
+    pose:
+      - "{n} rocks their hips in a slow spiral motion and looks at {holder}. They are demonstrating what they want."
+      - "{n} slides two fingers inside themselves slowly, spiraling, and gasps. 'This,' they say, looking at {holder}. 'Yours. Please.'"
+      - "{n} lies back and spreads their legs and makes the spiral motion with their hand. An invitation and a demonstration."
+      - "{n} presses their fingers against themselves from the outside and traces a circle, then another. 'I want to feel every inch of the twist,' they say."
+
+  draconic:
+    say:
+      - "Please. I want the ridges. I want to feel every single one of them. Please."
+      - "I want your cock. The heat of it and the ridges and all of it. Please."
+      - "I can feel every ridge when you're inside me and I want it to last for as long as possible. Please."
+      - "Please — the heat first and then the ridges and I want to feel them on every pull and push. Please."
+      - "I want to be marked by the ridges. Inside. I want to feel where they've been. Please."
+    pose:
+      - "{n} presses back against {holder} and arches and gasps at the heat of it before it even begins. 'Yes,' they say. 'Please. All of it.'"
+      - "{n} touches the ridged surface with open wonder and looks up at {holder}. They want to know what that feels like from the inside."
+      - "{n} wraps both hands around {holder} and feels the ridges carefully, one by one. Their breathing changes. They want it."
+      - "{n} kneels close and presses their cheek against {holder}. The heat of it is real. They breathe it in."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TESTES WORSHIP POOLS
+# Zone-specific begging and worship focused on testes/balls.
+# ─────────────────────────────────────────────────────────────────────────────
+
+testes_worship:
+  say:
+    - "Please. I want to feel how full they are. I want to know what's in them. Please."
+    - "I want to be filled with everything that's in there. I want to feel your balls empty into me. Please."
+    - "I want to press my face against them and feel the weight. Please let me."
+    - "Please. I need them. I want to be bred from them. I want to feel the source of it."
+    - "Fill me. From there. All of it. Please. I want to carry what's in there."
+    - "I want to worship them. I want to press my hands around them and feel how much is waiting. Please."
+  pose:
+    - "{n} kneels close and presses their forehead to {holder}'s thigh and breathes. What they want is very specific. Very near."
+    - "{n} cups {holder}'s balls in both hands — careful, reverent, feeling the weight of them. Their breathing has changed."
+    - "{n} presses their face against {holder}'s balls and stays there. They are cataloguing the weight and the warmth and the fullness of it."
+    - "{n} looks up at {holder} with their hands full and says nothing. Their expression says everything about what they want done to them."
+    - "{n} mouths at {holder}'s balls slowly, separately, with total concentration. They are worshipping. They know it. They don't stop."
+    - "{n} nuzzles into {holder}'s lap and rests there with their cheek against the fullness and sighs. They want to be filled from the source."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SELF-PLEASURE POSE POOLS
+# Forced self-pleasure poses that demonstrate what the character wants.
+# ─────────────────────────────────────────────────────────────────────────────
+
+self_pleasure:
+
+  general:
+    pose:
+      - "{n} touches themselves slowly in front of {holder}, looking at {holder} the entire time. Showing what they want."
+      - "{n} slides two fingers inside themselves and gasps and looks at {holder}. This is a demonstration."
+      - "{n} lies back and shows {holder} exactly what their body does when they want something. They are not subtle."
+      - "{n} presses their hand between their legs and works themselves open slowly, watching {holder}'s face."
+      - "{n} arches into their own hand and makes a sound they can't stop, eyes still on {holder}."
+
+  canine:
+    pose:
+      - "{n} reaches back and fingers themselves open slowly and looks at {holder}. 'For the knot,' they say. 'I'm practicing.'"
+      - "{n} positions themselves on all fours and touches themselves from behind and looks back. This is what they're asking for."
+      - "{n} slides fingers in and out and then circles the rim and shows {holder} how deep. 'All of it,' they say."
+
+  equine:
+    pose:
+      - "{n} spreads wide and touches themselves slowly and looks at {holder}. 'I can take it,' they say. Their fingers show where."
+      - "{n} works themselves open with both hands and breathes through it and watches {holder}. The size. They want the size."
+      - "{n} presses their face into the floor and arches up and touches themselves from behind. Invitation. Clear."
+
+  testes_fixation:
+    pose:
+      - "{n} cups their own body and presses in and thinks about what they want filling them. They say {holder}'s name."
+      - "{n} touches themselves slowly and says: 'I want what's in them. I want to carry it. Please.'"
+      - "{n} arches and says: 'Fill me from your balls. I want to feel them go empty into me.' They keep touching themselves."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DEGRADING COLLAR BEG POOLS BY VARIANT
+# These map collar variants to their specific beg style.
+# ─────────────────────────────────────────────────────────────────────────────
+
+collar_beg:
+
+  leather_puppy:
+    say:
+      - "Please please please fix it. I'll be so good. I promise. Please."
+      - "It's breaking. Please. Replace it. Please I'll be so good please."
+      - "I need it fixed. Please. I'll do anything. Please."
+    pose:
+      - "{n} drops to their knees and presses their face against {holder}'s leg, whimpering."
+      - "{n} pawing at {holder}'s hand and looks up — eyes wide, entirely begging."
+
+  silk_kitty:
+    say:
+      - "It's falling apart. Please. I'll purr for you. I'll be so good. Please fix it."
+      - "The silk is fraying. I can feel it. Please don't let it break. Please."
+    pose:
+      - "{n} winds around {holder}'s ankles and presses their cheek to {holder}'s calf. Asking."
+      - "{n} chirps once and then goes still, face pressed to {holder}'s knee. The asking is in the stillness."
+
+  chain_pony:
+    say:
+      - "Please — the chain is cracking. I'm presenting correctly. I'm asking correctly. Please fix it."
+      - "I can't say it properly but you understand. Please. Fix the collar. Please."
+    pose:
+      - "{n} stamps twice and shakes their head and presents themselves — weight back, entirely correct form."
+      - "{n} steps close and drops their head to {holder}'s shoulder. No words. Just the asking."
+
+  ribbon_bunny:
+    say:
+      - "Please. I'm being very still and very good and the ribbon is almost gone and I am asking please."
+      - "It's fraying. Please. I thump when I can't say it and I'm thumping inside. Please."
+    pose:
+      - "{n} goes completely still. Their foot hits the floor twice. They stare at {holder} with the whole of their face."
+      - "{n} presses against {holder}'s side and doesn't move. Their nose twitches. They are asking as quietly as they can."
+
+  hucow:
+    say:
+      - "Please. I need milked and I need the collar fixed and I can't think past either one. Please."
+      - "It's breaking. Please fix it. I'm so full and I need the machine and I need the collar please."
+      - "Mooo — I mean — please. Please. I need both things. Please."
+    pose:
+      - "{n} kneels with both hands pressed to their swollen chest and looks at {holder}. Two needs. One face. All begging."
+      - "{n} presses their forehead to {holder}'s hip and says nothing for a moment. Then: 'Please.' Then, quieter: 'Also, I'm full.'"
+
+  canine:
+    say:
+      - "Please fix it. I want to be knotted again. I want to be bred again. I need the collar on. Please."
+      - "It's falling apart and I need to be tied again and I can't stop thinking about the knot please fix it."
+    pose:
+      - "{n} presses back toward {holder} and then stops and looks over their shoulder at the collar and back at {holder}. Knotted and broken. Both."
+      - "{n} kneels and presents themselves and then looks back at the collar. The offering and the asking in the same motion."
+
+  equine:
+    say:
+      - "Please fix it. I want to be mounted again. I want to be filled all the way. I need the collar please."
+      - "The collar's going. I can feel it. Please fix it. I want to take it again. Please."
+    pose:
+      - "{n} spreads and lowers and presents perfectly and then looks back at the collar. They are asking for both at once."
+      - "{n} stands very still with their legs wide and their back arched and looks at {holder}. 'Please,' they say, meaning the collar and everything else."

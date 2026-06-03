@@ -87,12 +87,13 @@ class DegradingCollar(CollarItem):
         self.key              = "degrading collar"
         self.db.desc          = "A collar that won't last. You can tell just looking at it."
         self.db.worn_desc     = "A collar sits around the throat — pristine for now."
-        self.db.state         = "pristine"
+        self.db.state          = "pristine"
         self.db.lifespan_hours = 48.0
-        self.db.created_at    = None
-        self.db.last_beg_at   = 0.0
-        self.db.base_stim     = 1.0    # continuous_stimulation per tick at pristine
-        self.db.base_floor    = 10.0   # arousal_floor at pristine
+        self.db.created_at     = None
+        self.db.last_beg_at    = 0.0
+        self.db.base_stim      = 1.0    # continuous_stimulation per tick at pristine
+        self.db.base_floor     = 10.0   # arousal_floor at pristine
+        self.db.collar_variant = "leather_puppy"  # selects beg pool variant
 
         # Always self-remove locked
         self.db.binding_effects = {
@@ -212,13 +213,40 @@ class DegradingCollar(CollarItem):
         self.db.worn_desc = _STATE_DESCS.get(new_state, self.db.worn_desc)
 
     def _fire_beg(self, char):
-        """Fire a forced begging message at the cracked stage."""
+        """Fire a forced begging message — as the character, in their voice."""
         import random
-        cname = char.db.rp_name or char.name
-        msg   = random.choice(_BEG_MSGS).format(name=cname)
-        if char.location:
-            char.location.msg_contents(f"|x{msg}|n")
-        char.msg("|xYou can't hold it back. You beg.|n")
+        from world.forced_emote import forced_emote
+        from world.variant_loader import pick_collar_beg
+
+        holder = self._get_holder(char)
+        holder_name = (holder.db.rp_name or holder.name) if holder else "them"
+        collar_variant = getattr(self.db, "collar_variant", "leather_puppy")
+
+        # Alternate say and pose
+        use_say = random.random() < 0.5
+        msg_type = "say" if use_say else "pose"
+        msg = pick_collar_beg(collar_variant, msg_type)
+
+        if not msg:
+            msg = _BEG_MSGS[random.randint(0, len(_BEG_MSGS)-1)].format(name=char.db.rp_name or char.name)
+            forced_emote(char, msg, "pose")
+            return
+
+        msg = msg.replace("{holder}", holder_name).replace("{name}", char.db.rp_name or char.name)
+        emote_type = "say" if use_say else "pose"
+        forced_emote(char, msg, emote_type)
+
+    def _get_holder(self, char):
+        """Return the character currently leading this character, if any."""
+        led_by_id = getattr(char.db, "led_by", None)
+        if not led_by_id:
+            return None
+        try:
+            from evennia import search_object
+            results = search_object(f"#{led_by_id}", exact=True)
+            return results[0] if results else None
+        except Exception:
+            return None
 
     def _break(self, char, cname: str):
         """The collar breaks — release the wearer and leave a mark."""

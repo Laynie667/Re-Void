@@ -748,3 +748,94 @@ contracts:
     effect_arousal_floor: 35.0
     effect_stim_per_tick: 6.0
     typeclass: "typeclasses.milking_contract.MilkingContract"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PERMANENT BINDING COLLARS
+# ─────────────────────────────────────────────────────────────────────────────
+permanent_collars:
+  permanent_leather_puppy:
+    key: "Permanent Puppy Collar"
+    desc: "A leather collar that holds its cracked state permanently. It will not break."
+    collar_variant: "leather_puppy"
+    permanent_state: "cracked"
+    beg_interval: 1800.0
+    base_stim: 2.2
+    base_floor: 20.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+      pet_triggers: true
+      pet_type: "puppy"
+
+  permanent_silk_kitty:
+    key: "Permanent Kitty Collar"
+    desc: "A silk collar permanently frayed — it stayed."
+    collar_variant: "silk_kitty"
+    permanent_state: "frayed"
+    beg_interval: 1500.0
+    base_stim: 1.8
+    base_floor: 15.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+      pet_triggers: true
+      pet_type: "kitty"
+
+  permanent_hucow:
+    key: "Permanent Hucow Collar"
+    desc: "A wide dairy collar that never falls off."
+    collar_variant: "hucow"
+    permanent_state: "cracked"
+    beg_interval: 1200.0
+    base_stim: 3.0
+    base_floor: 25.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+      continuous_stimulation: 3.0
+      arousal_floor: 25.0
+
+  soul_binding_collar:
+    key: "Soul-Binding Collar"
+    desc: "A collar that glows cold at the edges. Its effects follow you everywhere you go."
+    collar_variant: "leather_puppy"
+    permanent_state: "cracked"
+    beg_interval: 2400.0
+    base_stim: 2.2
+    base_floor: 20.0
+    soul_bound: true
+    typeclass: "typeclasses.permanent_binding_collar.PermanentSoulBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      soul_bound: true
+      auto_consent: true
+      lock_navigation: true
+      orgasm_denial: true
+      continuous_stimulation: 2.2
+      arousal_floor: 20.0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ANIMATED FURNITURE SETUP NOTES
+# These are not spawned items — they are scripts applied to rooms.
+# See world/STAFF_COMMANDS.txt for installation commands.
+# ─────────────────────────────────────────────────────────────────────────────
+# Edge machine:
+#   @set here/has_edge_machine = 1
+#   @set here/edge_machine_zone = <zone_name>
+#   @set here/edge_release_word = release
+#   edgestart
+#
+# Milking stanchion:
+#   @set here/has_stanchion = 1
+#   @set here/stanchion_zone = <zone_name>
+#   @set here/stanchion_speed = steady
+#   stanchionstart
+#
+# Display pedestal:
+#   @set here/has_pedestal = 1
+#   @set here/pedestal_zone = <zone_name>
+#   @py from typeclasses.furniture_scripts import DisplayPedestalScript
+#   @py from evennia.utils import create; create.create_script(DisplayPedestalScript, obj=here, persistent=True, autostart=True)

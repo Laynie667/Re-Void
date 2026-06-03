@@ -342,11 +342,12 @@ class PassiveAccumulationScript(DefaultScript):
         except Exception:
             pass
 
-        # 7. Degrading collar tick
+        # 7. Degrading / permanent binding collar tick
         try:
             from typeclasses.degrading_collar import DegradingCollar
+            from typeclasses.permanent_binding_collar import PermanentBindingCollar
             for obj in list(char.contents):
-                if isinstance(obj, DegradingCollar) and obj.db.is_worn:
+                if isinstance(obj, (DegradingCollar, PermanentBindingCollar)) and obj.db.is_worn:
                     obj.tick()
         except Exception:
             pass

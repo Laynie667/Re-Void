@@ -346,6 +346,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_CONTRACT_CMDS:
             self.add(cmd_cls())
 
+        # Animated furniture commands
+        from commands.furniture_commands import ALL_FURNITURE_CMDS
+        for cmd_cls in ALL_FURNITURE_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
