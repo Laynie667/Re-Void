@@ -130,6 +130,14 @@ _INSULT_LINES = [
     "\"Whose name? You don't get a name, sow. You get a number and a schedule.\"",
     "\"Good cow,\" someone says, and it lands warmer in {t} than {t} wants it to.",
     "\"That's it. Drip for me. Dumb bitches drip when they're being good.\"",
+    "\"Look at the state of her,\" one says to the other, not to {t}. \"Couldn't form a sentence if you paid her. Perfect.\"",
+    "\"Cow's leaking from both ends again,\" the attendant notes, bored. \"Productive little thing. Shame about the rest of her.\"",
+    "\"You used to be somebody, didn't you,\" a handler says, almost kind, thumbing her chin. \"Can't tell anymore. Neither can you.\"",
+    "\"Hole's hungry,\" someone laughs, watching {t} clench around nothing. \"Beg for it, then. Go on. We've got all day to wait.\"",
+    "\"Number, not a name,\" the attendant reminds her, tapping the tag on her wrist. \"Say your number. ...She doesn't even know it. Write that down.\"",
+    "\"Bred, milked, and dumb as a post,\" a handler recites off the board. \"Facility's doing good work on this one.\"",
+    "\"Don't look at me like that. Tools don't look at me. Eyes down, hole.\"",
+    "\"She thanked the bull. Unprompted.\" A pause. \"We're nearly done with her.\"",
 ]
 
 # The animals — a kennel and stalls of varied, impatient stock.
@@ -342,6 +350,44 @@ _KNOTTRAIN_BEATS = [
     "being a struggle and starts being a thing her body just does.",
 ]
 
+# Forced verbal participation — what she's MADE to say. Her own voice used against her.
+_VERBAL_BEATS = [
+    "\"Ask for it,\" the handler says, and waits. {t} hears her own voice climb out of "
+    "her, thin and automatic — 'please... please breed me, please don't stop, please' — "
+    "and she didn't decide to say any of it. She doesn't decide to say things anymore. "
+    "The handler nods, satisfied, and lets the next one mount her.",
+    "\"Count them.\" So {t} counts, out loud, each load as it's pumped into her — 'four... "
+    "five...' — losing her place when one finishes too hard, made to start the tally over "
+    "from one. The number is the only words she's allowed, and even those aren't hers.",
+    "\"Thank it,\" the handler orders as the bull drags free of her. {t}'s mouth obeys "
+    "before any pride can catch it — 'thank you, thank you for breeding me.' The room logs "
+    "the compliance. The shame logs itself, separately, where only she can read it.",
+    "\"Say what you are.\" And she says it, flat and certain, because it's true now and "
+    "saying it is easier than whatever the alternative used to be: 'i'm a hole, i'm a cow, "
+    "i don't decide.' They make her say it twice, to be sure it's seated.",
+    "\"Beg, livestock.\" {t} begs. That's the part that's left the deepest mark — it isn't "
+    "hard anymore. She begs prettily, desperately, to be used, and means every word, and "
+    "hates that she means it, and begs anyway because the wanting is louder than the hate.",
+    "\"Whose are you?\" {t} answers without a pause, the way you answer your own name — "
+    "except this is the name that replaced it: 'the facility's, i'm the facility's.' Good "
+    "girl. The words land warm, and that's the worst of it.",
+]
+
+# False tenderness — the contrast that makes the rest land. Comfort as a leash.
+_RESPITE_BEATS = [
+    "For a moment it's almost kind. The lights soften, a warm cloth wipes {t} down, a hand "
+    "smooths her hair back and a low voice tells her she's doing so well, such a good girl, "
+    "the facility's so pleased with her. She leans into it before she can stop herself — and "
+    "that's the whole point. They're teaching her that gentleness only ever comes from them, "
+    "on their terms, as a reward for being used well. Then the cloth is gone and the timer "
+    "starts again.",
+    "A handler holds water to {t}'s lips and lets her drink, unhurried, almost tender, "
+    "thumbing a strand of hair off her wet face while she does. It's the only softness in "
+    "the whole room and she's pathetically grateful for it — which is exactly the lesson. "
+    "Comfort is theirs to dole out. She'll be good for the next one in the hope of a little "
+    "more of it. She knows she will. So do they.",
+]
+
 _WETTING_BEATS = [
     "{t} can't hold it any longer — and there's no one going to let her up, no break "
     "coming, so it just happens, hot and humiliating, soaking the cradle and running "
@@ -372,6 +418,20 @@ _DEGRADE_LINES = [
     "figures. It only goes up.",
     "\"Good breeder,\" the attendant says, the way one praises a tool that's holding "
     "its edge, and slaps {t}'s flank once, dismissively.",
+    "A clipboard is held up where {t} can read it: her own arousal, output, and breeding "
+    "count, all charted against a baseline labelled WHEN SHE STILL ARGUED. The line only "
+    "goes one way.",
+    "The attendant measures the gape of each of {t}'s holes with a gloved spread and calls "
+    "the numbers to the logger, comparing them aloud to last cycle's. \"Coming along. "
+    "Won't close at all by the end.\"",
+    "{t}'s milk is decanted, labelled with her number, and set on the rack beside the others "
+    "— product, dated and shelved, while she watches what comes out of her get filed away "
+    "from her.",
+    "A handler holds a mirror to {t} so she can watch herself be used. \"Look. That's what "
+    "you're for. Keep your eyes on it.\" She's marked down for how long she manages to.",
+    "Her belly's measured full, the number announced like a weather report, and a bet is "
+    "quietly settled between two handlers over how much more she'll take before it shows "
+    "from across the room.",
 ]
 
 # Deeper mindbreak — only once conditioning is well advanced.
@@ -401,6 +461,18 @@ _SUBLIMINALS = [
     "your holes already agreed. stop arguing with your holes.",
     "wet means yes. your body already submitted. catch up to it.",
     "you smell like heat and milk now. that's all you're for. thank the Process.",
+    "count the cocks if you want a number to hold onto. it's the only number that's yours.",
+    "holes don't have names. you keep reaching for one and it isn't there.",
+    "the begging works better than the silence. you've noticed. you'll use it.",
+    "every drop they put in you is a vote, and you don't get one.",
+    "you're not being punished. you're being finished. there's a difference and you'll learn it.",
+    "open. that's the whole instruction. it's such a relief when the instruction is that small.",
+    "your no got quieter again. soon it won't bother coming up at all.",
+    "you were a person with a schedule. now you're a schedule with a hole in it.",
+    "the ache is the truth. everything else is just the part of you that hasn't agreed yet.",
+    "good livestock doesn't dread the next cycle. good livestock waits for it. wait for it.",
+    "you'll ask for it before the end. not because they made you. because you forgot how not to.",
+    "let the number do the thinking. the number's never wrong. you were, constantly.",
 ]
 
 # The Process speaking directly — possessive, patient, certain. Private.
@@ -726,6 +798,9 @@ class FacilityScript(DefaultScript):
                     "|G  empty again, and empty is unbearable now — you clench around nothing, "
                     "desperate to be filled, and the pause is its own special cruelty for it. "
                     "you find yourself wishing the breeding phase would hurry back.|n")
+            # Rare false-tenderness beat — contrast that teaches comfort is theirs.
+            if random.random() < 0.22:
+                room.msg_contents("|C" + random.choice(_RESPITE_BEATS).format(t=t) + "|n")
             contract = self._contract()
             signed = getattr(target.db, "facility_signed", False) or (contract and contract.db.signed)
             if contract is not None and not signed:
@@ -1144,6 +1219,7 @@ class FacilityScript(DefaultScript):
             scenes += ["allholes", "allholes"]
         scenes.append("suspension")
         scenes.append("knottrain")
+        scenes += ["verbal", "verbal"]   # she's made to say it, often
         # Higher processing tiers weight the harsher scenes more heavily.
         try:
             from world.processing import processing_tier
@@ -1285,6 +1361,21 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
         room.msg_contents("|r" + random.choice(_FIST_BEATS).format(t=t) + "|n")
+
+    def _scene_verbal(self, room, target, t, cond, orifices):
+        # Forced speech — narrated as her own broken compliance. Counts as obeying.
+        room.msg_contents("|r" + random.choice(_VERBAL_BEATS).format(t=t) + "|n")
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(target); add_arousal(target, 6.0)
+        except Exception:
+            pass
+        if getattr(target.db, "facility_signed", False):
+            try:
+                from world.compliance import register_compliance
+                register_compliance(target, reward=False)
+            except Exception:
+                pass
 
     def _scene_prolapse(self, room, target, t, cond, orifices):
         try:
