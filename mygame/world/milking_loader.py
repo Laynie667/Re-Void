@@ -307,3 +307,16 @@ def pick_action_message(action: str) -> str | None:
     data = _load()
     msgs = data.get("actions", {}).get(action, [])
     return random.choice(msgs) if msgs else None
+
+
+def pick_edge_message(phase: str, msg_type: str = "private") -> str | None:
+    """
+    Return a random edge machine message for the given phase.
+
+    Args:
+        phase:    "building" | "approaching" | "near" | "held"
+        msg_type: "private" | "room"
+    """
+    data = _load()
+    msgs = data.get("edge_machine", {}).get(phase, {}).get(msg_type, [])
+    return random.choice(msgs) if msgs else None

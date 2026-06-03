@@ -96,24 +96,46 @@ class EdgeMachineScript(DefaultScript):
             char.db.orgasm_release_word   = getattr(room.db, "edge_release_word", "release")
 
             arousal = float(char.db.arousal or 0.0)
-            if arousal < 90:
+            cname   = char.db.rp_name or char.name
+
+            try:
+                from world.milking_loader import pick_edge_message
+                _edge = pick_edge_message
+            except Exception:
+                _edge = None
+
+            def _private(phase):
+                if _edge:
+                    msg = _edge(phase, "private")
+                    if msg:
+                        char.msg(msg)
+
+            def _room_msg(phase, chance=0.30):
+                if random.random() < chance and _edge:
+                    msg = _edge(phase, "room")
+                    if msg:
+                        room.msg_contents(msg.replace("{name}", cname), exclude=[char])
+
+            if arousal < 75:
                 add_arousal(char, 8.0)
+                if random.random() < 0.35:
+                    _private("building")
+                _room_msg("building", 0.15)
+            elif arousal < 90:
+                add_arousal(char, 8.0)
+                if random.random() < 0.50:
+                    _private("approaching")
+                _room_msg("approaching", 0.25)
             elif arousal < 99:
                 add_arousal(char, 3.0)
-                # Near-edge private message
-                if random.random() < 0.4:
-                    char.msg(random.choice(_EDGE_NEAR_MSGS))
+                if random.random() < 0.65:
+                    _private("near")
+                _room_msg("near", 0.35)
             else:
-                # At the edge — private hold message
-                if random.random() < 0.5:
-                    char.msg(random.choice(_EDGE_MSGS_PRIVATE))
-                # Room-visible occasional note
-                if random.random() < 0.25:
-                    cname = char.db.rp_name or char.name
-                    room.msg_contents(
-                        random.choice(_EDGE_MSGS_ROOM).format(name=cname),
-                        exclude=[char],
-                    )
+                # Held at the edge
+                if random.random() < 0.60:
+                    _private("held")
+                _room_msg("held", 0.25)
 
     def at_stop(self):
         """Release all occupants' denial when machine stops."""

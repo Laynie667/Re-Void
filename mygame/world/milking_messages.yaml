@@ -694,3 +694,75 @@ actions:
     - "{actor} squeezes {target}'s {zone} — firm, practiced strokes — and takes {vol}."
     - "{actor} milks {target}'s {zone} thoroughly. {vol} out."
     - "{actor} gets their hands on {target}'s {zone} and doesn't stop until they've taken {vol}."
+
+# ---------------------------------------------------------------------------
+# Edge machine message pools
+# private_* messages go only to the person in the machine
+# room_* messages fire occasionally for anyone watching
+# Phases: building (< 75) / approaching (75-90) / near (90-99) / held (99)
+# ---------------------------------------------------------------------------
+
+edge_machine:
+
+  building:
+    private:
+      - "The machine has established itself. The pressure is there now — low, patient, committed to the pace it has set."
+      - "Something in you has already conceded to the machine. It builds from there."
+      - "The machine works in small increments. It has all the time it needs."
+      - "The pressure is consistent. The machine is not interested in rushing this."
+      - "It settles into you methodically. The pace does not vary. The machine knows what it is building toward."
+      - "Low, even, cumulative. The machine is working and you are its only current project."
+      - "Each increment is small. The machine is patient in a way that suggests it has done this before."
+      - "The pressure is real and it is building. The machine notes your state without hurrying it."
+    room:
+      - "|x{name} is in the machine's custody now. The work has begun.|n"
+      - "|x{name} settles into the machine's rhythm — patient as the thing running it.|n"
+
+  approaching:
+    private:
+      - "The machine has adjusted. Whatever it was doing before, it is doing more of now."
+      - "Seventy-five. The machine has noted this and the pressure intensifies by a measured amount."
+      - "The threshold is ahead and the machine is accelerating toward it in small, deliberate steps."
+      - "You can feel the ceiling getting closer. The machine can feel it too. It is not slowing."
+      - "The pressure is specific now. Not general — it has a direction and a destination."
+      - "Ninety is visible from here. The machine has always known the way."
+      - "The machine is thorough. It leaves nothing on the table between here and the edge."
+      - "Closer. The machine does not rush. It also does not stop."
+    room:
+      - "|x{name}'s stillness is the kind that has a reason behind it.|n"
+      - "|x{name} is somewhere between where they started and where the machine is taking them.|n"
+      - "|xSomething has changed in how {name} is holding themselves.|n"
+
+  near:
+    private:
+      - "Ninety. The machine has noted it and kept going. The precision is different at this level."
+      - "You are close. The machine is close. Neither of you has arrived yet."
+      - "The edge is right there and the machine is keeping pace with it exactly."
+      - "At this point the machine is adjusting in real time. Very little separates you from where it's taking you."
+      - "The pressure is specific and surgical and the machine is not letting you look away from it."
+      - "Close enough that close doesn't quite cover it. The machine keeps the pace."
+      - "Ninety-five. The machine knows this. It does not break its rhythm."
+      - "The gap between here and there has a measurement. The machine is reducing it."
+    room:
+      - "|x{name} is working around something. The machine is the thing they're working around.|n"
+      - "|xThe quality of {name}'s attention has narrowed to a single point.|n"
+      - "|x{name} is at the machine's mercy now in a very specific sense.|n"
+
+  held:
+    private:
+      - "The machine holds you exactly where it has you. Right at the edge. No further. It does not lose track."
+      - "You are at ninety-nine and the machine knows it and is not giving you the last point. The pressure does not ease."
+      - "Right there. The machine keeps you right there. The release is present and unreachable."
+      - "The edge is precise. The machine is precise. You stay exactly at it."
+      - "You push against the ceiling the machine has set and it does not move. Neither do you."
+      - "The machine maintains this with the patience of something that has done it before and will do it again."
+      - "Ninety-nine. The machine has your number and it is holding it here. The release requires permission you do not have."
+      - "At the edge and not past it. The machine is very good at this."
+      - "The pressure stays constant. The ceiling stays constant. You stay at the ceiling."
+      - "The machine is keeping you in a very specific and very uncomfortable place and it is not tired."
+    room:
+      - "|x{name} is very still — a concentrated stillness, held in place by something specific.|n"
+      - "|xSomething in {name}'s posture has found its limit and stopped there.|n"
+      - "|x{name} breathes carefully — measured, controlled, working around something.|n"
+      - "|xThe machine has {name} somewhere. {name} is staying there.|n"
+      - "|x{name} is at the ceiling the machine has set. The ceiling is holding.|n"
