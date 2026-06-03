@@ -26,6 +26,7 @@ Then set:
 import time
 import random
 from evennia import DefaultScript
+from typeclasses.furniture_session import FurnitureSessionScript
 
 
 # ---------------------------------------------------------------------------
@@ -54,7 +55,7 @@ _EDGE_NEAR_MSGS = [
 ]
 
 
-class EdgeMachineScript(DefaultScript):
+class EdgeMachineScript(FurnitureSessionScript):
     """
     Holds an occupant at arousal 99 — just short of climax.
     Release requires: holder says configured release word, or 'endedge' command.
@@ -62,11 +63,17 @@ class EdgeMachineScript(DefaultScript):
     Attaches to a room. Zone set via room.db.edge_machine_zone.
     """
 
+    furniture_key = "edge_machine"
+    zone_attr     = "edge_machine_zone"
+    label         = "Edge Machine"
+    verbs         = [
+        "edgestart [zone] / edgestop",
+        "held at 99 — say the release word to finish",
+    ]
+
     def at_script_creation(self):
-        self.key        = "edge_machine"
-        self.persistent = True
-        self.repeats    = 0
-        self.interval   = 30   # check every 30 seconds
+        super().at_script_creation()
+        self.interval = 30   # check every 30 seconds
 
     def at_repeat(self):
         room = self.obj
@@ -77,20 +84,14 @@ class EdgeMachineScript(DefaultScript):
         if not zone_name:
             return
 
-        # Find occupants in the zone
-        from typeclasses.characters import Character
+        # Auto-stop if nobody is in the machine (prevents stale scripts).
+        riders = list(self.occupants(room, zone_name))
+        if self.note_occupancy(bool(riders)):
+            return
+
         from typeclasses.arousal_script import add_arousal
 
-        for char in room.contents:
-            if not isinstance(char, Character):
-                continue
-
-            # Check if they're seated/restrained in the target zone
-            # (uses seat mechanic occupant tracking)
-            occupied_zone = getattr(char.db, "seated_zone", None) or getattr(char.db, "restrained_zone", None)
-            if occupied_zone != zone_name:
-                continue
-
+        for char in riders:
             # Apply arousal_denial flag — cap at 99
             char.db.orgasm_denial         = True
             char.db.orgasm_release_word   = getattr(room.db, "edge_release_word", "release")
@@ -172,7 +173,7 @@ _STANCHION_RELEASE_MSGS = [
 ]
 
 
-class MilkingStanchionScript(DefaultScript):
+class MilkingStanchionScript(FurnitureSessionScript):
     """
     Restrains the occupant and auto-starts a milking session.
     Releases when milking is complete or occupant uses 'endmilk'.
@@ -180,11 +181,16 @@ class MilkingStanchionScript(DefaultScript):
     Attaches to a room. Zone set via room.db.stanchion_zone.
     """
 
+    furniture_key = "milking_stanchion"
+    zone_attr     = "stanchion_zone"
+    label         = "Milking Stanchion"
+    verbs         = [
+        "stanchionstart [zone] / stanchionrelease",
+    ]
+
     def at_script_creation(self):
-        self.key        = "milking_stanchion"
-        self.persistent = True
-        self.repeats    = 0
-        self.interval   = 10   # check every 10 seconds
+        super().at_script_creation()
+        self.interval = 10   # check every 10 seconds
 
     def at_repeat(self):
         room = self.obj
@@ -195,19 +201,16 @@ class MilkingStanchionScript(DefaultScript):
         if not zone_name:
             return
 
-        from typeclasses.characters import Character
+        # Auto-stop if nobody is locked in (prevents stale scripts).
+        riders = list(self.occupants(room, zone_name))
+        if self.note_occupancy(bool(riders)):
+            return
+
         from typeclasses.milking_session_script import MilkingSessionScript
         from evennia.utils import create
         from world.milking_loader import get_speed_config, pick_message
 
-        for char in room.contents:
-            if not isinstance(char, Character):
-                continue
-
-            occupied_zone = getattr(char.db, "seated_zone", None) or getattr(char.db, "restrained_zone", None)
-            if occupied_zone != zone_name:
-                continue
-
+        for char in riders:
             # Check if already milking
             already_milking = any(
                 isinstance(s, MilkingSessionScript)
@@ -265,7 +268,7 @@ _PEDESTAL_MSGS = [
 ]
 
 
-class DisplayPedestalScript(DefaultScript):
+class DisplayPedestalScript(FurnitureSessionScript):
     """
     When occupied, applies exhibition effect to the occupant and fires
     periodic room messages drawing attention to them.
@@ -273,11 +276,16 @@ class DisplayPedestalScript(DefaultScript):
     Attaches to a room. Zone set via room.db.pedestal_zone.
     """
 
+    furniture_key = "display_pedestal"
+    zone_attr     = "pedestal_zone"
+    label         = "Display Pedestal"
+    verbs         = [
+        "step onto the pedestal zone to be put on display",
+    ]
+
     def at_script_creation(self):
-        self.key        = "display_pedestal"
-        self.persistent = True
-        self.repeats    = 0
-        self.interval   = 120   # check every 2 minutes
+        super().at_script_creation()
+        self.interval = 120   # check every 2 minutes
 
     def at_repeat(self):
         room = self.obj
@@ -289,17 +297,20 @@ class DisplayPedestalScript(DefaultScript):
             return
 
         from typeclasses.characters import Character
+        present = False
         for char in room.contents:
             if not isinstance(char, Character):
                 continue
 
             occupied = getattr(char.db, "seated_zone", None) or getattr(char.db, "restrained_zone", None)
             if occupied != zone_name:
-                # Remove exhibition if they left
+                # Remove exhibition if they stepped off
                 if getattr(char.db, "on_pedestal", False):
                     char.db.on_pedestal       = False
                     char.db.exhibition_active = False
                 continue
+
+            present = True
 
             # Apply exhibition effect
             if not getattr(char.db, "on_pedestal", False):
@@ -314,6 +325,9 @@ class DisplayPedestalScript(DefaultScript):
             # Periodic display message
             cname = char.db.rp_name or char.name
             room.msg_contents(random.choice(_PEDESTAL_MSGS).format(name=cname))
+
+        # Auto-stop when the pedestal has stood empty a while.
+        self.note_occupancy(present)
 
 
 # ---------------------------------------------------------------------------

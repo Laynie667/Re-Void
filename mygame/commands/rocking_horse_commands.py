@@ -126,8 +126,7 @@ class CmdHorseStart(Command):
         from typeclasses.rocking_horse_script import RockingHorseScript
         from evennia.utils import create
 
-        existing = [s for s in room.scripts.all() if s.key == "rocking_horse"]
-        if existing:
+        if RockingHorseScript.is_running(room):
             self.caller.msg("|xThe horse is already running.|n")
             return
 
@@ -160,32 +159,27 @@ class CmdHorseStop(Command):
         if not room:
             return
         from typeclasses.rocking_horse_script import RockingHorseScript
-        stopped = False
-        for s in list(room.scripts.all()):
-            # Match by class AND by key — a persistent script whose typeclass
-            # failed to resolve loads as a plain DefaultScript but keeps the
-            # "rocking_horse" key, so an isinstance-only check would leak it.
-            if isinstance(s, RockingHorseScript) or getattr(s, "key", "") == "rocking_horse":
-                # Stop messages
-                try:
-                    pace = getattr(room.db, "horse_pace", "steady") or "steady"
-                    zone_name = getattr(room.db, "horse_zone", "horse")
-                    from typeclasses.characters import Character
-                    from world.rocking_horse_loader import pick_horse_msg
-                    for char in room.contents:
-                        if isinstance(char, Character) and getattr(char.db, "seated_zone", None) == zone_name:
-                            rider_name = char.db.rp_name or char.name
-                            stop_msg = pick_horse_msg(pace, "stop") or f"The horse stills under {rider_name}."
-                            room.msg_contents(stop_msg.replace("{rider}", rider_name))
-                            break
-                except Exception:
-                    pass
-                s.stop()
-                stopped = True
-        if stopped:
-            self.caller.msg("|wHorse stopped.|n")
-        else:
+        if not RockingHorseScript.is_running(room):
             self.caller.msg("|xNo horse session running here.|n")
+            return
+
+        # Emit a stop message once for any current rider.
+        try:
+            pace = getattr(room.db, "horse_pace", "steady") or "steady"
+            zone_name = getattr(room.db, "horse_zone", "horse")
+            from typeclasses.characters import Character
+            from world.rocking_horse_loader import pick_horse_msg
+            for char in room.contents:
+                if isinstance(char, Character) and getattr(char.db, "seated_zone", None) == zone_name:
+                    rider_name = char.db.rp_name or char.name
+                    stop_msg = pick_horse_msg(pace, "stop") or f"The horse stills under {rider_name}."
+                    room.msg_contents(stop_msg.replace("{rider}", rider_name))
+                    break
+        except Exception:
+            pass
+
+        RockingHorseScript.stop_all(room)
+        self.caller.msg("|wHorse stopped.|n")
 
 
 class CmdHorsePace(Command):

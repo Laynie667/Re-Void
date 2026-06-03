@@ -67,7 +67,11 @@ class CmdInsert(Command):
         ]
 
         if not orifice_zones:
-            caller.msg("|xYou have no orifice zones to insert into.|n")
+            caller.msg(
+                "|xYou have no orifice zones to insert into. Build one first, e.g.:|n\n"
+                "|w  zone add groin/vulva type=both intimate|n\n"
+                "|w  zone add groin/anus  type=orifice intimate|n"
+            )
             return
 
         if zone_arg:

@@ -49,8 +49,7 @@ class CmdEdgeStart(Command):
         from typeclasses.furniture_scripts import EdgeMachineScript
         from evennia.utils import create
 
-        existing = [s for s in room.scripts.all() if s.key == "edge_machine"]
-        if existing:
+        if EdgeMachineScript.is_running(room):
             caller.msg("|xEdge machine is already running.|n")
             return
 
@@ -74,12 +73,7 @@ class CmdEdgeStop(Command):
         if not room:
             return
         from typeclasses.furniture_scripts import EdgeMachineScript
-        stopped = False
-        for s in list(room.scripts.all()):
-            if isinstance(s, EdgeMachineScript):
-                s.stop()
-                stopped = True
-        if stopped:
+        if EdgeMachineScript.stop_all(room):
             self.caller.msg("|wEdge machine stopped. Occupants released.|n")
         else:
             self.caller.msg("|xNo edge machine running here.|n")
@@ -113,8 +107,7 @@ class CmdStanchionStart(Command):
         from typeclasses.furniture_scripts import MilkingStanchionScript
         from evennia.utils import create
 
-        existing = [s for s in room.scripts.all() if s.key == "milking_stanchion"]
-        if existing:
+        if MilkingStanchionScript.is_running(room):
             caller.msg("|xMilking stanchion is already running.|n")
             return
 
@@ -136,14 +129,18 @@ class CmdStanchionRelease(Command):
             return
         from typeclasses.furniture_scripts import MilkingStanchionScript
         from typeclasses.characters import Character
-        for s in room.scripts.all():
-            if isinstance(s, MilkingStanchionScript):
-                for char in room.contents:
-                    if isinstance(char, Character) and getattr(char.db, "stanchion_locked", False):
-                        s.release_occupant(char)
-                self.caller.msg("|wStanchion released.|n")
-                return
-        self.caller.msg("|xNo active milking stanchion here.|n")
+        sessions = MilkingStanchionScript.find(room)
+        if not sessions:
+            self.caller.msg("|xNo active milking stanchion here.|n")
+            return
+        s = sessions[0]
+        for char in room.contents:
+            if isinstance(char, Character) and getattr(char.db, "stanchion_locked", False):
+                if hasattr(s, "release_occupant"):
+                    s.release_occupant(char)
+                else:
+                    char.db.stanchion_locked = False
+        self.caller.msg("|wStanchion released.|n")
 
 
 # ---------------------------------------------------------------------------
@@ -229,10 +226,89 @@ class CmdDeprive(MuxCommand):
             caller.msg("|xNo one currently in deprivation here.|n")
 
 
+# ---------------------------------------------------------------------------
+# Furniture discovery
+# ---------------------------------------------------------------------------
+
+# (label, presence_attr, zone_attr|None, session_class_path|None, [verbs])
+_FURNITURE_REGISTRY = [
+    ("Rocking Horse", "horse_zone", "horse_zone",
+     "typeclasses.rocking_horse_script.RockingHorseScript",
+     ["horsemount [forward|backward] / horsedismount",
+      "horsestart / horsestop / horsepace <slow|steady|fast|intense>",
+      "horseupgrade add|remove <flag> / horsestatus"]),
+    ("Edge Machine", "edge_machine_zone", "edge_machine_zone",
+     "typeclasses.furniture_scripts.EdgeMachineScript",
+     ["edgestart [zone] / edgestop",
+      "held at 99 — say the release word to finish"]),
+    ("Milking Stanchion", "stanchion_zone", "stanchion_zone",
+     "typeclasses.furniture_scripts.MilkingStanchionScript",
+     ["stanchionstart [zone] / stanchionrelease"]),
+    ("Display Pedestal", "pedestal_zone", "pedestal_zone",
+     "typeclasses.furniture_scripts.DisplayPedestalScript",
+     ["step onto the pedestal zone to be put on display"]),
+    ("Milking Machine", "machine_zone", "machine_zone", None,
+     ["milk <target> [zone]"]),
+    ("Jacuzzi", "has_jacuzzi", None, None,
+     ["jacuzzi (see jacuzzi help for hosting/zones)"]),
+    ("Shower", "has_shower", None, None,
+     ["shower — step in and use it"]),
+]
+
+
+class CmdShowFurniture(Command):
+    """
+    List the interactive furniture installed in this room.
+
+    Usage:
+      showfurniture
+
+    Shows each installed device, the zone it uses, whether a session is
+    currently running, and the commands to operate it. Furniture is attached
+    to room zones; you interact with it by occupying the matching zone.
+    """
+    key     = "showfurniture"
+    aliases = ["furniture"]
+    locks   = "cmd:all()"
+    help_category = "Furniture"
+
+    def func(self):
+        room = self.caller.location
+        if not room:
+            return
+
+        from evennia.utils.utils import class_from_module
+
+        lines = []
+        for label, present_attr, zone_attr, cls_path, verbs in _FURNITURE_REGISTRY:
+            if not getattr(room.db, present_attr, None):
+                continue
+
+            head = f"|w{label}|n"
+            zone = getattr(room.db, zone_attr, None) if zone_attr else None
+            if zone:
+                head += f"  |c(zone: {zone})|n"
+            if cls_path:
+                try:
+                    cls = class_from_module(cls_path)
+                    head += "  |g[running]|n" if cls.is_running(room) else "  |x[idle]|n"
+                except Exception:
+                    pass
+            lines.append(head)
+            for v in verbs:
+                lines.append(f"    {v}")
+
+        if not lines:
+            self.caller.msg("|xThere's no interactive furniture installed here.|n")
+            return
+        self.caller.msg("|wInstalled furniture here:|n\n" + "\n".join(lines))
+
+
 ALL_FURNITURE_CMDS = [
     CmdEdgeStart,
     CmdEdgeStop,
     CmdStanchionStart,
     CmdStanchionRelease,
     CmdDeprive,
+    CmdShowFurniture,
 ]

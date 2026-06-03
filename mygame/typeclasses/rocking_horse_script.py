@@ -27,17 +27,20 @@ Room commands: horsestart / horsestop / horsepace / horsemount / horsedismount
 
 import time
 import random
-from evennia import DefaultScript
+from typeclasses.furniture_session import FurnitureSessionScript
 
 
-class RockingHorseScript(DefaultScript):
+class RockingHorseScript(FurnitureSessionScript):
     """Drives an active rocking horse session."""
 
-    def at_script_creation(self):
-        self.key        = "rocking_horse"
-        self.persistent = True
-        self.repeats    = 0
-        self.interval   = 45   # recalculated per pace on start
+    furniture_key = "rocking_horse"
+    zone_attr     = "horse_zone"
+    label         = "Rocking Horse"
+    verbs         = [
+        "horsemount [forward|backward] / horsedismount",
+        "horsestart / horsestop / horsepace <slow|steady|fast|intense>",
+        "horseupgrade add|remove <flag> / horsestatus",
+    ]
 
     def at_repeat(self):
         room = self.obj
@@ -48,10 +51,16 @@ class RockingHorseScript(DefaultScript):
         if not zone_name:
             return
 
+        # Auto-stop the session if nobody is riding (prevents stale scripts).
+        riders = list(self.occupants(room, zone_name))
+        if self.note_occupancy(bool(riders)):
+            return
+        if not riders:
+            return
+
         upgrades = list(getattr(room.db, "horse_upgrades", None) or [])
         pace     = getattr(room.db, "horse_pace", "steady") or "steady"
 
-        from typeclasses.characters import Character
         from typeclasses.arousal_script import add_arousal
         from world.rocking_horse_loader import (
             pick_horse_msg, get_horse_config
@@ -60,18 +69,7 @@ class RockingHorseScript(DefaultScript):
         config   = get_horse_config(pace)
         arousal_gain = config.get("arousal_per_tick", 6.0)
 
-        for char in room.contents:
-            if not isinstance(char, Character):
-                continue
-
-            # Check if rider is seated in the horse zone
-            occupied = (
-                getattr(char.db, "seated_zone", None) or
-                getattr(char.db, "restrained_zone", None)
-            )
-            if occupied != zone_name:
-                continue
-
+        for char in riders:
             rider_name = char.db.rp_name or char.name
 
             # Running message
