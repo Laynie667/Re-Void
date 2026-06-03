@@ -15,65 +15,73 @@ pet_beg:
 
   puppy:
     say:
-      - "Please please please fix it. I'll be so good. I promise. Please."
-      - "I need it fixed. Please. I'll do anything. Please."
-      - "It's breaking. Please. Replace it. Please I'll be so good please."
-      - "Please — it's going to break. Please. Please."
-      - "Fix it please. I'm asking. I'm begging. Please please please."
+      - "Please, please, please fix it — I'll be so good, I'll be perfect, I'll do anything you want, just don't let it come off me, please—"
+      - "I need it fixed, I need it, please — I'm shaking, I can't think, just put it back on me and I'll be the best you've ever had, please—"
+      - "It's breaking and I can feel it and it's making me crazy — please replace it, please, I'll beg all night, please—"
+      - "Please — fix it — I'll roll over, I'll show you everything, I'll do whatever you want, just keep it on me, please, please—"
+      - "Fix it, fix it, I'm begging, I'm on the floor begging, please, I need the weight of it on my throat, please—"
     pose:
-      - "{n} drops to their knees and presses their face against {holder}'s leg, whimpering. They are begging and they can't stop."
-      - "{n} paws at {holder}'s hand and looks up — eyes wide, tail-tuck visible in every line of their body. Please."
-      - "{n} makes a sound between a whine and a word, neither quite, and doesn't take their eyes off {holder}."
-      - "{n} sits back on their heels and raises both hands toward {holder}, shaking. Begging without words."
-      - "{n} noses at {holder}'s knee and looks up. The asking is completely visible. They have no dignity left about it."
+      - "{n} drops to their knees and grinds their face into {holder}'s thigh, whimpering, hips rocking against nothing because they can't keep still. Begging and well past helping it."
+      - "{n} paws at {holder}'s hand and drags it up toward the collar, toward their throat, eyes wet and wide, every line of them shaking with how badly they need it back."
+      - "{n} makes a broken sound — half whine, half plea — and presses their whole flushed body against {holder}'s leg, rutting slow and desperate, asking with all of it."
+      - "{n} sits back on their heels, thighs spread, hands raised and trembling, and looks up at {holder} like the collar is the only thing left in the world. No dignity, and not reaching for any."
+      - "{n} noses up {holder}'s leg, panting, and bares their throat — the cracked collar on display, the begging gone completely shameless. Please. Fix me. Please."
 
   kitty:
     say:
-      - "Please. I'll be good. I'll be so good. Just fix it. Please."
-      - "Fix the collar. Please. I'm asking nicely. I'm asking as nicely as I can."
-      - "It's almost gone. Please. I know you see it. Please fix it."
-      - "Please — I'll purr for you. I'll behave. I'll do anything. Fix it please."
+      - "Please — I'll purr, I'll be so good, I'll do anything you want done to me, just fix it, please—"
+      - "Fix the collar — please — I'm asking so nicely, I'm being so good, and I'm so worked up I can barely think, please—"
+      - "It's almost gone and I can't stand it, I can feel it slipping and it's driving me out of my mind, please fix it—"
+      - "Please, please — I'll arch for you, I'll present, I'll be the prettiest thing you own, just keep it locked on me—"
+      - "I know you can see what it's doing to me. I know you can tell. Please. Fix it. I'll earn it however you want me to."
     pose:
-      - "{n} winds around {holder}'s legs without stopping, head lowered, the asking in every pass."
-      - "{n} sits at {holder}'s feet and looks up through lowered lashes. The purr that starts is involuntary. They're still asking."
-      - "{n} butts their head slowly against {holder}'s hand and stays there — soft, repeated pressure, entirely a request."
-      - "{n} makes a small chirping sound in their throat — not quite a word, not quite not one — and doesn't move away."
-      - "{n} curls against {holder}'s ankle and goes still. The stillness is the begging. They are waiting to be answered."
+      - "{n} winds around {holder}'s legs, arching into every pass, the friction of it making them shiver — the asking gone needy and hot in every line."
+      - "{n} sinks to {holder}'s feet and looks up through lowered lashes, lips parted, the purr starting low and involuntary as their hips shift. Still asking — asking with everything now."
+      - "{n} drags their cheek up {holder}'s thigh, slow and deliberate, baring their throat and the failing collar, the want plain on their flushed face."
+      - "{n} presses their forehead to {holder}'s knee, breathing hard, one hand drifting between their own thighs before they catch it and freeze, mortified, still begging."
+      - "{n} curls against {holder}'s ankle and rolls their hips once, helplessly, then goes still and waits — the stillness trembling, the need pouring off them."
 
   bunny:
     say:
-      - "Please. I'm asking. I'm asking very nicely and I would really like it fixed."
-      - "It's breaking and I can't — please. Just please."
-      - "Please fix it. Please. I'm being very still and very good and I'm asking please."
+      - "Please — I'm being so still and so good but inside I'm — please, please fix it, I can't—"
+      - "It's breaking and I can't sit with it, I'm thumping, I'm shaking, please, I'll be perfect, please—"
+      - "Please fix it — I'm holding so still and it's so hard because I want — please, please—"
+      - "I'm asking so nicely and I'm so wound up I could cry, please, the collar, please don't let it go—"
+      - "Please. I'll present, I'll be good, I'll be quiet, just — please — I need it back on me, please—"
     pose:
-      - "{n} goes absolutely still and stares at {holder}. Their foot hits the floor once. Then again. They are asking."
-      - "{n} presses against {holder}'s side and doesn't move. Their nose twitches. The whole body is the question."
-      - "{n} sits upright with their hands folded neatly in their lap and looks at {holder} with enormous composure and enormous need simultaneously."
-      - "{n} does a small involuntary binky — a full-body shudder of distress — and then looks immediately at {holder}. Mortified. Still begging."
-      - "{n} thumps their foot twice, stops, and looks at the floor. Then back up. The foot hits again. They can't help it."
+      - "{n} goes rigid, every muscle locked, and stares at {holder} — but their thighs are pressed tight together and trembling, and their foot hits the floor, once, twice, helpless."
+      - "{n} presses against {holder}'s side and shivers, nose twitching, the whole quivering length of them one held breath of a plea. Please. Please."
+      - "{n} sits upright with hands folded and back straight — perfect composure ruined by the flush climbing their throat and the way they keep squeezing their knees together."
+      - "{n} does a full-body shudder they can't suppress, mortified, and immediately buries their face in {holder}'s hip to hide it — still asking, hotter for the shame of it."
+      - "{n} thumps their foot hard, stops, drops their gaze, then drags it back up to {holder} — wide-eyed, wet-eyed, wound impossibly tight."
 
   pony:
     say:
-      - "I'm — please. Please. I can't say it properly but you know what I'm asking."
-      - "Please — I'm presenting. I'm standing right. I'm asking correctly. Please fix it."
+      - "I — please — I can't say it right but you know, you know what I need, please fix it—"
+      - "Please — I'm presenting, I'm standing right, I'm being so good, please — the collar — please—"
+      - "I can't get the words, I'm too far gone, just — please — look at me, look how I'm asking—"
+      - "Please fix it, I'll carry anything, I'll take anything, just keep it on me, please—"
+      - "I'm being correct, I'm being perfect, and I'm dying for it, please, please fix the collar—"
     pose:
-      - "{n} steps in a tight circle, head tossing, unable to make the words come and saying it anyway in every movement."
-      - "{n} stops, plants their feet, and presents — weight back, back arched, completely correct — and looks at {holder} over their shoulder. Asking."
-      - "{n} stamps once, twice, and shakes their head hard enough that the collar shifts. They look at it. Look at {holder}. Look at it again."
-      - "{n} makes a sound in their throat that isn't a word and isn't not one. They go still. The asking is in every muscle."
-      - "{n} steps close to {holder} and drops their head against {holder}'s shoulder. Still. Just asking. Just that."
+      - "{n} steps a tight, restless circle, head tossing, flanks heaving — unable to make the words and saying it with the whole sweating, shifting line of their body."
+      - "{n} plants their feet and presents — weight back, spine arched deep, everything on offer — and looks at {holder} over their shoulder, eyes blown, begging without a sound."
+      - "{n} stamps, shakes their head until the collar swings, and grinds back against the empty air, frustrated and flushed and asking with every muscle."
+      - "{n} makes a low sound that isn't a word, shudders, and goes still mid-present — trembling, held, every line of them a plea."
+      - "{n} steps in close and drops their head to {holder}'s shoulder, breathing ragged, hips canted forward — still, except for the shaking, and burning with it."
 
   fox:
     say:
-      - "Please. I'm asking nicely. I know I'm cute enough to get away with it. Fix it?"
-      - "Please please — I'll yip for you. I'll be clever. Just fix the collar please."
-      - "It's falling apart and I need it not to. Please. I'm being very charming about this. Please."
+      - "Please — I'm cute, I'm clever, I'm completely wrecked over this, just fix it, please—"
+      - "Please, please, I'll yip, I'll charm you, I'll do filthy little tricks, just keep it on me—"
+      - "It's falling apart and so am I, please — I'm being so charming and I'm so desperate, please fix it—"
+      - "I can usually talk my way out of anything. I can't talk my way out of this. Please. I need it. Fix it."
+      - "Please — the collar — I'll be your clever little thing forever, just don't take it off me, please—"
     pose:
-      - "{n} pounces close to {holder}, pulls up short, sits. Their tail — if they have one — wraps around their feet. They look up sideways. Asking."
-      - "{n} circles {holder} once, twice, and curls at their feet with their chin on {holder}'s shoe. The asking is in the ear angle."
-      - "{n} yips — sharp, brief, impossible to ignore — and then looks immediately at the collar and back at {holder}."
-      - "{n} stands on their toes and cranes their neck toward {holder}, the collar stretched forward, the asking completely literal."
-      - "{n} grins at {holder} — all charm, no teeth — and then lets it slip. The asking comes through underneath."
+      - "{n} pounces close, pulls up short, and drops to a crouch at {holder}'s feet, tail curling tight — looking up sideways, all charm and all need, the grin already slipping."
+      - "{n} circles {holder} once, twice, and folds down with their chin on {holder}'s shoe, throat bared, hips shifting restlessly. The asking has stopped being cute."
+      - "{n} yips — sharp, desperate — and cranes their throat up toward {holder}, the failing collar stretched forward, the want completely literal and completely shameless."
+      - "{n} flashes the charming grin, holds it a beat, then lets it crack — and underneath is something raw and wound tight, rutting slow against {holder}'s shin before they catch themselves."
+      - "{n} stands on their toes, neck stretched, and presses the cracked collar toward {holder}'s hands like an offering, breathing hard, every clever line of them undone."
 
 # ─────────────────────────────────────────────────────────────────────────────
 # SHAFT TYPE WORSHIP POOLS
