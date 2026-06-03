@@ -162,7 +162,10 @@ class CmdHorseStop(Command):
         from typeclasses.rocking_horse_script import RockingHorseScript
         stopped = False
         for s in list(room.scripts.all()):
-            if isinstance(s, RockingHorseScript):
+            # Match by class AND by key — a persistent script whose typeclass
+            # failed to resolve loads as a plain DefaultScript but keeps the
+            # "rocking_horse" key, so an isinstance-only check would leak it.
+            if isinstance(s, RockingHorseScript) or getattr(s, "key", "") == "rocking_horse":
                 # Stop messages
                 try:
                     pace = getattr(room.db, "horse_pace", "steady") or "steady"
