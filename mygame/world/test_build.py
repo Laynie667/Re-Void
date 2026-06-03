@@ -1,14 +1,19 @@
 """
-world/test_build.py
+world/test_build.py — Re:Void system verification build
 
-Re:Void comprehensive test build script.
-Tests all new mechanics, items, effects, and furniture systems.
+Spawns and installs items/mechanics to test every new system.
+The Adjudicator NPC tracks your progress and tells you what's left.
 
-Run in-game as superuser:
+Run:
+  @reload
   @py exec(open('/home/laynie/ReVoid/mygame/world/test_build.py').read()); run_test_build(me)
 
-Then complete the test checklist printed at the end.
-When all flags are done, run the reset:
+During testing, ask the NPC:
+  say status    — see what's done and what's left
+  say help      — explanation of each test
+  say done      — NPC verifies completion and clears you to reset
+
+When cleared, run:
   @py exec(open('/home/laynie/ReVoid/mygame/world/test_reset.py').read()); run_test_reset(me)
 """
 
@@ -16,406 +21,417 @@ import time
 
 
 def run_test_build(caller):
-    """Entry point — run this with the character you want to test on."""
-
-    caller.msg("\n|w═══════════════════════════════════════════════|n")
-    caller.msg("|wRe:Void TEST BUILD — Starting...|n")
-    caller.msg("|w═══════════════════════════════════════════════|n\n")
-
-    results = []
-    errors  = []
-
-    # ── Helpers ──────────────────────────────────────────────────────────
-    def ok(msg):
-        results.append(f"  |g✓|n {msg}")
-
-    def err(msg):
-        errors.append(f"  |r✗|n {msg}")
-
-    def section(title):
-        caller.msg(f"\n|w── {title} ──|n")
-
-    def _find_zone(caller, zone_type):
-        """Find first zone of the given type on the character."""
-        zones = getattr(caller.db, "zones", None) or {}
-        for zn, zd in zones.items():
-            if (zd or {}).get("zone_type") == zone_type:
-                return zn
-        return None
-
-    def _find_zones(caller, zone_type):
-        zones = getattr(caller.db, "zones", None) or {}
-        return [zn for zn, zd in zones.items()
-                if (zd or {}).get("zone_type") == zone_type]
-
-    # ── Detect character zones ────────────────────────────────────────────
-    section("Detecting Zones")
-    zones = getattr(caller.db, "zones", None) or {}
-    if not zones:
-        caller.msg("|rNo zones detected. Make sure your character is set up with zones.|n")
-        return
-
-    orifice_zone = _find_zone(caller, "orifice") or _find_zone(caller, "both")
-    surface_zones = [zn for zn, zd in zones.items()
-                     if (zd or {}).get("zone_type") in ("surface", "attachment", "both")]
-    shaft_zone = _find_zone(caller, "shaft")
-
-    caller.msg(f"  Orifice zone:  |w{orifice_zone or 'NONE'}|n")
-    caller.msg(f"  Surface zones: |w{', '.join(surface_zones[:3]) or 'NONE'}|n")
-    caller.msg(f"  Shaft zone:    |w{shaft_zone or 'NONE'}|n")
-
-    if not orifice_zone:
-        caller.msg("|yNo orifice zone found. Plug and WombRoom tests will be skipped.|n")
-
-    # ── Initialize test flags ─────────────────────────────────────────────
-    caller.db.test_build_active   = True
-    caller.db.test_flag_edge      = False   # get arousal to 99 via edge machine
-    caller.db.test_flag_horse     = False   # mount and start the rocking horse
-    caller.db.test_flag_womb      = False   # enter the WombRoom
-    caller.db.test_flag_speech    = False   # say something while filtered (auto-set)
-    caller.db.test_flag_chastity  = False   # attempt penetrate while chastity locked
-    caller.db.test_flag_collar    = False   # let degrading collar tick once
-    caller.db.test_flag_contract  = False   # sign the test milking contract
-    caller.db.test_items_installed = []     # track dbref strings for cleanup
-
-    items_installed = []
-
-    from world.item_loader import spawn_item
-
-    # ── 1. PLUG ───────────────────────────────────────────────────────────
-    section("Plug Installation")
-    if orifice_zone:
-        try:
-            plug = spawn_item(caller, "metal_plug")
-            if plug:
-                ok_result, reason = plug.insert(caller, orifice_zone)
-                if ok_result:
-                    items_installed.append(plug.dbref)
-                    ok(f"Metal Plug inserted into {orifice_zone}")
-                else:
-                    err(f"Plug insert failed: {reason}")
-        except Exception as e:
-            err(f"Plug creation error: {e}")
-    else:
-        caller.msg("  |xSkipped — no orifice zone.|n")
-
-    # ── 2. VIBRATING EGG + REMOTE ────────────────────────────────────────
-    section("Vibrating Egg + Remote")
-    if orifice_zone:
-        try:
-            from typeclasses.vibration_item import VibratingPlugItem
-            egg = spawn_item(caller, "vibrating_egg")
-            remote = spawn_item(caller, "standard_remote")
-            if egg and remote:
-                # Don't insert yet — let the player try it
-                remote.db.paired_item = egg.dbref
-                items_installed.extend([egg.dbref, remote.dbref])
-                ok(f"Vibrating Egg in inventory (not yet inserted)")
-                ok(f"Remote Control paired to egg — use: insert Vibrating Egg {orifice_zone}")
-                ok(f"Then test: vibrate {caller.db.rp_name or caller.name} medium")
-        except Exception as e:
-            err(f"Vibrating egg error: {e}")
-
-    # ── 3. PIERCINGS ──────────────────────────────────────────────────────
-    section("Piercings")
-    try:
-        nipple_zone = next((zn for zn in surface_zones
-                            if "chest" in zn or "breast" in zn or "nipple" in zn), None)
-        groin_zone  = next((zn for zn in zones.keys()
-                            if "groin" in zn or "pussy" in zn or "clit" in zn), None)
-
-        if nipple_zone:
-            ring = spawn_item(caller, "nipple_ring")
-            if ring:
-                ok_r, reason = ring.wear(caller, nipple_zone)
-                if ok_r:
-                    items_installed.append(ring.dbref)
-                    ok(f"Nipple Ring on {nipple_zone} (+20% sensitivity)")
-                else:
-                    err(f"Nipple ring failed: {reason}")
-        else:
-            caller.msg("  |xNo chest zone found for nipple ring — install manually.|n")
-
-        if groin_zone and orifice_zone:
-            clit = spawn_item(caller, "clit_ring")
-            if clit:
-                ok_r, reason = clit.wear(caller, orifice_zone)
-                if ok_r:
-                    items_installed.append(clit.dbref)
-                    ok(f"Clit Ring on {orifice_zone} (+35% sensitivity)")
-                else:
-                    caller.msg(f"  |xClit ring: {reason} — try: wear Clit Ring {orifice_zone}|n")
-    except Exception as e:
-        err(f"Piercing error: {e}")
-
-    # ── 4. COLLAR + DEGRADING ────────────────────────────────────────────
-    section("Collars")
-    try:
-        # Training collar (normal)
-        training = spawn_item(caller, "training_collar")
-        if training:
-            ok_r, reason = training.wear(caller)
-            if ok_r:
-                items_installed.append(training.dbref)
-                ok("Training Collar worn")
-            else:
-                caller.msg(f"  |xTraining collar: {reason}|n")
-
-        # Degrading leather collar (to test degradation)
-        deg = spawn_item(caller, "degrading_leather")
-        if deg:
-            items_installed.append(deg.dbref)
-            caller.msg(f"  |yDegrading Collar in inventory — wear it manually: wear Worn Leather Collar|n")
-            caller.msg(f"  |yThen wait for a passive tick (or force one) to see it degrade.|n")
-    except Exception as e:
-        err(f"Collar error: {e}")
-
-    # ── 5. CHASTITY (timed, so it auto-releases) ─────────────────────────
-    section("Chastity")
-    if orifice_zone:
-        try:
-            belt = spawn_item(caller, "chastity_belt_timed_8h")
-            if belt:
-                ok_r, reason = belt.wear(caller, orifice_zone)
-                if ok_r:
-                    items_installed.append(belt.dbref)
-                    ok(f"Timed Chastity Belt on {orifice_zone} (8h timer)")
-                    ok("TEST: Try 'penetrate' on yourself or get someone to try")
-                    ok("  The chastity should block it — set test_flag_chastity = True after confirming")
-                else:
-                    caller.msg(f"  |xChastity belt: {reason}|n")
-        except Exception as e:
-            err(f"Chastity error: {e}")
-
-    # ── 6. WEARABLE + CAMOUFLAGE ─────────────────────────────────────────
-    section("Wearable / Camouflage")
-    try:
-        uniform = spawn_item(caller, "schoolgirl_uniform")
-        if uniform:
-            items_installed.append(uniform.dbref)
-            caller.msg("  |ySchoolgirlUniform in inventory.|n")
-            caller.msg("  |yWear it: wear Schoolgirl Uniform|n")
-            caller.msg("  |yThen have someone 'look' at you — they should see the camouflage desc.|n")
-            caller.msg("  |yYou 'look' at yourself — you see real zones.|n")
-    except Exception as e:
-        err(f"Wearable error: {e}")
-
-    # ── 7. BRAND ──────────────────────────────────────────────────────────
-    section("Brand / Mark")
-    try:
-        brand = spawn_item(caller, "temp_brand")
-        if brand:
-            items_installed.append(brand.dbref)
-            ok("Temp Brand in inventory")
-            caller.msg("  |yApply it to yourself: brand me [zone]|n")
-            caller.msg("  |yOr apply to another character: brand <target> [zone]|n")
-    except Exception as e:
-        err(f"Brand error: {e}")
-
-    # ── 8. APHRODISIAC ────────────────────────────────────────────────────
-    section("Aphrodisiac")
-    try:
-        aph = spawn_item(caller, "mild_aphrodisiac")
-        room_candle = spawn_item(caller, "room_candle")
-        wolf_bait   = spawn_item(caller, "wolf_bait_mild")
-        for item in [aph, room_candle, wolf_bait]:
-            if item:
-                items_installed.append(item.dbref)
-        ok("Mild Aphrodisiac, Room Candle, Wolf Bait (Mild) in inventory")
-        caller.msg("  |yUse (personal): @py [aph] = [find in inventory]; aph.use(me)|n")
-        caller.msg("  |yUse (room):     @py [candle] = [find in inventory]; candle.use(me)|n")
-        caller.msg("  |yWolf bait flags you for wolf NPC reactions.|n")
-    except Exception as e:
-        err(f"Aphrodisiac error: {e}")
-
-    # ── 9. MILKING CONTRACT ───────────────────────────────────────────────
-    section("Milking Contract")
-    try:
-        contract = spawn_item(caller, "standard_milking_contract")
-        if contract:
-            # Add a visible clause
-            contract.db.author_id = caller.id
-            contract.add_clause(
-                "The signee agrees to present themselves for milking at the "
-                "operator's discretion for a period of twenty-four hours.",
-                hidden=False
-            )
-            # Add a hidden clause
-            contract.add_clause(
-                "The signee's arousal floor is set to 30 for the duration. "
-                "They did not read this clause before signing.",
-                hidden=True
-            )
-            contract.add_clause(
-                "The signee's say is filtered through third_person for one "
-                "hour following signing.",
-                hidden=True
-            )
-            items_installed.append(contract.dbref)
-            ok("Milking Contract created with 1 visible + 2 hidden clauses")
-            caller.msg("  |yRead it: contract/read Milking Contract|n")
-            caller.msg("  |ySign it: contract/sign Milking Contract  ← sets test_flag_contract|n")
-            caller.msg("  |yReveal hidden: contract/reveal/all Milking Contract|n")
-    except Exception as e:
-        err(f"Contract error: {e}")
-
-    # ── 10. WOMB ROOM ─────────────────────────────────────────────────────
-    section("WombRoom")
-    if orifice_zone:
-        try:
-            caller.msg(f"  |yInstall WombRoom on {orifice_zone}:|n")
-            caller.msg(f"  |w  wombroom/install {orifice_zone}|n")
-            caller.msg(f"  |y  Then set desc: wombroom/desc = <interior text>|n")
-            caller.msg(f"  |y  Add yourself as resident: wombroom/resident add {caller.db.rp_name or caller.name}|n")
-            caller.msg(f"  |y  Enter: enter {caller.db.rp_name or caller.name} {orifice_zone}|n")
-            caller.msg(f"  |y  Leave: leave|n")
-            caller.msg(f"  |y  Completing entry sets test_flag_womb automatically.|n")
-        except Exception as e:
-            err(f"WombRoom setup error: {e}")
-    else:
-        caller.msg("  |xSkipped — no orifice zone.|n")
-
-    # ── 11. BINDING EFFECTS ───────────────────────────────────────────────
-    section("Binding Effects")
-    try:
-        # Apply speech filter (third_person) — mild, clearly shows the filter working
-        caller.db.active_speech_filters = ["third_person"]
-        caller.db.stim_per_tick         = 3.0
-        caller.db.arousal_floor         = 15.0
-        ok("Speech filter: third_person (say something — it transforms)")
-        ok("Continuous stimulation: 3.0 per passive tick")
-        ok("Arousal floor: 15.0 (arousal won't decay below this)")
-        caller.msg("  |ySay something now — it will come out in third person.|n")
-        caller.msg("  |y  This auto-sets test_flag_speech when you speak.|n")
-
-        # Set orgasm denial OFF for now (edge machine will set it)
-        caller.db.orgasm_denial = False
-        ok("Orgasm denial: OFF — the edge machine will enable it")
-    except Exception as e:
-        err(f"Binding effects error: {e}")
-
-    # ── 12. ANIMATED FURNITURE IN CURRENT ROOM ───────────────────────────
-    section("Animated Furniture Setup")
     room = caller.location
     if not room:
-        caller.msg("  |xNo room found. Run this while standing somewhere.|n")
-    else:
+        caller.msg("|rRun this while standing in a room.|n")
+        return
+
+    caller.msg("\n|w══════════════════════════════════════════════|n")
+    caller.msg("|wRe:Void — SYSTEM VERIFICATION BUILD|n")
+    caller.msg("|w══════════════════════════════════════════════|n\n")
+
+    ok_log  = []
+    err_log = []
+    inst    = []   # item dbrefs for cleanup
+
+    def ok(msg):   ok_log.append(f"  |g✓|n {msg}")
+    def err(msg):  err_log.append(f"  |r✗|n {msg}")
+    def sec(title): caller.msg(f"\n|w── {title} ──|n")
+
+    def spawn(key):
         try:
-            # Pick a room zone for furniture
-            room_zones = getattr(room.db, "zones", None) or {}
-            furniture_zone = next(iter(room_zones), None) if room_zones else None
-
-            if furniture_zone:
-                # Edge machine
-                from typeclasses.furniture_scripts import EdgeMachineScript
-                from evennia.utils import create
-                existing_edge = [s for s in room.scripts.all() if s.key == "edge_machine"]
-                if not existing_edge:
-                    room.db.edge_machine_zone = furniture_zone
-                    room.db.edge_release_word = "release"
-                    create.create_script(EdgeMachineScript, obj=room,
-                                         persistent=True, autostart=True)
-                    ok(f"Edge Machine installed on zone '{furniture_zone}'")
-                    ok("  To test: sit in the zone, wait for arousal to reach 99")
-                    ok("  Then say 'release' to lift the denial")
-                    ok("  This sets test_flag_edge when arousal hits 99")
-                else:
-                    ok("Edge Machine already running")
-
-                # Rocking Horse
-                from typeclasses.rocking_horse_script import RockingHorseScript
-                existing_horse = [s for s in room.scripts.all() if s.key == "rocking_horse"]
-                if not existing_horse:
-                    room.db.horse_zone     = furniture_zone
-                    room.db.horse_pace     = "steady"
-                    room.db.horse_upgrades = ["motorized", "vibrating", "milking"]
-                    # Don't autostart — player mounts first
-                    ok(f"Rocking Horse configured on zone '{furniture_zone}'")
-                    ok("  Upgrades: motorized, vibrating, milking")
-                    ok("  To test: horsemount → horsestart → watch the session → horsestop")
-                    ok("  This sets test_flag_horse when you mount and start")
-                else:
-                    ok("Rocking Horse already configured")
-            else:
-                caller.msg("  |yRoom has no zones. Creating furniture notes only.|n")
-                caller.msg("  |y  Add room zone: roomzone add horse_pad|n")
-                caller.msg("  |y  Then: @set here/horse_zone = horse_pad; horsestart|n")
-
+            from world.item_loader import spawn_item
+            return spawn_item(caller, key)
         except Exception as e:
-            err(f"Furniture setup error: {e}")
+            err(f"spawn '{key}': {e}")
+            return None
 
-    # ── 13. AROUSAL BOOST ────────────────────────────────────────────────
-    section("Arousal State")
+    def track(item):
+        if item and hasattr(item, "dbref"):
+            inst.append(item.dbref)
+
+    # Detect zones
+    zones   = getattr(caller.db, "zones", None) or {}
+    orifice = next((z for z, d in zones.items()
+                    if (d or {}).get("zone_type") in ("orifice", "both")), None)
+    surfaces = [z for z, d in zones.items()
+                if (d or {}).get("zone_type") in ("surface", "attachment", "both")]
+    chest   = next((z for z in surfaces if "chest" in z or "breast" in z), None)
+    shaft   = next((z for z, d in zones.items()
+                    if (d or {}).get("zone_type") == "shaft"), None)
+
+    caller.msg(f"  Orifice: |w{orifice or 'none'}|n   "
+               f"Chest: |w{chest or 'none'}|n   "
+               f"Shaft: |w{shaft or 'none'}|n")
+
+    # Initialise all 13 test flags
+    for f in [
+        "test_flag_speech",    "test_flag_edge",       "test_flag_horse",
+        "test_flag_womb",      "test_flag_chastity",   "test_flag_collar",
+        "test_flag_contract",  "test_flag_cycle",      "test_flag_body_mods",
+        "test_flag_inflation", "test_flag_pet",        "test_flag_arousal",
+        "test_flag_womb_flood","test_build_active",
+    ]:
+        setattr(caller.db, f, False)
+    caller.db.test_build_active = True
+    caller.db.test_items_installed = []
+
+    # ─────────────────────────────────────────────────────────────────
+    # 1. BODY MODS — tests {size}, {vol}, {circ}, {diam} zone tokens
+    # ─────────────────────────────────────────────────────────────────
+    sec("Body Mods — zone token testing")
+    try:
+        from evennia.utils import create as _c
+        from typeclasses.body_mod_item import BreastItem, TesticleItem
+        from typeclasses.production_item import MilkProductionItem
+
+        if chest:
+            bi = _c.create_object(BreastItem, key="Test Breast Mod", location=caller)
+            bi.db.size = 10.0            # L-ish, clearly visible in {size}
+            ok_r, r = bi.install(caller, chest)
+            if ok_r:
+                track(bi); ok(f"Breast mod (size 10) on {chest}")
+                caller.msg(f"  |yToken test → zone set {chest} = {{size}} breast holding {{vol}}.|n")
+            else:
+                err(f"Breast mod: {r}")
+
+            mp = _c.create_object(MilkProductionItem, key="Test Milk Glands", location=caller)
+            mp.db.current_volume_ml = 800.0
+            mp.db.base_rate_ml_per_tick = 12.0
+            ok_r, r = mp.install(caller, chest)
+            if ok_r:
+                track(mp); ok(f"Milk Glands (800ml) on {chest}")
+            else:
+                err(f"Milk glands: {r}")
+
+        if orifice:
+            ti = _c.create_object(TesticleItem, key="Test Testicle Mod", location=caller)
+            ti.db.size = 9.0; ti.db.mod_type = "testicle"
+            ok_r, r = ti.install(caller, orifice)
+            if ok_r:
+                track(ti); ok(f"Testicle mod (size 9, melon) on {orifice}")
+                caller.msg(f"  |yToken test → zone set {orifice} = {{size}}, each one {{diam}} across.|n")
+            else:
+                err(f"Testicle mod: {r}")
+
+        caller.db.test_flag_body_mods = False  # set True after examining zone descs
+        ok("FLAG 9: examine zone descs to see tokens, then: @py me.db.test_flag_body_mods=True")
+    except Exception as e:
+        err(f"Body mods: {e}")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 2. PLUGS + PIERCINGS
+    # ─────────────────────────────────────────────────────────────────
+    sec("Plugs + Piercings")
+    if orifice:
+        p = spawn("metal_plug")
+        if p:
+            ok_r, _ = p.insert(caller, orifice)
+            if ok_r: track(p); ok(f"Metal Plug inserted → {orifice}")
+
+        vib = spawn("vibrating_egg")
+        rem = spawn("standard_remote")
+        if vib and rem:
+            rem.db.paired_item = vib.dbref
+            track(vib); track(rem)
+            ok("Vibrating Egg + paired Remote in inventory")
+            caller.msg(f"  |yTest: insert Vibrating Egg {orifice} → vibrate {caller.db.rp_name or caller.name} medium|n")
+
+    if chest:
+        nr = spawn("nipple_ring")
+        if nr:
+            ok_r, _ = nr.wear(caller, chest)
+            if ok_r: track(nr); ok(f"Nipple Ring on {chest} (+20% sensitivity)")
+
+    if orifice:
+        cr = spawn("clit_ring")
+        if cr:
+            ok_r, r = cr.wear(caller, orifice)
+            if ok_r: track(cr); ok(f"Clit Ring on {orifice} (+35% sensitivity)")
+            else: caller.msg(f"  |yClit ring: {r} — try: wear Clit Ring {orifice}|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 3. INFLATION — tests inflate/check/drain + {inflation} token
+    # ─────────────────────────────────────────────────────────────────
+    sec("Inflation")
+    if orifice:
+        try:
+            from typeclasses.inflation_item import InflationItem, add_inflation_volume
+            from evennia.utils import create as _c
+            inf = _c.create_object(InflationItem, key="Test Inflation Kit", location=caller)
+            inf.db.max_volume_ml = 500.0
+            inf.db.drain_rate_ml_per_tick = 25.0
+            ok_r, r = inf.install_into_zone(caller, orifice, caller)
+            if ok_r:
+                track(inf)
+                add_inflation_volume(caller, orifice, 100.0, "fluid")   # pre-fill to notable
+                ok(f"Inflation installed on {orifice} (pre-filled ~100ml, max 500)")
+                caller.msg(f"  |yTest: inflate me {orifice} 200 → inflate/check me {orifice}|n")
+                caller.msg(f"  |yToken: zone set {orifice} = currently {{inflation}} inside.|n")
+                caller.msg(f"  |yDrain: inflate/drain me {orifice}|n")
+                caller.msg(f"  |yThen: @py me.db.test_flag_inflation=True|n")
+            else:
+                caller.msg(f"  |yInflation install: {r}. Try: use Test Inflation Kit on {orifice}|n")
+                track(inf)
+        except Exception as e:
+            err(f"Inflation: {e}")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 4. WOMB ROOM — tests enter/look/flood/leave/pulse
+    # ─────────────────────────────────────────────────────────────────
+    sec("WombRoom")
+    if orifice:
+        try:
+            from typeclasses.womb_room import WombRoom
+            from evennia.utils import create as _c
+            wb = _c.create_object(
+                WombRoom,
+                key=f"{caller.db.rp_name or caller.name}'s Test WombRoom",
+                location=None,
+            )
+            ok_r, r = wb.install(caller, orifice)
+            if ok_r:
+                track(wb)
+                wb.db.womb_fluid_ml  = 600.0    # pre-fill to knee level
+                wb.db.womb_fluid_type = "fluid"
+                wb.add_friend(caller)
+                wb.db.housing_locked = False
+                ok(f"WombRoom installed on {orifice}, knee-deep fluid pre-loaded")
+                caller.msg(f"  |ySet desc: wombroom/desc = <text>|n")
+                caller.msg(f"  |yEnter: enter {caller.db.rp_name or caller.name} {orifice}|n")
+                caller.msg(f"  |yLook inside — flood description should show.|n")
+                caller.msg(f"  |yLeave: leave|n")
+                caller.msg(f"  |yThen: @py me.db.test_flag_womb=True; me.db.test_flag_womb_flood=True|n")
+            else:
+                err(f"WombRoom: {r}")
+        except Exception as e:
+            err(f"WombRoom: {e}")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 5. CHASTITY — tests zone block on penetrate
+    # ─────────────────────────────────────────────────────────────────
+    sec("Chastity")
+    if orifice:
+        belt = spawn("chastity_belt_timed_8h")
+        if belt:
+            ok_r, r = belt.wear(caller, orifice)
+            if ok_r:
+                track(belt)
+                ok(f"Timed Chastity Belt (8h) on {orifice}")
+                caller.msg(f"  |yTest: penetrate me {orifice}  — should be blocked.|n")
+                caller.msg(f"  |yThen: @py me.db.test_flag_chastity=True|n")
+            else:
+                caller.msg(f"  |yChastity blocked — try: wear Timed Chastity Belt (8h) {orifice}|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 6. COLLARS — puppy (pet triggers) + degrading (state machine)
+    # ─────────────────────────────────────────────────────────────────
+    sec("Collars")
+    pc = spawn("puppy_collar")
+    if pc:
+        ok_r, _ = pc.wear(caller)
+        if ok_r:
+            track(pc)
+            ok("Puppy Collar worn — pet triggers active, auto_consent on")
+            caller.msg(f"  |yTest trigger: sayto {caller.db.rp_name or caller.name} stay  (then: free)|n")
+            caller.msg(f"  |yOr ask the Adjudicator: say run pet test|n")
+
+    deg = spawn("degrading_leather")
+    if deg:
+        track(deg)
+        caller.msg("  |yWorn Leather Collar in inventory — wear it to test degradation:|n")
+        caller.msg("  |w  wear Worn Leather Collar|n")
+        caller.msg("  |yForce a tick: @py [c for c in me.contents if hasattr(c.db,'state') and getattr(c.db,'is_worn',False)][0].tick()|n")
+        caller.msg("  |yThen: @py me.db.test_flag_collar=True|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 7. MILKING CONTRACT — visible + hidden clauses, sign + reveal
+    # ─────────────────────────────────────────────────────────────────
+    sec("Milking Contract")
+    contract = spawn("standard_milking_contract")
+    if contract:
+        contract.db.author_id = caller.id
+        contract.add_clause(
+            "The signee presents for milking at the operator's discretion "
+            "for twenty-four hours.",
+            hidden=False
+        )
+        contract.add_clause(
+            "Arousal floor raised to 40 for the duration of this agreement.",
+            hidden=True
+        )
+        contract.add_clause(
+            "Speech rendered in third person for one hour post-signing.",
+            hidden=True
+        )
+        track(contract)
+        ok("Milking Contract (1 visible, 2 hidden clauses)")
+        caller.msg("  |yRead:   contract/read Milking Contract|n")
+        caller.msg("  |ySign:   contract/sign Milking Contract  ← hidden effects activate|n")
+        caller.msg("  |yReveal: contract/reveal/all Milking Contract|n")
+        caller.msg("  |yThen: @py me.db.test_flag_contract=True|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 8. CYCLE MACHINE — restraint → milk → boost → rest
+    # ─────────────────────────────────────────────────────────────────
+    sec("Cycle Machine")
+    if chest:
+        try:
+            from evennia.utils import create as _c
+            from typeclasses.milking_machine_mechanic import MilkingMachineMechanic
+            mm = _c.create_object(MilkingMachineMechanic, key="Test Milking Machine", location=room)
+            room_zones = getattr(room.db, "zones", None) or {}
+            if chest in room_zones:
+                mech = dict((room_zones[chest].get("mechanics") or {}))
+                mech["milking_machine"] = {"item_dbref": mm.dbref, "item_name": mm.key, "speed": "steady"}
+                zc = dict(room_zones[chest]); zc["mechanics"] = mech
+                zs = dict(room_zones); zs[chest] = zc
+                room.db.zones = zs
+                ok(f"Milking machine installed on room zone '{chest}'")
+            else:
+                caller.msg(f"  |yRoom has no zone '{chest}'. Create it: roomzone add {chest}|n")
+                caller.msg(f"  |yThen re-run the build.|n")
+                mm.delete()
+
+            caller.msg("  |yStart cycle on yourself:|n")
+            caller.msg(f"  |w  @py from typeclasses.cycle_script import CycleScript; from evennia.utils import create; s=create.create_script(CycleScript,obj=me,persistent=True,autostart=False); s.db.machine_zone='{chest}'; s.start(); me.msg('Cycle running.')|n")
+            caller.msg("  |yLet it run one full phase (15 sec) then: endcycle|n")
+            caller.msg("  |yThen: @py me.db.test_flag_cycle=True|n")
+        except Exception as e:
+            err(f"Cycle machine: {e}")
+    else:
+        caller.msg("  |yNo chest zone in room. Create: roomzone add chest, then re-run.|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 9. APHRODISIACS
+    # ─────────────────────────────────────────────────────────────────
+    sec("Aphrodisiacs")
+    for key in ("mild_aphrodisiac", "room_candle", "wolf_bait_mild"):
+        a = spawn(key); track(a) if a else None
+    ok("Mild Aphrodisiac, Room Candle, Wolf Bait in inventory")
+    caller.msg("  |yPersonal: @py [o for o in me.contents if 'Aphrodisiac' in o.key][0].use(me)|n")
+    caller.msg("  |yRoom:     @py [o for o in me.contents if 'Candle' in o.key][0].use(me)|n")
+    caller.msg("  |yWolf bait: @py [o for o in me.contents if 'Wolf' in o.key][0].use(me)|n")
+    caller.msg("  |yCheck: @py from typeclasses.aphrodisiac_item import check_wolf_bait; me.msg(str(check_wolf_bait(me)))|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 10. ANIMATED FURNITURE — edge machine + rocking horse
+    # ─────────────────────────────────────────────────────────────────
+    sec("Animated Furniture")
+    room_zones = getattr(room.db, "zones", None) or {}
+    fzone = next(iter(room_zones), None)
+
+    if fzone:
+        try:
+            from typeclasses.furniture_scripts import EdgeMachineScript
+            from typeclasses.rocking_horse_script import RockingHorseScript
+            from evennia.utils import create as _c
+
+            if not any(s.key == "edge_machine" for s in room.scripts.all()):
+                room.db.edge_machine_zone = fzone
+                room.db.edge_release_word = "release"
+                _c.create_script(EdgeMachineScript, obj=room, persistent=True, autostart=True)
+                ok(f"Edge Machine on '{fzone}'  — release word: release")
+            else:
+                ok("Edge Machine already running")
+
+            if not any(s.key == "rocking_horse" for s in room.scripts.all()):
+                room.db.horse_zone     = fzone
+                room.db.horse_pace     = "steady"
+                room.db.horse_upgrades = ["motorized", "vibrating", "milking", "restrained"]
+                ok(f"Rocking Horse on '{fzone}' (steady, upgrades: motorized/vibrating/milking/restrained)")
+                caller.msg("  |yhorsemount → horsestart → let it run → horsestop → horsedismount|n")
+            else:
+                ok("Rocking Horse already configured")
+        except Exception as e:
+            err(f"Furniture: {e}")
+    else:
+        caller.msg("  |yRoom needs at least one zone for furniture. roomzone add station|n")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 11. BINDING EFFECTS — test-level, not maxed
+    # ─────────────────────────────────────────────────────────────────
+    sec("Binding Effects (test levels)")
+    try:
+        caller.db.active_speech_filters = ["third_person"]
+        caller.db.arousal_floor         = 30.0
+        caller.db.stim_per_tick         = 4.0
+        caller.db.orgasm_denial         = True
+        caller.db.orgasm_release_word   = "release"
+        ok("Speech filter: third_person  (say something to verify it transforms)")
+        ok("Arousal floor: 30  (arousal won't decay below this)")
+        ok("Stimulation: 4/tick  (passive ticks push arousal up)")
+        ok("Orgasm denial: ON  (say 'release' or sit on edge machine to test)")
+        caller.msg("  |yTest speech: say anything — output should be third-person.|n")
+        caller.msg("  |yThen: @py me.db.test_flag_speech=True|n")
+        caller.msg("  |yTest denial: try to climax via machine, then say: say release|n")
+        caller.msg("  |yThen: @py me.db.test_flag_arousal=True|n")
+    except Exception as e:
+        err(f"Effects: {e}")
+
+    # ─────────────────────────────────────────────────────────────────
+    # 12. AROUSAL BOOST — push into test range
+    # ─────────────────────────────────────────────────────────────────
+    sec("Arousal")
     try:
         from typeclasses.arousal_script import add_arousal, ensure_arousal_script
         ensure_arousal_script(caller)
-        add_arousal(caller, 50.0)
-        current = caller.db.arousal or 0.0
-        ok(f"Arousal boosted to ~{current:.0f} (floor is 15)")
-        ok("The edge machine will push you to 99 — watch the threshold messages")
+        add_arousal(caller, 60.0)
+        ok(f"Arousal boosted to ~{caller.db.arousal or 0:.0f}  (threshold messages at 75/90/95)")
     except Exception as e:
-        err(f"Arousal error: {e}")
+        err(f"Arousal: {e}")
 
-    # ── Store items list for cleanup ──────────────────────────────────────
-    caller.db.test_items_installed = items_installed
+    # ─────────────────────────────────────────────────────────────────
+    # 13. THE ADJUDICATOR — progress tracker NPC
+    # ─────────────────────────────────────────────────────────────────
+    sec("Adjudicator NPC")
+    try:
+        from typeclasses.adjudicator_npc import AdjudicatorNPC
+        from evennia.utils import create as _c
+        adj = _c.create_object(AdjudicatorNPC, key="The Adjudicator", location=room)
+        adj.db.adjudicator_caller_id = caller.id
+        adj.db.adjudicator_active    = True
+        track(adj)
+        ok(f"The Adjudicator is in the room (#{adj.id})")
+        caller.msg("  |y  say status  — see what's done and what's left|n")
+        caller.msg("  |y  say help    — get explanation of each test|n")
+        caller.msg("  |y  say run pet test  — Adjudicator runs pet triggers on you|n")
+        caller.msg("  |y  say done    — Adjudicator verifies all flags and clears you to reset|n")
+        room.msg_contents(
+            "|xA figure steps into the room and opens a small ledger. "
+            "\"System verification in progress,\" they say. "
+            "\"Thirteen items on the list. Ask me for status at any time.\"|n"
+        )
+    except Exception as e:
+        err(f"Adjudicator: {e}")
 
-    # ── Summary ──────────────────────────────────────────────────────────
-    caller.msg("\n|w═══════════════════════════════════════════════|n")
-    caller.msg("|wINSTALLATION RESULTS:|n")
-    for line in results:
-        caller.msg(line)
-    if errors:
-        caller.msg("\n|rERRORS:|n")
-        for line in errors:
-            caller.msg(line)
+    # ─────────────────────────────────────────────────────────────────
+    caller.db.test_items_installed = inst
 
-    caller.msg(f"\n|w{len(items_installed)} items installed/created.|n")
+    caller.msg("\n|w══════════════════════════════════════════════|n")
+    caller.msg("|wRESULTS:|n")
+    for line in ok_log: caller.msg(line)
+    if err_log:
+        caller.msg("\n|rNON-FATAL ERRORS (manual steps shown above):|n")
+        for line in err_log: caller.msg(line)
 
-    # ── Test Checklist ────────────────────────────────────────────────────
+    caller.msg(f"\n|w{len(inst)} items/scripts installed. Adjudicator has the list.|n")
     caller.msg("""
-|w═══════════════════════════════════════════════|n
-|wYOUR TEST CHECKLIST|n
-|w═══════════════════════════════════════════════|n
-
-Complete ALL of these before running the reset script.
-The reset will not run until every flag is set.
-
-|w1. SPEECH FILTER|n — Say anything out loud (it will come out as third person).
-   |x→ Automatically sets test_flag_speech when you speak.|n
-
-|w2. EDGE MACHINE|n — Sit in the room zone, let your arousal reach 99.
-   Feel the "hold" messages. Then say: |wsay release|n
-   |x→ Manually set after: @py me.db.test_flag_edge = True|n
-
-|w3. ROCKING HORSE|n — Mount the horse: |whorsemount|n
-   Start the session: |whersestart|n
-   Run at least one full tick (45 sec on steady). Stop: |whorsestop|n
-   |x→ Manually set after: @py me.db.test_flag_horse = True|n
-
-|w4. WOMB ROOM|n — Install WombRoom on your orifice zone:
-   |wwombroom/install <zone>|n then add yourself as resident,
-   then: |wenter <your name> <zone>|n and |wleave|n
-   |x→ Manually set after: @py me.db.test_flag_womb = True|n
-
-|w5. CHASTITY|n — While wearing the chastity belt, attempt:
-   |wpenetrate me groin/pussy|n (should be blocked)
-   |x→ Manually set after: @py me.db.test_flag_chastity = True|n
-
-|w6. DEGRADING COLLAR|n — Wear the Worn Leather Collar:
-   |wwear Worn Leather Collar|n
-   Force a tick: |w@py [c for c in me.contents if hasattr(c.db,'state') and c.db.is_worn][0].tick()|n
-   Watch it advance state and fire a beg.
-   |x→ Automatically sets test_flag_collar on first beg.|n
-
-|w7. MILKING CONTRACT|n — Sign the test contract:
-   |wcontract/sign Milking Contract|n
-   Watch the hidden effects activate (speech filter, arousal floor).
-   Then reveal the hidden clauses:
-   |wcontract/reveal/all Milking Contract|n
-   |x→ Automatically sets test_flag_contract on sign.|n
-
-|w═══════════════════════════════════════════════|n
-When all flags complete, run:
-  |w@py exec(open('/home/laynie/ReVoid/mygame/world/test_reset.py').read()); run_test_reset(me)|n
-|w═══════════════════════════════════════════════|n
+|w══════════════════════════════════════════════|n
+|wQUICK REFERENCE — ask the Adjudicator for detail|n
+|w══════════════════════════════════════════════|n
+  1.  Speech filter      say anything
+  2.  Edge machine       sit in zone, reach 99, say release
+  3.  Rocking horse      horsemount → horsestart → horsestop
+  4.  WombRoom           enter yourself → look → leave
+  5.  Chastity           try to penetrate while belted
+  6.  Degrading collar   wear it → force tick
+  7.  Contract           sign → reveal hidden clauses
+  8.  Cycle machine      start → let run → endcycle
+  9.  Body mods          check zone descs for tokens
+  10. Inflation          inflate → check → drain
+  11. Pet triggers       say run pet test to Adjudicator
+  12. Arousal cycle      ride through 75/90/95/99
+  13. WombRoom flood     enter → see knee-deep level
+|w══════════════════════════════════════════════|n
 """)
