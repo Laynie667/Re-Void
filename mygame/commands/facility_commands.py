@@ -76,16 +76,24 @@ class CmdBoard(Command):
         if dep:
             lines.append(f"  Drug dependence: {dep}")
 
-        # Holes — gape state per orifice.
-        gape = getattr(d, "gape", None) or {}
-        if gape:
+        # Holes — gape state + trained capabilities per orifice.
+        holes = getattr(d, "holes", None) or {}
+        if holes:
             try:
-                from world.gang_breeding import gape_word
-                parts = [f"{zn.split('/')[-1].replace('_',' ')}: {gape_word(who, zn)}"
-                         for zn in gape]
-                lines.append("  Holes:          " + " | ".join(parts))
+                from world.gang_breeding import gape_word, hole_capabilities
+                for zn, h in holes.items():
+                    disp = zn.split("/")[-1].replace("_", " ")
+                    caps = hole_capabilities(who, zn)
+                    captxt = (" — trained: " + ", ".join(sorted(caps))) if caps else ""
+                    lines.append(f"  {disp:<14} {gape_word(who, zn)} "
+                                 f"(used {int(h.get('use',0))}x){captxt}")
             except Exception:
                 pass
+        pierc = getattr(d, "piercings", None) or []
+        if pierc:
+            lines.append(f"|wPIERCINGS:|n  {len(pierc)}")
+            for p in pierc:
+                lines.append(f"    • {p.get('desc', p.get('loc',''))}")
         bl = float(getattr(d, "bladder_ml", 0) or 0)
         if bl > 0:
             state = "|rBURSTING|n" if bl >= 500 else ("aching" if bl >= 350 else "filling")

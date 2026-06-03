@@ -294,16 +294,20 @@ def _birth_offspring(target, species, generation=1):
 GAPE_PERMANENT_AT = 18.0
 
 
-def add_gape(target, zone_name, amount):
-    """Stretch a hole with use. Past a threshold it gapes permanently — a mark."""
+def record_use(target, zone_name, amount=1.0):
+    """Log use of a hole: raises its use count and gape, trains its capacity, and
+    past a threshold the hole gapes permanently (a bleed-over mark)."""
     if not target or not zone_name:
         return
-    gape = dict(getattr(target.db, "gape", None) or {})
-    g = float(gape.get(zone_name, 0.0)) + float(amount)
-    gape[zone_name] = g
-    target.db.gape = gape
+    holes = dict(getattr(target.db, "holes", None) or {})
+    h = dict(holes.get(zone_name) or {"use": 0, "gape": 0.0})
+    h["use"]  = int(h.get("use", 0)) + 1
+    h["gape"] = float(h.get("gape", 0.0)) + float(amount)
+    holes[zone_name] = h
+    target.db.holes = holes
+
     perm = list(getattr(target.db, "permanent_gape", None) or [])
-    if g >= GAPE_PERMANENT_AT and zone_name not in perm:
+    if h["gape"] >= GAPE_PERMANENT_AT and zone_name not in perm:
         perm.append(zone_name)
         target.db.permanent_gape = perm
         disp = zone_name.split("/")[-1].replace("_", " ")
@@ -318,15 +322,76 @@ def add_gape(target, zone_name, amount):
                 f"improvement.|n")
 
 
+def add_gape(target, zone_name, amount):
+    """Back-compat alias — all use is recorded through record_use now."""
+    record_use(target, zone_name, amount)
+
+
+def hole_capabilities(target, zone_name):
+    """What a hole can now take, earned through training/use. Returns a set."""
+    h = (getattr(target.db, "holes", None) or {}).get(zone_name) or {}
+    use  = int(h.get("use", 0)); gape = float(h.get("gape", 0.0))
+    caps = set()
+    if use >= 6  or gape >= 5:  caps.add("knot")
+    if use >= 14 or gape >= 10: caps.add("double")
+    if use >= 22 or gape >= 14: caps.add("fist")
+    if zone_name in (getattr(target.db, "permanent_gape", None) or []):
+        caps.add("prolapse")
+    return caps
+
+
 def gape_word(target, zone_name):
     """A descriptor for a hole's current state, for prose."""
-    g = float((getattr(target.db, "gape", None) or {}).get(zone_name, 0.0))
+    h = (getattr(target.db, "holes", None) or {}).get(zone_name) or {}
+    g = float(h.get("gape", 0.0))
     if zone_name in (getattr(target.db, "permanent_gape", None) or []):
         return "permanently gaping"
     if g >= 12: return "gaping"
     if g >= 6:  return "stretched loose"
     if g >= 2:  return "used and puffy"
     return "tight"
+
+
+# ── Piercings ───────────────────────────────────────────────────────────────
+# location -> (description, +stim_per_tick, +arousal_floor)
+_PIERCINGS = {
+    "nipples":   ("heavy captive rings locked through both nipples", 1.5, 6.0),
+    "clit":      ("a thick barbell driven through the clit itself", 2.5, 10.0),
+    "clit_hood": ("a ring through the clit hood, tugging with every move", 1.5, 6.0),
+    "labia":     ("a locked ladder of rings down both labia", 1.0, 4.0),
+    "septum":    ("a heavy septum ring — a handle, really, to lead her by", 0.4, 0.0),
+    "tongue":    ("a barbell through the tongue", 0.4, 0.0),
+    "navel":     ("a dangling navel piercing", 0.3, 0.0),
+}
+
+
+def add_piercing(target, location=None):
+    """Pierce a part of her — permanent, with a sensitivity effect and a mark."""
+    if not target:
+        return None
+    import random as _r
+    have = [p.get("loc") for p in (getattr(target.db, "piercings", None) or [])]
+    options = [k for k in _PIERCINGS if k not in have]
+    location = location if location in _PIERCINGS else (_r.choice(options) if options else None)
+    if not location:
+        return None
+    desc, stim, floor = _PIERCINGS[location]
+    pl = list(getattr(target.db, "piercings", None) or [])
+    pl.append({"loc": location, "desc": desc})
+    target.db.piercings = pl
+    target.db.stim_per_tick = float(getattr(target.db, "stim_per_tick", 0) or 0) + stim
+    if floor:
+        target.db.arousal_floor = max(float(getattr(target.db, "arousal_floor", 0) or 0), floor)
+    marks = list(getattr(target.db, "facility_brands", None) or [])
+    marks.append(f"pierced: {desc} — permanent")
+    target.db.facility_brands = marks
+    return desc
+
+
+def clear_session_state(target):
+    """Clear the per-session hole/use state (not the permanent marks)."""
+    target.db.holes = None
+
 
 
 def summarize_quota(target):

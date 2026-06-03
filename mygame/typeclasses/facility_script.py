@@ -299,6 +299,49 @@ _GOLDEN_BEATS = [
 ]
 
 # Bladder desperation / forced wetting — they don't let livestock up to piss.
+# Fisting — once a hole's trained loose enough to take a whole arm.
+_FIST_BEATS = [
+    "A handler greases up to the elbow and works his whole fist into {t}'s cunt — knuckles "
+    "first, then the wide of the hand, her trained-loose hole swallowing it with a wet give "
+    "that wouldn't have been possible a dozen cycles ago. He punches it in to the wrist and "
+    "past, fucking her open on his forearm while she shakes and gushes, and the attendant "
+    "notes — approvingly — how much she takes now without tearing.",
+    "{t}'s ass is loose enough now that a handler simply folds his hand and pushes, sinking "
+    "fist-deep into her with a slow obscene stretch, working her open around his knuckles "
+    "until she's gaping wide around his wrist. She was made to take this. The cycles made her.",
+]
+
+# Prolapse — extreme, only once a hole is permanently ruined.
+_PROLAPSE_BEATS = [
+    "They've used {t}'s hole past anything that closes now — and when the last cock pulls out "
+    "of her with a wet drag, her insides come with it, a slick pink bloom turned out of her "
+    "and left on display, leaking and twitching. The attendant photographs it for the file, "
+    "logs it as peak training, and pushes it back in with two fingers like it's nothing.",
+]
+
+# Spitroast — used at both ends at once by two breeders.
+_SPITROAST_BEATS = [
+    "Two of them take {t} at once, front to back — one buried down her throat, one rutting "
+    "into her cunt — and they fuck her between them like a thing to be passed and shared, her "
+    "whole body rocked on the two of them, gagging on one end and gushing on the other, both "
+    "of them finishing in her almost together.",
+]
+
+# Suspension — strung up and used hanging, no leverage of her own.
+_SUSPENSION_BEATS = [
+    "{t} is winched up off the cradle in a web of straps, hung spread and helpless at exactly "
+    "breeding height, and used like that — swinging on whatever's in her, no leverage, no "
+    "purchase, nothing to do but hang there and be a hole at the right altitude for the line.",
+]
+
+# Knot-training — deliberately tied and held, teaching the hole to take the lock.
+_KNOTTRAIN_BEATS = [
+    "This round is training: a hound is let onto {t} and the moment it knots her the handler "
+    "holds them tied, won't let it pull, makes her hole learn the lock — held stuffed and "
+    "swollen on the knot for long minutes past when she's begging, until taking it stops "
+    "being a struggle and starts being a thing her body just does.",
+]
+
 _WETTING_BEATS = [
     "{t} can't hold it any longer — and there's no one going to let her up, no break "
     "coming, so it just happens, hot and humiliating, soaking the cradle and running "
@@ -847,15 +890,17 @@ class FacilityScript(DefaultScript):
             pass
 
     def _proc_pierce(self, room, target, t):
-        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 45.0)
-        target.db.stim_per_tick = float(getattr(target.db, 'stim_per_tick', 0) or 0) + 1.5
-        self._mark(target, "heavy rings pierced through both nipples, clit hood, and cunt — permanent")
+        # One or two new piercings, each a real permanent mark + sensitivity.
+        from world.gang_breeding import add_piercing
+        got = [d for d in (add_piercing(target) for _ in range(random.randint(1, 2))) if d]
+        if not got:
+            return
+        which = "; ".join(got)
         room.msg_contents(
             f"|GA tray of needles is wheeled to {t}'s station and they pierce her without "
-            f"anaesthetic — both nipples, the hood of her clit, the rim of her cunt — threading "
-            f"thick steel rings through each fresh hole and tugging to seat them. Everything is "
-            f"louder now: every pull of the cups, every drip down her thighs, sings through the "
-            f"new metal. (permanent piercings — sensitivity up)|n")
+            f"anaesthetic — {which} — threading the steel through and tugging each one to seat "
+            f"it. Everything is louder now: every pull of the cups, every drip down her thighs, "
+            f"sings through the new metal. (permanent piercings — sensitivity up)|n")
 
     def _proc_brand(self, room, target, t):
         spot = random.choice(["one hip", "the swell of her ass", "her lower belly, over the womb"])
@@ -1049,11 +1094,25 @@ class FacilityScript(DefaultScript):
         if not orifices:
             return
         heat = getattr(target.db, "perpetual_heat", False)
-        scenes = ["single", "single", "single", "double", "bukkake", "golden", "offspring"]
+        scenes = ["single", "single", "double", "bukkake", "golden", "offspring", "spitroast"]
         if len([z for z in orifices if self._is_oral(z)]):
             scenes.append("oral")
         if len(orifices) >= 3 and (heat or random.random() < 0.5):
             scenes += ["allholes", "allholes"]
+        scenes.append("suspension")
+        scenes.append("knottrain")
+        # Capability-gated scenes unlock as her holes train looser.
+        try:
+            from world.gang_breeding import hole_capabilities
+            caps = set()
+            for z in self._holes_only(target):
+                caps |= hole_capabilities(target, z)
+            if "fist" in caps:
+                scenes += ["fist", "fist"]
+            if "prolapse" in caps:
+                scenes.append("prolapse")
+        except Exception:
+            pass
         getattr(self, f"_scene_{random.choice(scenes)}")(room, target, t, cond, orifices)
 
     def _scene_single(self, room, target, t, cond, orifices):
@@ -1136,6 +1195,49 @@ class FacilityScript(DefaultScript):
             f"it and breeds her in turn. The loop closes... and the {species} quota climbs "
             f"by {penalty} for it. The line breeds itself through her, and the finish line "
             f"only moves further away.|n")
+
+    def _scene_spitroast(self, room, target, t, cond, orifices):
+        holes = self._holes_only(target)
+        orals = [z for z in orifices if self._is_oral(z)]
+        if not holes:
+            return self._scene_single(room, target, t, cond, orifices)
+        self._breed_one(room, target, random.choice(holes), self._pick_species(target), cond, gape_mult=1.3)
+        if orals:
+            self._breed_one(room, target, random.choice(orals), self._pick_species(target), cond, gape_mult=1.2)
+        room.msg_contents("|r" + random.choice(_SPITROAST_BEATS).format(t=t) + "|n")
+
+    def _scene_suspension(self, room, target, t, cond, orifices):
+        zone = random.choice(self._holes_only(target) or orifices)
+        self._breed_one(room, target, zone, self._pick_species(target), cond, gape_mult=1.4)
+        room.msg_contents("|r" + random.choice(_SUSPENSION_BEATS).format(t=t) + "|n")
+
+    def _scene_knottrain(self, room, target, t, cond, orifices):
+        zone = random.choice(self._holes_only(target) or orifices)
+        self._breed_one(room, target, zone, "hound", cond, gape_mult=1.8)
+        room.msg_contents("|r" + random.choice(_KNOTTRAIN_BEATS).format(t=t) + "|n")
+
+    def _scene_fist(self, room, target, t, cond, orifices):
+        try:
+            from world.gang_breeding import hole_capabilities, record_use
+            holes = [z for z in self._holes_only(target) if "fist" in hole_capabilities(target, z)]
+            zone = random.choice(holes or self._holes_only(target) or orifices)
+            record_use(target, zone, random.uniform(2.0, 3.5))
+        except Exception:
+            zone = random.choice(self._holes_only(target) or orifices)
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(target); add_arousal(target, 18.0)
+        except Exception:
+            pass
+        room.msg_contents("|r" + random.choice(_FIST_BEATS).format(t=t) + "|n")
+
+    def _scene_prolapse(self, room, target, t, cond, orifices):
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(target); add_arousal(target, 14.0)
+        except Exception:
+            pass
+        room.msg_contents("|R" + random.choice(_PROLAPSE_BEATS).format(t=t) + "|n")
 
     def _addendum(self, contract, target, t):
         """Clause 11: the facility amends the contract with new hidden pages."""
