@@ -42,20 +42,20 @@ SPEED_MULTIPLIERS = {
 
 SPEED_DESCRIPTIONS = {
     "slow": (
-        "The machine hums at a low, patient frequency — the cups work "
-        "with a slow, even pull that leaves nothing rushed."
+        "The machine hums low and lazy — the cups working with a slow, even "
+        "pull that's in no hurry whatsoever, coaxing it up a drop at a time."
     ),
     "steady": (
-        "The machine settles into a measured rhythm — steady suction, "
-        "consistent intervals, neither demanding nor gentle."
+        "The machine drops into a working rhythm — steady suction, even "
+        "intervals, the cups grinding away like they've clocked in for a shift."
     ),
     "fast": (
-        "The machine accelerates — the rhythm quickens and the pull becomes "
-        "more insistent, working past what has simply accumulated."
+        "The machine winds up — the rhythm quickening, the pull turning "
+        "greedy, dragging it out faster than the body can refill between cycles."
     ),
     "intense": (
-        "The machine runs at full draw — deep, persistent suction that "
-        "leaves the body aware of exactly what it is giving."
+        "The machine runs flat out — deep, hammering suction that leaves the "
+        "body in absolutely no doubt about exactly how much it's giving up."
     ),
 }
 

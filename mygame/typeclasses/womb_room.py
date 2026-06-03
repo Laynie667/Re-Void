@@ -296,7 +296,7 @@ class WombRoom(HousingRoom):
 
         msg = pick_womb_message("shaft_visible")
         if not msg:
-            msg = "Something pushes through the wall of this space from outside."
+            msg = "Something pushes through the wall of this space from outside — thick and insistent, the flesh stretching inward around its shape."
         msg = (msg.replace("{actor}", actor_name)
                   .replace("{host}", host_name)
                   .replace("{zone}", zone_disp))

@@ -27,40 +27,40 @@ from typeclasses.plug_item import PlugItem
 # Message pools per intensity
 _PRIVATE_MSGS = {
     "low": [
-        "A soft hum against the inside of you — brief, low, barely there.",
-        "A faint vibration where the plug sits. Easy to mistake for nothing.",
-        "Low and steady — the hum of it registers and fades.",
+        "A soft hum starts up against the inside of you — low, lazy, barely there. Just enough to make you aware of it.",
+        "A faint buzz where the plug sits, easy to mistake for nothing — until you can't quite stop noticing it.",
+        "Low and steady, the hum rolling through you in slow waves that build and fade and build again.",
     ],
     "medium": [
-        "The vibration picks up — a consistent pulse that's harder to ignore.",
-        "Medium intensity, unwavering. It settles in your awareness and stays.",
-        "The hum is real now. Your body is paying attention.",
+        "The buzz steps up — a steady pulse now, harder to ignore and not the least bit interested in being ignored.",
+        "Medium and relentless, the vibration settling in deep and making itself comfortable right where you feel it most.",
+        "The hum's real now, working at you steady. Your body's started paying very close attention.",
     ],
     "high": [
-        "High intensity — the vibration is insistent and constant and very present.",
-        "The plug is working at full speed and your body has no choice but to notice.",
-        "High and relentless. There is no ignoring this. It's in everything.",
+        "High and merciless — the vibration buzzing insistent and constant and absolutely everywhere that matters.",
+        "The plug's going full speed and your body's got no say in the matter, every nerve lit up and humming.",
+        "High and relentless, no let-up, no mercy — it's in everything now and you feel every bit of it.",
     ],
     "random": [
-        "An unexpected burst of vibration — gone before you fully react.",
-        "The intensity shifts without warning. High, then low, then high again.",
-        "Random and impossible to predict. Your body can't settle.",
+        "A sudden burst rips through you — gone again before you can even react to it.",
+        "The intensity lurches without warning — high, then nothing, then high again, jerking you around.",
+        "Random and impossible to read. Just when your body settles, it changes, and you're chasing it all over again.",
     ],
 }
 
 _ROOM_MSGS = {
     "medium": [
-        "{name} shifts slightly — something subtle, contained.",
-        "A faint flush touches {name}'s expression.",
+        "{name} shifts in place — something subtle, something they're working to keep contained.",
+        "A faint flush creeps up {name}'s face.",
     ],
     "high": [
-        "{name} catches a breath — something is clearly happening.",
-        "{name} goes very still for a moment, jaw tight.",
-        "Something crosses {name}'s face — there and gone.",
+        "{name} catches a sharp breath — whatever's happening, it's clearly getting to them.",
+        "{name} goes dead still for a beat, jaw tight, riding something out.",
+        "Something flickers across {name}'s face — there and gone, quickly smothered.",
     ],
     "random": [
-        "{name} twitches faintly — involuntary, brief.",
-        "{name} stops mid-movement. Then continues.",
+        "{name} twitches — involuntary, sudden, quickly covered.",
+        "{name} stops mid-movement, breath hitching, then carries on like nothing happened.",
     ],
 }
 
@@ -85,7 +85,7 @@ class VibratingPlugItem(PlugItem):
     def at_object_creation(self):
         super().at_object_creation()
         self.key                 = "vibrating plug"
-        self.db.desc             = "A plug with a small motor inside. Currently quiet."
+        self.db.desc             = "A plug with a little motor tucked inside. Quiet for now — that's up to whoever's holding the remote."
         self.db.vibe_state       = "off"     # off/low/medium/high/random
         self.db.vibe_last_tick   = 0.0       # unix timestamp of last message
         self.db.paired_remote    = None      # dbref of paired remote control
@@ -155,7 +155,7 @@ class RemoteControlItem(PlugItem.__bases__[0]):
         from evennia import DefaultObject
         DefaultObject.at_object_creation(self)
         self.key             = "remote control"
-        self.db.desc         = "A small device. It controls something."
+        self.db.desc         = "A small handset with a single dial. It controls something — and someone."
         self.db.paired_item  = None   # dbref of the vibrating item
         self.db.range_locked = True   # True = must be in same room
 
