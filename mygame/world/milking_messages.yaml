@@ -16,124 +16,124 @@ speeds:
     ml_per_session_tick: 4.0
 
     start:
-      - "The machine hums to life at its lowest setting — a patient, quiet sound. The cups settle against {target} and seal, the first draw barely a suggestion."
-      - "Slow speed establishes itself without announcement. The cups compress gently against {target} and the suction builds to a steady, unhurried minimum."
-      - "The machine begins with the patience of something in no hurry whatsoever. The cups find {target} and the first pull is even and barely felt."
-      - "A soft mechanical breath — the cups seal to {target} at slow speed and the draw begins at its most gentle. Present, but not pressing."
+      - "The machine wakes up low and lazy — a soft hum, the cups settling over {target}'s nipples and sealing on with a wet little kiss. The first pull is barely there, just enough to say hello."
+      - "Slow speed eases on like it's got all night. The cups latch onto {target} and start to suck, gentle and unhurried, drawing the first of it up nice and easy."
+      - "The cups find {target} and clamp down soft — a slow, patient tug that tightens by degrees. No rush. The machine's just getting comfortable."
+      - "A quiet mechanical breath and the cups seal to {target}, sucking slow. The pull's so gentle it's almost teasing — there, then gone, then there again."
 
     running:
-      - "The machine maintains its slow, even draw — the cups holding {target} in a steady rhythm, each cycle complete before the next begins. The hum is low."
-      - "A quiet, patient pull through the cups. {target}'s body gives a little with each slow cycle. The machine takes it and continues."
-      - "Slow suction holds its rhythm. The motor is barely audible at this setting. The cups stay close against {target}, the draw unchanged."
-      - "The cups work at the machine's lowest pace — each pull gentle, each release measured. Against {target}, the suction barely rises above comfortable."
-      - "Low and steady: the rhythm is almost meditative at this speed. The cups press and release against {target} in their slow, patient count."
-      - "The hum of the machine at its gentlest setting. The cups draw from {target} with the unhurried certainty of something that has all the time it needs."
+      - "The cups keep working {target} nice and slow — each pull tugging the nipple out long before it lets go, milk creeping up the lines a drop at a time. Unhurried. Thorough."
+      - "Slow and steady. The suction draws {target} in, holds, releases, again — a lazy grinding rhythm that's in no hurry to finish what it started."
+      - "The machine takes its time with {target}. Cups sealed tight, the pull soft but constant, dragging the milk up by patient inches. The hum barely rises above a purr."
+      - "Low suction, long pulls. {target}'s tits give a little more with every cycle, the machine coaxing it out slow enough to make them feel each one."
+      - "Almost gentle, this pace — the cups suckling at {target} in a slow, even count, the kind of rhythm that gets under the skin and stays there."
+      - "The cups draw on {target} like they've got nowhere better to be — slow, wet, certain, milking it up a little at a time and savoring it."
 
     first_empty:
-      - "The draw comes and finds little. {target} is running dry at this pace, but the machine's slow rhythm doesn't adjust — the cups continue as before."
-      - "The pull finds less than it expected. {target} is nearly empty, but the slow rhythm persists. The cups maintain their seal and keep cycling."
+      - "The pull comes up nearly dry — {target}'s running low at this pace, but the cups don't care. They keep suckling slow and patient, working what's left."
+      - "Less than before. {target}'s close to empty, but the slow rhythm doesn't so much as blink — cups still sealed, still tugging, still hungry."
 
     running_empty:
-      - "The slow draw continues. The cups hold {target} and cycle through as before — finding little now, but unhurried about the absence of output."
-      - "Nothing comes, but the patient rhythm doesn't acknowledge it. The cups press and release against {target} in the same slow count as before."
-      - "The machine continues its gentle cycle against {target} through the empty return. The hum is unchanged. The cups maintain their seal."
+      - "The cups keep suckling at {target} on empty — slow and patient, drawing on nothing and entirely at peace with it. The hum doesn't change."
+      - "Nothing left to give and the machine doesn't notice. It keeps milking {target} in that same lazy rhythm, pulling at dry nipples like the well's still full."
+      - "Empty, and the slow draw rolls on regardless — the cups gripping {target} and tugging at nothing, content to keep at it as long as it likes."
 
     stop:
-      - "The machine's hum fades by degrees — the suction easing before the cups release {target}. A slow decompression, then quiet."
-      - "Slow speed winds down in stages. The pressure releases, the cups loosen from {target}, the motor settles."
+      - "The hum sinks away by degrees, the suction letting {target} go slow — a soft, reluctant decompression, then the cups slip free with a wet pop. Quiet."
+      - "Slow speed winds down easy. The pull fades, the cups loosen off {target}'s nipples, and the machine settles back into silence like nothing happened."
 
   steady:
     interval_seconds: 60
     ml_per_session_tick: 11.0
 
     start:
-      - "The machine settles into its working rhythm — steady suction, the cups fitting to {target} with the confidence of equipment that knows its purpose."
-      - "Steady speed: the cups compress against {target} and the draw begins immediately. Measured, reliable, consistent."
-      - "The machine finds its pace quickly at steady setting. The cups seal to {target} and the rhythm establishes itself without ceremony."
-      - "A working hum as the machine starts at steady. The cups hold {target} in an even, purposeful pull — neither demanding nor gentle."
+      - "The machine drops into its working rhythm — the cups clamp onto {target}'s nipples and get straight to it, steady suction biting in from the first pull."
+      - "Steady speed: no warm-up, no foreplay. The cups seal over {target} and start dragging milk up in even, businesslike pulls."
+      - "The cups grab hold of {target} and the rhythm kicks in quick — firm, regular, the kind of pull that means to empty them and won't be talked out of it."
+      - "A solid working hum and the machine sets to {target} — cups sucking in a steady beat, tugging the nipples deep into the cups and letting them snap back."
 
     running:
-      - "Steady suction — the cups working {target} in a measured rhythm, each draw taking what has accumulated since the last. The motor holds its note."
-      - "The cups press and pull against {target} in the machine's working rhythm. Consistent. Purposeful. Not asking permission."
-      - "The motor holds its working frequency. The cups maintain their seal and draw from {target} at steady intervals, the rhythm unchanged."
-      - "A regular pull through each cycle. {target}'s body answers the machine's steady draw honestly."
-      - "Steady extraction: the cups work {target} in an even rhythm that leaves little ambiguity about what is happening here."
-      - "The machine at its working speed draws from {target} with the reliability of something designed for exactly this — consistent pressure, consistent pace."
+      - "The cups work {target} in a steady grind — each pull dragging at the nipple, milk climbing the lines in fat, even spurts. The machine doesn't miss a beat."
+      - "Steady and relentless. The suction tugs {target}'s tits up into the cups and lets go, over and over, emptying them by patient degrees."
+      - "The machine's got {target} now — grip, pull, release, milk crawling up the tubing every time the suction bites down. Reliable as a heartbeat and twice as insistent."
+      - "An even, grinding rhythm — the cups suckling {target} hard enough to count, drawing it up in a steady stream that doesn't ask permission."
+      - "The machine milks {target} like it's clocking in for a shift — measured, thorough, the pull deep and the pace unbothered by anything."
+      - "Steady draw, full seal. {target}'s nipples stay dragged out long in the cups, milk pulsing up the lines with every cycle. The motor holds its note."
 
     first_empty:
-      - "The draw comes and finds {target} nearly empty. The machine doesn't slow — the rhythm continues at steady pace through the diminishing return."
-      - "Running dry. The cups find less than before with each cycle, but the steady rhythm doesn't adjust for it."
+      - "The pull comes up short — {target}'s nearly milked out, but the machine doesn't ease off. It keeps that steady grind going right through the thinning stream."
+      - "Running low. Each cycle finds less than the last, but the cups don't slow for it — still sucking {target} steady, still hunting for more."
 
     running_empty:
-      - "Steady pull, empty return. The cups cycle against {target} with the same even rhythm, drawing what little remains or nothing at all."
-      - "The machine continues its steady draw against {target} through the empty cycles — consistent pressure, unchanged rhythm."
-      - "Nothing comes now, but the steady rhythm persists against {target}. The cups stay sealed and cycle as before."
+      - "Steady pull, dry return. The cups keep milking {target} in that same even beat, dragging at empty nipples and not the least bit discouraged."
+      - "Nothing coming up the lines now, but the rhythm rolls on — the machine working {target} steady through the empty, sealed tight and grinding away."
+      - "Empty and the cups don't care. They keep tugging at {target} in that reliable steady pulse, milking nothing with total commitment."
 
     stop:
-      - "The machine completes its cycle and powers down — suction easing, cups releasing {target} in a smooth decompression."
-      - "Steady speed ends cleanly — a brief deceleration, the cups loosening from {target}, the motor dropping to quiet."
+      - "The machine finishes its cycle and powers down — suction easing off, the cups peeling away from {target}'s nipples with a wet little release."
+      - "Steady speed clocks out clean: a last pull, a quick wind-down, and the cups slip free of {target} as the motor drops to quiet."
 
   fast:
     interval_seconds: 30
     ml_per_session_tick: 22.0
 
     start:
-      - "The machine accelerates — the motor climbs to a higher note, the cups lock to {target} with firmer compression, and the draw comes quickly."
-      - "Fast: the rhythm tightens immediately. The cups press hard against {target} and the suction arrives in rapid cycles. More insistent than steady."
-      - "The machine goes to fast speed with a rise in the motor's pitch. The cups find {target} and draw in quick, firm pulls."
-      - "A sharper hum. The cups seal harder to {target} and the rhythm quickens — each draw rapid, each cycle leaving less time than the last."
+      - "The motor climbs and the machine bites down — the cups lock onto {target}'s nipples hard and start sucking fast, milk ripped up the lines almost at once."
+      - "Fast: the rhythm snaps tight from the jump. The cups clamp to {target} and the suction comes in quick, greedy pulls, no patience left in it."
+      - "The hum sharpens. The cups grab {target} harder than before and the pace quickens — rapid, hungry tugs that drag the milk up faster than it can pool."
+      - "The machine kicks up a gear and goes at {target} fast — cups sealed tight, suction snapping in quick succession, each pull leaving less breath between than the last."
 
     running:
-      - "The cups pull hard and quickly — the machine working {target} at fast speed, the draw coming faster than the body fully refills between cycles."
-      - "Fast suction leaves little interval between pulls. The cups press against {target} with a firmness that makes the setting's name accurate."
-      - "The motor runs at its higher register. The cups work {target} in rapid, firm compression — insistent, thorough, quick."
-      - "Each cycle draws faster than the last gave. The cups press against {target} in quick succession, the pull demanding."
-      - "The machine's rhythm is tight now — rapid cycles, firm compression, the draw insistent against {target}."
-      - "At fast speed the suction doesn't pause long enough to allow reconsideration. The cups lock to {target} and draw with urgency."
+      - "The cups pull hard and quick — the machine milking {target} fast enough that the tits don't get to refill between yanks. Milk races up the lines in rapid spurts."
+      - "Fast suction, barely a beat between pulls. The cups drag {target}'s nipples deep and let go and grab again, greedy and quick about it."
+      - "The motor sings high and the cups work {target} in rapid, firm bursts — milk pumping up the tubing in a steady stream that doesn't slow to be admired."
+      - "Each pull comes before the last one's finished giving. The cups snap at {target} in quick succession, the suction demanding and the pace just shy of brutal."
+      - "The machine's got a hunger on now — fast, tight cycles dragging the milk out of {target} as quick as it'll come, the cups gripping and yanking and gripping again."
+      - "At this speed the suction doesn't pause long enough to let {target} catch up — just rapid, firm pulls, one after another, milking them quick and clean."
 
     first_empty:
-      - "The fast pull hits empty. {target} has little left, but the machine's rapid rhythm doesn't slow for it. The cups continue pressing."
-      - "Running dry at fast speed — the rapid cycles find less with each pass, but the pace doesn't adjust. The cups drive on."
+      - "The fast pull hits a near-empty and doesn't flinch — {target}'s nearly dry, but the cups keep snapping at the same greedy pace, hunting every last drop."
+      - "Running dry at speed. The rapid cycles find less each pass, but the machine drives on, tugging hard at {target} like the milk's just being shy."
 
     running_empty:
-      - "Fast and relentless against empty. The cups press hard to {target} in rapid cycles, pulling through the absence of output as if it hasn't registered."
-      - "The rhythm doesn't adjust for empty at this speed — the cups work {target} with the same fast, firm draw, finding nothing but maintaining the pace."
-      - "Full speed, empty return. The cups continue their rapid pull against {target}, the motor at its higher note, indifferent."
+      - "Fast and merciless on empty — the cups snapping at {target} in quick, hard pulls, milking dry nipples like the stream never stopped. The motor doesn't drop a note."
+      - "Nothing left and the speed doesn't care. The machine keeps yanking at {target} fast and firm, working the empty with the same hunger as the full."
+      - "Full speed, dry return. The cups race through their cycle on {target}, suction snapping at nothing, the motor high and indifferent."
 
     stop:
-      - "The machine drops quickly from fast speed — suction cutting, cups releasing {target} with a sharp decompression. The room drops in volume."
-      - "Fast speed ends decisively: a few rapid deceleration cycles, the cups loosening their grip on {target}, the motor falling."
+      - "The machine drops off fast speed sharp — suction cutting, the cups ripping free of {target}'s nipples with a hard wet snap. The room gets quieter in a hurry."
+      - "Fast speed quits hard: a couple of rapid wind-down pulls, the cups losing their grip on {target}, the motor falling out of its high whine."
 
   intense:
     interval_seconds: 10
     ml_per_session_tick: 38.0
 
     start:
-      - "The machine goes to maximum — the motor climbs to a high, sustained note, the cups lock to {target} with full pressure, and the draw is deep and immediate."
-      - "Intense: the cups compress to {target} with force that isn't a question. The suction comes in rapid, deep cycles. The motor is loud at this setting."
-      - "Full draw from the first moment. The cups seal hard to {target} and the machine runs at maximum — rapid, deep, unrelenting."
-      - "The motor reaches its top note. The cups lock against {target} and the rhythm is tight and deep and does not spare anything."
+      - "The machine goes to the top — the motor screaming high, the cups slamming onto {target}'s nipples at full pressure and sucking deep from the very first beat. No mercy in it anywhere."
+      - "Intense: the cups crush onto {target} hard enough to make the point, and the suction hits in deep, rapid waves. The motor's loud and the machine means it."
+      - "Full draw from the first second. The cups lock to {target} brutal-tight and the machine runs flat out — deep, fast, relentless, milking like it's got a quota."
+      - "The motor hits its top note and the cups bear down on {target} without a shred of restraint — the rhythm deep and tight and taking everything it can reach."
 
     running:
-      - "Deep, persistent suction at maximum intensity — the cups driving against {target} in rapid succession, the draw pulling ahead of accumulation."
-      - "Maximum draw: the cups press against {target} in rapid, deep compression. The rhythm leaves no ambiguity about intent or pace."
-      - "At full intensity the draw is constant and demanding — the cups working {target} in deep, fast cycles, the motor loud, the output consistent."
-      - "The cups drive against {target} with maximum pressure, rapid cycling, the pull taking everything available and reaching for more."
-      - "Intense speed doesn't negotiate. The cups lock to {target} and the machine runs at full extraction — deep, rapid, thorough."
-      - "Full intensity against {target}: deep compression, rapid rhythm, the suction at its heaviest. The machine is working at capacity."
+      - "Deep, hammering suction at full tilt — the cups driving at {target} in rapid succession, dragging the milk up faster than the body can make it. Brutal and thorough."
+      - "Maximum draw. The cups crush down on {target} in deep, fast pulls, milking them in a relentless stream that leaves zero doubt about what's happening here."
+      - "Full intensity — the cups working {target} in deep, rapid cycles, the motor roaring, milk pumping up the lines in a flood the machine has no intention of slowing."
+      - "The cups drive at {target} with everything the machine's got — crushing pressure, rapid pulls, sucking out all there is and reaching greedily for more."
+      - "Intense doesn't negotiate. The cups lock to {target} and the machine runs wide open — deep, fast, merciless, milking them right down to the dregs."
+      - "Full force on {target}: the suction at its heaviest, the rhythm a relentless hammer, milk ripped up the tubing as fast as the body can be made to give it."
 
     first_empty:
-      - "The intense draw hits empty — {target} has nothing left, but the machine's full-speed rhythm doesn't acknowledge this. Maximum pressure continues."
-      - "Maximum draw, nothing remaining. The cups hammer against {target} at full intensity through the first empty cycle. The motor stays at pitch."
+      - "The intense draw hits empty and doesn't ease a hair — {target}'s got nothing left, but the cups keep crushing down at full pressure, milking dry like it's spiteful about it."
+      - "Maximum draw, nothing coming. The cups hammer at {target} flat out through the first dry cycle, the motor screaming at full pitch, utterly indifferent to the empty."
 
     running_empty:
-      - "Intense and empty: the cups drive against {target} at maximum force through each dry cycle — deep compression, rapid rhythm, no reduction."
-      - "The machine runs at full intensity against {target} through the empty cycles. The motor loud, the rhythm relentless, the output absent."
-      - "Full draw on nothing. The cups work {target} at maximum suction through the dry cycles, the speed unchanged, the pressure unchanged."
+      - "Intense and bone-dry — the cups driving at {target} at full force through every empty cycle, deep and rapid and not slowing a fraction for the lack of anything to take."
+      - "The machine runs wide open on nothing, hammering {target} at full intensity, the motor roaring over a dry return it clearly couldn't care less about."
+      - "Full draw on empty. The cups crush and pull at {target} at maximum, milking dry nipples with the exact same merciless hunger as a full set."
 
     stop:
-      - "The machine cuts from intense speed sharply — the motor drops, the cups release {target} in a hard decompression. The room is noticeably quieter."
-      - "Intense ends with a cut: motor down, suction off, the cups releasing {target}. The silence after this setting has a quality to it."
+      - "The machine cuts off intense hard — the motor crashing down, the cups tearing free of {target} in a brutal release. The silence after lands like a held breath finally let go."
+      - "Intense ends with a slam: motor dead, suction gone, the cups dropping off {target} all at once. The quiet that follows has a weight to it."
 
 # ---------------------------------------------------------------------------
 # Fullness threshold messages — private to the character only.
@@ -145,65 +145,65 @@ fullness:
     - ml: 100
       private: true
       messages:
-        - "A faint awareness settles in — not discomfort yet, just a presence. Something has been accumulating and your body has noticed."
-        - "The first edge of fullness arrives without urgency. It's simply there now, at the edge of attention."
-        - "There's a fullness beginning that hasn't demanded anything yet. Your body has filed it under 'noted.'"
+        - "Just a little heaviness setting in — nothing urgent, just a low, full feeling that wasn't there before. Your body clocks it and files it away for later."
+        - "The first hint of full. Not pushy yet, just present — a warm weight sitting low, tapping you on the shoulder to let you know it's started."
+        - "Something's begun to gather in there. No complaints yet. Your body's just keeping a quiet tally and waiting to see where this goes."
 
     - ml: 300
       private: true
       messages:
-        - "The fullness has weight to it now — heavier than before, occupying a corner of your attention whether you invite it or not."
-        - "It's become harder to ignore. The pressure has moved from presence to something that sits with you consistently."
-        - "A noticeable heaviness. Not uncomfortable exactly, but past the point of simply going unnoticed."
+        - "The full feeling's got some weight behind it now — heavier than before, sitting in the corner of your attention and refusing to be ignored."
+        - "Harder to forget about now. The pressure's settled in proper, a steady fullness that keeps nudging for your attention."
+        - "A real heaviness now. Not bad, exactly — just well past the point where you can pretend it isn't there."
 
     - ml: 600
       private: true
       messages:
-        - "Discomfort has made itself a permanent fixture now. The pressure is real and steady, and your thoughts turn unbidden toward the milking machine."
-        - "Concentration on other things is a conscious effort. The fullness presses with a consistency that wants attention."
-        - "The fullness has shifted from background to foreground. The milking machine is a specific thought rather than an abstract one."
+        - "The pressure's a permanent guest now, real and steady, and your thoughts keep drifting back to the milking machine without being asked."
+        - "Concentrating on anything else is starting to take effort. The fullness presses in, steady and demanding, and it wants dealing with."
+        - "It's gone from background to front and center. The machine's not an abstract idea anymore — it's a specific, increasingly appealing thought."
 
     - ml: 900
       private: true
       messages:
-        - "The pressure is pronounced enough now that it shapes how you hold yourself — insistent, constant, hard to work around. The milking machine is a destination."
-        - "It's difficult to concentrate through. The fullness at this level wants specific attention and has stopped being subtle about it."
-        - "Urgent now in a way that has nothing to do with preference. Your body has made its position clear and is not interested in negotiation."
+        - "Full enough now that it changes how you stand — heavy, insistent, hard to work around. The milking machine has gone from idea to destination."
+        - "Hard to think through this. The fullness wants attention and has stopped being polite about asking. Your whole body's pointing one direction."
+        - "Urgent now, in a way that's got nothing to do with what you'd prefer. Your body's made its position loud and clear and it's not taking questions."
 
     - ml: 1200
       private: true
       messages:
-        - "Past the point of comfort by a significant margin. Every movement registers against the fullness. Resolution is the only coherent direction your thoughts are moving."
-        - "The pressure is a constant, occupying thing. Your attention cannot leave it and your body has stopped being quiet about it."
-        - "At this volume the milking machine exists in your awareness as the single most relevant object in the room. Your body has reached a conclusion."
+        - "Way past comfortable. Every move you make registers against the fullness. There's really only one thing your thoughts are circling now, and it has cups."
+        - "The pressure's a constant, occupying thing — your attention can't leave it and your body has flat-out stopped being quiet about what it wants."
+        - "At this point the milking machine is the single most interesting object in any room. Your body's made up its mind. You're just carrying the news."
 
     - ml: 2000
       private: true
       messages:
-        - "The fullness has become a visible distension — a shape, not just a pressure. Two litres of accumulated weight and your body has been making its case for some time."
-        - "Concentration on anything else requires active effort. The distension is substantial and has been for a while. The milking machine is not an abstract thought."
-        - "Two thousand millilitres. The physical weight of it is real and present and your body has stopped framing this as a preference."
+        - "Two litres in and you're showing it — a real swell now, not just a pressure. Your body's been making its case for a while and the argument's getting visual."
+        - "Anything that isn't 'empty out' takes active effort to think about. The distension's substantial and it's been that way long enough to stop being subtle."
+        - "Two thousand millilitres of full. The weight is real, the shape is obvious, and your body has officially stopped treating this as optional."
 
     - ml: 3785
       private: true
       messages:
-        - "A full gallon of pressure. The weight and volume together are physically demanding in a way that has moved well past discomfort into its own territory."
-        - "One gallon, distributed entirely within you. Your body's objections have been ongoing and well-articulated. The machine exists as a specific, necessary destination."
-        - "A gallon. The actual physical reality of carrying this has shaped how you've been holding yourself for some time. Resolution is the only coherent plan."
+        - "A full gallon, sloshing. The weight and the stretch together have marched well past discomfort and set up camp somewhere new. The machine is a need now, not a notion."
+        - "One gallon, all of it inside you, all of it making itself felt. Your body's complaints are loud, frequent, and frankly well-argued. The machine is the only sensible plan."
+        - "A gallon. Carrying this has been quietly reshaping how you hold yourself for a while now. There's exactly one fix and you both know what it is."
 
     - ml: 7570
       private: true
       messages:
-        - "Two gallons. The distension is significant and visible. Every movement negotiates around what you're carrying. There is no longer a question of whether the machine is needed."
-        - "The volume you're carrying would fill a substantial container. You are that container and you have been aware of this for longer than is comfortable to acknowledge."
-        - "Two gallons of accumulated pressure. The milking machine is not a thought — it is the thought. Everything else is a secondary consideration."
+        - "Two gallons. The swell's heavy and obvious, and every move has to account for it. Whether you need the machine stopped being a question some time ago."
+        - "What you're hauling around would fill a serious jug — and you're the jug. You've been aware of that fact for longer than is comfortable to admit."
+        - "Two gallons of pressure and the milking machine isn't a thought anymore — it's the thought. Everything else is background noise."
 
     - ml: 15000
       private: true
       messages:
-        - "Four gallons. The physical reality of this has stopped requiring description — it is simply the entire situation. Your body resolved this question some time ago."
-        - "At this volume the usual language has stopped being adequate. Four gallons of pressure, and your body has been making a very clear argument about this for a considerable time."
-        - "This is the part where the milking machine stops being an option and becomes the only remaining subject. Your body reached that conclusion some time ago."
+        - "Four gallons. The reality of this has stopped needing words — it's just the whole situation now. Your body settled this argument a long time back."
+        - "Past the point where the usual language covers it. Four gallons of pressure, and your body's been making one very clear, very loud point for a good while."
+        - "This is where the machine stops being an option and becomes the only subject left. Your body reached that conclusion ages ago and has been repeating itself since."
 
 # ---------------------------------------------------------------------------
 # Size-aware ambient messages — private to the character.
@@ -216,39 +216,39 @@ size_ambient:
   tiers:
     - min_size: 38.0   # Gravitationally Concerning / Beyond Classification
       messages:
-        - "The descriptor stopped being hyperbole. Everything nearby bends toward the weight they carry, including posture, balance, and the attention of everyone in the room."
-        - "At this scale they are not a feature — they are a condition. Your body organizes around them entirely and has for some time. There is no version of a moment that doesn't account for them."
-        - "Gravitationally Concerning is the label, and it has stopped being funny. The weight is its own weather system. Movement is a negotiation."
+        - "The descriptor stopped being a joke a while ago. Everything about how you stand, balance, and move bends around the sheer weight of them — and so does the gaze of everyone in the room."
+        - "At this size they're not a feature, they're a whole climate. Your body organized itself around them long ago and barely remembers doing it. There's no moment that isn't about them."
+        - "Gravitationally Concerning, and nobody's laughing. The weight is its own weather system. Moving is a negotiation and they always win."
 
     - min_size: 34.0   # Architecturally Significant / Incomprehensible
       messages:
-        - "The term architecturally significant has taken on a literal quality. No position or movement fails to account for them first. They precede every decision your body makes."
-        - "They are a structural fact of every room you enter. The weight is total, the presence is constant, and your body has reorganized itself around them as a baseline condition."
-        - "Moving with them requires planning. They carry their own momentum. Every doorway is a consideration."
+        - "'Architecturally significant' has gotten literal. Nothing you do — no step, no turn, no lean — happens without them going first. They lead; you follow."
+        - "They're a structural fact of every room you walk into. The weight is total, the presence constant, and your body just treats them as the baseline of existence now."
+        - "Getting anywhere with them takes planning. They carry their own momentum and every doorway is a frank conversation about whether you'll both fit."
 
     - min_size: 30.0   # Monumental / named absurd tiers begin
       messages:
-        - "They exist as a physical force rather than a size. They precede you into rooms. They dictate how you sit and stand and breathe. Your center of gravity has relocated."
-        - "At this scale the weight is not something you carry — it's something you are organized around. Every posture accounts for them before anything else."
-        - "Monumental is accurate. The weight is constant, total, and has been reshaping the way your body moves for long enough that it feels like baseline now."
+        - "They've stopped being a size and become a force. They enter rooms before you do. They decide how you sit, stand, and breathe. Your center of gravity packed up and moved out front."
+        - "At this scale you don't carry them — you're organized around them. Every posture checks in with them first and adjusts accordingly."
+        - "Monumental, and accurate. The weight's constant and total and it's been reshaping how you move for so long it just feels like the truth now."
 
     - min_size: 26.0   # Z cup and above / Structurally Significant testicles
       messages:
-        - "At this size they can't be negotiated with or ignored. Every posture accounts for them first. Every movement negotiates around the weight."
-        - "The weight is a constant companion that has rewritten what resting feels like. Your center of gravity has shifted. It is simply the state of things."
-        - "They are present in everything — standing, sitting, moving, staying still. The weight has been consistent long enough that its absence would be the remarkable thing."
+        - "Too big to ignore and far too big to argue with. Every posture accounts for them first; every move works around the weight. They run the show."
+        - "A constant, heavy companion that's rewritten what 'resting' even feels like. Your balance shifted to make room and never shifted back. It's just how things are."
+        - "They're in everything — standing, sitting, moving, lying still. The weight's been a fact long enough that its absence would be the strange thing."
 
     - min_size: 12.0   # L cup and above / Very Large and above
       messages:
-        - "The size of them shapes how you hold yourself without your input. They displace weight in every position and your body has built its habits around this."
-        - "A significant presence, continuous and physical. Not painful, not incapacitating — simply always there, always accounted for, always part of the geometry."
-        - "They are simply always there — preceding your movements, carrying their own momentum, occupying their own space."
+        - "The size of them shapes how you hold yourself without asking your opinion. They throw their weight around in every position, and your body's built all its habits around the fact."
+        - "A serious, constant presence — not painful, not in the way, just always there, always felt, always part of the math of moving."
+        - "They're simply always there: leading your movements, carrying their own swing, taking up their own generous slice of the world."
 
     - min_size: 7.0    # G cup and above / Large and above
       messages:
-        - "The weight of them is present in everything you do — a consistent physical fact your body has organized itself around."
-        - "They precede your movements by their own momentum. It is not painful, just a continuous, familiar heaviness that has become part of how you take up space."
-        - "A persistent, pleasant weight — notable at rest, more notable in motion. The kind of thing that becomes familiar without ever becoming ignorable."
+        - "The weight of them rides along in everything you do — a steady, pleasant fact your body long ago made peace with and built around."
+        - "They lead your movements by a half-beat of momentum. Not painful — just a warm, familiar heaviness that's become part of how much space you take up."
+        - "A pleasant, constant weight — noticeable at rest, more so in motion. The kind of thing that gets familiar without ever once getting ignorable."
 
 # ---------------------------------------------------------------------------
 # Leaking conditions — size + volume thresholds combined.
@@ -263,49 +263,49 @@ leaking:
       min_volume: 0     # volume-independent — always leaking at this scale
       room_visible: true
       messages:
-        - "{target}'s presence in the room has already marked the floor. At the scale they carry, leaking is not a condition — it is a baseline. The floor confirms this."
-        - "At the size {target} carries, retention is a technical impossibility. The drip is constant, unhurried, and entirely inevitable."
-        - "A steady trail follows {target}. The scale of them has simply outpaced any capacity for containment regardless of volume."
+        - "{target} doesn't so much enter a room as mark it — the floor's already wet where they're standing. At this size, leaking isn't a condition, it's the default setting, and the puddle agrees."
+        - "Containment, for {target}, is a fond memory. The drip is steady, unbothered, and absolutely inevitable — gravity and volume ganging up and winning easily."
+        - "A wet trail follows {target} wherever they go. The sheer scale of them outran any hope of holding it in a long time ago."
 
     - min_size: 34.0    # Architecturally Significant+
       min_volume: 0
       room_visible: true
       messages:
-        - "{target} is leaking steadily — at the size they carry, the threshold for containment requires no particular volume to exceed."
-        - "The floor beneath {target} is marked and being marked further. The combination of size and capacity has resolved the question of retention."
-        - "Leaking, continuously, at a pace that requires no particular fullness to maintain. {target}'s scale handles that independently."
+        - "{target} is leaking steady — at the size they're hauling, it takes no particular fullness to spill over. It just happens, constantly, because of course it does."
+        - "The floor under {target} is wet and getting wetter. Size and capacity have settled the question of holding it in, and the answer was a firm no."
+        - "A continuous drip off {target}, no real fullness required to keep it going. Their scale handles that all on its own, thanks."
 
     - min_size: 30.0    # Monumental+
       min_volume: 50
       room_visible: true
       messages:
-        - "{target} is leaking continuously at the pace their size demands — the volume present is more than sufficient context."
-        - "A steady drip from {target} — the size and the pressure together have long since resolved the question of containment."
-        - "At {target}'s scale and this volume, leaking is simply what happens. The floor is already aware."
+        - "{target} drips continuously at the pace their size demands — and there's plenty in them to keep it flowing. The floor's keeping notes."
+        - "A steady leak off {target} — size and pressure sorted out the containment question between them ages ago, and the floor's been damp ever since."
+        - "At {target}'s scale and this much in them, leaking is just what happens. The puddle's already aware. So is everyone nearby."
 
     - min_size: 26.0    # Z cup+ / Structurally Significant+
       min_volume: 100
       room_visible: true
       messages:
-        - "{target} is dripping visibly — the combination of size and pressure has exceeded any threshold of retention. The floor marks their position."
-        - "A consistent drip from {target}. At this size and volume the pressure has found its exit and is not being particularly subtle about it."
-        - "Fluid tracks down {target} in a thin, steady line. The size and the fullness together have made containment a past tense condition."
+        - "{target} is dripping where everyone can see — size and pressure have blown past any hope of holding it, and the floor's marking their spot for them."
+        - "A steady drip off {target}. At this size and this full, the pressure found the exit and isn't being remotely shy about using it."
+        - "Fluid tracks down {target} in a thin, steady line. Between the size and the fullness, 'contained' is firmly past tense."
 
     - min_size: 12.0    # L cup+ / Very Large+
       min_volume: 300
       room_visible: true
       messages:
-        - "A thin drip marks {target}'s position — size and volume together have brought them to the threshold where the pressure expresses itself visibly."
-        - "{target} is beginning to drip. The combination of size and fullness has crossed the line between internal and external."
-        - "Slow and visible — a bead forms at {target}'s nipple and drops. The pressure has found its expression."
+        - "A thin drip marks {target}'s spot — enough size and enough in them that the pressure's started showing itself out where everyone can see."
+        - "{target}'s starting to drip. Size and fullness together just crossed the line from 'inside' to 'very much outside.'"
+        - "Slow and visible — a bead wells up at {target}'s nipple and falls. The pressure found its way out and took the scenic route."
 
     - min_size: 7.0     # G cup+ / Large+
       min_volume: 600
       room_visible: false
       messages:
-        - "A warmth at the tips — not yet visible, but felt. The pressure and the size together have brought you to the edge of passive escape."
-        - "There's a dampness that wasn't there before. The fullness has reached the threshold where the size is no longer fully containing it."
-        - "The pressure has begun to express itself. Not visible yet, but present — a warmth at the tips that will become more apparent if nothing changes."
+        - "A warmth at the tips — not showing yet, but you can feel it. Between the size and how full you are, you're right at the edge of leaking whether you like it or not."
+        - "There's a dampness that wasn't there a minute ago. You've gotten full enough that the size isn't quite keeping it all in anymore."
+        - "The pressure's starting to find its own way out. Nothing visible yet, just a telltale warmth at the tips — and it'll get a lot more obvious if you don't deal with it."
 
 # ---------------------------------------------------------------------------
 # Milking phase pools — universal (not speed-specific).
@@ -317,16 +317,16 @@ leaking:
 phases:
 
   priming:
-    - "The machine finds its draw before full flow — the first pulls pulling from close to the surface. {target}'s body is building toward what the machine is asking for."
-    - "The session is finding itself — cups sealed, rhythm establishing, the flow beginning its slow build before it reaches working pressure."
-    - "The early draw: the machine pulls steadily and {target} gives into it by degrees, the flow still gathering rather than arrived."
-    - "First pulls, full seal. The suction has found {target} and the rhythm is establishing. The flow hasn't peaked yet."
+    - "The machine warms into it — the first pulls catching on {target} close to the surface, coaxing the flow up out of them before it really gets going. It's building."
+    - "The session's just finding its feet — cups sealed, rhythm settling in, the milk starting its slow climb toward a proper flow. {target}'s body is waking up to what's wanted."
+    - "Early pulls, full seal. The suction's got {target} and the rhythm's setting, the flow still gathering itself before it breaks loose."
+    - "The machine draws steady and {target} gives it up by degrees — the milk still building, not yet pouring. Give it a minute."
 
   tapering:
-    - "The draw is diminishing — the cups work {target} but each pull finds less than the last. The machine doesn't slow, but the output does."
-    - "Running down: the flow from {target} has begun its taper, the rhythm unchanged but the return growing thinner with each cycle."
-    - "The end of the supply is in sight. The cups still work {target} with the same pull, but the response has thinned. Nearly done."
-    - "Tapering — each draw from {target} yields a little less than the one before it. The cups hold their pressure, the machine holds its pace."
+    - "The draw's running thin — the cups still working {target} hard, but each pull comes up with less than the last. The machine doesn't slow; the body just runs out."
+    - "Winding down: the flow from {target} has started to taper, the rhythm dead steady but the stream getting thinner every cycle. Nearly milked out."
+    - "The end's in sight. The cups keep tugging at {target} just as firm, but there's less and less to give. Almost done."
+    - "Tapering off — each pull drags a little less out of {target} than the one before. The machine holds its pace; {target}'s just running dry."
 
 # ---------------------------------------------------------------------------
 # Arousal threshold messages — private to the character only.
@@ -501,33 +501,33 @@ testes_size_ambient:
   tiers:
     - min_size: 50.0   # Beyond All Frameworks
       messages:
-        - "The concept of carrying them has stopped making linguistic sense. Your body reorganised itself around them so long ago that you have forgotten what the alternative felt like. They are the situation."
-        - "Every room you have ever entered has been entered by them first. The scale is not a descriptor anymore. It is a fact of geometry."
-        - "Beyond All Frameworks is accurate. You have moved past the point where language applies and into the territory where physics is having a quiet conversation with itself about you."
+        - "Carrying them has stopped making sense as a sentence. Your body reorganised itself around them so long ago you've genuinely forgotten the alternative. They're not part of the situation — they are the situation."
+        - "Every room you've ever walked into got walked into by them first, by a comfortable margin. 'Size' isn't the word anymore. 'Geography' is closer."
+        - "Beyond All Frameworks, and fair enough. You've sailed past where words help and into the part where physics sits you down for a quiet, concerned chat about your balls."
 
     - min_size: 46.0   # A Continent of Intent
       messages:
-        - "They precede you into every space by a margin that has stopped being metaphorical. Your body is organised entirely around them. The weight is tectonic."
-        - "A Continent of Intent. The description has become literal. The mass of what you carry is a matter of geography."
-        - "You have not experienced your own center of gravity for some time. Everything your body does is a negotiation with the weight. The weight is winning, comfortably."
+        - "They lead you into every space by a margin that gave up being metaphorical a while back. Your whole body bends around them. The weight is tectonic and it is not negotiating."
+        - "A Continent of Intent, and the name's gone literal. The mass of what's hanging between your legs is now a question for cartographers."
+        - "You haven't felt your own center of gravity in some time — it lives in your balls now. Everything you do is a negotiation with the weight, and the weight is winning, easily, smugly."
 
     - min_size: 42.0   # Cosmologically Impractical
       messages:
-        - "Cosmologically Impractical is the label. Your body chose to continue existing around them rather than the other way around. This was not a negotiation."
-        - "The mass of what you carry has long since resolved from a physical sensation into a permanent condition of existing. Every movement is a structural decision."
-        - "They are simply the dominant fact of your physical reality. The weight, the volume, the presence — all of it constant, total, and entirely in charge of how you navigate space."
+        - "Cosmologically Impractical, says the label, and the label's being polite. Your body opted to keep existing around them rather than the reverse. Nobody asked your opinion."
+        - "The mass you're hauling stopped being a sensation and became a permanent condition of being alive. Every step is a structural decision and your balls have veto power."
+        - "They're just the dominant fact of your physical reality now — the weight, the heft, the sheer obscene presence of them, all constant, all total, all firmly in charge of how you cross a room."
 
     - min_size: 38.0   # Gravitationally Concerning
       messages:
-        - "Gravitationally Concerning has stopped being hyperbole. The mass they carry is a real force in any room you enter. Objects nearby don't bend toward them — but your posture has been bending toward them for a long time."
-        - "At this scale they are not a feature of your body — they are the primary physical fact of it. Everything else is arranged around them."
-        - "The weight is its own weather system. You stopped negotiating with it some time ago and started simply existing within it."
+        - "'Gravitationally Concerning' stopped being a punchline. The weight swinging between your legs is a genuine force in any room. Nothing nearby actually bends toward them — but your posture's been bending toward them for a long, long time."
+        - "At this scale they're not a part of your body so much as the headline of it. Everything else is just the small print arranged underneath."
+        - "The weight's its own weather system down there. You quit fighting it ages ago and settled for living inside it, low and heavy and hanging."
 
     - min_size: 34.0   # Architecturally Significant
       messages:
-        - "Architecturally Significant has taken on a load-bearing quality. No position, no doorway, no movement fails to account for them first. They arrive before you do."
-        - "They are a structural consideration. The weight is total and the presence is constant and your body has reorganised itself around them as a baseline it no longer remembers choosing."
-        - "Every room you enter is immediately a smaller room. The weight arrives with you and stays at the centre of everything your body does."
+        - "'Architecturally Significant' has gone load-bearing. No stance, no doorway, no step happens without them clearing the way first. They arrive; you tag along."
+        - "They're a structural consideration now — heavy, constant, and your body's quietly rebuilt itself around them as a baseline it doesn't recall agreeing to."
+        - "Every room you enter is instantly a smaller room. The weight comes in with you, swings to the front, and runs the rest of the visit."
 
 # ---------------------------------------------------------------------------
 # Extreme fullness threshold messages for testes — private to character.
@@ -540,32 +540,32 @@ testes_fullness:
     - ml: 50000      # 50L — hot-tub scale
       private: true
       messages:
-        - "Fifty litres. The weight of what's accumulated inside you has passed from sensation into structural reality. Your body is doing its best."
-        - "The pressure at this volume has stopped being background and become the entire foreground. Fifty litres, distributed and insistent and not going anywhere on its own."
+        - "Fifty litres. The weight of what's sloshing around in there has crossed from sensation into structural engineering. Your body's giving it a heroic effort and slowly losing."
+        - "At this much, the pressure's stopped being background and become the entire foreground — fifty litres, heavy and insistent and not going anywhere on its own. Something's got to give, and it isn't going to be the litres."
 
     - ml: 200000     # 200L — small room scale
       private: true
       messages:
-        - "Two hundred litres of pressure and your body has been making its position clear for some time. The milking machine is not a thought. It is the only thought."
-        - "At this volume the usual language has stopped applying. Your body resolved the question of what it needs. It has been resolving it, loudly, for longer than is comfortable."
+        - "Two hundred litres, and your body's been filing very clear complaints for a while now. The milking machine isn't a thought anymore. It's the only thought."
+        - "At this volume the usual words quit on you. Your body already worked out exactly what it needs and has been saying so — loudly, constantly, and for longer than is dignified."
 
     - ml: 1000000    # 1kL — room scale
       private: true
       messages:
-        - "A thousand litres. The physical reality of carrying this has stopped requiring description. It is simply the entire situation. The machine exists as the only remaining subject."
-        - "One kilolitre. You are aware of very little else. Your body stopped framing this as a preference some time ago."
+        - "A thousand litres. The reality of carrying this has stopped needing description — it's just the whole entire situation now. The machine is the only subject your brain still recognizes."
+        - "One kilolitre. You're aware of very, very little else. Your body stopped pretending this was a preference a long way back down the gauge."
 
     - ml: 10000000   # 10kL — house-filling
       private: true
       messages:
-        - "Ten thousand litres. The concept of comfortable has been theoretical for a long time. Your body has had one clear position on this matter and has been expressing it without subtlety."
-        - "At this volume words like 'full' have stopped being adequate. You are carrying ten thousand litres and your body has moved past asking and into demanding."
+        - "Ten thousand litres. 'Comfortable' has been a purely theoretical concept for ages. Your body's had exactly one opinion this whole time and it has not once shut up about it."
+        - "At this point 'full' isn't a word that does any work. You're carrying ten thousand litres and your body shoved straight past asking and into outright demanding."
 
     - ml: 100000000  # 100kL — beyond
       private: true
       messages:
-        - "One hundred thousand litres. The idea of describing what this feels like has become academic. Your body's argument is total and has been total for longer than memory comfortably covers."
-        - "Past the point where this conversation can be had in normal language. The pressure is everything. The machine is not a thought — it is the only remaining physical fact that matters."
+        - "One hundred thousand litres. Describing what this feels like has become a purely academic exercise. Your body's argument is total, and it's been total for longer than memory cares to revisit."
+        - "Past the point where this can be discussed in normal language at all. The pressure is everything. The machine isn't a thought — it's the last physical fact that still matters."
 
 # ---------------------------------------------------------------------------
 # WombRoom messages
@@ -706,63 +706,63 @@ edge_machine:
 
   building:
     private:
-      - "The machine has established itself. The pressure is there now — low, patient, committed to the pace it has set."
-      - "Something in you has already conceded to the machine. It builds from there."
-      - "The machine works in small increments. It has all the time it needs."
-      - "The pressure is consistent. The machine is not interested in rushing this."
-      - "It settles into you methodically. The pace does not vary. The machine knows what it is building toward."
-      - "Low, even, cumulative. The machine is working and you are its only current project."
-      - "Each increment is small. The machine is patient in a way that suggests it has done this before."
-      - "The pressure is real and it is building. The machine notes your state without hurrying it."
+      - "The machine's settled in on you now — the pressure low and patient and dead set on the pace it picked. It's not in a hurry. You don't get a say."
+      - "Something in you's already given in to it, somewhere down low. It builds from there, slow and sure."
+      - "The machine works you in small, mean little increments. It's got all the time in the world and it knows it."
+      - "Steady pressure, no variation, no rush. The machine knows exactly what it's building you toward and it's going to take the scenic route."
+      - "It settles into you methodically — patient, relentless, the heat stacking up a notch at a time while you just have to take it."
+      - "Low, even, cumulative. The machine's working and you're its only project tonight."
+      - "Each little pulse adds to the last. The machine's patient in a way that says it's done this to plenty of people before you."
+      - "The pressure's real and it's climbing, slow as you like. The machine clocks exactly how worked-up you are and pointedly does not hurry."
     room:
-      - "|x{name} is in the machine's custody now. The work has begun.|n"
-      - "|x{name} settles into the machine's rhythm — patient as the thing running it.|n"
+      - "|x{name} is in the machine's custody now. The fun's just getting started.|n"
+      - "|x{name} settles into the machine's rhythm — and the machine's got all night.|n"
 
   approaching:
     private:
-      - "The machine has adjusted. Whatever it was doing before, it is doing more of now."
-      - "Seventy-five. The machine has noted this and the pressure intensifies by a measured amount."
-      - "The threshold is ahead and the machine is accelerating toward it in small, deliberate steps."
-      - "You can feel the ceiling getting closer. The machine can feel it too. It is not slowing."
-      - "The pressure is specific now. Not general — it has a direction and a destination."
-      - "Ninety is visible from here. The machine has always known the way."
-      - "The machine is thorough. It leaves nothing on the table between here and the edge."
-      - "Closer. The machine does not rush. It also does not stop."
+      - "The machine's adjusted. Whatever it was doing to you before, it's doing more of it now."
+      - "Seventy-five. The machine clocks it and leans on you a little harder, nice and measured about it."
+      - "The edge is up ahead and the machine's walking you toward it in slow, deliberate steps, savoring every one."
+      - "You can feel the ceiling getting close. So can the machine. It is absolutely not slowing down."
+      - "The pressure's gone specific — not a general heat anymore, but something with a direction and a very clear destination."
+      - "Ninety's in view from here, and the machine's always known the way. It's just enjoying the walk."
+      - "The machine is thorough. It's not leaving a single thing on the table between here and the edge, and you can feel it not leaving it."
+      - "Closer. The machine doesn't rush you. It also has no intention of stopping. Pick a feeling about that."
     room:
-      - "|x{name}'s stillness is the kind that has a reason behind it.|n"
-      - "|x{name} is somewhere between where they started and where the machine is taking them.|n"
-      - "|xSomething has changed in how {name} is holding themselves.|n"
+      - "|x{name}'s gone still — the kind of still that's got a very good reason behind it.|n"
+      - "|x{name} is somewhere between where they started and wherever the machine's hauling them.|n"
+      - "|xSomething's changed in how {name}'s holding themselves. They wouldn't call it relaxed.|n"
 
   near:
     private:
-      - "Ninety. The machine has noted it and kept going. The precision is different at this level."
-      - "You are close. The machine is close. Neither of you has arrived yet."
-      - "The edge is right there and the machine is keeping pace with it exactly."
-      - "At this point the machine is adjusting in real time. Very little separates you from where it's taking you."
-      - "The pressure is specific and surgical and the machine is not letting you look away from it."
-      - "Close enough that close doesn't quite cover it. The machine keeps the pace."
-      - "Ninety-five. The machine knows this. It does not break its rhythm."
-      - "The gap between here and there has a measurement. The machine is reducing it."
+      - "Ninety. The machine noted it and kept right on going. It gets precise this close — surgical, almost cruel about it."
+      - "You're close. The machine's close. Neither of you is there yet and only one of you is suffering about it."
+      - "The edge is right there and the machine is matching its pace to yours exactly, holding you a hair short of it."
+      - "This close, the machine's adjusting you in real time. There's barely anything left between you and where it's dragging you."
+      - "The pressure's surgical now, and the machine won't let you look away from it for a second."
+      - "Close enough that 'close' doesn't begin to cover it. The machine keeps the pace, steady and merciless."
+      - "Ninety-five. The machine knows it. It doesn't break rhythm for a heartbeat."
+      - "The gap between here and there has a number on it now, and the machine is patiently, deliberately shrinking it."
     room:
-      - "|x{name} is working around something. The machine is the thing they're working around.|n"
-      - "|xThe quality of {name}'s attention has narrowed to a single point.|n"
-      - "|x{name} is at the machine's mercy now in a very specific sense.|n"
+      - "|x{name} is working around something, and the machine is the something they're working around.|n"
+      - "|xThe whole of {name}'s attention has narrowed down to a single, very specific point.|n"
+      - "|x{name} is at the machine's mercy now, in a very particular sense of the word.|n"
 
   held:
     private:
-      - "The machine holds you exactly where it has you. Right at the edge. No further. It does not lose track."
-      - "You are at ninety-nine and the machine knows it and is not giving you the last point. The pressure does not ease."
-      - "Right there. The machine keeps you right there. The release is present and unreachable."
-      - "The edge is precise. The machine is precise. You stay exactly at it."
-      - "You push against the ceiling the machine has set and it does not move. Neither do you."
-      - "The machine maintains this with the patience of something that has done it before and will do it again."
-      - "Ninety-nine. The machine has your number and it is holding it here. The release requires permission you do not have."
-      - "At the edge and not past it. The machine is very good at this."
-      - "The pressure stays constant. The ceiling stays constant. You stay at the ceiling."
-      - "The machine is keeping you in a very specific and very uncomfortable place and it is not tired."
+      - "The machine holds you right where it wants you — at the edge, no further, not for anything. It does not lose its grip and it does not lose track."
+      - "Ninety-nine, and the machine knows it, and it is not giving you that last point. The pressure doesn't ease a hair. It's not going to."
+      - "Right there. The machine keeps you right there. The finish is close enough to taste and just exactly out of reach."
+      - "The edge is precise. The machine is precise. You stay pinned exactly on it, shaking."
+      - "You push at the ceiling the machine's set and it doesn't budge. Neither, it turns out, do you."
+      - "The machine holds you here with the patience of something that's done this a hundred times and will do it a hundred more. Tonight you're number a hundred and one."
+      - "Ninety-nine. The machine's got your number and it's holding you right on it. The finish needs a permission you flat-out do not have."
+      - "At the edge and not one inch past it. The machine is very, very good at this, and it knows it."
+      - "The pressure stays constant. The ceiling stays constant. You stay nailed to the ceiling, and the machine stays unbothered."
+      - "The machine is keeping you somewhere specific and deeply unfair, and it is not the least bit tired. You, on the other hand, are a mess."
     room:
-      - "|x{name} is very still — a concentrated stillness, held in place by something specific.|n"
-      - "|xSomething in {name}'s posture has found its limit and stopped there.|n"
-      - "|x{name} breathes carefully — measured, controlled, working around something.|n"
-      - "|xThe machine has {name} somewhere. {name} is staying there.|n"
-      - "|x{name} is at the ceiling the machine has set. The ceiling is holding.|n"
+      - "|x{name} is very still — the kind of concentrated, white-knuckle still that's being held in place by something.|n"
+      - "|xSomething in {name}'s posture hit its limit and just... stopped there, trembling.|n"
+      - "|x{name} is breathing careful — slow, measured, working hard around something they can't quite get to.|n"
+      - "|xThe machine's got {name} somewhere. {name} is staying there, not entirely by choice.|n"
+      - "|x{name} is pinned at whatever ceiling the machine set, and the ceiling is holding just fine.|n"
