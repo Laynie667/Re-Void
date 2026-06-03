@@ -215,6 +215,10 @@ def apply_effects(character, item):
     if effects.get("cum_receptacle"):
         character.db.cum_receptacle = True
 
+    # mark_signed — flags that a facility contract has been signed
+    if effects.get("mark_signed"):
+        character.db.facility_signed = True
+
     # perpetual_heat — keeps her permanently in heat via a self-sustaining script
     if effects.get("perpetual_heat"):
         character.db.perpetual_heat = True

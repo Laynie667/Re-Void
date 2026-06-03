@@ -229,6 +229,25 @@ _PROCESS_VOICE = [
     "\"Every animal in here knows what you are before you do. Catch up, good girl.\"",
 ]
 
+# Experimental dosing / procedures — permanent growth and yield, undocumented.
+_DRUG_BEATS = [
+    "A line is run into {t}'s arm and something pale-green goes in cold, then warm, then "
+    "everywhere. Experimental, the label says — effects not fully documented. That's what "
+    "{t} is for. Her tits ache and swell against the cups as it takes.",
+    "The attendant injects {t} at the base of each heavy tit, needle sunk deep into the "
+    "gland, and pushes a thick serum that has her flesh straining fuller within the minute, "
+    "skin tight and hot and leaking before the plunger's even empty.",
+    "A procedure cart rolls up and a drape goes around {t}'s hips. Whatever they do to her "
+    "cunt and womb behind it, she comes out of it gaping wider, dripping more, and built to "
+    "take and hold even more than before.",
+    "Two doses today, pumped straight into her: one for yield, one for size. Both permanent, "
+    "neither explained. {t}'s body swells to meet them — udder fuller, nipples fatter, the "
+    "gauge climbing — whether she follows the science or just feels it happen.",
+    "A growth serum is fed directly into {t}'s milk glands through a port sunk under each "
+    "areola. It burns, and then it's just heat and pressure and the obscene, steady stretch "
+    "of her tits getting bigger on a schedule she doesn't set.",
+]
+
 # Contract pressure — said to the room while the contract is unsigned.
 _CONTRACT_PRESSURE = [
     "The attendant taps the unsigned contract where {t} can see it. \"Sign, and the "
@@ -274,6 +293,11 @@ class FacilityScript(DefaultScript):
                 return o
         return None
 
+    # Phase machine — the facility runs as a repeating cycle. Phases are long
+    # and drawn out: one sustained beat per tick, building across the phase.
+    _PHASE_ORDER = ["restrain", "milk", "breed", "condition", "rest"]
+    _PHASE_LEN   = {"restrain": 3, "milk": 7, "breed": 7, "condition": 5, "rest": 3}
+
     def at_repeat(self):
         room   = self.obj
         target = self._target()
@@ -284,11 +308,14 @@ class FacilityScript(DefaultScript):
         t = target.db.rp_name or target.name
         cond = float(getattr(target.db, "conditioning", 0.0) or 0.0)
 
-        # Conditioning accrues SLOWLY and only mildly accelerates — the descent
-        # is paced by use over time. Use/breeding beats add a little extra below.
-        used_hard = False
+        phase = self.db.phase or "restrain"
+        ptick = int(self.db.phase_tick or 0)
 
-        # Arousal stays up but doesn't slam to the ceiling.
+        # Phase opening header — so the cycle is legible.
+        if ptick == 0:
+            self._phase_header(room, target, t, cond, phase)
+
+        # Arousal stays up; heat keeps it climbing.
         try:
             from typeclasses.arousal_script import add_arousal, ensure_arousal_script
             ensure_arousal_script(target)
@@ -296,83 +323,255 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
-        # Private subliminal drip.
-        if random.random() < 0.6:
+        # The phase's own sustained beat (one per tick — drawn out, not rapid).
+        self._phase_beat(room, target, t, cond, phase, ptick)
+
+        # Quiet background — a subliminal here, an insult there. Sparse.
+        if random.random() < 0.4:
             target.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
-        # The Process, rarely, directly.
-        if random.random() < (0.12 + cond / 600.0):
-            target.msg("|M" + random.choice(_PROCESS_VOICE) + "|n")
-
-        # ── ONE anchored public beat (the spine of the tick) ──────────────
-        # Heat draws the animals — breeding lands far more often while in heat.
-        breed_chance = 0.15 + cond / 400.0
-        if getattr(target.db, "perpetual_heat", False):
-            breed_chance += 0.25
-        if self.db.orifice_zone and random.random() < breed_chance:
-            self._gang(room, target, t, cond)        # breeding load lands
-            used_hard = True
-        else:
-            roll = random.random()
-            if roll < 0.34:
-                room.msg_contents("|c" + random.choice(_MACHINE_BEATS).format(t=t) + "|n")
-                self._log_milk(target)               # the producer side counts too
-            elif roll < 0.70:
-                room.msg_contents("|y" + random.choice(_USE_BEATS).format(t=t) + "|n")
-                used_hard = True
-            else:
-                room.msg_contents("|g" + random.choice(_ANIMAL_BEATS).format(t=t) + "|n")
-
-        # Crude line, often — name-calling / insults (bright red).
-        if random.random() < 0.45:
+        if phase in ("breed", "restrain") and random.random() < 0.3:
             room.msg_contents("|R" + random.choice(_INSULT_LINES).format(t=t) + "|n")
 
-        # Public degradation / readout, scaling with depth (magenta).
-        if random.random() < (0.22 + cond / 300.0):
-            room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+        # Conditioning accrues — more during breeding and conditioning phases.
+        try:
+            from world.conditioning import add_conditioning
+            bonus = 1.5 if phase in ("breed", "condition") else 0.0
+            add_conditioning(target, 1.0 + cond * 0.012 + bonus, source="facility")
+        except Exception:
+            pass
 
-        # Reinforcement — rehearse the conditioning, once it's taken hold.
-        if cond >= 50 and random.random() < 0.3:
-            self._reinforce(room, target, t)
+        # Advance the phase machine.
+        ptick += 1
+        if ptick >= self._PHASE_LEN.get(phase, 2):
+            nxt = self._PHASE_ORDER[(self._PHASE_ORDER.index(phase) + 1) % len(self._PHASE_ORDER)]
+            self.db.phase = nxt
+            self.db.phase_tick = 0
+            if nxt == "restrain":
+                self.db.cycle_count = int(self.db.cycle_count or 0) + 1
+        else:
+            self.db.phase_tick = ptick
 
-        # Deep-state mindbreak, late only (dim — it happens quietly, inside).
-        if cond >= 70 and random.random() < 0.35:
-            pool = _MINDBREAK_LINES if cond >= 100 else _DEEP_LINES
-            room.msg_contents("|x" + random.choice(pool).format(t=t) + "|n")
+    # ------------------------------------------------------------------
 
-        # Contract: pressure while unsigned; review/penalize quotas once signed.
-        contract = self._contract()
-        if contract is not None and not contract.db.signed:
-            if random.random() < 0.3:
-                room.msg_contents("|m" + random.choice(_CONTRACT_PRESSURE).format(t=t) + "|n")
-        elif contract is not None and contract.db.signed:
-            if self.db.ticks % 20 == 0:
-                try:
-                    from world.compliance import penalize_quota_shortfall
-                    penalize_quota_shortfall(target)
-                except Exception:
-                    pass
-            # Taking it without a fight is logged as compliance (earn-back + reward).
-            if used_hard and random.random() < 0.4:
+    def _phase_header(self, room, target, t, cond, phase):
+        cyc = int(self.db.cycle_count or 0) + 1
+        if phase == "restrain":
+            room.msg_contents(
+                f"\n|w━━━━ CYCLE {cyc} · INTAKE ━━━━|n\n"
+                f"|cThe restraints draw {t} back into the station with a hydraulic sigh — "
+                f"chest hauled up into the cups, hips tipped, knees forced wide. Presented, "
+                f"opened, locked down. The cycle starts again whether she's ready or not.|n")
+        elif phase == "milk":
+            room.msg_contents(
+                f"\n|w━━━━ MILKING ━━━━|n\n"
+                f"|cThe rig descends onto {t}'s tits and seals. The draw begins — slow, "
+                f"deep, metronomic — and won't stop until the phase does.|n")
+        elif phase == "breed":
+            room.msg_contents(
+                f"\n|w━━━━ BREEDING ━━━━|n\n"
+                f"|rThe pens unlatch down the wall. The board lists what's owed. It's {t}'s "
+                f"turn to be bred, on the schedule, to the count.|n")
+        elif phase == "condition":
+            room.msg_contents(
+                f"\n|w━━━━ CONDITIONING ━━━━|n\n"
+                f"|MThe lights dim to a single band. The voice starts up close. This is the "
+                f"part where {t} gets a little quieter inside than she was last cycle.|n")
+        elif phase == "rest":
+            room.msg_contents(
+                f"\n|w━━━━ PAUSE ━━━━|n\n"
+                f"|xThe line stops. Not finished — the line is never finished. Just paused, "
+                f"long enough for {t} to feel how little of the pause is hers.|n")
+
+    def _phase_beat(self, room, target, t, cond, phase, ptick):
+        if phase == "restrain":
+            room.msg_contents("|y" + random.choice(_USE_BEATS).format(t=t) + "|n")
+
+        elif phase == "milk":
+            # Mid-phase, the dosing/procedure goes in — permanent, varied, real.
+            if ptick == self._PHASE_LEN["milk"] // 2:
+                self._dose(room, target, t)
+            else:
+                room.msg_contents("|c" + random.choice(_MACHINE_BEATS).format(t=t) + "|n")
+                self._log_milk(target)
+
+        elif phase == "breed":
+            if self.db.orifice_zone:
+                self._gang(room, target, t, cond)
+            else:
+                room.msg_contents("|g" + random.choice(_ANIMAL_BEATS).format(t=t) + "|n")
+            if getattr(target.db, "facility_signed", False) and random.random() < 0.5:
                 try:
                     from world.compliance import register_compliance
                     register_compliance(target)
                 except Exception:
                     pass
-            # The contract writes itself new hidden pages — clause 11 allows it.
-            if self.db.ticks % 30 == 0 and random.random() < 0.5:
-                self._addendum(contract, target, t)
-            if getattr(target.db, "breeding_quota", None) and random.random() < 0.16:
-                target.msg("|m" + self._quota_board(target) + "|n")
 
-        # Slow conditioning gain — a touch more when she's actually being used.
-        try:
-            from world.conditioning import add_conditioning
-            gain = 1.0 + cond * 0.012 + (1.5 if used_hard else 0.0)
-            add_conditioning(target, gain, source="facility")
-        except Exception:
-            pass
+        elif phase == "condition":
+            # One sustained conditioning beat per tick.
+            r = random.random()
+            if r < 0.35:
+                target.msg("|M" + random.choice(_PROCESS_VOICE) + "|n")
+            elif r < 0.6 and cond >= 40:
+                self._reinforce(room, target, t)
+            elif r < 0.85:
+                room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+            elif cond >= 70:
+                pool = _MINDBREAK_LINES if cond >= 100 else _DEEP_LINES
+                room.msg_contents("|x" + random.choice(pool).format(t=t) + "|n")
+            else:
+                target.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
+
+        elif phase == "rest":
+            # Withdrawal bites in the pauses once she's been made dependent.
+            dep = int(getattr(target.db, "drug_dependence", 0) or 0)
+            if dep and random.random() < min(0.7, 0.2 + dep * 0.1):
+                try:
+                    from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+                    ensure_arousal_script(target); add_arousal(target, 10.0 + dep * 2)
+                except Exception:
+                    pass
+                target.msg(
+                    "|G  the pause is the worst part now — your body claws for the next dose, "
+                    "the craving louder than any thought, and you'd take anything to make it "
+                    "the milk phase again.|n")
+            contract = self._contract()
+            signed = getattr(target.db, "facility_signed", False) or (contract and contract.db.signed)
+            if contract is not None and not signed:
+                room.msg_contents("|m" + random.choice(_CONTRACT_PRESSURE).format(t=t) + "|n")
+            elif signed:
+                # Quota review + the board, once per pause.
+                try:
+                    from world.compliance import penalize_quota_shortfall
+                    penalize_quota_shortfall(target)
+                except Exception:
+                    pass
+                if getattr(target.db, "breeding_quota", None):
+                    target.msg("|m" + self._quota_board(target) + "|n")
+                if int(self.db.cycle_count or 0) % 3 == 0 and contract is not None:
+                    self._addendum(contract, target, t)
 
     # ------------------------------------------------------------------
+
+    # Experimental drug menu — each dose applies one or two of these. All real,
+    # all permanent (cleared only by the reset). Effects are deliberately mixed.
+    _DRUGS = ["swell", "yield", "sensitize", "capacity", "brood",
+              "compliance", "bimbo", "dependence"]
+
+    def _dose(self, room, target, t):
+        room.msg_contents("|G" + random.choice(_DRUG_BEATS).format(t=t) + "|n")
+        for drug in random.sample(self._DRUGS, k=random.randint(1, 2)):
+            try:
+                getattr(self, f"_drug_{drug}")(room, target, t)
+            except Exception:
+                pass
+
+    def _boost_bodymods(self, target, amount):
+        from evennia import search_object
+        from typeclasses.body_mod_item import BodyModItem
+        n = 0
+        for zd in (getattr(target.db, "zones", None) or {}).values():
+            bm = ((zd or {}).get("mechanics", {}) or {}).get("body_mod")
+            if bm:
+                res = search_object(bm.get("item_dbref", ""), exact=True)
+                if res and isinstance(res[0], BodyModItem):
+                    try: res[0].apply_permanent_boost(amount); n += 1
+                    except Exception: pass
+        return n
+
+    def _boost_production(self, target, amount):
+        from evennia import search_object
+        from typeclasses.production_item import ProductionItem
+        n = 0
+        for zd in (getattr(target.db, "zones", None) or {}).values():
+            pr = ((zd or {}).get("mechanics", {}) or {}).get("production")
+            if pr:
+                res = search_object(pr.get("item_dbref", ""), exact=True)
+                if res and isinstance(res[0], ProductionItem):
+                    try:
+                        old = res[0].db.base_rate_ml_per_tick or 8.0
+                        res[0].db.base_rate_ml_per_tick = old + amount; n += 1
+                    except Exception: pass
+        return n
+
+    # ── the drugs ──
+    def _drug_swell(self, room, target, t):
+        amt = round(random.uniform(0.15, 0.30), 2)
+        self._boost_bodymods(target, amt)
+        room.msg_contents(
+            f"|G  ▸ SWELL SERUM — {t}'s flesh strains and grows: tits fuller, heavier, "
+            f"the skin tight and hot. (+{amt} size, permanent)|n")
+
+    def _drug_yield(self, room, target, t):
+        self._boost_production(target, 3.0)
+        room.msg_contents(
+            f"|G  ▸ YIELD COMPOUND — {t}'s glands let down faster and fuller than her body "
+            f"wants to, milk beading before the cups even seal. (+production, permanent)|n")
+
+    def _drug_sensitize(self, room, target, t):
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 50.0)
+        target.db.stim_per_tick = float(getattr(target.db, 'stim_per_tick', 0) or 0) + 2.0
+        room.msg_contents(
+            f"|G  ▸ RAW-NERVE AGENT — every nerve in {t} turns up past comfort. Air, fabric, "
+            f"breath all read as too much, and the ache never fully backs off. (sensitivity up)|n")
+
+    def _drug_capacity(self, room, target, t):
+        from evennia import search_object
+        try:
+            from typeclasses.inflation_item import InflationItem
+        except Exception:
+            return
+        raised = False
+        for zd in (getattr(target.db, "zones", None) or {}).values():
+            inf = ((zd or {}).get("mechanics", {}) or {}).get("inflation")
+            if inf:
+                res = search_object(inf.get("item_dbref", ""), exact=True)
+                if res:
+                    try:
+                        res[0].db.max_volume_ml = float(res[0].db.max_volume_ml or 1000.0) + 1500.0
+                        raised = True
+                    except Exception: pass
+        room.msg_contents(
+            f"|G  ▸ CAPACITY EXPANDER — {t} is remade to hold more without complaint. Her "
+            f"limits move; the fill stops mattering long after it used to.|n")
+
+    def _drug_brood(self, room, target, t):
+        prog = dict(getattr(target.db, "offspring_progress", None) or {})
+        for sp in ("hound", "bull", "boar", "stallion"):
+            prog[sp] = int(prog.get(sp, 0)) + random.randint(1, 3)
+        target.db.offspring_progress = prog
+        room.msg_contents(
+            f"|G  ▸ BROOD ACCELERANT — {t}'s womb is hurried along; whatever's rooted in her "
+            f"comes due sooner and takes faster. (fertility up — get drops sooner)|n")
+
+    def _drug_compliance(self, room, target, t):
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, random.uniform(8, 15), source="drug")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G  ▸ COMPLIANCE COMPOUND — something in {t} goes soft and agreeable. The part "
+            f"that argued gets quieter, and stays quieter. (conditioning deepened)|n")
+
+    def _drug_bimbo(self, room, target, t):
+        filters = list(getattr(target.db, "active_speech_filters", None) or [])
+        if "baby_talk" not in filters:
+            filters.append("baby_talk"); target.db.active_speech_filters = filters
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 5.0, source="drug")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G  ▸ BIMBO DRAUGHT — {t}'s thoughts go round and pink and slow, and her mouth "
+            f"follows them down. (speech softened, conditioning up)|n")
+
+    def _drug_dependence(self, room, target, t):
+        dep = int(getattr(target.db, "drug_dependence", 0) or 0) + 1
+        target.db.drug_dependence = dep
+        room.msg_contents(
+            f"|G  ▸ DEPENDENCE DOSE — {t}'s body learns to need the next one. Between doses "
+            f"now there's a craving, and the craving has its own leash. (dependence {dep})|n")
 
     def _gang(self, room, target, t, cond):
         try:

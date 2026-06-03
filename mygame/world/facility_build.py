@@ -125,6 +125,7 @@ _CONTRACT_BINDING = {
     "lock_conditioning":      True,
     "cum_receptacle":         True,
     "perpetual_heat":         True,
+    "mark_signed":            True,
     "breeding_quota":         {"hound": 30, "bull": 12, "boar": 12,
                                "stallion": 10, "contributor": 80},
     "milk_quota":             40,
@@ -250,18 +251,9 @@ def run_facility(caller):
     except Exception:
         pass
 
-    # ── Physical cycle loop (existing CycleScript) ──────────────────────
-    try:
-        from typeclasses.cycle_script import CycleScript
-        from evennia.utils import create as _c
-        if not CycleScript.find(caller):
-            s = _c.create_script(CycleScript, obj=caller, persistent=True, autostart=False)
-            s.db.machine_zone  = cycle_zone
-            s.db.phase         = "rest"
-            s.db.phase_started = time.time()
-            s.start()
-    except Exception:
-        pass
+    # NOTE: the FacilityScript below IS the cycle (phased: intake -> milk ->
+    # breed -> condition -> pause). No separate CycleScript runs, so the loop
+    # stays single and coherent.
 
     # ── Populate the room — staff + a stock of varied animals ───────────
     try:
@@ -310,10 +302,16 @@ def run_facility(caller):
         pass
 
     # ── The contract — presented now, enforced mechanically on signing ──
+    caller.db.facility_signed = False
     contract_dbref = None
     try:
         from typeclasses.milking_contract import MilkingContract
         from evennia.utils import create as _c
+        # Remove any stale contracts from earlier runs so there's exactly one.
+        for o in list(room.contents):
+            if isinstance(o, MilkingContract):
+                try: o.delete()
+                except Exception: pass
         contract = _c.create_object(MilkingContract, key="contract", location=room)
         contract.db.desc = ("A thick multi-page intake form. The top sheet is face-up "
                             "and readable; most of the pages beneath are turned face-down.")
@@ -498,6 +496,8 @@ def run_facility_reset(caller, purge=False):
     caller.db.freedom_forfeited         = False
     caller.db.offspring_progress        = None
     caller.db.offspring_counts          = None
+    caller.db.facility_signed           = False
+    caller.db.drug_dependence           = 0
 
     # Stop perpetual heat and clear the flag.
     caller.db.perpetual_heat = False

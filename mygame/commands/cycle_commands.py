@@ -147,7 +147,8 @@ class CmdCycle(MuxCommand):
 
     def _self_stop(self, caller):
         from typeclasses.cycle_script import CycleScript
-        if not CycleScript.find(caller):
+        in_facility = getattr(caller.db, "facility_active", False)
+        if not CycleScript.find(caller) and not in_facility:
             caller.msg("|xYou aren't in a machine cycle.|n")
             return
         if getattr(caller.db, "endcycle_blocked", False):
@@ -218,7 +219,8 @@ class CmdEndCycle(Command):
     def func(self):
         caller = self.caller
         from typeclasses.cycle_script import CycleScript
-        if not CycleScript.find(caller):
+        in_facility = getattr(caller.db, "facility_active", False)
+        if not CycleScript.find(caller) and not in_facility:
             caller.msg("|xNo active machine cycle to end.|n")
             return
         if getattr(caller.db, "endcycle_blocked", False):
