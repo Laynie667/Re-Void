@@ -902,8 +902,13 @@ class FacilityScript(DefaultScript):
         cyc = int(self.db.cycle_count or 0) + 1
         if phase == "restrain":
             self._check_tier(room, target, t)
+            try:
+                from world.processing import processing_tier
+                grade = processing_tier(target)[1].upper()
+            except Exception:
+                grade = "INTAKE"
             room.msg_contents(
-                f"\n|w━━━━ CYCLE {cyc} · INTAKE ━━━━|n\n"
+                f"\n|w━━━━ CYCLE {cyc} · {grade} ━━━━|n\n"
                 f"|cThe restraints draw {t} back into the station with a hydraulic sigh — "
                 f"chest hauled up into the cups, hips tipped, knees forced wide. Presented, "
                 f"opened, locked down. The cycle starts again whether she's ready or not.|n")
@@ -998,6 +1003,21 @@ class FacilityScript(DefaultScript):
             if brood: opts.append(f"\"{brood} of your own get on the roster now, and every one of them owes its turn in you. Do the math on getting out.\"")
             if use:   opts.append(f"\"{use} times those holes have been used and logged. You're not a person with a number. You're the number.\"")
             opts.append(f"\"I can see exactly how much of you is left, {t}. It's a smaller figure every review.\"")
+            try:
+                from world.processing import processing_tier
+                lvl = processing_tier(target)[0]
+                grade_lines = {
+                    0: "\"Intake grade. You still think this is happening to a person. We'll fix that.\"",
+                    1: "\"Breaking in nicely. The fight's the last thing to go, and it's going.\"",
+                    2: "\"Breeding stock now. Signed, stamped, producing. Be glad you're useful — useless ones get culled.\"",
+                    3: "\"A broodmare. Listen to yourself — you breed your own get back into you and thank me for the chance.\"",
+                    4: "\"Perfected. Nothing left in you to break, pet, and look how that lands like a compliment. Good girl.\"",
+                }
+                if lvl in grade_lines:
+                    opts.append(grade_lines[lvl])
+            except Exception:
+                pass
+            opts = [o for o in opts if o]
             if opts:
                 return random.choice(opts)
         return random.choice(_PROCESS_VOICE)

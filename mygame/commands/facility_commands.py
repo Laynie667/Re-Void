@@ -397,11 +397,30 @@ class CmdStruggle(_FacilityVerb):
               "freedom. The restraints don't give. Struggling only ever trained you faster.|n")
 
 
+# keyword -> (scene_method_or_None, climb-on flavor)
 _FURNITURE_SCENE = {
-    "bench": "single", "breeding": "single",
-    "rack": None, "milking": None,
-    "machine": "single", "fucking": "single",
-    "block": "verbal", "display": "verbal",
+    "bench":    ("double",  "She folds herself over the breeding bench and reaches back to "
+                            "buckle her own ankles into the stirrups — presented, locked, ready."),
+    "breeding": ("double",  "She folds herself over the breeding bench and locks her own "
+                            "ankles into the stirrups, hips up, holes offered."),
+    "rack":     (None,      "She steps into the milking rack and fits her own tits to the "
+                            "waiting cups, arms up into the cuffs, and waits for the draw."),
+    "milking":  (None,      "She fits herself to the milking rack, tits to the cups, and "
+                            "lets it cinch on."),
+    "machine":  ("single",  "She lowers herself onto the fucking machine's primed attachment, "
+                            "takes it to the base with a shudder, and reaches for the dial she "
+                            "isn't allowed to turn down."),
+    "fucking":  ("single",  "She seats herself on the fucking machine and braces — it only "
+                            "goes one way, and she set it running herself."),
+    "block":    ("verbal",  "She climbs up onto the display block under the lights, turns to "
+                            "present herself to the room, and holds the pose to be looked at."),
+    "display":  ("verbal",  "She mounts the display block and offers herself up to be graded, "
+                            "shown, and bid on."),
+    "kennel":   ("knottrain","She crawls to the kennel gate on her knees and presents through "
+                            "the bars, asking for what's behind them."),
+    "cart":     ("__dose",  "She bares an arm to the supply cart, offering herself for "
+                            "whatever's loaded next."),
+    "supply":   ("__dose",  "She presents to the supply cart for dosing."),
 }
 
 
@@ -422,16 +441,15 @@ class CmdMount(_FacilityVerb):
             c.msg("|xMount what? (the breeding bench, the milking rack, the fucking "
                   "machine, the display block...)|n")
             return
-        scene = None
-        for kw, sc in _FURNITURE_SCENE.items():
+        scene = flavor = None
+        for kw, (sc, fl) in _FURNITURE_SCENE.items():
             if kw in arg:
-                scene = sc; matched = kw; break
+                scene, flavor = sc, fl; break
         else:
-            c.msg("|xThere's no such fixture here to climb onto.|n")
+            c.msg("|xThere's no such fixture here to climb onto. (bench / rack / machine / "
+                  "block / kennel / cart)|n")
             return
-        room.msg_contents(
-            f"|y{t} climbs onto the {arg} herself and arranges into position, offering up "
-            f"whatever it's built to use.|n")
+        room.msg_contents(f"|y{t} doesn't wait to be put there. {flavor}|n")
         self._comply(reward=False)
         fs = _fac_script(room)
         if not fs:
@@ -439,11 +457,13 @@ class CmdMount(_FacilityVerb):
             return
         cond = float(getattr(c.db, "conditioning", 0) or 0)
         try:
-            if "rack" in arg or "milk" in arg:
+            if scene is None:                       # the milking rack
                 fs._start_milking(c)
-                c.msg("|cThe rack's cups find you and start to pull. You climbed on for this.|n")
+                c.msg("|cThe cups find you and start to pull. You climbed on for this.|n")
+            elif scene == "__dose":                 # the supply cart
+                fs._dose(room, c, t)
             else:
-                getattr(fs, f"_scene_{scene or 'single'}")(room, c, t, cond, fs._orifices(c))
+                getattr(fs, f"_scene_{scene}")(room, c, t, cond, fs._orifices(c))
         except Exception:
             self._arouse(8)
 
@@ -500,6 +520,20 @@ class CmdProcess(Command):
             if fs:
                 try: fs._gang(room, target, t, cond)
                 except Exception: pass
+            # A named deposit — this load is actually the handler's, in her, on file.
+            try:
+                import random as _r
+                from typeclasses.insemination_item import do_inseminate
+                zone = None
+                if fs:
+                    holes = fs._holes_only(target)
+                    zone = _r.choice(holes) if holes else (fs._orifices(target) or [None])[0]
+                if zone:
+                    do_inseminate(caller, target, zone, {
+                        "source": "machine", "fluid_type": "semen",
+                        "volume_per_tick": _r.uniform(80, 200), "ttl_hours": 24.0})
+            except Exception:
+                pass
             tally = list(getattr(target.db, "bred_by", None) or [])
             tally.append((caller.id, cn)); target.db.bred_by = tally
             room.msg_contents(f"|r{cn} takes a turn with {t}, using her the way the facility "
