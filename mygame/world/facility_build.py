@@ -358,6 +358,71 @@ def run_facility(caller):
     except Exception:
         pass
 
+    # ── Other livestock — she is never the only one being processed ──────
+    try:
+        from typeclasses.facility_script import FacilityAttendant
+        from evennia.utils import create as _c
+        others = [
+            ("a heavy broodmare",
+             "Two stations down, a broodmare so far along in her processing she's gone "
+             "placid and empty-eyed — milked and mounted at once without a flicker, belly "
+             "soft and used, the finished product the handlers point to as the goal."),
+            ("a fresh intake",
+             "A newer girl, still flinching, still saying no with her whole face, strapped "
+             "to an early station and learning what the tags mean. A cycle or two behind, no more."),
+            ("a ruined cow",
+             "An older piece of stock kept on past usefulness as an example — gaping, "
+             "branded all over, beyond reacting to much of anything, wheeled out when the "
+             "handlers want to show the others where the line ends."),
+        ]
+        for key, desc in others:
+            o = _c.create_object(FacilityAttendant, key=key, location=room)
+            o.db.rp_name = key
+            o.db.facility_role = "livestock"
+            o.db.physical_desc = desc
+            track(o)
+    except Exception:
+        pass
+
+    # ── Furniture — the room is fitted out, things where they belong ─────
+    try:
+        from evennia import DefaultObject
+        from evennia.utils import create as _c
+        furniture = [
+            ("the breeding bench",
+             "A heavy padded bench bolted to the floor, angled and cut away to fold an "
+             "occupant over it and hold her presented — restraints at the ankles, the wrists, "
+             "the throat, and a height-adjustable rail behind for whatever's taking its turn."),
+            ("the milking rack",
+             "An upright rack of articulated arms and suction cups, graduated collection "
+             "bottles racked beneath it, a gauge logging yield. It descends onto whoever's "
+             "strapped in and does not stop on its own."),
+            ("the fucking machine",
+             "A piston-driven machine on a swing mount, a rack of interchangeable attachments "
+             "beside it from modest to obscene, a dial that only seems to turn one direction. "
+             "It runs to a timer, not to mercy."),
+            ("the display block",
+             "A raised, slowly-rotating block at the centre of the room, lit from above — "
+             "where stock is stood, graded, branded, and shown off to the rest. Bids are "
+             "taken here. Gradings are announced here."),
+            ("the status board",
+             "A vast board on the wall, chalked and re-chalked: every resident's conditioning, "
+             "quotas, yield, brands, and grade. It only ever lists what's owed. (Try: board)"),
+            ("the supply cart",
+             "A wheeled cart of labelled vials, needle guns, gauging rings, brands and "
+             "tattoo kit — the experimental dosing and the permanent procedures, all within "
+             "easy reach of the line."),
+        ]
+        fcreated = []
+        for key, desc in furniture:
+            f = _c.create_object(DefaultObject, key=key, location=room)
+            f.db.desc = desc
+            track(f)
+            fcreated.append(f.dbref)
+        caller.db.facility_furniture = fcreated
+    except Exception:
+        pass
+
     # ── The contract — presented now, enforced mechanically on signing ──
     caller.db.facility_signed = False
     contract_dbref = None
@@ -606,6 +671,7 @@ def run_facility_reset(caller, purge=False):
     caller.db.gape                      = None
     caller.db.holes                     = None
     caller.db.processing_tier           = 0
+    caller.db.facility_furniture        = None
     caller.db.bladder_ml                = 0.0
     caller.db.lactation_locked          = False
     caller.db.cum_craving               = False

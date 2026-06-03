@@ -512,6 +512,61 @@ _DEGRADE_LINES = [
     "from across the room.",
 ]
 
+# Graduation set-pieces — fire once when she's re-graded into a tier. Witnessed.
+_GRADUATION = {
+    1: [
+        "The first review is brief and clinical. {t} is unstrapped just long enough to be "
+        "stood up, turned once, and looked over — tits hefted, holes spread and inspected, a "
+        "finger hooked in her mouth — and then a tag is clipped to her ear and she's pushed "
+        "back down onto the cradle. BREAKING IN, the board reads. The other livestock barely "
+        "glance up. They've all worn that tag. They know how the rest of it goes.",
+    ],
+    2: [
+        "This one's a ceremony. {t} is walked to the front of the room on a lead and made to "
+        "present — bent, spread, holes on show — while an attendant reads her output figures "
+        "aloud to the room like a livestock auctioneer. A brand is heated and pressed to her: "
+        "BREEDING STOCK, seared in where it'll always show. The other girls are made to watch, "
+        "and she's made to watch them watch, and somewhere in the burn and the staring she "
+        "stops being a person who got caught and becomes a product that got graded.",
+    ],
+    3: [
+        "{t} is put up on the display block at the centre of the room, turned slowly so every "
+        "handler and every other broodmare can see what she's become — belly soft and used, "
+        "holes gaping, leaking from both ends, the tally of her own get chalked on a board "
+        "beside her. Bids are taken on her future output. She doesn't understand all of it, "
+        "and that not-understanding is noted approvingly, and she's leased out by the cycle to "
+        "whoever wants a turn while the room applauds the grade: BROODMARE.",
+    ],
+    4: [
+        "There's a kind of graduation for the finished ones, and today it's {t}'s. She's "
+        "paraded the length of the room — no name left to announce her by, just a number and "
+        "the grade — every ruined gaping hole on display, the brands and piercings and the "
+        "BRED tattoo catalogued out loud as a list of completed work. She's the example now, "
+        "the thing the newer livestock are shown to know where they're headed. PERFECTED "
+        "LIVESTOCK. The Process says, almost fondly, that there's nothing left to break — and "
+        "the awful part is how much that lands like praise, how much she wants it to be true.",
+    ],
+}
+
+# Other livestock — she's never the only one. Comparison, ranking, witness.
+_LIVESTOCK_BEATS = [
+    "Down the line, another of the cows is being bred through her own review — screaming, "
+    "then not — and {t} is made to watch, told plainly that this is her in a few cycles, or "
+    "her last cycle, the timeline deliberately blurred so she can't tell whether she's "
+    "watching her future or her past.",
+    "The handlers rank the stock out loud where they can all hear it — yield, gape, "
+    "obedience, breeding count — and {t}'s number is read into the order somewhere she "
+    "doesn't like, with a note that she'll climb the list the more she's used. The other "
+    "girls don't look at her. On the list, they're competitors.",
+    "A heavily-bred broodmare two stations over is being milked and mounted at the same time, "
+    "placid and empty-eyed and utterly compliant, and an attendant nods at her and tells {t}, "
+    "\"That's the goal. That's a good girl. You're getting there.\" The praise is for the "
+    "other one. {t} finds herself wanting it pointed her way, and hates that she does.",
+    "One of the other cows is dragged past, freshly graded and sobbing, and shoved onto an "
+    "empty station to begin — and the only thing {t} feels, to her shame, is relief that "
+    "it's that one's turn at the front and not hers, this cycle.",
+]
+
 # Deeper mindbreak — only once conditioning is well advanced.
 _MINDBREAK_LINES = [
     "{t} reaches for a thought and finds the shelf empty. Reaches again. Stops "
@@ -669,6 +724,9 @@ class FacilityScript(DefaultScript):
             target.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
         if phase in ("breed", "restrain") and random.random() < 0.3:
             room.msg_contents("|R" + random.choice(_INSULT_LINES).format(t=t) + "|n")
+        # The other livestock — comparison and witness, occasionally.
+        if phase in ("condition", "rest") and random.random() < 0.22:
+            room.msg_contents("|g" + random.choice(_LIVESTOCK_BEATS).format(t=t) + "|n")
 
         # Conditioning accrues — more during breeding and conditioning phases.
         try:
@@ -772,6 +830,9 @@ class FacilityScript(DefaultScript):
             f"|xThe attendant initials the form. Nobody asks {t} how she feels about the "
             f"new grade — the grade is a measurement, not an opinion, and the measurement "
             f"only goes one way.|n")
+        # The graduation set-piece for this tier, witnessed by the herd.
+        if lvl in _GRADUATION:
+            room.msg_contents("|w" + random.choice(_GRADUATION[lvl]).format(t=t) + "|n")
         marks = list(getattr(target.db, "facility_brands", None) or [])
         marks.append(f"graded by the facility: {name}")
         target.db.facility_brands = marks
