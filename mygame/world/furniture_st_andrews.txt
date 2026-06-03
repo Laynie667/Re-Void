@@ -1,0 +1,65 @@
+== ST. ANDREW'S CROSS — Drop-in Build Script ==
+== Run these commands while standing in the room where the cross will go ==
+== Creates zone: st_andrews_cross ==
+== Mechanics: SeatMechanic (standing, capacity 1) + RestrainMechanic (capacity 1) ==
+
+-- STEP 1: Create zone --
+
+roomzone add st_andrews_cross
+
+
+-- STEP 2: Zone description --
+
+roomzone desc st_andrews_cross = An |wX-frame cross|n mounted against the wall — two beams crossing at the center, the angle of the X set so that arms go up and out and legs go down and out, the body spread and held. |cD-rings|n are mounted at the four ends of the X and at the center crossing, each one sized for standard restraint hardware and positioned to put a wrist or ankle exactly where the frame requires it. The cross is bolted to the wall at three points. It does not move. The surface of the wood has been sanded and finished; there is nothing rough about it except the position it creates.
+
+
+-- STEP 3: Zone details --
+
+roomzone detail st_andrews_cross/frame = The two beams are hardwood, each one thick enough that flexing under load is not a consideration. The crossing point is a steel bracket through both beams, the whole assembly then bolted into the wall studs. The angle of the X puts the wrist D-rings above head height and wide, and the ankle D-rings below hip height and wide — the spread is significant. The center D-ring is at hip height. It has its own purpose.
+
+roomzone detail st_andrews_cross/d_rings = The |cD-rings|n at the four end-points are welded, not bolted — a choice that says something about the loads they're designed to take. The metal is smooth from the contact of hardware clipping and unclipping from them. The center ring is a slightly larger gauge than the others.
+
+roomzone detail st_andrews_cross/wall_mounting = The cross is mounted with three bolts into the wall studs, each one set with washers and lock nuts. The wall around the mounting points shows a faint outline — a rectangle of slightly different color where the frame was measured and placed. Someone took their time.
+
+
+-- STEP 4: Study observations --
+
+roomzone study st_andrews_cross + The finish on the wood at the wrist positions is slightly more worn than elsewhere — the specific wear of skin contact and friction, accumulated over many uses. The finish holds, but the surface there is smoother.
+
+roomzone study st_andrews_cross + The center D-ring has been used more than the end ones. The metal where a clip would contact it is polished to a brighter finish than the ring itself.
+
+roomzone study st_andrews_cross + The floor below the cross has a small pattern of marks — faint, at the position of two feet standing and shifting. The marks are consistent. The position is always the same.
+
+
+-- STEP 5: Handle interactions --
+
+roomzone handle st_andrews_cross/frame = You stand against the cross and feel the wood at your back — smooth, solid, unyielding. You raise your arms to the wrist D-rings and the position is immediately clear: arms up and wide, legs down and wide, weight supported by the cross but belonging to it. The D-rings are at exactly the right position. You check the center ring at your hips. The frame was built to a specific set of proportions and whoever it was built for, the measurements were considered.
+
+roomzone handle st_andrews_cross/d_rings = You clip and unclip one of the wrist D-rings several times to test the hardware. The ring is solid and the weld is clean. The position of your wrist in relation to the frame, the spread of your arms from this one point, makes the geometry of the whole thing apparent. There is no slack built into this design. You are where the cross puts you.
+
+
+-- STEP 6: Mechanic installation --
+
+@create Cross Frame:typeclasses.seat_mechanic.SeatMechanic
+@set Cross Frame/capacity = 1
+@set Cross Frame/label = the cross
+@set Cross Frame/position = standing
+@set Cross Frame/allow_lap = 0
+use Cross Frame on st_andrews_cross
+
+@create Cross Restraints:typeclasses.restrain_mechanic.RestrainMechanic
+@set Cross Restraints/capacity = 1
+@set Cross Restraints/label = the cross restraints
+@set Cross Restraints/blocker_msg = The restraints hold your wrists and ankles to the cross. You are spread and fixed in place.
+use Cross Restraints on st_andrews_cross
+
+
+-- STEP 7: Ambient lines --
+
+rambient/add |xThe cross stands against the wall — the X of it still, the D-rings catching the room's light in small bright points.|n
+
+rambient/add |xThe shadow of the cross falls across the floor in an X. It does not move.|n
+
+rambient/add |xOne of the cross's D-rings turns very slightly on its mount — the metal responding to a draft.|n
+
+rambient/add |xThe center D-ring of the cross is at exactly hip height. Its position is not incidental.|n

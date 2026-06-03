@@ -274,33 +274,87 @@ def run_test_build(caller):
     # ─────────────────────────────────────────────────────────────────
     # 8. CYCLE MACHINE — restraint → milk → boost → rest
     # ─────────────────────────────────────────────────────────────────
-    sec("Cycle Machine")
-    if chest:
-        try:
-            from evennia.utils import create as _c
-            from typeclasses.milking_machine_mechanic import MilkingMachineMechanic
-            mm = _c.create_object(MilkingMachineMechanic, key="Test Milking Machine", location=room)
-            room_zones = getattr(room.db, "zones", None) or {}
-            if chest in room_zones:
-                mech = dict((room_zones[chest].get("mechanics") or {}))
-                mech["milking_machine"] = {"item_dbref": mm.dbref, "item_name": mm.key, "speed": "steady"}
-                zc = dict(room_zones[chest]); zc["mechanics"] = mech
-                zs = dict(room_zones); zs[chest] = zc
-                room.db.zones = zs
-                ok(f"Milking machine installed on room zone '{chest}'")
-            else:
-                caller.msg(f"  |yRoom has no zone '{chest}'. Create it: roomzone add {chest}|n")
-                caller.msg(f"  |yThen re-run the build.|n")
-                mm.delete()
+    sec("Cycle Machine — restraint → milk → boost → rest")
+    try:
+        from evennia.utils import create as _c
+        from typeclasses.milking_machine_mechanic import MilkingMachineMechanic
+        from typeclasses.cycle_script import CycleScript
 
-            caller.msg("  |yStart cycle on yourself:|n")
-            caller.msg(f"  |w  @py from typeclasses.cycle_script import CycleScript; from evennia.utils import create; s=create.create_script(CycleScript,obj=me,persistent=True,autostart=False); s.db.machine_zone='{chest}'; s.start(); me.msg('Cycle running.')|n")
-            caller.msg("  |yLet it run one full phase (15 sec) then: endcycle|n")
+        # Use existing room zone or create a dedicated test one
+        room_zones = dict(getattr(room.db, "zones", None) or {})
+        cycle_zone = None
+
+        # Prefer a zone that already exists
+        for zn in (chest, "cycle_station", "test_station"):
+            if zn and zn in room_zones:
+                cycle_zone = zn
+                break
+
+        # If none found, create one on the room now
+        if not cycle_zone:
+            cycle_zone = "cycle_station"
+            room_zones[cycle_zone] = {
+                "zone_type":    "surface",
+                "desc":         "A testing station for the cycle machine.",
+                "mechanics":    {},
+                "visibility":   "look",
+                "intimate":     False,
+                "covered_by":   None,
+                "contents":     [],
+            }
+            room.db.zones = room_zones
+            ok(f"Created room zone '{cycle_zone}' for cycle machine")
+
+        # Install milking_machine mechanic into the zone
+        mm = _c.create_object(MilkingMachineMechanic, key="Test Milking Machine", location=room)
+        mech = dict((room_zones[cycle_zone].get("mechanics") or {}))
+        mech["milking_machine"] = {
+            "item_dbref":  mm.dbref,
+            "item_name":   mm.key,
+            "speed":       "steady",
+            "cycle_mode":  True,
+            "cycle_boost_size": 0.10,
+            "cycle_boost_rate": 3.0,
+        }
+        # Also add a milking machine restraint for the restrain phase
+        from typeclasses.restrain_mechanic import RestrainMechanic
+        rm = _c.create_object(RestrainMechanic, key="Test Cycle Restraints", location=room)
+        rm.db.label = "the cycle machine restraints"
+        rm.db.blocker_msg = "The cycle machine holds you in place."
+        rm.db.capacity = 1
+        mech["restraint"] = {
+            "item_dbref": rm.dbref,
+            "item_name":  rm.key,
+            "label":      "cycle machine restraints",
+        }
+        zc = dict(room_zones[cycle_zone]); zc["mechanics"] = mech
+        room_zones[cycle_zone] = zc
+        room.db.zones = room_zones
+        track(mm)
+
+        ok(f"Cycle machine installed on zone '{cycle_zone}' (milking + restraint)")
+
+        # Auto-start the CycleScript on the caller
+        existing = [s for s in caller.scripts.all() if isinstance(s, CycleScript)]
+        if existing:
+            ok("CycleScript already running on you — endcycle first, then re-run build")
+        else:
+            s = _c.create_script(
+                CycleScript, obj=caller,
+                persistent=True, autostart=False,
+            )
+            s.db.machine_zone = cycle_zone
+            s.start()
+            ok("CycleScript started — running: restraint → milk → boost → rest")
+            caller.msg("  |yWatch for phase messages. When you've seen the cycle run, type: endcycle|n")
+            caller.msg("  |yThe cycle fires messages from milking_messages.yaml — verify they show.|n")
             caller.msg("  |yThen: @py me.db.test_flag_cycle=True|n")
-        except Exception as e:
-            err(f"Cycle machine: {e}")
-    else:
-        caller.msg("  |yNo chest zone in room. Create: roomzone add chest, then re-run.|n")
+    except Exception as e:
+        err(f"Cycle machine: {e}")
+        caller.msg("  |yManual fallback — run in order:|n")
+        caller.msg("  |w  roomzone add cycle_station|n")
+        caller.msg("  |w  @reload|n")
+        caller.msg("  |y  Re-run the build script.|n")
 
     # ─────────────────────────────────────────────────────────────────
     # 9. APHRODISIACS

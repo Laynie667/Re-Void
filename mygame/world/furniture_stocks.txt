@@ -1,0 +1,65 @@
+== STANDING STOCKS (PILLORY) — Drop-in Build Script ==
+== Run these commands while standing in the room where the stocks will go ==
+== Creates zone: stocks ==
+== Mechanics: SeatMechanic (standing, capacity 1) + RestrainMechanic (capacity 1) ==
+
+-- STEP 1: Create zone --
+
+roomzone add stocks
+
+
+-- STEP 2: Zone description --
+
+roomzone desc stocks = A set of |wstanding stocks|n positioned for visibility — the timber frame upright and solid, the neck-and-wrist yoke at the height of a standing person, the whole structure designed so that whoever is locked in it faces the room. The |cyoke|n is hinged at one side and latches on the other; it holds the head and both wrists in fixed positions, bent forward from the waist, the back flat and everything behind it available. |cAnkle bars|n at the base hold the feet in place. The wood is smooth from handling at the grip points, and the grain of it has darkened at those places from oil and contact.
+
+
+-- STEP 3: Zone details --
+
+roomzone detail stocks/yoke = The |cyoke|n is carved to size — three openings in a row, the outer two for wrists and the center for the neck. The padding inside each opening is worn to the specific compression of something used often. The latch on the right side requires a deliberate lift-and-drop to release; it will not open by pulling. The hinges on the left are polished from the repetition of opening and closing. When locked, the yoke holds the head down and the wrists out, and there is no position that makes it comfortable.
+
+roomzone detail stocks/ankle_bars = The |cankle bars|n are on adjustable posts — the height can be set, within a range, before locking. Once locked, the position is fixed: feet apart, weight on the balls of the feet, everything else compensating. The locking mechanism on each bar requires a key. One of the posts shows a hairline scratch on its upper surface — a mark from something small and metal, made at a moment of less-than-careful placement.
+
+roomzone detail stocks/frame = The timber frame is pegged and mortised — no metal fasteners except at the adjustable hardware, the rest all wood-on-wood joints. The construction is deliberate and the weight of it says so. The base is wide enough that the frame doesn't tip under load. Someone built this to last.
+
+
+-- STEP 4: Study observations --
+
+roomzone study stocks + The center opening of the yoke has slightly more wear than the wrist openings — the padding there compressed to a different depth. The neck sits differently from the wrists in how it bears weight, and this piece has been used enough that the difference shows.
+
+roomzone study stocks + The latch mechanism closes with a sound that carries in a quiet room. Someone with experience can close it in one motion without looking. The wear on the top of the latch plate says this has been done that way many times.
+
+roomzone study stocks + There is a faint mark on the floor directly in front of the stocks — at the position of someone's feet, standing and braced. The mark is not damage. It is the accumulated trace of occupation.
+
+
+-- STEP 5: Handle interactions --
+
+roomzone handle stocks/yoke = You open the yoke and examine the openings. The neck opening is sized for adult proportions — not cramped, but not comfortable when bearing weight for long. You set your own wrists into the outer openings to check the feel. The wood is smooth against the skin. The latch drops with a sound that is small and final. You release it deliberately and step back. The position the yoke creates — head down, wrists out, braced forward — is completely clear. The room is visible from that position, and so is whoever is in the stocks.
+
+roomzone handle stocks/ankle_bars = You adjust one of the ankle bars to a different height setting and lock it. The mechanism holds at exactly the position you set, without drift. You release it and return it to the previous setting. The bars at this height would put someone on the balls of their feet, leaning slightly into the position. The angle works with the yoke to hold the body in a specific and deliberate orientation.
+
+
+-- STEP 6: Mechanic installation --
+
+@create Stocks Frame:typeclasses.seat_mechanic.SeatMechanic
+@set Stocks Frame/capacity = 1
+@set Stocks Frame/label = the stocks
+@set Stocks Frame/position = standing
+@set Stocks Frame/allow_lap = 0
+use Stocks Frame on stocks
+
+@create Stocks Restraints:typeclasses.restrain_mechanic.RestrainMechanic
+@set Stocks Restraints/capacity = 1
+@set Stocks Restraints/label = the stocks yoke
+@set Stocks Restraints/blocker_msg = The yoke holds your neck and wrists in position. You are not able to move freely until it is opened.
+use Stocks Restraints on stocks
+
+
+-- STEP 7: Ambient lines --
+
+rambient/add |xThe stocks stand empty and upright — the yoke closed, the ankle bars at their set position, the frame holding its shape without effort.|n
+
+rambient/add |xThe latch on the stocks makes a faint sound — the mechanism settling, or the temperature of the room changing the wood very slightly.|n
+
+rambient/add |xThe timber frame of the stocks holds perfectly still. It was built for this.|n
+
+rambient/add |xThe ankle bars at the base of the stocks catch the light along their upper edges.|n

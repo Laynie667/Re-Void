@@ -1,0 +1,65 @@
+== KNOTTING POST — Drop-in Build Script ==
+== Run these commands while standing in the room where the post will go ==
+== Creates zone: knotting_post ==
+== Mechanics: SeatMechanic (standing, capacity 1) + RestrainMechanic (capacity 1) ==
+
+-- STEP 1: Create zone --
+
+roomzone add knotting_post
+
+
+-- STEP 2: Zone description --
+
+roomzone desc knotting_post = A |wpost of solid timber|n set into the floor — waist-height, thick enough to grip from either side, the surface worn smooth from contact. A pull-down |cwrist bar|n is mounted at the top on a hinge, swinging down to lock both wrists forward against the post. |cAnkle cuffs|n on short chains are set into the floor at the post's base, the spacing between them fixed to hold the feet apart. The position the post creates is specific: bent over it, wrists pinned forward, feet fixed wide. The post does not move. The angle of the wrist bar is calibrated so that whoever is bent over the post cannot straighten up once it closes.
+
+
+-- STEP 3: Zone details --
+
+roomzone detail knotting_post/post = The post is a single piece of hardwood, set into a steel base plate that is bolted to the floor. The surface is smooth — finished and then worn further by contact at the specific points where hands grip and weight bears. The color at those points is slightly different: the finish compressed and the grain tighter from repeated pressure. At the center, where a body presses against the post when bent over it, the wood has taken on a very faint polish.
+
+roomzone detail knotting_post/wrist_bar = The |cwrist bar|n hinges down from the top of the post — when it closes, it catches both wrists in a padded channel and latches with a pin on either end. The latch pins require a deliberate pull to release from the outside; they cannot be reached by the person locked in. The bar's angle is set so that the arms go forward and down, which keeps the upper body bent and the back horizontal. The padding in the channel is worn to a specific width.
+
+roomzone detail knotting_post/ankle_cuffs = The floor anchors for the ankle cuffs are set at a fixed spacing — not adjustable, because the spacing is the point. The cuffs are the padded hinged type, and they sit low. At this height and spread, the posture the post creates is thorough. The chains are short.
+
+
+-- STEP 4: Study observations --
+
+roomzone study knotting_post + The latch pins on the wrist bar show a slight polish at the points where someone's thumbs press to release them. They have been released from the outside many times, at the same points, in the same way.
+
+roomzone study knotting_post + The post's surface has a faint directional wear along its upper half — the wood grain there slightly compressed in a consistent direction. The compression is from contact and pressure, applied from the same angle repeatedly.
+
+roomzone study knotting_post + One of the ankle cuff chains has been replaced at some point — the link quality is slightly different from the other, the metal a fraction brighter. The repair was made correctly.
+
+
+-- STEP 5: Handle interactions --
+
+roomzone handle knotting_post/post = You grip the post with both hands and the wood is smooth and cool under your palms. You bend forward and your hands reach the end of the post naturally, the height of it exactly right for the position it creates. You test the wrist bar — it swings down and the channel fits. You release it without latching. Bent over the post at this angle, the back is flat, the hips up, the feet fixed wide where the ankle cuffs would be. The position is unambiguous and built from the ground up to be exactly what it is.
+
+roomzone handle knotting_post/ankle_cuffs = You crouch and fasten one cuff around your own wrist to test the mechanism. The hinge closes decisively and the padded channel holds without play. The latch holds under moderate pull and releases cleanly when pressed. The spacing between the two anchor points, at floor level, is significant. The posture this would produce is apparent even standing upright.
+
+
+-- STEP 6: Mechanic installation --
+
+@create Knotting Post Frame:typeclasses.seat_mechanic.SeatMechanic
+@set Knotting Post Frame/capacity = 1
+@set Knotting Post Frame/label = the knotting post
+@set Knotting Post Frame/position = standing
+@set Knotting Post Frame/allow_lap = 0
+use Knotting Post Frame on knotting_post
+
+@create Knotting Post Restraints:typeclasses.restrain_mechanic.RestrainMechanic
+@set Knotting Post Restraints/capacity = 1
+@set Knotting Post Restraints/label = the knotting post restraints
+@set Knotting Post Restraints/blocker_msg = The wrist bar holds you forward over the post. The ankle cuffs hold your feet. You cannot straighten up until released.
+use Knotting Post Restraints on knotting_post
+
+
+-- STEP 7: Ambient lines --
+
+rambient/add |xThe knotting post stands in its position — the wrist bar up, the ankle cuffs open at the floor, waiting.|n
+
+rambient/add |xThe post's wood is still and cool in the room's air.|n
+
+rambient/add |xOne of the ankle cuff chains shifts very slightly against the floor — a small sound, a small movement.|n
+
+rambient/add |xThe wrist bar at the top of the post catches the light on its hinge hardware.|n

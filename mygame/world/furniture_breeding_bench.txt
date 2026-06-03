@@ -1,0 +1,71 @@
+== BREEDING BENCH — Drop-in Build Script ==
+== Run these commands while standing in the room where the bench will go ==
+== Creates zone: breeding_bench ==
+== Mechanics: SeatMechanic (lying, capacity 1) + RestrainMechanic (capacity 1) ==
+
+-- STEP 1: Create zone --
+
+roomzone add breeding_bench
+
+
+-- STEP 2: Zone description --
+
+roomzone desc breeding_bench = A |wbreeding bench|n at the center of the floor — padded leather over a steel frame, the proportions chosen to keep whoever is on it at exactly the right height and angle. Built-in |cankle cuffs|n are set wide apart at the base, their spacing not adjustable: the width is the point. |cWrist restraints|n on short chains are mounted at the front corners, close enough to the edge that the arms have nowhere to go but forward and down. The padding is firm. The bench does not move. The angle of it makes the purpose obvious from any position in the room.
+
+
+-- STEP 3: Zone details --
+
+roomzone detail breeding_bench/padding = The leather padding is dark and dense — the surface give is minimal, calibrated to support weight without absorbing it. The center of the bench carries a subtle compression pattern from consistent use, the grain of the leather there a fraction darker than the edges. The stitching along the long axis is reinforced twice over. Someone considered the forces involved when they built this.
+
+roomzone detail breeding_bench/ankle_cuffs = The |cankle cuffs|n are steel-lined leather, set on fixed posts at the bench's base. The width between them is deliberately wide — enough to hold the occupant in an open, accessible position with no possibility of closing. The cuff mechanisms are solid-click, requiring a deliberate press to release. The leather lining shows the specific compression of regular use, the surface there smoothed and worn.
+
+roomzone detail breeding_bench/wrist_restraints = The |cwrist restraints|n at the front corners are on short chains — just long enough to reach a wrist extended to the edge of the bench, no longer. The implication is that the arms don't stay at the sides; they go forward, onto the bench surface or over the edge, and the restraints hold them there. The chain links are polished from handling. The restraint mechanisms open with a key.
+
+roomzone detail breeding_bench/angle = The bench angles slightly — head lower than hips by a few degrees. The angle is subtle enough that it isn't immediately apparent, but it becomes apparent in use. It is a deliberate choice, not an accident of construction. The person who built this understood what they were building.
+
+
+-- STEP 4: Study observations --
+
+roomzone study breeding_bench + The ankle cuff posts show a faint wear pattern at a specific height — the leather of the cuffs has been fastened and unfastened many times at the same point. The height is consistent. Whoever uses this bench has been using it for some time.
+
+roomzone study breeding_bench + The underside of the bench frame has a series of small hooks, currently empty. The hooks are spaced with intent — each one an attachment point for something that isn't here right now.
+
+roomzone study breeding_bench + The chain connecting the right wrist restraint is one link shorter than the left. Not by accident. The asymmetry is deliberate, and it produces a specific effect on the position of whoever is restrained.
+
+
+-- STEP 5: Handle interactions --
+
+roomzone handle breeding_bench/surface = You set your hands on the bench surface and the leather is cool and gives just enough. The angle of it is apparent when you press your weight forward — the hips want to rise. You check the ankle cuffs: they are fixed, and the width between them is significant. You check the wrist restraints: they pull the arms forward and hold them there. The bench presents whoever is on it in a specific and unambiguous position, and there is no part of the design that doesn't serve that purpose.
+
+roomzone handle breeding_bench/ankle_cuffs = You fasten the cuff around your own wrist to test the mechanism. The click is decisive and the give is nonexistent. Releasing it requires deliberate intent — not a casual pull but a specific press. You release it. The width between the ankle posts is apparent now, standing between them. The bench's angle would put weight forward, hips up. The position is not subtle and not designed to be.
+
+
+-- STEP 6: Mechanic installation --
+
+-- Bench: lying surface, capacity 1 --
+@create Breeding Bench Mechanic:typeclasses.seat_mechanic.SeatMechanic
+@set Breeding Bench Mechanic/capacity = 1
+@set Breeding Bench Mechanic/label = the breeding bench
+@set Breeding Bench Mechanic/position = lying
+@set Breeding Bench Mechanic/allow_lap = 0
+use Breeding Bench Mechanic on breeding_bench
+
+-- Restraints on the bench --
+@create Breeding Bench Restraints:typeclasses.restrain_mechanic.RestrainMechanic
+@set Breeding Bench Restraints/capacity = 1
+@set Breeding Bench Restraints/label = the bench restraints
+@set Breeding Bench Restraints/blocker_msg = The ankle cuffs and wrist restraints hold you on the bench. You are not going anywhere.
+use Breeding Bench Restraints on breeding_bench
+
+
+-- STEP 7: Ambient lines --
+
+rambient/add |xThe breeding bench sits in its position — the leather still, the angle unchanged, waiting with the patience of things that do not need to hurry.|n
+
+rambient/add |xA faint creak from the bench frame as the air shifts — the steel settling, the leather adjusting to the temperature.|n
+
+rambient/add |xThe ankle cuffs at the bench's base reflect the room's light in a thin line along their steel edges.|n
+
+rambient/add |xThe chains on the wrist restraints make a faint sound — a single link shifting against another.|n
+
+rambient/add |xThe bench's angle holds it slightly tilted, hips up, head down. The position is apparent even when no one is on it.|n

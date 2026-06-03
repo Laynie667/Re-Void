@@ -1,0 +1,65 @@
+== SERVICE PAD — Drop-in Build Script ==
+== Run these commands while standing in the room where the pad will go ==
+== Creates zone: service_pad ==
+== Mechanics: SeatMechanic (kneeling, capacity 1) ==
+== Optional: add a RestrainMechanic if posture anchor is needed ==
+
+-- STEP 1: Create zone --
+
+roomzone add service_pad
+
+
+-- STEP 2: Zone description --
+
+roomzone desc service_pad = A |wkneeling pad|n positioned on the floor with the deliberateness of furniture that was placed here once and never moved — thick foam under a dark covering, its shape rectangular and its surface compressed to a specific density from use. The pad is large enough to kneel comfortably on for an extended period. A |wposture anchor|n is set into the floor just behind its rear edge: a low steel loop, close to the ground, that a wrist restraint or lead could clip to. The pad faces a particular direction. That direction is not accidental.
+
+
+-- STEP 3: Zone details --
+
+roomzone detail service_pad/surface = The covering of the pad is a dense woven fabric — not soft exactly, but not uncomfortable. The center is compressed lower than the edges from the accumulated weight of occupation, the depression shaped to the width of knees over time. The fabric is clean but carries the faint warmth of something that has been occupied recently and often. The padding beneath it gives to pressure and returns, but the surface memory is real.
+
+roomzone detail service_pad/posture_anchor = The |wposture anchor|n is a steel loop set flush with the floor just behind the pad — low enough that it would hold a wrist at a specific angle if clipped, the angle being one that keeps the arms behind the body rather than forward. The loop is on a swivel so the direction adjusts. It has been used. The metal shows the specific polish of a clip's contact point at two places on the interior of the loop.
+
+roomzone detail service_pad/position = The pad faces toward the center of the room, or toward whatever is placed opposite it. The floor on all sides of the pad is unmarked, but the facing is not random. Someone chose this orientation and placed the pad accordingly.
+
+
+-- STEP 4: Study observations --
+
+roomzone study service_pad + The compression at the center of the pad follows a consistent pattern — the depth and shape of it suggest the same position, repeated, over a significant period of use. The impression is settled, not new.
+
+roomzone study service_pad + The posture anchor's swivel has a preferred resting angle — it always returns to the same position when released, worn into place by the direction of repeated use.
+
+roomzone study service_pad + There is a very faint outline on the floor around the pad where the covering's edge has rested — not damage, just the trace of the pad's position held long enough to leave a mark.
+
+
+-- STEP 5: Handle interactions --
+
+roomzone handle service_pad/surface = You kneel on the pad and the foam gives under your weight and settles. The position is stable and the surface is firm enough to hold without shifting. The compression at the center fits the position naturally. You stay kneeling for a moment. The pad is the right height and the right firmness for extended occupation. The posture anchor behind you is at exactly the height of a wrist held behind the back. The facing of the pad puts whatever is in front of you in the primary position.
+
+roomzone handle service_pad/posture_anchor = You clip a finger through the posture anchor loop and feel the swivel. It moves smoothly and stops with the same quiet resistance in every direction. At this height and angle, a wrist clipped to it would be held close to the body and behind. You release it. The loop returns to its resting angle.
+
+
+-- STEP 6: Mechanic installation --
+
+@create Service Pad:typeclasses.seat_mechanic.SeatMechanic
+@set Service Pad/capacity = 1
+@set Service Pad/label = the service pad
+@set Service Pad/position = kneeling
+@set Service Pad/allow_lap = 0
+use Service Pad on service_pad
+
+-- Optional posture restraint (uncomment to add):
+-- @create Pad Anchor:typeclasses.restrain_mechanic.RestrainMechanic
+-- @set Pad Anchor/capacity = 1
+-- @set Pad Anchor/label = the posture anchor
+-- @set Pad Anchor/blocker_msg = The posture anchor holds your wrists behind you while you kneel. You stay where you are.
+-- use Pad Anchor on service_pad
+
+
+-- STEP 7: Ambient lines --
+
+rambient/add |xThe service pad sits in its position, facing its direction, the depression at its center holding the shape of occupation.|n
+
+rambient/add |xThe posture anchor behind the service pad catches the light on its loop.|n
+
+rambient/add |xThe pad is still. The direction it faces is apparent.|n
