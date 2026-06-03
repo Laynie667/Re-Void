@@ -259,7 +259,20 @@ class CmdContract(MuxCommand):
     def func(self):
         caller   = self.caller
         args     = self.args.strip()
-        switches = self.switches
+        switches = list(self.switches)
+
+        # Accept the action as a leading word too, so both 'contract/read X' and
+        # 'contract read X' work. (The docstring promises the second form.)
+        _actions = ("read", "sign", "addend", "reveal", "status")
+        parts = args.split(None, 1)
+        if parts and parts[0].lower() in _actions and parts[0].lower() not in switches:
+            switches.append(parts[0].lower())
+            args = parts[1].strip() if len(parts) > 1 else ""
+            # also fold a trailing 'all'/'hidden' qualifier: 'read all contract'
+            sub = args.split(None, 1)
+            if sub and sub[0].lower() in ("all", "hidden"):
+                switches.append(sub[0].lower())
+                args = sub[1].strip() if len(sub) > 1 else ""
 
         if "read" in switches:
             self._do_read(caller, args, include_hidden="all" in switches)
