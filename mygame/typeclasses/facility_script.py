@@ -245,6 +245,14 @@ _ORAL_BEATS = [
     "snapping, her swallowing on reflex around it while it pumps straight into her gut. "
     "She's used at both ends on rotation now, and her own gagging is just one more wet "
     "sound the room doesn't react to.",
+    "A ring gag is cranked into {t}'s mouth and locked, holding her open, and after that they "
+    "don't even bother to hold her head — they just use the hole, one after another, fucking "
+    "her throat at their own pace while drool sheets down her chin and she learns to breathe "
+    "around it because the alternative is not breathing.",
+    "They milk her throat the way they milk the rest of her — a thick cock worked down it in "
+    "slow deep strokes, held to the root until she swallows convulsively around it, trained to "
+    "take the whole length and thank it with the squeeze of her own throat. The attendant "
+    "notes her gag reflex is almost gone. Almost ready.",
 ]
 
 # All-holes aggressive moments — mouth, pussy, and ass at once. Brutal.
@@ -264,6 +272,15 @@ _ALLHOLE_BEATS = [
     "and gagging and leaking, the animals rutting into her with no regard for the body "
     "between them. They breed all three of her at the same time and leave her airtight, "
     "stuffed, dripping from every hole, and already logged for the next round.",
+    "Three of the stock are brought up at once and {t} is made to take all of them — one "
+    "down her throat, one in her cunt, one forced into her ass — held airtight in the middle "
+    "of them while they rut into her with no regard for the body between, no hole of hers left "
+    "unfilled, no breath she doesn't share with whatever owns her mouth. They flood all three "
+    "of her in a ragged near-unison and she overflows from everywhere at once.",
+    "It's an efficiency drill: every hole working at the same time so nothing's idle. {t} is "
+    "skewered front, back, and throat, a handler at each, and used as three holes that happen "
+    "to share a body — milked of her gag, her grip, and her dignity simultaneously while the "
+    "board ticks all three counts up together.",
 ]
 
 # Double penetration — two in one hole.
@@ -278,6 +295,13 @@ _DOUBLE_BEATS = [
     "gaping and slack as they piston into {t} together. She's stretched past sense, "
     "stuffed and split and drooling, and they breed her ass in tandem until it won't "
     "close around the gush they leave behind.",
+    "One in her cunt isn't enough for quota today, so a second is forced in alongside it — "
+    "{t}'s hole made to take both at once, rims white and straining, the two grinding against "
+    "each other inside her and stretching her wider with every shove until she's a thin seam "
+    "barely holding around the pair, and then they finish in her together.",
+    "They stack two into each of her holes and call it a stretching session — {t} packed full "
+    "front and back, gaping helplessly around the doubled girth, trained looser by the minute "
+    "while the handlers note aloud how much more she takes than she did a dozen cycles ago.",
 ]
 
 # Bukkake — many finishing on her, outside, to mark and humiliate.
@@ -292,6 +316,14 @@ _BUKKAKE_BEATS = [
     "ordered to keep her eyes up and her mouth open and thank each one. By the end she's "
     "a glazed, dripping mess, cum sliding off her chin in strings, and the room treats "
     "the state of her as the expected result of a job done right.",
+    "{t} is put on her knees in the centre and the whole shift takes a turn finishing on her "
+    "— face, hair, tits, tongue — until she's coated and dripping and blinking through it, "
+    "marked head to chest as used, and then left kneeling in it a while so everyone passing "
+    "can see what she's for.",
+    "They use {t} as a target. One after another the handlers and stock spend themselves "
+    "across her upturned face, and she's made to hold still and count each one out loud, "
+    "thanking them as they land, until the count's high enough that the attendant nods and "
+    "lets her wipe her eyes — with permission, like everything else.",
 ]
 
 # Golden showers / watersports — used as a toilet, humiliation.
@@ -304,6 +336,14 @@ _GOLDEN_BEATS = [
     "They water the stock. {t} is hosed in piss from more than one of them at once, hot "
     "and stinking, told to open wide and take a mouthful, and left dripping and "
     "humiliated in the puddle of it while the cycle rolls on like nothing happened.",
+    "When the bull's done with her the handler doesn't bother to step away — just pisses on "
+    "{t} where she's still bent and gaping, marking her with it, hot down her back and "
+    "dripping off her ruined hole, treating her as the drain at the end of the line that she "
+    "is. \"Rinses the same either way,\" he says, and zips up.",
+    "{t} is moved to the wet station and used as the shift's toilet for the duration — held "
+    "open-mouthed and made to swallow, hosed down between, the indignity of it logged as just "
+    "another of her functions. By the end the only clean part of her is wherever they haven't "
+    "decided to aim yet.",
 ]
 
 # Bladder desperation / forced wetting — they don't let livestock up to piss.
@@ -317,6 +357,14 @@ _FIST_BEATS = [
     "{t}'s ass is loose enough now that a handler simply folds his hand and pushes, sinking "
     "fist-deep into her with a slow obscene stretch, working her open around his knuckles "
     "until she's gaping wide around his wrist. She was made to take this. The cycles made her.",
+    "It's logged as a depth test: the handler works his fist into {t} and then keeps going, "
+    "forearm sinking in to the elbow, her trained-loose hole swallowing the whole of it while "
+    "she shakes and wails and gushes around his arm. He measures how deep before she taps, "
+    "writes it down, and notes she goes deeper every cycle.",
+    "Two handlers fist her at once, one in each hole, working their hands in side by side and "
+    "spreading {t} obscenely open between them — proof, they tell her, of exactly how much "
+    "she's been remade to take, her own ruined capacity demonstrated back to her until she "
+    "can't pretend she's the same body that came in.",
 ]
 
 # Prolapse — extreme, only once a hole is permanently ruined.
@@ -325,6 +373,14 @@ _PROLAPSE_BEATS = [
     "of her with a wet drag, her insides come with it, a slick pink bloom turned out of her "
     "and left on display, leaking and twitching. The attendant photographs it for the file, "
     "logs it as peak training, and pushes it back in with two fingers like it's nothing.",
+    "{t}'s ruined hole turns itself out the moment it's empty — that obscene pink flower of "
+    "her own insides, slack and glistening, on show for the room. A handler prods it, notes "
+    "the depth, and remarks that she's finished really; there's nothing left in her that "
+    "holds a shape of its own anymore.",
+    "When the bull drags free, {t} prolapses around the loss of it — her body so trained-open "
+    "it follows whatever leaves, blooming out wet and helpless. It's catalogued as the mark "
+    "of a perfected breeder, and they leave it out a while, because making her see it is part "
+    "of teaching her what she is now.",
 ]
 
 # Spitroast — used at both ends at once by two breeders.
@@ -333,6 +389,16 @@ _SPITROAST_BEATS = [
     "into her cunt — and they fuck her between them like a thing to be passed and shared, her "
     "whole body rocked on the two of them, gagging on one end and gushing on the other, both "
     "of them finishing in her almost together.",
+    "{t} is folded over the bench and skewered both ways — a cock forced past her lips and "
+    "held there by a fist in her hair while another hammers her from behind, the two handlers "
+    "setting a rhythm that uses her like a sleeve strung between them, no part of the motion "
+    "hers, both ends stuffed and leaking by the time they're done.",
+    "They spitroast {t} for the count, swapping ends halfway through without asking so every "
+    "hole takes the same load — her face wet, her eyes streaming, her moans muffled around "
+    "whatever's currently in her mouth.",
+    "Racked between two of them, mouth and cunt, {t} is driven into from both sides hard "
+    "enough to bounce her off each other until she's just the warm wet middle of something "
+    "happening to her — filled at both ends, logged twice, thanked by neither.",
 ]
 
 # Suspension — strung up and used hanging, no leverage of her own.
@@ -340,6 +406,12 @@ _SUSPENSION_BEATS = [
     "{t} is winched up off the cradle in a web of straps, hung spread and helpless at exactly "
     "breeding height, and used like that — swinging on whatever's in her, no leverage, no "
     "purchase, nothing to do but hang there and be a hole at the right altitude for the line.",
+    "They hoist {t} into the suspension rig, thighs hauled wide, all her weight on the straps, "
+    "and bring the stock to her one after another — every thrust setting her swinging, the rig "
+    "holding her open so the animals don't have to, her body just cargo at a convenient height.",
+    "Suspended and spread, {t} can't brace or clench or do anything but hang and take it — and "
+    "that helplessness is the whole point of the rig, demonstrated over and over as she's bred "
+    "swinging, straps creaking, her holes the only part of her with a job.",
 ]
 
 # Knot-training — deliberately tied and held, teaching the hole to take the lock.
@@ -348,6 +420,12 @@ _KNOTTRAIN_BEATS = [
     "holds them tied, won't let it pull, makes her hole learn the lock — held stuffed and "
     "swollen on the knot for long minutes past when she's begging, until taking it stops "
     "being a struggle and starts being a thing her body just does.",
+    "They knot-train {t} deliberately, hound after hound, each tie held to full term so her "
+    "rim learns the swell and the lock and the long helpless drain. By the third she's stopped "
+    "fighting the stretch. By the fifth she's pushing back onto it. That's the lesson, logged.",
+    "The handler times the tie on a stopwatch — {t} held knotted and full and twitching, not "
+    "allowed to pull off, taught minute by clinical minute that her hole belongs to the lock "
+    "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
 # Forced verbal participation — what she's MADE to say. Her own voice used against her.
