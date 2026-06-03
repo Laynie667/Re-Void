@@ -605,6 +605,7 @@ def run_facility_reset(caller, purge=False):
     caller.db.drug_dependence           = 0
     caller.db.gape                      = None
     caller.db.holes                     = None
+    caller.db.processing_tier           = 0
     caller.db.bladder_ml                = 0.0
     caller.db.lactation_locked          = False
     caller.db.cum_craving               = False
@@ -663,6 +664,7 @@ def run_facility_reset(caller, purge=False):
         caller.db.facility_brands        = []
         caller.db.permanent_gape         = []
         caller.db.piercings              = []
+        caller.db.processing_tier        = 0
         tail = "Purged. Nothing kept — restored to true baseline."
     else:
         # Normal reset: she walks out, but she does not walk out clean.

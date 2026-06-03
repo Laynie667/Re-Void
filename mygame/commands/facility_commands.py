@@ -64,6 +64,13 @@ class CmdBoard(Command):
                  f"|wFACILITY BOARD — {name}|n",
                  "|w" + "═" * 46 + "|n"]
 
+        try:
+            from world.processing import processing_tier
+            lvl, tname, tstate = processing_tier(who)
+            lines.append(f"  Processing tier: |Y{tname}|n  ({tstate})")
+        except Exception:
+            pass
+
         cond = float(getattr(d, "conditioning", 0) or 0)
         perm = " |R[SET]|n" if getattr(d, "conditioning_permanent", False) else ""
         lines.append(f"  Conditioning:   {cond:6.0f}  ({_stage(cond)}){perm}")

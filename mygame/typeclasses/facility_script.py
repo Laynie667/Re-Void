@@ -578,6 +578,7 @@ class FacilityScript(DefaultScript):
             self._stop_milking(target)
         cyc = int(self.db.cycle_count or 0) + 1
         if phase == "restrain":
+            self._check_tier(room, target, t)
             room.msg_contents(
                 f"\n|w━━━━ CYCLE {cyc} · INTAKE ━━━━|n\n"
                 f"|cThe restraints draw {t} back into the station with a hydraulic sigh — "
@@ -603,6 +604,48 @@ class FacilityScript(DefaultScript):
                 f"\n|w━━━━ PAUSE ━━━━|n\n"
                 f"|xThe line stops. Not finished — the line is never finished. Just paused, "
                 f"long enough for {t} to feel how little of the pause is hers.|n")
+
+    def _check_tier(self, room, target, t):
+        """Grade her against the processing tiers; announce any promotion."""
+        try:
+            from world.processing import processing_tier
+        except Exception:
+            return
+        lvl, name, state = processing_tier(target)
+        prev = int(getattr(target.db, "processing_tier", 0) or 0)
+        if lvl <= prev:
+            return
+        target.db.processing_tier = lvl
+        room.msg_contents(
+            f"\n|W════ PROCESSING REVIEW ════|n\n"
+            f"|WThe board re-grades {t}: |Y{name}|W. {state.capitalize()}.|n\n"
+            f"|xThe attendant initials the form. Nobody asks {t} how she feels about the "
+            f"new grade — the grade is a measurement, not an opinion, and the measurement "
+            f"only goes one way.|n")
+        marks = list(getattr(target.db, "facility_brands", None) or [])
+        marks.append(f"graded by the facility: {name}")
+        target.db.facility_brands = marks
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 4.0 * lvl, source="grading")
+        except Exception:
+            pass
+
+    def _process_line(self, target, t):
+        """A Process utterance — sometimes generic, sometimes specific to her state."""
+        if random.random() < 0.45:
+            d = target.db
+            cyc   = int(self.db.cycle_count or 0)
+            brood = sum(int(v) for v in (getattr(d, "offspring_counts", None) or {}).values())
+            use   = sum(int(h.get("use", 0)) for h in (getattr(d, "holes", None) or {}).values())
+            opts = []
+            if cyc:   opts.append(f"\"{cyc} cycles in. You stopped counting around four. I never stop counting.\"")
+            if brood: opts.append(f"\"{brood} of your own get on the roster now, and every one of them owes its turn in you. Do the math on getting out.\"")
+            if use:   opts.append(f"\"{use} times those holes have been used and logged. You're not a person with a number. You're the number.\"")
+            opts.append(f"\"I can see exactly how much of you is left, {t}. It's a smaller figure every review.\"")
+            if opts:
+                return random.choice(opts)
+        return random.choice(_PROCESS_VOICE)
 
     def _phase_beat(self, room, target, t, cond, phase, ptick):
         if phase == "restrain":
@@ -636,7 +679,7 @@ class FacilityScript(DefaultScript):
             # One sustained conditioning beat per tick.
             r = random.random()
             if r < 0.35:
-                target.msg("|M" + random.choice(_PROCESS_VOICE) + "|n")
+                target.msg("|M" + self._process_line(target, t) + "|n")
             elif r < 0.6 and cond >= 40:
                 self._reinforce(room, target, t)
             elif r < 0.85:
@@ -1101,6 +1144,18 @@ class FacilityScript(DefaultScript):
             scenes += ["allholes", "allholes"]
         scenes.append("suspension")
         scenes.append("knottrain")
+        # Higher processing tiers weight the harsher scenes more heavily.
+        try:
+            from world.processing import processing_tier
+            tier = processing_tier(target)[0]
+            if tier >= 2:
+                scenes += ["double", "spitroast"]
+            if tier >= 3:
+                scenes += ["allholes", "golden", "knottrain"]
+            if tier >= 4:
+                scenes += ["allholes", "fist"]
+        except Exception:
+            pass
         # Capability-gated scenes unlock as her holes train looser.
         try:
             from world.gang_breeding import hole_capabilities
