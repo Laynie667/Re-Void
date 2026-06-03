@@ -1342,6 +1342,14 @@ class Character(ObjectParent, DefaultCharacter):
                 nude = zone.get("nude", "")
                 if nude:
                     surface = self._expand_zone_tokens(zone_name, zone, nude)
+                # Append plug desc if one is inserted into this zone
+                try:
+                    from typeclasses.plug_item import get_plug_append
+                    plug_text = get_plug_append(self, zone_name)
+                    if plug_text:
+                        surface = f"{surface} {plug_text}" if surface else plug_text
+                except Exception:
+                    pass
 
         return {
             "surface":  surface,
@@ -1758,11 +1766,18 @@ class Character(ObjectParent, DefaultCharacter):
             parts.append("")
 
         # --- Layer 3: Core description ---
-        physical = self.db.physical_desc or ""
-        if physical:
-            from world.freeform_manager import render_zone_tokens
-            physical = render_zone_tokens(physical, self)
-            parts.append(physical)
+        # If a camouflage outfit is active and looker is not self, substitute
+        # the camouflage desc instead of the real physical/zone desc.
+        camouflage = getattr(self.db, "outfit_camouflage", "") or ""
+        is_self = (looker == self)
+        if camouflage and not is_self:
+            parts.append(camouflage)
+        else:
+            physical = self.db.physical_desc or ""
+            if physical:
+                from world.freeform_manager import render_zone_tokens
+                physical = render_zone_tokens(physical, self)
+                parts.append(physical)
 
         # --- Layer 5: Body language ---
         body = self.db.body_language or ""
@@ -1861,11 +1876,10 @@ class Character(ObjectParent, DefaultCharacter):
                 parts.append(f"|x{voice}|n")
 
             # --- E2: Outfit details per zone ---
-            # Tokenized zones: show examine_desc if it differs from worn_desc
-            #   (the token already showed worn_desc on look).
-            # Non-tokenized zones: show "At/On/In her [zone], [examine_desc]"
+            # Suppressed for non-self lookers when camouflage is active.
             zone_lines = []
-            for zone_name in self.get_zone_order():
+            _show_zones = not (camouflage and not is_self)
+            for zone_name in (self.get_zone_order() if _show_zones else []):
                 if zone_name not in zones:
                     continue
                 # Hidden under a parent zone's clothing — skip

@@ -326,6 +326,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_WOMB_CMDS:
             self.add(cmd_cls())
 
+        # Wearable/plug/collar/leash/camouflage item commands
+        from commands.item_commands import ALL_ITEM_CMDS
+        for cmd_cls in ALL_ITEM_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
