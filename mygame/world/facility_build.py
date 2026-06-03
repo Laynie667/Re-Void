@@ -394,7 +394,7 @@ def run_facility(caller):
 
     # ── Furniture — the room is fitted out, things where they belong ─────
     try:
-        from evennia import DefaultObject
+        from typeclasses.facility_furniture import FacilityFurniture, FacilityBoard
         from evennia.utils import create as _c
         furniture = [
             ("the breeding bench",
@@ -423,7 +423,11 @@ def run_facility(caller):
         ]
         fcreated = []
         for key, desc in furniture:
-            f = _c.create_object(DefaultObject, key=key, location=room)
+            if "board" in key:
+                f = _c.create_object(FacilityBoard, key=key, location=room)
+                f.db.subject_id = caller.id          # board renders her live stats on look
+            else:
+                f = _c.create_object(FacilityFurniture, key=key, location=room)
             f.db.desc = desc
             track(f)
             fcreated.append(f.dbref)

@@ -520,6 +520,12 @@ _DEEP_LINES = [
     "{t} has stopped tracking how long. That, more than anything, is the point.",
     "Whatever {t} meant to hold onto is quieter now than it was an hour ago.",
     "The line does not hurry. It already won the only argument that mattered.",
+    "Somewhere in here {t} stopped waiting for it to end and started waiting for the next "
+    "part. She doesn't notice the difference. The facility noticed it cycles ago and logged it.",
+    "The thought of outside comes to {t} less often now, and thinner each time, like a word "
+    "in a language she's forgetting on purpose because remembering it only ever hurt.",
+    "{t} catches her own reflection in the steel and doesn't look away fast enough to pretend "
+    "she didn't recognise the thing looking back — wet, marked, waiting, content.",
 ]
 
 # Public humiliation / degradation — escalates with conditioning.
@@ -672,6 +678,15 @@ _MINDBREAK_LINES = [
     "to. There was no decision in it. There hasn't been one in a while.",
     "What's left of {t}'s resistance is going through the motions out of habit, and "
     "even the habit is getting bored of itself.",
+    "{t} goes to think a full thought and it just... doesn't arrive. The space where it "
+    "would have been fills instead with the schedule, the ache, the next instruction, and "
+    "that's so much easier that she stops sending for the thought at all.",
+    "Someone uses her old name in passing and {t}'s head turns a half-second late, the way "
+    "you glance at a sound, not at a thing that means you. By the time she places it the "
+    "moment's gone and so, a little more, is she.",
+    "There's a warmth in {t} now where the fight used to be — a stupid, grateful, leaking "
+    "warmth that comes up every time she's used well, and she's stopped being ashamed of it, "
+    "which was the very last wall, and it's down.",
 ]
 
 # Subliminal channel — sent PRIVATELY to the subject, dim and quiet, between

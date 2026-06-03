@@ -57,13 +57,20 @@ class CmdBoard(Command):
             if not found:
                 return
             who = found
+        caller.msg(build_board_text(who))
 
-        d = who.db
-        name = who.db.rp_name or who.name
-        lines = ["|w" + "═" * 46 + "|n",
-                 f"|wFACILITY BOARD — {name}|n",
-                 "|w" + "═" * 46 + "|n"]
 
+def build_board_text(who):
+    """Render the live facility board for `who` as a string."""
+    if not who:
+        return "|xNo subject on the board.|n"
+    d = who.db
+    name = who.db.rp_name or who.name
+    lines = ["|w" + "═" * 46 + "|n",
+             f"|wFACILITY BOARD — {name}|n",
+             "|w" + "═" * 46 + "|n"]
+
+    if True:
         try:
             from world.processing import processing_tier
             lvl, tname, tstate = processing_tier(who)
@@ -150,7 +157,7 @@ class CmdBoard(Command):
             lines.append(f"  Installed responses: {trig}")
 
         lines.append("|w" + "═" * 46 + "|n")
-        caller.msg("\n".join(lines))
+    return "\n".join(lines)
 
 
 class CmdFacilityReset(MuxCommand):
