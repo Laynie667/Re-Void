@@ -1221,11 +1221,14 @@ class Character(ObjectParent, DefaultCharacter):
                 text = text.replace("{circ}", circ).replace("{length}", length)
 
             if "{vol}" in text:
-                from typeclasses.body_mod_item import (
-                    get_testicle_volume_ml, format_body_volume
-                )
                 if mod_type == "testicle":
-                    vol_str = format_body_volume(get_testicle_volume_ml(size))
+                    try:
+                        from typeclasses.body_mod_item import (
+                            get_testicle_volume_ml, format_body_volume
+                        )
+                        vol_str = format_body_volume(get_testicle_volume_ml(size))
+                    except Exception:
+                        vol_str = "?"
                 elif mod_type == "breast":
                     # Live milk volume — look up directly by PK via ObjectDB
                     prod = mechanics.get("production") or {}
