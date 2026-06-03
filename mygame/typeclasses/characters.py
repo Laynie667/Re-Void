@@ -1201,11 +1201,11 @@ class Character(ObjectParent, DefaultCharacter):
             item_dbref = body_mod.get("item_dbref")
             if item_dbref:
                 try:
-                    from evennia import search_object
-                    res = search_object(item_dbref, exact=True)
-                    if res:
-                        size     = res[0].effective_size()
-                        mod_type = res[0].db.mod_type or mod_type
+                    from evennia.objects.models import ObjectDB
+                    pk   = int(str(item_dbref).lstrip("#"))
+                    obj  = ObjectDB.objects.get(pk=pk).typeclass
+                    size = obj.effective_size()
+                    mod_type = obj.db.mod_type or mod_type
                 except Exception:
                     pass
 
@@ -1226,19 +1226,20 @@ class Character(ObjectParent, DefaultCharacter):
                 if mod_type == "testicle":
                     vol_str = format_body_volume(get_testicle_volume_ml(size))
                 elif mod_type == "breast":
-                    # Live milk volume from production item
+                    # Live milk volume from production item — look up by PK
+                    # (search_object exact=True fails on dbref strings like #140)
                     prod = mechanics.get("production") or {}
                     vol_str = "empty"
                     prod_dbref = prod.get("item_dbref")
                     if prod_dbref:
                         try:
-                            from evennia import search_object
+                            from evennia.objects.models import ObjectDB
                             from typeclasses.production_item import format_volume
-                            res = search_object(prod_dbref, exact=True)
-                            if res:
-                                vol_str = format_volume(
-                                    res[0].db.current_volume_ml or 0.0
-                                )
+                            pk  = int(str(prod_dbref).lstrip("#"))
+                            obj = ObjectDB.objects.get(pk=pk)
+                            vol_str = format_volume(
+                                obj.typeclass.db.current_volume_ml or 0.0
+                            )
                         except Exception:
                             pass
                 else:
