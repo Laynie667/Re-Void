@@ -108,12 +108,17 @@ class AdjudicatorNPC(NPC):
 
     # ── Status report ──────────────────────────────────────────────────
 
+    @staticmethod
+    def _safe_send(room, text: str):
+        """Send text to room, escaping {} so format_map doesn't choke."""
+        room.msg_contents(text.replace("{", "{{").replace("}", "}}"))
+
     def _reveal_uniform(self, subject, room):
         """Tell the subject what was applied to them by the blind build."""
         notes = getattr(self.db, "adjudicator_notes", None) or \
                 getattr(subject.db, "test_adjudicator_notes", None) or []
         if not notes:
-            room.msg_contents(
+            self._safe_send(room,
                 "|xThe Adjudicator looks at the ledger. "
                 "\"Nothing recorded here. Run: testuniform first.\"|n"
             )
@@ -122,7 +127,7 @@ class AdjudicatorNPC(NPC):
         for note in notes:
             lines.append(f"  |x{note}|n")
         lines.append("\n|x\"That is what you're wearing. Any questions.\"|n")
-        room.msg_contents("\n".join(lines))
+        self._safe_send(room, "\n".join(lines))
 
     def _report_status(self, subject, room):
         flags = [(k, l, getattr(subject.db, k, False)) for k, l in _FLAG_LABELS]
@@ -144,26 +149,26 @@ class AdjudicatorNPC(NPC):
         else:
             lines.append(f"\n|x{len(left)} remaining.|n")
 
-        room.msg_contents("\n".join(lines))
+        self._safe_send(room, "\n".join(lines))
 
     # ── Help ───────────────────────────────────────────────────────────
 
     def _give_help(self, room):
-        room.msg_contents(
+        self._safe_send(room,
             "|wThe Adjudicator turns the ledger so you can read it.|n\n\n"
             "  |w 1|n  Say anything. Watch the filter transform it.\n"
             "  |w 2|n  Sit in the room zone. Edge machine pushes to 99. Say: release\n"
-            "  |w 3|n  horsemount → horsestart → let it tick → horsestop → horsedismount\n"
-            "  |w 4|n  enter yourself (WombRoom) → look → leave\n"
+            "  |w 3|n  horsemount -> horsestart -> let it tick -> horsestop -> horsedismount\n"
+            "  |w 4|n  enter yourself (WombRoom) -> look -> leave\n"
             "  |w 5|n  While chastity belt on, try: penetrate me [zone]\n"
-            "  |w 6|n  wear Worn Leather Collar → force tick → watch the beg fire\n"
-            "  |w 7|n  contract/sign Milking Contract → contract/reveal/all\n"
-            "  |w 8|n  Start cycle script on yourself → let one phase run → endcycle\n"
-            "  |w 9|n  zone set [zone] = {size} breast holding {vol} → look at yourself\n"
-            "  |w10|n  inflate me [zone] 200 → inflate/check → inflate/drain\n"
-            "  |w11|n  Say: run pet test — Adjudicator runs triggers for you\n"
+            "  |w 6|n  wear Worn Leather Collar -> force tick -> watch the beg fire\n"
+            "  |w 7|n  contract/sign Milking Contract -> contract/reveal/all\n"
+            "  |w 8|n  Start cycle script on yourself -> let one phase run -> endcycle\n"
+            "  |w 9|n  zone set [zone] = SIZE breast holding VOL -> look at yourself\n"
+            "  |w10|n  inflate me [zone] 200 -> inflate/check -> inflate/drain\n"
+            "  |w11|n  Say: run pet test -- Adjudicator runs triggers for you\n"
             "  |w12|n  Ride arousal through 75/90/95/99 threshold messages\n"
-            "  |w13|n  Enter WombRoom while knee-deep — look at the flood desc\n\n"
+            "  |w13|n  Enter WombRoom while knee-deep -- look at the flood desc\n\n"
             "  Manual flag set: @py me.db.test_flag_NAME = True\n"
             "  Current flags:   say status\n"
             "  Reset check:     say done\n"
@@ -181,11 +186,11 @@ class AdjudicatorNPC(NPC):
                 f"{len(missing)} item(s) still unverified:|n"
             ]
             for _, label in missing:
-                lines.append(f"  |y→|n {label}")
+                lines.append(f"  |y->|n {label}")
             lines.append("|xComplete those and say done again.|n")
-            room.msg_contents("\n".join(lines))
+            self._safe_send(room, "\n".join(lines))
         else:
-            room.msg_contents(
+            self._safe_send(room,
                 "|wThe Adjudicator closes the ledger.|n\n\n"
                 "|xAll thirteen systems verified and recorded. "
                 "The build is confirmed functional.\n\n"
