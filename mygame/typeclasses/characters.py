@@ -1227,20 +1227,19 @@ class Character(ObjectParent, DefaultCharacter):
                 if mod_type == "testicle":
                     vol_str = format_body_volume(get_testicle_volume_ml(size))
                 elif mod_type == "breast":
-                    # Live milk volume from production item
+                    # Live milk volume — look up directly by PK via ObjectDB
                     prod = mechanics.get("production") or {}
                     vol_str = "empty"
                     prod_dbref = prod.get("item_dbref")
                     if prod_dbref:
                         try:
-                            from evennia import search_object
+                            from evennia.objects.models import ObjectDB
                             from typeclasses.production_item import format_volume
                             pk  = int(str(prod_dbref).lstrip("#"))
-                            res = search_object(f"#{pk}")
-                            if res:
-                                vol_str = format_volume(
-                                    res[0].db.current_volume_ml or 0.0
-                                )
+                            obj = ObjectDB.objects.get(pk=pk)
+                            vol_str = format_volume(
+                                obj.db.current_volume_ml or 0.0
+                            )
                         except Exception:
                             pass
                 else:

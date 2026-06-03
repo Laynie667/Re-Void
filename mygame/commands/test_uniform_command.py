@@ -87,16 +87,28 @@ class CmdTestUniform(MuxCommand):
 
         if "reset" in self.switches or "force" in self.switches:
             force = "force" in self.switches
+            import os
+            # Try both possible game paths
+            for candidate in [
+                '/root/Re-Void/mygame/world/test_reset.py',
+                '/home/laynie/ReVoid/mygame/world/test_reset.py',
+            ]:
+                if os.path.exists(candidate):
+                    reset_path = candidate
+                    break
+            else:
+                caller.msg(
+                    "|rCould not find test_reset.py. Run from terminal:|n\n"
+                    "  git pull  (in /root/Re-Void or wherever the game lives)\n"
+                    "  Then try testuniform/reset again."
+                )
+                return
             try:
-                exec(open('/home/laynie/ReVoid/mygame/world/test_reset.py').read())
-                run_test_reset(caller, force=force)
+                globs = {}
+                exec(open(reset_path).read(), globs)
+                globs['run_test_reset'](caller, force=force)
             except Exception as e:
                 caller.msg(f"|rReset error: {e}|n")
-                caller.msg(
-                    "|yManual reset:|n\n"
-                    "  @py exec(open('/home/laynie/ReVoid/mygame/world/test_reset.py').read()); "
-                    "run_test_reset(me)"
-                )
             return
 
         if not room:
