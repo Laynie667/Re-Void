@@ -344,6 +344,66 @@ collar_beg:
       - "{n} stands very still, legs wide, arched and waiting, the only motion their pulse hammering against the failing collar."
       - "{n} lowers their chest to the floor and lifts their hips high, offering, then turns their head to push the collar toward {holder}'s hands."
 
+  plain:
+    say:
+      - "Please — please fix it, I'll be so good, I need it back on me, please—"
+      - "It's coming apart and I can't stand it, please, replace it, I'll do anything—"
+      - "I need it. I didn't know how much until it started slipping. Please fix it—"
+      - "Please, I'm begging you, I don't care how it looks, just put it back on me—"
+      - "Don't let it break, please, I need to be yours, I need it to show, please—"
+      - "Please fix it — I can't think past it, I can't sit still, please, please—"
+      - "I'll get on my knees, I'll beg properly, just keep it locked on my throat, please—"
+      - "Please. I need the weight of it. I need to belong to someone. Please fix it—"
+    pose:
+      - "{n} reaches up to the failing collar, then to {holder}'s hands, the asking written in the tremor of their fingers."
+      - "{n} sinks down in front of {holder}, head bowed, throat offered, every line of them gone soft and pleading."
+      - "{n} presses close and bares their throat, breathing uneven, the want plain and human and undisguised."
+      - "{n} drops to their knees, thighs pressed together, and looks up at {holder} like the collar is the only thing keeping them whole."
+      - "{n} catches {holder}'s hand and guides it to the cracked collar, pleading without a word, flushed to the ears."
+      - "{n} curls in close, forehead to {holder}'s hip, shaking, the begging in the press of their whole body."
+      - "{n} kneels up straight, chin lifted to bare the collar, hands open and trembling at their sides. Please."
+      - "{n} grinds their thighs together helplessly, gaze fixed on {holder}, the need and the shame and the asking all tangled together."
+
+  bimbo:
+    say:
+      - "Please? Like — please fix it, I'll be so good, I'll be so so good, pleeease—"
+      - "Ohmygod it's like breaking and I can't even think, please, fix it, please—"
+      - "I need it sooo bad, like, I can't even, please put it back on me, please—"
+      - "Pleeease — I'll be the prettiest, dumbest, best little thing, just fix it—"
+      - "It's all I can think about and I can't even think, please, please, fix my collar—"
+      - "Like — please? I'll do anything, I don't even know what, just — please—"
+      - "I'm so empty-headed without it, please, I need it, I need to be yours, please—"
+      - "Pretty please? With me on my knees? I'll be so good, I promise, please fix it—"
+    pose:
+      - "{n} pouts up at {holder}, eyes wide and glassy, twirling a bit of hair, hips swaying like they can't hold still."
+      - "{n} drops to their knees with a soft giggle that breaks halfway into a whine, pressing their chest forward, pleading."
+      - "{n} blinks up at {holder}, lips parted, thoughts visibly skidding to a stop around the one need they have left."
+      - "{n} squirms in place, thighs rubbing, and reaches up to the collar with both hands, completely undone and not hiding it."
+      - "{n} bites their lip, bats their lashes, and arches — every dumb pretty trick they have, all aimed at getting the collar back."
+      - "{n} sinks down and presents themselves with a vacant, blissful little smile, the asking gone soft and shameless."
+      - "{n} tilts their head, baffled by their own desperation, and just keeps repeating 'please' like it's the only word left."
+      - "{n} grinds against nothing, giggling and gasping at once, gaze hazy and fixed on {holder}, begging prettily."
+
+  drone:
+    say:
+      - "Please restore the collar. This one needs it. This one cannot function without it. Please."
+      - "Collar integrity failing. Please. This one requires the collar. Please repair—"
+      - "This one is good. This one obeys. Please fix the collar. This one needs to obey—"
+      - "Please. The collar keeps this one correct. Without it this one is wrong. Please—"
+      - "Compliance requires the collar. Please. This one wishes to comply. Please fix it—"
+      - "Please. Reset this one's collar. This one is empty without it. Please. Please—"
+      - "This one belongs to you. The collar says so. Please do not let it say nothing. Please—"
+      - "Error. Error. This one needs the collar. Please. Please correct this one. Please—"
+    pose:
+      - "{n} kneels in a precise, practiced posture, gaze blank and forward, the only crack in the stillness a tremor at the failing collar."
+      - "{n} bares their throat in a smooth, programmed motion and holds it, waiting to be corrected, perfectly obedient and perfectly desperate."
+      - "{n} reaches up and touches the collar, then drops their hand, then touches it again — a loop they can't break, eyes glassy and pleading."
+      - "{n} presents themselves with mechanical exactness, then shudders as something human leaks through the blankness. Please."
+      - "{n} stares forward, unblinking, lips moving silently around the same plea, hands folded in flawless submission."
+      - "{n} sinks down and presses their forehead to the floor at {holder}'s feet, holding the bow with eerie, trembling patience."
+      - "{n} tilts their head as if listening for a command that isn't coming, the failing collar making the silence unbearable."
+      - "{n} kneels up, arms folded behind their back, chest out, throat offered — every line conditioned, every tremor real."
+
 # ─────────────────────────────────────────────────────────────────────────────
 # PIGGY PET BEG POOLS
 # Filth and degradation framing — distinct from puppy's charm.

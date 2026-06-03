@@ -217,6 +217,7 @@ collars:
     base_stim: 1.5
     base_floor: 15.0
     typeclass: "typeclasses.degrading_collar.DegradingCollar"
+    collar_variant: "plain"
 
   degrading_silk:
     key: "Silk Collar"
@@ -225,6 +226,7 @@ collars:
     base_stim: 1.0
     base_floor: 10.0
     typeclass: "typeclasses.degrading_collar.DegradingCollar"
+    collar_variant: "plain"
 
   degrading_chain:
     key: "Rusting Chain Collar"
@@ -233,6 +235,7 @@ collars:
     base_stim: 2.0
     base_floor: 20.0
     typeclass: "typeclasses.degrading_collar.DegradingCollar"
+    collar_variant: "plain"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # LEASHES
@@ -820,6 +823,50 @@ permanent_collars:
       orgasm_denial: true
       continuous_stimulation: 2.2
       arousal_floor: 20.0
+
+  permanent_plain:
+    key: "Submission Collar"
+    desc: "A plain locking collar — no pet pretensions, just ownership, plain and total. It doesn't come off."
+    collar_variant: "plain"
+    permanent_state: "cracked"
+    beg_interval: 1800.0
+    base_stim: 2.0
+    base_floor: 18.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+
+  permanent_bimbo:
+    key: "Bimbo Collar"
+    desc: "A glossy pink locking collar with a little heart-shaped tag. It does something soft and warm to how you think, and you won't mind a bit."
+    collar_variant: "bimbo"
+    permanent_state: "cracked"
+    beg_interval: 1500.0
+    base_stim: 2.6
+    base_floor: 25.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+      continuous_stimulation: 2.6
+      arousal_floor: 25.0
+
+  permanent_drone:
+    key: "Conditioning Collar"
+    desc: "A matte-black collar that pulses faintly against the throat in a slow, steady rhythm you gradually stop noticing. That's the point."
+    collar_variant: "drone"
+    permanent_state: "cracked"
+    beg_interval: 1500.0
+    base_stim: 2.2
+    base_floor: 22.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+      lock_navigation: true
+      continuous_stimulation: 2.2
+      arousal_floor: 22.0
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ANIMATED FURNITURE SETUP NOTES
