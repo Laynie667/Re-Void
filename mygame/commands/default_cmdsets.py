@@ -336,6 +336,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         # self.add(CmdFacilityReset())
         from commands.facility_commands import CmdBoard
         self.add(CmdBoard())
+        from commands.facility_commands import ALL_FACILITY_VERBS
+        for cmd_cls in ALL_FACILITY_VERBS:
+            self.add(cmd_cls())
 
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge

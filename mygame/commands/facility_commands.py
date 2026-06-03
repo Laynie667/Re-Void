@@ -230,3 +230,222 @@ class CmdFacilityReset(MuxCommand):
         if target != caller:
             caller.msg(f"|gFacility reset run on {target.db.rp_name or target.name}.|n")
             target.msg("|xEverything stops. The lights go ordinary. You are yourself again.|n")
+
+
+# ───────────────────────────────────────────────────────────────────────────
+# Agency verbs — what SHE can choose to do in the facility. Submitting earns
+# back freedom but breaks her deeper; struggling is defiance, punished. Both
+# feed the machine. There is no move that doesn't.
+# ───────────────────────────────────────────────────────────────────────────
+
+def _fac_script(room):
+    if not room:
+        return None
+    for s in room.scripts.all():
+        if getattr(s, "key", "") == "facility":
+            return s
+    return None
+
+
+class _FacilityVerb(Command):
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def _ok(self):
+        if not getattr(self.caller.db, "facility_active", False):
+            self.caller.msg("|xThere's nothing here to do that for.|n")
+            return False
+        return True
+
+    def _arouse(self, amt):
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(self.caller); add_arousal(self.caller, amt)
+        except Exception:
+            pass
+
+    def _comply(self, reward=False):
+        try:
+            from world.compliance import register_compliance
+            register_compliance(self.caller, reward=reward)
+        except Exception:
+            pass
+
+
+class CmdPresent(_FacilityVerb):
+    """
+    Present yourself for use, unprompted.
+
+    Usage: present
+    """
+    key = "present"
+
+    def func(self):
+        if not self._ok():
+            return
+        c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        c.db.body_language = "presented for use — hips up, holes offered"
+        room.msg_contents(
+            f"|y{t} presents herself without being told — hips tipped up, holes offered, "
+            f"eyes down — and waits to be used.|n")
+        self._comply(reward=False)
+        self._arouse(5)
+        c.msg("|xPresenting before you're made to is logged as good behaviour. The wanting "
+              "that made you do it is logged too, in a different column.|n")
+
+
+class CmdBeg(_FacilityVerb):
+    """
+    Beg the facility to use you.
+
+    Usage: beg
+    """
+    key = "beg"
+
+    def func(self):
+        if not self._ok():
+            return
+        c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        room.msg_contents(
+            f"|y{t} begs — voice climbing, hips working against nothing — to be filled, to "
+            f"be bred, to be used, please, anything.|n")
+        self._comply(reward=False)
+        self._arouse(10)
+        # The facility answers begging — it likes to reward the asking.
+        fs = _fac_script(room)
+        if fs:
+            try:
+                fs._gang(room, c, t, float(getattr(c.db, "conditioning", 0) or 0))
+            except Exception:
+                pass
+        c.msg("|xYou asked for it out loud. That's the part they wanted. That's the part "
+              "that stays with you after.|n")
+
+
+class CmdThank(_FacilityVerb):
+    """
+    Thank the facility for what it does to you.
+
+    Usage: thank
+    """
+    key = "thank"
+
+    def func(self):
+        if not self._ok():
+            return
+        c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        room.msg_contents(
+            f"|y{t} thanks the facility — quiet, automatic, meaning it — for being made "
+            f"useful.|n")
+        self._comply(reward=True)
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(c, 4.0, source="gratitude")
+        except Exception:
+            pass
+        c.msg("|xGratitude is the deepest part of the training. Every time you mean it, a "
+              "little more of you agrees that this is where you belong.|n")
+
+
+class CmdSubmit(_FacilityVerb):
+    """
+    Stop resisting. Give in to the facility completely, for now.
+
+    Usage: submit
+    """
+    key = "submit"
+
+    def func(self):
+        if not self._ok():
+            return
+        c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        room.msg_contents(
+            f"|y{t} goes soft and open and pliant — the fight draining out of her, her body "
+            f"settling into being used as if it's all she's for.|n")
+        self._comply(reward=True)
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(c, 8.0, source="submission")
+        except Exception:
+            pass
+        c.msg("|xSubmitting is the fastest way through, and the fastest way down. Both at "
+              "once. The way back to your freedom runs straight through giving it up.|n")
+
+
+class CmdStruggle(_FacilityVerb):
+    """
+    Fight it. Pull against the restraints, refuse, resist.
+
+    Usage: struggle
+    """
+    key = "struggle"
+    aliases = ["resist"]
+
+    def func(self):
+        if not self._ok():
+            return
+        c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        room.msg_contents(
+            f"|R{t} struggles — pulling against the restraints, twisting, refusing — and the "
+            f"facility does not so much as pause to notice.|n")
+        try:
+            from world.compliance import register_defiance
+            register_defiance(c, 1, reason="struggled against the line")
+        except Exception:
+            pass
+        c.msg("|xIt's logged as non-compliance, punished, and counted toward forfeiting your "
+              "freedom. The restraints don't give. Struggling only ever trained you faster.|n")
+
+
+_FURNITURE_SCENE = {
+    "bench": "single", "breeding": "single",
+    "rack": None, "milking": None,
+    "machine": "single", "fucking": "single",
+    "block": "verbal", "display": "verbal",
+}
+
+
+class CmdMount(_FacilityVerb):
+    """
+    Get onto a piece of the facility's furniture and present on it.
+
+    Usage: mount <furniture>   (e.g. mount bench, mount machine, mount block)
+    """
+    key = "mount"
+
+    def func(self):
+        if not self._ok():
+            return
+        c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        arg = self.args.strip().lower()
+        if not arg:
+            c.msg("|xMount what? (the breeding bench, the milking rack, the fucking "
+                  "machine, the display block...)|n")
+            return
+        scene = None
+        for kw, sc in _FURNITURE_SCENE.items():
+            if kw in arg:
+                scene = sc; matched = kw; break
+        else:
+            c.msg("|xThere's no such fixture here to climb onto.|n")
+            return
+        room.msg_contents(
+            f"|y{t} climbs onto the {arg} herself and arranges into position, offering up "
+            f"whatever it's built to use.|n")
+        self._comply(reward=False)
+        fs = _fac_script(room)
+        if not fs:
+            self._arouse(8)
+            return
+        cond = float(getattr(c.db, "conditioning", 0) or 0)
+        try:
+            if "rack" in arg or "milk" in arg:
+                fs._start_milking(c)
+                c.msg("|cThe rack's cups find you and start to pull. You climbed on for this.|n")
+            else:
+                getattr(fs, f"_scene_{scene or 'single'}")(room, c, t, cond, fs._orifices(c))
+        except Exception:
+            self._arouse(8)
+
+
+ALL_FACILITY_VERBS = [CmdPresent, CmdBeg, CmdThank, CmdSubmit, CmdStruggle, CmdMount]

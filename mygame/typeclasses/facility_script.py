@@ -560,6 +560,10 @@ _GRADUATION = {
         "finger hooked in her mouth — and then a tag is clipped to her ear and she's pushed "
         "back down onto the cradle. BREAKING IN, the board reads. The other livestock barely "
         "glance up. They've all worn that tag. They know how the rest of it goes.",
+        "An attendant runs {t} through a baseline assessment for the file — every hole "
+        "measured, every reflex tested, her resistance scored and her resting arousal logged "
+        "as a starting figure to chart her decline against. \"Lot of fight left,\" he notes, "
+        "almost approving, clipping the new tag on. \"We do love a good before.\"",
     ],
     2: [
         "This one's a ceremony. {t} is walked to the front of the room on a lead and made to "
@@ -568,6 +572,11 @@ _GRADUATION = {
         "BREEDING STOCK, seared in where it'll always show. The other girls are made to watch, "
         "and she's made to watch them watch, and somewhere in the burn and the staring she "
         "stops being a person who got caught and becomes a product that got graded.",
+        "{t} is fitted, at this grade, with her permanent collar and tag — locked on at the "
+        "front of the room while the herd watches, her number stamped into the metal, her old "
+        "name struck off the intake sheet with a single bored line. \"Breeding stock from "
+        "here,\" the attendant announces, and the rest is just paperwork and the slow dawning "
+        "on her face that the paperwork is about her.",
     ],
     3: [
         "{t} is put up on the display block at the centre of the room, turned slowly so every "
@@ -576,6 +585,11 @@ _GRADUATION = {
         "beside her. Bids are taken on her future output. She doesn't understand all of it, "
         "and that not-understanding is noted approvingly, and she's leased out by the cycle to "
         "whoever wants a turn while the room applauds the grade: BROODMARE.",
+        "The graduation to broodmare is a breeding exhibition: {t} mounted on the display "
+        "block and bred through, live, by one stud after another while her stats scroll on the "
+        "board above her and the handlers take notes on her form for the breeding programme. "
+        "She is, officially now, livestock kept for what her body makes — and the certificate "
+        "of it is the load currently being pumped into her in front of everyone.",
     ],
     4: [
         "There's a kind of graduation for the finished ones, and today it's {t}'s. She's "
@@ -585,6 +599,12 @@ _GRADUATION = {
         "the thing the newer livestock are shown to know where they're headed. PERFECTED "
         "LIVESTOCK. The Process says, almost fondly, that there's nothing left to break — and "
         "the awful part is how much that lands like praise, how much she wants it to be true.",
+        "Perfecting {t} is marked with a final cataloguing: every brand, piercing, ruined "
+        "hole, installed trigger and breeding record read into the permanent file out loud, a "
+        "complete inventory of a person converted entirely into product. There's no line left "
+        "for 'name'. There's no line left for anything she used to be. The Process reads the "
+        "list to her like a love letter, and the worst of it is that some drowned, grateful "
+        "part of her receives it as one.",
     ],
 }
 
