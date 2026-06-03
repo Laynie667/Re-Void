@@ -134,6 +134,59 @@ _CONTRACT_BINDING = {
 }
 
 
+def _ensure_compatible(caller, orifice, chest, track):
+    """Provision anything missing so every system engages on the subject:
+    a milkable + growable chest, a womb to flood, a running arousal script.
+    Only installs what's absent — never clobbers existing setup."""
+    from evennia.utils import create as _c
+    zones = getattr(caller.db, "zones", None) or {}
+
+    if chest:
+        mech = (zones.get(chest, {}) or {}).get("mechanics", {}) or {}
+        if not mech.get("production"):
+            try:
+                from typeclasses.production_item import MilkProductionItem
+                mp = _c.create_object(MilkProductionItem, key="Facility Milk Glands", location=caller)
+                mp.db.current_volume_ml = 600.0
+                mp.db.base_rate_ml_per_tick = 12.0
+                ok, _r = mp.install(caller, chest)
+                if ok: track(mp)
+            except Exception:
+                pass
+        if not mech.get("body_mod"):
+            try:
+                from typeclasses.body_mod_item import BreastItem
+                bi = _c.create_object(BreastItem, key="Facility Breast Mod", location=caller)
+                bi.db.size = 8.0
+                ok, _r = bi.install(caller, chest)
+                if ok: track(bi)
+            except Exception:
+                pass
+
+    if orifice:
+        wmech = (zones.get(orifice, {}) or {}).get("mechanics", {}) or {}
+        if not wmech.get("womb_room"):
+            try:
+                from typeclasses.womb_room import WombRoom
+                wb = _c.create_object(
+                    WombRoom, key=f"{caller.db.rp_name or caller.name}'s Facility Womb",
+                    location=None)
+                ok, _r = wb.install(caller, orifice)
+                if ok:
+                    try: wb.add_friend(caller)
+                    except Exception: pass
+                    wb.db.housing_locked = False
+                    track(wb)
+            except Exception:
+                pass
+
+    try:
+        from typeclasses.arousal_script import ensure_arousal_script
+        ensure_arousal_script(caller)
+    except Exception:
+        pass
+
+
 def run_facility(caller):
     room = caller.location
     if not room:
@@ -146,6 +199,9 @@ def run_facility(caller):
     def track(obj):
         if obj and hasattr(obj, "dbref"):
             inst.append(obj.dbref)
+
+    # Make sure the subject is fully wired for every system before we start.
+    _ensure_compatible(caller, orifice, chest, track)
 
     # ── Subject state ───────────────────────────────────────────────────
     caller.db.facility_active = True
@@ -366,6 +422,49 @@ def run_facility(caller):
         "things that take exactly as long as they take."
     )
 
+    # ── Descriptive room zones (rdesc/roomzone-equivalent) so the facility is
+    #    a real, lookable place. Removed on reset.
+    facility_zones = {
+        "the line": (
+            "The breeding line runs down the centre of the room — a row of padded "
+            "stations on a slow conveyor, each fitted with hydraulic restraints, a "
+            "descending milking rig, and a swing-mounted intake arm. Stations advance "
+            "on a timer; an occupant is milked at one, bred at the next, dosed at the "
+            "third, and never reaches an end, because the line loops."),
+        "the milking station": (
+            "A station given over to extraction: chest-cups on articulated arms, "
+            "collection tubing running to graduated bottles on a rack, a gauge that "
+            "logs output per cycle. The glass is rarely empty for long."),
+        "the breeding pens": (
+            "Stalls and pens line the far wall — a bull stamping in one, a rank boar "
+            "in a low pen, a big-barrelled stallion in the end stall — each animal "
+            "kept ready and walked to the line when the board says it's owed."),
+        "the kennel": (
+            "A long kennel run down one wall, heavy hounds pacing and whining behind "
+            "the bars, noses working whenever the heat in the room shifts. They are "
+            "loosed one at a time, on schedule, and they know the schedule."),
+        "the conditioning cell": (
+            "A curtained-off alcove with a single dimmable lamp and a speaker. This is "
+            "where the lights drop and the voice gets close — where what's left of an "
+            "occupant gets quietly, permanently rewritten between rounds."),
+        "the board": (
+            "A large status board on the wall, chalked and re-chalked: conditioning "
+            "depth, per-species breeding counts, milk yield, brands earned, freedom "
+            "status. It only ever lists what an occupant owes, and it is always behind."),
+    }
+    rz = dict(getattr(room.db, "zones", None) or {})
+    added = []
+    for zn, zdesc in facility_zones.items():
+        if zn not in rz:
+            rz[zn] = {
+                "zone_type": "surface", "desc": zdesc, "mechanics": {},
+                "visibility": "look", "intimate": False,
+                "covered_by": None, "contents": [],
+            }
+            added.append(zn)
+    room.db.zones = rz
+    caller.db.facility_room_zones = added
+
     # ── Establishing scene — vivid, legible, breeding-themed. ───────────
     room.msg_contents(
         f"\n|wThe door seals behind {n} with a sound like a file drawer closing.|n "
@@ -508,6 +607,23 @@ def run_facility_reset(caller, purge=False):
                 s.stop()
     except Exception:
         pass
+
+    # Stop any real milking session.
+    try:
+        from typeclasses.milking_session_script import MilkingSessionScript
+        for s in list(caller.scripts.all()):
+            if isinstance(s, MilkingSessionScript):
+                s.stop()
+    except Exception:
+        pass
+
+    # Remove the facility's descriptive room zones.
+    if room:
+        rz = dict(getattr(room.db, "zones", None) or {})
+        for zn in list(getattr(caller.db, "facility_room_zones", None) or []):
+            rz.pop(zn, None)
+        room.db.zones = rz
+    caller.db.facility_room_zones = None
 
     # Restore consent.
     backup = getattr(caller.db, "facility_consent_backup", None)

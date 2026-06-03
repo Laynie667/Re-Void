@@ -82,11 +82,22 @@ def gang_inseminate(target, zone_name, contributors=3,
     if species in ("hound", "bull", "boar", "stallion"):
         _maybe_offspring(target, species)
 
-    # Route the combined volume into the zone as cumflation.
+    # Route the combined volume into the zone as cumflation (belly swell).
     total = volume_each * len(donors)
     try:
         from typeclasses.inflation_item import add_inflation_volume
         add_inflation_volume(target, zone_name, total, fluid_type)
+    except Exception:
+        pass
+
+    # REAL deposit — actually place the fluid in her zone and flood any WombRoom,
+    # using the same insemination system the machines use. Not just narration.
+    try:
+        from typeclasses.insemination_item import do_inseminate
+        do_inseminate(None, target, zone_name, {
+            "source": "machine", "fluid_type": fluid_type,
+            "volume_per_tick": total, "ttl_hours": 24.0,
+        })
     except Exception:
         pass
 

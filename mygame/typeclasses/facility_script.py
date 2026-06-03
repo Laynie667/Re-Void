@@ -413,7 +413,41 @@ class FacilityScript(DefaultScript):
 
     # ------------------------------------------------------------------
 
+    def _start_milking(self, target):
+        """Run a REAL milking session — extracts her production into the bank."""
+        try:
+            from typeclasses.milking_session_script import MilkingSessionScript
+            from world.milking_loader import get_speed_config
+            from evennia.utils import create
+            for s in target.scripts.all():
+                if isinstance(s, MilkingSessionScript):
+                    return   # already milking
+            cfg = get_speed_config()
+            s = create.create_script(MilkingSessionScript, obj=target,
+                                     autostart=False, persistent=True)
+            s.db.speed          = "steady"
+            s.db.operator_dbref = None
+            s.db.zone_filter    = None
+            s.interval = (cfg.get("steady", {}) or {}).get("interval_seconds", 30)
+            s.start()
+        except Exception:
+            pass
+
+    def _stop_milking(self, target):
+        try:
+            from typeclasses.milking_session_script import MilkingSessionScript
+            for s in list(target.scripts.all()):
+                if isinstance(s, MilkingSessionScript):
+                    s.stop()
+        except Exception:
+            pass
+
     def _phase_header(self, room, target, t, cond, phase):
+        # The milker only runs during the milking phase.
+        if phase == "milk":
+            self._start_milking(target)
+        else:
+            self._stop_milking(target)
         cyc = int(self.db.cycle_count or 0) + 1
         if phase == "restrain":
             room.msg_contents(
