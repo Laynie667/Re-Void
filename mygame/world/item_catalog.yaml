@@ -504,6 +504,7 @@ piercings:
     default_zone: "chest"
     slot: "left"
     typeclass: "typeclasses.piercing_item.PiercingItem"
+    leash_anchor: true
     effect:
       sensitivity: 0.20
       display: true
@@ -537,6 +538,7 @@ piercings:
     default_zone: "groin"
     slot: "hood"
     typeclass: "typeclasses.piercing_item.PiercingItem"
+    leash_anchor: true
     effect:
       sensitivity: 0.35
 
@@ -557,6 +559,7 @@ piercings:
     default_zone: "groin"
     slot: "labia"
     typeclass: "typeclasses.piercing_item.PiercingItem"
+    leash_anchor: true
     effect:
       sensitivity: 0.25
 
@@ -567,6 +570,7 @@ piercings:
     default_zone: "groin"
     slot: "pa"
     typeclass: "typeclasses.piercing_item.PiercingItem"
+    leash_anchor: true
     effect:
       sensitivity: 0.30
 

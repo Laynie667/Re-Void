@@ -44,12 +44,17 @@ class CmdInsert(Command):
         room   = caller.location
 
         if not args:
-            caller.msg("|xUsage: insert <item> [zone]|n")
+            caller.msg("|xUsage: insert <item> [into <zone>]|n")
             return
 
         parts     = args.split(None, 1)
         item_name = parts[0]
-        zone_arg  = parts[1].strip().lower().replace(" ", "_") if len(parts) > 1 else None
+        zone_arg  = parts[1].strip() if len(parts) > 1 else None
+        if zone_arg:
+            # Accept "insert <item> into <zone>" as well as "insert <item> <zone>".
+            if zone_arg.lower().startswith("into "):
+                zone_arg = zone_arg[5:].strip()
+            zone_arg = zone_arg.lower().replace(" ", "_") or None
 
         from typeclasses.plug_item import PlugItem
         item = caller.search(item_name, location=caller)

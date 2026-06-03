@@ -49,6 +49,7 @@ class PiercingItem(WearableItem):
         self.db.player_desc  = ""
         self.db.default_zone = ""
         self.db.slot         = "center"  # left/right/center/bar/hoop/stud
+        self.db.leash_anchor = False     # ring-type piercings a leash can clip to
 
         # Effect flags
         self.db.effect = {
@@ -94,6 +95,7 @@ class PiercingItem(WearableItem):
             "desc_locked": self.db.desc_locked,
             "effect":      dict(self.db.effect or {}),
             "slot":        self.db.slot,
+            "leash_anchor": bool(getattr(self.db, "leash_anchor", False)),
         }
 
         zone_copy = dict(zones[zone_name])

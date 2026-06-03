@@ -201,18 +201,32 @@ class LeashItem(DefaultObject):
         if self.db.is_attached:
             return False, f"{self.key} is already attached."
 
-        # Verify target has a collar
+        # Verify the target wears something a leash can clip to: a collar, or a
+        # ring-type piercing (clit ring, nipple ring, etc.) flagged as an anchor.
         zones = getattr(target.db, "zones", None) or {}
         has_anchor = False
+        anchor_label = "collar"
+        anchor_is_piercing = False
         for zd in zones.values():
-            collar = (zd.get("mechanics") or {}).get("collar")
+            mechanics = zd.get("mechanics") or {}
+            collar = mechanics.get("collar")
             if collar and collar.get("leash_anchor"):
                 has_anchor = True
+                anchor_label = collar.get("item_name") or "collar"
+                break
+            for key, data in mechanics.items():
+                if (key.startswith("piercing_") and isinstance(data, dict)
+                        and data.get("leash_anchor")):
+                    has_anchor = True
+                    anchor_label = data.get("item_name") or "piercing"
+                    anchor_is_piercing = True
+                    break
+            if has_anchor:
                 break
 
         if not has_anchor:
             tname = target.db.rp_name or target.name
-            return False, f"{tname} is not wearing a collar with a leash anchor."
+            return False, f"{tname} isn't wearing a collar or ring a leash can clip to."
 
         # Wire the lead system (same as CmdLead)
         if holder.db.leading:
@@ -221,6 +235,8 @@ class LeashItem(DefaultObject):
         holder_name = holder.db.rp_name or holder.name
         target_name = target.db.rp_name or target.name
         active_desc = self.db.player_desc or self.db.desc or "a leash"
+        if anchor_is_piercing:
+            active_desc = f"{active_desc}, clipped to their {anchor_label.lower()}"
 
         holder.db.leading  = target.id
         target.db.led_by   = holder.id
