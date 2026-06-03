@@ -33,24 +33,24 @@ from evennia import DefaultScript
 # ---------------------------------------------------------------------------
 
 _EDGE_MSGS_PRIVATE = [
-    "The machine holds you exactly where it has you — right at the edge, no further. It does not lose track.",
-    "You are at ninety-nine and the machine knows it and is not giving you the last point. The pressure does not ease.",
-    "Right there. The machine keeps you right there. The release is present and unreachable.",
-    "The edge is precise. The machine is precise. You stay exactly at it.",
-    "You push against the ceiling the machine has set and it does not move. Neither do you.",
+    "The machine holds you right where it wants you — at the edge, no further, not for anything. It does not lose its grip and it does not lose track.",
+    "Ninety-nine, and the machine knows it, and it's not giving you that last point. The pressure doesn't ease a hair.",
+    "Right there. The machine keeps you right there — the finish close enough to taste and just exactly out of reach.",
+    "The edge is precise. The machine is precise. You stay pinned exactly on it, shaking.",
+    "You push at the ceiling the machine's set and it doesn't budge. Neither, it turns out, do you.",
 ]
 
 _EDGE_MSGS_ROOM = [
-    "{name} is very still — a concentrated stillness, held in place by something specific.",
-    "Something in {name}'s posture has found its limit and stopped there.",
-    "{name} breathes carefully — measured, controlled, working around something.",
+    "{name} is very still — the kind of concentrated, white-knuckle still that's being held in place by something.",
+    "Something in {name}'s posture hit its limit and just stopped there, trembling.",
+    "{name} breathes careful — slow, measured, working hard around something they can't quite reach.",
 ]
 
 _EDGE_NEAR_MSGS = [
-    "The machine is taking you toward the edge. Approach is not the same as arrival.",
-    "Ninety. The machine has noted this and is adjusting its pace.",
-    "Close. The machine keeps it close. The interval changes.",
-    "The pressure builds toward the ceiling the machine has set.",
+    "The machine's walking you toward the edge, and approach is a long way from arrival.",
+    "Ninety. The machine clocks it and leans in, adjusting its pace, savoring the climb.",
+    "Close. The machine keeps you close and changes the interval just to make sure you feel it.",
+    "The pressure stacks up toward the ceiling the machine's set, slow, deliberate, and merciless.",
 ]
 
 
@@ -152,7 +152,7 @@ class EdgeMachineScript(DefaultScript):
             char.db.orgasm_denial         = False
             char.db.orgasm_denial_lifted  = False
             char.db.orgasm_release_word   = ""
-            char.msg("|xThe edge machine releases you.|n")
+            char.msg("|xThe edge machine finally lets you go.|n")
 
 
 # ---------------------------------------------------------------------------
@@ -160,15 +160,15 @@ class EdgeMachineScript(DefaultScript):
 # ---------------------------------------------------------------------------
 
 _STANCHION_LOCK_MSGS = [
-    "The stanchion closes around you — frame at the neck, bar at the hips. You are not going anywhere.",
-    "The stanchion locks you in place. The milking attachments find their positions automatically.",
-    "A mechanical click as the stanchion secures. You are positioned, held, and ready to be milked.",
+    "The stanchion clamps shut around you — frame at the neck, bar at the hips. You're not going anywhere, and that's rather the idea.",
+    "The stanchion locks you down and the milking attachments find their spots on their own. No input required from you.",
+    "A heavy mechanical click and the stanchion's got you — positioned, held, and lined up to be milked whether you're ready or not.",
 ]
 
 _STANCHION_RELEASE_MSGS = [
-    "The stanchion releases. The frame opens and the attachments retract.",
-    "The locks on the stanchion open. You are free to move.",
-    "The stanchion releases you — frame, bar, and attachments all retracting.",
+    "The stanchion lets go — the frame swinging open, the attachments drawing back. You're free, and a little unsteady.",
+    "The locks pop on the stanchion and it opens up. You can move again.",
+    "The stanchion releases you — frame, bar, and attachments all retracting. Done with you. For now.",
 ]
 
 
@@ -259,9 +259,9 @@ class MilkingStanchionScript(DefaultScript):
 # ---------------------------------------------------------------------------
 
 _PEDESTAL_MSGS = [
-    "{name} is displayed on the pedestal — elevated, lit, every line of them visible.",
-    "{name} stands on the pedestal. The room's attention organizes around them.",
-    "The pedestal holds {name} above the floor level. There is nowhere to look that isn't toward them.",
+    "{name} is up on the pedestal — raised, lit, every line of them laid out for the room to look at.",
+    "{name} stands on the pedestal and the whole room's attention quietly rearranges itself around them.",
+    "The pedestal holds {name} up above the floor, and there's nowhere in the room to look that isn't straight at them.",
 ]
 
 
@@ -308,7 +308,7 @@ class DisplayPedestalScript(DefaultScript):
                 char.db.outfit_camouflage = ""
                 cname = char.db.rp_name or char.name
                 room.msg_contents(
-                    f"|x{cname} steps onto the pedestal. The exhibition effect is immediate and total.|n"
+                    f"|x{cname} steps up onto the pedestal — and suddenly there's nowhere left on them to hide.|n"
                 )
 
             # Periodic display message
