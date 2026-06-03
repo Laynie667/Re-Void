@@ -25,18 +25,24 @@ class CmdFacilityReset(MuxCommand):
     Usage:
         facilityreset [<target>]
         facilityreset/force [<target>]
+        facilityreset/purge [<target>]
 
     With no target, resets yourself. With a target (a character in your
     location), resets them — use this to free a subject the rig has locked.
 
-    A coin toss at build time may lock resetting YOURSELF for a few days. That
-    lock is flavor only: '/force' overrides it at any time, and resetting
-    another character is never locked. The genuine emergency exit always exists.
+    A normal reset frees the subject but leaves behind a few persistent marks.
+    Switches:
+        /force   ignore the coin-toss time lock (emergency exit; keeps marks)
+        /purge   scorched earth — clears EVERYTHING, marks included, and
+                 ignores the lock. The true factory reset.
+
+    The lock is flavor only: /force, /purge, and resetting another character
+    are never locked. The genuine emergency exit always exists.
     """
 
     key            = "facilityreset"
     aliases        = ["resetfacility"]
-    switch_options = ("force",)
+    switch_options = ("force", "purge")
     locks          = "cmd:perm(Developer) or perm(Admin)"
     help_category  = "Admin"
 
@@ -49,9 +55,10 @@ class CmdFacilityReset(MuxCommand):
                 return
             target = found
 
-        forced = "force" in self.switches
+        purge  = "purge" in self.switches
+        forced = "force" in self.switches or purge
 
-        # The coin-toss lock applies ONLY to resetting yourself without /force.
+        # The coin-toss lock applies ONLY to resetting yourself without override.
         if target == caller and not forced:
             locked_until = float(getattr(caller.db, "facility_reset_locked_until", 0) or 0)
             if locked_until and time.time() < locked_until:
@@ -71,7 +78,7 @@ class CmdFacilityReset(MuxCommand):
             caller.msg(f"|rCould not load reset routine: {e}|n")
             return
 
-        run_facility_reset(target)
+        run_facility_reset(target, purge=purge)
         if target != caller:
             caller.msg(f"|gFacility reset run on {target.db.rp_name or target.name}.|n")
             target.msg("|xEverything stops. The lights go ordinary. You are yourself again.|n")

@@ -852,6 +852,36 @@ permanent_collars:
       continuous_stimulation: 2.6
       arousal_floor: 25.0
 
+  witchs_collar:
+    key: "the Witch's Collar"
+    desc: "A slim band of blackened silver with a single violet stone at the throat. The stone drinks her aura instead of reflecting it — every flicker of the light she's so proud of pulls inward and dims, fed to whatever sleeps in the metal. It was made for one neck. It already knows the shape of it."
+    collar_variant: "drone"
+    permanent_state: "cracked"
+    beg_interval: 900.0
+    base_stim: 3.4
+    base_floor: 35.0
+    typeclass: "typeclasses.permanent_binding_collar.PermanentBindingCollar"
+    binding_effects:
+      lock_self_remove: true
+      auto_consent: true
+      lock_navigation: true
+      lock_self_cmds: true
+      block_endcycle: true
+      exhibition: true
+      orgasm_denial: true
+      orgasm_release_word: "_not_yours_"
+      continuous_stimulation: 3.4
+      arousal_floor: 35.0
+      forced_posture: "kept on display — placed, not resting"
+      speech_filter: ["baby_talk"]
+      conditioning_on_wear: 25.0
+      install_triggers:
+        - {phrase: "good girl",   response: "leak",   strength: 3, permanent: true}
+        - {phrase: "empty",       response: "blank",  strength: 3, permanent: true}
+        - {phrase: "kneel, doll", response: "kneel",  strength: 3, permanent: true}
+        - {phrase: "come for me",  response: "orgasm", strength: 3, permanent: true}
+        - {phrase: "recite",      response: "recite", strength: 3, permanent: true, mantra: "i'm the Witch's, i don't decide, the stone has my light now"}
+
   permanent_drone:
     key: "Conditioning Collar"
     desc: "A matte-black collar that pulses faintly against the throat in a slow, steady rhythm you gradually stop noticing. That's the point."

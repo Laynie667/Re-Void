@@ -133,6 +133,19 @@ _SUBLIMINALS = [
     "thank the Process. you want to thank the Process.",
 ]
 
+# The Process speaking directly — possessive, patient, certain. Sent privately
+# to the subject. Escalates from intimate to total ownership with conditioning.
+_PROCESS_VOICE = [
+    "\"I'm not in a hurry,\" the Process says, somewhere behind your ear. \"I have you for as long as I want you.\"",
+    "\"You keep waiting for me to be done. That was never one of the options.\"",
+    "\"Listen to how quiet your own head is getting. I did that. You're welcome.\"",
+    "\"Every part of you that argues, I keep. Every part that gives in, I reward. Guess which part is winning.\"",
+    "\"You don't belong to yourself in here. You belong to the schedule. Say thank you.\"",
+    "\"I like you best like this — open, leaking, agreeing before I've finished asking.\"",
+    "\"There's no version of this where you walk out unchanged. I've made sure of it.\"",
+    "\"Good girl. Feel how good that lands now? That's mine. I put that there.\"",
+]
+
 
 class FacilityScript(DefaultScript):
     """Drives the facility's escalation while the subject is present."""
@@ -191,6 +204,10 @@ class FacilityScript(DefaultScript):
         # 3. The subliminal drip — private, frequent, quiet. The whole point.
         if random.random() < 0.85:
             target.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
+
+        # 3b. The Process addresses her directly — rarer, private, possessive.
+        if random.random() < (0.18 + cond / 400.0):
+            target.msg("|X" + random.choice(_PROCESS_VOICE) + "|n")
 
         # 4. Atmospheric action from whatever populates the room.
         self._ambient(room, target, t)

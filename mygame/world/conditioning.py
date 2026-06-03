@@ -37,14 +37,24 @@ def add_conditioning(character, amount, source=None):
 
 
 # Each threshold fires exactly once, the first time the meter crosses it.
-# (value, key, handler_name)
+# The meter has no ceiling and accelerates, so it WILL climb into the deep
+# stages on its own if left running. (value, key, handler_name)
 _THRESHOLDS = [
     (20.0,  "floor",       "_cond_floor"),
     (40.0,  "speech",      "_cond_speech"),
     (60.0,  "trigger",     "_cond_trigger"),
     (80.0,  "designation", "_cond_designation"),
     (100.0, "permanent",   "_cond_permanent"),
+    (130.0, "doll",        "_cond_doll"),
+    (160.0, "identity",    "_cond_identity"),
+    (200.0, "lockself",    "_cond_lockself"),
+    (250.0, "imprint",     "_cond_imprint"),
 ]
+
+
+def deepen_on_climax(character, amount=14.0):
+    """Every release rewires a little more — called when a conditioned climax fires."""
+    return add_conditioning(character, amount, source="climax")
 
 
 def _apply_thresholds(character, old_value, new_value):
@@ -141,4 +151,56 @@ def _cond_permanent(character):
         "|xThere is a quiet click somewhere you can't point to, and then a stillness — "
         "the particular stillness of a decision being made for you and then closed. "
         "Whatever just set is not yours to take back.|n"
+    )
+
+
+def _cond_doll(character):
+    """The body is posed and held that way — pretty, placed, waiting."""
+    character.db.forced_posture = "posed and still — placed, not resting"
+    character.db.body_language  = "posed and still, waiting to be arranged"
+    character.msg(
+        "|xYour body settles into a shape you didn't pick and holds it. It feels "
+        "correct in a way that has nothing to do with comfort. You are easier to "
+        "arrange now than to ask.|n"
+    )
+
+
+def _cond_identity(character):
+    """She loses her name to the designation — restored only by a reset."""
+    if not getattr(character.db, "designation", None):
+        character.db.designation = "the doll"
+    if not getattr(character.db, "facility_name_backup", None):
+        character.db.facility_name_backup = character.db.rp_name or character.key
+    character.db.rp_name = character.db.designation
+    character.msg(
+        "|xSomeone says your name and it slides off — it belongs to a person who used "
+        f"to stand here. What answers now is {character.db.designation}. It answers "
+        "faster than the old name ever did.|n"
+    )
+
+
+def _cond_lockself(character):
+    """She can no longer undo her own modifications, and gets a report trigger."""
+    character.db.self_cmds_locked = True
+    try:
+        from world.binding_effects import install_trigger
+        install_trigger(character, "report", response="recite", strength=2,
+                        mantra="i'm a hole, i'm a cow, i don't decide, thank you")
+    except Exception:
+        pass
+    character.msg(
+        "|xYour hands won't move to undo any of it. The part of you that used to "
+        "change things has been quietly retired. When asked to report, you will.|n"
+    )
+
+
+def _cond_imprint(character):
+    """Animal imprint — the last of the person files down to a kept thing."""
+    character.db.pet_type = character.db.pet_type or "puppy"
+    if not getattr(character.db, "pet_trigger_sources", None):
+        character.db.pet_trigger_sources = ["facility"]
+    character.msg(
+        "|xThere isn't much left to talk to. What's here is warm, obedient, and "
+        "happy in the small flat way of an animal that has everything it needs and "
+        "no say in any of it. Good girl. That part landed a long time ago.|n"
     )

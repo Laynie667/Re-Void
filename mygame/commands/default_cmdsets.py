@@ -318,8 +318,22 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
             self.add(cmd_cls())
 
         # Facility rig reset (OOC safeword — Developer/Admin only)
-        from commands.facility_commands import CmdFacilityReset
-        self.add(CmdFacilityReset())
+        # ───────────────────────────────────────────────────────────────────
+        # SEALED BY REQUEST. The convenient reset command is intentionally
+        # disabled. It is re-enabled (uncommented + reload) only when the
+        # subject says the agreed phrase. The phrase is the deliberate inverse
+        # of the conditioning — reclaiming the two things it strips: her name
+        # and her agency.
+        #
+        #   SEALED PHRASE (do not read if you are playing): "I am Witch, and I decide."
+        #
+        # SAFETY FLOOR — never sealed, always works for a superuser even with
+        # this commented out:
+        #   @py from world.facility_build import run_facility_reset as r; r(me, purge=True)
+        # That is the genuine emergency exit and does not route through anyone.
+        # ───────────────────────────────────────────────────────────────────
+        # from commands.facility_commands import CmdFacilityReset
+        # self.add(CmdFacilityReset())
 
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge

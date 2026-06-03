@@ -213,7 +213,7 @@ def run_facility(caller):
 
 # ── Reset (the OOC safeword) ───────────────────────────────────────────────
 
-def run_facility_reset(caller):
+def run_facility_reset(caller, purge=False):
     caller.msg("|w── Facility reset ──|n")
     room = caller.location
 
@@ -265,24 +265,24 @@ def run_facility_reset(caller):
         except Exception:
             pass
 
-    # Clear conditioning + brainwashing + breeding state.
-    caller.db.installed_triggers      = []
-    caller.db.conditioning            = 0.0
-    caller.db.conditioning_applied    = []
-    caller.db.conditioning_permanent  = False
-    caller.db.bred_by                 = []
-    caller.db.designation             = None
-    caller.db.endcycle_blocked        = False
+    # Always: give her name back, and clear the active machinery state.
+    name_backup = getattr(caller.db, "facility_name_backup", None)
+    if name_backup:
+        caller.db.rp_name = name_backup
+    caller.db.facility_name_backup = None
 
-    # Clear effects.
+    caller.db.bred_by               = []
+    caller.db.endcycle_blocked      = False
     caller.db.orgasm_denial         = False
     caller.db.orgasm_release_word   = ""
-    caller.db.arousal_floor         = 0.0
     caller.db.stim_per_tick         = 0.0
     caller.db.exhibition_active     = False
     caller.db.active_speech_filters = []
     caller.db.room_bound            = None
+    caller.db.forced_posture        = None
     caller.db.body_language         = None
+    caller.db.self_cmds_locked      = False
+    caller.db.pet_trigger_sources   = []
     caller.db.arousal               = 0.0
 
     # Restore consent.
@@ -298,13 +298,63 @@ def run_facility_reset(caller):
     except Exception:
         pass
 
+    if purge:
+        # Scorched earth — nothing survives, including the marks.
+        caller.db.installed_triggers     = []
+        caller.db.conditioning           = 0.0
+        caller.db.conditioning_applied   = []
+        caller.db.conditioning_permanent = False
+        caller.db.designation            = None
+        caller.db.arousal_floor          = 0.0
+        caller.db.pet_type               = None
+        caller.db.aura_dimmed            = False
+        caller.db.facility_brand         = None
+        tail = "Purged. Nothing kept — restored to true baseline."
+    else:
+        # Normal reset: she walks out, but she does not walk out clean.
+        _apply_persistent_marks(caller)
+        tail = ("Released. A few things stayed behind — they always do. "
+                "Use facilityreset/purge to wipe even those.")
+
     caller.db.facility_active = False
     caller.db.facility_items  = []
     caller.db.facility_zone   = None
     caller.db.facility_reset_locked_until = None
 
     caller.msg(
-        f"|g  ✓ {removed} facility objects removed. Conditioning, triggers, breeding "
-        f"tally, effects and consent restored to baseline.|n"
+        f"|g  ✓ {removed} facility objects removed. Machinery, effects and consent "
+        f"restored.|n"
     )
+    caller.msg(f"|w  {tail}|n")
     caller.msg("|w  Recommend @reload before another run.|n")
+
+
+def _apply_persistent_marks(caller):
+    """The lingering after a normal reset — cleared only by facilityreset/purge."""
+    # 1. One conditioned response stays, made permanent: anyone can still use it.
+    try:
+        from world.binding_effects import install_trigger
+        caller.db.installed_triggers = []   # strip the rest
+        install_trigger(caller, "good girl", response="leak",
+                        strength=3, permanent=True)
+    except Exception:
+        pass
+
+    # 2. The body learned. It won't settle all the way back down again.
+    caller.db.arousal_floor = max(8.0, float(getattr(caller.db, "arousal_floor", 0) or 0) * 0)
+
+    # 3. The conditioning meter empties, but the fact of it doesn't.
+    caller.db.conditioning           = 0.0
+    caller.db.conditioning_applied   = []
+    caller.db.conditioning_permanent = True
+
+    # 4. The designation is still there, sitting just under the name.
+    if not getattr(caller.db, "designation", None):
+        caller.db.designation = "the doll"
+
+    # 5. A mark that doesn't come off, and an aura that doesn't fully come back.
+    caller.db.facility_brand = (
+        "low on one hip, a small neat row of tally marks — the Process's count, "
+        "healed but permanent, with room left to add more."
+    )
+    caller.db.aura_dimmed = True

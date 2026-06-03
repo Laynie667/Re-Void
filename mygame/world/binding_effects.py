@@ -145,6 +145,29 @@ def apply_effects(character, item):
             f"|xSpeech filter active: {', '.join(filters)}.|n"
         )
 
+    # install_triggers — conditioning baked into the item. NOTE: these are
+    # written into the wearer and deliberately do NOT come off with the item.
+    for t in (effects.get("install_triggers") or []):
+        try:
+            install_trigger(
+                character, t.get("phrase", ""),
+                response=t.get("response", "kneel"),
+                strength=int(t.get("strength", 1)),
+                permanent=bool(t.get("permanent")),
+                mantra=t.get("mantra"),
+            )
+        except Exception:
+            pass
+
+    # conditioning_on_wear — seeds the conditioning meter the moment it's worn
+    cw = float(effects.get("conditioning_on_wear", 0.0) or 0.0)
+    if cw:
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(character, cw, source="collar")
+        except Exception:
+            pass
+
     # pet_triggers — mark which item is the trigger source
     if effects.get("pet_triggers"):
         sources = list(character.db.pet_trigger_sources or [])
@@ -530,6 +553,12 @@ def _inst_orgasm(char, speaker, room, entry):
         from typeclasses.arousal_script import add_arousal, ensure_arousal_script
         ensure_arousal_script(char)
         add_arousal(char, 60.0)
+    except Exception:
+        pass
+    # Every conditioned release rewires a little more.
+    try:
+        from world.conditioning import deepen_on_climax
+        deepen_on_climax(char)
     except Exception:
         pass
     cname = char.db.rp_name or char.name

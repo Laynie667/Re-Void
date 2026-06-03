@@ -28,6 +28,27 @@ _BLOCKED_MSG = (
 )
 
 
+def _resist_backfire(caller):
+    """In the facility, struggling against the lock only drives it deeper."""
+    if not getattr(caller.db, "facility_active", False):
+        return
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(caller, 6.0, source="resistance")
+    except Exception:
+        pass
+    try:
+        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+        ensure_arousal_script(caller)
+        add_arousal(caller, 12.0)
+    except Exception:
+        pass
+    caller.msg(
+        "|xThe struggle registers somewhere as data, not protest — and the ache "
+        "answers it by climbing. Fighting it is just another way of being trained.|n"
+    )
+
+
 class CmdCycle(MuxCommand):
     """
     Operate the automatic cycle machine.
@@ -124,6 +145,7 @@ class CmdCycle(MuxCommand):
             return
         if getattr(caller.db, "endcycle_blocked", False):
             caller.msg(_BLOCKED_MSG)
+            _resist_backfire(caller)
             return
         CycleScript.stop_all(caller)   # at_stop handles end messaging
 
@@ -194,6 +216,7 @@ class CmdEndCycle(Command):
             return
         if getattr(caller.db, "endcycle_blocked", False):
             caller.msg(_BLOCKED_MSG)
+            _resist_backfire(caller)
             return
         CycleScript.stop_all(caller)
 
