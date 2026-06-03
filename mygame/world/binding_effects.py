@@ -352,6 +352,24 @@ _PET_TRIGGER_MAPS = {
         "release":  "_trigger_free",
         "come":     "_trigger_free",
     },
+
+    "piggy": {
+        "wallow":   "_trigger_piggy_wallow",
+        "mud":      "_trigger_piggy_wallow",
+        "root":     "_trigger_piggy_root",
+        "oink":     "_trigger_piggy_oink",
+        "squeal":   "_trigger_piggy_squeal",
+        "grunt":    "_trigger_piggy_grunt",
+        "present":  "_trigger_piggy_present",
+        "roll":     "_trigger_piggy_roll",
+        "stay":     "_trigger_stay",
+        "quiet":    "_trigger_quiet",
+        "shush":    "_trigger_quiet",
+        "free":     "_trigger_free",
+        "come":     "_trigger_free",
+        "release":  "_trigger_free",
+        "clean":    "_trigger_piggy_clean",
+    },
 }
 
 
@@ -672,6 +690,76 @@ def _trigger_fox_groom(char, holder, room):
 
 
 # ── Orgasm denial release ─────────────────────────────────────────────────
+
+# ── Piggy triggers ───────────────────────────────────────────────────────
+
+def _trigger_piggy_wallow(char, holder, room):
+    char.db.body_language = "wallowing"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} drops low and moves with the complete lack of dignity that is, apparently, the point.|n"
+    )
+    char.msg("|xWallow.|n")
+
+def _trigger_piggy_root(char, holder, room):
+    char.db.body_language = "rooting"
+    cname = char.db.rp_name or char.name
+    hname = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{cname} presses their nose to the floor and roots toward {hname}. Persistent. Unhurried.|n"
+    )
+    char.msg("|xRoot.|n")
+
+def _trigger_piggy_oink(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} makes the sound they have been asked to make. It comes out right on the first try.|n"
+    )
+    char.msg("|xOink.|n")
+    from world.forced_emote import forced_emote
+    forced_emote(char, "Oink.", "say")
+
+def _trigger_piggy_squeal(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} squeals — high and involuntary and entirely undignified — and does not look like they regret it.|n"
+    )
+    char.msg("|xSqueal.|n")
+
+def _trigger_piggy_grunt(char, holder, room):
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} grunts. Low. Satisfied. Like something that doesn't need more than this.|n"
+    )
+    char.msg("|xGrunt.|n")
+
+def _trigger_piggy_present(char, holder, room):
+    char.db.body_language = "presented low"
+    cname  = char.db.rp_name or char.name
+    hname  = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{cname} goes low and presents for {hname} — head down, hindquarters up, the offering entirely without reserve.|n"
+    )
+    char.msg("|xPresent.|n")
+
+def _trigger_piggy_roll(char, holder, room):
+    char.db.body_language = "rolled over"
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|x{cname} rolls over completely, back to the floor, sprawled with the thoroughness of something that has given up being particular about surfaces.|n"
+    )
+    char.msg("|xRoll.|n")
+
+def _trigger_piggy_clean(char, holder, room):
+    """Clean removes the wallowing body language — holder decides when they're clean."""
+    char.db.body_language = ""
+    cname  = char.db.rp_name or char.name
+    hname  = holder.db.rp_name or holder.name
+    room.msg_contents(
+        f"|x{hname} decides {cname} is clean. For now.|n"
+    )
+    char.msg("|xClean. For now.|n")
+
 
 def _trigger_orgasm_release(char, holder, room):
     """Holder says the release word — lifts denial for one climax."""

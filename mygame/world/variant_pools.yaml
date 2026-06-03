@@ -253,3 +253,40 @@ collar_beg:
     pose:
       - "{n} spreads and lowers and presents perfectly and then looks back at the collar. They are asking for both at once."
       - "{n} stands very still with their legs wide and their back arched and looks at {holder}. 'Please,' they say, meaning the collar and everything else."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIGGY PET BEG POOLS
+# Filth and degradation framing — distinct from puppy's charm.
+# ─────────────────────────────────────────────────────────────────────────────
+
+piggy_beg:
+  say:
+    - "Please. I don't care how I look. I'm asking anyway. Please."
+    - "I'll wallow for it. I'll beg on the floor. I'm already there. Please."
+    - "It doesn't matter what I look like right now. I'm asking. Please fix it."
+    - "Please. I've already given up being particular. Just please."
+    - "Oink — please — I know what I am right now. I'm asking anyway. Please."
+  pose:
+    - "{n} stays low and looks up at {holder}. There is no dignity left in this position and they are not reaching for it."
+    - "{n} noses toward {holder}'s foot and stays there. They are asking without getting up. The floor is fine."
+    - "{n} makes a sound in their throat — not a word, something lower — and presses their face to {holder}'s ankle. Begging from here."
+    - "{n} rolls onto their back and looks up at {holder}. This is the begging. This position is the whole of it."
+    - "{n} roots toward {holder} without lifting their chin from the floor. What they want is clear. The method of asking is the point."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PORCINE ENCOUNTER FRAMING (SHAFT TYPE)
+# About the encounter and what is being done — not just the mechanics.
+# Framed from the perspective of the one being used.
+# ─────────────────────────────────────────────────────────────────────────────
+
+porcine_encounter:
+  say:
+    - "I want to be used by something that doesn't stop to ask. Please."
+    - "Please. I want what a boar gives. I'm asking specifically."
+    - "I want to be rutted. I want it to be ungentle and I want to feel the whole of it after. Please."
+    - "Please. I want the encounter, not just the mechanics. I know what I'm asking for."
+  pose:
+    - "{n} goes low and presents themselves with the completeness of something that has decided what it wants and stopped being careful about it."
+    - "{n} kneels in the filth of whatever surface they've been given and waits. This is the posture of the ask. They are not adjusting it."
+    - "{n} looks at {holder} and says nothing. The position says the whole of it."
+    - "{n} presses forward into whatever is offered and doesn't pull back. Rutted and aware of it and not stopping."

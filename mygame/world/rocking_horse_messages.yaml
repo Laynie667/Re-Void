@@ -1,0 +1,107 @@
+# world/rocking_horse_messages.yaml
+#
+# Message pools for the rocking horse session system.
+# Follows the same pattern as milking_messages.yaml.
+#
+# Tokens: {rider} = rider's RP name
+# Upgrade-specific pools: milking_start, knot_engage, knot_release, inflation_peak
+#
+# Add more variants to any pool — more = better variety.
+
+speeds:
+
+  slow:
+    interval_seconds: 90
+    arousal_per_tick: 3.0
+
+    start:
+      - "The horse begins its slow rock — a patient, even motion that establishes itself without urgency. {rider} settles into it."
+      - "A low creak of wood and the horse finds its rhythm at its slowest setting. {rider} moves with it."
+      - "Slow. The horse rocks with the patience of something designed to be ridden for as long as the rider needs."
+
+    running:
+      - "The horse maintains its slow, even rhythm under {rider}. The creak of the wood is low and consistent."
+      - "A steady gentle sway. {rider} moves with each arc. The pace holds."
+      - "Slow and patient — the horse doesn't hurry {rider} and {rider} doesn't hurry the horse."
+
+    stop:
+      - "The horse rocks to stillness under {rider}. The session ends at the pace it kept."
+      - "The motion eases to a stop. {rider} stills with it."
+
+  steady:
+    interval_seconds: 45
+    arousal_per_tick: 6.0
+
+    start:
+      - "The horse settles into its working rhythm — steady, purposeful, each arc complete. {rider} has been committed to this."
+      - "Steady speed: the horse finds its pace and keeps it. {rider} rocks with it."
+      - "A working rhythm establishes itself. The horse is in no hurry and no longer slow."
+
+    running:
+      - "Steady rocking under {rider} — the arc is even, the creak of the frame a consistent note."
+      - "The horse keeps its rhythm. {rider} moves with it, seat finding the peak of each arc."
+      - "Each rock carries {rider} through the full motion. The pace doesn't break."
+
+    stop:
+      - "The horse slows to stillness. {rider} comes to rest with it."
+      - "Steady speed settles — the motion decelerates and stops cleanly."
+
+  fast:
+    interval_seconds: 20
+    arousal_per_tick: 12.0
+
+    start:
+      - "The horse accelerates into its faster pace — the arc sharper now, each rock driving {rider} through it quickly."
+      - "Fast: the rhythm tightens. The horse moves {rider} through the full arc in quick succession."
+      - "The frame picks up speed. The creak of it is more frequent, each rock arriving before the last has fully settled."
+
+    running:
+      - "Fast and insistent — the horse works {rider} through each arc without pausing at either end."
+      - "The motion is urgent now. {rider} is taken through each rock before they've finished the last one."
+      - "The horse at this pace leaves {rider} no room for anything except riding it."
+
+    stop:
+      - "The horse drops from fast to stillness in a few decelerating arcs. {rider} stops with it."
+      - "Fast speed ends — the horse slows quickly and stops."
+
+  intense:
+    interval_seconds: 8
+    arousal_per_tick: 20.0
+
+    start:
+      - "The horse goes to maximum — the arcs rapid and full and leaving no interval between them. {rider} is committed."
+      - "Intense: the frame moves {rider} through the full arc in rapid succession. There is nothing gradual about this setting."
+      - "Maximum speed establishes itself immediately. The horse does not ease into this."
+
+    running:
+      - "The horse runs at full intensity under {rider} — rapid, complete, relentless."
+      - "Each arc arrives before {rider} has processed the last one. The pace is total."
+      - "Intense and unwavering. The horse gives {rider} nothing to do except be ridden."
+
+    stop:
+      - "The horse drops from intensity to stillness sharply. The room is quieter after."
+      - "Full speed ends decisively. {rider} comes to rest."
+
+# Upgrade-specific messages
+
+upgrade:
+
+  milking_start:
+    - "The suction cups engage against {rider}'s chest — the milking attachment settling into place as the horse begins its work."
+    - "The milking attachment activates. The suction finds {rider} and holds."
+
+  knot_engage:
+    - "Something catches inside {rider} — the seat's knot swelling, locking them onto the horse. They aren't going anywhere until it releases."
+    - "The knot engages. {rider} and the horse are now specifically committed to each other."
+
+  knot_release:
+    - "The knot finally softens and releases {rider} from the horse. The session ends."
+    - "The seat's knot eases and lets go. {rider} is free to dismount."
+
+  inflation_peak:
+    - "The seat has expanded to its maximum fill inside {rider}. The horse continues its pace around that."
+    - "Full inflation: the seat is at capacity inside {rider}, the rocking happening around the fullness."
+
+  restrained_mount:
+    - "The restraints engage — wrists to the handles, ankles to the stirrups. {rider} is on the horse and the horse has them."
+    - "Handles and stirrups lock. {rider} is in position and not getting off on their own."

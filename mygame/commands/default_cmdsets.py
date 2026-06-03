@@ -351,6 +351,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_FURNITURE_CMDS:
             self.add(cmd_cls())
 
+        # Rocking horse commands
+        from commands.rocking_horse_commands import ALL_HORSE_CMDS
+        for cmd_cls in ALL_HORSE_CMDS:
+            self.add(cmd_cls())
+
 
 class AccountCmdSet(default_cmds.AccountCmdSet):
     """
