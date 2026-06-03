@@ -164,7 +164,6 @@ class CmdHorseStop(Command):
         for s in list(room.scripts.all()):
             if isinstance(s, RockingHorseScript):
                 # Stop messages
-                pace = getattr(room.obj, "horse_pace", "steady") if hasattr(s, "obj") else "steady"
                 try:
                     pace = getattr(room.db, "horse_pace", "steady") or "steady"
                     zone_name = getattr(room.db, "horse_zone", "horse")
