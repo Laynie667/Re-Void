@@ -63,17 +63,25 @@ _ROOMS = [
      "under an open seat. A hose coils by the drains. This is where the facility's stock is put "
      "when a hole — any hole — is needed for relief, and where the staff and the other livestock "
      "come to use it."),
+    ("showroom",     "The Facility — The Showroom",
+     "|wA bright, carpeted sales floor with a raised, lit display block at its centre and a wall "
+     "of one-way glass along one side.|n It is the only tasteful room in the place — soft "
+     "lighting, a podium, a brass rail — staged like a high-end dealership, because that is what "
+     "it is. Stock is brought up here to be posed, appraised, and sold: priced by yield and get "
+     "and grade, bid on by buyers you cannot see behind the glass, and walked back down owned by "
+     "someone new. A discreet brass plate on the block reads LOT IN VIEWING."),
 ]
 
 # Adjacency (non-linear): which rooms connect to which.
 _EXITS = {
     "lobby":        ["floor"],
-    "floor":        ["lobby", "pens", "conditioning", "dairy", "restroom"],
+    "floor":        ["lobby", "pens", "conditioning", "dairy", "restroom", "showroom"],
     "pens":         ["floor", "pigsty"],
     "conditioning": ["floor", "dairy"],
     "dairy":        ["floor", "pigsty"],
     "pigsty":       ["pens", "dairy", "restroom"],
     "restroom":     ["floor", "pigsty"],
+    "showroom":     ["floor"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -567,6 +575,68 @@ _ROOM_ZONES = {
             ambient=["Water trickles to the drain and is gone. The block is built to be sluiced.",
                      "The hose drips against the tile, coiled and waiting for the end of shift."]),
     },
+    "showroom": {
+        "block": _z(
+            "A raised, lit display block stands at the centre of the carpet, a brass rail around "
+            "it and a turntable set into the floor, angled and spotlit so whatever's posed on it "
+            "is shown from every side at once.",
+            summary="a lit display block with a turntable",
+            study=[
+                "The block rotates slowly when occupied, so the buyers behind the glass get every "
+                "angle without having to move. Spread, lit, turned — a body on it isn't looked at "
+                "so much as *inspected*, the way you'd walk around a car.",
+                "A brass plate is bolted to the rail: LOT IN VIEWING, with a slot beneath for a "
+                "card. The card has your spec on it. The card has your price on it.",
+            ],
+            handle={"block": "|xYou step up onto the block and the turntable takes you, slow and "
+                            "smooth, into the spotlight — lit, raised, turned for the glass, every "
+                            "part of you offered to eyes you can't see, posed like merchandise "
+                            "because that is precisely what you are up here.|n"}),
+        "card": _z(
+            "A printed spec card sits in the rail's slot and on the wall display — the lot's "
+            "particulars in clean sans-serif: grade, yield, get dropped, capabilities, and, in "
+            "bold at the bottom, an asking price.",
+            summary="the lot's spec card and price",
+            study=[
+                "It reads like a livestock listing because it is one: your grade, your litres, "
+                "your litters, what your holes can take, all rendered as selling points. There's "
+                "no line for anything you'd have called yourself. None of that priced.",
+                "The asking price updates as you're worked — every litre milked, every litter "
+                "dropped, every hole trained looser nudges the figure. You can watch yourself "
+                "appreciate as an asset in real time. Some find that the worst part.",
+            ],
+            handle={"card": "|xYou pick the spec card out of the slot and read yourself the way a "
+                            "buyer would — grade, yield, get, gape, and a price in bold — a whole "
+                            "person rendered as a number a stranger might find reasonable.|n"}),
+        "glass": _z(
+            "One long wall is a sheet of one-way glass, mirror on this side, the buyers' gallery "
+            "dim behind it — shapes, the red wink of a bid-button, the occasional silhouette "
+            "leaning in to look closer.",
+            summary="a wall of one-way buyers' glass",
+            study=[
+                "You can't see them; they can see all of you. The asymmetry is the product. You "
+                "perform for a darkness that's appraising you and never has to show you a face or "
+                "a reason.",
+                "Now and then a light blinks behind the glass — a bid, raised. The number on your "
+                "card ticks. Somewhere in the dark, someone has decided what you're worth to them, "
+                "and it is both more and less than you'd have guessed.",
+            ],
+            ambient=["A bid-light winks red behind the glass, and the price on the card ticks up.",
+                     "A silhouette leans close to the glass, studies the lot, and sits back."]),
+        "lots": _z(
+            "Other stock waits its turn along the rail — penned, tagged, graded — a row of the "
+            "facility's livestock kept here for comparison and sale, each with its own card.",
+            summary="other lots awaiting sale",
+            study=[
+                "They're posed like you, tagged like you, priced like you — and you find yourself "
+                "reading their cards against your own, sizing up the competition, before you catch "
+                "what you're doing and what it means that you're doing it.",
+                "One's heavily pregnant and going for a premium. One's graded higher than you and "
+                "knows it. The ranking is the point: stock that competes to sell is stock that's "
+                "stopped trying to do anything but.",
+            ],
+            ambient=["A higher-graded lot is led past to the block, and the gallery stirs."]),
+    },
     "pigsty": {
         "wallow": _z(
             "The floor is churned mud and slop, warm and reeking, deep enough to kneel in and "
@@ -694,6 +764,19 @@ _ROOM_NPCS = {
          "occasional rap of impatient knuckles, the shuffle of someone stepping up. You never "
          "see a face. That is the entire point of the wall."),
     ],
+    "showroom": [
+        ("the auctioneer", "attendant", "A smooth, well-dressed auctioneer with a headset and a "
+         "laser pointer, working the block like a luxury salesman — because to them that's the "
+         "job. They walk the buyers through your particulars in a warm, practiced patter, "
+         "pointing out your features, talking your price up, never once addressing you, because "
+         "the lot doesn't need to be talked to, only talked about."),
+        ("the gallery", "resident", "Behind the one-way glass, the buyers: shapes in the dim, "
+         "the occasional lean-in, the red wink of a bid. You never see a face — only the prices "
+         "they put on you, climbing in the dark."),
+        ("a premium lot", "resident", "Another of the facility's stock waits along the rail, "
+         "posed and tagged and heavily pregnant, going for a premium and placid about it — what "
+         "a lot looks like once it's stopped being anything but a lot."),
+    ],
 }
 
 
@@ -729,6 +812,10 @@ _ROOM_MECHANICS = {
                   "The frame folds you face-up beneath the seat and locks. You are in service now; you hold still and you catch what comes."),
         "wall":  ("seat", 1, "the glory-hole rail", "kneeling at the holed wall, mouth at working height"),
         "urinal":("seat", 1, "the urinal fixture", "clamped face-up under the trough's run"),
+    },
+    "showroom": {
+        "block": ("restrain", 1, "the display block",
+                  "The block's clamps take your wrists and ankles and the turntable starts to turn. You are posed, lit, and on offer; you hold the pose because the pose is the product."),
     },
 }
 
@@ -771,6 +858,12 @@ _ROOM_AMBIENT = {
         "|xKnuckles rap the partition. Someone's been waiting. Someone's always waiting.|n",
         "|xThe trough trickles toward the drain. The reek of ammonia is kept, not cleaned.|n",
         "|xThe custodian ticks the use-tally without looking, and moves on.|n",
+    ],
+    "showroom": [
+        "|xThe display block turns its slow half-revolution, and the spotlight follows.|n",
+        "|xA bid-light winks red behind the glass; somewhere a number that is you goes up.|n",
+        "|xThe auctioneer's patter drifts over — warm, practiced, talking up the lot to the dark.|n",
+        "|xA buyer leans close to the one-way glass, studies the lot a long moment, and sits back.|n",
     ],
 }
 
@@ -1040,6 +1133,37 @@ _SWINEHERD_TRIGGERS = {
         "always coming to use you down here, and I've got hosing to do.\"", "say"),
 }
 
+# The auctioneer — runs the Showroom. Talks about her, never to her; to them she
+# is a lot with features and a price, and the whole patter is selling.
+_AUCTIONEER_TRIGGERS = {
+    "showroom": ("\"Welcome to viewing,\" the auctioneer says smoothly, not to you — to the "
+        "glass. \"This is where the facility realises value. Every lot up here is graded, "
+        "specced, and offered. You're not visiting. You're inventory being moved.\"", "say"),
+    "price": ("The auctioneer taps your card without looking at you. \"Your figure? Function of "
+        "grade, yield, get dropped, and what your holes take. It climbs every time you're "
+        "worked. Pleasing, isn't it, watching yourself appreciate. The buyers think so.\"", "emote"),
+    "sold": ("\"When the gavel falls you're walked back down owned by someone new — staff, a "
+        "private party, the breeding concern, whoever bid highest.\" A smooth smile at the glass. "
+        "\"Ownership's just a line in a ledger to us. To you it's everything. Funny, that.\"",
+        "say"),
+    "buyers": ("\"Behind the glass. You won't see them; they see all of you.\" The auctioneer "
+        "gestures grandly at the mirror. \"Discretion is part of the price. A buyer likes to "
+        "appraise a lot without the lot appraising back. You understand. Or you don't — doesn't "
+        "matter for the sale.\"", "emote"),
+    "bethany": ("\"Ah — intake's put a standing bid on you. The futa from the front desk. She "
+        "does that, with the ones she takes a shine to.\" A knowing look at the glass. \"She "
+        "usually wins. She has... priorities the facility likes to keep happy.\"", "say"),
+    "lots": ("\"Comparison stock. We sell in a room full of other lots on purpose — a thing "
+        "that can see it's being ranked tries harder to place well. You're already reading their "
+        "cards against yours. That's the room working.\"", "emote"),
+    "leaving": ("\"Out? You'll leave this room, certainly — on a lead, with a new owner. That's "
+        "the only exit the Showroom offers.\" The gavel taps. \"Up on the block. You're next.\"",
+        "emote"),
+    "help": ("\"Ask about the showroom, your price, being sold, the buyers, the other lots. Or "
+        "simply pose and turn and let the figure climb. The lot that sells itself fetches "
+        "most.\"", "say"),
+}
+
 # Residents are ambient props — set with a flat per-key 'look' flavour.
 _RESIDENT_ROLES = {"resident"}
 
@@ -1159,6 +1283,8 @@ def _furnish(room, key, owner):
                 _tree = _DAIRYHAND_TRIGGERS
             elif nkey.lower() == "the swineherd":
                 _tree = _SWINEHERD_TRIGGERS
+            elif nkey.lower() == "the auctioneer":
+                _tree = _AUCTIONEER_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
@@ -1587,7 +1713,8 @@ def force_clear(owner):
         _preg_clear(owner)
     except Exception: pass
     for k in ("pregnancy", "belly_desc_backup", "pregnancy_belly", "cycle_day",
-              "offspring_progress", "offspring_counts", "offspring_roster"):
+              "offspring_progress", "offspring_counts", "offspring_roster",
+              "facility_owner", "sale_price"):
         try: setattr(d, k, None)
         except Exception: pass
     # clear facility freeform marks

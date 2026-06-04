@@ -453,6 +453,52 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── The Showroom: appraised and sold ──
+_SHOW_BEATS = [
+    "{t} is led up onto the lit display block and the turntable takes her, slow and smooth, "
+    "into the spotlight — clamped posed and spread, rotated for the dark gallery behind the "
+    "glass, every part of her shown and shown again while the auctioneer's patter warms up.",
+    "Posed on the block under the lights, {t} is turned for the buyers she can't see — the "
+    "auctioneer walking the glass through her points with a laser dot that crawls over her "
+    "tits, her belly, her holes, the way you'd itemise a vehicle.",
+    "The block lifts {t} into view and rotates her for the gallery, and she holds the pose "
+    "because the pose is the product — lit, spread, specced, and offered to a wall of buyers "
+    "who study her in silence and answer only in bids.",
+]
+_SHOW_APPRAISE = [
+    "\"Grade's good, get's proven, holes are trained to take anything you'd care to put in "
+    "them,\" the auctioneer purrs to the glass, laser dot crawling. \"We're opening this lot at "
+    "|w{price}|c. Do I hear it? — I hear it.\" The dot lingers on {t}'s belly. \"More if she's "
+    "carrying. She's carrying.\"",
+    "\"Yield's documented, conditioning's deep, temperament's exactly as compliant as you'd "
+    "want,\" the auctioneer says, and taps {t}'s card. \"Appraised at |w{price}|c and climbing "
+    "every cycle we work her. A genuinely appreciating asset. Bid accordingly.\"",
+    "The auctioneer reads {t} off her own spec card to the dark — litres, litters, capability, "
+    "grade — and lands on the figure: \"|w{price}|c. A fair price for a finished product. "
+    "Look at her. She's barely arguing anymore. That's the premium right there.\"",
+]
+_SHOW_SOLD = [
+    "The gavel falls. \"SOLD — to {owner}, for |w{price}|R.\" A tag is wired to {t} on the spot, "
+    "and just like that she's walked back down off the block owned by someone new, a line in a "
+    "ledger changed and her whole world with it.",
+    "A bid-light goes solid and the auctioneer beams at the glass. \"And she's away — to {owner}, "
+    "|w{price}|R. Pleasure doing business.\" {t} is tagged SOLD and led off the block; the "
+    "facility has realised her value, and she belongs to {owner} now.",
+    "\"Going once. Twice. Sold to {owner}.\" The word lands on {t} like a brand: bought, for "
+    "|w{price}|R, by someone in the dark she'll never see — ownership transferred over her head "
+    "while she's posed and turning and not consulted at all.",
+]
+_SHOW_DEGRADE = [
+    "You read your own price off the card and feel the trained thing instead of the human one: "
+    "not horror at being for sale, but a small anxious hope that the number's high enough. A "
+    "good lot wants to fetch well. They made you a good lot.",
+    "Lit and turning and appraised, you catch yourself holding the pose better, presenting "
+    "cleaner, wanting the dark to like what it sees. The wanting is the sale. The wanting is "
+    "what they were always really selling.",
+    "Somewhere behind the glass a number that is you climbs, and you are proud of it, and the "
+    "pride is the worst thing in the room, and you have it anyway.",
+]
+
 # ── Lineage: her own get, grown, breeding her ──
 _LINEAGE_BREED = [
     "It's one of her own get that mounts her this time — grown now, proven, put to the line "
@@ -2070,6 +2116,76 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── The Showroom: appraised, priced off her own stats, and sold ──
+    _GRADE_ORDER = ["Unprocessed", "Intake", "Breaking In", "Breeding Stock",
+                    "Broodmare", "Perfected Livestock"]
+
+    def _appraise(self, target):
+        """Compute her sale price from her own particulars — grade, get, yield,
+        trained capabilities, conditioning. Stored on db.sale_price."""
+        grade = getattr(target.db, "facility_grade", None) or "Unprocessed"
+        gi = self._GRADE_ORDER.index(grade) if grade in self._GRADE_ORDER else 0
+        counts = sum(int(v) for v in (getattr(target.db, "offspring_counts", None) or {}).values())
+        cond = float(getattr(target.db, "conditioning", 0) or 0)
+        milk = float(getattr(target.db, "milk_baseline_ml", 0) or 0) / 1000.0
+        caps = 0
+        try:
+            from world.gang_breeding import hole_capabilities, animal_holes
+            for z in animal_holes(target).values():
+                if z:
+                    caps += len(hole_capabilities(target, z))
+        except Exception:
+            pass
+        gravid = 800 if getattr(target.db, "pregnancy", None) else 0
+        price = int(1200 * gi + 220 * counts + 260 * caps + 6 * cond + 40 * milk + gravid + 500)
+        target.db.sale_price = price
+        return price
+
+    def _showroom(self, room, target, t, cond):
+        """Posed on the block, appraised aloud, bid on through the glass, and — when
+        the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her)."""
+        price = self._appraise(target)
+        room.msg_contents("|W" + random.choice(_SHOW_BEATS).format(t=t) + "|n")
+        room.msg_contents("|c" + random.choice(_SHOW_APPRAISE).format(t=t, price=f"{price:,}")
+                          + "|n")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 1.0 + cond * 0.004, source="showroom")
+        except Exception:
+            pass
+        # The gavel falls sometimes — and she's sold, owned by someone new.
+        if not getattr(target.db, "facility_owner", None) and random.random() < 0.30:
+            self._sell(room, target, t, price)
+        else:
+            target.msg("  |m" + random.choice(_SHOW_DEGRADE).format(t=t) + "|n")
+
+    def _sell(self, room, target, t, price):
+        # Intake's futa keeps a standing bid; she usually wins the ones she wants.
+        bethany_bid = getattr(target.db, "bethany_owned", False) or random.random() < 0.4
+        if bethany_bid:
+            owner, suffix = "Bethany", "— Bethany's"
+            target.db.bethany_owned = True
+        else:
+            owner = random.choice(["a private breeding concern", "an anonymous buyer",
+                                   "the deep-stock division", "a kennel syndicate"])
+            suffix = "— Sold Stock"
+        target.db.facility_owner = owner
+        # Back up the title once so the reset restores it; stamp the new owner.
+        if not getattr(target.db, "facility_title_backup", None):
+            target.db.facility_title_backup = {
+                "faction": getattr(target.db, "title_faction", "") or "",
+                "suffix":  getattr(target.db, "title_suffix", "") or "",
+            }
+        target.db.title_suffix = suffix
+        room.msg_contents("|R" + random.choice(_SHOW_SOLD).format(
+            t=t, owner=owner, price=f"{price:,}") + "|n")
+        try:
+            from world.gang_breeding import record_mark
+            record_mark(target, f"a sale tag wired to her — SOLD, lot price {price:,}, to {owner}",
+                        mode="on")
+        except Exception:
+            pass
+
     # ── The Dairy & Output: milked, measured, displayed as product ──
     def _dairy(self, room, target, t, cond):
         """Her output room: actually milked here (real drain), her totals thrown in
@@ -2612,6 +2728,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "toilet":
                 room.msg_contents(f"\n|w━━━━ SANITATION BLOCK ━━━━|n")
                 self._toilet(room, char, t, cond)
+            elif phase == "show":
+                room.msg_contents(f"\n|w━━━━ THE SHOWROOM ━━━━|n")
+                self._showroom(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 self._dairy(room, char, t, cond)
@@ -2699,6 +2818,10 @@ class RealmCycleScript(FacilityScript):
 
         # Put on relief duty in the sanitation block now and then.
         add("restroom", "toilet", 2)
+
+        # Brought up to the showroom to be appraised and sold, more so once graded.
+        from world.factions import get_standing as _gs
+        add("showroom", "show", 1 + (2 if _gs(char) >= 150 else 0))
 
         if not weights:
             seq = _REALM_SEQUENCE[int(self.db.phase_index or 0) % len(_REALM_SEQUENCE)]
