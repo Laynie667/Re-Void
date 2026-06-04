@@ -453,6 +453,57 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── The Sanitation Block: glory wall, meat-toilet, urinal ──
+_TOILET_WALL = [
+    "{t} is put on the rail at the glory wall and the queue starts. A cock comes through the "
+    "hole at mouth height and she services it, and the moment it spurts and withdraws another "
+    "takes its place, and another — no faces, no names, no end to the line, just hole after "
+    "anonymous hole using her mouth and her cunt and her ass through the partition while a tally "
+    "on the wall climbs.",
+    "Cocks push through the worn holes one after another and {t} is made to take each one "
+    "wherever it's aimed — throat, cunt, ass — an anonymous relief-hole for a queue she can't "
+    "see and will never meet, used and spurted in and abandoned for the next, over and over, the "
+    "wall indifferent as a vending machine and she the thing it dispenses.",
+    "The wall keeps her busy. Whoever's queued on the far side feeds a cock through, uses the "
+    "hole it's given, finishes, and is replaced — staff, stock, no telling — {t} milked of "
+    "service by strangers' cocks until her face and holes are a mess of other people's spend and "
+    "the tally above her hole ticks up and up.",
+]
+_TOILET_SEAT = [
+    "{t} is locked face-up in the meat-toilet frame beneath the open seat, and the block uses "
+    "her as exactly that — someone sits and empties into her mouth and she swallows because the "
+    "frame leaves nothing else to do, the unit in service, catching what the seat is for.",
+    "The frame holds {t} mouth-up under the gap and the staff and stock come and go above her, "
+    "sitting, using the toilet, and the toilet is her — cum and piss down her throat on the "
+    "schedule of other people's needs, a placard at her hip reading IN SERVICE and a tally "
+    "filling up.",
+    "Fixed under the seat, {t} is a fixture now — used from above without ceremony or a glance, "
+    "made to take and swallow whatever comes down through the gap, hold still, stay in service, "
+    "and be grateful she's still useful enough to be plumbing.",
+]
+_TOILET_PISS = [
+    "Someone steps up to the trough and {t}'s clamped face is right under the run — a hot stream "
+    "of piss splashing across her lips and into her open mouth, and she swallows it because the "
+    "clamp gives her no angle to do anything else, watered by a stranger who doesn't break stride.",
+    "The cistern hisses and {t} is pissed into — a long hot stream down her throat, into her "
+    "belly, the custodian noting that hydration's a perk and the unit should be grateful, while "
+    "her stomach sloshes with someone else's piss and the trough runs on.",
+    "They piss on her and in her without ceremony — across her tits, her face, into her open "
+    "mouth — marking her, using her, the reek of it soaking into her skin and hair, kept on her "
+    "until the end of shift because filthy tells the next user exactly what she is.",
+]
+_TOILET_DEGRADE = [
+    "You've stopped tasting them individually. It's just warmth and salt and the next one. You "
+    "are where the facility comes to be rid of things, and your throat works on its own now, "
+    "swallowing on schedule, no part of you needing to be asked.",
+    "Held full and used and reeking, you understand the lesson of this room without anyone "
+    "saying it: even your bladder isn't yours, even your disgust isn't yours, even being a "
+    "toilet is a kind of being useful, and useful is the only thing they left you.",
+    "A fixture. In service. The phrase has stopped being humiliating and started being simply "
+    "true, which is so much worse, and your mouth opens for the next one before your mind has "
+    "weighed in at all.",
+]
+
 # ── The Conditioning Cell: scripted hypnotic induction ──
 # Real technique, implied through the prose: fixation, paced breathing, countdown
 # and staircase deepeners, fractionation, confusion/overload, anchoring,
@@ -1919,6 +1970,89 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── The Sanitation Block: used as a relief-hole, toilet, and urinal ──
+    def _toilet(self, room, target, t, cond):
+        """The restroom uses her as plumbing: the glory wall (anonymous cocks),
+        the meat-toilet frame (used from the seat), and the urinal (pissed into and
+        held full). Real deposits (semen via gang_inseminate, urine to the fluid
+        bank + bladder), real filth marks, real bladder backing."""
+        from world.gang_breeding import animal_holes, apply_filth
+        ah = animal_holes(target)
+        holes = [z for z in ah.values() if z]
+        mouth = ah.get("mouth")
+        if not holes:
+            return
+
+        mode = random.choice(["wall", "wall", "seat", "urinal"])
+
+        if mode == "urinal":
+            room.msg_contents("|y" + random.choice(_TOILET_PISS).format(t=t) + "|n")
+            ml = random.uniform(250, 650)
+            self._take_piss(target, ml)
+        else:
+            pool = _TOILET_WALL if mode == "wall" else _TOILET_SEAT
+            room.msg_contents("|R" + random.choice(pool).format(t=t) + "|n")
+            # Anonymous contributors use her holes for real (cum deposits).
+            for z in random.sample(holes, k=random.randint(1, len(holes))):
+                try:
+                    from world.gang_breeding import gang_inseminate
+                    gang_inseminate(target, z, contributors=random.randint(1, 3),
+                                    fluid_type="semen", species="contributor")
+                except Exception:
+                    pass
+            # The seat and the queue piss in her too, often.
+            if random.random() < 0.6:
+                room.msg_contents("|y" + random.choice(_TOILET_PISS).format(t=t) + "|n")
+                self._take_piss(target, random.uniform(150, 450))
+
+        # Filth, held-full ache, conditioning, the internal lesson.
+        if random.random() < 0.5:
+            apply_filth(target)
+        bl = float(getattr(target.db, "bladder_ml", 0) or 0)
+        if bl >= 500:
+            target.msg("|y  your own bladder is at bursting and they will not let the unit "
+                       "relieve itself on shift — you ache, and you hold, and you learn it "
+                       "isn't yours either.|n")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 1.5 + cond * 0.008, source="toilet")
+        except Exception:
+            pass
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(target); add_arousal(target, 5.0)
+        except Exception:
+            pass
+        target.msg("  |m" + random.choice(_TOILET_DEGRADE).format(t=t) + "|n")
+
+    def _take_piss(self, target, ml):
+        """Real watersports: bank the urine taken into her + fill her held bladder."""
+        try:
+            from typeclasses.fluid_bank import GlobalFluidBank
+            GlobalFluidBank.get().deposit(target, ml, "urine", None)
+        except Exception:
+            pass
+        # She's held full — her own bladder isn't emptied; it climbs.
+        target.db.bladder_ml = float(getattr(target.db, "bladder_ml", 0) or 0) + ml * 0.5
+        # Cumflate/fill her belly with what's pumped in, if she has the channel.
+        try:
+            from typeclasses.inflation_item import add_inflation_volume
+            zones = getattr(target.db, "zones", None) or {}
+            for zn, zd in zones.items():
+                if ((zd or {}).get("mechanics", {}) or {}).get("inflation"):
+                    add_inflation_volume(target, zn, ml, "urine")
+                    break
+        except Exception:
+            pass
+        # Mark her piss-soaked once.
+        if not getattr(target.db, "pen_filth", False):
+            try:
+                from world.gang_breeding import record_mark
+                record_mark(target, "piss-soaked and reeking of ammonia — watered and marked "
+                            "by the block, kept unrinsed in service", mode="on")
+            except Exception:
+                pass
+
     # ── Scene picker — the breeding phase rolls one of these each beat ──
     def _gang(self, room, target, t, cond):
         orifices = self._orifices(target)
@@ -2335,6 +2469,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "condition":
                 room.msg_contents(f"\n|w━━━━ CONDITIONING ━━━━|n")
                 self._hypno(room, char, t, cond)
+            elif phase == "toilet":
+                room.msg_contents(f"\n|w━━━━ SANITATION BLOCK ━━━━|n")
+                self._toilet(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 if getattr(char.db, "breeding_quota", None):
@@ -2415,6 +2552,9 @@ class RealmCycleScript(FacilityScript):
 
         # Shown her output now and then.
         add("dairy", "display", 2)
+
+        # Put on relief duty in the sanitation block now and then.
+        add("restroom", "toilet", 2)
 
         if not weights:
             seq = _REALM_SEQUENCE[int(self.db.phase_index or 0) % len(_REALM_SEQUENCE)]

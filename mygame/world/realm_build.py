@@ -56,16 +56,24 @@ _ROOMS = [
      "one wall; the floor is churned muck. This is where the lowest stock is kept on all fours "
      "to wallow, slopped and hosed and rutted and put back. It is also, the board notes, a "
      "place graded stock can be *sent* — a reminder, and a destination."),
+    ("restroom",     "The Facility — Sanitation Block",
+     "|wA white-tiled wet-room of drains and troughs and holed partitions, bleach laid thin "
+     "over the reek of piss and stale spend.|n One wall is a row of waist-height holes worn "
+     "smooth at the rim, a kneeling-pad bolted beneath. A low frame in the centre locks a body "
+     "under an open seat. A hose coils by the drains. This is where the facility's stock is put "
+     "when a hole — any hole — is needed for relief, and where the staff and the other livestock "
+     "come to use it."),
 ]
 
 # Adjacency (non-linear): which rooms connect to which.
 _EXITS = {
     "lobby":        ["floor"],
-    "floor":        ["lobby", "pens", "conditioning", "dairy"],
+    "floor":        ["lobby", "pens", "conditioning", "dairy", "restroom"],
     "pens":         ["floor", "pigsty"],
     "conditioning": ["floor", "dairy"],
     "dairy":        ["floor", "pigsty"],
-    "pigsty":       ["pens", "dairy"],
+    "pigsty":       ["pens", "dairy", "restroom"],
+    "restroom":     ["floor", "pigsty"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -488,6 +496,77 @@ _ROOM_ZONES = {
             summary="the output ledger",
             ambient=["A figure on the board updates itself upward. It only ever goes one way."]),
     },
+    "restroom": {
+        "wall": _z(
+            "One wall is a partition of waist-height holes, a dozen of them, rims worn smooth and "
+            "pale, a padded kneeling-rail bolted along the base. Cocks come through from the far "
+            "side — staff, stock, whoever's queued — and there is no telling whose.",
+            summary="a glory-hole partition",
+            study=[
+                "You can't see the other side, and that's the design: the hole on the wall has "
+                "no face, no name, no one to appeal to. Just the next cock through the next hole, "
+                "and you on the rail, and your mouth at working height.",
+                "Above each hole a small worn placard: a number, and a tally scratched beneath "
+                "it. The numbers aren't holes. They're residents. The tallies are uses.",
+                "The rim of each hole is stained and slick. They are used constantly. The pad "
+                "under them is shaped to the dents of a great many knees.",
+            ],
+            handle={"wall": "|xYou kneel to the rail and a cock pushes through the hole in front "
+                            "of you, already hard, already leaking, no face behind it — just "
+                            "there, expectant, and the queue shifting on the far side waiting "
+                            "for you to get to work.|n"},
+            ambient=["A cock pushes through one of the holes, waits a beat, and withdraws — used, "
+                     "or impatient.",
+                     "Knuckles rap the far side of the partition. The queue is not patient."]),
+        "stall": _z(
+            "In the centre a low steel frame locks a body face-up beneath an open seat — a "
+            "toilet built around a person, mouth and holes positioned under the gap to catch "
+            "whatever the seat is used for.",
+            summary="a meat-toilet frame under an open seat",
+            study=[
+                "The seat above is ordinary, institutional, lidless. What's underneath it isn't. "
+                "The frame holds you fixed mouth-up beneath the gap, and the facility's staff and "
+                "stock sit and use you as exactly what the frame makes you: the toilet.",
+                "There's a placard riveted to the frame: THIS UNIT IS IN SERVICE. Below it, a "
+                "use-tally, filled in by hand. The unit is you. The service is everything that "
+                "comes through the seat.",
+            ],
+            handle={"stall": "|xYou touch the meat-toilet frame — cold steel, contoured to fold a "
+                            "body face-up beneath the seat, throat and holes lined up under the "
+                            "gap, restraints to keep the unit in service and still while it's "
+                            "used.|n"}),
+        "urinal": _z(
+            "A long shallow trough is set into the wall at hip height, tiled and stained, a "
+            "drain at one end — and a fixture at the other shaped to hold a face up to catch the "
+            "stream, so the trough need never go to waste.",
+            summary="a trough urinal with a face-fixture",
+            study=[
+                "It's a urinal, plainly. The only unusual fitting is the padded clamp at the "
+                "head of it, angled to hold a mouth open under the lip where the stream runs — "
+                "so the stock fixed there is watered by everyone who uses the trough.",
+                "The tile is yellowed at the waterline and scrubbed pale above it. It is used "
+                "often and rinsed rarely. You are not, the placard notes, to be rinsed until the "
+                "shift ends.",
+            ],
+            handle={"urinal": "|xYou run a hand along the cold trough — slick, stained, reeking "
+                            "of ammonia under the bleach, the head-clamp at the end hanging open "
+                            "and waiting to hold a face up under the run.|n"},
+            ambient=["The trough drips and trickles toward the drain. The reek of it is kept, "
+                     "not cleaned.",
+                     "Somewhere a cistern refills with a long hiss, and is, eventually, used."]),
+        "drain": _z(
+            "The whole floor pitches to a central grated drain, the tile worn pale around it, a "
+            "hose coiled alongside for sluicing down the unit and the room between shifts.",
+            summary="a central floor drain and sluice hose",
+            study=[
+                "Everything in here runs to this one point — piss, spend, rinse, all of it — and "
+                "is gone. The room is built to be hosed out, and so, between uses, are you.",
+                "The hose is the only thing in the block that makes anything cleaner, and it is "
+                "used on the room far more often than on the unit fixed in it.",
+            ],
+            ambient=["Water trickles to the drain and is gone. The block is built to be sluiced.",
+                     "The hose drips against the tile, coiled and waiting for the end of shift."]),
+    },
     "pigsty": {
         "wallow": _z(
             "The floor is churned mud and slop, warm and reeking, deep enough to kneel in and "
@@ -605,6 +684,16 @@ _ROOM_NPCS = {
         ("the swineherd", "attendant", "A swineherd in waders who slops the trough, hoses the "
          "wallow, and treats what's kept here exactly as what it is."),
     ],
+    "restroom": [
+        ("the custodian", "attendant", "A bored custodian in rubber gloves and an apron, "
+         "clipboard in hand, who keeps the block stocked and the unit in service and ticks the "
+         "use-tally without looking at it. To them you are plumbing — a fixture that needs "
+         "checking, logging, and hosing down at end of shift, and nothing that needs a name."),
+        ("the queue", "resident", "Beyond the partition, a shifting line of the facility's "
+         "staff and stock waits its turn at the holes — shapes through frosted glass, the "
+         "occasional rap of impatient knuckles, the shuffle of someone stepping up. You never "
+         "see a face. That is the entire point of the wall."),
+    ],
 }
 
 
@@ -634,6 +723,12 @@ _ROOM_MECHANICS = {
     "pigsty": {
         "wallow": ("seat", 6, "the wallow", "on all fours in the muck"),
         "trough": ("seat", 4, "the trough", "bent over the trough, face down"),
+    },
+    "restroom": {
+        "stall": ("restrain", 1, "the meat-toilet frame",
+                  "The frame folds you face-up beneath the seat and locks. You are in service now; you hold still and you catch what comes."),
+        "wall":  ("seat", 1, "the glory-hole rail", "kneeling at the holed wall, mouth at working height"),
+        "urinal":("seat", 1, "the urinal fixture", "clamped face-up under the trough's run"),
     },
 }
 
@@ -671,6 +766,44 @@ _ROOM_AMBIENT = {
         "|xThe trough is slopped, twice a cycle, whether anything's ready for it or not.|n",
         "|xThe hose drips against the wall. The reek is kept warm on purpose.|n",
     ],
+    "restroom": [
+        "|xA cock pushes through one of the wall-holes, waits, and withdraws. The queue shuffles forward.|n",
+        "|xKnuckles rap the partition. Someone's been waiting. Someone's always waiting.|n",
+        "|xThe trough trickles toward the drain. The reek of ammonia is kept, not cleaned.|n",
+        "|xThe custodian ticks the use-tally without looking, and moves on.|n",
+    ],
+}
+
+# The custodian runs the Sanitation Block. To them she is plumbing — a fixture in
+# service, logged and hosed, never named.
+_CUSTODIAN_TRIGGERS = {
+    "restroom": ("\"Sanitation,\" the custodian says, not looking up from the clipboard. "
+        "\"Wall's for relief, frame's the toilet, trough's the urinal. Whichever's needed, "
+        "that's where you go. You're not here to be bred. You're here to be *used up* and "
+        "rinsed.\"", "say"),
+    "wall": ("\"Glory wall. You kneel, they come through, you service whatever does. No faces, "
+        "no names — theirs or yours.\" A shrug. \"Staff, stock, doesn't matter. A hole on the "
+        "rail doesn't get to be choosy. That's rather the comfort of it, most find.\"", "emote"),
+    "toilet": ("\"The frame puts you face-up under the seat and you stay there, in service, "
+        "catching what the seat's for.\" The custodian ticks a box. \"Cum, piss, the lot. A "
+        "good unit doesn't spill and doesn't complain. You'll learn to swallow on schedule.\"",
+        "say"),
+    "urinal": ("\"Trough fixture. We clamp your face up under the run and you're watered by "
+        "everyone who uses it.\" Flat. \"Hydration's a perk, really. You won't be let up to "
+        "drink any other way, so. Open up when you hear the cistern.\"", "emote"),
+    "piss": ("\"You'll be pissed in and pissed on, yes. Held full, too — we don't let the unit "
+        "relieve itself on shift, so you ache and you hold and you learn your own bladder isn't "
+        "yours either.\" A thin smile. \"Watersports, the brochure calls it. We call it Tuesday.\"",
+        "emote"),
+    "clean": ("\"You get hosed at end of shift. Not before. Walking around filthy and reeking "
+        "between uses is the point — it tells the next user exactly what you are and that you're "
+        "in service.\"", "say"),
+    "leaving": ("\"Out? You're a fixture. Fixtures don't leave, they get *decommissioned*, and "
+        "you're nowhere near worn out enough for that.\" The custodian caps a pen. \"Back under "
+        "the seat. The queue's building.\"", "emote"),
+    "help": ("\"Ask about the wall, the toilet, the urinal, the pissing, or getting clean. Or "
+        "save it — units that talk get the frame, and the frame keeps your mouth otherwise "
+        "occupied.\"", "say"),
 }
 
 
@@ -981,6 +1114,8 @@ def _furnish(room, key, owner):
                 _tree = _STOCKMAN_TRIGGERS
             elif nkey.lower() == "the conditioning tech":
                 _tree = _CONDTECH_TRIGGERS
+            elif nkey.lower() == "the custodian":
+                _tree = _CUSTODIAN_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
