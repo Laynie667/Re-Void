@@ -1587,7 +1587,7 @@ def force_clear(owner):
         _preg_clear(owner)
     except Exception: pass
     for k in ("pregnancy", "belly_desc_backup", "pregnancy_belly", "cycle_day",
-              "offspring_progress", "offspring_counts"):
+              "offspring_progress", "offspring_counts", "offspring_roster"):
         try: setattr(d, k, None)
         except Exception: pass
     # clear facility freeform marks

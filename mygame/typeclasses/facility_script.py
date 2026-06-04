@@ -453,6 +453,19 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── Lineage: her own get, grown, breeding her ──
+_LINEAGE_BREED = [
+    "It's one of her own get that mounts her this time — grown now, proven, put to the line "
+    "that made it — and it breeds {t} exactly as its sire did, the line folding back on itself "
+    "through her womb, a generation deeper and not the last.",
+    "Her own son-thing climbs onto {t} and ruts her with its sire's indifference, breeding the "
+    "next generation back into the body that dropped it. The handler logs it without comment. "
+    "This is the design. This is what the roster was always for.",
+    "The stud working {t} now has her own eyes, a little — her get, matured and returned to the "
+    "pens to breed its dam. It knots her and floods her with the line's own seed, and somewhere "
+    "a chart adds a generation and moves her quota further out of reach.",
+]
+
 # ── The Dairy & Output ──
 _DAIRY_BEATS = [
     "{t} is racked at the dairy station and the cups come down — her tits hooked up to the "
@@ -1866,10 +1879,22 @@ class FacilityScript(DefaultScript):
     def _is_oral(self, zone):
         return any(k in zone.lower() for k in ("mouth", "throat"))
 
+    def _is_breeder(self, o):
+        """A usable stud: any facility beast that isn't a still-juvenile offspring."""
+        if getattr(o.db, "facility_role", None) != "beast":
+            return False
+        if getattr(o.db, "is_offspring", False) and not getattr(o.db, "matured", False):
+            return False
+        return True
+
     def _find_breeder(self, room, species):
-        cands = [o for o in room.contents if getattr(o.db, "facility_role", None) == "beast"]
+        cands = [o for o in room.contents if self._is_breeder(o)]
         match = [o for o in cands if getattr(o.db, "species", None) == species]
         pool = match or cands
+        # Prefer her own matured get when present — the line breeds itself through her.
+        get = [o for o in (match or pool) if getattr(o.db, "is_offspring", False)]
+        if get and random.random() < 0.5:
+            return random.choice(get)
         return random.choice(pool) if pool else None
 
     def _provision_beast(self, npc, species):
@@ -1936,15 +1961,24 @@ class FacilityScript(DefaultScript):
         npc.db.penetrating = None
 
     def _breed_one(self, room, target, zone, species, cond, gape_mult=1.0):
-        """One real breeding of one hole: quota/offspring/deposit + real penetration."""
+        """One real breeding of one hole: quota/offspring/deposit + real penetration.
+        If the chosen breeder is her own matured get, the conception runs a generation
+        deeper — the line breeding itself through her."""
+        oral = self._is_oral(zone)
+        npc = self._find_breeder(room, species)
+        # Generation of any resulting pregnancy: her own get breed the next gen.
+        gen = 1
+        if npc and getattr(npc.db, "is_offspring", False):
+            gen = int(getattr(npc.db, "generation", 1)) + 1
+            t = target.db.rp_name or target.name
+            room.msg_contents("|R" + random.choice(_LINEAGE_BREED).format(t=t) + "|n")
         n = random.randint(2, 3 + int(cond // 30))
         try:
             from world.gang_breeding import gang_inseminate
-            gang_inseminate(target, zone, contributors=n, fluid_type="semen", species=species)
+            gang_inseminate(target, zone, contributors=n, fluid_type="semen",
+                            species=species, generation=gen)
         except Exception:
             pass
-        oral = self._is_oral(zone)
-        npc = self._find_breeder(room, species)
         if npc and not oral:
             self._real_penetrate(room, npc, target, zone, species)
         if gape_mult != 1.0:
@@ -1962,7 +1996,7 @@ class FacilityScript(DefaultScript):
         """Which animals the handler has on hand in this room, by species."""
         seen = []
         for o in (room.contents if room else []):
-            if getattr(o.db, "facility_role", None) == "beast":
+            if self._is_breeder(o):
                 sp = getattr(o.db, "species", None)
                 if sp and sp not in seen:
                     seen.append(sp)
@@ -2611,6 +2645,11 @@ class RealmCycleScript(FacilityScript):
             gestation_tick(char)
         except Exception:
             pass
+        # Her get age toward joining the stud line that breeds her.
+        try:
+            self._mature_get(char)
+        except Exception:
+            pass
         # Facility standing accrues SLOWLY from the processing — the slow burn.
         try:
             from world.factions import add_standing
@@ -2666,6 +2705,43 @@ class RealmCycleScript(FacilityScript):
             return seq
         keys = list(weights.keys())
         return random.choices(keys, weights=[weights[k] for k in keys], k=1)[0]
+
+    _GET_MATURE_AT = 6   # cycle beats before a juvenile joins the stud line
+
+    def _mature_get(self, char):
+        """Age her get; when one matures it's walked to the pens to join the stud
+        line that breeds her. The realm's cruellest loop, made mechanical."""
+        roster = list(getattr(char.db, "offspring_roster", None) or [])
+        if not roster:
+            return
+        realm = getattr(char.db, "realm", None) or {}
+        pens_ref = (realm.get("rooms") or {}).get("pens")
+        from evennia import search_object
+        pens = (search_object(pens_ref) or [None])[0] if pens_ref else None
+        for ref in list(roster):
+            o = (search_object(ref) or [None])[0]
+            if not o:
+                roster.remove(ref)
+                continue
+            if getattr(o.db, "matured", False):
+                continue
+            o.db.maturity = int(getattr(o.db, "maturity", 0) or 0) + 1
+            if o.db.maturity >= self._GET_MATURE_AT:
+                o.db.matured = True
+                sp = getattr(o.db, "species", "get")
+                gen = int(getattr(o.db, "generation", 1))
+                if pens and o.location != pens:
+                    try: o.move_to(pens, quiet=True)
+                    except Exception: pass
+                where = char.location
+                if where:
+                    tname = char.db.rp_name or char.name
+                    where.msg_contents(
+                        f"|RWord comes up from the pens: one of {tname}'s own {sp} get has "
+                        f"finished growing and been put to the stud line — gen {gen}, proven and "
+                        f"ready. It will be bred back to its dam like all the rest. The line "
+                        f"closes on her a little tighter.|n")
+        char.db.offspring_roster = roster
 
     def _drag(self, char, dest, t):
         old = char.location

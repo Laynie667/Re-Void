@@ -23,7 +23,7 @@ _ANON_NAMES = [
 
 def gang_inseminate(target, zone_name, contributors=3,
                     fluid_type="semen", volume_each=DEFAULT_VOLUME_EACH,
-                    species="contributor"):
+                    species="contributor", generation=1):
     """Inseminate `target`'s `zone_name` from multiple contributors at once.
 
     `species` attributes this successful breeding to a kind (hound/bull/boar/
@@ -82,9 +82,9 @@ def gang_inseminate(target, zone_name, contributors=3,
     if species in ("hound", "bull", "boar", "stallion"):
         try:
             from world.pregnancy import on_bred
-            on_bred(target, species)
+            on_bred(target, species, generation=generation)
         except Exception:
-            _maybe_offspring(target, species)
+            _maybe_offspring(target, species, generation=generation)
 
     # Route the combined volume into the zone as cumflation (belly swell).
     total = volume_each * len(donors)
@@ -275,6 +275,13 @@ def _birth_offspring(target, species, generation=1):
     o.db.species       = species
     o.db.is_offspring  = True
     o.db.generation    = generation
+    # Lineage: born juvenile, it matures into a stud that breeds its own dam.
+    o.db.matured       = False
+    o.db.maturity      = 0
+    o.db.dam_id        = target.id
+    roster = list(getattr(target.db, "offspring_roster", None) or [])
+    roster.append(o.dbref)
+    target.db.offspring_roster = roster
     lineage = ("by the facility's stud line" if generation <= 1
                else f"out of her own {species} get, {generation} generations deep")
     o.db.physical_desc = (
