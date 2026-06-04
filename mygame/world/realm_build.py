@@ -727,4 +727,6 @@ def force_clear(owner):
               if not str(k).startswith("facility mark")}
         d.freeform_items = ff
     except Exception: pass
-    owner.msg("|gForce-cleared. Speech, conditioning, triggers, marks, scripts, title — all reset.|n")
+    try: d.factions = {}
+    except Exception: pass
+    owner.msg("|gForce-cleared. Speech, conditioning, triggers, marks, scripts, title, standing — all reset.|n")

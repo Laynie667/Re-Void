@@ -121,7 +121,7 @@ _CONTRACT_BINDING = {
     "pet_triggers":           True,
     "pet_type":               "puppy",
     "broadcast_sensation":    "the facility",
-    "conditioning_on_wear":   18.0,
+    "conditioning_on_wear":   6.0,
     "forfeit_name":           True,
     "lock_conditioning":      True,
     "cum_receptacle":         True,
@@ -763,6 +763,7 @@ def run_facility_reset(caller, purge=False):
         caller.db.title_faction = _tb.get("faction", "")
         caller.db.title_suffix  = _tb.get("suffix", "")
         caller.db.facility_title_backup = None
+        caller.db.factions             = {}
         # Remove the REAL piercing items and the facility's freeform marks.
         try:
             from typeclasses.piercing_item import PiercingItem

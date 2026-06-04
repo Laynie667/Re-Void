@@ -611,3 +611,43 @@ class CmdProcess(Command):
 
 
 ALL_FACILITY_VERBS.append(CmdProcess)
+ALL_FACILITY_VERBS.append(CmdStanding)
+
+
+class CmdStanding(Command):
+    """
+    View your standing in The Facility (and any other faction).
+
+    Usage:
+        standing
+    """
+    key           = "standing"
+    aliases       = ["faction", "rep"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        factions = getattr(caller.db, "factions", None) or {}
+        if not factions:
+            caller.msg("|xYou hold no standing with any faction.|n")
+            return
+        lines = ["|w" + "═" * 40 + "|n", "|wSTANDING|n", "|w" + "═" * 40 + "|n"]
+        try:
+            from world.factions import FACILITY, get_facility_tier, next_threshold, get_standing
+        except Exception:
+            FACILITY = None
+        for name, val in factions.items():
+            if FACILITY and name == FACILITY:
+                grade, title = get_facility_tier(caller)
+                nxt, nxt_name = next_threshold(caller)
+                line = f"  |Y{name}|n: {int(val)}  — graded |Y{grade}|n"
+                if nxt:
+                    line += f"  (next: {nxt_name} at {nxt})"
+                else:
+                    line += "  (max grade)"
+                lines.append(line)
+            else:
+                lines.append(f"  {name}: {int(val)}")
+        lines.append("|w" + "═" * 40 + "|n")
+        caller.msg("\n".join(lines))

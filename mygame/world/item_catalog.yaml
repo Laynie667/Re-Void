@@ -874,7 +874,7 @@ permanent_collars:
       arousal_floor: 35.0
       forced_posture: "kept on display — placed, not resting"
       speech_filter: ["baby_talk"]
-      conditioning_on_wear: 12.0
+      conditioning_on_wear: 5.0
       install_triggers:
         - {phrase: "good girl",   response: "leak",   strength: 3, permanent: true}
         - {phrase: "empty",       response: "blank",  strength: 3, permanent: true}

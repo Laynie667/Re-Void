@@ -861,8 +861,8 @@ class FacilityScript(DefaultScript):
         # Conditioning accrues — more during breeding and conditioning phases.
         try:
             from world.conditioning import add_conditioning
-            bonus = 1.5 if phase in ("breed", "condition") else 0.0
-            add_conditioning(target, 1.0 + cond * 0.012 + bonus, source="facility")
+            bonus = 0.6 if phase in ("breed", "condition") else 0.0
+            add_conditioning(target, 0.4 + cond * 0.005 + bonus, source="facility")
         except Exception:
             pass
 
@@ -1076,6 +1076,11 @@ class FacilityScript(DefaultScript):
         if lvl in _GRADUATION:
             room.msg_contents("|w" + random.choice(_GRADUATION[lvl]).format(t=t) + "|n")
         self._mark(target, f"graded by the facility: {name}")
+        try:
+            from world.factions import add_standing
+            add_standing(target, source="grade")
+        except Exception:
+            pass
         try:
             from world.conditioning import add_conditioning
             add_conditioning(target, 4.0 * lvl, source="grading")
@@ -1981,7 +1986,15 @@ class RealmCycleScript(FacilityScript):
             char.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
         try:
             from world.conditioning import add_conditioning
-            add_conditioning(char, 1.2 + cond * 0.012, source="realm")
+            add_conditioning(char, 0.5 + cond * 0.005, source="realm")
+        except Exception:
+            pass
+        # Facility standing accrues SLOWLY from the processing — the slow burn.
+        try:
+            from world.factions import add_standing
+            add_standing(char, source={"milk": "milk", "breed": "breed",
+                                       "condition": "condition", "display": "cycle",
+                                       "punish": "comply"}.get(phase, "cycle"))
         except Exception:
             pass
         self.db.phase_index = idx + 1
