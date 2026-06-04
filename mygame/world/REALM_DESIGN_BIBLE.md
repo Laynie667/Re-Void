@@ -284,8 +284,25 @@ labour as a real backed-up zone desc), and **delivery** (`deliver` drops the lit
 active gestation. Reset restores the belly + wipes all pregnancy/cycle state.
 
 **The realm loop is now complete end-to-end:** every phase (milk / breed / condition /
-display / toilet / punish) drives a real, system-backed scene, every room has an askable
-staffer, and breeding→pregnancy→delivery→quota→milk all feed each other.
+display / toilet / punish / show) drives a real, system-backed scene, every room has an
+askable staffer, and breeding→pregnancy→delivery→quota→milk all feed each other.
+
+### Lineage — COMPLETE (the loop closes on her)
+Her get are born juvenile (`offspring_roster`), age each beat (`_mature_get`), and at
+maturity are walked to the **pens** and put to the stud line. `_find_breeder` excludes
+juveniles and **prefers her own matured get**; when one breeds her, `_breed_one` runs the
+conception a **generation deeper** (`gang_inseminate`/`on_bred` thread `generation`) — so
+her own line breeds itself through her, gen on gen, each delivery raising quota. The
+facility's purpose, made self-perpetuating.
+
+### Room 8 — The Showroom — COMPLETE
+Appraised and **sold**. `_appraise` prices her live off her own particulars (grade, get,
+trained capabilities, conditioning, milk, gravid bonus → `db.sale_price`, shown on the
+spec card, climbing as she's worked). `_showroom` poses/lights/turns her on the block for
+the one-way buyers' glass; ~30% the gavel falls and `_sell` transfers ownership — **intake
+Bethany keeps a standing bid and usually wins** (title `— Bethany's`), else a buyer (`—
+Sold Stock`). In-fiction only; the OOC floor still frees her. Auctioneer askable; other
+lots to be ranked against. Zones: block (display restrain), spec card, one-way glass, lots.
 
 ---
 
