@@ -611,7 +611,6 @@ class CmdProcess(Command):
 
 
 ALL_FACILITY_VERBS.append(CmdProcess)
-ALL_FACILITY_VERBS.append(CmdStanding)
 
 
 class CmdStanding(Command):
@@ -651,3 +650,5 @@ class CmdStanding(Command):
                 lines.append(f"  {name}: {int(val)}")
         lines.append("|w" + "═" * 40 + "|n")
         caller.msg("\n".join(lines))
+
+ALL_FACILITY_VERBS.append(CmdStanding)
