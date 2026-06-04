@@ -197,13 +197,16 @@ class HubWaystone(DefaultObject):
         """
         try:
             from typeclasses.waypost import Waypost
+            from typeclasses.characters import Character
             for wp in Waypost.objects.all():
                 wa = (wp.db.realm_address or "").strip().lower()
                 if wa != address:
                     continue
                 loc = wp.location
-                # Active = in a room (location exists and is not a character)
-                if loc and not hasattr(loc, "account"):
+                # Active = placed in a room, not carried in a character's inventory.
+                # (hasattr(loc,'account') was always True — every object has it —
+                #  so the old check rejected every waypost.)
+                if loc and not isinstance(loc, Character):
                     return wp
         except Exception:
             pass
