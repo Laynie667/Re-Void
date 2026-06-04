@@ -924,6 +924,51 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    def _do_milk(self, room, target, t):
+        """Drain her production directly — guaranteed: reduces ml, banks it, prints."""
+        try:
+            from evennia import search_object
+            from typeclasses.production_item import ProductionItem
+        except Exception:
+            return
+        import random as _r
+        by_type = {}
+        total = 0.0
+        for zd in (getattr(target.db, "zones", None) or {}).values():
+            entry = ((zd or {}).get("mechanics", {}) or {}).get("production")
+            if not entry:
+                continue
+            res = search_object(entry.get("item_dbref", ""), exact=True)
+            if not (res and isinstance(res[0], ProductionItem)):
+                continue
+            prod = res[0]
+            avail = float(prod.db.current_volume_ml or 0)
+            ext = min(_r.uniform(20, 55), avail)
+            if ext > 0:
+                prod.db.current_volume_ml = max(0.0, avail - ext)
+                try: prod.reset_fullness_notifications()
+                except Exception: pass
+                ft = prod.db.fluid_type or "milk"
+                by_type[ft] = by_type.get(ft, 0.0) + ext
+                total += ext
+        if total > 0:
+            try:
+                from typeclasses.fluid_bank import GlobalFluidBank
+                bank = GlobalFluidBank.get()
+                for ft, ml in by_type.items():
+                    bank.deposit(target, ml, ft, None)
+            except Exception:
+                pass
+            room.msg_contents(
+                f"|cThe cups drag {total:.0f}ml out of {t}'s tits and bottle it — her glands "
+                f"ache emptier, the gauge logs the yield, and the rack racks another labelled "
+                f"with her number.|n")
+        else:
+            room.msg_contents(
+                f"|cThe cups work {t}'s tits and find her milked dry — so they keep pulling "
+                f"anyway, dragging the empty ache out of her, because empty was never a reason "
+                f"to stop.|n")
+
     def _stop_milking(self, target):
         try:
             from typeclasses.milking_session_script import MilkingSessionScript
@@ -1071,7 +1116,7 @@ class FacilityScript(DefaultScript):
             if ptick == self._PHASE_LEN["milk"] // 2:
                 self._dose(room, target, t)
             else:
-                room.msg_contents("|c" + random.choice(_MACHINE_BEATS).format(t=t) + "|n")
+                self._do_milk(room, target, t)   # real drain + bank + visible line
                 self._log_milk(target)
 
         elif phase == "breed":
