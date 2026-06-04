@@ -744,6 +744,24 @@ def run_facility_reset(caller, purge=False):
         caller.db.permanent_gape         = []
         caller.db.piercings              = []
         caller.db.processing_tier        = 0
+        # Remove the REAL piercing items and the facility's freeform marks.
+        try:
+            from typeclasses.piercing_item import PiercingItem
+            for o in list(caller.contents):
+                if isinstance(o, PiercingItem) and getattr(o.db, "facility_piercing", False):
+                    try:
+                        if hasattr(o, "remove"): o.remove(force=True)
+                        o.delete()
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+        try:
+            ff = dict(getattr(caller.db, "freeform_items", None) or {})
+            ff = {k: v for k, v in ff.items() if not str(k).startswith("facility mark")}
+            caller.db.freeform_items = ff
+        except Exception:
+            pass
         tail = "Purged. Nothing kept — restored to true baseline."
     else:
         # Normal reset: she walks out, but she does not walk out clean.

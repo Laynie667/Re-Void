@@ -879,6 +879,30 @@ class FacilityScript(DefaultScript):
 
     # ------------------------------------------------------------------
 
+    def _ensure_machine(self, room):
+        """Guarantee a milking_machine mechanic exists in the room, or the
+        milking session ends itself instantly."""
+        try:
+            from typeclasses.milking_machine_mechanic import MilkingMachineMechanic
+            zone, _state = MilkingMachineMechanic.find_in_room(room)
+            if zone:
+                return
+            from evennia.utils import create
+            rz = dict(getattr(room.db, "zones", None) or {})
+            zn = "facility_line"
+            if zn not in rz:
+                rz[zn] = {"zone_type": "surface", "desc": "A station on the line.",
+                          "mechanics": {}, "visibility": "look", "intimate": False,
+                          "covered_by": None, "contents": []}
+            mm = create.create_object(MilkingMachineMechanic, key="Facility Milker", location=room)
+            mech = dict(rz[zn].get("mechanics") or {})
+            mech["milking_machine"] = {"item_dbref": mm.dbref, "item_name": mm.key,
+                                       "speed": "steady", "cycle_mode": True}
+            zc = dict(rz[zn]); zc["mechanics"] = mech; rz[zn] = zc
+            room.db.zones = rz
+        except Exception:
+            pass
+
     def _start_milking(self, target):
         """Run a REAL milking session — extracts her production into the bank."""
         try:
@@ -888,6 +912,7 @@ class FacilityScript(DefaultScript):
             for s in target.scripts.all():
                 if isinstance(s, MilkingSessionScript):
                     return   # already milking
+            self._ensure_machine(self.obj)   # so the session won't instantly end
             cfg = get_speed_config()
             s = create.create_script(MilkingSessionScript, obj=target,
                                      autostart=False, persistent=True)
@@ -973,9 +998,7 @@ class FacilityScript(DefaultScript):
                 e = dict(mq); e["required"] = int(e.get("required", 0)) + max(2, int(e.get("required", 0) * 0.12))
                 target.db.milk_quota = e
             if key == "buyer":
-                marks = list(getattr(target.db, "facility_brands", None) or [])
-                marks.append("a second owner's mark added beside the facility's — sold on")
-                target.db.facility_brands = marks
+                self._mark(target, "a second owner's mark seared in beside the facility's — sold on")
 
     def _check_tier(self, room, target, t):
         """Grade her against the processing tiers; announce any promotion."""
@@ -997,9 +1020,7 @@ class FacilityScript(DefaultScript):
         # The graduation set-piece for this tier, witnessed by the herd.
         if lvl in _GRADUATION:
             room.msg_contents("|w" + random.choice(_GRADUATION[lvl]).format(t=t) + "|n")
-        marks = list(getattr(target.db, "facility_brands", None) or [])
-        marks.append(f"graded by the facility: {name}")
-        target.db.facility_brands = marks
+        self._mark(target, f"graded by the facility: {name}")
         try:
             from world.conditioning import add_conditioning
             add_conditioning(target, 4.0 * lvl, source="grading")
@@ -1317,9 +1338,13 @@ class FacilityScript(DefaultScript):
 
     # ── Procedures (intake phase) — surgical/permanent, with a lasting mark ──
     def _mark(self, target, text):
-        marks = list(getattr(target.db, "facility_brands", None) or [])
-        marks.append(text)
-        target.db.facility_brands = marks
+        # Real freeform mark (shows in marks/brands) + board entry.
+        try:
+            from world.gang_breeding import record_mark
+            record_mark(target, text)
+        except Exception:
+            marks = list(getattr(target.db, "facility_brands", None) or [])
+            marks.append(text); target.db.facility_brands = marks
 
     def _procedure(self, room, target, t):
         name = random.choice(self._PROCEDURES)

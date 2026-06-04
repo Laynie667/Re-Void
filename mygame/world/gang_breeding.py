@@ -67,9 +67,8 @@ def gang_inseminate(target, zone_name, contributors=3,
                 entry["branded"] = True
                 quota[species] = entry
                 target.db.breeding_quota = quota
-                marks = list(getattr(target.db, "facility_brands", None) or [])
-                marks.append(f"a stamp marking the {species} quota cleared — healed, permanent")
-                target.db.facility_brands = marks
+                record_mark(target, f"a quota stamp seared in — {species} line, cleared",
+                            prefer="ass")
                 if target.location:
                     target.location.msg_contents(
                         f"|RA brand is pressed into {tname}'s skin — the {species} quota, "
@@ -90,14 +89,16 @@ def gang_inseminate(target, zone_name, contributors=3,
     except Exception:
         pass
 
-    # REAL deposit — actually place the fluid in her zone and flood any WombRoom,
-    # using the same insemination system the machines use. Not just narration.
+    # REAL deposit — actually place the fluid in her zone, flood any WombRoom,
+    # AND broadcast the system's own message so it's visible in-game, not silent.
     try:
         from typeclasses.insemination_item import do_inseminate
-        do_inseminate(None, target, zone_name, {
+        msg = do_inseminate(None, target, zone_name, {
             "source": "machine", "fluid_type": fluid_type,
             "volume_per_tick": total, "ttl_hours": 24.0,
         })
+        if msg and target.location:
+            target.location.msg_contents("|m" + msg + "|n")
     except Exception:
         pass
 
@@ -294,6 +295,39 @@ def _birth_offspring(target, species, generation=1):
 GAPE_PERMANENT_AT = 18.0
 
 
+def _markable_zone(target, prefer=None):
+    """Pick a real zone to place a freeform mark on."""
+    zones = getattr(target.db, "zones", None) or {}
+    order = ([prefer] if prefer else []) + ["abdomen", "lower_belly", "hip", "lower_back",
+             "back", "chest", "groin", "ass", "thigh"]
+    for pref in order:
+        if not pref:
+            continue
+        for zn in zones:
+            if pref in zn.lower():
+                return zn
+    for zn, zd in zones.items():
+        if (zd or {}).get("zone_type") in ("surface", "both"):
+            return zn
+    return next(iter(zones), None)
+
+
+def record_mark(target, text, zone=None, mode="on", prefer=None):
+    """Log a permanent mark BOTH on the board AND as a real freeform mark so it
+    shows in the game's marks/brands commands and zone descriptions."""
+    marks = list(getattr(target.db, "facility_brands", None) or [])
+    marks.append(text)
+    target.db.facility_brands = marks
+    try:
+        from world.freeform_manager import FreeformManager
+        z = zone or _markable_zone(target, prefer=prefer)
+        if z:
+            key = f"facility mark {len(marks)}"
+            FreeformManager.place_item(target, z, key, text, 0, display_mode=mode)
+    except Exception:
+        pass
+
+
 def record_use(target, zone_name, amount=1.0):
     """Log use of a hole: raises its use count and gape, trains its capacity, and
     past a threshold the hole gapes permanently (a bleed-over mark)."""
@@ -311,9 +345,8 @@ def record_use(target, zone_name, amount=1.0):
         perm.append(zone_name)
         target.db.permanent_gape = perm
         disp = zone_name.split("/")[-1].replace("_", " ")
-        marks = list(getattr(target.db, "facility_brands", None) or [])
-        marks.append(f"her {disp} stretched permanently slack and gaping — it won't close right again")
-        target.db.facility_brands = marks
+        record_mark(target, f"{disp} stretched permanently slack and gaping — it won't "
+                    f"close right again", zone=zone_name, mode="in")
         if target.location:
             tname = target.db.rp_name or target.name
             target.location.msg_contents(
@@ -353,20 +386,21 @@ def gape_word(target, zone_name):
 
 
 # ── Piercings ───────────────────────────────────────────────────────────────
-# location -> (description, +stim_per_tick, +arousal_floor)
+# location -> (key, description, +stim, +floor, zone-name-fragments to find a real zone)
 _PIERCINGS = {
-    "nipples":   ("heavy captive rings locked through both nipples", 1.5, 6.0),
-    "clit":      ("a thick barbell driven through the clit itself", 2.5, 10.0),
-    "clit_hood": ("a ring through the clit hood, tugging with every move", 1.5, 6.0),
-    "labia":     ("a locked ladder of rings down both labia", 1.0, 4.0),
-    "septum":    ("a heavy septum ring — a handle, really, to lead her by", 0.4, 0.0),
-    "tongue":    ("a barbell through the tongue", 0.4, 0.0),
-    "navel":     ("a dangling navel piercing", 0.3, 0.0),
+    "nipples":   ("nipple rings", "heavy captive rings locked through both nipples", 1.5, 6.0, ("nipple", "chest")),
+    "clit":      ("clit barbell", "a thick barbell driven through the clit itself", 2.5, 10.0, ("clit", "groin")),
+    "clit_hood": ("hood ring", "a ring through the clit hood, tugging with every move", 1.5, 6.0, ("clit", "groin")),
+    "labia":     ("labia ladder", "a locked ladder of rings down both labia", 1.0, 4.0, ("labia", "groin")),
+    "septum":    ("septum ring", "a heavy septum ring — a handle, really, to lead her by", 0.4, 0.0, ("nose", "face")),
+    "tongue":    ("tongue barbell", "a barbell through the tongue", 0.4, 0.0, ("tongue", "mouth")),
+    "navel":     ("navel piercing", "a dangling navel piercing", 0.3, 0.0, ("navel", "abdomen")),
 }
 
 
 def add_piercing(target, location=None):
-    """Pierce a part of her — permanent, with a sensitivity effect and a mark."""
+    """Pierce a part of her with a REAL PiercingItem worn on a real zone, plus a
+    freeform mark, plus the sensitivity effect. Returns the description or None."""
     if not target:
         return None
     import random as _r
@@ -375,16 +409,43 @@ def add_piercing(target, location=None):
     location = location if location in _PIERCINGS else (_r.choice(options) if options else None)
     if not location:
         return None
-    desc, stim, floor = _PIERCINGS[location]
+    key, desc, stim, floor, frags = _PIERCINGS[location]
+
+    # Find a real zone to wear it on.
+    zones = getattr(target.db, "zones", None) or {}
+    zone = None
+    for frag in frags:
+        for zn in zones:
+            if frag in zn.lower():
+                zone = zn; break
+        if zone:
+            break
+
+    # Create and wear a REAL PiercingItem on that zone.
+    worn = False
+    if zone:
+        try:
+            from typeclasses.piercing_item import PiercingItem
+            from evennia.utils import create
+            p = create.create_object(PiercingItem, key=key, location=target)
+            p.db.desc = desc
+            p.db.facility_piercing = True
+            ok, _r2 = p.wear(target, zone)
+            worn = bool(ok)
+            if not worn:
+                try: p.delete()
+                except Exception: pass
+        except Exception:
+            worn = False
+
     pl = list(getattr(target.db, "piercings", None) or [])
     pl.append({"loc": location, "desc": desc})
     target.db.piercings = pl
     target.db.stim_per_tick = float(getattr(target.db, "stim_per_tick", 0) or 0) + stim
     if floor:
         target.db.arousal_floor = max(float(getattr(target.db, "arousal_floor", 0) or 0), floor)
-    marks = list(getattr(target.db, "facility_brands", None) or [])
-    marks.append(f"pierced: {desc} — permanent")
-    target.db.facility_brands = marks
+    # Freeform mark so it shows in marks/brands even if the zone wear failed.
+    record_mark(target, f"pierced: {desc}", zone=zone)
     return desc
 
 
