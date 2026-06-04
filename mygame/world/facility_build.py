@@ -189,6 +189,27 @@ def _ensure_compatible(caller, orifice, chest, track):
         pass
 
 
+def provision_body(caller):
+    """Install the REAL facility body systems on the character — milkable/growable
+    chest (MilkProductionItem + BreastItem), a floodable womb (WombRoom), and a
+    running arousal script — and track them on db.facility_items so the reset path
+    tears them down. Idempotent: only installs what's absent. Used by the realm sign
+    path (so milking on the Floor actually drains) and by the lactation primer dose.
+    """
+    if not caller:
+        return []
+    orifice, chest = _detect_zones(caller)
+    inst = list(getattr(caller.db, "facility_items", None) or [])
+
+    def track(obj):
+        if obj and hasattr(obj, "dbref") and obj.dbref not in inst:
+            inst.append(obj.dbref)
+
+    _ensure_compatible(caller, orifice, chest, track)
+    caller.db.facility_items = inst
+    return inst
+
+
 def run_facility(caller):
     room = caller.location
     if not room:
@@ -690,6 +711,8 @@ def run_facility_reset(caller, purge=False):
     caller.db.lactation_locked          = False
     caller.db.cum_craving               = False
     caller.db.milk_baseline_ml          = 0.0
+    caller.db.suggestibility            = 0.0
+    caller.db.intake_suggestibility     = 0
 
     # Stop the contract's body-processing hooks.
     caller.db.body_processing_locked = False

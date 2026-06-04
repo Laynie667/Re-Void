@@ -171,16 +171,42 @@ def apply_effects(character, item):
         except Exception:
             pass
 
-    # suggestibility — spikes the Intake suggestibility counter (the screen's hook
-    # and Bethany's leverage). A cursed item can seat the sign compulsion instantly.
+    # suggestibility — spikes BOTH the Intake counter (the screen's hook / Bethany's
+    # leverage, pre-sign) AND the persistent db.suggestibility stat, which has real
+    # ongoing backing: conditioning gains scale with it and installed triggers seat
+    # deeper (see conditioning.add_conditioning and install_trigger).
     sug = int(effects.get("suggestibility", 0) or 0)
     if sug:
         cur = int(getattr(character.db, "intake_suggestibility", 0) or 0)
         character.db.intake_suggestibility = cur + sug
+        base = float(getattr(character.db, "suggestibility", 0) or 0)
+        character.db.suggestibility = base + sug
         character.msg(
             "|xSomething behind your eyes goes soft and agreeable, like a question you've "
             "stopped wanting to ask. It would be so easy to just say yes.|n"
         )
+
+    # lactation_primer — real LACT+ backing: ensures milk glands are installed and
+    # switched permanently on, and bumps their output rate (drained by _do_milk).
+    if effects.get("lactation_primer"):
+        character.db.lactation_locked = True
+        try:
+            from world.facility_build import provision_body
+            provision_body(character)
+        except Exception:
+            pass
+        try:
+            from evennia import search_object
+            from typeclasses.production_item import ProductionItem
+            for zd in (getattr(character.db, "zones", None) or {}).values():
+                pr = ((zd or {}).get("mechanics", {}) or {}).get("production")
+                if pr:
+                    res = search_object(pr.get("item_dbref", ""), exact=True)
+                    if res and isinstance(res[0], ProductionItem):
+                        cur = float(res[0].db.base_rate_ml_per_tick or 8.0)
+                        res[0].db.base_rate_ml_per_tick = cur + 4.0
+        except Exception:
+            pass
 
     # forfeit_name — she answers to her designation; name restored only by reset
     if effects.get("forfeit_name"):
@@ -238,6 +264,13 @@ def apply_effects(character, item):
         try:
             from world.factions import seed_facility_title
             seed_facility_title(character)
+        except Exception:
+            pass
+        # Install her real body systems (milk glands, womb, arousal) so milking and
+        # breeding on the Floor actually engage — the realm never did this before.
+        try:
+            from world.facility_build import provision_body
+            provision_body(character)
         except Exception:
             pass
 
@@ -606,6 +639,10 @@ def install_trigger(character, phrase, response="kneel",
     phrase = (phrase or "").strip().lower()
     if not phrase:
         return None
+    # Suggestibility makes a freshly-seated trigger bite deeper (real ongoing backing).
+    sug = float(getattr(character.db, "suggestibility", 0) or 0)
+    if sug > 0:
+        strength = int(strength) + int(min(sug, 20.0) // 4)
     triggers = list(getattr(character.db, "installed_triggers", None) or [])
     for entry in triggers:
         if entry.get("phrase") == phrase:

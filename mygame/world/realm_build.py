@@ -272,14 +272,22 @@ _ROOM_ZONES = {
             "marking might want, laid out in tidy rows.",
             summary="a wheeled dosing-and-marking cart",
             study=[
-                "The vials are labelled in a clinical shorthand — LACT+, HEAT, DOCILE, RETAIN — "
-                "and most of the foam slots are empty, used, a great many residents dosed before "
-                "you off this one cart.",
+                "The vials are labelled in clinical shorthand and there are more than you want "
+                "to count — SWELL, YIELD, RAW-NERVE, CAPACITY, BROOD, COMPLIANCE, BIMBO, "
+                "DEPENDENCE, ESTRUS, LACTATION, CUMSLUT, and one just marked SOLVENT. Most foam "
+                "slots are empty, used; a great many residents have been dosed off this one cart.",
+                "Each compound does a different, permanent thing — swells the flesh, opens the "
+                "glands, raws the nerves, stretches what you can hold, hurries the womb, quiets "
+                "the part that argues, softens the speech, builds the craving, locks the heat or "
+                "the milk on for good. The handler picks one or two by whatever the schedule "
+                "wants. You don't get told which, only that it's working.",
                 "There's a row of prepped auto-injectors in a tray, primed and capped, the kind "
                 "you press to the thigh and thumb. One has rolled loose to the cart's edge, as if "
                 "set apart. As if meant. You could pick it up.",
-                "The brand and the tattoo kit sit at the back, cleaned and ready. They are not "
-                "for today. They have your file already; today is only the start of filling it.",
+                "The back of the cart is the marking kit: a cold-iron brand, a tattoo gun loaded "
+                "for a womb-stamp, surgical milk-port valves, steel gauging rings on a sizing "
+                "rod, a fertility implant in a sterile sleeve. None of it is for today. They have "
+                "your file already; today is only the start of filling it.",
             ],
             handle={"cart": "|xYour hand goes to the loose auto-injector at the cart's edge "
                     "before you've quite decided to — and it fits your palm like it was molded "
@@ -1006,9 +1014,10 @@ def build_realm(owner):
                         "golden fluid already drawn. Marked, in the cart's clinical shorthand: "
                         "LACT+ / HEAT / DOCILE.")
         dose.db.binding_effects = {
-            "perpetual_heat": True,
-            "suggestibility": 4,
-            "conditioning_on_wear": 6.0,
+            "perpetual_heat": True,      # HEAT — real: HeatScript + arousal floor
+            "lactation_primer": True,    # LACT+ — real: installs/boosts milk glands
+            "suggestibility": 4,         # real: scales conditioning + trigger depth
+            "conditioning_on_wear": 6.0, # DOCILE — real: the conditioning meter
             "arousal_floor": 45.0,
             "continuous_stimulation": 1.5,
             "milk_quota": 6,
@@ -1108,6 +1117,9 @@ def force_clear(owner):
     """Bulletproof reset — clears ALL facility/realm state on the character,
     step by step so nothing half-fails. Use if run_facility_reset misbehaves."""
     d = owner.db
+    # Capture tracked body installs before the list-clear below wipes the record,
+    # so we can still delete the real objects (milk glands, womb, breast mod).
+    _tracked_items = list(getattr(d, "facility_items", None) or [])
     # restore name + title FIRST (before clearing their backups)
     if getattr(d, "facility_name_backup", None):
         try: d.rp_name = d.facility_name_backup
@@ -1135,7 +1147,8 @@ def force_clear(owner):
     # -> 0
     for k in ("conditioning", "arousal_floor", "stim_per_tick", "bladder_ml", "arousal",
               "defiance", "compliance_threshold", "compliance_streak", "processing_tier",
-              "facility_standing", "drug_dependence", "milk_baseline_ml"):
+              "facility_standing", "drug_dependence", "milk_baseline_ml",
+              "suggestibility", "intake_suggestibility"):
         try: setattr(d, k, 0)
         except Exception: pass
     # -> False / ""
@@ -1172,6 +1185,23 @@ def force_clear(owner):
         for o in list(owner.contents):
             if isinstance(o, PiercingItem) and getattr(o.db, "facility_piercing", False):
                 try: o.delete()
+                except Exception: pass
+    except Exception: pass
+    # delete tracked body installs (milk glands, womb, breast mod) — uninstall first
+    try:
+        from evennia import search_object
+        for dbref in _tracked_items:
+            res = search_object(dbref, exact=True)
+            if res:
+                obj = res[0]
+                for sub in list(getattr(obj, "contents", []) or []):
+                    try: sub.delete()
+                    except Exception: pass
+                for m in ("uninstall", "remove"):
+                    if hasattr(obj, m):
+                        try: getattr(obj, m)()
+                        except Exception: pass
+                try: obj.delete()
                 except Exception: pass
     except Exception: pass
     # clear facility freeform marks

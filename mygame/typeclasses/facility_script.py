@@ -1936,11 +1936,9 @@ class RealmCycleScript(FacilityScript):
         if not self.db.orifice_zone:
             self.db.orifice_zone = (self._orifices(char) or [None])[0]
 
-        # Pick the next room/phase — diverted to the pigsty when she's slipped.
+        # The handler reads her board and decides where she's owed next.
         idx = int(self.db.phase_index or 0)
-        room_key, phase = _REALM_SEQUENCE[idx % len(_REALM_SEQUENCE)]
-        if getattr(char.db, "freedom_forfeited", False) and random.random() < 0.35:
-            room_key, phase = "pigsty", "punish"
+        room_key, phase = self._choose_destination(char, rooms)
 
         from evennia import search_object
         dest_ref = rooms.get(room_key)
@@ -1956,6 +1954,15 @@ class RealmCycleScript(FacilityScript):
                 self._do_milk(room, char, t)
                 if random.random() < 0.5:
                     self._dose(room, char, t)
+                # The cart's equipment actually gets used — an occasional permanent
+                # procedure (branding, milk-ports, ring-fitting, womb tattoo, …),
+                # gated low and rising with standing so it stays a slow burn.
+                try:
+                    from world.factions import get_standing
+                    if random.random() < min(0.06 + get_standing(char) / 4000.0, 0.25):
+                        self._procedure(room, char, t)
+                except Exception:
+                    pass
             elif phase == "breed":
                 room.msg_contents(f"\n|w━━━━ BREEDING PENS ━━━━|n")
                 self._gang(room, char, t, cond)
@@ -1999,17 +2006,83 @@ class RealmCycleScript(FacilityScript):
             pass
         self.db.phase_index = idx + 1
 
+    def _choose_destination(self, char, rooms):
+        """The handler reads her board and decides where she's owed next — a real,
+        state-weighted choice (not a fixed loop). Returns (room_key, phase). Falls
+        back to the scripted sequence if her state is unremarkable or rooms are sparse.
+        """
+        avail = set(rooms.keys())
+        weights = {}
+
+        def add(rk, phase, w):
+            if rk in avail and w > 0:
+                weights[(rk, phase)] = weights.get((rk, phase), 0.0) + float(w)
+
+        # Slipped stock gets sent down to be punished.
+        if getattr(char.db, "freedom_forfeited", False):
+            add("pigsty", "punish", 7)
+
+        # Owed milk — always a pull to the floor, more if she's switched permanently on.
+        add("floor", "milk", 4)
+        if getattr(char.db, "lactation_locked", False):
+            add("floor", "milk", 2)
+
+        # Owed offspring — unmet breeding quota pulls her to the pens.
+        q = getattr(char.db, "breeding_quota", None)
+        if isinstance(q, dict) and q:
+            counts = dict(getattr(char.db, "offspring_counts", None) or {})
+            unmet = any(int(v) > int(counts.get(k, 0)) for k, v in q.items())
+            add("pens", "breed", 5 if unmet else 2)
+        else:
+            add("pens", "breed", 3)
+
+        # Due for adjustment — the more conditioned she already is, the more they work it.
+        cond = float(getattr(char.db, "conditioning", 0) or 0)
+        add("conditioning", "condition", 2 + min(cond / 40.0, 4))
+
+        # Shown her output now and then.
+        add("dairy", "display", 2)
+
+        if not weights:
+            seq = _REALM_SEQUENCE[int(self.db.phase_index or 0) % len(_REALM_SEQUENCE)]
+            return seq
+        keys = list(weights.keys())
+        return random.choices(keys, weights=[weights[k] for k in keys], k=1)[0]
+
     def _drag(self, char, dest, t):
         old = char.location
+        dest_label = (dest.key or "").split("— ")[-1].strip().lower() or "the next room"
+        # If a handler/attendant is present, the move reads as their decision.
+        handler = None
         if old:
-            old.msg_contents(
-                f"|x{t} is unstrapped and hauled up — dragged off mid-use, the room's job with "
-                f"her unfinished and not her concern.|n", exclude=[char])
+            for o in old.contents:
+                if (getattr(o.db, "facility_role", None) == "attendant"
+                        and "handler" in (o.key or "").lower()):
+                    handler = o
+                    break
+        if old:
+            if handler:
+                old.msg_contents(
+                    f"|yThe handler checks the board beside {t}'s station, grunts, and unclips "
+                    f"her mid-use. \"{dest_label.capitalize()} next. She's owed.\" {t} is "
+                    f"unstrapped and hauled up, the room's job with her left unfinished.|n",
+                    exclude=[char])
+            else:
+                old.msg_contents(
+                    f"|x{t} is unstrapped and hauled up — dragged off mid-use, the room's job "
+                    f"with her unfinished and not her concern.|n", exclude=[char])
         char.move_to(dest, quiet=True)
-        char.msg(
-            "|xYou don't get to walk it. You're moved — by the hair, by a lead clipped to the "
-            "ring in your nose, by the restraints sliding along a ceiling track — out of one "
-            "room and fixed into the next before you've finished registering the change.|n")
+        if handler:
+            char.msg(
+                f"|xThe handler decides it, not you. He reads the board, says where you're owed, "
+                f"and you're moved — by the hair, by a lead clipped to the ring in your nose, by "
+                f"the restraints sliding along a ceiling track — out of one room and fixed into "
+                f"{dest_label} before you've finished registering the change.|n")
+        else:
+            char.msg(
+                "|xYou don't get to walk it. You're moved — by the hair, by a lead clipped to the "
+                "ring in your nose, by the restraints sliding along a ceiling track — out of one "
+                "room and fixed into the next before you've finished registering the change.|n")
         dest.msg_contents(
             f"|x{t} is brought in and locked into place, presented for whatever this room is "
             f"for.|n", exclude=[char])

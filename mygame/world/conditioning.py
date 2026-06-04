@@ -29,8 +29,15 @@ def add_conditioning(character, amount, source=None):
     """
     if not character:
         return 0.0
+    amt = float(amount)
+    # Suggestibility makes her take conditioning faster — a real, ongoing effect of
+    # the drugs/items that raise it (capped so the slow burn stays a slow burn).
+    if amt > 0:
+        sug = float(getattr(character.db, "suggestibility", 0) or 0)
+        if sug > 0:
+            amt *= 1.0 + min(sug, 20.0) * 0.03   # up to +60% at suggestibility 20
     cur = float(getattr(character.db, "conditioning", 0.0) or 0.0)
-    new = max(0.0, cur + float(amount))
+    new = max(0.0, cur + amt)
     character.db.conditioning = new
     _apply_thresholds(character, cur, new)
     return new
