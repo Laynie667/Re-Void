@@ -253,6 +253,10 @@ _ROOM_FURNITURE = {
     "lobby": [
         ("the brand press", "A cold-iron brand on a press arm by the counter, kept at hand "
          "for marking intake the moment the forms are signed."),
+        ("the screen", "A wall-mounted screen above the waiting chairs, playing a soft pastel "
+         "wellness loop on repeat — warm voices, calming colours, a jingle that gets into the "
+         "back of your head and stays there. You can't quite stop watching it, and you can't "
+         "quite say why."),
     ],
     "pens": [
         ("the breeding stocks", "A timber frame at the mouth of the walkway that locks an "
@@ -271,9 +275,14 @@ _ROOM_FURNITURE = {
 # NPCs per room: (key, species_or_role, desc).
 _ROOM_NPCS = {
     "lobby": [
-        ("the intake clerk", "attendant", "A bored clerk in a grey coverall behind the counter, "
-         "stamping forms and not looking up — the last person here who'll treat you like "
-         "paperwork instead of livestock."),
+        ("Bethany", "attendant",
+         "A bright, pretty receptionist behind the counter in a fitted blouse and a lanyard, "
+         "her smile genuinely warm right up until you notice it doesn't reach the muscle around "
+         "her eyes. She is relentlessly, professionally lovely — and when she shifts her weight "
+         "the fitted skirt does nothing to hide what she's packing beneath it, heavy and "
+         "unhurried, a detail she lets you catch and clearly enjoys you catching. She runs "
+         "intake. She takes her time with the ones who make her work for it, and she remembers "
+         "every single one — some of the stock further in carry her eyes."),
     ],
     "floor": [
         ("the attendant", "attendant", "An attendant in a clean grey coverall working the "
@@ -605,6 +614,17 @@ def build_realm(owner):
     except Exception:
         pass
 
+    # Start the Intake lobby driver — Bethany, the screen, the slow squeeze.
+    try:
+        from typeclasses.intake_script import IntakeScript
+        from evennia.utils import create as _c2
+        for s in list(rooms["lobby"].scripts.all()):
+            if getattr(s, "key", "") == "intake":
+                s.stop()
+        _c2.create_script(IntakeScript, obj=rooms["lobby"], persistent=True, autostart=True)
+    except Exception:
+        pass
+
     # 4. Store realm metadata (return_word held here, not revealed to her).
     owner.db.realm = {
         "rooms":       {k: v.dbref for k, v in rooms.items()},
@@ -682,7 +702,8 @@ def force_clear(owner):
     for k in ("pet_type", "designation", "facility_name_backup", "breeding_quota",
               "milk_quota", "holes", "gape", "offspring_progress", "offspring_counts",
               "facility_title_backup", "forced_posture", "body_language", "room_bound",
-              "facility_zone", "facility_furniture"):
+              "facility_zone", "facility_furniture", "intake_provocations",
+              "intake_suggestibility"):
         try: setattr(d, k, None)
         except Exception: pass
     # -> 0
