@@ -295,6 +295,26 @@ conception a **generation deeper** (`gang_inseminate`/`on_bred` thread `generati
 her own line breeds itself through her, gen on gen, each delivery raising quota. The
 facility's purpose, made self-perpetuating.
 
+### Embodiment — COMPLETE (production / growth / latex / mods / begging)
+- **Breast growth + production:** `_grow_udder` permanently grows her real BreastItem and
+  ramps production every milking (milk ~50%, dairy ~60%), with a cup-tier milestone beat —
+  she's visibly grown into a dairy over time.
+- **Modifications** (cart procedure menu, all real + permanent): the existing piercings/
+  brand/stim-implant/ring-fit/milk-port/tail/fertility-implant/tongue/womb-tattoo/clit-hood,
+  plus new **`_proc_latex`** (sealed into a depersonalised latex drone — single_word +
+  no_self_name speech, posture, mark), **`_proc_udder`** (forced hard growth jump), and
+  **`_proc_rings`** (a heavy set of piercings at once).
+- **Begging:** `_made_to_beg` makes her beg out loud before use and before relief, fires the
+  real `_inst_beg` + a "beg for it" trigger, and routes through `register_compliance` so
+  begging is the actual path to the granted climax that denial otherwise withholds. Woven
+  into the milk + breed phases; conditioning turns it into reflex. (`CmdBeg` is the player path.)
+
+### Room 9 — Deep Stock (Sub-Level P) — COMPLETE (the terminus)
+Grade-gated (standing ≥ 1800 → the chooser weights `deep` to dominate). `_deepstock`: sealed
+latex-default, plumbed into a pod, still milked and bred but **through the lines, hands-free,
+no scene, no begging** — the lowest hum of conditioning forever and the engineered peace of
+being finished. Warden askable. The arc has an end: Intake → … → Perfected → stored on the lines.
+
 ### Room 8 — The Showroom — COMPLETE
 Appraised and **sold**. `_appraise` prices her live off her own particulars (grade, get,
 trained capabilities, conditioning, milk, gravid bonus → `db.sale_price`, shown on the
