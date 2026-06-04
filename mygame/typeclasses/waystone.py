@@ -177,11 +177,10 @@ class HubWaystone(DefaultObject):
     def _find_portal(address):
         """Return the first PortalWaystone with matching portal_label, or None."""
         try:
-            from evennia import search_object
-            portals = search_object(
-                None, typeclass="typeclasses.waystone.PortalWaystone", quiet=True
-            ) or []
-            for p in portals:
+            # NOTE: search_object(None, typeclass=...) returns [] in this Evennia,
+            # so use the typeclass manager directly.
+            from typeclasses.waystone import PortalWaystone
+            for p in PortalWaystone.objects.all():
                 label = (p.db.portal_label or "").strip().lower()
                 if label == address and p.location:
                     return p
@@ -197,11 +196,8 @@ class HubWaystone(DefaultObject):
         (not in a character's inventory).
         """
         try:
-            from evennia import search_object
-            wayposts = search_object(
-                None, typeclass="typeclasses.waypost.Waypost", quiet=True
-            ) or []
-            for wp in wayposts:
+            from typeclasses.waypost import Waypost
+            for wp in Waypost.objects.all():
                 wa = (wp.db.realm_address or "").strip().lower()
                 if wa != address:
                     continue
