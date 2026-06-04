@@ -67,9 +67,34 @@ def next_threshold(character):
     return None, None
 
 
+def seed_facility_title(character):
+    """
+    Stamp the faction title slots the moment she signs, before she's accrued
+    any standing — she is Facility property now, grade not-yet-processed. This
+    makes the (faction) part of her title render immediately on the sheet.
+    Backed up + restored by the same reset/force_clear path as a graded title.
+    """
+    if not character:
+        return
+    if not getattr(character.db, "facility_title_backup", None):
+        character.db.facility_title_backup = {
+            "faction": getattr(character.db, "title_faction", "") or "",
+            "suffix":  getattr(character.db, "title_suffix", "") or "",
+        }
+    character.db.title_faction = "of The Facility"
+    # Only seed the suffix if standing hasn't already set a real grade suffix.
+    if not (getattr(character.db, "title_suffix", "") or "").startswith("—"):
+        character.db.title_suffix = "— Resident"
+    if not getattr(character.db, "facility_grade", None):
+        character.db.facility_grade = "Unprocessed"
+
+
 def _apply_facility_title(character, standing):
     name, title = get_facility_tier(character)
     if name == "Unprocessed":
+        # Still stamp the faction slot so signed-but-ungraded stock reads as
+        # property; the grade suffix fills in once she crosses Intake (40).
+        seed_facility_title(character)
         return
     # Back up her real title once, restored by reset/force_clear.
     if not getattr(character.db, "facility_title_backup", None):

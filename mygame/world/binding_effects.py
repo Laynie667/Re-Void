@@ -219,6 +219,13 @@ def apply_effects(character, item):
     if effects.get("mark_signed"):
         character.db.facility_signed = True
         character.db.facility_active = True
+        # She's Facility property the moment she signs — stamp the faction title
+        # slot now so (faction) renders on her sheet even before she's graded.
+        try:
+            from world.factions import seed_facility_title
+            seed_facility_title(character)
+        except Exception:
+            pass
 
     # realm_cycle — start the cycle that drags her through the realm's rooms.
     if effects.get("realm_cycle"):

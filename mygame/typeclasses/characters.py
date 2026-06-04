@@ -1679,8 +1679,12 @@ class Character(ObjectParent, DefaultCharacter):
         """
         parts = []
 
+        # Keep the reputation-driven LEVEL slot in sync with current rep so the
+        # assembled title is correct regardless of call order (the sheet used to
+        # render this before get_reputation_tier() had populated it).
+        level = self._refresh_title_level()
+
         prefix = self.db.title_prefix or ""
-        level = self.db.title_level or ""
         interfix = self.db.title_interfix or ""
         faction = self.db.title_faction or ""
         suffix = self.db.title_suffix or ""
@@ -1698,6 +1702,21 @@ class Character(ObjectParent, DefaultCharacter):
 
         return " ".join(parts)
 
+    def _refresh_title_level(self):
+        """
+        Recompute the reputation-driven LEVEL title slot from current rep and
+        persist it. Returns the tier name. Safe to call from get_full_title()
+        on every render so the level never falls out of sync.
+        """
+        rep = self.db.reputation or 0
+        tier_name = "Unknown"
+        for threshold, name in REPUTATION_TIERS:
+            if rep >= threshold:
+                tier_name = name
+        if (self.db.title_level or "") != tier_name:
+            self.db.title_level = tier_name
+        return tier_name
+
     def get_reputation_tier(self):
         """
         Get the reputation tier name based on current score.
@@ -1705,15 +1724,7 @@ class Character(ObjectParent, DefaultCharacter):
         Returns:
             str: Tier name.
         """
-        rep = self.db.reputation or 0
-        tier_name = "Unknown"
-
-        for threshold, name in REPUTATION_TIERS:
-            if rep >= threshold:
-                tier_name = name
-
-        self.db.title_level = tier_name
-        return tier_name
+        return self._refresh_title_level()
 
     # -------------------------------------------------------------------
     # Main appearance assembly
