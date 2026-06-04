@@ -781,6 +781,7 @@ def run_facility_reset(caller, purge=False):
     caller.db.facility_owner = None
     caller.db.sale_price = None
     caller.db.offspring_roster = None
+    caller.db.latex_sealed = False
     # drop the installed 'mind' zone (its monitor object is removed via facility_items)
     try:
         _z = dict(getattr(caller.db, "zones", None) or {})

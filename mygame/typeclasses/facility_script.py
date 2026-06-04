@@ -512,6 +512,32 @@ _LINEAGE_BREED = [
     "a chart adds a generation and moves her quota further out of reach.",
 ]
 
+# ── Growth: the udder ramps as she's milked ──
+_GROWTH_BEATS = [
+    "Something gives in {t}'s chest under the relentless pull — her tits ache and swell and "
+    "settle heavier, and the chart updates her size: |w{cup}|c now, and climbing. The cups are "
+    "swapped for the next gauge up without comment.",
+    "{t}'s glands answer the schedule the way they've been trained to — growing into it, fuller "
+    "and heavier every drained cycle, her frame reshaped around the yield. Logged at |w{cup}|c "
+    "and rising. A bigger producer is a better producer.",
+    "Drained and dosed and milked past empty again, {t} feels the tight hot ache of growth take "
+    "— her chest a measurable size larger, |w{cup}|c on the gauge, the body she came in with "
+    "receding another notch behind the dairy animal they're growing her into.",
+]
+
+# ── Begging: the relief is the leash, and she has to ask ──
+_BEG_BEATS = [
+    "\"If you want it, ask,\" the handler says, flat, and waits — and {t} hears her own voice "
+    "climb and break, begging out loud to be filled, to be bred, to be allowed, because the "
+    "ache won't stop and asking is the only key she's been left.",
+    "They hold {t} right at the edge and won't let her over until she begs for it — properly, "
+    "out loud, in words — and she does, hating it, needing it, the begging dragged out of her "
+    "and logged as progress.",
+    "{t} is made to beg before she's used and made to beg before she's allowed to come, until "
+    "the begging stops being something they force and starts being the first thing out of her — "
+    "the conditioned reflex of a thing that knows asking is all it has.",
+]
+
 # ── The Dairy & Output ──
 _DAIRY_BEATS = [
     "{t} is racked at the dairy station and the cups come down — her tits hooked up to the "
@@ -1616,7 +1642,8 @@ class FacilityScript(DefaultScript):
               "compliance", "bimbo", "dependence", "estrus", "lactation",
               "solvent", "cumslut"]
     _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
-                   "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood"]
+                   "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood",
+                   "latex", "udder", "rings"]
 
     def _dose(self, room, target, t):
         room.msg_contents("|G" + random.choice(_DRUG_BEATS).format(t=t) + "|n")
@@ -1638,6 +1665,32 @@ class FacilityScript(DefaultScript):
                     try: res[0].apply_permanent_boost(amount); n += 1
                     except Exception: pass
         return n
+
+    def _grow_udder(self, room, target, t, amount=None):
+        """Every milking leaves her a little bigger and a little more productive —
+        permanent BreastItem growth + production ramp, with a milestone beat when she
+        crosses a cup tier. The slow, visible body-horror of being turned into a dairy."""
+        from evennia import search_object
+        from typeclasses.body_mod_item import BodyModItem
+        amount = amount if amount is not None else random.uniform(0.05, 0.16)
+        for zd in (getattr(target.db, "zones", None) or {}).values():
+            bm = ((zd or {}).get("mechanics", {}) or {}).get("body_mod")
+            if not bm:
+                continue
+            res = search_object(bm.get("item_dbref", ""), exact=True)
+            if res and isinstance(res[0], BodyModItem) and res[0].db.mod_type == "breast":
+                item = res[0]
+                try:
+                    old = item.display_size()
+                    item.apply_permanent_boost(amount)
+                    self._boost_production(target, 0.6)
+                    new = item.display_size()
+                except Exception:
+                    return
+                if new != old:
+                    room.msg_contents("|c" + random.choice(_GROWTH_BEATS).format(
+                        t=t, cup=new) + "|n")
+                return
 
     def _boost_production(self, target, amount):
         from evennia import search_object
@@ -1912,6 +1965,58 @@ class FacilityScript(DefaultScript):
             f"afterward her mouth is shaped for sounds rather than words, the language drained out "
             f"of her a little more. (speech filtered)|n")
 
+    def _proc_latex(self, room, target, t):
+        # Sealed into facility latex — a shined, depersonalised drone/doll state.
+        target.db.latex_sealed = True
+        target.db.arousal_floor = max(float(getattr(target.db, 'arousal_floor', 0) or 0), 45.0)
+        target.db.stim_per_tick = float(getattr(target.db, 'stim_per_tick', 0) or 0) + 2.0
+        target.db.body_language = "encased and gleaming, moving in small permitted increments"
+        filters = list(getattr(target.db, "active_speech_filters", None) or [])
+        for f in ("single_word", "no_self_name"):
+            if f not in filters:
+                filters.append(f)
+        target.db.active_speech_filters = filters
+        self._mark(target, "sealed into a second skin of facility latex — shined, hooded, "
+                   "drained of self, a doll-smooth drone with breathing-holes and use-holes "
+                   "and nothing it needs to say")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, random.uniform(6, 10), source="latex")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G{t} is rolled and smoothed into a poured second skin of black facility latex — "
+            f"hood, body, the lot — sealed seamless but for breathing-holes and the use-holes left "
+            f"open and rimmed in rubber. The shine erases her edges; the encasement erases the "
+            f"rest. What stands there gleaming when they're done is less a person than a doll the "
+            f"facility keeps polished and plugged. (latex drone state — speech + posture)|n")
+
+    def _proc_udder(self, room, target, t):
+        # Forced growth procedure — a hard jump in size + production.
+        self._grow_udder(room, target, t, amount=random.uniform(0.8, 1.6))
+        self._boost_production(target, 4.0)
+        self._mark(target, "glands forced into a heavy growth cycle — a hard, aching swell, "
+                   "permanent")
+        room.msg_contents(
+            f"|GA growth cocktail is pumped straight into {t}'s glands and they swell on the "
+            f"table — hot, tight, straining, heavier by the minute — forced up a size in one "
+            f"sitting and left aching and overfull, a bigger udder for a better yield. (forced "
+            f"breast growth + production)|n")
+
+    def _proc_rings(self, room, target, t):
+        # A heavy set of real piercings at once.
+        try:
+            from world.gang_breeding import add_piercing
+            got = [d for d in (add_piercing(target) for _ in range(random.randint(2, 3))) if d]
+        except Exception:
+            got = []
+        if not got:
+            return self._proc_pierce(room, target, t)
+        room.msg_contents(
+            f"|GThey ring {t} in a sitting — {'; '.join(got)} — heavy steel driven through and "
+            f"locked, each one a fresh handle to lead and hang and tug her by, every pull of them "
+            f"singing straight to the nerve. (multiple permanent piercings)|n")
+
     # ── Orifices / breeders ──
     def _orifices(self, target):
         zones = getattr(target.db, "zones", None) or {}
@@ -2062,6 +2167,10 @@ class FacilityScript(DefaultScript):
         if not live:
             return self._gang(room, target, t, cond)
 
+        # Made to beg for the mount before she gets it, often.
+        if random.random() < 0.4:
+            self._made_to_beg(room, target, t)
+
         present = self._species_present(room)
         all_at_once = random.random() < 0.22 and len(live) >= 2
 
@@ -2186,12 +2295,31 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    def _made_to_beg(self, room, target, t):
+        """She's made to beg — out loud, for it — and begging is the only path to the
+        granted release denial otherwise withholds. Conditioned, it becomes reflex."""
+        room.msg_contents("|m" + random.choice(_BEG_BEATS).format(t=t) + "|n")
+        try:
+            from world.binding_effects import install_trigger, _inst_beg
+            _inst_beg(target, target, room, {})          # the begging itself
+            install_trigger(target, "beg for it", response="beg", strength=1)
+        except Exception:
+            pass
+        # Begging is compliance — and compliance is the only thing that buys relief.
+        try:
+            from world.compliance import register_compliance
+            register_compliance(target, reward=True)
+        except Exception:
+            pass
+
     # ── The Dairy & Output: milked, measured, displayed as product ──
     def _dairy(self, room, target, t, cond):
         """Her output room: actually milked here (real drain), her totals thrown in
         her face, and she's displayed and handled as product, not person."""
         room.msg_contents("|c" + random.choice(_DAIRY_BEATS).format(t=t) + "|n")
         self._do_milk(room, target, t)              # real ml drained + banked
+        if random.random() < 0.6:
+            self._grow_udder(room, target, t)       # bigger and more productive each time
         if getattr(target.db, "breeding_quota", None):
             target.msg("|m" + self._quota_board(target) + "|n")
         if random.random() < 0.5:
@@ -2708,6 +2836,10 @@ class RealmCycleScript(FacilityScript):
             if phase == "milk":
                 room.msg_contents(f"\n|w━━━━ MILKING FLOOR ━━━━|n")
                 self._do_milk(room, char, t)
+                if random.random() < 0.5:
+                    self._grow_udder(room, char, t)
+                if random.random() < 0.3:
+                    self._made_to_beg(room, char, t)
                 if random.random() < 0.5:
                     self._dose(room, char, t)
                 # The cart's equipment actually gets used — an occasional permanent

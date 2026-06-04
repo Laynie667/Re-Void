@@ -1653,7 +1653,7 @@ def force_clear(owner):
               "navigation_locked", "anti_clothing_active", "conditioning_permanent",
               "freedom_forfeited", "facility_signed", "facility_active", "perpetual_heat",
               "cum_craving", "lactation_locked", "body_processing_locked", "aura_dimmed",
-              "bethany_busy", "bethany_owned"):
+              "bethany_busy", "bethany_owned", "latex_sealed"):
         try: setattr(d, k, False)
         except Exception: pass
     for k in ("orgasm_release_word", "required_honorific", "facility_grade", "facility_brand"):
