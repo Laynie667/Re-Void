@@ -219,6 +219,22 @@ def apply_effects(character, item):
     if effects.get("mark_signed"):
         character.db.facility_signed = True
 
+    # body_processing — install the contract's processing hooks in HER body, so
+    # she's milked and bred on a schedule wherever she is (real enforcement).
+    if effects.get("body_processing"):
+        character.db.body_processing_locked = True
+        try:
+            from typeclasses.body_processing_script import BodyProcessingScript
+            running = any(isinstance(s, BodyProcessingScript)
+                          or getattr(s, "key", "") == "body_processing"
+                          for s in character.scripts.all())
+            if not running:
+                from evennia.utils import create
+                create.create_script(BodyProcessingScript, obj=character,
+                                     persistent=True, autostart=True)
+        except Exception:
+            pass
+
     # perpetual_heat — keeps her permanently in heat via a self-sustaining script
     if effects.get("perpetual_heat"):
         character.db.perpetual_heat = True
