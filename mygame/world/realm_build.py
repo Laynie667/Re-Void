@@ -408,6 +408,7 @@ def _furnish(room, key, owner):
     for zn, zd in (_ROOM_ZONES.get(key) or {}).items():
         zd = dict(zd)
         spec = zd.pop("_install", None)
+        zd["summary"] = ""        # so {zone:} tokens render the full desc inline (Helena-style)
         zname = zn.replace(" ", "_")
         zones[zname] = zd
         if spec:
