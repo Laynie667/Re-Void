@@ -1001,6 +1001,45 @@ _CONDTECH_TRIGGERS = {
         "really, from where I'm sitting.\"", "say"),
 }
 
+# The dairy hand — refers to stock entirely by number; cares only about yield.
+_DAIRYHAND_TRIGGERS = {
+    "output": ("\"Everything that comes out of you is ours — milk, get, the data.\" The dairy "
+        "hand doesn't look up from the chart. \"You're a producer. We measure producers by what "
+        "they produce. That's the whole relationship.\"", "say"),
+    "milk": ("\"You'll let down on the rack whether you've got it or not — the cups don't take "
+        "no for an answer and neither do I.\" A glance at the gauge. \"Your numbers are coming "
+        "up nicely. Post-partum especially. You make a lot when you've just dropped.\"", "emote"),
+    "number": ("\"I don't use names down here. You're the figure on your shelf.\" He taps a "
+        "labelled bottle. \"This is you. So's that whole row. That's more of you than the "
+        "talking kind ever amounted to, if you think about it. I'd rather you didn't think.\"",
+        "say"),
+    "bottles": ("\"Graded by yield and date. Best stock gets the front rack.\" He shelves one. "
+        "\"Being good, here, is just a quantity. You can see your own goodness stacking up. "
+        "Some of them find that motivating. We like the motivated ones.\"", "say"),
+    "leaving": ("\"Producers don't leave, they get *retired*, and retirement here isn't a "
+        "place you'd want to get to. Back on the rack. Your shelf's not full.\"", "emote"),
+    "help": ("\"Ask about your output, the milk, your number, the bottles. Or just get on the "
+        "rack. The rack's the only conversation that fills a bottle.\"", "say"),
+}
+
+# The swineherd — runs the sty, treats what's kept there as exactly what it is.
+_SWINEHERD_TRIGGERS = {
+    "sty": ("\"Bottom of the place,\" the swineherd grunts, leaning on the hose. \"Where stock "
+        "goes when it slips, or when it needs reminding what it is under all the processing. "
+        "On your knees in the muck, same as the rest. You'll settle. They all settle.\"", "emote"),
+    "filth": ("\"I don't clean you, I move it around. Filthy's the point — tells everyone you're "
+        "sty stock.\" He spits. \"Mud, slop, piss, spunk. Not shit, we're not animals.\" A dry "
+        "look. \"Well. You are. I'm not.\"", "emote"),
+    "trough": ("\"You eat from it bent, hands behind you, face down. First time's the only hard "
+        "time.\" He tips a bucket in. \"After that it's just dinner, and you're just the thing "
+        "that eats it on its knees.\"", "say"),
+    "out": ("\"Out of the sty's a privilege you earn by being good upstairs. Out of the "
+        "*facility*?\" He laughs, not unkindly. \"Not a sty conversation. Eat your slop.\"",
+        "emote"),
+    "help": ("\"Ask about the sty, the filth, or the trough. Or root down and wait — something's "
+        "always coming to use you down here, and I've got hosing to do.\"", "say"),
+}
+
 # Residents are ambient props — set with a flat per-key 'look' flavour.
 _RESIDENT_ROLES = {"resident"}
 
@@ -1116,6 +1155,10 @@ def _furnish(room, key, owner):
                 _tree = _CONDTECH_TRIGGERS
             elif nkey.lower() == "the custodian":
                 _tree = _CUSTODIAN_TRIGGERS
+            elif nkey.lower() == "the dairy hand":
+                _tree = _DAIRYHAND_TRIGGERS
+            elif nkey.lower() == "the swineherd":
+                _tree = _SWINEHERD_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {

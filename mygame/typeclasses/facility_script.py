@@ -453,6 +453,59 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── The Dairy & Output ──
+_DAIRY_BEATS = [
+    "{t} is racked at the dairy station and the cups come down — her tits hooked up to the "
+    "machine and drained into graded bottles, the gauge logging every millilitre under her "
+    "number while a screen tallies her lifetime yield in litres.",
+    "The dairy hand clips {t} into the milking rack, checks her flow against the chart, and "
+    "lets the machine pull her empty — bottling her output, capping it, labelling it with a "
+    "number where a name should be, and shelving her among the rows.",
+    "Post-partum and heavy, {t} lets down fast and hard the moment the cups seal, and the dairy "
+    "drains her into bottle after bottle, her body doing exactly the one thing the room keeps "
+    "her for, measured and approved and stored.",
+]
+_DAIRY_DISPLAY = [
+    "She's turned on the display dais while she drains — lit, rotated, her yield-figures "
+    "projected on the wall behind her so the room can see the product and its numbers at once. "
+    "Not a person being milked. A graph with tits.",
+    "The board throws {t}'s totals up in lights — litres milked, get dropped, grade — and the "
+    "dairy hand reads them aloud to no one in particular, the way you'd read a spec sheet off a "
+    "machine that happens to be sobbing.",
+]
+_DAIRY_DEGRADE = [
+    "You are a number on a shelf and a slope on a graph, and the only part of you anyone in here "
+    "consults is the figure. It only goes up. So, lately, does your strange flat pride in it.",
+    "Bottled, labelled, shelved. You catch yourself reading your own yield-total and feeling the "
+    "thing they trained you to feel about it: not horror. Satisfaction. A good producer.",
+]
+
+# ── The Pigsty ──
+_STY_BEATS = [
+    "{t} is put down on all fours in the warm reeking muck and slopped — a bucket of feed-mash "
+    "tipped into the trough at face height, and she eats from it bent and hands-free because "
+    "that's how the things kept down here eat, and she's one of them now.",
+    "The swineherd hoses {t} down where she kneels in the wallow — not to clean her, just to "
+    "move the filth around — then leaves her dripping and stinking in the muck to wait for "
+    "whatever's next, which is always more of the same.",
+    "Down in the sty {t} is rooted into the slop and left there, mud and worse worked into every "
+    "crease of her, the bottom of the place teaching its one lesson: this is where stock goes "
+    "when it forgets it's stock, and it is very easy to stay.",
+]
+_STY_RUT = [
+    "Something mounts {t} right there in the muck and ruts her face-down into it, breeding her "
+    "in the filth without ceremony, her knees sliding in the slop with every thrust.",
+    "A stallion or a hound — she's past telling, face-down — mounts her in the wallow and uses "
+    "her in the muck, grinding her deeper into the slop as it breeds her.",
+]
+_STY_DEGRADE = [
+    "The muck is warm and you have stopped minding it, and the not-minding is the whole point of "
+    "the room. A person would mind. You're being shown, daily, that you're something else.",
+    "Face-down in the slop, fed from a trough, hosed like a pen — there's a flat animal peace "
+    "down here that frightens the last thinking part of you, because it's so much easier than "
+    "the alternative, and the alternative is getting harder to remember.",
+]
+
 # ── The Sanitation Block: glory wall, meat-toilet, urinal ──
 _TOILET_WALL = [
     "{t} is put on the rail at the glory wall and the queue starts. A cock comes through the "
@@ -1983,6 +2036,46 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── The Dairy & Output: milked, measured, displayed as product ──
+    def _dairy(self, room, target, t, cond):
+        """Her output room: actually milked here (real drain), her totals thrown in
+        her face, and she's displayed and handled as product, not person."""
+        room.msg_contents("|c" + random.choice(_DAIRY_BEATS).format(t=t) + "|n")
+        self._do_milk(room, target, t)              # real ml drained + banked
+        if getattr(target.db, "breeding_quota", None):
+            target.msg("|m" + self._quota_board(target) + "|n")
+        if random.random() < 0.5:
+            room.msg_contents("|c" + random.choice(_DAIRY_DISPLAY).format(t=t) + "|n")
+        target.msg("  |m" + random.choice(_DAIRY_DEGRADE).format(t=t) + "|n")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 1.0 + cond * 0.004, source="dairy")
+        except Exception:
+            pass
+
+    # ── The Pigsty: slopped, hosed, rutted in the muck, put back ──
+    def _sty(self, room, target, t, cond):
+        """Punishment / bottom-tier: she's kept on all fours in the filth, slopped,
+        hosed, and rutted — and the lesson lands as conditioning + degradation."""
+        room.msg_contents("|y" + random.choice(_STY_BEATS).format(t=t) + "|n")
+        # The sty breeds her too, in the muck — real deposit when stock's about.
+        try:
+            from world.gang_breeding import animal_holes, apply_filth
+            holes = [z for z in animal_holes(target).values() if z]
+            if holes and random.random() < 0.6:
+                z = random.choice(holes)
+                self._breed_one(room, target, z, self._pick_species(target), cond, gape_mult=1.2)
+                room.msg_contents("|r" + random.choice(_STY_RUT).format(t=t) + "|n")
+            apply_filth(target)
+        except Exception:
+            pass
+        try:
+            from world.compliance import punish
+            punish(target, reason="kept in the sty", severity=1)
+        except Exception:
+            pass
+        target.msg("  |m" + random.choice(_STY_DEGRADE).format(t=t) + "|n")
+
     # ── The Sanitation Block: used as a relief-hole, toilet, and urinal ──
     def _toilet(self, room, target, t, cond):
         """The restroom uses her as plumbing: the glory wall (anonymous cocks),
@@ -2487,17 +2580,10 @@ class RealmCycleScript(FacilityScript):
                 self._toilet(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
-                if getattr(char.db, "breeding_quota", None):
-                    char.msg("|m" + self._quota_board(char) + "|n")
-                room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+                self._dairy(room, char, t, cond)
             elif phase == "punish":
                 room.msg_contents(f"\n|w━━━━ THE PIGSTY ━━━━|n")
-                room.msg_contents("|y" + random.choice(_WETTING_BEATS).format(t=t) + "|n")
-                try:
-                    from world.compliance import punish
-                    punish(char, reason="sent down to the sty", severity=1)
-                except Exception:
-                    pass
+                self._sty(room, char, t, cond)
         except Exception:
             pass
 
