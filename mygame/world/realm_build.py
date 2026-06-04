@@ -72,15 +72,24 @@ _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm",
 _RETURN_WORDS = ["surfacing", "homeward", "released", "clockout", "upstairs", "iwasaperson"]
 
 
-def _z(desc, summary="", study=None, handle=None, ambient=None, details=None):
-    """Compact room-zone builder matching roomzone_commands._blank_zone schema."""
+def _z(desc, summary="", study=None, handle=None, ambient=None, details=None,
+       mechanic=None, inscribe=False):
+    """Compact room-zone builder matching roomzone_commands._blank_zone schema.
+
+    mechanic: optional spec installed as a real zone mechanic, one of:
+        ("restrain", capacity, label, blocker_msg)
+        ("seat",     capacity, label, position)
+        ("dildo",    capacity, label, position)
+        ("milk",)    — a milking machine mechanic
+    """
     return {
         "desc": desc, "summary": summary,
         "details": details or {}, "handle_details": handle or {},
-        "study_details": study or [], "inscribable": False, "inscriptions": [],
+        "study_details": study or [], "inscribable": bool(inscribe), "inscriptions": [],
         "scent": None, "ambient": ambient or [], "contents": [], "parent": None,
         "mechanics": {}, "scripts": [], "event_hooks": {}, "bar_drinks": [],
         "games": [], "pantry": [],
+        "_install": mechanic,   # consumed by _furnish, not part of the stored zone
     }
 
 
@@ -294,13 +303,136 @@ _ROOM_NPCS = {
 }
 
 
+# Real mechanics installed onto room zones — these make the furniture WORK.
+_ROOM_MECHANICS = {
+    "lobby": {
+        "counter": ("restrain", 1, "the intake counter",
+                    "You're bent over the counter and held there while the forms are filled in. You wait."),
+    },
+    "floor": {
+        "line":   ("restrain", 4, "the line restraints",
+                   "The station folds you into presentation and locks. You can't move until the line decides to advance."),
+        "rigs":   ("milk",),
+    },
+    "pens": {
+        "stalls": ("restrain", 1, "the breeding stocks",
+                   "The stocks lock you bent and spread at exactly the height the stock prefer. You wait to be bred."),
+    },
+    "conditioning": {
+        "cradle": ("restrain", 1, "the conditioning cradle",
+                   "The cradle holds you reclined and still, facing the dark and the voice. You listen, because there's nothing else to do."),
+    },
+    "dairy": {
+        "racks": ("milk",),
+    },
+    "pigsty": {
+        "wallow": ("seat", 6, "the wallow", "on all fours in the muck"),
+        "trough": ("seat", 4, "the trough", "bent over the trough, face down"),
+    },
+}
+
+# Room-level ambient pools (fire periodically as atmosphere).
+_ROOM_AMBIENT = {
+    "lobby": [
+        "|xThe sodium lamps hum a half-tone flat, and the light never quite settles.|n",
+        "|xThe clerk stamps another form without looking up. The stack never gets shorter.|n",
+        "|xA draught carries the smell up from below — milk, animal, disinfectant — and the door stays shut.|n",
+    ],
+    "floor": [
+        "|xDown the line a rig descends, works wetly, and rises again. The conveyor ticks one notch.|n",
+        "|xA collection bottle fills a measure higher and a gauge logs the yield without comment.|n",
+        "|xSomewhere a strap is cinched a notch tighter and a small, bitten-off sound follows.|n",
+        "|xThe board updates a figure upward. It only ever moves the one way.|n",
+    ],
+    "pens": [
+        "|xThe bull stamps and the sound carries through the floor.|n",
+        "|xA hound presses to the bars, snuffling at the air, and is told to wait.|n",
+        "|xThe boar's musk thickens whenever the heat in the place shifts.|n",
+        "|xThe stallion screams once, impatient, and quiets when a handler glances at the clock.|n",
+    ],
+    "conditioning": [
+        "|xThe dark presses a little closer between one breath and the next.|n",
+        "|xThe speaker clicks, considers, and stays silent — for now.|n",
+        "|xThe single band of light hums. There is nowhere to look but up into it.|n",
+    ],
+    "dairy": [
+        "|xA figure on the board climbs itself upward. It only goes one way.|n",
+        "|xThe bottling head caps and labels another, hands-free, and racks it by number.|n",
+        "|xThe cold cases hum. A whole shelf is given to one number.|n",
+    ],
+    "pigsty": [
+        "|xSomething shifts under the muck and settles. A bubble surfaces and pops.|n",
+        "|xThe trough is slopped, twice a cycle, whether anything's ready for it or not.|n",
+        "|xThe hose drips against the wall. The reek is kept warm on purpose.|n",
+    ],
+}
+
+
+def _install_mechanic(room, zone_name, spec, installer):
+    """Install a real mechanic into a room zone (restraint / seat / dildo / milk)."""
+    if not spec:
+        return
+    from evennia.utils import create as _c
+    kind = spec[0]
+    try:
+        if kind == "restrain":
+            _, cap, label, blocker = (spec + (1, "the restraints", "It holds you."))[:4]
+            m = _tag(_c.create_object("typeclasses.restrain_mechanic.RestrainMechanic",
+                                      key=label, location=room))
+            m.db.capacity = cap; m.db.label = label; m.db.blocker_msg = blocker
+            m.install_into_zone(room, zone_name, installer)
+        elif kind in ("seat", "dildo"):
+            _, cap, label, pos = (spec + (1, "it", "seated"))[:4]
+            path = ("typeclasses.dildo_seat_mechanic.DildoSeatMechanic" if kind == "dildo"
+                    else "typeclasses.seat_mechanic.SeatMechanic")
+            m = _tag(_c.create_object(path, key=label, location=room))
+            m.db.capacity = cap; m.db.label = label; m.db.position = pos
+            m.install_into_zone(room, zone_name, installer)
+        elif kind == "milk":
+            m = _tag(_c.create_object("typeclasses.milking_machine_mechanic.MilkingMachineMechanic",
+                                      key="the milking rig", location=room))
+            zones = dict(getattr(room.db, "zones", None) or {})
+            zd = dict(zones.get(zone_name, {})); mech = dict(zd.get("mechanics", {}) or {})
+            mech["milking_machine"] = {"item_dbref": m.dbref, "item_name": m.key,
+                                       "speed": "steady", "cycle_mode": True}
+            zd["mechanics"] = mech; zones[zone_name] = zd; room.db.zones = zones
+    except Exception:
+        pass
+
+
 def _furnish(room, key, owner):
-    """Apply craft (zones), furniture, and NPCs to one realm room."""
-    # Zones
+    """Apply craft (zones + tokens + mechanics + ambient), furniture, and NPCs."""
+    # Zones — store a clean copy (pop the install spec) and remember mechanics.
     zones = dict(getattr(room.db, "zones", None) or {})
+    to_install = []
     for zn, zd in (_ROOM_ZONES.get(key) or {}).items():
-        zones[zn.replace(" ", "_")] = zd
+        zd = dict(zd)
+        spec = zd.pop("_install", None)
+        zname = zn.replace(" ", "_")
+        zones[zname] = zd
+        if spec:
+            to_install.append((zname, spec))
     room.db.zones = zones
+
+    # Mechanics declared in _ROOM_MECHANICS (keeps the zone content readable).
+    for zn, spec in (_ROOM_MECHANICS.get(key) or {}).items():
+        to_install.append((zn.replace(" ", "_"), spec))
+
+    # Install real mechanics into the zones.
+    for zname, spec in to_install:
+        _install_mechanic(room, zname, spec, owner)
+
+    # Embed {zone:<name>} tokens so the zones render inline in the room look.
+    tokens = "\n\n".join("{zone:%s}" % zn.replace(" ", "_")
+                         for zn in (_ROOM_ZONES.get(key) or {}))
+    if tokens:
+        base = (room.db.desc or "").split("\n\n{zone:")[0]
+        room.db.desc = base + "\n\n" + tokens
+
+    # Room-level ambient lines.
+    amb = _ROOM_AMBIENT.get(key)
+    if amb:
+        room.db.ambient_msgs = list(amb)
     # Furniture
     try:
         from typeclasses.facility_furniture import FacilityFurniture
