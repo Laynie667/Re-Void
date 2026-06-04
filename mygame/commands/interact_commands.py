@@ -136,6 +136,14 @@ class CmdHandle(Command):
 
         char_name = caller.db.rp_name or caller.name
 
+        # Builders author handle text in either second person ("You reach...") or
+        # with {actor}/{target} tokens. Fill the tokens if present; fall back to the
+        # raw text if it contains other/literal braces we can't safely format.
+        try:
+            handle_text = handle_text.format(actor=char_name, target=char_name)
+        except (KeyError, IndexError, ValueError):
+            pass
+
         # Show the full intimate sequence to the caller only
         caller.msg(handle_text)
 
@@ -188,6 +196,12 @@ class CmdHandle(Command):
                             try:
                                 from world.binding_effects import apply_effects
                                 apply_effects(caller, obj)
+                            except Exception:
+                                pass
+                        # Consumables (a spent dose) are used up, not kept.
+                        if trig.get("consume"):
+                            try:
+                                obj.delete()
                             except Exception:
                                 pass
                     else:

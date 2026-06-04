@@ -56,11 +56,14 @@ def apply_effects(character, item):
     if not effects:
         return
 
-    # auto_consent — save previous state, set all flags True
+    # auto_consent — save the TRUE previous state once, set all flags True.
+    # Non-destructive: if a backup already exists (e.g. the cursed ring opened
+    # consent before the contract did), don't overwrite it with the now-open
+    # state, or the reset would restore "open" instead of her real original.
     if effects.get("auto_consent"):
-        prev = dict(character.db.consent_flags or {})
-        character.db.binding_consent_backup = prev
-        flags = dict(prev)
+        if character.db.binding_consent_backup is None:
+            character.db.binding_consent_backup = dict(character.db.consent_flags or {})
+        flags = dict(character.db.consent_flags or {})
         for key in ALL_CONSENT_FLAGS:
             flags[key] = True
         character.db.consent_flags = flags

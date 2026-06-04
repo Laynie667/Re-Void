@@ -237,19 +237,83 @@ _ROOM_ZONES = {
             summary="the breeding line of padded stations",
             study=[
                 "Each station is cut away and angled to fold an occupant into presentation and "
-                "hold her there, hands-free, at exactly working height.",
+                "hold her there, hands-free, at exactly working height. There is one with your "
+                "number freshly chalked on the headboard. They were expecting you. They are "
+                "always expecting you.",
                 "The conveyor ticks forward a notch every so often, carrying whatever's strapped "
-                "in from milking to breeding to dosing without ever reaching an end.",
+                "in from milking to breeding to dosing without ever reaching an end. This is "
+                "orientation: not a tour, a turn on the line. You learn what you are by being "
+                "used as it.",
+                "There's no instruction posted, no schedule you can read — you're meant to learn "
+                "the rhythm the way the animals did, by being put through it until it's the only "
+                "thing your body remembers how to do.",
             ],
-            handle={"touch": "{actor} touches the nearest station's padding — wipe-clean vinyl, "
-                             "still warm from the last thing held in it."},
+            handle={"line": "|xYou touch the nearest station's padding — wipe-clean vinyl, "
+                            "still warm and faintly damp from the last thing held in it, the "
+                            "restraints hanging open and unhurried, waiting to be filled.|n"},
             ambient=["Somewhere down the line a rig descends, works, and rises again, wet.",
                      "A collection bottle fills a measure higher and the gauge logs it."]),
         "rigs": _z(
             "Articulated arms of suction cups and tubing hang ready over each station, "
             "graduated bottles racked beneath, gauges logging yield.",
             summary="milking rigs and collection bottles",
-            study=["The bottles are labelled by number, not name. One rack is yours, or will be."]),
+            study=[
+                "The bottles are labelled by number, not name. One rack is yours, or will be — "
+                "an empty shelf with your figure stencilled on it, waiting to start filling.",
+                "The cups are sized in a range, smallest to obscene, and they are not sized for "
+                "comfort. They are sized for what you'll become, further down the schedule.",
+            ],
+            handle={"rigs": "|xYou lift one of the suction cups from its cradle — heavier "
+                           "than it looks, the rim soft and cold, the vacuum hose behind it "
+                           "twitching faintly with stored suck, eager for a nipple to seal over.|n"}),
+        "cart": _z(
+            "A wheeled supply cart stands within reach of the line — labelled vials in foam, "
+            "needle guns, gauging rings, a brand and a tattoo kit, everything dosing and "
+            "marking might want, laid out in tidy rows.",
+            summary="a wheeled dosing-and-marking cart",
+            study=[
+                "The vials are labelled in a clinical shorthand — LACT+, HEAT, DOCILE, RETAIN — "
+                "and most of the foam slots are empty, used, a great many residents dosed before "
+                "you off this one cart.",
+                "There's a row of prepped auto-injectors in a tray, primed and capped, the kind "
+                "you press to the thigh and thumb. One has rolled loose to the cart's edge, as if "
+                "set apart. As if meant. You could pick it up.",
+                "The brand and the tattoo kit sit at the back, cleaned and ready. They are not "
+                "for today. They have your file already; today is only the start of filling it.",
+            ],
+            handle={"cart": "|xYour hand goes to the loose auto-injector at the cart's edge "
+                    "before you've quite decided to — and it fits your palm like it was molded "
+                    "for it, capped, prepped, the little window showing a measure of something "
+                    "warm and golden already drawn. Your thumb finds the trigger.|n"},
+            ambient=["A used injector is tidied into the sharps bin. The tray is restocked "
+                     "without anyone seeming to do it."]),
+        "gauges": _z(
+            "A bank of yield gauges and a lit processing board dominate the near wall, every "
+            "station's output charted live, every resident a climbing line by number.",
+            summary="yield gauges and the processing board",
+            study=[
+                "Your number is already on the board — a flat line at zero with a date beside it, "
+                "the day you signed, waiting to start its climb. Being good, here, will be a "
+                "slope. Being bad will be a flatter one, and a longer stay.",
+                "The board doesn't track how you feel or what you want. It tracks millilitres and "
+                "counts and grades. It is the only opinion of you the facility keeps, and it is "
+                "the only one that will, eventually, be yours too.",
+            ],
+            ambient=["A figure on the processing board ticks upward, and a soft chime approves it.",
+                     "A gauge needle swings as some station down the line gives up its measure."]),
+        "drain": _z(
+            "A wide grated drain sits in the centre of the sloped floor, the tiles around it "
+            "worn pale, a hose coiled on a bracket nearby.",
+            summary="a grated floor drain",
+            study=[
+                "The whole floor is pitched gently toward the drain. Whatever the line produces "
+                "or spills runs to this one point and is gone, and the tiles are scrubbed pale "
+                "around it from how often that's needed.",
+                "It is a very practical detail, and that's the horror of it: this is a place "
+                "built to be hosed down between uses, and you are one of the things between uses.",
+            ],
+            ambient=["Water trickles to the drain and is gone. The floor is sluiced clean on a "
+                     "schedule, ready for the next mess."]),
     },
     "pens": {
         "stalls": _z(
@@ -399,7 +463,14 @@ _ROOM_NPCS = {
         ("the attendant", "attendant", "An attendant in a clean grey coverall working the "
          "gauges along the line with unbothered efficiency."),
         ("the handler", "attendant", "A broad handler in a rubber apron who works the bodies — "
-         "strapping, adjusting, lining up whose turn is next."),
+         "strapping, adjusting, lining up whose turn is next. He looks at you the way the cart "
+         "looks at you: as the next item to be set up, run, logged, and sluiced down. Ask him "
+         "what you like. He answers in procedure."),
+        ("worked stock", "resident", "Further down the line a resident is folded into a station, "
+         "hands-free and presented, the cups working at her chest and the intake arm seated deep, "
+         "her eyes half-lidded and gone somewhere else while the gauge beside her climbs. She "
+         "doesn't look up. There's nothing in the look to give. That is what working looks like, "
+         "and the chalked station with your number is three down from hers."),
     ],
     "pens": [
         ("the kennel", "hound", "A run of heavy hounds, pacing and scenting the air."),
@@ -567,6 +638,45 @@ _BETHANY_TRIGGERS = {
         "for the pen. That's the question that gets answered.", "say"),
 }
 
+# The Processing Floor handler — curt, procedural, no euphemism left in him. Where
+# Bethany lied you in, he just tells you what you are now, because it no longer matters
+# whether you like it. Wired the same way (scripted NPC + keyword tree).
+_HANDLER_TRIGGERS = {
+    "orientation": ("Handler doesn't look up from the strap he's checking. \"This is "
+        "orientation. No tour. You go on the line, you get run, you learn the rhythm by "
+        "doing it. Same as the animals. They learned. You'll learn.\"", "emote"),
+    "station": ("\"That one's yours.\" He nods at the chalked headboard. \"Number, not name. "
+        "You fold in, it holds you, the line does the rest. You don't work it. It works you.\"",
+        "say"),
+    "milking": ("\"Cups seal, vacuum pulls, gauge logs it. Don't matter if you're empty — "
+        "schedule says milk, you get milked. Body figures it out fast once it knows there's no "
+        "off switch.\"", "say"),
+    "cart": ("He glances at the cart, then at you, flat. \"Dosing. Lactation primer, heat, "
+        "docility, retention. We give it when the schedule calls it. Anything walks up and doses "
+        "itself early —\" a shrug \"— saves me the trip. Wouldn't recommend it. Doesn't mean you "
+        "won't.\"", "emote"),
+    "injector": ("\"Prepped dose. Thigh, thumb the trigger, done. They're not for you to "
+        "help yourself to.\" The faintest curl of his mouth. \"Funny how many do anyway. Place "
+        "gets into you before the dose does.\"", "emote"),
+    "dose": ("\"Whatever's drawn is drawn for a reason. You don't get told the reason. You get "
+        "the dose. You'll feel it work and you'll stop minding it works — that's usually what "
+        "it's for.\"", "say"),
+    "board": ("\"Your number's up there. Flat line, today's date. Goes up from here if you're "
+        "productive, stays flat if you fight it. Flat means you're here longer. Math's not "
+        "complicated.\"", "say"),
+    "drain": ("\"Floor runs to the drain. We hose between uses.\" He says it without weight, "
+        "because to him it has none. \"You'll work out what that makes you. Most do, about the "
+        "second time they're hosed.\"", "emote"),
+    "leaving": ("\"Not my department. I run the line. Doors and words and going home, that's "
+        "upstairs, that's grades, that's later. Right now you're stock on my floor and the line's "
+        "ready. Let's set you up.\"", "say"),
+    "stock": ("\"Her?\" He doesn't look. \"Further along. Stopped asking questions about a "
+        "hundred runs back. That's not broken, that's *done*. Settled. You'll get there. "
+        "Everyone on my line gets there.\"", "emote"),
+    "help": ("\"Ask about the station, the line, the cart, the dose, the board. Or don't. "
+        "Line doesn't need you to understand it to run you. Hold still.\"", "say"),
+}
+
 # Residents are ambient props — set with a flat per-key 'look' flavour.
 _RESIDENT_ROLES = {"resident"}
 
@@ -670,12 +780,17 @@ def _furnish(room, key, owner):
                 n.db.facility_role = "resident"   # ambient prop; won't meet your eye
             else:
                 n.db.facility_role = "attendant"
-            # Bethany is a real, askable clerk — wire her conversation tree.
+            # Askable NPCs — wire their conversation trees (scripted tier).
+            _tree = None
             if nkey.lower() == "bethany":
+                _tree = _BETHANY_TRIGGERS
+            elif nkey.lower() == "the handler":
+                _tree = _HANDLER_TRIGGERS
+            if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
                     kw: {"response": resp, "type": ttype}
-                    for kw, (resp, ttype) in _BETHANY_TRIGGERS.items()
+                    for kw, (resp, ttype) in _tree.items()
                 }
     except Exception:
         pass
@@ -875,6 +990,53 @@ def build_realm(owner):
         cz["mechanics"] = mech
         zs["chairs"] = cz
         lobby.db.zones = zs
+    except Exception:
+        pass
+
+    # The cursed dose — a prepped auto-injector on the Processing Floor cart, found
+    # via `handle cart`. Self-dosing early (the place gets into you before the dose
+    # does) facilitates the schedule: lactation primer + perpetual heat + docility.
+    # Consumed on use; its installed effects are cleared by force_clear/the floor.
+    try:
+        from evennia import create_object as _co
+        floor = rooms["floor"]
+        dose = _tag(_co("typeclasses.objects.Object", key="a prepped auto-injector"))
+        dose.location = None
+        dose.db.desc = ("A capped auto-injector, its little window showing a measure of warm "
+                        "golden fluid already drawn. Marked, in the cart's clinical shorthand: "
+                        "LACT+ / HEAT / DOCILE.")
+        dose.db.binding_effects = {
+            "perpetual_heat": True,
+            "suggestibility": 4,
+            "conditioning_on_wear": 6.0,
+            "arousal_floor": 45.0,
+            "continuous_stimulation": 1.5,
+            "milk_quota": 6,
+            "install_triggers": [
+                {"phrase": "settle down", "response": "kneel", "strength": 2,
+                 "mantra": "good stock settles"},
+            ],
+        }
+        zf = dict(getattr(floor.db, "zones", None) or {})
+        cart = dict(zf.get("cart", {}))
+        cmech = dict(cart.get("mechanics", {}) or {})
+        ctrigs = dict(cmech.get("triggers", {}) or {})
+        ctrigs["cart"] = {
+            "type": "reveal_item",
+            "item_dbref": dose.dbref,
+            "attr": "used_floor_dose",
+            "once": True,
+            "apply_on_contact": True,
+            "consume": True,
+            "msg_room": ("|x{actor} lifts a prepped injector off the cart, presses it to her own "
+                         "thigh, and thumbs the trigger before anyone has to tell her to.|n"),
+            "msg_empty": ("|xThe tray's been restocked, but you can't make your hand reach for "
+                          "another. One was enough. One is always enough to start.|n"),
+        }
+        cmech["triggers"] = ctrigs
+        cart["mechanics"] = cmech
+        zf["cart"] = cart
+        floor.db.zones = zf
     except Exception:
         pass
 
