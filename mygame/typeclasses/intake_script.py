@@ -69,8 +69,38 @@ class IntakeScript(DefaultScript):
             if not isinstance(char, Character):
                 continue
             if getattr(char.db, "facility_signed", False):
+                # The lying stops the instant the ink dries — fire the door once.
+                if not getattr(char.db, "intake_door_opened", False):
+                    self._open_door(room, char)
                 continue
             self._work(room, char)
+
+    def _open_door(self, room, char):
+        char.db.intake_door_opened = True
+        t = char.db.rp_name or char.name
+        # Update the sealed-door zone desc so look reflects the new truth.
+        try:
+            zones = dict(getattr(room.db, "zones", None) or {})
+            if "door" in zones:
+                zd = dict(zones["door"])
+                zd["desc"] = (
+                    "The heavy door in the near wall stands open now — not swung wide, just "
+                    "parted, onto a corridor of the same bone-coloured light going down. The "
+                    "warm-wet smell of milk and animal comes up it freely. It opened the moment "
+                    "the ink dried, and it is not a way back."
+                )
+                zd["summary"] = ""
+                zones["door"] = zd
+                room.db.zones = zones
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|WSomething heavy releases in the wall with a pneumatic sigh, and the seamless "
+            f"door parts — onto a corridor of the same flat light, going down. The warm reek of "
+            f"the place rolls up out of it. Bethany caps her pen and beams.|n |y\"There. "
+            f"Welcome to the Residency, sweetheart.\"|n |W{t} is not asked to walk through. "
+            f"That gets decided for her.|n"
+        )
 
     def _work(self, room, char):
         t = char.db.rp_name or char.name

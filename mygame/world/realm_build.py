@@ -131,8 +131,103 @@ _ROOM_ZONES = {
             "Sodium lamps hum a half-tone flat overhead, the light even and shadowless and "
             "the colour of old bone.",
             summary="humming sodium light",
+            study=["Under the flat light there are no shadows to stand in and nothing looks "
+                   "well — skin goes waxy, edges go clinical. It is lighting chosen to make a "
+                   "body easy to inspect, not easy to like.",
+                   "It never flickers off, only dips and steadies, the way a thing watching you "
+                   "blinks and goes on watching."],
             ambient=["The sodium hum dips, wavers, steadies. The light never quite goes out.",
                      "Under the flat light, everything — including you — looks like inventory."]),
+        "chairs": _z(
+            "A row of moulded waiting chairs is bolted to the floor in front of the screen, "
+            "wipe-clean and the colour of nothing, facing forward whether you want to or not.",
+            summary="bolted-down waiting chairs",
+            study=[
+                "The front edge of every seat is worn shiny and smooth — not the wear of "
+                "sitting back, but of being perched forward, knees apart, presented. Everyone "
+                "who waited here was made to wait the same way.",
+                "They're bolted down and angled at the screen so there's nowhere to face but "
+                "the loop. You can close your eyes. You will open them again.",
+                "There's a gap beneath the nearest seat where the moulding doesn't quite meet "
+                "the frame, and something is tucked up into it, out of a cleaner's reach — a "
+                "small dull glint you only catch from this angle. You could reach under and feel "
+                "for it.",
+            ],
+            handle={"chairs":
+                "|xYou crouch by the nearest bolted chair and work your fingers up into the "
+                "seam under the seat, where the moulding doesn't quite meet the frame — and they "
+                "close on something small, cold, and metal, pushed up where no cleaner ever "
+                "reaches. It comes free into your palm, warm almost at once from your skin: a "
+                "heavy little piercing, a captive ring, its bead worked with the facility's "
+                "mark. Left here. Waiting. As if for a hand exactly your size.|n"},
+            ambient=["A chair's front edge catches the light, worn to a shine by everyone made "
+                     "to perch there before you."]),
+        "brochures": _z(
+            "A rack of glossy brochures stands by the chairs — warm photographs, soft headlines, "
+            "smiling testimonials for the Residency.",
+            summary="a rack of glossy brochures",
+            study=[
+                "Every photograph is shot from behind, or with the face turned, or cropped at "
+                "the collarbone. You flip through a dozen happy residents and never once see a "
+                "pair of eyes.",
+                "The testimonials are signed by initial and a number of years. \"Never been more "
+                "productive! — M., Resident, Year 3.\" \"I don't know who I was before. — "
+                "Resident, Year 6.\" The second one is printed like it's a good thing.",
+                "A pull-quote in friendly type promises *a structured daily rhythm residents "
+                "come to love.* It does not say what the rhythm is, or that loving it is the "
+                "point, or that it isn't optional.",
+            ],
+            handle={"brochures": "|xYou take a brochure off the rack. It's heavier and glossier "
+                    "than it has any right to be, warm from the lamps, and it falls open to a "
+                    "dog-eared page someone before you kept returning to.|n"},
+            ambient=["A brochure slides from the rack and fans open on the floor to a page of "
+                     "faceless, smiling residents."]),
+        "poster": _z(
+            "A large framed poster hangs above the rack: a soft-focus body, arms open, under "
+            "three friendly words — |wYOUR BODY IS A GIFT|n.",
+            summary="a framed wellness poster",
+            study=[
+                "Beneath the slogan, in type sized to be seen but not read from the chairs, runs "
+                "a strip of clause text: *...the Gift, once given, is received in full and held "
+                "in trust by the Residency for the productive lifetime of the donor...*",
+                "The model's arms are open in welcome, but her wrists are turned out and held "
+                "a little too wide — the pose of someone presenting, or restrained, framed to "
+                "read as the first thing until you've sat with it a while.",
+            ],
+            ambient=["The poster's soft-lit body seems, under the flat hum, to be offering "
+                     "something it has already been told it doesn't get to keep."]),
+        "board": _z(
+            "An illuminated |wNOW WELCOMING|n board hangs over the counter, a single number "
+            "glowing in its window above a worn ticket dispenser.",
+            summary="a NOW WELCOMING number board",
+            study=[
+                "The number in the window is enormous — five figures — and it ticks up while "
+                "you watch, steadily, far faster than one room of waiting chairs could ever "
+                "feed it. They are welcoming a great many people. None of them are leaving by "
+                "this door.",
+                "The ticket you'd pull doesn't have a number on it. It has a blank, and a line, "
+                "and the word OUTPUT, the same as the form on the counter. You are not in a "
+                "queue. You are an entry.",
+            ],
+            ambient=["The NOW WELCOMING number ticks up another digit. The chairs around you "
+                     "don't empty to match it."]),
+        "cooler": _z(
+            "A water cooler bubbles in the corner by the chairs, paper cones stacked beside it, "
+            "the only homely thing in the room.",
+            summary="a bubbling water cooler",
+            study=[
+                "The bottle glugs and sends up a string of bubbles every so often — a warm, "
+                "ordinary sound, put here on purpose, doing the work of making this feel like a "
+                "place where ordinary things happen to you.",
+                "The water is faintly sweet, and faintly warm, and you drink it because your "
+                "mouth is dry from the hum and the waiting. Afterward the loop on the screen is "
+                "a little easier to watch. You decide that's a coincidence.",
+            ],
+            handle={"cooler": "|xYou fill a paper cone at the cooler and drink. It's warm, and "
+                    "faintly sweet, and it goes down easy — easier than water should — and a "
+                    "soft, pleasant heaviness settles behind your eyes a moment later.|n"},
+            ambient=["The cooler glugs and sends up a friendly string of bubbles. It is the only "
+                     "kind sound in the room, and it was put here on purpose."]),
     },
     "floor": {
         "line": _z(
@@ -283,6 +378,22 @@ _ROOM_NPCS = {
          "unhurried, a detail she lets you catch and clearly enjoys you catching. She runs "
          "intake. She takes her time with the ones who make her work for it, and she remembers "
          "every single one — some of the stock further in carry her eyes."),
+        ("a gravid resident", "resident",
+         "A heavily pregnant woman sits two chairs down, hands folded on the swell of her belly, "
+         "serene in a way that has nothing behind it. A laminated tag is clipped to her wrist "
+         "where a name should be. She does not look at you. She is, the brochures would say, "
+         "thriving — and she is what the chair you're in is for."),
+        ("a collared resident", "resident",
+         "Another applicant waits near the door, placid and pleasant and entirely empty-eyed, a "
+         "faint pale band worn into the skin of her throat where a collar sits often enough to "
+         "leave a line. She answers the clerk's glances before they're finished, already nodding. "
+         "She is further along than you. She is also, unmistakably, your future, sitting with you "
+         "in the same grey light."),
+        ("a fresh applicant", "resident",
+         "A new arrival perches on the front edge of her chair exactly the way the wear suggests, "
+         "knees apart without seeming to know why, watching the screen with the soft slack face of "
+         "someone the loop has already started on. She still has her name. She doesn't know that's "
+         "a thing she has."),
     ],
     "floor": [
         ("the attendant", "attendant", "An attendant in a clean grey coverall working the "
@@ -377,6 +488,89 @@ _ROOM_AMBIENT = {
 }
 
 
+# Bethany's conversation tree — real NPC keyword triggers (ask Bethany about X).
+# Each value: (response, type). Bethany is set to a scripted tier so `ask` works.
+# She never says no; she euphemises, deflects, and slides the pen closer.
+_BETHANY_TRIGGERS = {
+    "program": ("Oh, it's *wonderful*. The Residency is a wellness-and-productivity "
+        "cooperative — structured days, full board, a real sense of purpose. Residents "
+        "tell me they've never felt so useful. You're going to fit right in, I can "
+        "always tell.", "say"),
+    "residency": ("A cooperative! We house you, we feed you, we give you a rhythm to your "
+        "days — and in return you contribute to the collective output. Everyone pulls their "
+        "weight. Some of us just have more to give, and we *celebrate* that here.", "say"),
+    "family": ("The family-building initiative! It's one of our proudest programs. Perfectly "
+        "natural, perfectly supported. We match residents to the initiative's needs and the "
+        "rest just... happens. You'd be amazed how quickly it stops feeling like a decision.",
+        "say"),
+    "breeding": ("We call it the family-building initiative, sweetheart — 'breeding' is such "
+        "an *agricultural* word. Though.\" Her smile doesn't move. \"Though I suppose, in the "
+        "end. Anyway! It's all in the paperwork.", "say"),
+    "milk": ("Lactation-wellness extraction — completely standard, completely comfortable. "
+        "Many residents find it the most relaxing part of the rhythm. The body so loves to be "
+        "*useful*, don't you find?", "say"),
+    "animals": ("Our agricultural partners! The Residency maintains a working livestock program "
+        "— it's all very integrated, very natural. You'll meet them during orientation. They're "
+        "ever so gentle.\" A small, private smile. \"Mostly.", "say"),
+    "conditioning": ("Orientation and adjustment support! Some residents arrive with so much "
+        "*noise* in them — opinions, hesitations, names they're awfully attached to. We help "
+        "quiet all that down. It's a kindness, really. You'll thank us. They all do.", "say"),
+    "cycle": ("A structured daily rhythm — residents *love* the structure. No more deciding, "
+        "no more wondering what to do with yourself. You'll be milked and bred and settled on a "
+        "lovely dependable schedule. Idle hands, and all that.", "say"),
+    "pigsty": ("The wellness-recovery suite! For residents who need a little... grounding. A "
+        "place to get back in touch with their basic nature. We don't send *everyone* there.\" "
+        "She beams. \"Not at first.", "say"),
+    "leaving": ("Oh! You'd discuss release with your placement coordinator — at a review. Once "
+        "you've settled in and we've got a sense of your output. I wouldn't worry about the end "
+        "before you've even begun, darling. Sign first. Everything else follows.", "say"),
+    "out": ("The way out? You came in by the waystone, same as everyone. Going back out is a "
+        "*privilege* — earned, reviewed, granted. By me, eventually, if you're very good. The "
+        "word that works it isn't one you have yet. Sign, and we'll talk about earning it.",
+        "say"),
+    "waystone": ("It only answers to words it knows, and it knows the word that brought you down. "
+        "The word that lifts you back up — well. That's kept somewhere safe. Somewhere that isn't "
+        "you. Don't fret about it. Fretting goes in your file.", "say"),
+    "noise": ("That sound? Just the rhythm of the place, sweetheart. Productive sounds. You'll "
+        "stop hearing it as anything but ordinary in a day or two — that's how you'll know you're "
+        "settling in nicely.", "say"),
+    "smell": ("Milk and clean animals and good honest work. Wholesome, isn't it? Your nose adjusts "
+        "by the second day. Everything about you adjusts, dear, given a little encouragement.",
+        "say"),
+    "residents": ("The other applicants? Further along than you, most of them. Content as anything. "
+        "That one's expecting — *thriving*. That one's nearly graduated. Look how settled they are. "
+        "That's you, in a little while. Isn't that a comfort?", "say"),
+    "contract": ("Standard! Everyone signs the same one — it's just a formality, the same forms "
+        "we've used for years. Front page is the friendly bit. The rest is the usual housekeeping, "
+        "nothing you need trouble yourself reading. Just initial where I've marked.", "say"),
+    "clauses": ("Boilerplate, all of it. Housekeeping. The interesting clauses are face-down for "
+        "*tidiness*, darling, not secrecy — though I do find people read less when there's less to "
+        "read, and read less still when I'm smiling. Shall we?", "say"),
+    "hidden": ("Hidden? Nothing's *hidden*. It's all right there, face-down, in writing, the way "
+        "everything binding always is. You agreed to be bound the moment you came down the "
+        "waystone, really. The signature's just manners.", "say"),
+    "you": ("Me? I'm Bethany. I run intake.\" She shifts her weight, and the fitted skirt does "
+        "nothing at all, and she lets you look. \"I take *such* good care of the ones who make me "
+        "work for it. Some of the stock downstairs have my eyes, you know. I do get attached.",
+        "say"),
+    "bethany": ("That's me! And it's the last time I'll use your name as much as you'll hear me use "
+        "mine, so enjoy it. After you sign, names get a bit... optional. Yours, mostly.", "say"),
+    "refuse": ("Bethany's smile does not so much as flicker. \"Of course, of course — no pressure "
+        "at all.\" She makes a small, neat note, and underlines it twice. \"I'll just let Processing "
+        "know you'll need a little *extra* orientation. They do so enjoy a project. Now. The pen.\"",
+        "emote"),
+    "no": ("\"No,\" Bethany repeats, warmly, like a word in a foreign language she finds charming. "
+        "She slides the pen another inch closer. \"You'll find that one gets easier to stop saying. "
+        "We help with that too.\"", "emote"),
+    "help": ("You can ask me about the program, the contract, the rhythm of the day, the other "
+        "residents — or about leaving, though I'll only smile at that one. Mostly you can ask me "
+        "for the pen. That's the question that gets answered.", "say"),
+}
+
+# Residents are ambient props — set with a flat per-key 'look' flavour.
+_RESIDENT_ROLES = {"resident"}
+
+
 def _install_mechanic(room, zone_name, spec, installer):
     """Install a real mechanic into a room zone (restraint / seat / dildo / milk)."""
     if not spec:
@@ -461,15 +655,28 @@ def _furnish(room, key, owner):
     # NPCs
     try:
         from typeclasses.facility_script import FacilityAttendant, FacilityBeast
+        from typeclasses.npc import NPC_TIER_SCRIPTED
         from evennia.utils import create as _c
+        _beasts = ("hound", "bull", "boar", "stallion")
         for nkey, role, ndesc in (_ROOM_NPCS.get(key) or []):
-            cls = FacilityBeast if role in ("hound", "bull", "boar", "stallion") else FacilityAttendant
+            cls = FacilityBeast if role in _beasts else FacilityAttendant
             n = _tag(_c.create_object(cls, key=nkey, location=room))
             n.db.rp_name = nkey
             n.db.physical_desc = ndesc
-            n.db.facility_role = "beast" if role in ("hound", "bull", "boar", "stallion") else "attendant"
-            if role in ("hound", "bull", "boar", "stallion"):
+            if role in _beasts:
+                n.db.facility_role = "beast"
                 n.db.species = role
+            elif role in _RESIDENT_ROLES:
+                n.db.facility_role = "resident"   # ambient prop; won't meet your eye
+            else:
+                n.db.facility_role = "attendant"
+            # Bethany is a real, askable clerk — wire her conversation tree.
+            if nkey.lower() == "bethany":
+                n.db.npc_tier = NPC_TIER_SCRIPTED
+                n.db.triggers = {
+                    kw: {"response": resp, "type": ttype}
+                    for kw, (resp, ttype) in _BETHANY_TRIGGERS.items()
+                }
     except Exception:
         pass
 
@@ -614,6 +821,63 @@ def build_realm(owner):
     except Exception:
         pass
 
+    # The cursed piercing — stashed under the lobby chairs, found by `handle chairs`.
+    # On contact it forces consent open and spikes suggestibility (it doesn't ask).
+    # Cleaned up by force_clear (tagged facility_piercing) and the OOC floor.
+    try:
+        from typeclasses.piercing_item import PiercingItem
+        curse = create_object(PiercingItem, key="the captive ring")
+        _tag(curse)
+        curse.location = None   # stashed nowhere until discovered
+        curse.db.facility_piercing = True
+        curse.db.slot = "center"
+        curse.db.default_zone = ""
+        curse.db.desc = (
+            "A heavy little captive-bead ring of dull dark metal, warm out of all proportion "
+            "to the cold seam it was hidden in. The bead is worked with the facility's mark. "
+            "It sits in your palm with the settled patience of a thing that was left here on "
+            "purpose, for a hand exactly your size — and it is already, faintly, trying to be "
+            "closer to you than your palm."
+        )
+        curse.db.worn_desc = ("|ra heavy captive-bead ring worked with the facility's mark, "
+                              "biting snug and warm and permanent-looking|n")
+        curse.db.binding_effects = {
+            "auto_consent": True,
+            "suggestibility": 5,
+            "conditioning_on_wear": 8.0,
+            "arousal_floor": 40.0,
+            "continuous_stimulation": 1.0,
+            "install_triggers": [
+                {"phrase": "be a good girl and sign", "response": "kneel", "strength": 3},
+                {"phrase": "good girls don't argue", "response": "obey", "strength": 2,
+                 "mantra": "good girls don't argue"},
+            ],
+        }
+        # Wire the reveal into the chairs zone trigger.
+        lobby = rooms["lobby"]
+        zs = dict(getattr(lobby.db, "zones", None) or {})
+        cz = dict(zs.get("chairs", {}))
+        mech = dict(cz.get("mechanics", {}) or {})
+        trigs = dict(mech.get("triggers", {}) or {})
+        trigs["chairs"] = {
+            "type": "reveal_item",
+            "item_dbref": curse.dbref,
+            "attr": "found_captive_ring",
+            "once": True,
+            "apply_on_contact": True,
+            "msg_room": ("|x{actor} crouches by the bolted chairs, reaches up under the nearest "
+                         "seat, and comes away with something small and metal closed in one "
+                         "fist — and then goes very still.|n"),
+            "msg_empty": ("|xYou feel along under the seats again, but the seam is empty now. "
+                          "Whatever was waiting there has already found its hand.|n"),
+        }
+        mech["triggers"] = trigs
+        cz["mechanics"] = mech
+        zs["chairs"] = cz
+        lobby.db.zones = zs
+    except Exception:
+        pass
+
     # Start the Intake lobby driver — Bethany, the screen, the slow squeeze.
     try:
         from typeclasses.intake_script import IntakeScript
@@ -703,7 +967,7 @@ def force_clear(owner):
               "milk_quota", "holes", "gape", "offspring_progress", "offspring_counts",
               "facility_title_backup", "forced_posture", "body_language", "room_bound",
               "facility_zone", "facility_furniture", "intake_provocations",
-              "intake_suggestibility"):
+              "intake_suggestibility", "intake_door_opened", "found_captive_ring"):
         try: setattr(d, k, None)
         except Exception: pass
     # -> 0
@@ -722,10 +986,16 @@ def force_clear(owner):
     for k in ("orgasm_release_word", "required_honorific", "facility_grade", "facility_brand"):
         try: setattr(d, k, "" if "word" in k or "honorific" in k else None)
         except Exception: pass
-    # consent restore
+    # consent restore — prefer the facility backup, fall back to any binding
+    # backup (e.g. the cursed piercing's auto_consent), so the floor always frees her.
     backup = getattr(d, "facility_consent_backup", None)
+    if backup is None:
+        backup = getattr(d, "binding_consent_backup", None)
     if backup is not None:
-        try: d.consent_flags = dict(backup); d.facility_consent_backup = None
+        try:
+            d.consent_flags = dict(backup)
+            d.facility_consent_backup = None
+            d.binding_consent_backup = None
         except Exception: pass
     # stop scripts on her
     for s in list(owner.scripts.all()):

@@ -168,6 +168,17 @@ def apply_effects(character, item):
         except Exception:
             pass
 
+    # suggestibility — spikes the Intake suggestibility counter (the screen's hook
+    # and Bethany's leverage). A cursed item can seat the sign compulsion instantly.
+    sug = int(effects.get("suggestibility", 0) or 0)
+    if sug:
+        cur = int(getattr(character.db, "intake_suggestibility", 0) or 0)
+        character.db.intake_suggestibility = cur + sug
+        character.msg(
+            "|xSomething behind your eyes goes soft and agreeable, like a question you've "
+            "stopped wanting to ask. It would be so easy to just say yes.|n"
+        )
+
     # forfeit_name — she answers to her designation; name restored only by reset
     if effects.get("forfeit_name"):
         if not getattr(character.db, "designation", None):

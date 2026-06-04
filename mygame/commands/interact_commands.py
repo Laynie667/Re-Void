@@ -156,6 +156,44 @@ class CmdHandle(Command):
         if zone_data and hasattr(zone_data, "get"):
             triggers = (zone_data.get("mechanics") or {}).get("triggers") or {}
             trig = triggers.get(dkey)
+            # reveal_item — handling this detail uncovers a stashed object (e.g. a
+            # cursed piercing hidden under a chair), delivers it to the finder, and
+            # — if it carries binding_effects — lets the curse bite on contact.
+            if trig and trig.get("type") == "reveal_item":
+                attr_name = trig.get("attr", f"found_{dkey}")
+                already = caller.attributes.get(attr_name)
+                if already and trig.get("once", True):
+                    empty = trig.get("msg_empty",
+                                     "|xThere's nothing else hidden there. Your fingers find "
+                                     "only the cold underside of the seat.|n")
+                    caller.msg(empty)
+                else:
+                    from evennia import search_object
+                    obj = None
+                    ref = trig.get("item_dbref")
+                    if ref:
+                        res = search_object(ref)
+                        obj = res[0] if res else None
+                    if obj:
+                        try:
+                            obj.move_to(caller, quiet=True, move_hooks=False)
+                        except Exception:
+                            obj.location = caller
+                        caller.attributes.add(attr_name, True)
+                        rmsg = trig.get("msg_room")
+                        if rmsg:
+                            room.msg_contents(rmsg.format(actor=char_name), exclude=caller)
+                        # Let the cursed thing apply itself on contact.
+                        if trig.get("apply_on_contact", True):
+                            try:
+                                from world.binding_effects import apply_effects
+                                apply_effects(caller, obj)
+                            except Exception:
+                                pass
+                    else:
+                        caller.msg("|xYour fingers close on nothing — whatever was there is "
+                                   "gone.|n")
+                return
             if trig and trig.get("type") == "set_attr":
                 attr_name = trig.get("attr")
                 attr_val  = trig.get("value", 1)
