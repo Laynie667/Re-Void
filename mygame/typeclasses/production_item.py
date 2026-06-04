@@ -98,6 +98,15 @@ class PassiveAccumulationScript(DefaultScript):
             except Exception:
                 pass
 
+            # Passive binding effects — continuous_stimulation (stim_per_tick) becomes
+            # real arousal here, and forced posture is re-enforced. (This is the call
+            # site the passive_tick helper was written for but was never wired to.)
+            try:
+                from world.binding_effects import passive_tick
+                passive_tick(char)
+            except Exception:
+                pass
+
 
 # ---------------------------------------------------------------------------
 # ProductionItem base

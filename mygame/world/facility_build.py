@@ -225,8 +225,8 @@ def provision_body(caller):
                       "zone_type": "surface", "consent_required": "casual",
                       "details": {}, "study_details": [], "handle_details": {},
                       "mechanics": {}, "default": True, "freeform": False, "ambient": []}
-            mz["default"] = False
-            mz["freeform"] = True
+            mz["default"] = True       # a real default zone → stable install address
+            mz["freeform"] = False
             zones["mind"] = mz
             caller.db.zones = zones
         if not find_mind_item(caller):
