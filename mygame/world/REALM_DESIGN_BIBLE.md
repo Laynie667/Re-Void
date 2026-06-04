@@ -205,9 +205,29 @@ Intake — she has not escaped the building, only gone deeper into its honesty.
 
 ### 2.5 The cursed dose (BUILT)
 A prepped auto-injector on the cart, found via `handle cart`. Self-dosing early
-(*the place gets into you before the dose does*) **facilitates the schedule**:
-perpetual heat + lactation primer + docility + suggestibility + conditioning.
-Consumed on use. Cleared by `force_clear`/the OOC floor.
+(*the place gets into you before the dose does*) **facilitates the schedule** with
+all-real backing: **HEAT** (perpetual_heat → HeatScript + arousal floor), **LACT+**
+(lactation_primer → installs/switches on her real milk glands + boosts output),
+**DOCILE** (conditioning meter + a seated "settle down" trigger), and a
+**suggestibility** spike (scales future conditioning + trigger depth). Consumed on
+use. Cleared by `force_clear`/the OOC floor.
+
+### 2.5b Drugs, procedures & equipment (what's *done* in processing)
+- **Milking is real:** her body systems (milk glands / womb / arousal) are installed
+  the moment she signs (`provision_body`), so the rigs actually drain millilitres into
+  the global fluid bank and the board logs the yield. Lactation, milking, and breeding
+  all have mechanical teeth here.
+- **The dosing cart (random, ~50% per milk phase):** a 12-compound menu, each real and
+  permanent — SWELL (grows her), YIELD/LACTATION (opens the glands), RAW-NERVE
+  (sensitises), CAPACITY (stretches what she holds), BROOD/fertility (hurries the womb),
+  COMPLIANCE/SOLVENT (deepen conditioning, set triggers), BIMBO (softens speech),
+  DEPENDENCE (builds a craving with its own leash), ESTRUS (locks heat on), CUMSLUT
+  (rewires empty→wrong). One or two per dose, handler's pick, never announced.
+- **The marking kit (occasional, rises with standing — slow burn):** 10 permanent
+  procedures — piercings, ownership brand, stim implant, gauging-ring fit, surgical
+  milk-ports, tail-plug/ears, fertility implant, tongue work, womb tattoo (BRED ·
+  PROPERTY OF THE FACILITY + a tally box), clit-hood removal. Real marks/implants that
+  show in `marks`/`brands` and persist until reset.
 
 ### 2.6 What she CAN / CANNOT do
 - CAN: `look`/`study`/`handle` every zone; `handle cart` (self-dose); `ask handler
@@ -216,9 +236,12 @@ Consumed on use. Cleared by `force_clear`/the OOC floor.
   would let her predict or refuse; un-dose herself.
 - OOC always: `escape` / `force_clear`.
 
-### 2.7 Transition
-The cycle drags her on from the Floor (→ Pens / Conditioning / Dairy per the realm
-sequence and grade). She does not walk it; it's decided for her.
+### 2.7 Transition — the handler decides
+She does not walk anywhere; the **handler reads her board and chooses** where she's
+owed next (`_choose_destination`, state-weighted): owed milk → Floor, unmet breeding
+quota → Pens, due for adjustment → Conditioning, output review → Dairy, slipped/
+freedom-forfeited → Pigsty. He unclips her mid-use and she's hauled to the next room —
+by the hair, by a nose-lead, by ceiling-track restraints — before she's registered it.
 
 ---
 
