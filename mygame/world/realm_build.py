@@ -656,3 +656,75 @@ def escape(owner):
     except Exception:
         pass
     owner.msg("|gYou're home, and clear. The realm lets go of you completely.|n")
+
+
+def force_clear(owner):
+    """Bulletproof reset — clears ALL facility/realm state on the character,
+    step by step so nothing half-fails. Use if run_facility_reset misbehaves."""
+    d = owner.db
+    # restore name + title FIRST (before clearing their backups)
+    if getattr(d, "facility_name_backup", None):
+        try: d.rp_name = d.facility_name_backup
+        except Exception: pass
+    tb = getattr(d, "facility_title_backup", None) or {}
+    try:
+        d.title_faction = tb.get("faction", "")
+        d.title_suffix  = tb.get("suffix", "")
+    except Exception: pass
+    # lists -> []
+    for k in ("active_speech_filters", "installed_triggers", "facility_brands",
+              "permanent_gape", "piercings", "pet_trigger_sources", "bred_by",
+              "sensation_broadcast_targets", "aphrodisiac_expirations",
+              "conditioning_applied", "facility_items", "facility_room_zones"):
+        try: setattr(d, k, [])
+        except Exception: pass
+    # -> None
+    for k in ("pet_type", "designation", "facility_name_backup", "breeding_quota",
+              "milk_quota", "holes", "gape", "offspring_progress", "offspring_counts",
+              "facility_title_backup", "forced_posture", "body_language", "room_bound",
+              "facility_zone", "facility_furniture"):
+        try: setattr(d, k, None)
+        except Exception: pass
+    # -> 0
+    for k in ("conditioning", "arousal_floor", "stim_per_tick", "bladder_ml", "arousal",
+              "defiance", "compliance_threshold", "compliance_streak", "processing_tier",
+              "facility_standing", "drug_dependence", "milk_baseline_ml"):
+        try: setattr(d, k, 0)
+        except Exception: pass
+    # -> False / ""
+    for k in ("orgasm_denial", "exhibition_active", "self_cmds_locked", "endcycle_blocked",
+              "navigation_locked", "anti_clothing_active", "conditioning_permanent",
+              "freedom_forfeited", "facility_signed", "facility_active", "perpetual_heat",
+              "cum_craving", "lactation_locked", "body_processing_locked", "aura_dimmed"):
+        try: setattr(d, k, False)
+        except Exception: pass
+    for k in ("orgasm_release_word", "required_honorific", "facility_grade", "facility_brand"):
+        try: setattr(d, k, "" if "word" in k or "honorific" in k else None)
+        except Exception: pass
+    # consent restore
+    backup = getattr(d, "facility_consent_backup", None)
+    if backup is not None:
+        try: d.consent_flags = dict(backup); d.facility_consent_backup = None
+        except Exception: pass
+    # stop scripts on her
+    for s in list(owner.scripts.all()):
+        if getattr(s, "key", "") in ("realm_cycle", "perpetual_heat", "body_processing",
+                                     "facility", "cycle_machine") or \
+           s.is_typeclass("typeclasses.milking_session_script.MilkingSessionScript", exact=False):
+            try: s.stop()
+            except Exception: pass
+    # remove worn facility piercings
+    try:
+        from typeclasses.piercing_item import PiercingItem
+        for o in list(owner.contents):
+            if isinstance(o, PiercingItem) and getattr(o.db, "facility_piercing", False):
+                try: o.delete()
+                except Exception: pass
+    except Exception: pass
+    # clear facility freeform marks
+    try:
+        ff = {k: v for k, v in (dict(getattr(d, "freeform_items", None) or {})).items()
+              if not str(k).startswith("facility mark")}
+        d.freeform_items = ff
+    except Exception: pass
+    owner.msg("|gForce-cleared. Speech, conditioning, triggers, marks, scripts, title — all reset.|n")
