@@ -1056,6 +1056,16 @@ class FacilityScript(DefaultScript):
         if lvl <= prev:
             return
         target.db.processing_tier = lvl
+        # Designate her in the title/sheet system — the grade IS her facility level.
+        if not getattr(target.db, "facility_title_backup", None):
+            target.db.facility_title_backup = {
+                "faction": getattr(target.db, "title_faction", "") or "",
+                "suffix":  getattr(target.db, "title_suffix", "") or "",
+            }
+        target.db.facility_grade    = name
+        target.db.facility_standing = lvl
+        target.db.title_faction     = "Property of the Facility"
+        target.db.title_suffix      = f"— Grade: {name}"
         room.msg_contents(
             f"\n|W════ PROCESSING REVIEW ════|n\n"
             f"|WThe board re-grades {t}: |Y{name}|W. {state.capitalize()}.|n\n"

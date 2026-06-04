@@ -402,6 +402,12 @@ def _install_mechanic(room, zone_name, spec, installer):
 
 def _furnish(room, key, owner):
     """Apply craft (zones + tokens + mechanics + ambient), furniture, and NPCs."""
+    # Designate the room as part of the named realm/area (ties to where/sheet).
+    room.db.area = "The Facility"
+    try:
+        room.tags.add("the_facility", category="area")
+    except Exception:
+        pass
     # Zones — store a clean copy (pop the install spec) and remember mechanics.
     zones = dict(getattr(room.db, "zones", None) or {})
     to_install = []

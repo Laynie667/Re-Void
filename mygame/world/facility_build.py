@@ -756,6 +756,13 @@ def run_facility_reset(caller, purge=False):
         caller.db.permanent_gape         = []
         caller.db.piercings              = []
         caller.db.processing_tier        = 0
+        caller.db.facility_grade         = None
+        caller.db.facility_standing      = 0
+        # restore her real title
+        _tb = getattr(caller.db, "facility_title_backup", None) or {}
+        caller.db.title_faction = _tb.get("faction", "")
+        caller.db.title_suffix  = _tb.get("suffix", "")
+        caller.db.facility_title_backup = None
         # Remove the REAL piercing items and the facility's freeform marks.
         try:
             from typeclasses.piercing_item import PiercingItem
