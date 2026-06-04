@@ -325,27 +325,98 @@ _ROOM_ZONES = {
     },
     "pens": {
         "stalls": _z(
-            "Heavy stalls line the wall — a dull-eyed breeding bull in one, a rank tusked boar "
-            "in a low pen, a big-barrelled stallion stamping in the last — stock kept ready and "
-            "walked to the line when the board says it's owed.",
+            "Heavy stalls line the far wall — a dull-eyed breeding bull in one, a rank tusked "
+            "boar in a low pen, a big-barrelled stallion stamping in the last — proven stock "
+            "kept fed, kept ready, and walked out when the stockman picks one.",
             summary="stalls of breeding stock",
             study=[
-                "The animals don't pace with hunger so much as schedule. They've learned the "
-                "rhythm of the place. So, the board notes, will you.",
-                "Each stall has a gate that opens onto a walkway that opens onto the line. The "
-                "geometry of the room only goes one direction, and it isn't out.",
+                "The |gbull|n is a wall of slow muscle, sheath heavy, bred for depth — the "
+                "stockman saves him for cunts trained loose enough to take him without tearing.",
+                "The |gboar|n is small-eyed and tireless, blunt and rooting; the placard wired to "
+                "his pen reads, in the stockman's hand, FOR THE BACK DOOR. He ruins an ass for good.",
+                "The |gstallion|n stamps and screams in the end stall, flared like a fist, the one "
+                "the stock is worked up to over a long, careful while. His stall has the most locks.",
+                "Each stall gates onto a walkway that gates onto the breeding stocks in the middle. "
+                "The geometry only runs one way, toward the frame, and the frame faces the wall.",
             ],
-            handle={"touch": "{actor} reaches toward a stall and the animal inside leans into it, "
-                             "huge and warm and entirely uninterested in {target} as a person."},
-            ambient=["The bull stamps and snorts, and the sound carries.",
-                     "The boar's musk thickens whenever the heat in the room shifts."]),
+            handle={"stalls": "|xYou reach toward a stall and the animal inside leans into it — "
+                             "huge and warm and rank, snuffling at you with flat, patient "
+                             "interest, entirely uninterested in you as anything but the next "
+                             "thing it'll be walked over to and put inside.|n"},
+            ambient=["The bull stamps and snorts, and the sound carries through the floor.",
+                     "The boar's musk thickens whenever the heat in the room shifts.",
+                     "The stallion screams once, impatient, and is told to wait his turn."]),
         "kennel": _z(
-            "A long kennel run takes up one wall, heavy rangy hounds pacing the bars, noses "
-            "working at the air, loosed one at a time on schedule.",
+            "A long kennel run takes up the near wall, a dozen heavy rangy hounds pacing the "
+            "bars, noses working the air, loosed in ones and twos — or all at once — on the "
+            "stockman's word.",
             summary="a kennel run of hounds",
-            study=["The hounds scent heat through the bars and whine when they catch it. They "
-                   "are very patient and not patient at all."],
-            ambient=["A hound presses to the bars, snuffling, and is told to wait."]),
+            study=[
+                "They scent heat through the bars and start to whine and jostle the moment a "
+                "fresh hole is brought in. Patient and not patient at all.",
+                "Hounds knot — they tie off inside and can't pull free until it goes down, so "
+                "whatever they're loosed on learns to hold a load whether it wants to or not. "
+                "The stockman uses them to train a hole to stay open.",
+                "When the whole run goes off at once it's a churning press of them, taking turns "
+                "and not waiting their turn, and there is no counting them from underneath.",
+            ],
+            handle={"kennel": "|xYou put your fingers near the bars and a dozen wet noses shove "
+                             "at them at once, snuffling, whining, the whole run going taut with "
+                             "interest — they can smell exactly what you're here to be.|n"},
+            ambient=["A hound presses to the bars, snuffling, and is told to wait.",
+                     "The kennel-run ripples with low whines whenever the latch-bar is touched."]),
+        "stocks": _z(
+            "A heavy timber breeding frame stands bolted in the centre of the floor, cut low and "
+            "spread, built to lock a body bent and open at exactly the height the stock mounts — "
+            "facing the wall, so there's nothing to look at but it while you're bred.",
+            summary="the central breeding stocks",
+            study=[
+                "The frame folds you down onto forearms and knees, hips hauled up and thighs "
+                "winched apart, holes presented at mounting height and your hands no use to you. "
+                "It is the only thing in the room built for a person, and it is built to make her "
+                "an animal's convenience.",
+                "The timber is worn smooth and dark at the hip-rest and the throat-rail, polished "
+                "by everyone bent here before you. The stains around the base were never fully "
+                "scrubbed out. No one tried very hard.",
+            ],
+            handle={"stocks": "|xYou run a hand over the breeding frame — smooth worn timber, "
+                             "still damp, the restraints hanging open and unhurried at ankle, "
+                             "wrist, and throat, every angle of it built to hold you presented "
+                             "and use-able and facing away.|n"}),
+        "wallow": _z(
+            "One corner of the floor is a churned pit of mud and slop, kept warm and wet, where "
+            "stock is rutted face-down and left to be marked and filthy between mounts.",
+            summary="a churned mud wallow",
+            study=[
+                "The muck is mud and water and a great deal that isn't — animal musk, spilled "
+                "spend, piss the stock and the hose put there. It is kept warm on purpose. It is "
+                "easier to stop minding than you'd think, and minding less is the point.",
+                "There's no clean part of it and nowhere near it that stays clean. You are rutted "
+                "into it face-first and you come up wearing it, and the wearing is half the mark.",
+            ],
+            handle={"wallow": "|xYou sink a hand into the warm reeking slop — it gives, and "
+                             "clings, and doesn't let go quickly, and the stink of it is on you "
+                             "now and won't come off until they decide to hose you.|n"},
+            ambient=["Something settles wetly in the wallow. The reek is kept warm on purpose.",
+                     "The hose drips against the wall, for marking and for the rare mercy of rinse."]),
+        "scentpost": _z(
+            "A scarred wooden post stands by the stocks at animal height, dark and greasy, where "
+            "the stock rub and mark — and where new holes are held to be scent-marked before "
+            "they're bred.",
+            summary="a greasy scent-marking post",
+            study=[
+                "The wood is black and slick with years of rubbed-in musk, glands, and spend. "
+                "The animals work themselves against it to leave their claim — and a fresh hole "
+                "is held to it first, rubbed down, so the stock reads her as theirs by smell.",
+                "Once you're marked at the post the animals breed you without hesitation. That's "
+                "what it's for: to make you smell like something that gets bred, so you do.",
+            ],
+            handle={"scentpost": "|xYou touch the post and your hand comes away greasy and "
+                             "reeking — musk and old spend ground into the grain, the smell of it "
+                             "instantly on your skin, marking you the way it marks everything "
+                             "brought near it.|n"},
+            ambient=["An animal rubs the scent-post and snorts, refreshing its claim.",
+                     "The post reeks across the whole floor — musk, and under it, the stock."]),
     },
     "conditioning": {
         "cradle": _z(
@@ -514,8 +585,9 @@ _ROOM_MECHANICS = {
         "rigs":   ("milk",),
     },
     "pens": {
-        "stalls": ("restrain", 1, "the breeding stocks",
-                   "The stocks lock you bent and spread at exactly the height the stock prefer. You wait to be bred."),
+        "stocks": ("restrain", 1, "the breeding stocks",
+                   "The frame folds you bent and spread at exactly mounting height and locks. You wait, presented, to be bred by whatever the stockman picks."),
+        "wallow": ("seat", 4, "the wallow", "face-down in the warm muck"),
     },
     "conditioning": {
         "cradle": ("restrain", 1, "the conditioning cradle",
@@ -685,6 +757,44 @@ _HANDLER_TRIGGERS = {
         "Line doesn't need you to understand it to run you. Hold still.\"", "say"),
 }
 
+# The stockman runs the Breeding Pens — he chooses which stock breeds her, and
+# when to just loose the whole pen. Curt, agricultural, no cruelty in it, which is
+# its own cruelty: to him she is simply an animal being bred, nothing worth heat.
+_STOCKMAN_TRIGGERS = {
+    "pens": ("\"This is the breeding floor. Stock on that wall, kennel on this one, stocks in "
+        "the middle for you.\" He doesn't look up from the latch he's oiling. \"You go in the "
+        "frame, they come to you. Simple operation.\"", "say"),
+    "stock": ("\"Bull, boar, stallion, and the kennel of hounds. All proven, all kept ready.\" "
+        "A shrug. \"Which one you take's my call, not yours. Depends what your board's owed and "
+        "what's rested. Some days it's the lot of them at once. Saves time.\"", "emote"),
+    "choice": ("\"I pick. You don't.\" He says it without unkindness, the way you'd tell a gate "
+        "it doesn't get a vote. \"I read the board, I read the stalls, I match them up. Could be "
+        "the boar today, could be the whole pen. You'll find out when the latch goes.\"", "say"),
+    "bull": ("\"Big lad. Slow, heavy, splits you wide and breeds deep. I save him for when your "
+        "cunt's trained enough to take him without tearing. You're getting there.\"", "say"),
+    "boar": ("\"Boar's for the back door, mostly. Blunt, relentless, roots in and won't quit. "
+        "Ruins an ass nicely. You'll gape for good after enough of him. That's the idea.\"", "say"),
+    "stallion": ("\"Stallion's the one they're all scared of. Flared like a fist. We work you up "
+        "to him over a long while.\" The ghost of something. \"You'll get there too. They all do.\"",
+        "say"),
+    "hounds": ("\"Kennel runs hot. Loose one and the rest go off. They knot — tie in you and "
+        "won't pull, so you learn to hold a load whether you like it or not. Good for training "
+        "a hole to stay open.\"", "emote"),
+    "all": ("\"Some days I don't pick. Throw every latch, kennel last, and let the pen have you "
+        "at once.\" He finally glances at you, flat. \"Faster. You don't enjoy it less for the "
+        "company, near as I can tell.\"", "emote"),
+    "scent": ("\"They'll mark you. Musk, piss, rub themselves all over you till you stink of the "
+        "pen.\" He nods, approving. \"Good. Means they've claimed you. A marked hole gets bred "
+        "without fuss. Don't wash it off — not that you'll get the chance.\"", "say"),
+    "breeding": ("\"You're bred till the board says the count's met, per species. Then the count "
+        "goes up.\" He latches the gate. \"It's not personal. You're a thing that takes and "
+        "drops. I keep you taking. That's the whole job.\"", "say"),
+    "leaving": ("\"Out's not a pen thing. Pen things get bred.\" He jerks his chin at the stocks. "
+        "\"In you go. They're ready even if you're not. Especially if you're not.\"", "emote"),
+    "help": ("\"Ask about the stock, the bull, the boar, the stallion, the hounds, who I pick, "
+        "or the marking. Or save your breath for the noises you'll be making. Your call.\"", "say"),
+}
+
 # Residents are ambient props — set with a flat per-key 'look' flavour.
 _RESIDENT_ROLES = {"resident"}
 
@@ -794,6 +904,8 @@ def _furnish(room, key, owner):
                 _tree = _BETHANY_TRIGGERS
             elif nkey.lower() == "the handler":
                 _tree = _HANDLER_TRIGGERS
+            elif nkey.lower() == "the stockman":
+                _tree = _STOCKMAN_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
@@ -1210,6 +1322,11 @@ def force_clear(owner):
                         except Exception: pass
                 try: obj.delete()
                 except Exception: pass
+    except Exception: pass
+    # undo the animal-sleeve state (restore hole descs, strip plug barriers)
+    try:
+        from world.gang_breeding import clear_animal_sleeve
+        clear_animal_sleeve(owner)
     except Exception: pass
     # clear facility freeform marks
     try:

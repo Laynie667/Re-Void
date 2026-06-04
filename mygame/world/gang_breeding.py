@@ -385,6 +385,174 @@ def gape_word(target, zone_name):
     return "tight"
 
 
+# ── Animal use: scent-marking, mucus plugs, filth, and the sleeve state ──────
+# Everything here is real and cleared by the reset (marks are facility marks;
+# barrier seals + rewritten zone descs are backed up and restored).
+
+_HOLE_FRAGMENTS = {
+    "pussy": ("pussy", "vag", "cunt"),
+    "anus":  ("anus", "anal", "ass", "rear", "butt"),
+    "mouth": ("mouth", "throat", "oral"),
+}
+
+_SLEEVE_DESC = {
+    "pussy": ("a slack, animal-bred cunt — a fuck-sleeve worn loose to the shape of a beast's "
+              "flared cock, lips dark and puffy and parted, the hole gaping and drooling cloudy "
+              "musk-thick slick, rubbed raw and kept that way"),
+    "anus":  ("a ruined, winking asshole — propped permanently open and slack, the rim a soft "
+              "loose ring, slick and dripping, a hole that doesn't close anymore and isn't meant to"),
+    "mouth": ("a slack, drooling fuckhole of a mouth — jaw loose, throat trained open, lips "
+              "puffy and spit-shined, a sleeve that's given up fighting the stretch"),
+}
+
+
+def _find_hole(target, key):
+    zones = getattr(target.db, "zones", None) or {}
+    frags = _HOLE_FRAGMENTS.get(key, ())
+    for z, d in zones.items():
+        if (d or {}).get("zone_type") in ("orifice", "both") and any(f in z for f in frags):
+            return z
+    return None
+
+
+def animal_holes(target):
+    """Map of pussy/anus/mouth -> real zone name (or None)."""
+    return {k: _find_hole(target, k) for k in _HOLE_FRAGMENTS}
+
+
+def scent_mark(target, zone=None):
+    """The animals scent-mark her — a real, persistent freeform mark (added once)."""
+    if getattr(target.db, "pen_scented", False):
+        return
+    record_mark(target,
+                "scent-marked — rubbed down with kennel-musk and stud-spunk until she reeks "
+                "of the pens, so every animal in the place knows her by smell",
+                zone=zone, mode="on")
+    target.db.pen_scented = True
+
+
+def mucus_plug(target, zone):
+    """Cork a bred hole with a clotted plug of animal cum — a real seal the womb
+    system respects (the load is held in, doesn't drain). Mark added once per zone."""
+    if not zone:
+        return
+    zones = dict(getattr(target.db, "zones", None) or {})
+    if zone in zones:
+        zd = dict(zones[zone]); mech = dict(zd.get("mechanics", {}) or {})
+        mech["barrier"] = {"seals_zone": True,
+                           "desc": "a thick clotted plug of animal cum sealing the hole, "
+                                   "holding the load in to take"}
+        zd["mechanics"] = mech; zones[zone] = zd; target.db.zones = zones
+    plugged = list(getattr(target.db, "pen_plugged", None) or [])
+    if zone not in plugged:
+        disp = zone.split("/")[-1].replace("_", " ")
+        record_mark(target, f"a mucus plug of clotted animal cum corking her {disp}, the load "
+                    f"held in to take", zone=zone, mode="in")
+        plugged.append(zone)
+        target.db.pen_plugged = plugged
+
+
+def apply_filth(target):
+    """Cake her in the pen's filth — mud, musk, dried piss. No feces. Added once."""
+    if getattr(target.db, "pen_filth", False):
+        return
+    for txt in (
+        "mud-caked to the thighs and elbows from being rutted face-down in the wallow",
+        "matted and slick with dried animal spunk and fresh kennel-musk, head to heel",
+        "piss-soaked — hosed and marked by the stock until she stinks of it, the smell "
+        "rubbed into her skin and hair",
+    ):
+        record_mark(target, txt, mode="on")
+    target.db.pen_filth = True
+
+
+def _set_sleeve_desc(target, zone, desc):
+    """Rewrite a hole's nude+interior desc to the sleeve, backing up the original."""
+    if not zone or not desc:
+        return
+    zones = dict(getattr(target.db, "zones", None) or {})
+    if zone not in zones:
+        return
+    backup = dict(getattr(target.db, "sleeve_desc_backup", None) or {})
+    zd = dict(zones[zone])
+    if zone not in backup:
+        backup[zone] = {"nude": zd.get("nude", ""), "interior": zd.get("interior", "")}
+        target.db.sleeve_desc_backup = backup
+    zd["nude"] = desc
+    zd["interior"] = desc
+    zones[zone] = zd
+    target.db.zones = zones
+
+
+def make_animal_sleeve(target, holes=("pussy", "anus", "mouth"),
+                       filth=True, scent=True, plug=True, broadcast=True):
+    """Train her holes into permanent animal cock-sleeves: real heavy use + permanent
+    gape (prolapse-capable), the zone descs rewritten to the sleeve, scent-marked,
+    bred holes corked with a mucus plug, and caked in filth. Cumulative — the pens
+    deepen it every visit. Returns the list of holes converted."""
+    found = animal_holes(target)
+    done = []
+    holes_db = dict(getattr(target.db, "holes", None) or {})
+    perm = list(getattr(target.db, "permanent_gape", None) or [])
+    for key in holes:
+        z = found.get(key)
+        if not z:
+            continue
+        h = dict(holes_db.get(z) or {"use": 0, "gape": 0.0})
+        h["use"] = max(int(h.get("use", 0)), 24)
+        h["gape"] = max(float(h.get("gape", 0.0)), 16.0)
+        holes_db[z] = h
+        if z not in perm:
+            perm.append(z)
+        _set_sleeve_desc(target, z, _SLEEVE_DESC.get(key))
+        if scent:
+            scent_mark(target, z)
+        if plug and key in ("pussy", "anus"):
+            mucus_plug(target, z)
+        done.append(key)
+    target.db.holes = holes_db
+    target.db.permanent_gape = perm
+    if filth:
+        apply_filth(target)
+    target.db.animal_sleeve = True
+    if broadcast and target.location and done:
+        tname = target.db.rp_name or target.name
+        target.location.msg_contents(
+            f"|R{tname}'s holes have been used past the point of recovery — cunt, mouth, and "
+            f"ass worn permanently slack and gaping, scent-marked, plugged, and filthy. She is "
+            f"a set of animal cock-sleeves now, logged as livestock, and the record calls it an "
+            f"improvement.|n")
+    return done
+
+
+def clear_animal_sleeve(target):
+    """Undo the sleeve state for the reset/OOC floor: restore the rewritten hole
+    descs, strip the mucus-plug barriers, and clear the flags. Marks/gape are
+    cleared by the caller's normal mark/permanent_gape teardown."""
+    if not target:
+        return
+    zones = dict(getattr(target.db, "zones", None) or {})
+    backup = dict(getattr(target.db, "sleeve_desc_backup", None) or {})
+    touched = set(backup.keys()) | set(getattr(target.db, "pen_plugged", None) or [])
+    for z in touched:
+        if z not in zones:
+            continue
+        zd = dict(zones[z])
+        if z in backup:
+            zd["nude"] = backup[z].get("nude", "")
+            zd["interior"] = backup[z].get("interior", "")
+        mech = dict(zd.get("mechanics", {}) or {})
+        mech.pop("barrier", None)
+        zd["mechanics"] = mech
+        zones[z] = zd
+    target.db.zones = zones
+    target.db.sleeve_desc_backup = None
+    target.db.pen_plugged = None
+    target.db.animal_sleeve = False
+    target.db.pen_filth = False
+    target.db.pen_scented = False
+
+
 # ── Piercings ───────────────────────────────────────────────────────────────
 # location -> (key, description, +stim, +floor, zone-name-fragments to find a real zone)
 _PIERCINGS = {

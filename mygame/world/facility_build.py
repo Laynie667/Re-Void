@@ -763,6 +763,12 @@ def run_facility_reset(caller, purge=False):
     caller.db.suggestibility            = 0.0
     caller.db.intake_suggestibility     = 0
     caller.db.docility                  = 0.0
+    # undo the animal-sleeve state (restore hole descs, strip mucus-plug barriers)
+    try:
+        from world.gang_breeding import clear_animal_sleeve
+        clear_animal_sleeve(caller)
+    except Exception:
+        pass
     # drop the installed 'mind' zone (its monitor object is removed via facility_items)
     try:
         _z = dict(getattr(caller.db, "zones", None) or {})

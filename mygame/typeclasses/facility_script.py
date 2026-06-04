@@ -453,6 +453,114 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── The Breeding Pens: relentless, constant animal use ──
+_PEN_PICK = [
+    "The handler walks the row, considering, then looks back at {t} folded open in the stocks "
+    "and decides. \"{who} today.\" He unlatches the stall and brings it to her, no more "
+    "ceremony than checking a box.",
+    "The handler runs a thumb down {t}'s file, then down the line of stalls, matching stock to "
+    "schedule. \"{who}. She's owed.\" He leads it over by the scruff and lines it up behind her.",
+    "\"Let's see,\" the handler muses, eyeing the board and then {t}'s gaping holes. \"{who} "
+    "this round.\" He loosens its pen and steps clear, leaving her to take what he's chosen.",
+    "The handler decides it the way he decides everything here — flat, practiced, without "
+    "asking {t}. \"{who}.\" The stall opens. The choice was never hers; it was only ever which "
+    "of them, and when.",
+]
+_PEN_PICK_ALL = [
+    "The handler looks at the clock, then at {t}, and just... opens everything. \"Ah, the lot "
+    "of you. Go on.\" Every stall and the kennel-run at once — he steps well back and lets the "
+    "whole pen have her.",
+    "\"No time to do this properly,\" the handler grunts, and throws all the latches at once. "
+    "The entire herd is loosed on {t} together — bull, boar, stallion, the whole kennel — and "
+    "he leaves her to it.",
+    "Some days the handler doesn't choose. He unlatches the row top to bottom, the kennel "
+    "last, and lets the full pen descend on {t} at once — every animal, every hole, no order "
+    "to it but appetite.",
+]
+_PEN_USE = [
+    "The pens don't take turns. The moment {t} is locked into the stocks the stock is loosed "
+    "on her all at once — a hound mounting her cunt while a second shoves up under her chin and "
+    "fucks her throat, the boar working into her ass, all of them rutting at their own animal "
+    "pace with no regard for hers, and the instant one pulls out spent another shoulders into "
+    "the gap. There is no pause. There was never going to be a pause. She is simply where the "
+    "herd empties itself now, hole after hole, on a loop that outlasts her.",
+    "It is not a scene, it is a shift. {t} is mounted front and back and made to swallow at "
+    "once, three animals using three holes in three different rhythms, and when the hound ties "
+    "off in her cunt the bull is already nosing her mouth open and the boar already grunting "
+    "into her ass — relentless, mechanical, indifferent, the stock cycling through her like she "
+    "is a fixture installed for exactly this and nothing else.",
+    "They use her like a thing on a conveyor that happens to be alive. One mounts, ruts, knots, "
+    "floods, pulls free; the next is already climbing on before the last drip has fallen. Cunt, "
+    "throat, ass — filled, refilled, never once empty, never once given a breath that isn't "
+    "around a cock. {t} stops being able to tell whose load is whose. The board just counts.",
+    "The handler steps back and lets the pen have her. Hounds, boar, the bull in his turn — "
+    "they mount {t} wherever there's a hole free and they do not stop, rutting her in a sweaty, "
+    "stinking, endless rotation, her whole body rocked on the stocks with the force of it, used "
+    "in every hole at once for as long as the herd has anything left to give. They have a lot "
+    "left to give.",
+]
+_PEN_HOLE = {
+    "pussy": [
+        "A weight slams onto {t}'s back and a slick animal cock punches into her cunt to the "
+        "knot, fucking her in fast brutal jackhammer strokes that bottom out against her cervix "
+        "every time, until it swells and ties and floods her and is dragged off so the next can "
+        "mount the same dripping hole.",
+        "Her cunt is bred again before the last load's even stopped leaking — mounted, rutted, "
+        "knotted, emptied, the animal's hips a blur against her ass, {t}'s gaping hole just a "
+        "warm wet socket the stock takes turns plugging.",
+    ],
+    "anus": [
+        "The boar's blunt cock forces into {t}'s ass and sets a grinding, relentless pace, "
+        "rooting deep and snorting, stretching her rim around its girth and rutting her gaping "
+        "and slack while she's used at both other ends too.",
+        "Something mounts {t}'s ass and ruts it open, fast and uncaring, the slap of it wet and "
+        "obscene, her asshole worked loose and drooling before it's even pulled out and replaced.",
+    ],
+    "mouth": [
+        "A cock shoves down {t}'s throat and face-fucks her in time with the others, an animal "
+        "using her mouth like a third hole, her jaw forced wide and drool roping to the floor, "
+        "gagging and swallowing because there is nothing else she's allowed to do with it.",
+        "Her mouth is filled mid-gasp — a slick animal length pushing past her lips and down, "
+        "fucking her throat raw, smearing pre and spit across her face while she's bred at the "
+        "other end, all her holes on the same indifferent schedule.",
+    ],
+}
+_PEN_SCENT = [
+    "Between mounts they scent-mark her — rubbing musk-glands and dripping sheaths over her "
+    "face, her tits, her hair, pissing a little on her thighs and grinding it in, until {t} "
+    "stinks unmistakably of the pen and every animal in it treats her as theirs by smell alone.",
+    "A hound drags its reeking sheath up {t}'s cheek and across her mouth, marking her, and the "
+    "others answer it — nosing her, slathering her in musk and slick, claiming the new hole for "
+    "the herd. She'll carry the stink for cycles. That's the point of it.",
+]
+_PEN_PLUG = [
+    "When the knot finally pulls free of {t} it leaves the load corked behind it — a thick "
+    "clotted plug of animal cum sealing her stretched hole, holding the breeding in, and the "
+    "handler nods: bred and plugged and kept that way to take.",
+    "Her bred hole clenches around nothing and seals itself with a slug of clotted spunk — a "
+    "mucus plug holding the load deep, kept in on purpose, {t} left dripping only at the edges "
+    "while the rest stays where it was put.",
+]
+_PEN_FILTH = [
+    "Face-down in the churned muck of the pen, rutted and dragged and rutted again, {t} is "
+    "caked to the elbows and thighs in mud and musk and dried piss — filthy as the stock she's "
+    "kept with, and hosed only enough to be used again, never enough to be clean.",
+    "They rut her into the wallow until she's plastered in it — mud, spunk, piss, kennel-stink "
+    "ground into her skin and hair — and leave her that way, a filthy bred thing that smells "
+    "like the pen because she is part of the pen now.",
+]
+_PEN_DEGRADE = [
+    "You stopped counting them a long time ago. There's no version of this where it ends with "
+    "the next one; there's only the next one. You are where the animals come to empty out, and "
+    "your body has started helping.",
+    "Every hole is full and your mind has gone somewhere flat and far and grateful for the "
+    "quiet. This is what the pens are for. This is what you're for in them. The thought doesn't "
+    "even sting anymore — it just settles, true, like everything they put in you.",
+    "Cunt, ass, throat — bred, plugged, scent-marked, filthy. Somewhere a board logs you as "
+    "stock and the only argument you have left is the wet, helpless sound you make around the "
+    "next cock, and that isn't an argument, that's just noise the herd likes.",
+]
+
 # Forced verbal participation — what she's MADE to say. Her own voice used against her.
 _VERBAL_BEATS = [
     "\"Ask for it,\" the handler says, and waits. {t} hears her own voice climb out of "
@@ -1612,6 +1720,87 @@ class FacilityScript(DefaultScript):
                 pass
         return npc, oral
 
+    _SPECIES_NOUN = {"hound": "a hound", "bull": "the bull", "boar": "the boar",
+                     "stallion": "the stallion", "contributor": "a stud"}
+
+    def _species_present(self, room):
+        """Which animals the handler has on hand in this room, by species."""
+        seen = []
+        for o in (room.contents if room else []):
+            if getattr(o.db, "facility_role", None) == "beast":
+                sp = getattr(o.db, "species", None)
+                if sp and sp not in seen:
+                    seen.append(sp)
+        return seen or ["hound"]
+
+    # ── The Breeding Pens: the handler picks who breeds her — sometimes one
+    #    animal, sometimes a couple, and occasionally the whole herd at once ──
+    def _pen_breed(self, room, target, t, cond):
+        """Her visit to the pens IS the use. The handler looks her over and the row
+        and decides which stock gets her this turn — real penetration + deposit per
+        hole, scent-marked, plugged, filthier by the beat. Once in a while he just
+        loses patience and looses the whole pen on her at once."""
+        from world.gang_breeding import (animal_holes, scent_mark, mucus_plug,
+                                          apply_filth, make_animal_sleeve, hole_capabilities)
+        ah = animal_holes(target)
+        live = [(k, z) for k, z in ah.items() if z]
+        if not live:
+            return self._gang(room, target, t, cond)
+
+        present = self._species_present(room)
+        all_at_once = random.random() < 0.22 and len(live) >= 2
+
+        used = []
+        if all_at_once:
+            # The handler steps back and gives her to the whole herd.
+            room.msg_contents("|y" + random.choice(_PEN_PICK_ALL).format(t=t) + "|n")
+            room.msg_contents("|r" + random.choice(_PEN_USE).format(t=t) + "|n")
+            for key, z in live:
+                if random.random() < 0.85:
+                    sp = random.choice(present)
+                    self._breed_one(room, target, z, sp, cond, gape_mult=1.25)
+                    used.append((key, z, sp))
+        else:
+            # The handler picks one stud (now and then a second) and assigns holes.
+            k = 2 if (len(present) >= 2 and random.random() < 0.3) else 1
+            picks = random.sample(present, k=min(k, len(present)))
+            names = " and ".join(self._SPECIES_NOUN.get(s, "a stud") for s in picks)
+            room.msg_contents("|y" + random.choice(_PEN_PICK).format(t=t, who=names) + "|n")
+            # The chosen stud(s) work one or two of her holes this turn.
+            holes = random.sample(live, k=min(len(picks) + random.randint(0, 1), len(live)))
+            for i, (key, z) in enumerate(holes):
+                sp = picks[i % len(picks)]
+                self._breed_one(room, target, z, sp, cond, gape_mult=1.2)
+                used.append((key, z, sp))
+
+        for key, z, sp in used:
+            room.msg_contents("|r" + random.choice(_PEN_HOLE.get(key, _PEN_HOLE["pussy"]))
+                              .format(t=t) + "|n")
+
+        # Consequences — scent, plugs on the bred holes, filth (no feces).
+        if random.random() < 0.55:
+            scent_mark(target, used[0][1] if used else None)
+            room.msg_contents("|g" + random.choice(_PEN_SCENT).format(t=t) + "|n")
+        for key, z, sp in used:
+            if key in ("pussy", "anus") and random.random() < 0.4:
+                mucus_plug(target, z)
+                room.msg_contents("|r" + random.choice(_PEN_PLUG).format(t=t) + "|n")
+        if random.random() < 0.5:
+            apply_filth(target)
+            room.msg_contents("|y" + random.choice(_PEN_FILTH).format(t=t) + "|n")
+
+        target.msg("  |m" + random.choice(_PEN_DEGRADE).format(t=t) + "|n")
+
+        # Trained slack enough → lock the permanent sleeve descs in (cumulative).
+        try:
+            caps = set()
+            for _k, z, _s in used:
+                caps |= hole_capabilities(target, z)
+            if "prolapse" in caps and not getattr(target.db, "animal_sleeve", False):
+                make_animal_sleeve(target)
+        except Exception:
+            pass
+
     # ── Scene picker — the breeding phase rolls one of these each beat ──
     def _gang(self, room, target, t, cond):
         orifices = self._orifices(target)
@@ -1967,7 +2156,7 @@ class RealmCycleScript(FacilityScript):
                     pass
             elif phase == "breed":
                 room.msg_contents(f"\n|w━━━━ BREEDING PENS ━━━━|n")
-                self._gang(room, char, t, cond)
+                self._pen_breed(room, char, t, cond)
             elif phase == "condition":
                 room.msg_contents(f"\n|w━━━━ CONDITIONING ━━━━|n")
                 if cond >= 40:
