@@ -245,17 +245,40 @@ by the hair, by a nose-lead, by ceiling-track restraints — before she's regist
 
 ---
 
-## 3b. ROOMS 3–6 — design index (to be expanded next, one room at a time)
+## 3b. ROOMS 3–7 — status
 
-- **Breeding Pens** — bred by the animals present (real penetration + deposit),
-  scene gated by trained holes. CAN: be bred, watch the stock. CAN'T: refuse the
-  mount. → dragged to Conditioning.
-- **Conditioning Cell** — the Process up close, triggers reinforced, degradation.
-  CAN: be conditioned, recite. CAN'T: not listen. → dragged to the Dairy.
-- **Dairy & Output** — her product displayed, the board thrown in her face. CAN:
-  read her totals. CAN'T: reach the bottles. → looped back, or sent down.
-- **The Pigsty** — the wallow; punishment/end-tier; slopped, hosed, rutted. CAN:
-  be put on all fours in the muck. CAN'T: stay clean. → loops on a slip.
+- **Breeding Pens — COMPLETE.** The **stockman picks** which stock breeds her (one
+  stud, sometimes two, assigned to holes) and ~22% of the time looses the **whole
+  herd at once** (`_pen_breed`). Real penetration + deposit + gape training per hole.
+  Consequences: **scent-marking, mucus plugs** (real barrier seals the womb respects),
+  **filth** (mud/musk/dried piss, no feces), and cumulative **animal cock-sleeve**
+  conversion (cunt/ass/mouth → permanent gaping, real gape + rewritten descs,
+  `clear_animal_sleeve` restores). Zones: stalls (per-animal), kennel (knot/all-at-once),
+  central breeding stocks (restrain), mud wallow, scent-post. Stockman askable.
+- **Conditioning Cell — COMPLETE.** Scripted **hypnotic induction** (`_hypno`): real
+  technique — fixation, paced breathing, countdown + staircase **deepeners**,
+  **fractionation**, **confusion/overload**, tier-scaled **suggestion**, **anchoring**
+  (post-hypnotic trigger installs), **mantra loops** (forced recite), **amnesia**
+  suggestions — all driving the real conditioning meter + trigger engine, amplified by
+  suggestibility. Zones: the **spiral** (fixation, paces her breathing), the **grille**
+  (the confided voice). Conditioning tech askable.
+- **Sanitation Block — COMPLETE (new 7th room).** Used as plumbing: the **glory wall**
+  (anonymous cocks, real deposits), the **meat-toilet frame** (locked face-up under a
+  seat, used from above), the **urinal** (clamped under the trough run). Real
+  **watersports** (`_take_piss`: urine banked, her own bladder held full, belly filled,
+  piss-soaked mark). Custodian askable. New `toilet` cycle phase.
+- **Dairy & Output — basic (to deepen).** Her product displayed, board in her face.
+- **The Pigsty — basic (to deepen).** The wallow; punishment/end-tier.
+
+### Womb / fertility / pregnancy — current honest status
+The **WombRoom** is a real, enterable space that **floods** with fluid (cum/piss, with
+flood-state prose), can be **sealed** (a mucus-plug barrier holds the load in, no drain),
+and shows a knot pushing through on penetration — so the **"meat toilet" / cum-dump /
+held-full** fantasy is fully supported. What is **NOT** yet modelled: a real **fertility
+cycle** (ovulation / fertile window) or true **gestation/pregnancy** (a growing belly,
+trimesters). Conception is abstract — offspring "drop" when `offspring_progress` crosses
+a threshold (brood/fertility accelerants + breeding). *Buildable next if wanted: a real
+estrus cycle gating breeding success + a gestation belly state that swells and delivers.*
 
 ---
 
