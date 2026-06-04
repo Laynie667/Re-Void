@@ -769,6 +769,15 @@ def run_facility_reset(caller, purge=False):
         clear_animal_sleeve(caller)
     except Exception:
         pass
+    # end any pregnancy + restore the belly desc
+    try:
+        from world.pregnancy import clear as _preg_clear
+        _preg_clear(caller)
+    except Exception:
+        pass
+    caller.db.pregnancy_belly = None
+    caller.db.belly_desc_backup = None
+    caller.db.cycle_day = 0
     # drop the installed 'mind' zone (its monitor object is removed via facility_items)
     try:
         _z = dict(getattr(caller.db, "zones", None) or {})

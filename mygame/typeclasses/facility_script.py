@@ -1588,6 +1588,13 @@ class FacilityScript(DefaultScript):
         for sp in ("hound", "bull", "boar", "stallion"):
             prog[sp] = int(prog.get(sp, 0)) + random.randint(1, 3)
         target.db.offspring_progress = prog
+        # If she's already gravid, hurry the gestation along instead.
+        try:
+            from world.pregnancy import accelerate, is_pregnant
+            if is_pregnant(target):
+                accelerate(target, random.uniform(3.0, 6.0))
+        except Exception:
+            pass
         room.msg_contents(
             f"|G  ▸ BROOD ACCELERANT — {t}'s womb is hurried along; whatever's rooted in her "
             f"comes due sooner and takes faster. (fertility up — get drops sooner)|n")
@@ -1751,6 +1758,12 @@ class FacilityScript(DefaultScript):
         for sp in ("hound", "bull", "boar", "stallion"):
             prog[sp] = int(prog.get(sp, 0)) + 2
         target.db.offspring_progress = prog
+        try:
+            from world.pregnancy import accelerate, is_pregnant
+            if is_pregnant(target):
+                accelerate(target, 4.0)
+        except Exception:
+            pass
         self._mark(target, "a fertility implant seated in her cervix — tuned for breeding")
         room.msg_contents(
             f"|GA fertility implant is pushed up through {t}'s cervix and seated, flooding her "
@@ -2504,6 +2517,12 @@ class RealmCycleScript(FacilityScript):
             mind = find_mind_item(char)
             if mind:
                 mind.tick(char)
+        except Exception:
+            pass
+        # Estrus cycle / gestation advances each beat — she catches, swells, drops.
+        try:
+            from world.pregnancy import gestation_tick
+            gestation_tick(char)
         except Exception:
             pass
         # Facility standing accrues SLOWLY from the processing — the slow burn.

@@ -1538,6 +1538,15 @@ def force_clear(owner):
         from world.gang_breeding import clear_animal_sleeve
         clear_animal_sleeve(owner)
     except Exception: pass
+    # end any pregnancy + restore the belly desc
+    try:
+        from world.pregnancy import clear as _preg_clear
+        _preg_clear(owner)
+    except Exception: pass
+    for k in ("pregnancy", "belly_desc_backup", "pregnancy_belly", "cycle_day",
+              "offspring_progress", "offspring_counts"):
+        try: setattr(d, k, None)
+        except Exception: pass
     # clear facility freeform marks
     try:
         ff = {k: v for k, v in (dict(getattr(d, "freeform_items", None) or {})).items()

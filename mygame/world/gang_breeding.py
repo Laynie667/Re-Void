@@ -75,11 +75,16 @@ def gang_inseminate(target, zone_name, contributors=3,
                         f"cleared at last and marked. It does not come off.|n"
                     )
 
-    # Offspring — purely the stud's line (never anonymous contributors). Enough
-    # of one stud and she drops its get, which joins the roster and, in time,
-    # breeds her too.
+    # Offspring — purely the stud's line (never anonymous contributors). A stud's
+    # deposit during her fertile window may catch; the pregnancy system then carries
+    # it to a real gestation and delivery. (Falls back to the abstract progress
+    # counter only if the pregnancy module is unavailable.)
     if species in ("hound", "bull", "boar", "stallion"):
-        _maybe_offspring(target, species)
+        try:
+            from world.pregnancy import on_bred
+            on_bred(target, species)
+        except Exception:
+            _maybe_offspring(target, species)
 
     # Route the combined volume into the zone as cumflation (belly swell).
     total = volume_each * len(donors)
