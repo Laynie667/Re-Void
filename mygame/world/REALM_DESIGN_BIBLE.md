@@ -267,18 +267,25 @@ by the hair, by a nose-lead, by ceiling-track restraints — before she's regist
   seat, used from above), the **urinal** (clamped under the trough run). Real
   **watersports** (`_take_piss`: urine banked, her own bladder held full, belly filled,
   piss-soaked mark). Custodian askable. New `toilet` cycle phase.
-- **Dairy & Output — basic (to deepen).** Her product displayed, board in her face.
-- **The Pigsty — basic (to deepen).** The wallow; punishment/end-tier.
+- **Dairy & Output — COMPLETE.** `_dairy`: actually milked here (real drain + bank),
+  totals in her face, displayed/read as product; post-partum lactation feeds it. Dairy
+  hand askable (numbers only).
+- **The Pigsty — COMPLETE.** `_sty`: slopped, hosed, rutted face-down in the muck (real
+  deposit), filth applied, punish + degradation. Swineherd askable (no feces).
 
-### Womb / fertility / pregnancy — current honest status
-The **WombRoom** is a real, enterable space that **floods** with fluid (cum/piss, with
-flood-state prose), can be **sealed** (a mucus-plug barrier holds the load in, no drain),
-and shows a knot pushing through on penetration — so the **"meat toilet" / cum-dump /
-held-full** fantasy is fully supported. What is **NOT** yet modelled: a real **fertility
-cycle** (ovulation / fertile window) or true **gestation/pregnancy** (a growing belly,
-trimesters). Conception is abstract — offspring "drop" when `offspring_progress` crosses
-a threshold (brood/fertility accelerants + breeding). *Buildable next if wanted: a real
-estrus cycle gating breeding success + a gestation belly state that swells and delivers.*
+### Womb / fertility / pregnancy — COMPLETE (`world/pregnancy.py`)
+The **WombRoom** flood/seal/meat-toilet support stands. On top of it now sits a real
+spine: **estrus cycle** (`is_fertile` — perpetual heat = always in season, else a
+cycle), **conception** (a stud's deposit in a fertile window catches, via `on_bred`),
+**gestation** (`gestation_tick` swells the belly through caught→showing→heavy→full→
+labour as a real backed-up zone desc), and **delivery** (`deliver` drops the litter via
+`_birth_offspring` — joins the roster — her milk comes in, and the species' quota is
+**raised by the litter** = the offspring spiral). BROOD/fertility accelerants hurry an
+active gestation. Reset restores the belly + wipes all pregnancy/cycle state.
+
+**The realm loop is now complete end-to-end:** every phase (milk / breed / condition /
+display / toilet / punish) drives a real, system-backed scene, every room has an askable
+staffer, and breeding→pregnancy→delivery→quota→milk all feed each other.
 
 ---
 
