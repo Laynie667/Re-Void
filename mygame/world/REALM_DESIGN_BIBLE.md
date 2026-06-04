@@ -148,24 +148,82 @@ milked on the Floor → bred in the Pens → broken in the Conditioning cell →
 shown her output in the Dairy → slopped to the Pigsty if she slips — looping,
 graded, deeper by standing. (See `FACILITY_DESIGN §4`.)
 
-### 1.10 Build status
-- BUILT: room + zones (counter/screen/door/light/waystone), Bethany NPC, the
-  screen + subliminal squeeze + suggestibility trigger + idle forced-sign,
+### 1.10 Build status — COMPLETE (playable)
+- BUILT: room + full zone set, every facet look/study/handle-able —
+  counter, waystone, door, light, **chairs, brochures, poster, NOW WELCOMING
+  number board, water cooler**. Concise on `look`, the wrongness on `study`.
+- BUILT: **Bethany's `ask` conversation tree** (scripted NPC) — program, residency,
+  contract, leaving, the way out, waystone, animals, conditioning, cycle, pigsty,
+  residents, refuse, no, help — euphemism, never says no, slides the pen closer.
+- BUILT: **prop-residents as real NPCs** — a gravid resident, a collared resident,
+  a fresh applicant (placid, tagged, won't meet your eye; your future beside you).
+- BUILT: the screen + subliminal squeeze + suggestibility trigger + idle forced-sign,
   contract on the counter, dawdle-worsens-terms, the cycle on signing.
-- TO BUILD: Bethany's `ask`/`talk` conversation tree; the prop-residents as real
-  NPCs; brochures/poster/number-board as study objects; Bethany-sired offspring
-  hook; the door visibly opening on signing; richer prose to the witch_build bar.
+- BUILT: **the cursed captive ring** hidden under the chairs (`handle chairs`) — on
+  contact it forces consent open, spikes suggestibility, seats the sign + "good girls
+  don't argue" compulsions, seeds conditioning/arousal. It doesn't ask. OOC floor
+  strips it (facility_piercing + realm-tagged; force_clear restores true consent).
+- BUILT: **the door visibly opens on signing** — IntakeScript fires a one-time beat
+  and rewrites the door zone desc; the lying stops the instant the ink dries.
+- TO BUILD (polish): Bethany-sired offspring hook; richer per-zone prose passes.
 
 ---
 
-## 2. ROOMS 2–6 — design index (to be expanded to Intake's depth)
+## 2. ROOM 2 — PROCESSING FLOOR (the next room) — COMPLETE (playable)
 
-Each gets the same treatment as §1 (purpose, space, zones, NPCs, what happens,
-can/can't, transition). Summaries here; full specs next.
+### 2.1 Purpose
+Where the contract stops being words. Intake manufactured consent; the Floor
+**collects on it.** The first loop past the door is her **orientation — and
+orientation is a turn on the line, not a tour.** She learns what she is the way
+the animals did: by being folded into a station and run until the rhythm is the
+only thing her body remembers. The dread shifts from dramatic irony (Intake) to
+**legible inevitability** — she can read exactly what's about to be done, and the
+reading changes nothing.
 
-- **Processing Floor** — the milking + dosing room. Strapped to a station, milked
-  for real, dosed mid-phase. CAN: be milked, be dosed, read the board. CAN'T:
-  leave the station mid-phase. → dragged to the Pens.
+### 2.2 The space
+A long low hall of padded breeding stations on a slow conveyor, coiled tubing and
+steel, collection bottles racked under each rig. The light never changes; the line
+never stops. The floor is pitched to a central drain. Same bone-coloured sodium as
+Intake — she has not escaped the building, only gone deeper into its honesty.
+
+### 2.3 Zones (look = concise, study = the wrongness)
+| Zone | First glance | On `study` |
+|------|-------------|------------|
+| **line** | padded stations on a conveyor | a station with *your number* chalked on it; orientation is being run, not toured; no posted schedule — you learn it by being put through it |
+| **rigs** | suction cups, tubing, graded bottles | a shelf stencilled with your figure, waiting to fill; cups sized for what you'll become, not for comfort |
+| **cart** | a dosing-and-marking cart | vials (LACT+/HEAT/DOCILE/RETAIN), most used; a row of prepped injectors, one rolled loose *as if meant*; brand + tattoo kit cleaned for later |
+| **gauges** | yield gauges + processing board | your number, flat at zero, dated the day you signed; the board tracks ml/counts/grades — the only opinion of you it keeps |
+| **drain** | a grated floor drain | the floor pitches to it; scrubbed pale; a place built to be hosed between uses, and you're a thing between uses |
+
+### 2.4 NPCs
+- **The handler** — broad, rubber-aproned, **askable** (scripted): station, line,
+  cart, dose, board, drain, leaving, stock, help. No euphemism left in him; where
+  Bethany lied her in, he just tells her what she is now, in procedure.
+- **The attendant** — works the gauges, ambient.
+- **Worked stock** — a resident folded into a station three down from hers, cups
+  working, gauge climbing, gone somewhere else. What "done" looks like.
+
+### 2.5 The cursed dose (BUILT)
+A prepped auto-injector on the cart, found via `handle cart`. Self-dosing early
+(*the place gets into you before the dose does*) **facilitates the schedule**:
+perpetual heat + lactation primer + docility + suggestibility + conditioning.
+Consumed on use. Cleared by `force_clear`/the OOC floor.
+
+### 2.6 What she CAN / CANNOT do
+- CAN: `look`/`study`/`handle` every zone; `handle cart` (self-dose); `ask handler
+  about <topic>`; be milked/dosed/bred when the cycle runs the room.
+- CANNOT: leave a station mid-phase; reach the bottles as hers; read a schedule that
+  would let her predict or refuse; un-dose herself.
+- OOC always: `escape` / `force_clear`.
+
+### 2.7 Transition
+The cycle drags her on from the Floor (→ Pens / Conditioning / Dairy per the realm
+sequence and grade). She does not walk it; it's decided for her.
+
+---
+
+## 3b. ROOMS 3–6 — design index (to be expanded next, one room at a time)
+
 - **Breeding Pens** — bred by the animals present (real penetration + deposit),
   scene gated by trained holes. CAN: be bred, watch the stock. CAN'T: refuse the
   mount. → dragged to Conditioning.
