@@ -453,6 +453,32 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── Deep Stock: the Perfected terminus ──
+_DEEP_BEATS = [
+    "{t} is walked to her pod and sealed in — latex to the lines, ports aligned, the lid drawn "
+    "to — and the dark closes warm and total around her as the plumbing takes over. No handler, "
+    "no scene, no asking. Just the lines, drawing and feeding and filling her on a loop with no "
+    "end, the way they keep all the finished stock.",
+    "The pod cradles {t} upright in the humming dark and plugs her into the rows — milk drawn "
+    "through one port, seed pushed through another, nutrient dripped in a third — kept running "
+    "without ever being woken, a serviced unit among serviced units, her uptime ticking over "
+    "on a readout that long ago stopped bothering with her name.",
+    "Down on Sub-Level P {t} idles in her latex, plumbed and pulsing, bred and milked by "
+    "machine in a silence so complete it feels like being held. The facility has nothing left "
+    "to teach her. It only keeps her now, running, for as many years as the lines hold out.",
+]
+_DEEP_DEGRADE = [
+    "There is nothing to do and nothing asked and no part of you left that minds, and the peace "
+    "of that is the last thing they take — by giving it to you. You are finished. You are kept. "
+    "It feels, God help the scrap of you that can still feel, like rest.",
+    "Sealed and plumbed and idling, you understand you've reached the bottom, and the bottom is "
+    "quiet, and warm, and forever, and you cannot find the version of yourself that would have "
+    "been horrified. They wore her out upstairs. This is just where they store what's left.",
+    "The lines draw and feed and fill, draw and feed and fill, and the years tick over on a pod "
+    "that used to be a person and is now just running well. Soon the pod is yours and the "
+    "running is all there is, and the worst of it is how little, by now, that costs you.",
+]
+
 # ── The Showroom: appraised and sold ──
 _SHOW_BEATS = [
     "{t} is led up onto the lit display block and the turntable takes her, slow and smooth, "
@@ -2225,6 +2251,35 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── Deep Stock: the Perfected end-state, sealed and kept on the lines ──
+    def _deepstock(self, room, target, t, cond):
+        """Grade-gated terminus: she's sealed into her pod and run on the lines —
+        milked and bred through ports without being woken, the loop's quiet end."""
+        # Down here she's kept latex-sealed by default.
+        if not getattr(target.db, "latex_sealed", False):
+            try:
+                self._proc_latex(room, target, t)
+            except Exception:
+                target.db.latex_sealed = True
+        room.msg_contents("|x" + random.choice(_DEEP_BEATS).format(t=t) + "|n")
+        # Still milked and bred — just through the lines, hands-free, no scene.
+        self._do_milk(room, target, t)
+        try:
+            from world.gang_breeding import animal_holes, gang_inseminate
+            holes = [z for z in animal_holes(target).values() if z]
+            if holes:
+                gang_inseminate(target, random.choice(holes), contributors=1,
+                                fluid_type="semen", species=self._pick_species(target))
+        except Exception:
+            pass
+        # The lowest hum of conditioning, forever — and the terrible peace of it.
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 0.8 + cond * 0.003, source="deepstock")
+        except Exception:
+            pass
+        target.msg("  |x" + random.choice(_DEEP_DEGRADE).format(t=t) + "|n")
+
     # ── The Showroom: appraised, priced off her own stats, and sold ──
     _GRADE_ORDER = ["Unprocessed", "Intake", "Breaking In", "Breeding Stock",
                     "Broodmare", "Perfected Livestock"]
@@ -2863,6 +2918,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "show":
                 room.msg_contents(f"\n|w━━━━ THE SHOWROOM ━━━━|n")
                 self._showroom(room, char, t, cond)
+            elif phase == "deep":
+                room.msg_contents(f"\n|w━━━━ DEEP STOCK · SUB-LEVEL P ━━━━|n")
+                self._deepstock(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 self._dairy(room, char, t, cond)
@@ -2953,7 +3011,13 @@ class RealmCycleScript(FacilityScript):
 
         # Brought up to the showroom to be appraised and sold, more so once graded.
         from world.factions import get_standing as _gs
-        add("showroom", "show", 1 + (2 if _gs(char) >= 150 else 0))
+        standing = _gs(char)
+        add("showroom", "show", 1 + (2 if standing >= 150 else 0))
+
+        # Perfected stock (standing >= 1800) is mostly kept down in Deep Stock now —
+        # the loop's terminus, weighted to dominate once she's finished.
+        if standing >= 1800:
+            add("deepstock", "deep", 12)
 
         if not weights:
             seq = _REALM_SEQUENCE[int(self.db.phase_index or 0) % len(_REALM_SEQUENCE)]

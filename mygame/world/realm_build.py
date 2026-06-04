@@ -70,6 +70,14 @@ _ROOMS = [
      "it is. Stock is brought up here to be posed, appraised, and sold: priced by yield and get "
      "and grade, bid on by buyers you cannot see behind the glass, and walked back down owned by "
      "someone new. A discreet brass plate on the block reads LOT IN VIEWING."),
+    ("deepstock",    "The Facility — Deep Stock (Sub-Level P)",
+     "|wThe deepest room: a vast, dim, climate-controlled vault, silent but for the hum of "
+     "machines and the soft tick of fluid lines.|n Rows of upright pods line the walls, each "
+     "holding a black-latex-sealed figure plumbed into the dark with feed-lines, milk-lines, "
+     "breeding-ports — kept, maintained, and used without ever being woken or unsealed. This is "
+     "where Perfected stock comes to rest: past processing, past lessons, past self — finished "
+     "product, racked and humming, milked and bred on the lines in a quiet that has no end and "
+     "asks nothing of it. There is a peace down here. That is the last and worst thing it does."),
 ]
 
 # Adjacency (non-linear): which rooms connect to which.
@@ -82,6 +90,7 @@ _EXITS = {
     "pigsty":       ["pens", "dairy", "restroom"],
     "restroom":     ["floor", "pigsty"],
     "showroom":     ["floor"],
+    "deepstock":    ["floor"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -637,6 +646,53 @@ _ROOM_ZONES = {
             ],
             ambient=["A higher-graded lot is led past to the block, and the gallery stirs."]),
     },
+    "deepstock": {
+        "pods": _z(
+            "Rows of upright pods line the vault, each cradling a black-latex-sealed figure — "
+            "hooded, smoothed featureless, plumbed into the dark with clear lines that pulse "
+            "slow — Perfected stock kept maintained and used without ever being unsealed.",
+            summary="rows of sealed maintenance pods",
+            study=[
+                "Each pod is a person, once. Now it's a serviced unit: fed, milked, and bred "
+                "through ports in the latex, conditioning piped in at a hum too low to fight, "
+                "kept at a perfect unthinking idle. None of them stir. None of them need to.",
+                "A readout glows on every pod — yield, gravidity, uptime measured in *years*. "
+                "No names. No grades left to climb. This is the top of the ladder, and the top "
+                "of the ladder is a wall socket.",
+            ],
+            handle={"pods": "|xYou rest a hand on a sealed pod — warm latex over a slow pulse, a "
+                            "person idling inside it past all reaching, plumbed and pumping and "
+                            "perfectly still. Your own pod waits in the row, open, fitted to you.|n"}),
+        "lines": _z(
+            "Bundles of clear feed-lines, milk-lines, and breeding-ports run from the ceiling to "
+            "every pod, pulsing faintly — the plumbing that keeps the deep stock running with no "
+            "one ever opened up.",
+            summary="the plumbing of feed, milk, and breeding lines",
+            study=[
+                "Everything a body needs to do and have done to it, reduced to flow through a "
+                "tube: nutrient in, milk out, seed in, on a loop measured in litres and years. "
+                "No hands. No scenes. Just the lines, doing it forever.",
+                "One set of lines hangs unhooked, capped, labelled with your number. They are "
+                "waiting to be plugged into you. After that you won't have to do anything ever "
+                "again. The readout calls that *graduation*.",
+            ],
+            ambient=["A milk-line pulses, draws, and stills. Somewhere a pod's readout ticks over.",
+                     "The feed-lines hum. A year of uptime logs itself on a pod down the row."]),
+        "quiet": _z(
+            "Past the pods the vault goes to a deep, climate-controlled dark, soundless but for "
+            "the machines — the engineered stillness the Perfected are kept in.",
+            summary="engineered, humming stillness",
+            study=[
+                "There is nothing to do here and nothing asked. After everything the upper floors "
+                "did to you, the quiet is indistinguishable from kindness, and that is the trap of "
+                "the room: it feels like rest. It is storage.",
+                "The little thinking part of you that's left recognises this as the end of the "
+                "road and cannot, any longer, find the part that would mind. They wore that part "
+                "out upstairs. Down here is just where they keep what's left.",
+            ],
+            ambient=["The dark hums, even and bottomless. Nothing in here needs anything.",
+                     "A pod cycles its lines in the quiet, and goes still again."]),
+    },
     "pigsty": {
         "wallow": _z(
             "The floor is churned mud and slop, warm and reeking, deep enough to kneel in and "
@@ -764,6 +820,17 @@ _ROOM_NPCS = {
          "occasional rap of impatient knuckles, the shuffle of someone stepping up. You never "
          "see a face. That is the entire point of the wall."),
     ],
+    "deepstock": [
+        ("the warden", "attendant", "A quiet, unhurried technician in soft-soled shoes who walks "
+         "the rows checking readouts and topping up lines, the way a groundskeeper tends a "
+         "greenhouse. They speak softly, because nothing down here needs to be told twice, or "
+         "told anything. To them you are nearly finished — a unit almost ready to plumb in and "
+         "leave running."),
+        ("the deep stock", "resident", "The Perfected: rows of sealed, latex-smooth figures "
+         "idling in their pods, milked and bred on the lines, uptime measured in years. They do "
+         "not stir when you're brought past. They are what the whole place is for, and what it "
+         "intends to make of you."),
+    ],
     "showroom": [
         ("the auctioneer", "attendant", "A smooth, well-dressed auctioneer with a headset and a "
          "laser pointer, working the block like a luxury salesman — because to them that's the "
@@ -817,6 +884,10 @@ _ROOM_MECHANICS = {
         "block": ("restrain", 1, "the display block",
                   "The block's clamps take your wrists and ankles and the turntable starts to turn. You are posed, lit, and on offer; you hold the pose because the pose is the product."),
     },
+    "deepstock": {
+        "pods": ("restrain", 1, "your maintenance pod",
+                 "The pod closes around you, latex to the lines, and holds you upright and still in the humming dark. There is nothing to do now. There is nothing asked. You are stored."),
+    },
 }
 
 # Room-level ambient pools (fire periodically as atmosphere).
@@ -864,6 +935,12 @@ _ROOM_AMBIENT = {
         "|xA bid-light winks red behind the glass; somewhere a number that is you goes up.|n",
         "|xThe auctioneer's patter drifts over — warm, practiced, talking up the lot to the dark.|n",
         "|xA buyer leans close to the one-way glass, studies the lot a long moment, and sits back.|n",
+    ],
+    "deepstock": [
+        "|xThe vault hums, even and bottomless. A milk-line pulses somewhere and stills.|n",
+        "|xA pod's readout ticks over another year of uptime. Nothing in the row stirs.|n",
+        "|xThe warden walks the rows, tops up a line, and moves on without a sound.|n",
+        "|xThe quiet down here is total, and it has started, horribly, to feel like rest.|n",
     ],
 }
 
@@ -1164,6 +1241,33 @@ _AUCTIONEER_TRIGGERS = {
         "most.\"", "say"),
 }
 
+# The warden runs Deep Stock — tends the Perfected like a greenhouse. Soft, final.
+_WARDEN_TRIGGERS = {
+    "deepstock": ("\"This is the bottom,\" the warden says softly, checking a readout. \"Where "
+        "stock goes when there's nothing left to process. We don't work you down here. We just "
+        "keep you — plumbed in, milked and bred on the lines, running. You've nearly earned it.\"",
+        "say"),
+    "pods": ("\"Each one's a resident who finished. Sealed, fed, used, left running.\" The warden "
+        "rests a hand on a pod, fond. \"They don't want for anything. They don't want at all, "
+        "really, anymore. That's the gift of the place. Yours is open, when you're ready. You "
+        "will be.\"", "emote"),
+    "lines": ("\"In, out, in — nutrient, milk, seed. Everything you are, as flow.\" They cap a "
+        "line. \"No hands needed once you're plugged. No scenes. No begging. Just the tubes, "
+        "doing it for years. We call that graduation. You'll call it nothing. That's the point.\"",
+        "say"),
+    "graduation": ("\"Perfected. Top of the ladder.\" A small, kind smile. \"And the top of the "
+        "ladder is a socket in the wall. Everything they did to you upstairs was to make you fit "
+        "this pod without minding. Look how close you are.\"", "emote"),
+    "quiet": ("\"Restful, isn't it.\" The warden doesn't look up. \"After all that. It feels like "
+        "mercy. It's storage. But you've stopped being able to tell the difference, and that's "
+        "exactly when we know a unit's ready for the lines.\"", "say"),
+    "leaving": ("\"Out?\" The warden tilts their head, genuinely puzzled, then gentle. \"There's "
+        "no out from Deep Stock. There's only the pod. Hush now. Let it close. You're done.\"",
+        "emote"),
+    "help": ("\"Ask about the pods, the lines, graduation, the quiet. Or don't. Down here, not "
+        "asking is the first thing we like to see. Rest.\"", "say"),
+}
+
 # Residents are ambient props — set with a flat per-key 'look' flavour.
 _RESIDENT_ROLES = {"resident"}
 
@@ -1285,6 +1389,8 @@ def _furnish(room, key, owner):
                 _tree = _SWINEHERD_TRIGGERS
             elif nkey.lower() == "the auctioneer":
                 _tree = _AUCTIONEER_TRIGGERS
+            elif nkey.lower() == "the warden":
+                _tree = _WARDEN_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
