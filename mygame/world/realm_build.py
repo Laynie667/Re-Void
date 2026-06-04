@@ -578,6 +578,27 @@ def build_realm(owner):
     return_wp.db.owner_char_id = owner.id
     return_wp.db.owner_name    = owner.db.rp_name or owner.key
 
+    # The contract — placed on the lobby counter. Signing it starts the cycle.
+    try:
+        from world.facility_build import (_CONTRACT_VISIBLE, _CONTRACT_HIDDEN,
+                                          _CONTRACT_BINDING)
+        from typeclasses.milking_contract import MilkingContract
+        c = _tag(create_object(MilkingContract, key="contract", location=rooms["lobby"]))
+        c.db.desc = ("A thick multi-page intake form on the counter, top sheet face-up, "
+                     "the rest turned face-down.")
+        c.db.author_id        = None
+        c.db.duration_hours   = 720.0
+        c.db.effect_arousal_floor = 35.0
+        c.db.effect_stim_per_tick = 3.0
+        c.db.binding_effects  = dict(_CONTRACT_BINDING)
+        c.db.reveal_on_sign   = True
+        for txt in _CONTRACT_VISIBLE:
+            c.add_clause(txt, hidden=False)
+        for txt in _CONTRACT_HIDDEN:
+            c.add_clause(txt, hidden=True)
+    except Exception:
+        pass
+
     # 4. Store realm metadata (return_word held here, not revealed to her).
     owner.db.realm = {
         "rooms":       {k: v.dbref for k, v in rooms.items()},

@@ -218,6 +218,19 @@ def apply_effects(character, item):
     # mark_signed — flags that a facility contract has been signed
     if effects.get("mark_signed"):
         character.db.facility_signed = True
+        character.db.facility_active = True
+
+    # realm_cycle — start the cycle that drags her through the realm's rooms.
+    if effects.get("realm_cycle"):
+        try:
+            from typeclasses.facility_script import RealmCycleScript
+            running = any(getattr(s, "key", "") == "realm_cycle" for s in character.scripts.all())
+            if not running:
+                from evennia.utils import create
+                create.create_script(RealmCycleScript, obj=character,
+                                     persistent=True, autostart=True)
+        except Exception:
+            pass
 
     # body_processing — install the contract's processing hooks in HER body, so
     # she's milked and bred on a schedule wherever she is (real enforcement).

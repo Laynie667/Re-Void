@@ -1871,3 +1871,122 @@ class FacilityScript(DefaultScript):
         install_trigger(target, "good girl", response="leak", strength=1)
         if random.random() < 0.5:
             _inst_recite(target, target, room, {"mantra": "i'm a good bred bitch, i don't decide"})
+
+
+# ───────────────────────────────────────────────────────────────────────────
+# RealmCycleScript — the cycle that DRAGS her through the realm's rooms.
+# Lives on the character so it follows her. Inherits all of FacilityScript's
+# scene methods and runs the themed one for each room, hauling her from the
+# milking floor to the pens to the conditioning cell on a loop — and down to
+# the pigsty when she slips. Starts only once she's signed.
+# ───────────────────────────────────────────────────────────────────────────
+
+# (room_key, phase) sequence — non-linear, repeats the worked rooms.
+_REALM_SEQUENCE = [
+    ("floor", "milk"), ("floor", "milk"),
+    ("pens", "breed"), ("pens", "breed"),
+    ("conditioning", "condition"),
+    ("dairy", "display"),
+    ("floor", "milk"),
+    ("pens", "breed"),
+]
+
+
+class RealmCycleScript(FacilityScript):
+    """Drives the phased cycle across a multi-room realm, on the character."""
+
+    def at_script_creation(self):
+        super().at_script_creation()
+        self.key         = "realm_cycle"
+        self.interval    = 180
+        self.db.phase_index = 0
+
+    def at_repeat(self):
+        char = self.obj
+        if not char or not hasattr(char, "db"):
+            self.stop(); return
+        realm = getattr(char.db, "realm", None) or {}
+        rooms = realm.get("rooms") or {}
+        if not rooms:
+            self.stop(); return
+        # Only runs while she's actually in the realm and has signed.
+        loc = char.location
+        if not (loc and loc.dbref in rooms.values()):
+            return
+        if not getattr(char.db, "facility_signed", False):
+            return   # the cycle starts only after she signs
+
+        t    = char.db.rp_name or char.name
+        cond = float(getattr(char.db, "conditioning", 0) or 0)
+        if not self.db.orifice_zone:
+            self.db.orifice_zone = (self._orifices(char) or [None])[0]
+
+        # Pick the next room/phase — diverted to the pigsty when she's slipped.
+        idx = int(self.db.phase_index or 0)
+        room_key, phase = _REALM_SEQUENCE[idx % len(_REALM_SEQUENCE)]
+        if getattr(char.db, "freedom_forfeited", False) and random.random() < 0.35:
+            room_key, phase = "pigsty", "punish"
+
+        from evennia import search_object
+        dest_ref = rooms.get(room_key)
+        dest = (search_object(dest_ref) or [None])[0] if dest_ref else None
+        if dest and char.location != dest:
+            self._drag(char, dest, t)
+        room = char.location
+
+        # Run the room's themed scene (inherited FacilityScript methods).
+        try:
+            if phase == "milk":
+                room.msg_contents(f"\n|w━━━━ MILKING FLOOR ━━━━|n")
+                self._do_milk(room, char, t)
+                if random.random() < 0.5:
+                    self._dose(room, char, t)
+            elif phase == "breed":
+                room.msg_contents(f"\n|w━━━━ BREEDING PENS ━━━━|n")
+                self._gang(room, char, t, cond)
+            elif phase == "condition":
+                room.msg_contents(f"\n|w━━━━ CONDITIONING ━━━━|n")
+                if cond >= 40:
+                    self._reinforce(room, char, t)
+                char.msg("|M" + self._process_line(char, t) + "|n")
+                room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+            elif phase == "display":
+                room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
+                if getattr(char.db, "breeding_quota", None):
+                    char.msg("|m" + self._quota_board(char) + "|n")
+                room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+            elif phase == "punish":
+                room.msg_contents(f"\n|w━━━━ THE PIGSTY ━━━━|n")
+                room.msg_contents("|y" + random.choice(_WETTING_BEATS).format(t=t) + "|n")
+                try:
+                    from world.compliance import punish
+                    punish(char, reason="sent down to the sty", severity=1)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        # Background drip + slow conditioning, same as the single-room cycle.
+        if random.random() < 0.6:
+            char.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 1.2 + cond * 0.012, source="realm")
+        except Exception:
+            pass
+        self.db.phase_index = idx + 1
+
+    def _drag(self, char, dest, t):
+        old = char.location
+        if old:
+            old.msg_contents(
+                f"|x{t} is unstrapped and hauled up — dragged off mid-use, the room's job with "
+                f"her unfinished and not her concern.|n", exclude=[char])
+        char.move_to(dest, quiet=True)
+        char.msg(
+            "|xYou don't get to walk it. You're moved — by the hair, by a lead clipped to the "
+            "ring in your nose, by the restraints sliding along a ceiling track — out of one "
+            "room and fixed into the next before you've finished registering the change.|n")
+        dest.msg_contents(
+            f"|x{t} is brought in and locked into place, presented for whatever this room is "
+            f"for.|n", exclude=[char])

@@ -84,7 +84,7 @@ _CONTRACT_HIDDEN = [
     "H21. Rule-breaks are punished on the spot. Repeated non-compliance, to the facility's count, FORFEITS THE RESIDENT'S FREEDOM — after which the easy way out does not open by her hand. Freedom may be earned back only by meeting every quota and holding a long, unbroken record of compliance. |x— [punishments, freedom-forfeit, earn-back]|n",
     "H22. The Resident is kept in perpetual heat for the term, and her offspring — got purely of facility stock — are facility property, added to the roster, and put to use, including upon the Resident. |x— [perpetual heat; offspring join the roster and breed her]|n",
     "H23. The facility may amend this agreement by addendum at any time, including clauses the Resident is not shown. By signing she accepts all of them, present and future, read and unread. |x— [the contract writes itself]|n",
-    "H24. Processing is installed into the Resident's body itself and follows her everywhere, on a schedule of the facility's keeping — she is milked and bred wherever she stands, in any room, on or off the line. |x— [body processing, location-independent, enforced]|n",
+    "H24. On signing, the Resident is committed to the cycle, which moves her through the facility's rooms at its own keeping — milked on the floor, bred in the pens, conditioned in the cell, slopped to the sty when she slips — looping until she is graded worthy to go deeper, and never letting her finish or stay anywhere. |x— [the cycle: dragged room to room, looping, tier-gated]|n",
 ]
 
 _CONTRACT_TRIGGERS = [
@@ -127,7 +127,7 @@ _CONTRACT_BINDING = {
     "cum_receptacle":         True,
     "perpetual_heat":         True,
     "mark_signed":            True,
-    "body_processing":        True,
+    "realm_cycle":            True,
     "breeding_quota":         {"hound": 30, "bull": 12, "boar": 12,
                                "stallion": 10, "contributor": 80},
     "milk_quota":             8,
@@ -696,7 +696,7 @@ def run_facility_reset(caller, purge=False):
     try:
         from typeclasses.body_processing_script import BodyProcessingScript
         for s in list(caller.scripts.all()):
-            if isinstance(s, BodyProcessingScript) or getattr(s, "key", "") == "body_processing":
+            if isinstance(s, BodyProcessingScript) or getattr(s, "key", "") in ("body_processing", "realm_cycle"):
                 s.stop()
     except Exception:
         pass
