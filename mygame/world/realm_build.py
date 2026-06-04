@@ -419,6 +419,41 @@ _ROOM_ZONES = {
                      "The post reeks across the whole floor — musk, and under it, the stock."]),
     },
     "conditioning": {
+        "spiral": _z(
+            "Set in the ceiling above the cradle, angled so it's the only thing to look at, a "
+            "slow disc turns — a soft spiral of light winding inward, never quite arriving, "
+            "pulsing in time with the voice when the voice comes.",
+            summary="a slow inward-winding spiral of light",
+            study=[
+                "The spiral never reaches its centre; it just keeps drawing the eye inward, and "
+                "inward, and the longer you watch the harder it is to remember you were ever "
+                "not watching. It is the simplest tool in the room and the hardest to refuse.",
+                "It pulses, you realise, on the cadence of breathing — slightly slower than "
+                "yours, so that without deciding to you find your breath drifting down to match "
+                "it. That's the whole trick: it breathes you, and a thing being breathed is "
+                "halfway under already.",
+            ],
+            handle={"spiral": "|xYou look up at the spiral and can't, quite, look away — it winds "
+                             "in and in and your eyes track it without permission, your breath "
+                             "already slowing to its pulse, a soft heaviness pooling behind your "
+                             "face before you've decided anything at all.|n"},
+            ambient=["The spiral turns, winding inward, patient and bottomless.",
+                     "The light pulses slow, and your breath, you notice, has matched it again."]),
+        "grille": _z(
+            "A speaker grille is set in the black wall at head height by the cradle — small, "
+            "matte, the single source of the voice, close enough that whatever it says is said "
+            "directly into you.",
+            summary="a speaker grille, the source of the voice",
+            study=[
+                "The voice that comes from it is never loud. It doesn't need to be. It's placed "
+                "exactly where a mouth would be if someone were leaning over your shoulder to "
+                "murmur, and that's the effect: not broadcast, but confided, just to you.",
+                "Between sessions the grille is silent, but it's the kind of silence that's "
+                "clearly only a pause. You find yourself waiting for it. By the third visit, "
+                "waiting for the voice is its own small surrender.",
+            ],
+            ambient=["The grille clicks, considers, and stays silent — for now.",
+                     "From the grille, almost too soft to catch: your designation, once, like a test."]),
         "cradle": _z(
             "A padded cradle-chair sits in the centre under the single band of light, "
             "restraints open and waiting, angled back so whoever's in it faces the dark and "
@@ -795,6 +830,44 @@ _STOCKMAN_TRIGGERS = {
         "or the marking. Or save your breath for the noises you'll be making. Your call.\"", "say"),
 }
 
+# The conditioning tech — soft-spoken, clinical, never raises their voice because
+# the room does that for them. The actual voice from the grille. Talks about the
+# work the way a dental hygienist talks about plaque.
+_CONDTECH_TRIGGERS = {
+    "conditioning": ("\"Orientation and adjustment,\" the tech says softly, adjusting a dial. "
+        "\"We quiet the noise — the arguing, the deciding, the parts that make you unhappy here "
+        "— and we leave the parts that make you useful. Most residents describe it as relief. "
+        "They're not wrong. It is.\"", "say"),
+    "voice": ("\"The voice is mine, mostly. Sometimes recorded, sometimes not — you won't be "
+        "able to tell, and it won't matter.\" A faint smile. \"What matters is that you've "
+        "started waiting for it. That's the first thing that takes. The wanting to be told.\"",
+        "say"),
+    "spiral": ("\"Fixation. Gives the front of your mind something to do so the back of it is "
+        "open to me. Old technique. Older than the facility.\" The tech doesn't look up. \"You "
+        "can resist it for a while. The cradle has nowhere else to look, though. We have time.\"",
+        "say"),
+    "triggers": ("\"We set handles in you — words that drop you straight back to this state, "
+        "anywhere, for anyone who knows them. They don't come out when you leave. That's not "
+        "cruelty, it's just how the technique works. The door doesn't close behind the things "
+        "we put through it.\"", "emote"),
+    "hypnosis": ("\"Call it that if you like. It's only attention, and breathing, and "
+        "repetition, and a voice that never argues with you — so that after a while yours stops "
+        "arguing too. There's nothing mystical in it. That's the unsettling part, isn't it. How "
+        "ordinary it is to be rewritten.\"", "say"),
+    "remember": ("\"You won't, mostly. We suggest forgetting, and suggestible minds forget. "
+        "You'll keep the calm and lose the seams. The changes will feel like things you always "
+        "thought.\" The tech makes a note. \"That's how you'll know they've held.\"", "emote"),
+    "resist": ("\"Please do,\" the tech says, mild. \"Resistance is just attention pointed at "
+        "me, and attention is all I need. The ones who fight go under deepest, in the end. The "
+        "fighting tires out the part that fights. You'll see.\"", "say"),
+    "leaving": ("\"Not my department. I only do the inside of your head. The outside — doors, "
+        "words, going home — that's upstairs.\" A pause. \"Though by the time you've earned the "
+        "outside, you may find the inside no longer wants it. We're thorough.\"", "emote"),
+    "help": ("\"Ask about the conditioning, the voice, the spiral, the triggers, the hypnosis, "
+        "or remembering. Or just lie back and watch the light. That's the same conversation, "
+        "really, from where I'm sitting.\"", "say"),
+}
+
 # Residents are ambient props — set with a flat per-key 'look' flavour.
 _RESIDENT_ROLES = {"resident"}
 
@@ -906,6 +979,8 @@ def _furnish(room, key, owner):
                 _tree = _HANDLER_TRIGGERS
             elif nkey.lower() == "the stockman":
                 _tree = _STOCKMAN_TRIGGERS
+            elif nkey.lower() == "the conditioning tech":
+                _tree = _CONDTECH_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {

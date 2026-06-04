@@ -453,6 +453,124 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── The Conditioning Cell: scripted hypnotic induction ──
+# Real technique, implied through the prose: fixation, paced breathing, countdown
+# and staircase deepeners, fractionation, confusion/overload, anchoring,
+# post-hypnotic suggestion, amnesia, and mantra loops.
+_HYP_INDUCTION = [
+    "The voice in the dark is soft and even and very close. \"Eyes on the light, {t}. Just the "
+    "light. You don't have to hold them open — let them get heavy, let them want to close. "
+    "Good. Breathe in while I count one... and out, two... in, three... let the number do the "
+    "breathing for you. You don't have to.\"",
+    "\"Find the light and let it be the only thing,\" the voice murmurs. \"Everything at the "
+    "edges going soft and grey and far away. My voice and the light, that's all that's left in "
+    "here. In... and out. In... and slack. There's nowhere you have to be but heavy.\"",
+    "\"Comfortable,\" the voice says, like a fact, not a question. \"The cradle's holding you so "
+    "you don't have to hold yourself. Let it. Let your weight go into it. Each breath out, a "
+    "little more of holding-on you can put down. You've been holding on so long, {t}. You can "
+    "put it down here.\"",
+    "\"Listen to my voice and let your own go quiet,\" it says. \"The little voice in you that "
+    "narrates, that argues, that keeps track — let it get tired. It's allowed to be tired. I'll "
+    "do the thinking part. That's what I'm for. That's what this room is for. Just listen.\"",
+]
+_HYP_DEEPEN = [
+    "\"Down,\" the voice says, unhurried. \"I'm going to count from ten and each number takes "
+    "you down a step, deeper, looser, further from the surface. Ten... heavier. Nine... warmer. "
+    "Eight... you can't feel where the cradle ends and you begin. Seven... and you stop trying "
+    "to. All the way down, {t}. There's no bottom and that's the relief of it.\"",
+    "\"There's a staircase behind your eyes,\" it murmurs, \"and you're already on it, going "
+    "down, one slow step a breath, and the deeper you go the better it feels and the less of you "
+    "there is to mind. Down. Down. Each step a little more of you left on the step above. You "
+    "won't miss it. You never do.\"",
+    "\"Twice as deep now,\" the voice says, \"and twice as deep is a thing your body just does "
+    "when I say it, no effort, like falling, like being poured. Down past thinking. Down past "
+    "wanting. Down to the warm dark part where you only do as you're told because being told is "
+    "so much easier than deciding ever was.\"",
+    "\"Sink,\" it breathes. \"Every word I say is a hand on the back of your neck pressing you "
+    "gently further under, and you let it, because under is where it stops being hard. Deeper "
+    "than yesterday. You're always deeper than yesterday now. That's the only direction this "
+    "room has.\"",
+]
+_HYP_FRACTIONATE = [
+    "\"Open your eyes,\" the voice says sharply — and {t} surfaces, blinking, halfway to herself "
+    "— and then, soft again: \"and close them, and drop, twice as far as before.\" The snap up "
+    "and the plunge down leave her looser each time, the climb out a little harder, the fall a "
+    "little sweeter, until surfacing stops seeming worth the effort.",
+    "It brings her up — \"with me, eyes open, awake\" — and drops her — \"and down, good girl, "
+    "all the way\" — over and over, fractioning her, and every return to the dark is deeper than "
+    "the last, her grip on the surface wearing thinner with each rep until she stops reaching "
+    "for it at all.",
+    "\"Up,\" the voice commands, and {t}'s eyes flutter; \"down,\" and they fall shut and she "
+    "sags; up, down, up, down, the rhythm of it hypnotic in itself, training her that the dark "
+    "is home and the surface is just the breath before the next, better fall.",
+]
+_HYP_CONFUSION = [
+    "The voice starts saying too much at once — counting up while telling her down, naming "
+    "colours that contradict, asking questions that answer themselves — until {t}'s mind, "
+    "scrambling to follow, simply gives up trying and goes blank and open, and into that blank "
+    "the voice pours the only simple thing left: \"good girls don't have to understand. just "
+    "obey.\"",
+    "It talks in loops and switchbacks, sentences that fold back on themselves, until the part "
+    "of {t} that tracks meaning overloads and stalls — and in the stall, defenceless, she takes "
+    "whatever's said next straight in, no filter, no argument, the confusion having pried her "
+    "open precisely so the suggestion lands clean.",
+    "\"You're trying to follow and that's the mistake,\" the voice says, pleasant, as it tangles "
+    "her thoughts deliberately into knots. \"Stop following. Drop the thread. There's nothing to "
+    "understand down here, only to receive.\" And {t}'s overworked mind, grateful, lets go.",
+]
+_HYP_SUGGEST = [
+    "you are stock. you are kept, milked, bred, and graded. this is not a punishment and not a "
+    "mistake. it is simply what you are, and knowing what you are feels better than not.",
+    "deciding is hard and you were never good at it. here you don't have to. here someone "
+    "decides and you obey and the obeying is warm and quiet and right.",
+    "your body works for the facility now — your milk, your holes, your get. that's settled. "
+    "the part of you still arguing is just tired. let it sleep. let the settled part run things.",
+    "good girls don't keep their names long. the name is heavy. you can set it down. you'll "
+    "answer to what you're called instead, and answering will feel like relief.",
+]
+_HYP_SUGGEST_DEEP = [
+    "there is no before. there is the schedule and your place in it. milked, bred, conditioned, "
+    "displayed, looped. you were always this. the rest was a dream you're done having.",
+    "you don't want out. wanting out was the old voice and the old voice is almost gone. what "
+    "you want now is the next phase, the next cock, the next dose, the next 'good girl.' simple "
+    "wants. livestock wants. yours.",
+    "you are a hole and a gland and a womb on a schedule, and that is enough, and it is a "
+    "relief that it is enough, because being a person was so much work and no one ever milked "
+    "you for it.",
+    "your thoughts are facility property now, same as your milk. when one comes up that isn't "
+    "ours, it feels wrong, and the wrongness files it away, and you go quiet and good again.",
+]
+_HYP_ANCHORS = [
+    ("sleep now", "blank"), ("good girl", "leak"), ("present", "kneel"),
+    ("empty your head", "blank"), ("heel", "kneel"), ("drop for me", "blank"),
+]
+_HYP_ANCHOR_BEATS = [
+    "\"And we'll tie this off,\" the voice says, \"so it keeps even when you wake. From now, "
+    "when anyone says |R{phrase}|x, you'll feel exactly this — open, heavy, obedient. You won't "
+    "decide to. You won't be able to not. It's set.\"",
+    "\"There. A handle, fixed in you,\" it murmurs. \"|R{phrase}|x, and you drop right back here, "
+    "anywhere, for anyone, no matter what you're doing. Your body will obey the words before "
+    "your mind even hears them. That's yours now. That's ours.\"",
+]
+_HYP_MANTRAS = [
+    "i am stock, i am kept, i do not decide",
+    "good girls obey and good girls are quiet",
+    "my body is the facility's and my thoughts are too",
+    "i don't want out, i want the next phase",
+    "i am a hole and a gland and that is enough",
+]
+_HYP_AMNESIA = [
+    "and you won't remember this part. you'll remember feeling calm, and good, and like none of "
+    "it was anyone's doing. the deciding will feel like it was always yours. that's the kindest "
+    "way, and the facility is kind.",
+    "when you surface you won't be able to find the seam where this went in. it'll just be true, "
+    "the way your own thoughts are true, with no one's fingerprints on it. you'll defend it as "
+    "yourself. that's how you'll know it worked.",
+    "let the memory of resisting go soft and unreachable. you were never really fighting. you "
+    "came here wanting this. the voice says so, and the voice is the only thing in here, so it's "
+    "so.",
+]
+
 # ── The Breeding Pens: relentless, constant animal use ──
 _PEN_PICK = [
     "The handler walks the row, considering, then looks back at {t} folded open in the stocks "
@@ -2076,6 +2194,63 @@ class FacilityScript(DefaultScript):
         if random.random() < 0.5:
             _inst_recite(target, target, room, {"mantra": "i'm a good bred bitch, i don't decide"})
 
+    # ── The Conditioning Cell: real induction techniques, scripted ──
+    # The voice comes from the speaker grille in the dark. It uses actual hypnotic
+    # method — fixation, paced breathing, countdown/staircase deepeners,
+    # fractionation, confusion/overload, anchoring, post-hypnotic suggestion,
+    # amnesia, and mantra loops — all driving the real conditioning meter and the
+    # installed-trigger engine. Slow-burn: light work shallow, mindbreak deep.
+    def _hypno(self, room, target, t, cond):
+        from world.conditioning import add_conditioning
+        sug = float(getattr(target.db, "suggestibility", 0) or 0)
+
+        # 1. The induction proper — pick technique by how deep she already is.
+        if cond < 40:
+            pool = _HYP_INDUCTION
+        elif cond < 90:
+            pool = random.choice([_HYP_DEEPEN, _HYP_FRACTIONATE, _HYP_INDUCTION])
+        else:
+            pool = random.choice([_HYP_CONFUSION, _HYP_DEEPEN, _HYP_FRACTIONATE])
+        target.msg("|M" + random.choice(pool).format(t=t) + "|n")
+
+        # 2. The suggestion — the actual content being written in, tier-scaled.
+        if cond >= 60:
+            target.msg("|x  " + random.choice(_HYP_SUGGEST_DEEP).format(t=t) + "|n")
+        else:
+            target.msg("|x  " + random.choice(_HYP_SUGGEST).format(t=t) + "|n")
+
+        # 3. Anchoring / post-hypnotic install — seats or reinforces a trigger.
+        if random.random() < 0.5:
+            try:
+                from world.binding_effects import install_trigger
+                phrase, resp = random.choice(_HYP_ANCHORS)
+                install_trigger(target, phrase, response=resp, strength=1,
+                                permanent=(cond >= 100))
+                target.msg("|M  " + random.choice(_HYP_ANCHOR_BEATS).format(
+                    t=t, phrase=phrase) + "|n")
+            except Exception:
+                pass
+
+        # 4. Mantra loop — forced verbal participation, repeat-after-the-voice.
+        if random.random() < 0.45:
+            try:
+                from world.binding_effects import _inst_recite
+                _inst_recite(target, target, room, {"mantra": random.choice(_HYP_MANTRAS)})
+            except Exception:
+                pass
+
+        # 5. Amnesia suggestion — the deeper she is, the more she's told to forget.
+        if cond >= 80 and random.random() < 0.4:
+            target.msg("|x  " + random.choice(_HYP_AMNESIA).format(t=t) + "|n")
+
+        # 6. Drive the meter — conditioning here is the heaviest in the realm,
+        #    amplified by suggestibility (the cell is where it really takes).
+        gain = (2.0 + cond * 0.01) * (1.0 + min(sug, 20.0) * 0.03)
+        add_conditioning(target, gain, source="cell")
+        if cond >= 40:
+            self._reinforce(room, target, t)
+        room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+
 
 # ───────────────────────────────────────────────────────────────────────────
 # RealmCycleScript — the cycle that DRAGS her through the realm's rooms.
@@ -2159,10 +2334,7 @@ class RealmCycleScript(FacilityScript):
                 self._pen_breed(room, char, t, cond)
             elif phase == "condition":
                 room.msg_contents(f"\n|w━━━━ CONDITIONING ━━━━|n")
-                if cond >= 40:
-                    self._reinforce(room, char, t)
-                char.msg("|M" + self._process_line(char, t) + "|n")
-                room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
+                self._hypno(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 if getattr(char.db, "breeding_quota", None):
