@@ -336,6 +336,12 @@ def build_realm(owner):
 
     # Tear down a previous build if present.
     old = owner.db.realm or {}
+    from evennia import search_object as _so
+    for _ref in [old.get("return_wp")]:        # old return waypost lives in housing
+        if _ref:
+            for _o in (_so(_ref) or []):
+                try: _o.delete()
+                except Exception: pass
     for dbref in (old.get("rooms") or {}).values():
         try:
             from evennia import search_object
