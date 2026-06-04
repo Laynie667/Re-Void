@@ -306,7 +306,7 @@ def _furnish(room, key, owner):
         from typeclasses.facility_furniture import FacilityFurniture
         from evennia.utils import create as _c
         for fkey, fdesc in (_ROOM_FURNITURE.get(key) or []):
-            f = _c.create_object(FacilityFurniture, key=fkey, location=room)
+            f = _tag(_c.create_object(FacilityFurniture, key=fkey, location=room))
             f.db.desc = fdesc
     except Exception:
         pass
@@ -316,7 +316,7 @@ def _furnish(room, key, owner):
         from evennia.utils import create as _c
         for nkey, role, ndesc in (_ROOM_NPCS.get(key) or []):
             cls = FacilityBeast if role in ("hound", "bull", "boar", "stallion") else FacilityAttendant
-            n = _c.create_object(cls, key=nkey, location=room)
+            n = _tag(_c.create_object(cls, key=nkey, location=room))
             n.db.rp_name = nkey
             n.db.physical_desc = ndesc
             n.db.facility_role = "beast" if role in ("hound", "bull", "boar", "stallion") else "attendant"
@@ -324,6 +324,68 @@ def _furnish(room, key, owner):
                 n.db.species = role
     except Exception:
         pass
+
+
+_REALM_TAG = "facility_realm"
+
+
+def _tag(obj):
+    try:
+        obj.tags.add(_REALM_TAG, category="realm")
+    except Exception:
+        pass
+    return obj
+
+
+def teardown_realm(owner):
+    """Remove ALL realm infrastructure: tagged objects + realm rooms + any
+    waystone/waypost in the owner's current room (catches old untagged builds)."""
+    removed = 0
+    from evennia import search_object
+    from evennia.utils.search import search_tag
+
+    # 1. Everything tagged as realm (rooms, waystones, wayposts, furniture, NPCs).
+    try:
+        for o in list(search_tag(_REALM_TAG, category="realm") or []):
+            try:
+                # delete contents (NPCs/furniture) of realm rooms first
+                for sub in list(getattr(o, "contents", []) or []):
+                    if not sub.is_typeclass("typeclasses.characters.Character", exact=False):
+                        try: sub.delete(); removed += 1
+                        except Exception: pass
+                o.delete(); removed += 1
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+    # 2. Realm rooms recorded in metadata (older builds, maybe untagged).
+    realm = owner.db.realm or {}
+    for dbref in list((realm.get("rooms") or {}).values()) + [realm.get("return_wp")]:
+        if not dbref:
+            continue
+        for r in (search_object(dbref) or []):
+            try:
+                for sub in list(getattr(r, "contents", []) or []):
+                    if not sub.is_typeclass("typeclasses.characters.Character", exact=False):
+                        try: sub.delete(); removed += 1
+                        except Exception: pass
+                r.delete(); removed += 1
+            except Exception:
+                pass
+
+    # 3. Scrub the owner's current room of any waystone/waypost (old untagged ones).
+    room = owner.location
+    if room:
+        for o in list(room.contents):
+            if (o.is_typeclass("typeclasses.waystone.HubWaystone", exact=False)
+                    or o.is_typeclass("typeclasses.waypost.Waypost", exact=False)):
+                try: o.delete(); removed += 1
+                except Exception: pass
+
+    owner.db.realm = None
+    owner.msg(f"|gRealm torn down — {removed} objects removed.|n")
+    return removed
 
 
 def build_realm(owner):
@@ -334,32 +396,16 @@ def build_realm(owner):
     from evennia import create_object
     from evennia.utils import create as _c
 
-    # Tear down a previous build if present.
-    old = owner.db.realm or {}
-    from evennia import search_object as _so
-    for _ref in [old.get("return_wp")]:        # old return waypost lives in housing
-        if _ref:
-            for _o in (_so(_ref) or []):
-                try: _o.delete()
-                except Exception: pass
-    for dbref in (old.get("rooms") or {}).values():
-        try:
-            from evennia import search_object
-            for r in (search_object(dbref) or []):
-                for o in list(r.contents):
-                    if not hasattr(o, "account"):   # don't delete characters
-                        try: o.delete()
-                        except Exception: pass
-                r.delete()
-        except Exception:
-            pass
+    # Clean slate.
+    teardown_realm(owner)
 
     # 1. Dig the rooms (disconnected — no exits to the main grid).
     rooms = {}
     for key, name, desc in _ROOMS:
         r = create_object("typeclasses.rooms.Room", key=name)
         r.db.desc = desc
-        _furnish(r, key, owner)   # zones, furniture, NPCs
+        _tag(r)
+        _furnish(r, key, owner)   # zones, furniture, NPCs (tagged inside)
         rooms[key] = r
 
     # 2. Exits between realm rooms (one-way feel kept by naming, but walkable).
@@ -379,7 +425,7 @@ def build_realm(owner):
     def _ensure_hub(room):
         if not any(o.is_typeclass("typeclasses.waystone.HubWaystone", exact=False)
                    for o in room.contents):
-            create_object(HubWaystone, key="a waystone", location=room)
+            _tag(create_object(HubWaystone, key="a waystone", location=room))
 
     _ensure_hub(rooms["lobby"])
     _ensure_hub(housing)
@@ -388,13 +434,13 @@ def build_realm(owner):
     return_word = random.choice(_RETURN_WORDS)
 
     # ENTRY waypost: in the lobby, active. Say its word in housing -> arrive lobby.
-    entry_wp = create_object(Waypost, key="the intake waypost", location=rooms["lobby"])
+    entry_wp = _tag(create_object(Waypost, key="the intake waypost", location=rooms["lobby"]))
     entry_wp.db.realm_address = entry_word
     entry_wp.db.owner_char_id = owner.id
     entry_wp.db.owner_name    = owner.db.rp_name or owner.key
 
     # RETURN waypost: in housing, INACTIVE (held). Activated only when worthy.
-    return_wp = create_object(Waypost, key="a dark waypost", location=housing)
+    return_wp = _tag(create_object(Waypost, key="a dark waypost", location=housing))
     return_wp.db.realm_address = None
     return_wp.db.owner_char_id = owner.id
     return_wp.db.owner_name    = owner.db.rp_name or owner.key
