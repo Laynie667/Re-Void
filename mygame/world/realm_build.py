@@ -1148,9 +1148,15 @@ def force_clear(owner):
     for k in ("conditioning", "arousal_floor", "stim_per_tick", "bladder_ml", "arousal",
               "defiance", "compliance_threshold", "compliance_streak", "processing_tier",
               "facility_standing", "drug_dependence", "milk_baseline_ml",
-              "suggestibility", "intake_suggestibility"):
+              "suggestibility", "intake_suggestibility", "docility"):
         try: setattr(d, k, 0)
         except Exception: pass
+    # drop the installed 'mind' zone entirely (the monitor object is deleted below)
+    try:
+        z = dict(getattr(d, "zones", None) or {})
+        if "mind" in z:
+            z.pop("mind", None); d.zones = z
+    except Exception: pass
     # -> False / ""
     for k in ("orgasm_denial", "exhibition_active", "self_cmds_locked", "endcycle_blocked",
               "navigation_locked", "anti_clothing_active", "conditioning_permanent",

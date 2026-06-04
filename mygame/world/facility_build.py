@@ -206,6 +206,48 @@ def provision_body(caller):
             inst.append(obj.dbref)
 
     _ensure_compatible(caller, orifice, chest, track)
+
+    # The 'mind' zone + mind-state monitor — the visible, mechanically-backed home
+    # for conditioning/suggestibility/docility/dependence/cravings/triggers.
+    try:
+        from evennia.utils import create as _c
+        from typeclasses.mind_state_item import MindStateItem, find_mind_item
+        zones = dict(getattr(caller.db, "zones", None) or {})
+        if "mind" not in zones:
+            zones["mind"] = {"zone_type": "surface", "desc": "", "summary": "",
+                             "details": {}, "handle_details": {}, "study_details": [],
+                             "inscribable": False, "inscriptions": [], "scent": None,
+                             "ambient": [], "contents": [], "parent": None,
+                             "mechanics": {}, "scripts": [], "event_hooks": {},
+                             "bar_drinks": [], "games": [], "pantry": [],
+                             "visibility": "look", "intimate": False}
+            caller.db.zones = zones
+        if not find_mind_item(caller):
+            mind = _c.create_object(MindStateItem, key="Facility Mind-State Monitor",
+                                    location=caller)
+            ok, _r = mind.install(caller, "mind")
+            if ok:
+                track(mind)
+    except Exception:
+        pass
+
+    # An intake/inflation item so the CAPACITY drug + cumflation have something real
+    # to expand in the realm (run_facility installs one; the realm did not).
+    if orifice:
+        try:
+            wmech = (dict(getattr(caller.db, "zones", None) or {}).get(orifice, {})
+                     .get("mechanics", {}) or {})
+            if not wmech.get("inflation"):
+                from typeclasses.inflation_item import InflationItem
+                inf = _c.create_object(InflationItem, key="Facility Intake", location=caller)
+                inf.db.max_volume_ml = 4000.0
+                inf.db.drain_rate_ml_per_tick = 5.0
+                ok, _r = inf.install_into_zone(caller, orifice, caller)
+                if ok:
+                    track(inf)
+        except Exception:
+            pass
+
     caller.db.facility_items = inst
     return inst
 
@@ -713,6 +755,14 @@ def run_facility_reset(caller, purge=False):
     caller.db.milk_baseline_ml          = 0.0
     caller.db.suggestibility            = 0.0
     caller.db.intake_suggestibility     = 0
+    caller.db.docility                  = 0.0
+    # drop the installed 'mind' zone (its monitor object is removed via facility_items)
+    try:
+        _z = dict(getattr(caller.db, "zones", None) or {})
+        if "mind" in _z:
+            _z.pop("mind", None); caller.db.zones = _z
+    except Exception:
+        pass
 
     # Stop the contract's body-processing hooks.
     caller.db.body_processing_locked = False

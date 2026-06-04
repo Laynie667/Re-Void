@@ -21,6 +21,30 @@ def register_defiance(character, amount=1, reason=""):
     """Log an act of non-compliance: punish it now, count it toward forfeiture."""
     if not character:
         return
+
+    # Docility (set by the mind-state monitor from conditioning/suggestibility/
+    # dependence) can swallow the resistance outright — the deeper she's processed,
+    # the harder it is to make herself defy at all, and trying only settles her more.
+    import random as _r
+    doc = float(getattr(character.db, "docility", 0) or 0)
+    if doc > 0 and _r.random() < min(doc, 90.0) / 100.0:
+        character.db.compliance_streak = 0
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(character, 1.0, source="failed-defiance")
+        except Exception:
+            pass
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(character); add_arousal(character, 6.0)
+        except Exception:
+            pass
+        character.msg(
+            "|xYou mean to refuse — and your body doesn't. The impulse arrives and goes "
+            "nowhere, smoothed flat before it reaches your hands, and the not-resisting feels, "
+            "horribly, like relief. They've made defiance too much work.|n")
+        return
+
     cur = int(getattr(character.db, "defiance", 0) or 0) + int(amount)
     character.db.defiance = cur
     character.db.compliance_streak = 0   # a slip breaks any earn-back streak

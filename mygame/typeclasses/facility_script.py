@@ -1996,6 +1996,16 @@ class RealmCycleScript(FacilityScript):
             add_conditioning(char, 0.5 + cond * 0.005, source="realm")
         except Exception:
             pass
+        # The mind-state monitor drives the ongoing pull of what's been done to her
+        # (withdrawal, the empty-ache, drift) and refreshes her live read-out, so
+        # dependence/cravings bite every phase, not only in a 'rest' beat.
+        try:
+            from typeclasses.mind_state_item import find_mind_item
+            mind = find_mind_item(char)
+            if mind:
+                mind.tick(char)
+        except Exception:
+            pass
         # Facility standing accrues SLOWLY from the processing — the slow burn.
         try:
             from world.factions import add_standing
