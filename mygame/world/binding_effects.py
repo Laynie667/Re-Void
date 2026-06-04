@@ -285,6 +285,16 @@ def apply_effects(character, item):
                                      persistent=True, autostart=True)
         except Exception:
             pass
+        # Bethany's chance visits, on the same subject — she wanders in off the desk.
+        try:
+            from typeclasses.bethany_script import BethanyScript
+            running = any(getattr(s, "key", "") == "bethany_visit" for s in character.scripts.all())
+            if not running:
+                from evennia.utils import create
+                create.create_script(BethanyScript, obj=character,
+                                     persistent=True, autostart=True)
+        except Exception:
+            pass
 
     # body_processing — install the contract's processing hooks in HER body, so
     # she's milked and bred on a schedule wherever she is (real enforcement).

@@ -1161,7 +1161,8 @@ def force_clear(owner):
     for k in ("orgasm_denial", "exhibition_active", "self_cmds_locked", "endcycle_blocked",
               "navigation_locked", "anti_clothing_active", "conditioning_permanent",
               "freedom_forfeited", "facility_signed", "facility_active", "perpetual_heat",
-              "cum_craving", "lactation_locked", "body_processing_locked", "aura_dimmed"):
+              "cum_craving", "lactation_locked", "body_processing_locked", "aura_dimmed",
+              "bethany_busy", "bethany_owned"):
         try: setattr(d, k, False)
         except Exception: pass
     for k in ("orgasm_release_word", "required_honorific", "facility_grade", "facility_brand"):
@@ -1181,7 +1182,7 @@ def force_clear(owner):
     # stop scripts on her
     for s in list(owner.scripts.all()):
         if getattr(s, "key", "") in ("realm_cycle", "perpetual_heat", "body_processing",
-                                     "facility", "cycle_machine") or \
+                                     "facility", "cycle_machine", "bethany_visit") or \
            s.is_typeclass("typeclasses.milking_session_script.MilkingSessionScript", exact=False):
             try: s.stop()
             except Exception: pass

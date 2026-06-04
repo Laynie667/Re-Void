@@ -1930,6 +1930,8 @@ class RealmCycleScript(FacilityScript):
             return
         if not getattr(char.db, "facility_signed", False):
             return   # the cycle starts only after she signs
+        if getattr(char.db, "bethany_busy", False):
+            return   # the line waits — processing resumes only after Bethany's done
 
         t    = char.db.rp_name or char.name
         cond = float(getattr(char.db, "conditioning", 0) or 0)

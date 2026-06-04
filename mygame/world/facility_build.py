@@ -214,13 +214,20 @@ def provision_body(caller):
         from typeclasses.mind_state_item import MindStateItem, find_mind_item
         zones = dict(getattr(caller.db, "zones", None) or {})
         if "mind" not in zones:
-            zones["mind"] = {"zone_type": "surface", "desc": "", "summary": "",
-                             "details": {}, "handle_details": {}, "study_details": [],
-                             "inscribable": False, "inscriptions": [], "scent": None,
-                             "ambient": [], "contents": [], "parent": None,
-                             "mechanics": {}, "scripts": [], "event_hooks": {},
-                             "bar_drinks": [], "games": [], "pantry": [],
-                             "visibility": "look", "intimate": False}
+            try:
+                from typeclasses.characters import _make_default_zone
+                mz = _make_default_zone(intimate=False, visibility="look",
+                                        zone_type="surface")
+            except Exception:
+                mz = {"parent": None, "nude": "", "covered_by": None, "interior": "",
+                      "contents": [], "state": "pristine", "state_desc": None,
+                      "state_ambient": [], "visibility": "look", "intimate": False,
+                      "zone_type": "surface", "consent_required": "casual",
+                      "details": {}, "study_details": [], "handle_details": {},
+                      "mechanics": {}, "default": True, "freeform": False, "ambient": []}
+            mz["default"] = False
+            mz["freeform"] = True
+            zones["mind"] = mz
             caller.db.zones = zones
         if not find_mind_item(caller):
             mind = _c.create_object(MindStateItem, key="Facility Mind-State Monitor",
@@ -764,12 +771,15 @@ def run_facility_reset(caller, purge=False):
     except Exception:
         pass
 
-    # Stop the contract's body-processing hooks.
+    # Stop the contract's body-processing hooks + Bethany's visits.
     caller.db.body_processing_locked = False
+    caller.db.bethany_busy  = False
+    caller.db.bethany_owned = False
     try:
         from typeclasses.body_processing_script import BodyProcessingScript
         for s in list(caller.scripts.all()):
-            if isinstance(s, BodyProcessingScript) or getattr(s, "key", "") in ("body_processing", "realm_cycle"):
+            if isinstance(s, BodyProcessingScript) or getattr(s, "key", "") in (
+                    "body_processing", "realm_cycle", "bethany_visit"):
                 s.stop()
     except Exception:
         pass

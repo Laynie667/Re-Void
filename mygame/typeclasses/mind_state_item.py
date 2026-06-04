@@ -180,7 +180,10 @@ class MindStateItem(DefaultObject):
         zones = dict(getattr(c.db, "zones", None) or {})
         if zone_name in zones:
             zone = dict(zones[zone_name])
-            zone["desc"] = self.render(c)
+            readout = self.render(c)
+            # Character zones render their "nude" field on `look <her> mind`.
+            zone["nude"] = readout
+            zone["desc"] = readout   # harmless mirror for any desc-based path
             zones[zone_name] = zone
             c.db.zones = zones
 
