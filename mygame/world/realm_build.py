@@ -87,7 +87,7 @@ def _z(desc, summary="", study=None, handle=None, ambient=None, details=None):
 # Per-room craft: zones (desc/study/handle/ambient), furniture, and NPCs.
 _ROOM_ZONES = {
     "lobby": {
-        "the counter": _z(
+        "counter": _z(
             "A long steel counter runs the far wall, scuffed and clean-scrubbed, a stack "
             "of multi-page intake forms weighted flat under a cold-iron brand.",
             summary="a long steel reception counter",
@@ -102,7 +102,7 @@ _ROOM_ZONES = {
                          "with disinfectant, worn smooth by everyone processed before {target}.",
             },
             ambient=["A form slides off the stack and settles on the floor. No one picks it up."]),
-        "the waystone": _z(
+        "waystone": _z(
             "A standing stone of dark mineral glows faintly in the corner, runes spiralling "
             "its surface — the only obvious way anywhere, and it only answers to words it knows.",
             summary="a faintly glowing waystone",
@@ -111,14 +111,14 @@ _ROOM_ZONES = {
                 "One word brought you down here. The word that lifts you back out is not cut "
                 "anywhere on it, and not one you've been given.",
             ]),
-        "the door": _z(
+        "door": _z(
             "A single heavy door is set in the near wall, seamless, no handle on this side. "
             "It closed behind you on arrival and has the settled look of something that "
             "won't open again until it's decided to.",
             summary="a sealed, handleless door",
             study=["There's no handle, no panel, no seam you can work a finger into. The "
                    "door is a statement, and the statement is no."]),
-        "the light": _z(
+        "light": _z(
             "Sodium lamps hum a half-tone flat overhead, the light even and shadowless and "
             "the colour of old bone.",
             summary="humming sodium light",
@@ -126,7 +126,7 @@ _ROOM_ZONES = {
                      "Under the flat light, everything — including you — looks like inventory."]),
     },
     "floor": {
-        "the line": _z(
+        "line": _z(
             "Padded breeding stations run the length of the hall on a slow conveyor, most of "
             "them empty, each fitted with restraints, a descending milking rig, and a "
             "swing-mounted intake arm. The line advances on a timer and does not stop.",
@@ -141,14 +141,14 @@ _ROOM_ZONES = {
                              "still warm from the last thing held in it."},
             ambient=["Somewhere down the line a rig descends, works, and rises again, wet.",
                      "A collection bottle fills a measure higher and the gauge logs it."]),
-        "the rigs": _z(
+        "rigs": _z(
             "Articulated arms of suction cups and tubing hang ready over each station, "
             "graduated bottles racked beneath, gauges logging yield.",
             summary="milking rigs and collection bottles",
             study=["The bottles are labelled by number, not name. One rack is yours, or will be."]),
     },
     "pens": {
-        "the stalls": _z(
+        "stalls": _z(
             "Heavy stalls line the wall — a dull-eyed breeding bull in one, a rank tusked boar "
             "in a low pen, a big-barrelled stallion stamping in the last — stock kept ready and "
             "walked to the line when the board says it's owed.",
@@ -163,7 +163,7 @@ _ROOM_ZONES = {
                              "huge and warm and entirely uninterested in {target} as a person."},
             ambient=["The bull stamps and snorts, and the sound carries.",
                      "The boar's musk thickens whenever the heat in the room shifts."]),
-        "the kennel": _z(
+        "kennel": _z(
             "A long kennel run takes up one wall, heavy rangy hounds pacing the bars, noses "
             "working at the air, loosed one at a time on schedule.",
             summary="a kennel run of hounds",
@@ -172,7 +172,7 @@ _ROOM_ZONES = {
             ambient=["A hound presses to the bars, snuffling, and is told to wait."]),
     },
     "conditioning": {
-        "the cradle": _z(
+        "cradle": _z(
             "A padded cradle-chair sits in the centre under the single band of light, "
             "restraints open and waiting, angled back so whoever's in it faces the dark and "
             "the speaker grille.",
@@ -181,7 +181,7 @@ _ROOM_ZONES = {
                    "the cruelty: comfort, and the voice, and nowhere to look but up."],
             handle={"touch": "{actor} touches the cradle's restraints — soft-lined, unhurried, "
                              "built to keep someone for a long, quiet while."}),
-        "the dark": _z(
+        "dark": _z(
             "Past the single band of light the cell goes to padded black that eats sound. The "
             "speaker grille is the only fixed point, and the voice comes from everywhere at once.",
             summary="sound-eating dark and a speaker grille",
@@ -189,7 +189,7 @@ _ROOM_ZONES = {
                      "The speaker clicks, considers, and stays silent — for now."]),
     },
     "dairy": {
-        "the racks": _z(
+        "racks": _z(
             "Refrigerated cases and steel racks hold bottles in graded rows, each labelled with "
             "a number and a date — product, shelved and inventoried.",
             summary="racks of bottled output",
@@ -200,14 +200,14 @@ _ROOM_ZONES = {
             ],
             handle={"touch": "{actor} lifts a cold bottle from the rack — heavy, full, labelled "
                              "with a number where a name should be."}),
-        "the ledger": _z(
+        "ledger": _z(
             "A terminal and a chalk board hold the dairy's running totals — what each resident "
             "has produced, charted against the day they still argued.",
             summary="the output ledger",
             ambient=["A figure on the board updates itself upward. It only ever goes one way."]),
     },
     "pigsty": {
-        "the wallow": _z(
+        "wallow": _z(
             "The floor is churned mud and slop, warm and reeking, deep enough to kneel in and "
             "be held — where the lowest stock is kept on all fours to wallow.",
             summary="a deep reeking mud wallow",
@@ -220,7 +220,7 @@ _ROOM_ZONES = {
             handle={"touch": "{actor} sinks a hand into the warm slop — it gives, and clings, "
                              "and doesn't let go quickly."},
             ambient=["Something shifts under the muck and settles. A bubble surfaces and pops."]),
-        "the trough": _z(
+        "trough": _z(
             "A long trough runs one wall, slopped twice a cycle, the only thing in here built "
             "for a mouth.",
             summary="a feeding trough",
