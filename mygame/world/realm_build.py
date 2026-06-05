@@ -1758,6 +1758,95 @@ def teardown_realm(owner):
     return removed
 
 
+def facility_upgrade(owner):
+    """Add NEW rooms / exits / staff placards / office anatomy into an ALREADY-BUILT
+    realm IN PLACE — no teardown, so the owner keeps her character state and progress.
+    Idempotent: only adds what's missing. Run as the owner:
+
+        @py from world.realm_build import facility_upgrade; facility_upgrade(me)
+    """
+    realm = getattr(owner.db, "realm", None)
+    if not realm or not (realm.get("rooms")):
+        owner.msg("|rNo realm to upgrade — run build_realm(me) first.|n")
+        return
+    from evennia import create_object, search_object
+
+    rooms = {}     # key -> room object (resolved from metadata)
+    for k, ref in (realm.get("rooms") or {}).items():
+        res = search_object(ref)
+        if res:
+            rooms[k] = res[0]
+
+    added_rooms, added_exits, added_placards = [], 0, 0
+
+    # 1. Dig any rooms in the current _ROOMS spec that the realm doesn't have yet.
+    for key, name, desc in _ROOMS:
+        if key in rooms:
+            continue
+        r = create_object("typeclasses.rooms.Room", key=name)
+        r.db.desc = desc
+        _tag(r)
+        _furnish(r, key, owner)
+        rooms[key] = r
+        realm["rooms"][key] = r.dbref
+        added_rooms.append(name.split("— ")[-1].strip())
+
+    # 2. Ensure every adjacency in _EXITS exists (idempotent — skip if present).
+    for src, dests in _EXITS.items():
+        if src not in rooms:
+            continue
+        srm = rooms[src]
+        existing = {getattr(e, "destination", None) for e in srm.exits}
+        for dst in dests:
+            if dst not in rooms or rooms[dst] in existing:
+                continue
+            try:
+                create_object("typeclasses.exits.Exit",
+                              key=rooms[dst].key.split("— ")[-1].lower(),
+                              location=srm, destination=rooms[dst])
+                added_exits += 1
+            except Exception:
+                pass
+
+    # 3. Add the staff handling placard to any existing room that lacks one.
+    try:
+        from typeclasses.facility_furniture import FacilityFurniture
+        from evennia.utils import create as _c
+        for key, rm in rooms.items():
+            if any((o.key or "") == "a staff handling placard" for o in rm.contents):
+                continue
+            sp = _tag(_c.create_object(FacilityFurniture, key="a staff handling placard",
+                                       location=rm))
+            sp.db.desc = (
+                "|wA laminated STAFF placard bolted to the wall|n:\n\n"
+                "|x  HANDLING THE STOCK — process <unit> <action>: breed/milk/dose/pierce/\n"
+                "  ring/milkport/oneway/cowset/feed/latex/grow/condition/punish/reward/beg/\n"
+                "  appraise/buy · process <staff> demote · The unit consented at intake.|n")
+            added_placards += 1
+    except Exception:
+        pass
+
+    # 4. Provision the office Bethany's anatomy if the office was just added.
+    try:
+        from typeclasses.bethany_script import provision_bethany
+        off = rooms.get("office")
+        if off:
+            for o in off.contents:
+                if (o.key or "").lower() == "bethany" and not getattr(o.db, "facility_anatomy", False):
+                    provision_bethany(o)
+    except Exception:
+        pass
+
+    owner.db.realm = realm
+    owner.msg(
+        f"|gFacility upgraded in place.|n\n"
+        f"|x  New rooms: {', '.join(added_rooms) if added_rooms else 'none'}\n"
+        f"  New exits wired: {added_exits}\n"
+        f"  Staff placards added: {added_placards}\n"
+        f"  Your character state and progress are untouched.|n")
+    return realm
+
+
 def build_realm(owner):
     housing = owner.location
     if not housing:

@@ -8,11 +8,12 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0. Operational note (read first)
 
-- 🟡 **Re-run `build_realm(me)` to get new rooms.** Rooms added after your last build
-  (Showroom, Deep Stock, Nursery, Bethany's Office) won't exist in an already-built
-  realm until you rebuild. The cycle guards missing rooms (`if "office" in avail`), so
-  an old realm won't crash — it just won't route to the new rooms. `teardown_realm` then
-  `build_realm` is the clean path; `force_clear`/`escape` remain the OOC floor.
+- 🟡→✅ **Getting new rooms without losing state.** Previously you had to `teardown_realm`
+  + `build_realm` (losing nothing on the *character*, but rebuilding the whole realm). **Now
+  there's `facility_upgrade(owner)`** — `@py from world.realm_build import facility_upgrade;
+  facility_upgrade(me)` — which adds *only the missing* rooms/exits/staff-placards/office
+  anatomy into your existing realm in place, idempotently. Full rebuild is still available
+  but no longer required to see new work.
 - 🟡 **The rp_name → alias fix only applies on next login** for already-puppeted
   characters (`at_post_puppet`). If page/tell/emote still can't find someone mid-session,
   they should relog once (or `setname <same name>`).
@@ -170,3 +171,8 @@ empty, wayposts always inactive, return-hub degraded, address-collision detectio
 now GONE from the whole codebase; all `hasattr(…,"account")` sites verified safe. Content:
 `BethanyCollar` — the personal "collar" clause now locks a real worn item on her (her B-tag,
 honorific + craving + open-consent binding, lock_self_remove), tracked for teardown.*
+*Loop pass 9: `facility_upgrade(owner)` — in-place idempotent realm migration (adds missing
+rooms/exits/placards/office-anatomy without teardown; resolves the operational re-build
+note). Content (my pick, across the board): four new special events — breeding_demo (the
+whole barn in order: hounds→boar→bull→stallion), conditioning_broadcast (facility-wide mass
+hypnosis), hose_drill (watersports/sanitation), milking_parade (exhibition).*

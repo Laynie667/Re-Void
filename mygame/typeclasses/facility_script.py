@@ -1263,6 +1263,33 @@ _EVENTS = [
      "that she's not the new one anymore. The handlers gesture at her as the example — \"that's "
      "where you're going\" — and she sees herself through the new girls' eyes and barely "
      "recognizes the thing being pointed at."),
+    ("breeding_demo",
+     "A breeding demonstration is staged for a tour of buyers — {t} is the model. They run her "
+     "through the whole barn in order while the visitors watch and take notes: the hounds first, "
+     "then the boar, then the bull, the stallion last when she's loose enough, each species "
+     "worked into her in turn and the differences narrated aloud — girth, knot, flare, "
+     "temperament — like a sommelier walking a tasting. By the end she's been bred by the entire "
+     "stock list in one sitting, dripping four kinds of seed, and applauded for it."),
+    ("conditioning_broadcast",
+     "The whole floor's speakers cut to the conditioning channel at once, and the voice fills "
+     "every room — the deep slow induction piped facility-wide while every unit, {t} among them, "
+     "is held still and made to take it together. A mass session: the same suggestions sunk into "
+     "all of them at the same moment, a hundred heads going soft and quiet on cue, the brainwash "
+     "done wholesale. {t} surfaces afterward a little more agreeable and unable to say which of "
+     "her thoughts were hers when she went under."),
+    ("hose_drill",
+     "Sanitation drill. The whole line is racked, tipped back, and hosed — and the staff don't "
+     "only use the hose. It's a watering as much as a washing: {t} and the units beside her held "
+     "open-mouthed and pissed on and into by the handlers working down the row, marked and "
+     "rinsed and marked again, kept filthy in the wet reeking way the block prefers its stock, "
+     "and logged as serviced."),
+    ("milking_parade",
+     "A milking parade for the visitors' gallery: the heaviest producers, {t} among them, are "
+     "walked out in a line, cups already drawing, and shown off mid-let-down — tits swollen and "
+     "leaking on display, yield-figures projected over each one, paraded slow so the buyers can "
+     "watch the milk come. {t} is made to keep producing the whole length of it, lit and "
+     "dripping and ranked, and the worst part is the small trained flush of pride when her number "
+     "shows highest."),
 ]
 
 # Other livestock — she's never the only one. Comparison, ranking, witness.
@@ -1693,7 +1720,10 @@ class FacilityScript(DefaultScript):
             from world.conditioning import add_conditioning
             if key == "culling":
                 add_conditioning(target, 12.0, source="event")
-            elif key in ("inspection", "open_house", "restock"):
+            elif key == "conditioning_broadcast":
+                add_conditioning(target, 14.0, source="event")   # a mass session sinks deep
+            elif key in ("inspection", "open_house", "restock", "breeding_demo",
+                         "hose_drill", "milking_parade"):
                 add_conditioning(target, 6.0, source="event")
         except Exception:
             pass
