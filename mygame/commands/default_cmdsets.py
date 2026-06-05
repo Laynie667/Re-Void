@@ -133,7 +133,9 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdApproach())
         self.add(CmdWithdraw())
         self.add(CmdBeside())
-        self.add(CmdAside())
+        # CmdAside intentionally NOT added here — the canonical `aside` is the RP
+        # speech command (rp_commands.CmdAside via ALL_RP_CMDS). Proximity's version
+        # was shadowing it; dropping this add resolves the collision. (AUDIT §1d.)
         self.add(CmdProx())
 
         # Social emotes (all 134 emotes + CmdPermit)

@@ -756,8 +756,11 @@ def _announce_up(room):
 # Exports
 # -------------------------------------------------------------------
 
+# NOTE: CmdKnock here is superseded by the unified `knock` in door_commands.py
+# (which now does both the built-door knock AND this exit-knock). Kept defined for
+# reference / scene/invite flow, but NOT exported, to avoid a CharacterCmdSet key
+# collision (it would shadow, or be shadowed by, the door one). See FACILITY_AUDIT §1d.
 ALL_SCENE_CMDS = [
     CmdScene,
-    CmdKnock,
     CmdPO,
 ]

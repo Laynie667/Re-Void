@@ -379,12 +379,17 @@ class CmdUnlock(Command):
 
 class CmdKnock(Command):
     """
-    Knock on a door. People on the other side will hear it.
+    Knock — let people on the other side know you're there.
 
     Usage:
-      knock <zone>
-      knock helena door
-      knock auria
+      knock                  — knock on the way through (notifies the rooms your
+                               exits lead to, if they're closed/locked/owned)
+      knock <door zone>      — knock on a specific built door (Helena-style door zone)
+
+    With no argument, knock checks every exit out of your room and notifies any
+    destination that is closed to you — scene-locked, traverse-locked, or a room
+    another player owns — so whoever's inside knows someone's outside checking.
+    They can let you in. With an argument, knock on a named door zone instead.
     """
 
     key = "knock"
@@ -397,34 +402,60 @@ class CmdKnock(Command):
         if not room:
             caller.msg("|xYou aren't in a room.|n"); return
 
-        zone_name, zone = _fuzzy_door_zone(room, self.args)
-        if zone_name is None:
-            caller.msg(
-                f"|xNo door found matching '{self.args.strip()}' here.|n"
-            ); return
+        args = (self.args or "").strip()
 
-        door = zone.get("mechanics", {}).get("door", {})
-        dest_id = door.get("destination_id")
-        knock_room_msg   = door.get("knock_room_msg",   "There is a knock at the door.")
-        knock_caller_msg = door.get("knock_caller_msg", "You knock at the door.")
+        # 1. Named door ZONE (the built-door system), if an argument matches one.
+        if args:
+            zone_name, zone = _fuzzy_door_zone(room, args)
+            if zone_name is not None:
+                door = zone.get("mechanics", {}).get("door", {})
+                dest_id = door.get("destination_id")
+                knock_room_msg   = door.get("knock_room_msg",   "There is a knock at the door.")
+                knock_caller_msg = door.get("knock_caller_msg", "You knock at the door.")
+                caller.msg(f"|w{knock_caller_msg}|n")
+                room.msg_contents(
+                    f"|x{caller.db.rp_name or caller.name} knocks on the door.|n",
+                    exclude=caller)
+                if dest_id:
+                    from evennia import search_object
+                    results = search_object(f"#{dest_id}")
+                    if results:
+                        results[0].msg_contents(f"|x{knock_room_msg}|n")
+                else:
+                    caller.msg("|x(The door hasn't been linked to a room yet — a Builder "
+                               "needs to run 'door set'.)|n")
+                return
+            # fall through to exit-knock if no zone matched
 
-        caller.msg(f"|w{knock_caller_msg}|n")
-        room.msg_contents(
-            f"|x{caller.db.rp_name or caller.name} knocks on the door.|n",
-            exclude=caller,
-        )
+        # 2. EXIT knock — notify any destination room that's closed/locked/owned.
+        name = caller.db.rp_name or caller.name
+        notified = []
+        for exit_obj in room.exits:
+            dest = getattr(exit_obj, "destination", None)
+            if not dest:
+                continue
+            # Only bother knocking where there's a closed/owned room beyond.
+            closed = (getattr(dest.db, "scene_locked", False)
+                      or getattr(dest.db, "owner_id", None)
+                      or getattr(dest.db, "owner", None))
+            if not closed:
+                # Also knock if the exit itself won't let us pass.
+                try:
+                    closed = not exit_obj.access(caller, "traverse")
+                except Exception:
+                    closed = False
+            if closed:
+                dest.msg_contents(
+                    f"|x[ A knock — {name} is at the {exit_obj.key}, checking if anyone's "
+                    f"inside. ]|n")
+                notified.append(exit_obj.key)
 
-        if dest_id:
-            from evennia import search_object
-            results = search_object(f"#{dest_id}")
-            if results:
-                dest_room = results[0]
-                dest_room.msg_contents(f"|x{knock_room_msg}|n")
+        if notified:
+            room.msg_contents(f"|x{name} knocks, waiting outside.|n", exclude=caller)
+            caller.msg(f"|wYou knock. Anyone inside |n{', '.join(notified)}|w will hear you.|n")
         else:
-            caller.msg(
-                "|x(The door hasn't been linked to a room yet — "
-                "a Builder needs to run 'door set'.)|n"
-            )
+            caller.msg("|xThere's no closed door or locked room here to knock on. "
+                       "(Try |wknock <door>|x for a built door.)|n")
 
 
 # ---------------------------------------------------------------------------

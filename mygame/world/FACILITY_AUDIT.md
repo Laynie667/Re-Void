@@ -39,20 +39,26 @@ Items get struck through / moved to "Resolved" as they're fixed.
   ever target the same zone, restore order would matter. *Fix idea:* one unified
   `db.facility_zone_backup` keyed by zone, written through a single helper.
 
-## 1d. Command-key collisions (NON-facility — needs your decision)
+## 1d. Command-key collisions (NON-facility) — RESOLVED (per user direction)
 
-Two verbs are defined **twice and both land in `CharacterCmdSet`**, so one implementation
-silently shadows the other. Not auto-fixed — which one is canonical is a design call.
-- 🟡 **`aside`** — `proximity_commands.CmdAside` (added explicitly, `default_cmdsets` ~L136)
-  vs `rp_commands.CmdAside` (via `ALL_RP_CMDS`, ~L121). The proximity one is added later, so
-  it **wins**; the rp_commands `aside` (L954) is dead. Decide which behaviour you want and
-  drop the other from its export/add.
-- 🟡 **`knock`** — `scene_commands.CmdKnock` (via `ALL_SCENE_CMDS`, ~L145) vs
-  `door_commands.CmdKnock` (via `ALL_DOOR_CMDS`, ~L248). Door is added later → **door wins**;
-  the scene-commands `knock` (L438) is shadowed. Pick one.
+Two verbs were defined twice and both landed in `CharacterCmdSet`, so one silently shadowed
+the other. Resolved on the user's call:
+- 🟡→✅ **`knock`** — the door-zone knock was beating the exit-knock, but the user wants
+  exit-knock (knock → notify the room beyond, for locked/owned grid rooms). **Merged** into
+  one canonical `door_commands.CmdKnock`: `knock <door>` does the built-door zone; bare `knock`
+  notifies any destination that's scene-locked / owned / traverse-locked. Removed
+  `scene_commands.CmdKnock` from `ALL_SCENE_CMDS` (de-shadowed; class kept for the scene/invite
+  flow).
+- 🟡→✅ **`aside`** — user notes proximity is "a bit unnecessary," so the RP `aside`
+  (`rp_commands.CmdAside`) is canonical. Dropped `proximity_commands.CmdAside` from the
+  `CharacterCmdSet` add so the RP one is no longer shadowed.
 - ✅ **Everything else dup'd** (say/pose/emote/look/whisper/mutter/ooc/shout) is the clean
-  **wisp ↔ character** split — `wisp_commands.*` feed the wisp cmdset, `rp_commands.*` feed
-  CharacterCmdSet; different cmdsets, intentional state-gating, no collision.
+  **wisp ↔ character** split — different cmdsets, intentional state-gating, no collision.
+
+**User design notes (for future work, not yet actioned):**
+- *Wisp/OOC layer* "has barely worked as intended" — `wisp` is flavour for being OOC and is a
+  candidate for a **redesign/re-envisioning** of the whole OOC-presence concept.
+- *Proximity commands* are "a bit unnecessary" — a candidate for slimming/removal.
 
 ## 1c. ENTIRE-game sweep (waystone / waypost travel infra)
 
