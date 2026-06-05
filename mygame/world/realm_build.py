@@ -1611,6 +1611,22 @@ def _furnish(room, key, owner):
         for fkey, fdesc in (_ROOM_FURNITURE.get(key) or []):
             f = _tag(_c.create_object(FacilityFurniture, key=fkey, location=room))
             f.db.desc = fdesc
+        # A staff placard in every room — teaches visiting players the handling verbs
+        # in-fiction (the `process` command), so witnesses can use the stock.
+        sp = _tag(_c.create_object(FacilityFurniture, key="a staff handling placard",
+                                   location=room))
+        sp.db.desc = (
+            "|wA laminated STAFF placard bolted to the wall|n, the kind of bored institutional "
+            "signage that's somehow the filthiest thing in the room:\n\n"
+            "|x  HANDLING THE STOCK — authorised staff & visitors\n"
+            "  process <unit> <action>  —  breed · milk · dose · pierce · ring · milkport ·\n"
+            "      oneway · cowset · feed · latex · grow · condition · punish · reward · beg\n"
+            "  process <unit> appraise   —  read the unit's grade, yield, and lot price\n"
+            "  process <unit> buy        —  claim the unit as your property\n"
+            "  process <staff> demote    —  put a staff member on the line as stock\n"
+            "  Everything you do drives the real schedule. The unit consented at intake.\n"
+            "  Be productive. The board is always watching.|n"
+        )
     except Exception:
         pass
     # NPCs

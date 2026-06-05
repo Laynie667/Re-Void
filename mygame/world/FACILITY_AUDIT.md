@@ -79,9 +79,9 @@ Items get struck through / moved to "Resolved" as they're fixed.
 - 🟢 **Ambient cadence.** Room `ambient_msgs` exist but I haven't confirmed a driver fires
   them on a timer in the realm rooms (vs only the cycle beats). Worth verifying an ambient
   ticker runs so empty-room atmosphere lands between cycle phases.
-- 🟢 **Witness discoverability.** `process <her> <action>` is powerful but undiscoverable;
-  a board/sign in each room ("STAFF: process this unit — breed/milk/dose/…") would teach
-  other players the verb in-fiction.
+- 🟢→✅ **Witness discoverability.** **Done:** every realm room now gets a "staff handling
+  placard" (FacilityFurniture) listing the full `process <unit> <action>` verb set
+  (incl. appraise/buy/demote) in-fiction, so visiting players learn how to use the stock.
 - 🟢 **Exit flavour.** Realm exits are auto-named from room keys; bespoke exit names/descs
   ("DOWN — Sub-Level P", a sealed hatch) would sell the geography.
 
@@ -104,3 +104,5 @@ ache, the flared+knotted multicock, employees-as-stock (`demote`).*
 *Loop pass 2: title-suffix ownership-wins fix, `FacilityScion` (futa get), and Bethany's
 bespoke personal clauses (honorific/name/collar/crave/display/line — each a real enforced
 term, imposed one at a time in the office, logged + reset-safe).*
+*Loop pass 3 (autonomous): in-fiction `process`-verb signage in every room (witness
+discoverability), and the office "first-day" breaking-in prose for a new favourite.*

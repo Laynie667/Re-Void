@@ -497,6 +497,23 @@ _FORGET_POOL = [
 ]
 
 # ── Bethany's Office: kept, owned, made hers ──
+_OFFICE_FIRSTDAY = [
+    "It's still new, this — you, here, hers — and she takes her time with the breaking-in the "
+    "way she takes her time with everything she enjoys. She walks slow circles around the "
+    "throne, reading you aloud from your file, naming each thing she's going to change about "
+    "you and then changing it: a clause, a dose, a hole worked looser, a memory lifted out. "
+    "\"No rush, sweetheart. I've got you for the rest of your life. We'll do this properly.\"",
+    "First days. Bethany clears her whole afternoon for a new favourite — no paperwork, just "
+    "you, learning the shape of belonging to her. She's patient and thorough and relentless, "
+    "building the devotion from nothing one deliberate cruelty and one false-tender kindness at "
+    "a time, watching your face to see which lands harder. \"There it is,\" she murmurs, when "
+    "something in you gives. \"That's the one. We'll do a lot more of that.\"",
+    "She's only just got you, and she's savouring it — the resistance still in you, the person "
+    "still mostly there, all the things she gets to take her time taking. \"I do love this "
+    "part,\" Bethany tells you, fond, settling in. \"Before. When there's still a you to "
+    "redecorate. By the time I'm done you won't remember being anything but mine, so let's not "
+    "hurry through the only bit you'd recognise.\"",
+]
 _OFFICE_BEATS = [
     "Bethany has you brought to her office and straps you into the throne herself, unhurried, "
     "humming — then settles behind her desk with a file and a coffee and turns the whole rig on "
@@ -2619,6 +2636,9 @@ class FacilityScript(DefaultScript):
         """Bethany has bought you and pulled you off the line into her office. The
         throne does everything at once on her dial while she works and watches — and
         every visit reorganises you a little more thoroughly around her."""
+        # The first days are the breaking-in — bespoke, intensive, personal.
+        if float(getattr(target.db, "bethany_devotion", 0) or 0) < 8 and random.random() < 0.7:
+            room.msg_contents("|y" + random.choice(_OFFICE_FIRSTDAY).format(t=t) + "|n")
         room.msg_contents("|y" + random.choice(_OFFICE_BEATS).format(t=t) + "|n")
         # The throne runs every system at once, hands-free, on her dial.
         self._do_milk(room, target, t)
