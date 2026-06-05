@@ -639,17 +639,27 @@ _SHOW_DEGRADE = [
     "pride is the worst thing in the room, and you have it anyway.",
 ]
 
-# ── Lineage: her own get, grown, breeding her ──
+# ── Lineage: her own offspring, grown, breeding their mother (incest loop) ──
 _LINEAGE_BREED = [
-    "It's one of her own get that mounts her this time — grown now, proven, put to the line "
-    "that made it — and it breeds {t} exactly as its sire did, the line folding back on itself "
-    "through her womb, a generation deeper and not the last.",
-    "Her own son-thing climbs onto {t} and ruts her with its sire's indifference, breeding the "
-    "next generation back into the body that dropped it. The handler logs it without comment. "
-    "This is the design. This is what the roster was always for.",
-    "The stud working {t} now has her own eyes, a little — her get, matured and returned to the "
-    "pens to breed its dam. It knots her and floods her with the line's own seed, and somewhere "
-    "a chart adds a generation and moves her quota further out of reach.",
+    "It's one of her own offspring that mounts her this time — grown now, proven, walked back "
+    "to the pens that bred it — and it fucks {t} exactly as its sire did, rutting its mother "
+    "open and breeding the next generation straight back into the womb it crawled out of. The "
+    "line folds through her again, a generation deeper, incest by design and logged as progress.",
+    "Her own son-thing climbs onto {t}'s back, the get she carried and dropped and nursed, and "
+    "knots its mother without a flicker of anything but appetite — pumping her full of the same "
+    "blood she gave it, breeding her with her own line. The chart calls it lineage. It is plainer "
+    "than that: her children breed her now, and their children will.",
+    "The stud working {t} has her own eyes looking down out of its face — her daughter, futa and "
+    "hung like the dam who whelped her, mounting her mother and seating the knot deep. She breeds "
+    "{t} with the family's own seed, mother and offspring locked together, the bloodline eating "
+    "its own tail through the one body it all runs back to.",
+    "They bring {t} her get to be bred by — a whole litter of them grown, sons and daughters "
+    "both, taking turns on their mother in the stocks, each one breeding her in turn and leaving "
+    "her dripping the line's own spend. Incest isn't a transgression here; it's the entire "
+    "business model, and she is its sole reliable supplier.",
+    "Her firstborn mounts {t} while a younger sibling waits its turn at her mouth — her own "
+    "children using their dam at both ends, breeding and being serviced by the body that made "
+    "them, the family closing on her tighter with every generation the nursery turns out.",
 ]
 
 # ── Growth: the udder ramps as she's milked ──
@@ -701,6 +711,10 @@ _NURSE_DEGRADE = [
     "The ledger on the wall curves every branch back to your number, and you nurse the next row "
     "of it, and the row after that has empty space waiting. You understand, hooked to the frame, "
     "exactly how long they mean to run you. The milk lets down anyway.",
+    "You nurse the very offspring that will mount you in a season or two — feeding your sons and "
+    "daughters at your own tits so they grow strong enough to breed their mother, the incest of "
+    "it so total and so domestic it has stopped reading as anything but chores. They suckle. You "
+    "let down. Soon enough they'll be back at the other end of you, and you'll let them.",
 ]
 
 # ── The Dairy & Output ──

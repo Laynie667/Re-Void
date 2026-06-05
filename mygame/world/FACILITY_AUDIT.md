@@ -80,11 +80,11 @@ Items get struck through / moved to "Resolved" as they're fixed.
 - 🟢 **Namespace the facility state.** There are ~60 `db.*` flags now. A single
   `db.facility = {...}` dict (with helpers) would make teardown a one-liner and reduce the
   risk of a new attribute being forgotten in a reset path. Big refactor; high payoff.
-- 🟢 **A `forgotten` readout.** `db.facility_forgotten` logs what FORGET took; surface it
-  (on the mind monitor, or a staff-only `process <her> inspect`) so the loss is legible.
-- 🟢 **Gape/capability surfaced on the sheet.** Hole capabilities (knot/double/fist/
-  prolapse) and permanent gape drive scenes but aren't shown anywhere the player reads.
-  A discreet body-state line would pay off the training.
+- 🟢→✅ **A `forgotten` readout.** **Done:** the mind monitor now shows the FORGET log
+  (last 5 redacted items), plus owner/devotion/personal-clauses and the lineage (offspring
+  counts + the incest-loop note). `look <her> mind` reads the whole damage now.
+- 🟢→✅ **Gape/capability surfaced.** **Done:** the monitor now prints a trained-holes line
+  per hole (gape word + what it can take: knot/double/fist/prolapse).
 
 ## 4. Improvements — room / world mechanics
 
@@ -125,3 +125,7 @@ discoverability), and the office "first-day" breaking-in prose for a new favouri
 `search_object` gotcha); full tree compiles clean. Added hidden contract clauses H25–H29
 (lineage, sale/ownership, FORGET/DEVOTION, Deep Stock, and H29 — the OOC floor named
 in-fiction as the one true clause).*
+*Loop pass 5: incest lineage prose deepened (her own offspring breed their mother — sons &
+daughters, the bloodline folded through her); mind-monitor read-out expanded to show
+owner/devotion/clauses, lineage + incest-loop, trained holes/capabilities, and the FORGET
+log (two improvement items resolved).*

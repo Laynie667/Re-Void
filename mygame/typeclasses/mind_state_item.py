@@ -169,6 +169,50 @@ class MindStateItem(DefaultObject):
                 lines.append(f"    |R\"{ph}\"|n → {rs} ×{st}{perm}")
         else:
             lines.append("  |xInstalled triggers:|n none yet.")
+
+        # Ownership / devotion to Bethany, when present.
+        dev = float(getattr(d, "bethany_devotion", 0) or 0)
+        if getattr(d, "bethany_owned", False) or dev > 0 or getattr(d, "facility_owner", None):
+            owner = getattr(d, "facility_owner", None) or "Bethany"
+            lines.append(f"  |xOwner:|n {owner}   |xDevotion:|n {dev:4.1f}  |x[{_bar(dev, 100)}]|n")
+            clauses = list(getattr(d, "bethany_clauses", None) or [])
+            if clauses:
+                lines.append("  |xPersonal clauses:|n " + ", ".join(clauses))
+
+        # Lineage — her own offspring, and the get bred back into her (incest loop).
+        counts = dict(getattr(d, "offspring_counts", None) or {})
+        if counts:
+            total = sum(int(v) for v in counts.values())
+            by = ", ".join(f"{k}×{int(v)}" for k, v in counts.items())
+            lines.append(f"  |xOffspring dropped:|n {total} ({by})")
+            roster = list(getattr(d, "offspring_roster", None) or [])
+            if roster:
+                lines.append("    |xher own get are raised on her milk and bred back into "
+                             "her — the bloodline folded through her body, generation on "
+                             "generation.|n")
+
+        # Trained body-state — what her holes can now take, and how ruined.
+        try:
+            from world.gang_breeding import animal_holes, hole_capabilities, gape_word
+            parts = []
+            for label, z in animal_holes(c).items():
+                if not z:
+                    continue
+                caps = hole_capabilities(c, z)
+                cap_s = ("/".join(sorted(caps))) if caps else "—"
+                parts.append(f"{label} ({gape_word(c, z)}; takes: {cap_s})")
+            if parts:
+                lines.append("  |xHoles (trained):|n " + "; ".join(parts))
+        except Exception:
+            pass
+
+        # What FORGET has taken out of her.
+        forgotten = list(getattr(d, "facility_forgotten", None) or [])
+        if forgotten:
+            lines.append(f"  |xRedacted (FORGET):|n {len(forgotten)} item(s) removed —")
+            for item in forgotten[-5:]:
+                lines.append(f"    |x· {item}|n")
+
         return "\n".join(lines)
 
     def refresh(self, character=None):
