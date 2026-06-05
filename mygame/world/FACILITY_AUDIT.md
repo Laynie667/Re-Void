@@ -127,6 +127,25 @@ Four real bugs, all the documented Evennia gotchas, in core travel code:
   `ValueError` at runtime. Each multi-token pool (`{who}`/`{price}`/`{owner}`/`{cup}`/
   `{phrase}`) is only ever `.format`-ed by a caller that supplies those keys.
 
+## 1e. Freeform items — comb-over (user-reported: "stuck / unremovable")
+
+The handles existed (`flist` showed them) but were undiscoverable from the zones, there was
+no bulk clear, and `undress` mishandled locks. Fixed:
+- 🔴→✅ **`undress` wiped ALL freeform — including LOCKED items.** It did
+  `char.db.freeform_items = {}`, so a slock/plock'd item (chastity belt, gag) came off by
+  undressing. **Fixed:** undress now uses `FreeformManager.remove_all_unlocked()` — clears
+  unlocked, **keeps locked**, and reports both.
+- 🟢→✅ **Names weren't visible from the zone view.** `look <self> <zone>` showed only the
+  description, so you couldn't know the handle to `unplace`. **Fixed:** the self zone-view now
+  lists `[items here: <name> …]` with a removal hint.
+- 🟢→✅ **No bulk clear.** **Added `unplace/all [target] [zone]`** — removes every unlocked
+  item at once (reports any locked ones it skipped). The escape hatch for "stuck" piles.
+- ✅ `unplace me <name>` already handled **multi-word names** (`facility mark 1`) and `me`
+  — confirmed working; the problem was purely discoverability + the undress lock bug.
+- ℹ **Note:** facility marks re-apply each cycle by design (they're the processing); manual
+  `unplace` clears them, but the active realm re-marks. Permanent removal is the OOC floor —
+  `escape` / `force_clear` / `/purge` — which wipes all facility freeform.
+
 ## 2. Bugs
 
 - 🔴→✅ **Office Bethany had no anatomy.** `provision_bethany` was only called for the

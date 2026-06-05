@@ -190,6 +190,21 @@ def _render_zone_target(char, target, zone_name, zone_data, deep=False):
             f"look {target_name_hint} {zone_name}/<key>]|n"
         )
 
+    # Freeform item handles — shown to the OWNER so they can actually remove them.
+    # (The descriptions render inline elsewhere; the removable *names* live here.)
+    if is_self:
+        ff = getattr(target.db, "freeform_items", None) or {}
+        here = [(nm, it) for nm, it in sorted(ff.items()) if it.get("zone") == zone_name]
+        if here:
+            tags = []
+            for nm, it in here:
+                lk = it.get("lock")
+                tags.append(f"{nm}" + (" |y[locked]|n" if lk else ""))
+            lines.append(
+                f"\n|x[items here: " + ", ".join(tags) + "|x]\n"
+                f"  remove with |wunplace me <name>|x, or |wunplace/all me|x "
+                f"to clear all unlocked.|n")
+
     return "\n".join(lines)
 
 

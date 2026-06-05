@@ -382,6 +382,24 @@ class FreeformManager:
         return True, item
 
     @staticmethod
+    def remove_all_unlocked(character, zone=None):
+        """Remove every UNLOCKED freeform item (optionally only on one zone).
+        Returns (removed_names, skipped_locked_names)."""
+        items = dict(character.db.freeform_items or {})
+        removed, skipped = [], []
+        zfilter = zone.lower().replace(" ", "_") if zone else None
+        for nm, it in list(items.items()):
+            if zfilter and it.get("zone") != zfilter:
+                continue
+            if it.get("lock"):
+                skipped.append(nm)
+                continue
+            del items[nm]
+            removed.append(nm)
+        character.db.freeform_items = items
+        return removed, skipped
+
+    @staticmethod
     def set_player_desc(character, item_name, text):
         """
         Set the character's own description for a freeform item on them.

@@ -2566,21 +2566,30 @@ class CmdUndress(MuxCommand):
                 char.remove_from_zone(zone_name)
                 cleared.append(zone_name)
 
-        # Also clear freeform items (place/wear items stored separately)
-        freeform_cleared = bool(char.db.freeform_items)
-        if freeform_cleared:
-            char.db.freeform_items = {}
-            char._rebuild_outfit_desc()
+        # Also clear UNLOCKED freeform items (place/wear items stored separately).
+        # Locked items (slock/plock — e.g. a chastity belt) survive undressing by
+        # design; only a keyholder/code can take those off.
+        ff_removed, ff_locked = [], []
+        if char.db.freeform_items:
+            try:
+                from world.freeform_manager import FreeformManager
+                ff_removed, ff_locked = FreeformManager.remove_all_unlocked(char)
+                char._rebuild_outfit_desc()
+            except Exception:
+                pass
 
-        if cleared or freeform_cleared:
+        if cleared or ff_removed:
             name = char.db.rp_name or char.key
-            self.msg(
-                f"You undress. {len(cleared)} zone(s) cleared."
-            )
-            char.location.msg_contents(
-                f"{name} undresses.",
-                exclude=char
-            )
+            extra = f" {len(ff_removed)} item(s) removed." if ff_removed else ""
+            self.msg(f"You undress. {len(cleared)} zone(s) cleared.{extra}")
+            char.location.msg_contents(f"{name} undresses.", exclude=char)
+            if ff_locked:
+                self.msg(f"|y{len(ff_locked)} item(s) stayed on (locked):|n "
+                         f"{', '.join(sorted(ff_locked))}. "
+                         f"A code/keyholder is needed (unslock/unplock).")
+        elif ff_locked:
+            self.msg(f"|yYou strip down, but {len(ff_locked)} locked item(s) won't come off:|n "
+                     f"{', '.join(sorted(ff_locked))}.")
         else:
             self.msg("You aren't wearing anything.")
 

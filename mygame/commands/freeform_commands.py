@@ -284,10 +284,15 @@ class CmdUnplace(MuxCommand):
         unplace <target> <name>
         unplace me collar
         unplace helena cuff
+        unplace/all [target]         — remove ALL unlocked items at once
+        unplace/all me [zone]        — clear one zone
 
-    See also: place, unslock, unplock
+    Multi-word names work: unplace me facility mark 1
+
+    See also: place, unslock, unplock, flist
     """
     key = "unplace"
+    switch_options = ("all",)
     locks = "cmd:all()"
     help_category = "Freeform"
 
@@ -295,9 +300,39 @@ class CmdUnplace(MuxCommand):
         caller = self.caller
         char = caller.puppet if hasattr(caller, 'puppet') else caller
 
+        # /all — bulk-remove every unlocked item (optionally on one zone).
+        if "all" in self.switches:
+            a = self.args.strip().split(None, 1)
+            tname = a[0] if a else "me"
+            zone = a[1].strip() if len(a) > 1 else None
+            target = char
+            if a and tname.lower() not in ("me", "self",
+                                           char.key.lower(), (char.db.rp_name or "").lower()):
+                target, err = _find_character(caller, tname)
+                if err:
+                    self.msg(err); return
+            if not (caller.check_permstring("Admin") or target == char):
+                self.msg("You can only bulk-clear your own freeform items.")
+                return
+            removed, skipped = FreeformManager.remove_all_unlocked(target, zone=zone)
+            who = "you" if target == char else _char_name(target)
+            if removed:
+                self.msg(f"|gRemoved {len(removed)} unlocked item(s) from {who}:|n "
+                         f"{', '.join(sorted(removed))}.")
+                if target.location:
+                    target.location.msg_contents(
+                        f"|x{_char_name(target)} strips off and discards a tangle of marks "
+                        f"and trinkets.|n", exclude=target)
+            else:
+                self.msg("|xNothing unlocked to remove.|n")
+            if skipped:
+                self.msg(f"|y{len(skipped)} item(s) stayed (locked):|n "
+                         f"{', '.join(sorted(skipped))}. Unlock them first (unslock/unplock).")
+            return
+
         args = self.args.strip().split(None, 1)
         if len(args) < 2:
-            self.msg("Usage: unplace <target> <name>")
+            self.msg("Usage: unplace <target> <name>   (or  unplace/all [target])")
             return
 
         target_name, item_name = args[0], args[1].lower()
