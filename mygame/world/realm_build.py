@@ -859,6 +859,15 @@ _ROOM_ZONES = {
 
 # Furniture objects per room (FacilityFurniture).
 _ROOM_FURNITURE = {
+    "office": [
+        ("the breaking frame", "Bethany's bespoke first-day rig, kept beside the throne under "
+         "a soft cloth she draws off like a magician — an upright steel frame of clamps, spreaders, "
+         "and a single adjustable arm tipped with whatever the day calls for. Where the throne is "
+         "for keeping a finished favourite comfortable, this is for the early work: holding a new "
+         "one open and still and *aware* through the long, patient hours of being taken apart and "
+         "rebuilt to her taste. The cloth is back over it the moment she's done. She likes the "
+         "reveal."),
+    ],
     "floor": [
         ("the breeding bench", "A heavy padded bench bolted to the floor, cut away to fold an "
          "occupant over it — ankle, wrist, and throat restraints, a height rail behind."),

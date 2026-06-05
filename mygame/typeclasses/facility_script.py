@@ -496,6 +496,28 @@ _FORGET_POOL = [
     "the feeling of wanting to leave", "who she was angry at, and why", "her own safe-word",
 ]
 
+# ── The breaking frame: CNC, the in-fiction futility of fighting ──
+# In-fiction only. The OOC floor (escape/force_clear/purge) is never gated and is the
+# one true way out; the dread below is built on top of that floor, not in place of it.
+_CNC_BREAK = [
+    "You fight it. Of course you fight it — the frame holds you open and you pull against the "
+    "clamps anyway, because some animal part of you still thinks struggling is for something. "
+    "It isn't. The steel doesn't care, Bethany doesn't mind, and the only thing your thrashing "
+    "earns is her delighted attention and a note in your file: |xspirited — for now.|n",
+    "No is a sound you make. It is not a door. You say it, scream it, and she nods along like "
+    "you're agreeing with her, fitting the next thing into you while you do. In here the word "
+    "has been disconnected from anything happening — it's just more noise from the unit, and "
+    "she finds the noise rather endearing while it lasts.",
+    "The horror isn't that you can't get free. It's how patiently she lets you try — watching "
+    "you exhaust the fight out of yourself against the frame, in no hurry at all, because every "
+    "failed pull is one less you've got left in you. She's breaking you with your own struggling. "
+    "She doesn't even have to do anything but wait.",
+    "You hold something back — a corner of yourself, the last private no — and you think she "
+    "can't reach it. She can see exactly where it is. She always could. \"There you are,\" she "
+    "murmurs, fond, and goes to work on precisely that, unhurried, because the last no is her "
+    "favourite thing to take and she's been saving it.",
+]
+
 # ── Bethany's Office: kept, owned, made hers ──
 _OFFICE_FIRSTDAY = [
     "It's still new, this — you, here, hers — and she takes her time with the breaking-in the "
@@ -2650,9 +2672,11 @@ class FacilityScript(DefaultScript):
         """Bethany has bought you and pulled you off the line into her office. The
         throne does everything at once on her dial while she works and watches — and
         every visit reorganises you a little more thoroughly around her."""
-        # The first days are the breaking-in — bespoke, intensive, personal.
+        # The first days are the breaking-in — bespoke, intensive, personal. She uncovers
+        # the breaking frame, and the struggle (real, in-fiction, and futile) gets its beat.
         if float(getattr(target.db, "bethany_devotion", 0) or 0) < 8 and random.random() < 0.7:
             room.msg_contents("|y" + random.choice(_OFFICE_FIRSTDAY).format(t=t) + "|n")
+            target.msg("  |M" + random.choice(_CNC_BREAK) + "|n")
         room.msg_contents("|y" + random.choice(_OFFICE_BEATS).format(t=t) + "|n")
         # The throne runs every system at once, hands-free, on her dial.
         self._do_milk(room, target, t)

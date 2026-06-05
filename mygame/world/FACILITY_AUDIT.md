@@ -52,6 +52,11 @@ Items get struck through / moved to "Resolved" as they're fixed.
 - 🟡 **Remaining gotcha audit:** all other `search_object(...)` calls reviewed pass a key
   positional (waystone/waypost/womb dbref lookups, char-by-name) — none hit the no-key `[]`
   trap. The waystone/waypost ones were already corrected to `.objects.all()` in earlier work.
+- ✅ **Stray-brace `.format()` crash class ruled out.** AST-scanned all ten pool/scene files
+  for any `{…}` token in a string that's later `.format(t=t)`-ed; the only hit is the
+  intentional `{zone:%s}` (`%`-format) template. No pool string can throw `KeyError`/
+  `ValueError` at runtime. Each multi-token pool (`{who}`/`{price}`/`{owner}`/`{cup}`/
+  `{phrase}`) is only ever `.format`-ed by a caller that supplies those keys.
 
 ## 2. Bugs
 
@@ -129,3 +134,7 @@ in-fiction as the one true clause).*
 daughters, the bloodline folded through her); mind-monitor read-out expanded to show
 owner/devotion/clauses, lineage + incest-loop, trained holes/capabilities, and the FORGET
 log (two improvement items resolved).*
+*Loop pass 6: bug-hunt — AST-ruled-out the stray-brace `.format()` crash class across all
+pool files. Content: the office "breaking frame" machine + CNC futility prose (`_CNC_BREAK`)
+on the first-day breaking — in-fiction helplessness layered on top of the never-gated OOC
+floor (the dread is built on the floor, not in place of it).*
