@@ -155,6 +155,65 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 - **Low / polish:** dedupe Bethany NPCs (AUDIT); table-drive `_choose_destination` weights;
   per-NPC `rp_name` aliasing; retire the single-room rig if unused (7).
 
-*Loop pass 13: created this catalogue; made `board` the canonical full dossier (added owner/
-devotion/clauses/suggestibility/docility + the FORGET log), so no redundant `file` command
-was added.*
+---
+
+# PART B — the wider game (non-facility systems)
+
+A survey of the ~45 command modules + core typeclasses outside the facility, grouped by
+area, with overlap/improvement notes. (Inventoried by size + module purpose.)
+
+## B1. Character & identity
+- `character_commands.py` (4.4k lines — the biggest module: name/desc/outfit/wardrobe/mood/
+  voice/scent/title/sheet/consent/block, wear/remove/insert), `chargen.py`, `bio_commands.py`,
+  `prefs_commands.py`. → The size of `character_commands` suggests it could be split by concern
+  (appearance vs outfit vs identity vs consent) for maintainability.
+
+## B2. Roleplay & speech
+- `rp_commands.py` (say/pose/emote/look/whisper/mutter/aside/ooc/shout + consent-gated speech),
+  `social_commands.py` (the directed social/intimate emote table), `scene_commands.py`,
+  `rp_tools_commands.py`, `comms_commands.py` (tell/page/reply/channels), `proximity_commands.py`
+  (approach/withdraw/beside/aside/prox). ⚠ **`aside` collision** (rp vs proximity — see AUDIT
+  §1d). ⚠ speech verbs also exist in `wisp_commands.py` for the wisp state (intentional split).
+
+## B3. Zones, body & intimacy
+- `roomzone_commands.py` + `zone_interact_commands.py` + `interact_commands.py` (zone look/
+  study/handle), `freeform_commands.py` (freeform marks/placement), `body_mod_commands.py`
+  (breast/penis/testicle mods), `penetration_commands.py`, `womb_commands.py`,
+  `inflate_commands.py`, `restrain_commands.py`, `mechanic_commands.py` (install zone mechanics),
+  `shower_commands.py` (cursed shower), `dairy_commands.py`. → Several overlap the facility's
+  installs; the facility reuses these real systems (good — not redundant).
+
+## B4. World, navigation & housing
+- `housing_commands.py`, `door_commands.py`, `stair_commands.py`, `teleport_commands.py`,
+  `waystone_commands.py` (+ the realm's waystone/waypost). ⚠ **`knock` collision** (door vs
+  scene — see AUDIT §1d). ✅ waystone/waypost no-key bugs fixed (AUDIT §1c).
+
+## B5. NPCs, furniture, props, minigames
+- `npc_commands.py` (ask/greet/nservice/triggers — the system the facility NPCs use),
+  `furniture_commands.py`, `rocking_horse_commands.py`, `jacuzzi_commands.py`,
+  `cah_commands.py` (cards-against-humanity minigame), `cooking_commands.py`,
+  `economy_commands.py`, `item_commands.py`, `ogram_commands.py`, `rel_commands.py`
+  (relationships), `safety_commands.py` (watch/block — `watch/list` bug fixed, AUDIT §1b),
+  `cycle_commands.py` (the endcycle/struggle verbs).
+
+## B6. Core typeclasses (non-facility)
+- `characters.py` (zones, appearance layers, rp_name→alias sync — added this loop),
+  `rooms.py` (15-layer appearance incl. wisps), `npc.py` (tiered NPC + triggers),
+  `objects.py`, `exits.py`, `scripts.py` (PassiveAccumulationScript — drives production +
+  the facility passive_tick), plus the body items (`production_item`, `womb_room`,
+  `inflation_item`, `body_mod_item`, `piercing_item`, `wearable_item`, `collar_item`,
+  `arousal_script`, `heat_script`, `fluid_bank`).
+
+## B7. Non-facility improvement notes
+- → **Split `character_commands.py`** (4.4k lines) along concern lines.
+- → **Resolve the two cmdset collisions** (`aside`, `knock`) — pick the canonical impl.
+- → **Per-NPC `rp_name` alias** (the PC fix applied to NPCs) so `ask`/targeting is robust.
+- → Many `except Exception as e:` where `e` is only logged — fine, but a project-wide
+  logging convention would make failures easier to trace.
+- ✅ No-key `search_object`, `hasattr`-account, bare `except:`, mutable defaults, stray-brace
+  `.format`, unguarded `[0]`/`int()` — all swept clean game-wide (see AUDIT).
+
+*Loop pass 13: created this catalogue; made `board` the canonical full dossier.*
+*Loop pass 14: extended the catalogue to the wider game (Part B — ~45 command modules + core
+typeclasses, grouped by area); flagged two real `CharacterCmdSet` key collisions (`aside`,
+`knock`) for your decision (AUDIT §1d).*

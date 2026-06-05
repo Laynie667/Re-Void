@@ -39,6 +39,21 @@ Items get struck through / moved to "Resolved" as they're fixed.
   ever target the same zone, restore order would matter. *Fix idea:* one unified
   `db.facility_zone_backup` keyed by zone, written through a single helper.
 
+## 1d. Command-key collisions (NON-facility — needs your decision)
+
+Two verbs are defined **twice and both land in `CharacterCmdSet`**, so one implementation
+silently shadows the other. Not auto-fixed — which one is canonical is a design call.
+- 🟡 **`aside`** — `proximity_commands.CmdAside` (added explicitly, `default_cmdsets` ~L136)
+  vs `rp_commands.CmdAside` (via `ALL_RP_CMDS`, ~L121). The proximity one is added later, so
+  it **wins**; the rp_commands `aside` (L954) is dead. Decide which behaviour you want and
+  drop the other from its export/add.
+- 🟡 **`knock`** — `scene_commands.CmdKnock` (via `ALL_SCENE_CMDS`, ~L145) vs
+  `door_commands.CmdKnock` (via `ALL_DOOR_CMDS`, ~L248). Door is added later → **door wins**;
+  the scene-commands `knock` (L438) is shadowed. Pick one.
+- ✅ **Everything else dup'd** (say/pose/emote/look/whisper/mutter/ooc/shout) is the clean
+  **wisp ↔ character** split — `wisp_commands.*` feed the wisp cmdset, `rp_commands.*` feed
+  CharacterCmdSet; different cmdsets, intentional state-gating, no collision.
+
 ## 1c. ENTIRE-game sweep (waystone / waypost travel infra)
 
 Four real bugs, all the documented Evennia gotchas, in core travel code:
