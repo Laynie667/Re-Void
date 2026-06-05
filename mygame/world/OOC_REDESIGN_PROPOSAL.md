@@ -70,6 +70,14 @@ let `ooc` simply mean "you're at the account screen." That alone removes most of
 
 ## Original three-phase plan
 
+> **Status note (honest):** Phase 2 (afk) is **done** — it's purely additive and safe.
+> Phases 1 & 3 + the roaming-ghost cut all touch **`at_post_login` / the unpuppet flow**,
+> which I cannot run-test in this sandbox. The reskin and the roaming removal are *coupled*
+> (you can't relabel "you drift into the world" as "you're at the account level" while the
+> code still drops you into a room), so they should land together, with a live login test.
+> I will not ship blind changes to the login path. Give the word when you can test a build
+> and I'll do Phases 1+3 + the roaming cut in one reviewed step.
+
 ### Phase 1 — reskin "wisp" → plain OOC (zero structural risk)
 Keep the unpuppet→account mechanic **exactly as is**. Change only the *flavour text* the
 player sees: "wisp / the wisp gathers / wisp mood" → plain "OOC / account / OOC status."
@@ -77,7 +85,19 @@ The account fields (`wisp_mood/color/desc`) stay as the storage; only their user
 labels change. Pure copy edit across `wisp_commands.py` + the login lines in `characters.py`.
 *Result:* the OOC state reads as what it is, nothing breaks, no commands move.
 
-### Phase 2 — make `afk` actually work (small, additive)
+### Phase 2 — make `afk` actually work (small, additive) — ✅ DONE
+**Shipped.** `afk_message` now has teeth, all additive (no login-path risk):
+- `afk <msg>` sets it + a timestamp and announces to the room ("steps away — present, but
+  not answering"); `afk/clear` clears it + announces "is back".
+- `look <char>` shows `|x[AFK — <msg>, Nm]|n` under the name (others *and* self).
+- `page`/`tell` to an AFK character auto-replies the sender `(X is away: <msg>)`.
+- AFK **auto-clears on activity** — say / pose / emote / move all drop it (with a quiet
+  "is back"), via a new `Character.clear_afk()` / `is_afk()` / `afk_line()` helper set.
+
+So `afk` = present-but-away (in-character); `ooc` = gone to account. The two states are now
+cleanly distinct, which was the toggle you wanted.
+
+### Phase 2 (original spec) — make `afk` actually work (small, additive)
 Give the existing `afk_message` teeth, so you get a clean **"away but still in-character"**
 state distinct from fully OOC:
 - **Appearance:** a character with `afk_message` set shows one line in `look` — `|x[AFK —

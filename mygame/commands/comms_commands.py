@@ -238,6 +238,9 @@ class CmdTell(MuxCommand):
                     f"{color}{cname} tells you,|n "
                     f"{color}\"{message}\"|n"
                 )
+                # Auto-reply if they're AFK, so the sender knows.
+                if getattr(target_char.db, "afk_message", None):
+                    self.msg(f"|x({tname} is away: {target_char.db.afk_message})|n")
                 # Track for reply
                 target_char.db.last_tell_from_id = caller.id
                 target_char.db.last_tell_from_name = cname
@@ -484,6 +487,8 @@ class CmdPage(MuxCommand):
                     target_char.db.last_tell_from_id = caller.id
                     target_char.db.last_tell_from_name = cname
                     target_char.db.last_tell_is_char = True
+                    if getattr(target_char.db, "afk_message", None):
+                        self.msg(f"|x({tname} is away: {target_char.db.afk_message})|n")
                     reached.append(tname)
                 else:
                     # Route to account

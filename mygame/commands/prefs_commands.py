@@ -234,8 +234,13 @@ class CmdAFK(MuxCommand):
             return
 
         if "clear" in self.switches:
+            was = caller.db.afk_message
             caller.db.afk_message = None
-            self.msg("AFK cleared.")
+            caller.db.afk_since = None
+            self.msg("AFK cleared. Welcome back.")
+            if was and caller.location:
+                caller.location.msg_contents(
+                    f"|x{caller.db.rp_name or caller.key} is back.|n", exclude=caller)
             return
 
         if not self.args.strip():
@@ -243,7 +248,7 @@ class CmdAFK(MuxCommand):
             if current:
                 self.msg(
                     f"AFK: |y{current}|n\n"
-                    "Use 'afk/clear' to remove."
+                    "Use 'afk/clear' to remove (or just say/pose/move — it clears itself)."
                 )
             else:
                 self.msg(
@@ -252,8 +257,14 @@ class CmdAFK(MuxCommand):
                 )
             return
 
+        import time as _t
         caller.db.afk_message = self.args.strip()
+        caller.db.afk_since = _t.time()
         self.msg(f"AFK set: |y{caller.db.afk_message}|n")
+        if caller.location:
+            caller.location.msg_contents(
+                f"|x{caller.db.rp_name or caller.key} steps away — present, but not answering.|n",
+                exclude=caller)
 
 
 # -------------------------------------------------------------------

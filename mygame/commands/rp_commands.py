@@ -526,6 +526,13 @@ class CmdSay(MuxCommand):
             self.msg("Say what?")
             return
 
+        # Speaking counts as activity — drop any AFK flag.
+        try:
+            if hasattr(char, "clear_afk"):
+                char.clear_afk(announce=True)
+        except Exception:
+            pass
+
         # Say-lock check (pet trigger quiet effect)
         try:
             from world.binding_effects import check_say_allowed
@@ -606,6 +613,11 @@ class CmdPose(MuxCommand):
 
     def func(self):
         char = self.caller
+        try:
+            if self.args and hasattr(char, "clear_afk"):
+                char.clear_afk(announce=True)
+        except Exception:
+            pass
 
         if not self.args:
             self.msg("Pose what? Usage: pose <action>  or  :<action>")
@@ -666,6 +678,11 @@ class CmdEmote(MuxCommand):
 
     def func(self):
         char = self.caller
+        try:
+            if self.args and hasattr(char, "clear_afk"):
+                char.clear_afk(announce=True)
+        except Exception:
+            pass
 
         if not self.args:
             self.msg(

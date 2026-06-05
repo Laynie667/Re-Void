@@ -811,6 +811,37 @@ class Character(ObjectParent, DefaultCharacter):
             destination, move_type=move_type, **kwargs
         )
 
+    def is_afk(self):
+        """True if this character has an AFK message set."""
+        return bool(getattr(self.db, "afk_message", None))
+
+    def afk_line(self):
+        """A short '[AFK — msg (since)]' line, or '' if not away."""
+        msg = getattr(self.db, "afk_message", None)
+        if not msg:
+            return ""
+        since = getattr(self.db, "afk_since", None)
+        ago = ""
+        if since:
+            try:
+                import time as _t
+                mins = int((_t.time() - float(since)) / 60)
+                if mins >= 1:
+                    ago = f", {mins}m" if mins < 60 else f", {mins // 60}h{mins % 60:02d}m"
+            except Exception:
+                ago = ""
+        return f"|x[AFK — {msg}{ago}]|n"
+
+    def clear_afk(self, announce=False):
+        """Drop the AFK flag (called when the character acts). Quietly idempotent."""
+        if not getattr(self.db, "afk_message", None):
+            return
+        self.db.afk_message = None
+        self.db.afk_since = None
+        if announce and self.location:
+            self.location.msg_contents(
+                f"|x{self.db.rp_name or self.key} is back.|n", exclude=self)
+
     def at_post_move(self, source_location, move_type="move", **kwargs):
         """
         Called after this character successfully moves to a new room.
@@ -821,6 +852,8 @@ class Character(ObjectParent, DefaultCharacter):
             source_location, move_type=move_type, **kwargs
         )
         _proximity_clear_and_notify(self)
+        # Moving counts as activity — drop any AFK flag.
+        self.clear_afk(announce=True)
 
         # Auto-rise from any zone position when leaving a room
         if self.db.zone_seated_at or self.db.zone_lying_at or self.db.zone_kneeling_at:
@@ -1854,6 +1887,11 @@ class Character(ObjectParent, DefaultCharacter):
             parts.append(f"|w{name}|n  |x{title}|n")
         else:
             parts.append(f"|w{name}|n")
+        # AFK — away but still here. Shown to others (and self) so an absent unit
+        # still reads as present-but-not-answering.
+        _afk = self.afk_line()
+        if _afk:
+            parts.append(_afk)
         parts.append(sep)
 
         # --- Layer 2: Species + apparent age ---
