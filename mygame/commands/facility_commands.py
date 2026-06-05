@@ -15,6 +15,7 @@ So the genuine emergency exit is never gated — only the convenient one.
 """
 
 import time
+import random
 from evennia import Command
 from evennia.commands.default.muxcommand import MuxCommand
 
@@ -509,8 +510,9 @@ class CmdProcess(Command):
     Actions: breed (use a hole), milk, dose (experimental drug), pierce, ring,
              milkport, oneway (one-way ring), cowset (heavy cow piercings),
              feed (force-feed her ports), latex (seal as a drone), grow (force
-             udder growth), condition, punish, reward, beg (make her beg),
-             appraise, buy (claim her), inspect.  Default is 'breed'.
+             udder growth), brand, tattoo, portfolio (mark/catalogue her in the
+             parlour), condition, punish, reward, beg (make her beg), appraise,
+             buy (claim her), demote (a staffer), inspect.  Default is 'breed'.
 
     The subject must be in the facility (it's their opt-in). Everything you do
     drives the real systems — real deposits, real milking, real conditioning.
@@ -688,6 +690,53 @@ class CmdProcess(Command):
                 try: fs._proc_rings(room, target, t)
                 except Exception: pass
             caller.msg(f"|GYou have {t} ringed.|n")
+
+        elif action in ("brand", "mark"):
+            # The marker (or a visiting owner) sets a permanent brand — the handler's
+            # initial unless they're claimed, in which case the owner's.
+            owner = getattr(target.db, "facility_owner", None) or cn
+            initial = (owner.strip()[:1] or "?").upper()
+            spot = random.choice(["one hip", "the swell of her ass",
+                                                "her lower belly over the womb", "her flank"])
+            try:
+                from world.gang_breeding import record_mark
+                record_mark(target, f"a brand seared into {spot} — a {initial}, set by {cn}, "
+                            f"permanent", mode="on")
+            except Exception:
+                pass
+            room.msg_contents(f"|R{cn} draws an iron glowing from the parlour bar and presses it "
+                              f"to {t}'s {spot} — a hiss, the smell of it, a bitten-off scream — "
+                              f"and leaves a {initial} burned into her for good.|n", exclude=[target])
+            target.msg(f"|R{cn} brands you — a {initial}, seared into {spot}, permanent. You'll "
+                       f"read it off your own skin for the rest of the term.|n")
+
+        elif action in ("tattoo", "ink"):
+            try:
+                from world.gang_breeding import record_mark
+                ink = random.choice([
+                    "BRED · PROPERTY OF THE FACILITY across the lower belly, with a tally box",
+                    "a stock number inked at the nape, under the hair",
+                    f"{cn}'s name inked along the hip in a neat possessive hand",
+                    "a row of breeding tallies down the inside of one thigh"])
+                record_mark(target, f"a permanent tattoo — {ink}", mode="on")
+            except Exception:
+                pass
+            room.msg_contents(f"|G{cn} sets a tattoo gun to {t} and inks her — {ink} — "
+                              f"under everything she'll ever wear, for good.|n", exclude=[caller])
+            caller.msg(f"|GYou ink {t}: {ink}.|n")
+
+        elif action in ("portfolio", "photograph", "polaroid"):
+            try:
+                from world.gang_breeding import record_mark
+                record_mark(target, f"catalogued in the parlour portfolio under {cn} — "
+                            f"photographed marked and owned", mode="on", prefer="back")
+            except Exception:
+                pass
+            room.msg_contents(f"|x{cn} stands {t} against the portfolio wall, marked and owned, "
+                              f"and photographs her — a before, an after, a page under {cn}'s "
+                              f"initial that only ever gains entries.|n", exclude=[target])
+            target.msg(f"|xYou're posed, marked, and photographed for {cn}'s portfolio. You hold "
+                       f"the pose. The thing in the picture is you, catalogued by who owns it.|n")
 
         elif action in ("beg", "make beg"):
             if fs:

@@ -183,3 +183,7 @@ hypnosis), hose_drill (watersports/sanitation), milking_parade (exhibition).*
 *Loop pass 10: Room 12 — the Marking Parlour (my pick): a dedicated marking studio (chair/
 rack/portfolio zones, the marker NPC, a `mark` cycle phase that runs the real permanent
 procedures + the owner's B-brand). Hygiene scan clean (zero bare `except:` tree-wide).*
+*Loop pass 11: `process <her> brand|tattoo|portfolio` — a visiting owner can now mark and
+catalogue stock in the parlour (real freeform marks; owner's initial on the brand). Bug-
+sweep: `search_object(...)[0]`/unguarded `int(self.args)` crash classes — clean (the one
+`[0]` hit is inside a docstring). Major fault classes remain closed.*
