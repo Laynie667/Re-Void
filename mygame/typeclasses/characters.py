@@ -226,6 +226,46 @@ def _make_default_zone(intimate=False, visibility="look",
 
 
 # -------------------------------------------------------------------
+# rp_name alias sync — keep the display name searchable
+# -------------------------------------------------------------------
+
+def sync_rpname_aliases(char, new_name=None):
+    """Register the character's rp_name (and its first word) as object aliases so
+    `caller.search()` — used by page/tell/directed emotes/process/etc. — resolves a
+    character by the name players actually see, not just their login key.
+
+    Tracks the aliases it added in db.rp_name_aliases so a later rename removes the
+    old ones without clobbering unrelated aliases. Pass new_name to set explicitly
+    (e.g. from `setname`), or omit to (re)sync from the current db.rp_name.
+    """
+    if new_name is None:
+        new_name = getattr(char.db, "rp_name", "") or ""
+    # Remove the aliases we previously added for an old rp_name.
+    for a in list(getattr(char.db, "rp_name_aliases", None) or []):
+        try:
+            char.aliases.remove(a)
+        except Exception:
+            pass
+    added = []
+    name = (new_name or "").strip().lower()
+    if name:
+        candidates = [name]
+        first = name.split()[0] if name.split() else ""
+        if first and first != name and len(first) > 1:
+            candidates.append(first)
+        existing = {a.lower() for a in (char.aliases.all() or [])}
+        for a in candidates:
+            if a and a not in existing:
+                try:
+                    char.aliases.add(a)
+                    added.append(a)
+                except Exception:
+                    pass
+    char.db.rp_name_aliases = added
+    return added
+
+
+# -------------------------------------------------------------------
 # Proximity helper — used by Character hooks and proximity_commands
 # -------------------------------------------------------------------
 
@@ -561,6 +601,14 @@ class Character(ObjectParent, DefaultCharacter):
         rather than relying on the parameter.
         """
         super().at_post_puppet(**kwargs)
+
+        # Keep rp_name searchable: register it (and its first word) as aliases so
+        # page/tell/emote and any caller.search() resolve a character by the name
+        # players actually see. (Fixes targets not being found by display name.)
+        try:
+            sync_rpname_aliases(self)
+        except Exception:
+            pass
 
         # Prefer the parameter if given; fall back to self.account
         account = account or self.account

@@ -174,6 +174,11 @@ class CmdSetName(MuxCommand):
 
         if "clear" in self.switches:
             char.db.rp_name = ""
+            try:
+                from typeclasses.characters import sync_rpname_aliases
+                sync_rpname_aliases(char, "")
+            except Exception:
+                pass
             self.msg("RP name cleared. Using account key.")
             return
 
@@ -188,6 +193,11 @@ class CmdSetName(MuxCommand):
             return
 
         char.db.rp_name = new_name
+        try:
+            from typeclasses.characters import sync_rpname_aliases
+            sync_rpname_aliases(char, new_name)
+        except Exception:
+            pass
         self.msg(f"Name set to: |w{new_name}|n")
 
 

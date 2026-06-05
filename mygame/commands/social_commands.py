@@ -1224,15 +1224,24 @@ class SocialEmoteCommand(MuxCommand):
             return
 
         # Resolve target
+        wanted = self.args.strip()
         results = char.search(
-            self.args.strip(),
+            wanted,
             location=char.location,
             quiet=True,
         )
-        if not results:
-            self.msg(f"You don't see '{self.args.strip()}' here.")
+        target = (results[0] if isinstance(results, list) else results) if results else None
+        # Fallback: match by rp_name in the room (covers display names that aren't
+        # the character's key/alias yet — see characters.sync_rpname_aliases).
+        if not target and char.location:
+            wl = wanted.lower()
+            people = [o for o in char.location.contents
+                      if o != char and hasattr(o, "db") and getattr(o.db, "rp_name", None)]
+            target = next((o for o in people if (o.db.rp_name or "").lower() == wl), None) \
+                or next((o for o in people if (o.db.rp_name or "").lower().startswith(wl)), None)
+        if not target:
+            self.msg(f"You don't see '{wanted}' here.")
             return
-        target = results[0] if isinstance(results, list) else results
 
         # Targeting yourself falls back to solo
         if target == char:

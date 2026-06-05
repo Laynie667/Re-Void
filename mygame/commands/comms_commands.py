@@ -78,10 +78,10 @@ def _find_character(name):
     if results:
         return results[0]
 
-    # Fall back to rp_name scan
-    all_chars = search_object(
-        typeclass="typeclasses.characters.Character",
-    )
+    # Fall back to rp_name scan. NOTE: search_object(typeclass=...) with no key
+    # returns [] in this Evennia (see CLAUDE.md §4) — use the typeclass manager.
+    from typeclasses.characters import Character
+    all_chars = Character.objects.all()
     # Exact match first
     for char in all_chars:
         rp = (char.db.rp_name or "").lower()
