@@ -187,3 +187,7 @@ procedures + the owner's B-brand). Hygiene scan clean (zero bare `except:` tree-
 catalogue stock in the parlour (real freeform marks; owner's initial on the brand). Bug-
 sweep: `search_object(...)[0]`/unguarded `int(self.args)` crash classes — clean (the one
 `[0]` hit is inside a docstring). Major fault classes remain closed.*
+*Loop pass 12: `FacilityPortfolio` — the parlour now has a real, readable portfolio album
+(`look the portfolio album`) that renders the owner-grouped catalogue; `process <her>
+portfolio` writes a live entry to it. Auto-added by `facility_upgrade`. Bug-sweep: zero
+mutable default args tree-wide; the 44 `except Exception as e:` are lint-smell only.*

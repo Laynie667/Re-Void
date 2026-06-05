@@ -1747,6 +1747,10 @@ def _furnish(room, key, owner):
             "  Everything you do drives the real schedule. The unit consented at intake.\n"
             "  Be productive. The board is always watching.|n"
         )
+        # The parlour gets a real, readable portfolio object.
+        if key == "parlour":
+            from typeclasses.facility_furniture import FacilityPortfolio
+            _tag(_c.create_object(FacilityPortfolio, key="the portfolio album", location=room))
     except Exception:
         pass
     # NPCs
@@ -1936,6 +1940,16 @@ def facility_upgrade(owner):
                 "  ring/milkport/oneway/cowset/feed/latex/grow/condition/punish/reward/beg/\n"
                 "  appraise/buy · process <staff> demote · The unit consented at intake.|n")
             added_placards += 1
+    except Exception:
+        pass
+
+    # 3b. Ensure the parlour has its readable portfolio album.
+    try:
+        from typeclasses.facility_furniture import FacilityPortfolio
+        from evennia.utils import create as _c2
+        par = rooms.get("parlour")
+        if par and not any(isinstance(o, FacilityPortfolio) for o in par.contents):
+            _tag(_c2.create_object(FacilityPortfolio, key="the portfolio album", location=par))
     except Exception:
         pass
 

@@ -726,17 +726,29 @@ class CmdProcess(Command):
             caller.msg(f"|GYou ink {t}: {ink}.|n")
 
         elif action in ("portfolio", "photograph", "polaroid"):
+            owner = getattr(target.db, "facility_owner", None) or cn
+            grade = getattr(target.db, "facility_grade", None) or "stock"
+            marks = len(getattr(target.db, "facility_brands", None) or [])
+            summary = f"{grade}, {marks} mark(s) on record"
             try:
                 from world.gang_breeding import record_mark
-                record_mark(target, f"catalogued in the parlour portfolio under {cn} — "
+                record_mark(target, f"catalogued in the parlour portfolio under {owner} — "
                             f"photographed marked and owned", mode="on", prefer="back")
             except Exception:
                 pass
+            # Write a real entry into the readable portfolio album, if one's here.
+            try:
+                from typeclasses.facility_furniture import FacilityPortfolio
+                album = next((o for o in room.contents if isinstance(o, FacilityPortfolio)), None)
+                if album:
+                    album.add_entry(owner, t, summary)
+            except Exception:
+                pass
             room.msg_contents(f"|x{cn} stands {t} against the portfolio wall, marked and owned, "
-                              f"and photographs her — a before, an after, a page under {cn}'s "
+                              f"and photographs her — a before, an after, a page under {owner}'s "
                               f"initial that only ever gains entries.|n", exclude=[target])
-            target.msg(f"|xYou're posed, marked, and photographed for {cn}'s portfolio. You hold "
-                       f"the pose. The thing in the picture is you, catalogued by who owns it.|n")
+            target.msg(f"|xYou're posed, marked, and photographed for {owner}'s portfolio. You "
+                       f"hold the pose. The thing in the picture is you, catalogued by who owns it.|n")
 
         elif action in ("beg", "make beg"):
             if fs:
