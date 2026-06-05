@@ -33,7 +33,7 @@ FACILITY_FLAGS = {
     "pregnancy": None, "belly_desc_backup": None, "pregnancy_belly": None,
     "sleeve_desc_backup": None, "pen_plugged": None, "facility_owner": None,
     "sale_price": None, "facility_grade": None, "facility_brand": None,
-    "high_bid": None, "high_bidder": None,
+    "high_bid": None, "high_bidder": None, "auction_floor": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,
@@ -51,6 +51,7 @@ FACILITY_FLAGS = {
     "bethany_busy": False, "bethany_owned": False, "latex_sealed": False,
     "bethany_branded": False, "bethany_collar": False, "bethany_line_only": False,
     "animal_sleeve": False, "pen_filth": False, "pen_scented": False,
+    "auction_open": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "",

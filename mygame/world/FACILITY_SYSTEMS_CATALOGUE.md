@@ -51,6 +51,17 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   (0.85) and they win; if they're present but outbid/idle it eases off (0.15) to give them ticks to
   act; empty house resolves the NPC auction at 0.30. Bethany winning via the bid path sets
   `bethany_owned`. Net: a self-running auction players can jump into and win.
+- **Live timed gavel (`_open_auction`/`_auction_step`/`_auction_gavel` + `_GAVEL_COUNTDOWN`):** a
+  display now *opens* a real ~80s bidding window (via `evennia.utils.delay`) instead of resolving
+  instantly — staged NPC rounds at 20/40/58/70s climb the price with a "going once / going twice"
+  countdown into the room + gallery, then `_auction_gavel` at 80s auto-resolves to the standing high
+  bidder (player or NPC) or passes the lot in if nobody bid. A watching player can `bid`/`tip` the
+  whole window to steal her at the wire. **Defensive:** falls back to the instant gavel if `delay`
+  isn't importable; every callback re-checks `auction_open`/`facility_active`/ownership and that she
+  hasn't been dragged off the block (auction lapses if so), all wrapped in try/except.
+  **OOC-floor-safe:** `auction_open`/`auction_floor` are in the reset spec, so a purge mid-auction
+  makes the pending gavel a silent no-op. Cycle interval is 180s, so the 80s window fits one visit.
+  → *Needs a live test* (delay timing + reload behaviour can't be verified in-sandbox).
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

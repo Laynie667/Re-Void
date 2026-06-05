@@ -709,6 +709,13 @@ _NPC_OUTBID_PC = [
     "|cYour bid is beaten: {who} goes |w{amt}|c. Raise it, or lose the lot.|n",
     "|c{who} outbids you at |w{amt}|c, unbothered, like reaching for a different drink.|n",
 ]
+# The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
+_GAVEL_COUNTDOWN = [
+    "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
+    "|cStill climbing — the booths aren't finished with {t} yet.|n",
+    "|Y\"Going once...\" The auctioneer's hand lifts over {t}. Last bids.|n",
+    "|Y\"Going twice...\" The hammer's up. Speak now or {t}'s gone.|n",
+]
 
 # ── Lineage: her own offspring, grown, breeding their mother (incest loop) ──
 _LINEAGE_BREED = [
@@ -2925,6 +2932,95 @@ class FacilityScript(DefaultScript):
                 pool = _NPC_OUTBID_PC if topping_pc else _NPC_BID_LINES
                 gallery.msg_contents(random.choice(pool).format(who=who, amt=f"{current:,}"))
 
+    # ── The live, timed gavel: a bidding window that auto-resolves ──────────────
+    def _open_auction(self, room, target, t, price):
+        """Open a timed live gavel on this lot: a window of NPC bid rounds and a
+        last-chance countdown, then `_auction_gavel` resolves it automatically. A live
+        player can `bid`/`tip` the whole time. Returns True if the timer armed (caller
+        then skips the instant sale); False if `delay` is unavailable (caller falls back).
+        OOC-floor-safe: every callback re-checks `auction_open`/`facility_active`, and the
+        flag is in the reset spec, so a purge mid-auction makes the gavel a no-op."""
+        try:
+            from evennia.utils import delay
+        except Exception:
+            try:
+                from evennia.utils.utils import delay
+            except Exception:
+                return False
+        target.db.auction_open  = True
+        target.db.auction_floor = int(price)
+        open_line = (f"|W*** LOT OPEN — {t} on the block. Floor |w{price:,}|W. The bidding's "
+                     f"live and the hammer falls in a minute or two. ***|n")
+        room.msg_contents(open_line)
+        gallery = self._gallery_of(room)
+        if gallery:
+            gallery.msg_contents(open_line + f" |c(|wbid {t.split()[0].lower()}|c · "
+                                 f"|wtip <what>|c)|n")
+        try:
+            delay(20, self._auction_step,  target, room, t, 0)
+            delay(40, self._auction_step,  target, room, t, 1)
+            delay(58, self._auction_step,  target, room, t, 2)
+            delay(70, self._auction_step,  target, room, t, 3)
+            delay(80, self._auction_gavel, target, room, t)
+        except Exception:
+            target.db.auction_open = False
+            return False
+        return True
+
+    def _auction_step(self, target, room, t, stage):
+        """One tick of the live window: another NPC round climbs the price, and a
+        countdown beat lands in the room + gallery. Defensive against a moved/reset lot."""
+        try:
+            if not target or not target.pk:
+                return
+            if not getattr(target.db, "auction_open", False):
+                return
+            if not getattr(target.db, "facility_active", False):
+                target.db.auction_open = False
+                return
+            rm = room if (room and room.pk) else target.location
+            floor = int(getattr(target.db, "auction_floor", 0) or self._appraise(target))
+            self._npc_bidding(rm, target, floor)
+            line = _GAVEL_COUNTDOWN[max(0, min(stage, 3))].format(t=t)
+            if rm:
+                rm.msg_contents(line)
+            gallery = self._gallery_of(rm)
+            if gallery:
+                gallery.msg_contents(line)
+        except Exception:
+            pass
+
+    def _auction_gavel(self, target, room, t):
+        """The hammer falls: resolve to the standing high bidder (player or NPC), or pass
+        the lot in if nobody bid. Closes the auction either way. If the lot was dragged out
+        of the showroom before the gavel, the auction lapses with no sale."""
+        try:
+            if not target or not target.pk:
+                return
+            if not getattr(target.db, "auction_open", False):
+                return
+            target.db.auction_open = False
+            if not getattr(target.db, "facility_active", False):
+                return
+            if getattr(target.db, "facility_owner", None):
+                return
+            # she must still be on the block — if the cycle moved her, the auction lapses
+            if not (room and room.pk and target.location == room):
+                if target.location:
+                    target.location.msg_contents(f"|xThe bidding on {t} lapses — she's already "
+                                                 f"been walked back to the line. Withdrawn.|n")
+                target.db.high_bid = None
+                target.db.high_bidder = None
+                return
+            high = int(getattr(target.db, "high_bid", 0) or 0)
+            if high:
+                self._sell(room, target, t, max(high, self._appraise(target)))
+            else:
+                room.msg_contents(f"|x\"No takers. Lot passes.\" {t} is walked back off the "
+                                  f"block, unsold — this time.|n")
+        except Exception:
+            pass
+
     def _showroom(self, room, target, t, cond):
         """Posed on the block, appraised aloud, bid on through the glass, and — when
         the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her)."""
@@ -2947,17 +3043,23 @@ class FacilityScript(DefaultScript):
                 f"(|wbid {t.split()[0].lower()}|c · |wtip <what>|c)|n")
         else:
             occupied = False
-        # The standing clientele bid her up — the booths are never empty.
+        # Seed the bidding with an opening NPC round — the booths are never empty.
         self._npc_bidding(room, target, price)
         try:
             from world.conditioning import add_conditioning
             add_conditioning(target, 1.0 + cond * 0.004, source="showroom")
         except Exception:
             pass
-        # Does the gavel fall this visit? Be fair to a live buyer in the booths: if the
-        # present player is winning, drop the hammer (they take her); if they're here but
-        # outbid / haven't bid, give them more ticks to act rather than snatching her to an
-        # NPC instantly. Empty house resolves the NPC auction at the normal rate.
+        # A live, timed gavel: open the bidding for a ~minute-plus window (NPC rounds + a
+        # going-once/twice countdown a watching player can interrupt with `bid`), then it
+        # auto-resolves. Skip if she's already owned or an auction's already open.
+        if (not getattr(target.db, "facility_owner", None)
+                and not getattr(target.db, "auction_open", False)
+                and self._open_auction(room, target, t, price)):
+            target.msg("  |m" + random.choice(_SHOW_DEGRADE).format(t=t) + "|n")
+            return
+        # Fallback — no timer available: resolve the gavel instantly, as before. Fair to a
+        # present player (winning → 0.85 they take her; present-but-behind → 0.15; empty → 0.30).
         pc_on_top = (int(getattr(target.db, "high_bid", 0) or 0) > 0
                      and getattr(target.db, "high_bidder", None) not in _NPC_BIDDERS
                      and getattr(target.db, "high_bidder", None) is not None)

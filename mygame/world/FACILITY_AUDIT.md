@@ -39,6 +39,16 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **Live timed gavel.** A display now opens a real ~80s bidding window (`evennia.utils.delay`)
+  instead of resolving in one tick: staged NPC rounds climb the price (20/40/58/70s) with a
+  going-once/going-twice countdown, then `_auction_gavel` at 80s auto-resolves to the high bidder
+  (player or NPC) or passes the lot in. A watching player can `bid`/`tip` the whole window and steal
+  her at the wire. Defensive throughout — falls back to the instant gavel if `delay` won't import,
+  every callback re-checks `auction_open`/`facility_active`/ownership + that she's still on the block
+  (lapses if the cycle moved her), all in try/except. **OOC floor verified:** `auction_open`/
+  `auction_floor` added to the reset spec (both paths call `apply_reset_flags`), so a purge
+  mid-auction makes the pending gavel a no-op — the fire-exit is untouched. ⏳ **Needs a live test**
+  (delay timing, multi-player bidding into a live window, reload mid-auction) — can't be run in-sandbox.
 - 🟢 **NPC clientele bid the block (both-layered audience).** `_npc_bidding` fills the booths with
   a standing NPC clientele that bids the lot up on its own during a display visit — climbing
   `high_bid`, narrating into the gallery, and able to **top a live player's standing bid** (Bethany
