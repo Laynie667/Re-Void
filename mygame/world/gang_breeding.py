@@ -282,6 +282,16 @@ def _birth_offspring(target, species, generation=1):
     roster = list(getattr(target.db, "offspring_roster", None) or [])
     roster.append(o.dbref)
     target.db.offspring_roster = roster
+    # Send the newborn to the nursery to be raised on her milk, if the realm has one.
+    try:
+        from evennia import search_object
+        nref = ((getattr(target.db, "realm", None) or {}).get("rooms") or {}).get("nursery")
+        if nref:
+            nrm = (search_object(nref) or [None])[0]
+            if nrm and nrm != room:
+                o.move_to(nrm, quiet=True)
+    except Exception:
+        pass
     lineage = ("by the facility's stud line" if generation <= 1
                else f"out of her own {species} get, {generation} generations deep")
     o.db.physical_desc = (

@@ -564,6 +564,31 @@ _BEG_BEATS = [
     "the conditioned reflex of a thing that knows asking is all it has.",
 ]
 
+# ── The Nursery ──
+_NURSE_BEATS = [
+    "{t} is locked kneeling into the nursing frame, tits clamped to the feed-lines, and milked "
+    "straight into the pens — her output piped out to a dozen snuffling mouths at once, the get "
+    "she's dropped fed on her body while she's made to face them and watch them feed.",
+    "The frame holds {t} presented and producing, drained into the lines that run to every crib, "
+    "and she nurses her whole brood the only way the facility allows: hands-free, hooked up, a "
+    "supply rather than a mother, watching the rows of her own young swell on her milk.",
+    "Hooked to the frame, {t} feeds the generations — newborns to half-grown — from her clamped, "
+    "dripping tits, and the half-grown ones feed with their eyes on her the way the stallions do, "
+    "already knowing what she'll be to them once they're walked to the stalls.",
+]
+_NURSE_DEGRADE = [
+    "You feed the things that will breed you, and you watch them grow toward it, and the room "
+    "is warm and smells of milk and straw and there is something in you that the facility built "
+    "that finds it almost nice. That's the worst thing the Nursery does. It makes the loop feel "
+    "like family.",
+    "Every one of them is yours and every one of them is a stud-in-waiting, and you supply them "
+    "the strength to do it out of your own body, on a schedule, facing the pens. You're not "
+    "raising children. You're growing your own replacements, and feeding them yourself.",
+    "The ledger on the wall curves every branch back to your number, and you nurse the next row "
+    "of it, and the row after that has empty space waiting. You understand, hooked to the frame, "
+    "exactly how long they mean to run you. The milk lets down anyway.",
+]
+
 # ── The Dairy & Output ──
 _DAIRY_BEATS = [
     "{t} is racked at the dairy station and the cups come down — her tits hooked up to the "
@@ -2408,6 +2433,31 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── The Nursery: she feeds her get her milk, and watches them grow toward her ──
+    def _nurse(self, room, target, t, cond):
+        """Hooked to the nursing frame and milked (real) into her own brood, facing the
+        pens, made to watch the generations she's raising grow toward the stalls — and
+        bred here too, sometimes, by the ones already grown."""
+        room.msg_contents("|c" + random.choice(_NURSE_BEATS).format(t=t) + "|n")
+        self._do_milk(room, target, t)          # real drain — piped to her get
+        # If any of her get have matured back into the pens, one may be brought to breed her.
+        try:
+            present = [o for o in room.contents
+                       if getattr(o.db, "is_offspring", False) and getattr(o.db, "matured", False)]
+            from world.gang_breeding import animal_holes
+            holes = [z for z in animal_holes(target).values() if z]
+            if present and holes and random.random() < 0.4:
+                self._breed_one(room, target, random.choice(holes),
+                                getattr(present[0].db, "species", "hound"), cond)
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 1.0 + cond * 0.004, source="nursery")
+        except Exception:
+            pass
+        target.msg("  |m" + random.choice(_NURSE_DEGRADE).format(t=t) + "|n")
+
     # ── The Pigsty: slopped, hosed, rutted in the muck, put back ──
     def _sty(self, room, target, t, cond):
         """Punishment / bottom-tier: she's kept on all fours in the filth, slopped,
@@ -2943,6 +2993,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "deep":
                 room.msg_contents(f"\n|w━━━━ DEEP STOCK · SUB-LEVEL P ━━━━|n")
                 self._deepstock(room, char, t, cond)
+            elif phase == "nurse":
+                room.msg_contents(f"\n|w━━━━ THE NURSERY ━━━━|n")
+                self._nurse(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 self._dairy(room, char, t, cond)
@@ -3035,6 +3088,10 @@ class RealmCycleScript(FacilityScript):
         from world.factions import get_standing as _gs
         standing = _gs(char)
         add("showroom", "show", 1 + (2 if standing >= 150 else 0))
+
+        # Once she's dropped get, she's brought to the Nursery to feed them her milk.
+        if getattr(char.db, "offspring_roster", None):
+            add("nursery", "nurse", 2)
 
         # Perfected stock (standing >= 1800) is mostly kept down in Deep Stock now —
         # the loop's terminus, weighted to dominate once she's finished.

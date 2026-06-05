@@ -70,6 +70,15 @@ _ROOMS = [
      "it is. Stock is brought up here to be posed, appraised, and sold: priced by yield and get "
      "and grade, bid on by buyers you cannot see behind the glass, and walked back down owned by "
      "someone new. A discreet brass plate on the block reads LOT IN VIEWING."),
+    ("nursery",      "The Facility — The Nursery",
+     "|wA warm, dim, straw-smelling barn-room of pens and cribs, loud with the snuffling and "
+     "mewling of growing young.|n This is where her get are raised: rows of pens holding the "
+     "litters she's dropped — squirming newborns, restless juveniles, half-grown things already "
+     "scenting the air — fed and grown on her own milk until they're ready to be walked to the "
+     "stalls and bred back to her. A nursing frame stands at the centre, lines running from it "
+     "to the pens. A wall-ledger charts the generations. It is the most domestic room in the "
+     "facility and by some distance the most obscene: a mother kept to feed and breed her own "
+     "replacements, deeper every generation."),
     ("deepstock",    "The Facility — Deep Stock (Sub-Level P)",
      "|wThe deepest room: a vast, dim, climate-controlled vault, silent but for the hum of "
      "machines and the soft tick of fluid lines.|n Rows of upright pods line the walls, each "
@@ -91,6 +100,7 @@ _EXITS = {
     "restroom":     ["floor", "pigsty"],
     "showroom":     ["floor"],
     "deepstock":    ["floor"],
+    "nursery":      ["floor", "pens"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -646,6 +656,58 @@ _ROOM_ZONES = {
             ],
             ambient=["A higher-graded lot is led past to the block, and the gallery stirs."]),
     },
+    "nursery": {
+        "cribs": _z(
+            "Rows of straw-bedded pens and cribs hold her get at every stage — squirming "
+            "newborns still wet, restless juveniles climbing the bars, half-grown things already "
+            "heavy-shouldered and scenting the air whenever she's brought near.",
+            summary="pens and cribs of her growing get",
+            study=[
+                "They're hers, every one — the litters she's dropped, kept and grown right here "
+                "where she can see them. The newest don't know her yet. The oldest already do, "
+                "and watch her come in with an interest that has nothing childish in it.",
+                "A card on each pen: species, generation, sire — and under sire, more and more "
+                "often, her own number. The line is folding inward. The cards are the proof, "
+                "written in the facility's neat hand.",
+            ],
+            handle={"cribs": "|xYou put a hand to the bars and the get inside crowd to it — "
+                            "snuffling, nipping, climbing over each other to get at the smell of "
+                            "the milk they were raised on. Yours. They know it. They want it, and "
+                            "soon they'll want the rest of you.|n"},
+            ambient=["A litter mewls and snuffles in the straw, climbing over one another.",
+                     "A half-grown one scents the air as she's brought past, and goes still, watching."]),
+        "frame": _z(
+            "A nursing frame stands at the centre, a body locked kneeling and presented at it "
+            "with feed-lines running from its clamped, dripping tits out to every pen — so the "
+            "whole brood feeds from her at once.",
+            summary="a nursing frame plumbed to the pens",
+            study=[
+                "The frame holds her hooked up and milked directly into the lines, her output "
+                "piped out to the cribs — she doesn't hold a single one, she just *supplies* "
+                "them, drained into her own young on a schedule like everything else she makes.",
+                "It is positioned so she faces the pens while she feeds them: made to watch the "
+                "generations she's nursing grow toward the stalls, toward her, the whole cruel "
+                "arithmetic of the place laid out in front of her in straw and milk-lines.",
+            ],
+            handle={"frame": "|xYou touch the nursing frame — clamps at the knees and wrists, "
+                            "cups and feed-lines hanging ready, every line running off to a pen "
+                            "of waiting young. It holds a body presented and producing, facing "
+                            "the brood it feeds.|n"}),
+        "ledger": _z(
+            "A long wall-ledger charts the lineage — generation by generation, the brood "
+            "branching and doubling back, every line eventually running through one number: hers.",
+            summary="the lineage ledger on the wall",
+            study=[
+                "It's a family tree drawn by an accountant: her get, their get, the generations "
+                "stacking, the arrows curving back to breed her again. Read far enough and every "
+                "branch returns to the same root. The root is labelled with her number, not a name.",
+                "The ledger has room for many more generations than have been filled. The empty "
+                "rows are the worst of it — the facility's plain statement of how long it intends "
+                "the line, and her, to run.",
+            ],
+            ambient=["A hand updates the ledger — another generation, another arrow curving back to her.",
+                     "The lineage chart ticks over; the line grows another branch, and folds it inward."]),
+    },
     "deepstock": {
         "pods": _z(
             "Rows of upright pods line the vault, each cradling a black-latex-sealed figure — "
@@ -820,6 +882,16 @@ _ROOM_NPCS = {
          "occasional rap of impatient knuckles, the shuffle of someone stepping up. You never "
          "see a face. That is the entire point of the wall."),
     ],
+    "nursery": [
+        ("the matron", "attendant", "A brisk, motherly woman in a stained apron who runs the "
+         "Nursery the way a farmer runs a calf-shed — fond of the stock, sentimental about none "
+         "of it. She knows every one of your get by generation and sire, hooks you to the frame "
+         "to feed them, and talks about the day each will be old enough to breed you the way "
+         "another woman might talk about a child's first day of school."),
+        ("her get", "resident", "Your own offspring, at every stage — newborn, juvenile, "
+         "half-grown — penned and growing on your milk, watching you with an interest that "
+         "curdles from helpless to hungry as they age toward the stalls."),
+    ],
     "deepstock": [
         ("the warden", "attendant", "A quiet, unhurried technician in soft-soled shoes who walks "
          "the rows checking readouts and topping up lines, the way a groundskeeper tends a "
@@ -884,6 +956,10 @@ _ROOM_MECHANICS = {
         "block": ("restrain", 1, "the display block",
                   "The block's clamps take your wrists and ankles and the turntable starts to turn. You are posed, lit, and on offer; you hold the pose because the pose is the product."),
     },
+    "nursery": {
+        "frame": ("restrain", 1, "the nursing frame",
+                  "The nursing frame locks you kneeling and presented, tits clamped to the feed-lines, facing the pens. You stay, and you feed them, and you watch them grow toward you."),
+    },
     "deepstock": {
         "pods": ("restrain", 1, "your maintenance pod",
                  "The pod closes around you, latex to the lines, and holds you upright and still in the humming dark. There is nothing to do now. There is nothing asked. You are stored."),
@@ -935,6 +1011,12 @@ _ROOM_AMBIENT = {
         "|xA bid-light winks red behind the glass; somewhere a number that is you goes up.|n",
         "|xThe auctioneer's patter drifts over — warm, practiced, talking up the lot to the dark.|n",
         "|xA buyer leans close to the one-way glass, studies the lot a long moment, and sits back.|n",
+    ],
+    "nursery": [
+        "|xA litter mewls and snuffles in the straw. Somewhere a milk-line draws and fills a trough.|n",
+        "|xA half-grown one scents the air and presses to the bars, watching the door she came in by.|n",
+        "|xThe matron updates the lineage ledger — another branch, curving back to one number.|n",
+        "|xThe warm straw-and-milk smell of the room is, horribly, almost comforting.|n",
     ],
     "deepstock": [
         "|xThe vault hums, even and bottomless. A milk-line pulses somewhere and stills.|n",
@@ -1241,6 +1323,35 @@ _AUCTIONEER_TRIGGERS = {
         "most.\"", "say"),
 }
 
+# The matron runs the Nursery — farms her own get on her milk, fond and pitiless.
+_MATRON_TRIGGERS = {
+    "nursery": ("\"This is where we raise your young,\" the matron says warmly, hooking a "
+        "feed-line. \"Every litter you drop comes here, grows up on your milk, and goes to the "
+        "stalls when it's ready. We keep them close. We find the stock settles better knowing "
+        "it's feeding its own replacements.\"", "say"),
+    "get": ("\"All yours, every one. I know them by generation and sire.\" She nods down the "
+        "pens. \"That row's your sons by the bull. That row's your sons by your sons. Grows "
+        "complicated, the bookkeeping, but the arrows all point the same way in the end — back "
+        "to you.\"", "emote"),
+    "nursing": ("\"You don't hold them, dear, you *supply* them.\" She clamps the cups on. \"We "
+        "pipe your milk straight to the pens. Cleaner. And it means you face them while you feed "
+        "them — watch them grow. Mothers should be involved. The facility's very pro-bonding.\"",
+        "say"),
+    "breed": ("\"Oh, they'll breed you, yes — once they're grown. That's what they're for. We "
+        "raise them up strong on your milk and walk them to the stalls and back they come.\" A "
+        "kindly pat. \"You'll have made the very thing that gets you with its young. Tidy, isn't "
+        "it. Self-sufficient.\"", "emote"),
+    "ledger": ("\"The lineage chart. Every generation, every branch.\" She taps the wall. \"See "
+        "how it all curves back through one number? That's you, love. The whole tree grows out "
+        "of you and folds straight back in. We've room on that wall for a great many more "
+        "generations. We intend to use it.\"", "say"),
+    "leaving": ("\"Leave? With all these little ones depending on your milk?\" The matron looks "
+        "almost scandalised. \"On the frame, dear. They're hungry, and so's the schedule. Plenty "
+        "of time to be elsewhere once you've fed your replacements.\"", "emote"),
+    "help": ("\"Ask about the nursery, your get, the nursing, the breeding, or the ledger. Then "
+        "up on the frame — the brood doesn't feed itself, not yet.\"", "say"),
+}
+
 # The warden runs Deep Stock — tends the Perfected like a greenhouse. Soft, final.
 _WARDEN_TRIGGERS = {
     "deepstock": ("\"This is the bottom,\" the warden says softly, checking a readout. \"Where "
@@ -1391,6 +1502,8 @@ def _furnish(room, key, owner):
                 _tree = _AUCTIONEER_TRIGGERS
             elif nkey.lower() == "the warden":
                 _tree = _WARDEN_TRIGGERS
+            elif nkey.lower() == "the matron":
+                _tree = _MATRON_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
