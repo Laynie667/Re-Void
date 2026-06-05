@@ -79,6 +79,16 @@ _ROOMS = [
      "to the pens. A wall-ledger charts the generations. It is the most domestic room in the "
      "facility and by some distance the most obscene: a mother kept to feed and breed her own "
      "replacements, deeper every generation."),
+    ("parlour",      "The Facility — The Marking Parlour",
+     "|wA clean, bright, almost clinical studio — part tattoo parlour, part surgery, part "
+     "leatherworker's bench — smelling of green soap, hot iron, and ink.|n A padded marking "
+     "chair stands bolted at the centre under a swing-arm lamp, restraints at every limb. One "
+     "wall is racked floor to ceiling with the trade: brands of every shape on a heated bar, "
+     "tattoo guns, piercing needles and a tray of rings and gauges, a corner kept for the slow "
+     "permanent work. The opposite wall is the portfolio — photographs and peeled hide-prints of "
+     "every mark the parlour has set, catalogued by owner. This is where the facility, and "
+     "Bethany in particular, makes ownership a thing you can read off a body forever. Nothing "
+     "applied in here ever comes off."),
     ("office",       "Bethany's Office",
      "|wA plush, private, off-the-books office that looks nothing like the rest of the place — "
      "warm lamplight, a deep carpet, a big leather chair behind a bigger desk.|n It is the only "
@@ -111,6 +121,7 @@ _EXITS = {
     "deepstock":    ["floor"],
     "nursery":      ["floor", "pens"],
     "office":       ["floor", "lobby"],
+    "parlour":      ["floor", "office"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -666,6 +677,57 @@ _ROOM_ZONES = {
             ],
             ambient=["A higher-graded lot is led past to the block, and the gallery stirs."]),
     },
+    "parlour": {
+        "chair": _z(
+            "A heavy padded marking chair is bolted under the swing-arm lamp, reclined and "
+            "spread, restraints at wrist, ankle, waist and brow — built to hold a body utterly "
+            "still for the precise, permanent, unhurried work of marking it.",
+            summary="the marking chair under the lamp",
+            study=[
+                "The restraints include one across the forehead, because the work wants you "
+                "still to the millimetre — a flinch ruins a line, and a ruined line is corrected, "
+                "not forgiven, with another pass over the same raw skin.",
+                "The leather is worn pale at the wrist and brow from everyone held here before "
+                "you, the ones who learned that the only way through the chair is to stop "
+                "fighting the chair. You'll learn it too. The lamp is very bright and very patient.",
+            ],
+            handle={"chair": "|xYou touch the marking chair — cool padded leather, restraints "
+                            "at every limb and one for the brow, the swing-arm lamp throwing a "
+                            "hard clean circle of light over the seat where the work gets done "
+                            "and doesn't get undone.|n"}),
+        "rack": _z(
+            "One wall is the trade, racked floor to ceiling: a heated bar of branding irons in "
+            "every shape, tattoo guns, trays of piercing needles and rings and gauges, inks in "
+            "facility grey and ownership black.",
+            summary="the wall of brands, guns, needles and rings",
+            study=[
+                "The brands hang in rows — the facility's mark in a dozen sizes, and beside "
+                "them the personal irons: initials, sigils, a heated |wB|n kept hotter than the "
+                "rest because its owner likes it ready. You don't have to be told whose.",
+                "There's a sizing rod of gauging rings running small to obscene, and a tray of "
+                "captive rings, bars, and tags. Whatever the parlour decides you'll wear, it's "
+                "already here, already sized, already waiting on the heated bar.",
+            ],
+            handle={"rack": "|xYou run a hand along the rack — warm iron, cold steel, the heated "
+                            "bar ticking as the brands come up to temperature, the personal |wB|n "
+                            "glowing a dull orange a little apart from the rest, kept ready.|n"}),
+        "portfolio": _z(
+            "The far wall is the portfolio — framed photographs and peeled, cured hide-prints of "
+            "every mark the parlour has set, catalogued by owner, a gallery of finished work.",
+            summary="the portfolio wall of past marks",
+            study=[
+                "It's a lookbook of bodies. You flip through owners' pages — the facility's "
+                "stock, and the private collections, whole sections under one initial — and see "
+                "the same hands' work signed across a hundred different people, each reduced to "
+                "the marks that say whose they are.",
+                "There's a fresh page started under a |wB|n, a few prints already cured to it and "
+                "a great deal of blank album waiting. A polaroid camera sits on the shelf beneath, "
+                "for documenting each new piece as it's set. They photograph you after. For the "
+                "records, and because she likes to look.",
+            ],
+            ambient=["A cured hide-print is mounted to the portfolio wall and dated. The album "
+                     "under the |wB|n gains another page."]),
+    },
     "office": {
         "throne": _z(
             "A padded throne-rig stands by the desk — part chair, part machine: restraints at "
@@ -970,6 +1032,13 @@ _ROOM_NPCS = {
          "occasional rap of impatient knuckles, the shuffle of someone stepping up. You never "
          "see a face. That is the entire point of the wall."),
     ],
+    "parlour": [
+        ("the marker", "attendant", "A calm, exacting artist in an apron and nitrile gloves who "
+         "runs the parlour the way a master engraver runs a plate — fond of good work, indifferent "
+         "to the canvas's opinion of it. They hold your eye while they heat the iron, not unkindly, "
+         "the way you'd steady an animal before something it won't enjoy, and their hands never "
+         "shake. They have set marks on more bodies than they can name, and remember every design."),
+    ],
     "office": [
         ("Bethany", "attendant",
          "Bethany, at home and in charge — out from behind the intake desk and behind her own "
@@ -1062,6 +1131,10 @@ _ROOM_MECHANICS = {
         "frame": ("restrain", 1, "the nursing frame",
                   "The nursing frame locks you kneeling and presented, tits clamped to the feed-lines, facing the pens. You stay, and you feed them, and you watch them grow toward you."),
     },
+    "parlour": {
+        "chair": ("restrain", 1, "the marking chair",
+                  "The chair takes your wrists, ankles, waist and brow and holds you still to the millimetre. You don't get to flinch. The lamp comes on, the iron comes up, and the work begins."),
+    },
     "office": {
         "throne": ("restrain", 1, "Bethany's throne-rig",
                    "The throne-rig takes your wrists, ankles, waist and throat and seats you facing her desk. Milking head, breeding arm, dosing line, conditioning hood — all of it on her dial. You wait, held, for whatever she feels like running while she works."),
@@ -1117,6 +1190,12 @@ _ROOM_AMBIENT = {
         "|xA bid-light winks red behind the glass; somewhere a number that is you goes up.|n",
         "|xThe auctioneer's patter drifts over — warm, practiced, talking up the lot to the dark.|n",
         "|xA buyer leans close to the one-way glass, studies the lot a long moment, and sits back.|n",
+    ],
+    "parlour": [
+        "|xThe heated bar ticks. A brand comes up to colour, dull orange, and is set back to wait.|n",
+        "|xThe marker mounts a fresh cured hide-print to the portfolio wall and dates it.|n",
+        "|xA tattoo gun buzzes somewhere, steady and unhurried, laying a line that won't come out.|n",
+        "|xThe smell of green soap and hot iron hangs over everything. Nothing in here washes off.|n",
     ],
     "office": [
         "|xBethany turns a page in your file, makes a note, and adjusts a dial without looking up.|n",
@@ -1435,6 +1514,38 @@ _AUCTIONEER_TRIGGERS = {
         "most.\"", "say"),
 }
 
+# The marker runs the Marking Parlour — an artist, exacting and fond of the work.
+_MARKER_TRIGGERS = {
+    "parlour": ("\"This is where it's made permanent,\" the marker says, testing an iron's "
+        "heat against a damp cloth. \"Brands, ink, piercings, the slow work. Whatever's decided "
+        "for you, I set it so it can't be unset. The processing upstairs can be argued with. "
+        "What I do here can't.\"", "say"),
+    "brand": ("\"Iron's the honest one,\" they say, fond. \"No undo. I heat it, I press it, you "
+        "hold still — the brow strap's there because a flinch ruins the line and a ruined line "
+        "just means I go again over the same raw skin. Facility mark, or a private one. We keep "
+        "a B hot. It's requested a lot.\"", "emote"),
+    "ink": ("\"Tattoo's for the detail a brand can't hold — a number, a tally, an owner's name, "
+        "BRED across the belly.\" The gun buzzes. \"It goes in under everything you'll ever wear, "
+        "for good. I document each piece after. The portfolio likes a before and an after.\"", "say"),
+    "rings": ("\"Steel, then. Piercings, gauging rings, tags.\" They lift a sizing rod. \"Some "
+        "decorate, some hold a hole open, some are just a handle to lead you by. I fit what I'm "
+        "told to fit, where I'm told. You'll wear it the rest of the term, so let's get it "
+        "straight.\"", "emote"),
+    "portfolio": ("\"Every mark I've set, catalogued by owner.\" A nod at the wall. \"There's a "
+        "page started for you already, under the initial of whoever's claimed you. Mostly blank "
+        "still. We'll fill it. People do like to see their collection grow.\"", "say"),
+    "permanent": ("\"Permanent means permanent,\" the marker says, without drama. \"There's no "
+        "removal service here, by design. Whatever's put on you in this chair, you take out the "
+        "door, and out the term, and — for the inked and the branded — out the rest of your life. "
+        "Hold still. It goes better for the canvas that holds still.\"", "emote"),
+    "leaving": ("\"Not finished yet.\" They check the design against your file. \"You don't "
+        "leave this chair part-marked — that's untidy. Back. The lamp's on, the iron's hot, and "
+        "the work doesn't wait on your nerves.\"", "emote"),
+    "help": ("\"Ask about the parlour, brands, ink, rings, the portfolio, or permanence. Or "
+        "settle into the chair and let me work. The canvas that talks gets a brow strap "
+        "tightened.\"", "say"),
+}
+
 # Bethany in her office — possessive, fond, total. Warm ownership, which is worse.
 _BETHANY_OWNER_TRIGGERS = {
     "office": ("\"My room,\" Bethany says, not looking up from your file, a fond smile playing. "
@@ -1686,6 +1797,8 @@ def _furnish(room, key, owner):
                 _tree = _WARDEN_TRIGGERS
             elif nkey.lower() == "the matron":
                 _tree = _MATRON_TRIGGERS
+            elif nkey.lower() == "the marker":
+                _tree = _MARKER_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {

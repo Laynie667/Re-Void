@@ -74,6 +74,10 @@ Four real bugs, all the documented Evennia gotchas, in core travel code:
   pattern) — and since `rp_name` is now registered as an alias (login sync), those resolve
   a character's display name too. No change needed; noted as a dependency on the alias fix.
 - ✅ **Whole `mygame/{typeclasses,commands,world}` tree compiles clean** (py_compile sweep).
+- ✅ **Hygiene scan clean:** zero bare `except:` across the tree (consistent
+  `except Exception:`); no stray-brace `.format` strings; no remaining no-key
+  `search_object`; all `hasattr(_,"account")` sites guarded. The known fault classes
+  are closed.
 - 🟡 **Remaining gotcha audit:** all other `search_object(...)` calls reviewed pass a key
   positional (waystone/waypost/womb dbref lookups, char-by-name) — none hit the no-key `[]`
   trap. The waystone/waypost ones were already corrected to `.objects.all()` in earlier work.
@@ -176,3 +180,6 @@ rooms/exits/placards/office-anatomy without teardown; resolves the operational r
 note). Content (my pick, across the board): four new special events — breeding_demo (the
 whole barn in order: hounds→boar→bull→stallion), conditioning_broadcast (facility-wide mass
 hypnosis), hose_drill (watersports/sanitation), milking_parade (exhibition).*
+*Loop pass 10: Room 12 — the Marking Parlour (my pick): a dedicated marking studio (chair/
+rack/portfolio zones, the marker NPC, a `mark` cycle phase that runs the real permanent
+procedures + the owner's B-brand). Hygiene scan clean (zero bare `except:` tree-wide).*

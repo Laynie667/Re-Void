@@ -496,6 +496,35 @@ _FORGET_POOL = [
     "the feeling of wanting to leave", "who she was angry at, and why", "her own safe-word",
 ]
 
+# ── The Marking Parlour ──
+_PARLOUR_BEATS = [
+    "{t} is walked to the parlour and strapped into the marking chair — wrists, ankles, waist, "
+    "and the strap across her brow that means she doesn't get to flinch — and the lamp swings "
+    "down hard and clean over her while the marker tests an iron against a damp cloth and waits "
+    "for it to come up to colour. The work that happens here doesn't wash off, doesn't fade, and "
+    "isn't up for discussion. It just gets set into her, permanently, while she's held too still "
+    "to do anything but feel it.",
+    "The chair holds {t} open under the bright clean light and the marker goes to work — unhurried, "
+    "exacting, fond of the craft and indifferent to the canvas's noise — setting whatever the "
+    "facility's decided she'll carry for good. Iron, ink, steel; a hiss, a buzz, a tug; and a "
+    "little more of her made unmistakably, readably, permanently owned.",
+    "In the parlour {t} is reduced to a surface to be worked. The marker reads the design off her "
+    "file, checks it twice, and begins — and there's a horrible intimacy to how careful they are, "
+    "how much it matters to them that the mark is straight and clean and forever, on a body that "
+    "stopped being consulted about its own decoration a long time ago.",
+]
+_PARLOUR_DEGRADE = [
+    "You'll wear what they set here under everything, for the rest of the term and — for the ink "
+    "and the brands — the rest of your life. There's no removal service. That was always the "
+    "point: a body you can read the ownership off in the dark, with your fingertips, forever.",
+    "They photograph you after, for the portfolio, for the records, and because she likes to "
+    "look. You hold the pose. Somewhere a page under an initial gains another print, and the "
+    "thing in the picture is you, catalogued by who owns it, smiling because they told it to.",
+    "The marks stack — number, tally, brand, rings, the owner's initial — until reading your own "
+    "skin is just reading a receipt for yourself. Bred, milked, owned, marked. The body keeps "
+    "the score the facility writes on it, permanently, where you can't argue with it.",
+]
+
 # ── The breaking frame: CNC, the in-fiction futility of fighting ──
 # In-fiction only. The OOC floor (escape/force_clear/purge) is never gated and is the
 # one true way out; the dread below is built on top of that floor, not in place of it.
@@ -2614,6 +2643,32 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── The Marking Parlour: ownership made permanent and visible ──
+    def _parlour(self, room, target, t, cond):
+        """Strapped in the marking chair and worked over — real permanent procedures
+        (brands, ink, piercings, rings), documented to the portfolio. Where the
+        ownership stops being a setting and becomes something read off the skin."""
+        room.msg_contents("|G" + random.choice(_PARLOUR_BEATS).format(t=t) + "|n")
+        # The real permanent work — one or two procedures per visit.
+        for _ in range(random.randint(1, 2)):
+            try:
+                self._procedure(room, target, t)
+            except Exception:
+                pass
+        # If she's owned, her owner's personal mark gets priority here.
+        if getattr(target.db, "bethany_owned", False):
+            self._devote(target, random.uniform(2.0, 4.0), room=room)
+            if not getattr(target.db, "bethany_branded", False) and random.random() < 0.5:
+                # force the brand threshold via a devotion top-up handled in _devote
+                target.db.bethany_devotion = max(float(getattr(target.db, "bethany_devotion", 0) or 0), 50.0)
+                self._devote(target, 1.0, room=room)
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 1.5 + cond * 0.004, source="parlour")
+        except Exception:
+            pass
+        target.msg("  |m" + random.choice(_PARLOUR_DEGRADE).format(t=t) + "|n")
+
     # ── Bethany's Office: she keeps you, on her throne, and makes you hers ──
     def _devote(self, target, amount, room=None):
         """Reorganise her around Bethany specifically — devotion, not just breaking.
@@ -3458,6 +3513,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "owned":
                 room.msg_contents(f"\n|w━━━━ BETHANY'S OFFICE ━━━━|n")
                 self._office(room, char, t, cond)
+            elif phase == "mark":
+                room.msg_contents(f"\n|w━━━━ THE MARKING PARLOUR ━━━━|n")
+                self._parlour(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 self._dairy(room, char, t, cond)
@@ -3556,6 +3614,9 @@ class RealmCycleScript(FacilityScript):
 
         # Put on relief duty in the sanitation block now and then.
         add("restroom", "toilet", 2)
+
+        # Taken to the parlour to be marked — more often the deeper she's processed.
+        add("parlour", "mark", 1 + (1 if float(getattr(char.db, "conditioning", 0) or 0) >= 40 else 0))
 
         # Brought up to the showroom to be appraised and sold, more so once graded.
         from world.factions import get_standing as _gs
