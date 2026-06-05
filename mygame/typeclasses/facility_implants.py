@@ -24,6 +24,36 @@ restores it — so the OOC reset/floor strips them clean.
 import random
 from evennia import DefaultObject
 
+try:
+    from typeclasses.permanent_binding_collar import PermanentBindingCollar
+except Exception:
+    PermanentBindingCollar = object
+
+
+class BethanyCollar(PermanentBindingCollar):
+    """Bethany's personal collar — not facility property, hers, specifically. Locks
+    on, marks the wearer as owned, and binds her honorific + craving + open consent
+    to it. Spawned and worn by the 'collar' personal clause."""
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.key  = "Bethany's collar"
+        self.db.desc = ("A heavy, well-made collar of black leather and steel, a small brass "
+                        "tag hung at the throat stamped with a single |wB|n. Not the facility's "
+                        "issue — hers, and unmistakably so. It does not open.")
+        self.db.facility_piercing = True   # so the reset's worn-item sweep removes it
+        self.db.binding_effects = {
+            "lock_self_remove":       True,
+            "auto_consent":           True,
+            "required_honorific":     "Mistress",
+            "continuous_stimulation": 1.5,
+            "arousal_floor":          25.0,
+            "install_triggers": [
+                {"phrase": "good girl for bethany", "response": "kneel", "strength": 2,
+                 "mantra": "i'm bethany's"},
+            ],
+        }
+
 
 # ---------------------------------------------------------------------------
 # Shared helpers

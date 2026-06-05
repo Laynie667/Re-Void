@@ -2654,6 +2654,22 @@ class FacilityScript(DefaultScript):
             elif key == "collar":
                 target.db.bethany_collar = True
                 target.db.self_cmds_locked = True
+                # Lock a real personal collar on her — worn, binding, hers.
+                try:
+                    from evennia import create_object
+                    from typeclasses.facility_implants import BethanyCollar
+                    if not any(isinstance(o, BethanyCollar) for o in target.contents):
+                        col = create_object(BethanyCollar, key="Bethany's collar", location=target)
+                        zones = getattr(target.db, "zones", None) or {}
+                        nz = next((z for z in zones if "neck" in z or "throat" in z or "collar" in z), None)
+                        ok, _r = col.wear(target, nz) if hasattr(col, "wear") else (False, "")
+                        if ok:
+                            from world.binding_effects import apply_effects
+                            apply_effects(target, col)
+                            items = list(getattr(target.db, "facility_items", None) or [])
+                            items.append(col.dbref); target.db.facility_items = items
+                except Exception:
+                    pass
             elif key == "crave":
                 target.db.cum_craving = True
             elif key == "display":

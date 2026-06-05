@@ -55,6 +55,12 @@ Four real bugs, all the documented Evennia gotchas, in core travel code:
 - 🟡→✅ **Address-collision detection disabled.** `waypost._address_in_use` scanned with the
   same no-key trap → always returned False → two wayposts could silently share an address
   (travel ambiguity). **Fixed:** managers.
+- 🟡→✅ **Two more fallback hub scans** (`waystone_commands` travel + return paths, lines
+  ~146/447) hit the same no-key trap. **Fixed.** ✅ **The no-key `search_object(None, …)`
+  gotcha is now fully swept from the entire codebase** — every remaining textual match is an
+  explanatory comment or this audit doc, not a live call. All `hasattr(_,"account")` sites
+  reviewed: only the two waystone ones were the dangerous (no-truthiness) form; the rest
+  guard with `and …account` and are safe.
 
 ## 1b. Codebase-wide sweep (beyond the facility)
 
@@ -160,3 +166,7 @@ floor (the dread is built on the floor, not in place of it).*
 empty, wayposts always inactive, return-hub degraded, address-collision detection disabled
 — all the no-key `search_object` / `hasattr(...,"account")` gotchas). Content: deepened the
 `struggle` verb with CNC futility (owner-aware) + an explicit in-line OOC-floor reminder.*
+*Loop pass 8: swept the last two no-key hub scans — the `search_object(None,…)` gotcha is
+now GONE from the whole codebase; all `hasattr(…,"account")` sites verified safe. Content:
+`BethanyCollar` — the personal "collar" clause now locks a real worn item on her (her B-tag,
+honorific + craving + open-consent binding, lock_self_remove), tracked for teardown.*

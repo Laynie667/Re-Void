@@ -141,12 +141,9 @@ class CmdWayback(MuxCommand):
         if not hub_room:
             # Fallback: look for any hub stone
             try:
-                from evennia import search_object
-                stones = search_object(
-                    None,
-                    typeclass="typeclasses.waystone.HubWaystone",
-                    quiet=True,
-                ) or []
+                # search_object(None, typeclass=...) returns [] here — use the manager.
+                from typeclasses.waystone import HubWaystone
+                stones = [s for s in HubWaystone.objects.all() if s.location]
                 if stones and stones[0].location:
                     hub_room = stones[0].location
             except Exception:
@@ -442,10 +439,9 @@ class CmdWaystone(MuxCommand):
                 return
         else:
             try:
-                from evennia import search_object
-                stones = search_object(
-                    None, typeclass="typeclasses.waystone.HubWaystone", quiet=True
-                ) or []
+                # search_object(None, typeclass=...) returns [] here — use the manager.
+                from typeclasses.waystone import HubWaystone
+                stones = [s for s in HubWaystone.objects.all() if s.location]
                 if stones and stones[0].location:
                     hub_room = stones[0].location
             except Exception:
