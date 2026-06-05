@@ -1538,8 +1538,59 @@ class FacilityScript(DefaultScript):
                 f"|xThe line stops. Not finished — the line is never finished. Just paused, "
                 f"long enough for {t} to feel how little of the pause is hers.|n")
 
+    def _demote_staff(self, room, target=None, t=None, npc=None):
+        """Nothing here is exempt, not even the staff. Pull an attendant off their post
+        and put them on the line — flips their role to stock, strips the uniform, brands
+        and breeds them. Returns the demoted NPC, or None."""
+        if npc is None:
+            cands = [o for o in room.contents
+                     if getattr(o.db, "facility_role", None) == "attendant"
+                     and (o.key or "").lower() != "bethany"
+                     and not getattr(o.db, "demoted", False)]
+            if not cands:
+                return None
+            npc = random.choice(cands)
+        old = npc.db.rp_name or npc.key
+        npc.db.facility_role = "resident"     # now stock — no longer drives scenes
+        npc.db.demoted = True
+        npc.db.physical_desc = (
+            f"What used to be {old} — stripped of the grey coverall and put on the line like "
+            f"any other unit. Branded, collared, holes already used and dripping, the brisk "
+            f"competence gone slack and stunned. A staff badge still clipped to one ear, crossed "
+            f"out in marker and re-stamped with a stock number. Proof, kept where the rest can "
+            f"see it, that nothing here is exempt."
+        )
+        try:
+            from world.gang_breeding import record_mark, gang_inseminate
+            record_mark(npc, f"DEMOTED — was staff ({old}), now stock; branded and bred down "
+                        f"to the line", mode="on")
+            # Break them in on the spot.
+            zones = getattr(npc.db, "zones", None) or {}
+            hole = next((z for z, d in zones.items()
+                         if (d or {}).get("zone_type") in ("orifice", "both")), None)
+            if hole:
+                gang_inseminate(npc, hole, contributors=random.randint(2, 4),
+                                fluid_type="semen", species="contributor")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|R{old} makes the mistake of displeasing the wrong person. There's no hearing, no "
+            f"appeal — just a nod, and the handlers take their own. The coverall is stripped, a "
+            f"stock number stamped over the staff badge, and {old} is bent over the nearest "
+            f"station and bred down onto the line in front of everyone. Staff one shift, stock "
+            f"the next. The lesson lands on every unit watching: nothing here is exempt.|n")
+        return npc
+
     def _facility_event(self, room, target, t):
         """A rare special event, with a matching mechanical bite."""
+        # Occasionally, the event IS a staff member being put on the line.
+        if random.random() < 0.18 and self._demote_staff(room, target, t):
+            try:
+                from world.conditioning import add_conditioning
+                add_conditioning(target, 5.0, source="event")
+            except Exception:
+                pass
+            return
         key, text = random.choice(_EVENTS)
         room.msg_contents("\n|W★ " + text.format(t=t) + "|n")
         try:

@@ -516,12 +516,26 @@ class CmdProcess(Command):
         if not target:
             return
         action = (parts[1].strip().lower() if len(parts) > 1 else "breed")
+        room = caller.location
+        fs   = _fac_script(room)
+
+        # Demote: pull a staff NPC off their post and put THEM on the line. Targets a
+        # facility attendant (not the subject), so it skips the facility_active gate.
+        if action in ("demote", "bust"):
+            if getattr(target.db, "facility_role", None) != "attendant":
+                caller.msg(f"|x{target.db.rp_name or target.name} isn't staff to demote.|n")
+                return
+            if fs:
+                try: fs._demote_staff(room, npc=target)
+                except Exception: pass
+            caller.msg(f"|RYou put {target.db.rp_name or target.name} on the line. Staff one "
+                       f"shift, stock the next.|n")
+            return
+
         if not getattr(target.db, "facility_active", False):
             caller.msg(f"|x{target.db.rp_name or target.name} isn't in the facility — there's "
                        f"nothing to handle.|n")
             return
-        room = caller.location
-        fs   = _fac_script(room)
         t    = target.db.rp_name or target.name
         cn   = caller.db.rp_name or caller.name
         cond = float(getattr(target.db, "conditioning", 0) or 0)

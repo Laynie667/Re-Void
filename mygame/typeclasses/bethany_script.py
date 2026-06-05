@@ -60,15 +60,18 @@ def provision_bethany(npc):
         cock.db.size = 36.0     # past Architecturally Significant — Beyond Classification
         cock.db.player_desc = (
             "a single monstrous futa cock at the root that splits — obscenely, impossibly — into "
-            "THREE separate prehensile heads, each one already the size of a fist, each weaving "
-            "and weeping and seeking on its own like the heads of some patient hydra. The base is "
-            "thicker than a wrist and dark with blood, the shafts longer than a forearm, and a "
-            "knot the size of an apple swells at every fork. She can seat one in your mouth, one "
-            "in your cunt, and one in your ass at the same moment and still have her hands free "
-            "for her coffee. It does not look like it should exist, let alone fit. It fits anyway, "
-            "everywhere at once, and leaves every hole permanently reshaped around the memory. "
-            "Just the sight of it scrambles something behind the eyes — they keep sliding back, "
-            "and the mouth, traitor that it is, keeps wanting"
+            "THREE separate prehensile shafts, each one a chimera the facility bred to her order: "
+            "flared wide and blunt at the tip like a stallion's, and knotted like a hound's at "
+            "the base, so each head both spears and locks. They weave and weep and seek on their "
+            "own like the heads of some patient hydra. The root is thicker than a wrist and dark "
+            "with blood, each shaft longer than a forearm, each equine flare swelling to a flat "
+            "plate as it nears the edge and each canine knot ballooning apple-fat behind it. She "
+            "can seat one in your mouth, one in your cunt, and one in your ass at the same moment, "
+            "flare and knot in every hole at once, and still have a hand free for her coffee. It "
+            "does not look like it should exist, let alone fit. It fits anyway, everywhere at "
+            "once, and leaves every hole permanently reshaped around the memory. Just the sight "
+            "of it scrambles something behind the eyes — they keep sliding back, and the mouth, "
+            "traitor that it is, keeps wanting"
         )
         cock.install(npc, "shaft")
     except Exception:
