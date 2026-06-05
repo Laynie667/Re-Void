@@ -20,6 +20,7 @@ FACILITY_FLAGS = {
     "permanent_gape": [], "piercings": [], "pet_trigger_sources": [], "bred_by": [],
     "sensation_broadcast_targets": [], "aphrodisiac_expirations": [],
     "conditioning_applied": [], "facility_items": [], "facility_room_zones": [],
+    "gallery_demands": [],
 
     # --- dicts/scalars -> None ---
     "pet_type": None, "designation": None, "facility_name_backup": None,

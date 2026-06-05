@@ -708,7 +708,9 @@ _ROOM_ZONES = {
             ],
             handle={"booths": "|xYou settle into a leather booth facing the glass, a drink "
                             "appearing at your elbow, the lit block and its turning lot framed "
-                            "perfectly in front of you. Comfortable. Unhurried. Yours to watch.|n"}),
+                            "perfectly in front of you. Comfortable. Unhurried. Yours to watch — "
+                            "or, when watching isn't enough, yours to direct. "
+                            "(|wbid <lot> [amount]|x · |wtip <what>|x · |wprocess <lot> buy|x)|n"}),
         "panel": _z(
             "A brass-trimmed bid panel glows at each booth — the lot's number, its live asking "
             "price, and a lit key to raise it, the figures ticking as the room competes.",
@@ -1710,13 +1712,20 @@ _HOST_TRIGGERS = {
     "buyers": ("\"The other members? Regulars, mostly. Private parties, the breeding concern, "
         "intake's standing bids.\" A discreet nod at the dark. \"Everyone here owns a few. "
         "Nobody here has ever come just to watch — though watching's included.\"", "say"),
+    "tip": ("The host leans in, confidential. \"You don't only watch, you understand. \"|wtip "
+        "<what>|n and the floor staff oblige — milk her, breed her, dose her, ring her, grow "
+        "her, put her through her paces — *right now*, while you sip. She never knows the demand "
+        "came from a seat behind the mirror; she only feels it land. \"|wtip|n by itself shows "
+        "the menu and who's on the block. Half the pleasure's seeing your whim done to her on "
+        "the turntable while she searches the glass for a face that isn't there.\"", "emote"),
     "leaving": ("\"Leave whenever you like — you're a *member*, not a lot.\" The host's smile is "
         "warm and absolute, and the distinction hangs in the air a moment. \"The ones who don't "
         "get to leave are on the other side of the glass. Mind the difference. Another drink?\"",
         "say"),
-    "help": ("\"Ask me about the gallery, bidding, the glass, the current lot, or the other "
-        "buyers. Or just sit, watch, and raise the panel when something catches your eye. "
-        "That's rather the whole pleasure of the room.\"", "say"),
+    "help": ("\"Ask me about the gallery, bidding, tipping, the glass, the current lot, or the "
+        "other buyers. Or just sit, watch, raise the panel when something catches your eye, and "
+        "tip the floor when you'd like it *done*. That's rather the whole pleasure of the room.\"",
+        "say"),
 }
 
 # The marker runs the Marking Parlour — an artist, exacting and fond of the work.

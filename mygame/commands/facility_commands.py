@@ -947,3 +947,199 @@ class CmdBid(Command):
 
 
 ALL_FACILITY_VERBS.append(CmdBid)
+
+
+def _showroom_lot(gallery_room, caller):
+    """From the gallery, resolve the adjacent showroom and the facility subject
+    posed on the block there. Returns (showroom_room, lot_character) or (None, None)."""
+    if not gallery_room:
+        return None, None
+    try:
+        from typeclasses.characters import Character
+    except Exception:
+        Character = None
+    for ex in gallery_room.exits:
+        dest = getattr(ex, "destination", None)
+        if dest and "showroom" in (getattr(dest, "key", "") or "").lower():
+            for obj in dest.contents:
+                if obj is caller:
+                    continue
+                if Character and not isinstance(obj, Character):
+                    continue
+                if getattr(obj.db, "facility_active", False):
+                    return dest, obj
+            return dest, None
+    return None, None
+
+
+def _lot_script(target):
+    """The cycle/facility script that drives this lot (lives on the character)."""
+    if not target:
+        return None
+    for s in target.scripts.all():
+        if hasattr(s, "_appraise") and hasattr(s, "_gang"):
+            return s
+    return None
+
+
+class CmdTip(Command):
+    """
+    Tip the floor staff to work the lot on the block — from your booth.
+
+    Usage:
+        tip                  — show who's on the block and the menu of demands
+        tip <what>           — pay the floor to do it to her, now, through the glass
+
+    Demands: milk, breed, dose, pierce, condition, grow, ring, pose.
+
+    You don't only watch. You name a thing and the handlers on the floor oblige
+    while you sip — the real systems fire, on her, on file. She feels it land and
+    never learns it came from a seat behind the mirror.
+    """
+    key           = "tip"
+    aliases       = ["request"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    _MENU = ("milk", "breed", "dose", "pierce", "condition", "grow", "ring", "pose")
+
+    def func(self):
+        caller = self.caller
+        gallery = caller.location
+        show, lot = _showroom_lot(gallery, caller)
+        if not show:
+            caller.msg("|xYou're not in the gallery — there's no glass to tip through.|n")
+            return
+        if not lot:
+            caller.msg("|xThe block's empty right now. Nothing on it to tip the floor for.|n")
+            return
+
+        cn = caller.db.rp_name or caller.key
+        t  = lot.db.rp_name or lot.name
+        what = self.args.strip().lower()
+
+        if not what:
+            caller.msg(f"|W{t} is on the block.|n  |xTip the floor to:|n "
+                       f"|w{', '.join(self._MENU)}|n\n  |x(e.g. |wtip breed|x — done to her now, "
+                       f"through the glass.)|n")
+            return
+
+        # normalise a few synonyms onto the menu
+        alias = {"fuck": "breed", "use": "breed", "drug": "dose", "udder": "grow",
+                 "rings": "ring", "present": "pose", "break": "condition"}
+        what = alias.get(what, what)
+        if what not in self._MENU:
+            caller.msg(f"|xThe floor doesn't do '{what}'. Try: |w{', '.join(self._MENU)}|n")
+            return
+
+        fs = _lot_script(lot)
+        cond = float(getattr(lot.db, "conditioning", 0) or 0)
+        # what the buyers and the floor see happen; what she feels
+        floor_line = None  # broadcast in the showroom (visible action)
+        felt_line  = None  # to the lot herself
+
+        if what == "milk":
+            if fs:
+                try: fs._start_milking(lot)
+                except Exception: pass
+            floor_line = (f"|cAt a tip from behind the glass, a handler walks out, clamps the "
+                          f"cups onto {t} on the block, and sets her milking for the room.|n")
+            felt_line  = ("|cThe cups close over you on the turntable and the pull starts — "
+                          "ordered by someone you can't see, watched by faces you'll never meet.|n")
+        elif what == "breed":
+            if fs:
+                try: fs._gang(show, lot, t, cond)
+                except Exception: pass
+            try:
+                import random as _r
+                from typeclasses.insemination_item import do_inseminate
+                zone = None
+                if fs:
+                    holes = fs._holes_only(lot)
+                    zone = _r.choice(holes) if holes else (fs._orifices(lot) or [None])[0]
+                if zone:
+                    do_inseminate(caller, lot, zone, {
+                        "source": "machine", "fluid_type": "semen",
+                        "volume_per_tick": _r.uniform(80, 200), "ttl_hours": 24.0})
+            except Exception:
+                pass
+            floor_line = (f"|rA tip lands and a handler steps up onto the block and breeds {t} "
+                          f"where she's posed — bent over the rail, lit, turned, taken for the "
+                          f"booths to watch.|n")
+            felt_line  = ("|rHands fold you over the rail and you're bred on the turntable, in "
+                          "the light, for a room of bidders you can't see — paid for, on demand.|n")
+        elif what == "dose":
+            if fs:
+                try: fs._dose(show, lot, t)
+                except Exception: pass
+            floor_line = (f"|GA buyer tips for a dose; a handler crosses the floor and puts a "
+                          f"measure into {t} on the block, the room watching it take her.|n")
+            felt_line  = ("|GA needle, a cup, a wet cloth over your face — and the block goes "
+                          "warm and far away while strangers watch the dose do its work.|n")
+        elif what == "pierce":
+            try:
+                from world.gang_breeding import add_piercing
+                d = add_piercing(lot)
+            except Exception:
+                d = None
+            if d:
+                floor_line = (f"|GOn a tip, a handler steps up and pierces {t} on the block — "
+                              f"{d} — done in the spotlight while the booths lean in.|n")
+                felt_line  = (f"|GThe gun bites — {d} — set into you on the turntable, lit and "
+                              f"turning, a new ring paid for by a hand you'll never see.|n")
+            else:
+                caller.msg(f"|xNothing left on {t} to pierce.|n")
+                return
+        elif what == "condition":
+            try:
+                from world.conditioning import add_conditioning
+                add_conditioning(lot, 8.0, source="gallery")
+            except Exception:
+                pass
+            floor_line = (f"|MA tip buys a session: a handler takes {t}'s head on the block — "
+                          f"murmuring, repeating, pressing it deeper — and a little more of her "
+                          f"gives, in front of everyone.|n")
+            felt_line  = ("|MA voice at your ear on the turntable, patient and certain, presses "
+                          "the same words deeper — and you feel a little more of yourself go, "
+                          "watched, bought, on the block.|n")
+        elif what == "grow":
+            if fs:
+                try: fs._proc_udder(show, lot, t)
+                except Exception: pass
+            floor_line = (f"|GA tip funds a growth cycle; a handler runs {t}'s glands up a stage "
+                          f"on the block, swelling her for the room to see.|n")
+            felt_line  = ("|GHeat blooms through your chest as the cycle drives your glands "
+                          "fuller on the turntable — grown a size for an audience, on demand.|n")
+        elif what == "ring":
+            if fs:
+                try: fs._proc_rings(show, lot, t)
+                except Exception: pass
+            floor_line = (f"|GA buyer tips for hardware and a handler rings {t} where she stands "
+                          f"on the block, the new steel catching the spotlight.|n")
+            felt_line  = ("|GCold steel is set through you on the turntable, weight added where "
+                          "the booths can see it swing — bought, fitted, turned to the light.|n")
+        elif what == "pose":
+            lot.db.body_language = "posed on the block — turned, opened, offered to the glass"
+            floor_line = (f"|WA tip, and a handler repositions {t} on the turntable — chin up, "
+                          f"spread, opened to the mirror, held there for the booths.|n")
+            felt_line  = ("|WHands set you into a pose on the block and leave you there — "
+                          "spread, lit, turning slow, offered to a wall of glass you can't see "
+                          "past — because someone behind it asked.|n")
+
+        # log the demand on her card
+        log = list(getattr(lot.db, "gallery_demands", None) or [])
+        log.append((caller.id, cn, what))
+        lot.db.gallery_demands = log[-40:]
+
+        # broadcast: the floor (visible), the gallery (the buyers watching), the lot (felt)
+        if floor_line:
+            show.msg_contents(floor_line, exclude=[lot])
+        gallery.msg_contents(f"|x{cn} tips the floor — '{what}' — and you watch it done to {t} "
+                             f"through the glass.|n", exclude=[caller])
+        caller.msg(f"|RYou tip the floor to {what} {t}. It happens on the block while you "
+                   f"watch, and she never sees the seat it came from.|n")
+        if felt_line:
+            lot.msg(felt_line)
+
+
+ALL_FACILITY_VERBS.append(CmdTip)

@@ -26,6 +26,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   (`facility_commands.CmdBid`): `bid <lot> [amount]` reads/raises `db.high_bid`/`high_bidder`
   off the real `_appraise` floor; an owner closes with `process <lot> buy`. The high bid carries
   *through the glass* — the lot is reposed but never told her number.
+- **Gallery `tip` (`facility_commands.CmdTip`):** the gallery isn't only passive. `tip` /
+  `tip <what>` (milk/breed/dose/pierce/condition/grow/ring/pose) resolves the adjacent showroom +
+  the facility-active lot on the block (`_showroom_lot`), finds her cycle script (`_lot_script`),
+  and fires the **same real systems** `process` uses (`_start_milking`/`_gang`+`do_inseminate`/
+  `_dose`/`add_piercing`/`add_conditioning`/`_proc_udder`/`_proc_rings`) on her, broadcasting to
+  the showroom (visible), the gallery (buyers watching through glass), and the lot (felt, source
+  hidden). Demands logged to `db.gallery_demands` (reset-spec'd). CNC-on-demand by an audience she
+  can't see — and every effect routes through a real subsystem, nothing faked.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

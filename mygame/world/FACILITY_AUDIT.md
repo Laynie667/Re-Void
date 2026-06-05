@@ -39,6 +39,17 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **Gallery `tip` — interactive viewing.** The booths can now *direct*, not just price.
+  `tip <what>` (milk/breed/dose/pierce/condition/grow/ring/pose) from the gallery resolves the
+  showroom + the lot on the block, finds her cycle script, and fires the **same real systems**
+  `process` uses on her — broadcast to the floor (visible), the gallery (buyers watching), and the
+  lot herself (felt, source hidden). Demands logged to `db.gallery_demands` (added to reset spec).
+  Host trigger tree + booth/panel handles updated to surface it. CNC-on-demand by an unseen
+  audience; nothing faked — every branch routes through a real subsystem. Compile + brace-scan clean.
+  *Watch-item:* `tip` reaches across a room boundary to fire effects on a player who didn't type the
+  command — that's intended (she's facility-active = opted in, and posed in the showroom to be shown),
+  but it's the first verb that does so. If we ever want a per-lot "no remote handling" toggle, this is
+  where it'd hook. The OOC floor is unaffected — `escape`/`force_clear`/purge still end everything.
 - 🟢 **Buyers' Gallery + `bid`.** New room behind the showroom glass (tiered viewing booths
   `seat` mech, bid-panel zone, the host + buyers NPCs) and a real multiplayer hook: `bid <lot>
   [amount]` (`facility_commands.CmdBid`) reads/raises `db.high_bid`/`high_bidder` off the live
