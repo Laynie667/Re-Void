@@ -38,6 +38,21 @@ Items get struck through / moved to "Resolved" as they're fixed.
   ever target the same zone, restore order would matter. *Fix idea:* one unified
   `db.facility_zone_backup` keyed by zone, written through a single helper.
 
+## 1b. Codebase-wide sweep (beyond the facility)
+
+- 🔴→✅ **`watch/list` always empty (2 sites).** `safety_commands.py` `CmdWatch._list`
+  and the admin watch-list both scanned `search_object(typeclass="…Character")` with no
+  key — the same `[]` gotcha — so the watch list always reported "not watching anyone."
+  **Fixed:** both now use `Character.objects.all()`.
+- 🟢 **By-name searches now resolve display names for free.** `economy_commands`,
+  `ogram_commands`, `wisp_commands`, `scripts.py` search by `name`+typeclass (the *working*
+  pattern) — and since `rp_name` is now registered as an alias (login sync), those resolve
+  a character's display name too. No change needed; noted as a dependency on the alias fix.
+- ✅ **Whole `mygame/{typeclasses,commands,world}` tree compiles clean** (py_compile sweep).
+- 🟡 **Remaining gotcha audit:** all other `search_object(...)` calls reviewed pass a key
+  positional (waystone/waypost/womb dbref lookups, char-by-name) — none hit the no-key `[]`
+  trap. The waystone/waypost ones were already corrected to `.objects.all()` in earlier work.
+
 ## 2. Bugs
 
 - 🔴→✅ **Office Bethany had no anatomy.** `provision_bethany` was only called for the
@@ -106,3 +121,7 @@ bespoke personal clauses (honorific/name/collar/crave/display/line — each a re
 term, imposed one at a time in the office, logged + reset-safe).*
 *Loop pass 3 (autonomous): in-fiction `process`-verb signage in every room (witness
 discoverability), and the office "first-day" breaking-in prose for a new favourite.*
+*Loop pass 4: codebase-wide bug sweep — fixed `watch/list` always-empty (2 sites, same
+`search_object` gotcha); full tree compiles clean. Added hidden contract clauses H25–H29
+(lineage, sale/ownership, FORGET/DEVOTION, Deep Stock, and H29 — the OOC floor named
+in-fiction as the one true clause).*

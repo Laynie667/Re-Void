@@ -411,10 +411,10 @@ class CmdWatch(MuxCommand):
 
     def _list(self, caller):
         acct = caller.account if hasattr(caller, "account") else caller
-        from evennia import search_object
-        all_chars = search_object(
-            typeclass="typeclasses.characters.Character",
-        )
+        # search_object(typeclass=...) with no key returns [] in this Evennia
+        # (CLAUDE.md §4) — use the typeclass manager so the list isn't always empty.
+        from typeclasses.characters import Character
+        all_chars = Character.objects.all()
         watching = [
             c for c in all_chars
             if acct.id in (c.db.watched_by or set())
@@ -489,10 +489,9 @@ class CmdWatching(MuxCommand):
     def func(self):
         caller = self.caller
         acct = caller.account if hasattr(caller, "account") else caller
-        from evennia import search_object
-        all_chars = search_object(
-            typeclass="typeclasses.characters.Character",
-        )
+        # Typeclass-manager scan (search_object(typeclass=...) returns [] here).
+        from typeclasses.characters import Character
+        all_chars = Character.objects.all()
         watching = [
             c for c in all_chars
             if acct.id in (c.db.watched_by or set())
