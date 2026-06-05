@@ -755,6 +755,44 @@ _REINVEST_BEATS = [
     "|WProfit becomes plant: the house signs off {blurb}. Every credit she made on the line comes "
     "back as more line, and the machine she paid for closes a little tighter around her.|n",
 ]
+# ── The Records Hall: catalogued, totted up, made to know her number ──
+_RECORDS_BEATS = [
+    "{t} is walked into the records hall and sat on the cataloguing stool before the appraisal "
+    "mirror, and the registrar begins to read her off the ledger in a flat courteous murmur — "
+    "grade, yield to date, get dropped, current valuation — while {t} watches her own face hear "
+    "it. Nothing is asked of her. She is only made to know, precisely, what she is worth.",
+    "The registrar turns to {t}'s page and updates it in a neat unhurried hand: another column of "
+    "output, another covering logged, the balance at the foot ticking up. She reads the new total "
+    "aloud to the room as if it were a temperature. {t} is the page now — a running figure kept "
+    "current in pencil, inked when it's sure.",
+    "They sit {t} at the mirror and catalogue her: every mark photographed for the wall, every "
+    "litter charted on the tree that only branches down, every credit and debt totted in the open "
+    "ledger. By the time the registrar caps her pen, {t} has been turned, on paper, into something "
+    "complete — a finished record of a body, kept forever and only ever added to.",
+    "\"Let's bring you current,\" the registrar says pleasantly, and reads {t} her own account: "
+    "what she's earned on her back, what the house has spent against her, what she's worth on the "
+    "block today. The mirror makes her watch herself be totalled. The number is higher than last "
+    "time. It is always higher than last time.",
+]
+_RECORDS_DEGRADE = [
+    "You leave the hall knowing your own number to the credit, and the worst part is the small "
+    "proud flare when it's gone up — the trained thing, not the human one. A good record wants to "
+    "read well. They made you a record that wants to read well.",
+    "You catch yourself, on the stool, doing the sums along with her — wanting the total higher, "
+    "the line longer, the page fuller. The ledger isn't kept against your will anymore. That's the "
+    "thing the room was built to do, and it's done it.",
+    "Your value is a fact now, written down, dated, and you carry it out with you like a name. It "
+    "almost is one. It's certainly more current than the one you came in with.",
+]
+# The ledger-tattoo: a live mark inked on her that displays her own running total
+_LEDGER_TATTOO = [
+    "a fine ledger-tattoo inked down her flank — a stock number over a running tally: {total} get "
+    "dropped, valued {price}, the figures left open-ended for the registrar to update by hand",
+    "an account-mark set at the small of her back: her number, her line-count ({total}), and her "
+    "current valuation ({price}) — a balance written into the skin, kept current, never settled",
+    "a tidy itemised tattoo along her hip, headed OUTPUT / GET / VALUE — {total} get, {price} on "
+    "the block — the body keeping its own books now, legible to anyone who turns her to read it",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -2024,7 +2062,7 @@ class FacilityScript(DefaultScript):
     # all permanent (cleared only by the reset). Effects are deliberately mixed.
     _DRUGS = ["swell", "yield", "sensitize", "capacity", "brood",
               "compliance", "bimbo", "dependence", "estrus", "lactation",
-              "solvent", "cumslut", "forget", "devotion"]
+              "solvent", "cumslut", "forget", "devotion", "arrears"]
     _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
                    "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood",
                    "latex", "udder", "rings", "cowset", "oneway"]
@@ -2264,6 +2302,27 @@ class FacilityScript(DefaultScript):
             f"quietly re-shelved to point one way. Bethany stops being a thing that happens to "
             f"her and starts being the thing she's for. She'll beg for the next dose, and mean "
             f"it. (devotion deepened — keyed to Bethany)|n")
+
+    def _drug_arrears(self, room, target, t):
+        # The ARREARS serum — laces the act of being used with relief, so running up the
+        # ledger reads as easing a debt. The more she's worked, the more "settled" she feels,
+        # and the balance only ever climbs. Pairs with the records hall and the ledger clause.
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, random.uniform(2, 4), source="arrears")
+        except Exception:
+            pass
+        try:
+            from world.economy import earn
+            earn(target, "cycle")   # a credited "payment" she feels as relief
+        except Exception:
+            pass
+        target.db.arrears_laced = True
+        room.msg_contents(
+            f"|G  ▸ ARREARS — the dose ties being used to the easing of a debt that never "
+            f"closes. {t} is dosed and worked, and her body reads the use as *paying something "
+            f"down* — grateful for the very thing that runs the figure up. She'll want to earn. "
+            f"Earning is the leash now, and the books never balance. (debt-relief conditioning)|n")
 
     # ── Procedures (intake phase) — surgical/permanent, with a lasting mark ──
     def _mark(self, target, text):
@@ -2774,12 +2833,63 @@ class FacilityScript(DefaultScript):
                                   f"facility's mark, hers — and signs the ownership the one way "
                                   f"she never delegates.|n")
 
+    # ── The Records Hall: catalogued, totted up, made to know her number ──
+    def _records_hall(self, room, target, t, cond):
+        """She's sat at the appraisal mirror and read off the ledger — her own account,
+        line, and valuation recited back while she watches. Refreshes the live
+        ledger-tattoo, runs the reinvestment books, and deepens via knowing her number."""
+        room.msg_contents("|W" + random.choice(_RECORDS_BEATS).format(t=t) + "|n")
+        price = self._appraise(target)
+        # Read her balance aloud and refresh the body's own books (the ledger-tattoo).
+        try:
+            from world.economy import get_balance, debt_amount
+            bal  = get_balance(target)
+            owed = debt_amount(target)
+            line = (f"|c  ▸ ON FILE — valuation |w{price:,}|c · account |w{bal:,}|c scrip"
+                    + (f" · |rin arrears {owed:,}|c" if owed else "") + ".|n")
+            room.msg_contents(line)
+        except Exception:
+            pass
+        self._ledger_tattoo(target, t, price)
+        # Knowing her number, exactly, settles deeper than any speech.
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 1.2 + cond * 0.004, source="records")
+        except Exception:
+            pass
+        # The registrar keeps the lineage current — age her get toward the line.
+        try:
+            self._mature_get(target)
+        except Exception:
+            pass
+        # The books are read here too; the house signs off what it can afford.
+        self._try_reinvest(target)
+        target.msg("  |m" + random.choice(_RECORDS_DEGRADE).format(t=t) + "|n")
+
+    def _ledger_tattoo(self, target, t, price):
+        """Ink (or refresh) a real freeform mark that displays her running total — the
+        body kept as its own legible account. One install; refreshed in place after."""
+        try:
+            from world.gang_breeding import record_mark
+            total = sum(int(v) for v in (getattr(target.db, "offspring_counts", None) or {}).values())
+            text = random.choice(_LEDGER_TATTOO).format(total=total, price=f"{price:,}")
+            if not getattr(target.db, "ledger_tattooed", False):
+                record_mark(target, text, mode="on", prefer="hip")
+                target.db.ledger_tattooed = True
+            else:
+                record_mark(target, text, mode="on", prefer="hip")
+        except Exception:
+            pass
+
     # Bethany's bespoke clauses — the facility's contract is boilerplate; what she
     # adds to her own property is not. Each is a real, enforced term, imposed one at a
     # time as she keeps you, logged in db.bethany_clauses (cleared by the reset).
     _BETHANY_CLAUSES = [
         ("honorific", "You will address me as Mistress, and answer when I call.",
          "Now say it. 'Yes, Mistress.' Good. You'll say it every time, or you won't be heard at all."),
+        ("ledger",    "Your account is mine. What you owe me, you owe with your body.",
+         "I keep your books, sweetheart — every credit you make and every one you cost. The balance "
+         "is mine to read to you and mine to call. You'll never be out of my debt; that's the point of it."),
         ("name",      "Your name is mine to use or not. You answer to what I call you.",
          "I'll decide what you're called. You don't need the old one; it kept getting in the way of what you are."),
         ("collar",    "My collar stays on. It is not yours to question or remove.",
@@ -2835,6 +2945,18 @@ class FacilityScript(DefaultScript):
                 target.db.anti_clothing_active = True
             elif key == "line":
                 target.db.bethany_line_only = True
+            elif key == "ledger":
+                # Her account is now Bethany's leash: a standing debt-bond she serves with
+                # her body. Seeds a marker against her and inks the ledger-tattoo.
+                target.db.bethany_ledger_bond = True
+                try:
+                    from world.economy import spend_credits
+                    spend_credits(target, 1500, "Bethany's ledger clause — a standing marker "
+                                  "against you, served with your body.", allow_debt=True)
+                except Exception:
+                    pass
+                self._ledger_tattoo(target, target.db.rp_name or target.name,
+                                    self._appraise(target))
         except Exception:
             pass
         room.msg_contents(
@@ -3187,13 +3309,22 @@ class FacilityScript(DefaultScript):
                 from evennia import search_object
                 buyer = (search_object("#%d" % int(buyer_id)) or [None])[0]
                 if buyer and buyer is not target:
-                    ok, _bal = spend_credits(buyer, int(price),
-                                             f"Purchase — lot {t} taken at the gavel.")
+                    ok, bal = spend_credits(buyer, int(price),
+                                            f"Purchase — lot {t} taken at the gavel.")
                     if ok:
                         buyer.msg(f"|R{int(price):,} scrip clears your account — {t} is yours.|n")
                     else:
-                        buyer.msg(f"|x{int(price):,} scrip wouldn't clear; the house carried the "
-                                  f"difference and noted it against you. {t} is yours.|n")
+                        # carry the marker against them — real debt, down to the floor
+                        ok2, bal = spend_credits(buyer, int(price), allow_debt=True,
+                                                 reason=f"Purchase on credit — lot {t} taken; "
+                                                        f"marker carried against you.")
+                        if ok2:
+                            buyer.msg(f"|R{int(price):,} scrip — you didn't have it. The house "
+                                      f"carries the marker (balance |w{bal:,}|R). {t} is yours; "
+                                      f"the debt is too. See |wtab|R.|n")
+                        else:
+                            buyer.msg(f"|x{int(price):,} would put you past what even the house "
+                                      f"will carry. The lot stands.|n")
         except Exception:
             pass
         # The house takes its cut of the sale into the treasury, files the polaroid, and
@@ -3342,6 +3473,17 @@ class FacilityScript(DefaultScript):
                 owner.db.sale_bonus = level             # read in _appraise as a price multiplier
             elif key == "pharmacy":
                 owner.db.dose_bonus = level             # heavier doses (hook for the dose scene)
+            elif key == "archive":
+                # A richer archive raises the bounty on her get and her facility standing.
+                owner.db.get_bounty = max(int(getattr(owner.db, "get_bounty", 0) or 0),
+                                          150 + 120 * level)
+                try:
+                    from world.factions import add_standing
+                    add_standing(owner, source="cycle", amount=20 * level)
+                except Exception:
+                    pass
+            elif key == "collections":
+                owner.db.collections_level = level       # markers called harder (indenture notices)
         except Exception:
             pass
 
@@ -3872,6 +4014,7 @@ _REALM_SEQUENCE = [
     ("pens", "breed"), ("pens", "breed"),
     ("conditioning", "condition"),
     ("dairy", "display"),
+    ("records", "records"),
     ("floor", "milk"),
     ("pens", "breed"),
 ]
@@ -3974,6 +4117,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "punish":
                 room.msg_contents(f"\n|w━━━━ THE PIGSTY ━━━━|n")
                 self._sty(room, char, t, cond)
+            elif phase == "records":
+                room.msg_contents(f"\n|w━━━━ THE RECORDS HALL ━━━━|n")
+                self._records_hall(room, char, t, cond)
         except Exception:
             pass
 
@@ -4094,6 +4240,19 @@ class RealmCycleScript(FacilityScript):
         # Once she's dropped get, she's brought to the Nursery to feed them her milk.
         if getattr(char.db, "offspring_roster", None):
             add("nursery", "nurse", 2)
+
+        # Brought to the Records Hall to be catalogued and read her own number — more so
+        # once she has a line on file or a debt the registrar wants to recite.
+        rec_w = 1
+        if getattr(char.db, "offspring_counts", None):
+            rec_w += 1
+        try:
+            from world.economy import in_debt
+            if in_debt(char):
+                rec_w += 2
+        except Exception:
+            pass
+        add("records", "records", rec_w)
 
         # Once Bethany owns her, Bethany seizes the cycle — she's mostly kept in the
         # office now, pulled off the line into private use, the more so the more devoted.

@@ -1097,6 +1097,128 @@ class CmdRecords(Command):
 ALL_FACILITY_VERBS.append(CmdRecords)
 
 
+class CmdTab(Command):
+    """
+    Your tab — the debt the house is carrying against you, if any.
+
+    Usage:
+        tab          — your arrears and where the marker stands
+    """
+    key           = "tab"
+    aliases       = ["debt", "marker", "arrears"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world.economy import (get_balance, debt_amount, indenture_due,
+                                    INDENTURE_AT, DEBT_FLOOR)
+        bal  = get_balance(caller)
+        owed = debt_amount(caller)
+        if owed <= 0:
+            caller.msg(f"|gNo marker against you. Account: |w{bal:,}|g scrip, in the black.|n")
+            return
+        lines = [f"|rThe house carries a marker against you: |w{owed:,}|r scrip in arrears "
+                 f"(balance |w{bal:,}|r).|n"]
+        if indenture_due(caller):
+            lines.append("|R The marker's been called. Clear it, or — by your own choice only — "
+                         "work it off on the block: |windenture|R. The door stays free regardless.|n")
+        else:
+            lines.append(f"|x The house will carry you to {DEBT_FLOOR:,}; it calls the marker "
+                         f"at {INDENTURE_AT:,}.|n")
+        caller.msg("\n".join(lines))
+
+ALL_FACILITY_VERBS.append(CmdTab)
+
+
+def _do_indenture(caller):
+    """Consensually convert a member into indentured facility stock — flags, mark,
+    conditioning seed, debt cleared, and (if a realm context exists) the cycle picks
+    them up. Reversible by the OOC floor like everything else."""
+    from world.economy import clear_debt
+    t    = caller.db.rp_name or caller.key
+    room = caller.location
+    caller.db.indentured      = True
+    caller.db.facility_role   = "resident"
+    caller.db.facility_signed = True
+    caller.db.facility_active = True
+    clear_debt(caller, "marker cleared — signed self over to indenture")
+    try:
+        from world.gang_breeding import record_mark
+        record_mark(caller, f"INDENTURED — {t} signed herself over to the house to work off a "
+                    f"called marker; now stock, worked and catalogued like any unit", mode="on")
+    except Exception:
+        pass
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(caller, 10.0, source="indenture")
+    except Exception:
+        pass
+    # If she has a realm/cycle context, let the line pick her up.
+    try:
+        from typeclasses.facility_script import RealmCycleScript
+        if getattr(caller.db, "realm", None) and not any(
+                getattr(s, "key", "") == "realm_cycle" for s in caller.scripts.all()):
+            from evennia.utils import create
+            create.create_script(RealmCycleScript, obj=caller, key="realm_cycle")
+    except Exception:
+        pass
+    if room:
+        room.msg_contents(
+            f"|R{t} signs the indenture herself — no one makes her, that's the whole horror of "
+            f"it — and the registrar logs the marker CLEARED against a body signed over to the "
+            f"house. The coverall comes off, a stock number goes on, and {t} is walked onto the "
+            f"line she used to watch from the booths. The buyer becomes the bought, by her own "
+            f"hand.|n")
+    caller.msg("|MYou're stock now, by your own signature. The debt's gone; the body that paid it "
+               "is the house's.|n |GThe door is still right there — |wescape|G — and always will "
+               "be, indentured or not.|n")
+
+
+class CmdIndenture(Command):
+    """
+    Work a called debt off the only way the house takes it — your body, on the block.
+
+    Usage:
+        indenture            — the terms, and whether your marker's been called
+        indenture confirm    — sign yourself over as indentured stock (your choice)
+
+    This is in-fiction servitude you CHOOSE. It never happens automatically and never
+    without this command — the house cannot put you on the line over a debt; only you
+    can. And it is not the door: escape / force_clear / facilityreset always free you,
+    indentured or not, debt or no debt, at any moment. This is dread you opt into, on
+    top of a floor that never moves.
+    """
+    key           = "indenture"
+    aliases       = ["selfindenture"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world.economy import debt_amount, indenture_due
+        arg  = self.args.strip().lower()
+        owed = debt_amount(caller)
+        if arg not in ("confirm", "yes", "sign"):
+            owe_line = (f"  You owe the house |w{owed:,}|n scrip.\n" if owed
+                        else "  You owe the house nothing right now — this would be wholly voluntary.\n")
+            caller.msg(
+                "|RINDENTURE — the terms.|n\n" + owe_line +
+                "  |xSigning yourself over makes you facility stock: worked, milked, bred, "
+                "catalogued and sold like any unit, your marker cleared by your body. It is a "
+                "choice you make — never one made for you.|n\n"
+                "  |GThe out-of-character exit is untouched: |wescape|G frees you instantly, "
+                "indentured or not, at any balance.|n\n"
+                "  |x→ |windenture confirm|x to sign yourself over.|n")
+            return
+        if getattr(caller.db, "indentured", False):
+            caller.msg("|xYou're already indentured stock. The books have you.|n")
+            return
+        _do_indenture(caller)
+
+ALL_FACILITY_VERBS.append(CmdIndenture)
+
+
 class CmdBid(Command):
     """
     Bid on a lot from the Buyers' Gallery.

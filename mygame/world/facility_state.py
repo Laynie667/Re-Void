@@ -46,6 +46,7 @@ FACILITY_FLAGS = {
     "docility": 0, "bethany_devotion": 0, "cycle_day": 0,
     "line_pass": 0, "punish_shield": 0,
     "cond_bonus": 0, "milk_bonus": 0, "sale_bonus": 0, "dose_bonus": 0,
+    "collections_level": 0,
 
     # --- booleans -> False ---
     "orgasm_denial": False, "exhibition_active": False, "self_cmds_locked": False,
@@ -57,6 +58,8 @@ FACILITY_FLAGS = {
     "bethany_branded": False, "bethany_collar": False, "bethany_line_only": False,
     "animal_sleeve": False, "pen_filth": False, "pen_scented": False,
     "auction_open": False, "bethany_owned_get": False,
+    "indentured": False, "bethany_ledger_bond": False, "arrears_laced": False,
+    "ledger_tattooed": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "",

@@ -91,3 +91,45 @@ class FacilityPortfolio(FacilityFurniture):
         lines.append(f"|x{len(entries)} piece(s) on record across {len(by_owner)} owner(s). "
                      "Nothing in here ever comes off the body, or out of the book.|n")
         return "\n".join(lines)
+
+
+class FacilityLedgerBoard(FacilityFurniture):
+    """The Records Hall's great ledger — a real, readable board that totals up whoever
+    reads it: their live scrip account and statement, their debt, and a one-line read of
+    their lineage. `look`/`read ledger` shows the looker their own balance. The number
+    is the leash you can read — and it never opens the door (the OOC floor is free)."""
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.get_err_msg = ("It's a desk-bound ledger the size of a paving slab. It isn't "
+                               "going anywhere. Neither, the book would note, are you.")
+
+    def get_display_desc(self, looker, **kwargs):
+        head = ("|wThe Great Ledger|n — credits in, debts out, a balance in your name.\n"
+                "|x" + "─" * 52 + "|n")
+        try:
+            from world.economy import statement, debt_amount, indenture_due
+        except Exception:
+            return head + "\n  The book is closed."
+        body = statement(looker, n=14)
+        tail = ""
+        try:
+            owed = debt_amount(looker)
+            if owed:
+                tail = (f"\n|r  IN ARREARS: {owed:,} scrip. The house carries the marker for now.|n")
+                if indenture_due(looker):
+                    tail += ("\n|R  ✦ The marker has been called. Clear it, or work it off on the "
+                             "block — see |whelp indenture|R. (You walk yourself down, or not at "
+                             "all; the door stays free.)|n")
+        except Exception:
+            pass
+        # A one-line lineage read, if they have a line.
+        try:
+            counts = dict(getattr(looker.db, "offspring_counts", None) or {})
+            total  = sum(int(v) for v in counts.values())
+            if total:
+                tail += (f"\n|x  Line on file: |w{total}|x get dropped across "
+                         f"{len(counts)} species — read the wall with |wrecords|x.|n")
+        except Exception:
+            pass
+        return f"{head}\n{body}{tail}"

@@ -121,6 +121,16 @@ _ROOMS = [
      "where Perfected stock comes to rest: past processing, past lessons, past self — finished "
      "product, racked and humming, milked and bred on the lines in a quiet that has no end and "
      "asks nothing of it. There is a peace down here. That is the last and worst thing it does."),
+    ("records",      "The Facility — The Records Hall",
+     "|wA long, cool, library-quiet hall lined floor to ceiling with the facility's memory of "
+     "you.|n One wall is the lineage — framed generation charts, every litter you've dropped "
+     "drawn out as a branching tree that only grows downward, your own get bred back into it line "
+     "after line. The opposite wall is the sale record: dated polaroids of every lot walked off "
+     "the block, you and your young both, cropped and catalogued by who paid. A long registrar's "
+     "desk runs the centre under green-shaded lamps, the great ledger open on it — credits in, "
+     "debts out, a balance in your name. A tall appraisal mirror stands at the end, angled so a "
+     "unit brought in to be catalogued has to watch herself be totalled up. Nothing here is ever "
+     "thrown away. The line is never forgotten — only added to."),
 ]
 
 # Adjacency (non-linear): which rooms connect to which.
@@ -139,6 +149,7 @@ _EXITS = {
     "nursery":      ["floor", "pens"],
     "office":       ["floor", "lobby"],
     "parlour":      ["floor", "office"],
+    "records":      ["floor", "nursery", "office"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -1031,10 +1042,71 @@ _ROOM_ZONES = {
             study=["You eat from it the way everything in here eats from it: bent, hands-free, "
                    "face down. The first time is the only hard time."]),
     },
+    "records": {
+        "wall": _z(
+            "The lineage wall — framed generation charts under glass, your line drawn as a tree "
+            "that only branches downward. Every litter you've dropped is a row of little tags, and "
+            "lines loop back up from your get to you: bred back, generation on generation, the "
+            "incest of it rendered as tidy genealogy in a clean institutional hand.",
+            summary="the lineage wall, charted generation by generation",
+            study=[
+                "You find yourself on it — not your name, your stock number — at the top of a tree "
+                "that drops away beneath you into get, and their get, all of it bred back up the "
+                "way it came. The chart doesn't editorialise. It doesn't have to.",
+                "Someone keeps it current in pencil, ready to ink. There are rows already ruled "
+                "and waiting beneath the last litter, blank, expectant. The wall assumes there "
+                "will be more of you. The wall is always right.",
+            ],
+            handle={"touch": "{actor} traces a line down the chart from the dam to her own get and "
+                             "back up again — the loop drawn plain, and labelled."},
+            ambient=["A registrar pencils a new tag onto the lineage wall and dates it.",
+                     "Glass ticks faintly as the heating shifts behind the generation charts."]),
+        "ledger": _z(
+            "The great ledger lies open on the registrar's desk — credits in one column, debts in "
+            "the other, a running balance in your name. Every millilitre drawn, every covering, "
+            "every lot sold off the block is a line of careful figures. It is the most honest "
+            "document in the facility: it says exactly what you are worth, and exactly what you owe.",
+            summary="the open ledger — your account, in full",
+            study=[
+                "Your column of credits is long and itemised and humiliating in its specificity: "
+                "OUTPUT, SERVICE, PRESENTATION, each dated, each priced. The debt column is "
+                "where it gets interesting — what the house has spent on you, against you.",
+                "A printed card is tucked into the spine: |xcheck your own account with |wscrip|x; "
+                "read the full books in the office with |wvault|x; your line and your sales on the "
+                "wall with |wrecords|x.|n The facility wants you to know the number. The number is "
+                "the leash you can read.",
+            ],
+            handle={"touch": "{actor} turns a heavy page; the columns march on, dated and totted, "
+                             "and the balance at the foot updates in a different hand."}),
+        "mirror": _z(
+            "A tall appraisal mirror stands at the end of the hall, angled and lit, a cataloguing "
+            "stool bolted before it. A unit brought in to be totalled is sat here and made to "
+            "watch herself be read off — grade, yield, get, price — reflected back while the "
+            "registrar reads the same figures aloud from the ledger behind her.",
+            summary="the appraisal mirror and its cataloguing stool",
+            study=[
+                "The glass is honest and the lighting is cruel and you cannot look away from the "
+                "stool — that's its whole design: you are made to watch the appraisal happen to "
+                "your own face while a stranger prices the rest of you.",
+                "There is a brass plate at the foot of the mirror. It reads, simply: KNOW YOUR "
+                "VALUE. It is not encouragement.",
+            ],
+            mechanic=("seat", 1, "the cataloguing stool", "sat and locked facing the mirror, "
+                      "made to watch herself appraised"),
+            ambient=["The appraisal mirror catches the lamplight and throws it back, patient."]),
+    },
 }
 
 # Furniture objects per room (FacilityFurniture).
 _ROOM_FURNITURE = {
+    "records": [
+        ("the registrar's desk", "A long oak desk under green-shaded lamps, the great ledger open "
+         "on it and a card-index of every unit the facility has ever processed ranked in steel "
+         "drawers behind. Read the live books here with the album beside it."),
+        ("the appraisal mirror", "A tall, lit, honest mirror with a cataloguing stool bolted "
+         "before it. Stock is sat here and made to watch its own appraisal read off the ledger — "
+         "grade, yield, get, price, debt — reflected back while it's totted up."),
+    ],
     "office": [
         ("the breaking frame", "Bethany's bespoke first-day rig, kept beside the throne under "
          "a soft cloth she draws off like a magician — an upright steel frame of clamps, spreaders, "
@@ -1078,6 +1150,15 @@ _ROOM_FURNITURE = {
 
 # NPCs per room: (key, species_or_role, desc).
 _ROOM_NPCS = {
+    "records": [
+        ("the registrar", "attendant",
+         "A precise, bloodless woman in half-moon glasses and a high-necked grey dress, perched at "
+         "the desk with a pen always moving. She is the facility's memory: she knows your stock "
+         "number, your every yield, your whole line and exactly what you owe, and she will recite "
+         "any of it in the same flat, courteous murmur she uses to note your weight. She is never "
+         "cruel. She simply writes everything down, and nothing she writes ever comes off the "
+         "page. She likes you to read your own balance. She finds it settles the stock."),
+    ],
     "lobby": [
         ("Bethany", "attendant",
          "A bright, pretty receptionist behind the counter in a fitted blouse and a lanyard, "
@@ -1965,6 +2046,13 @@ def _furnish(room, key, owner):
         if key == "parlour":
             from typeclasses.facility_furniture import FacilityPortfolio
             _tag(_c.create_object(FacilityPortfolio, key="the portfolio album", location=room))
+        # The records hall gets a real, readable ledger board (live account + lineage).
+        if key == "records":
+            try:
+                from typeclasses.facility_furniture import FacilityLedgerBoard
+                _tag(_c.create_object(FacilityLedgerBoard, key="the great ledger", location=room))
+            except Exception:
+                pass
     except Exception:
         pass
     # NPCs
@@ -2168,6 +2256,16 @@ def facility_upgrade(owner):
         par = rooms.get("parlour")
         if par and not any(isinstance(o, FacilityPortfolio) for o in par.contents):
             _tag(_c2.create_object(FacilityPortfolio, key="the portfolio album", location=par))
+    except Exception:
+        pass
+
+    # 3c. Ensure the records hall has its readable ledger board.
+    try:
+        from typeclasses.facility_furniture import FacilityLedgerBoard
+        from evennia.utils import create as _c3
+        rec = rooms.get("records")
+        if rec and not any(isinstance(o, FacilityLedgerBoard) for o in rec.contents):
+            _tag(_c3.create_object(FacilityLedgerBoard, key="the great ledger", location=rec))
     except Exception:
         pass
 

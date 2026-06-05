@@ -39,6 +39,23 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **The Records Hall & The Ledger (big themed pass).** Built #1 + #2 plus a connected bundle.
+  **Records Hall:** a real 14th realm room (`records` in `realm_build.py`) — lineage wall, open
+  ledger, appraisal mirror + cataloguing stool (real `seat` mechanic install); data-driven so both
+  `build_realm` and `facility_upgrade` create it, its exits, the registrar NPC, and a readable
+  `FacilityLedgerBoard` (shows the looker's own live account). Cycle phase `_records_hall` wired into
+  dispatch + `_choose_destination` (weighted by line/debt) + `_REALM_SEQUENCE`. **Debt + consensual
+  indenture:** `spend_credits(allow_debt=True)` carries markers to `DEBT_FLOOR`; the gavel pushes
+  unaffordable wins into real arrears; `tab` + `indenture`/`indenture confirm` commands; `_do_indenture`
+  flips a *consenting* player to stock (mark, conditioning, debt cleared, cycle if realm present).
+  **Consent floor honored:** indenture is opt-in only, never automatic, never on a third party without
+  their `confirm`; `escape`/`force_clear` free an indentured member at any balance. Plus: **ledger-
+  tattoo** player-zone install (`_ledger_tattoo`), **`ledger` Bethany clause**, **`arrears` drug**,
+  two new upgrades (`archive`/`collections`). All new flags in the reset spec. Compile + brace-scan
+  clean; debt/indenture math + upgrade ladder tested standalone. ⏳ **Needs a live test** (new room
+  build/upgrade/teardown, the seat install, the ledger board render, the indenture conversion +
+  cycle-start) — can't run Evennia in-sandbox. **Follow-ups:** indentured member's own cycle when no
+  realm; registrar dialogue tree; shared house-account object.
 - 🟢 **House treasury, reinvestment, bounties, polaroids, records hall.** The skims became real
   money. A per-instance treasury (`db.facility_house`) takes a 25% `HOUSE_CUT` of every sale/get-sale/
   tip/relief, and `_try_reinvest` (on each sale + office visit) auto-buys off the `UPGRADES` ladder

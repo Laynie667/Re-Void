@@ -113,18 +113,50 @@ def can_afford(char, amount):
     return get_balance(char) >= int(amount)
 
 
-def spend_credits(char, amount, reason="debited"):
-    """Debit scrip if affordable. Returns (ok: bool, balance: int). Never blocks an
-    OOC exit — escape/force_clear/purge do not route through here."""
+def spend_credits(char, amount, reason="debited", allow_debt=False):
+    """Debit scrip. Returns (ok: bool, balance: int). With allow_debt, the balance may
+    run negative down to DEBT_FLOOR (the house carries the marker against you) — this is
+    how members fall into debt and, by their own later choice, indenture. Never blocks an
+    OOC exit — escape/force_clear/purge do not route through here, at any balance."""
     _ensure(char)
     amount = int(amount)
     if amount <= 0:
         return True, get_balance(char)
-    if int(char.db.facility_credits or 0) < amount:
+    bal = int(char.db.facility_credits or 0)
+    if not allow_debt and bal < amount:
         return False, get_balance(char)
-    char.db.facility_credits = int(char.db.facility_credits) - amount
+    if allow_debt and (bal - amount) < DEBT_FLOOR:
+        return False, get_balance(char)   # past the floor even the house won't carry it
+    char.db.facility_credits = bal - amount
     _record(char, -amount, reason)
     return True, int(char.db.facility_credits)
+
+
+# ── Debt & (consensual) indenture ────────────────────────────────────────────
+DEBT_FLOOR  = -8000   # the deepest the house will carry a marker before it's called
+INDENTURE_AT = -2500  # at or below this, the marker is called: clear it or work it off
+
+
+def in_debt(char):
+    return get_balance(char) < 0
+
+
+def debt_amount(char):
+    """How far underwater (a positive number), or 0."""
+    b = get_balance(char)
+    return -b if b < 0 else 0
+
+
+def indenture_due(char):
+    """The marker's been called: deep enough in debt that the house wants the body."""
+    return get_balance(char) <= INDENTURE_AT
+
+
+def clear_debt(char, reason="marker cleared — debt worked off in indenture"):
+    """Zero a negative balance (the body's been signed over; the debt is settled)."""
+    if get_balance(char) < 0:
+        char.db.facility_credits = 0
+        _record(char, 0, reason)
 
 
 def earn(char, source, amount=None, reason=None):
@@ -280,6 +312,8 @@ UPGRADES = [
     ("bounty",   5500, 3, "standing bounties on her get — every drop and maturation pays out"),
     ("showroom", 6000, 3, "a showroom expansion — a bigger house, dearer sales off the block"),
     ("pharmacy", 4500, 4, "the good pharmacy — heavier doses, faster dependence"),
+    ("archive",  5000, 3, "the records archive expanded — her line catalogued richer, bounties up"),
+    ("collections", 4800, 3, "a collections desk — markers called harder, debt bites sooner"),
 ]
 _UP_BLURB = {k: b for (k, _c, _cap, b) in UPGRADES}
 

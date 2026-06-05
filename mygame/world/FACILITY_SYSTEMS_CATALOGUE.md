@@ -118,9 +118,37 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   species, how many on the roster / grown and bred back / sold off — plus the polaroid wall, dated.
   A readable "hall" without grid surgery. `vault` now also shows the **treasury** (taken in /
   reinvested / on hand) and the **upgrades bought with it**, in Bethany's voice.
-  → *Backlog (deliberately next):* **debt + consensual indenture** — let a member go negative and,
-  *with their own consent only* (third-party players keep the floor), walk themselves onto the block;
-  a true house-account object/room; live test of the reinvest+bounty+gavel-charge paths.
+- **Debt + consensual indenture (`economy` debt API + `tab`/`indenture` commands):** members can now
+  run **negative**. `spend_credits(..., allow_debt=True)` carries a marker down to `DEBT_FLOOR`
+  (-8000); the gavel uses it — win a lot you can't cover and the house carries the difference as real
+  arrears. `in_debt`/`debt_amount`/`indenture_due` (called at `INDENTURE_AT` -2500)/`clear_debt`. The
+  `tab` command reads your arrears; `indenture`/`indenture confirm` lets a player **consensually** sign
+  themselves over as stock (`_do_indenture`: role flip, real `record_mark`, conditioning seed, debt
+  cleared, cycle started if a realm context exists). **Consent floor for third parties:** indenture
+  *never* happens automatically and *never* without the player's own `confirm` — the house cannot put
+  anyone on the line over a debt; only they can. And it is never the OOC door: `escape`/`force_clear`
+  free an indentured member instantly at any balance. `indentured` is in the reset spec.
+- **The Records Hall (new realm room `records` in `realm_build.py`):** a 14th room — lineage wall,
+  the open ledger, and a tall **appraisal mirror with a cataloguing stool** (a real `seat` zone
+  mechanic install). Data-driven, so `build_realm` *and* `facility_upgrade` create it + its exits
+  (`floor`/`nursery`/`office`) automatically, with a registrar NPC and a readable
+  **`FacilityLedgerBoard`** furniture object (renders the looker's own live account/statement/debt +
+  lineage). Cycle phase `_records_hall` (wired into dispatch, `_choose_destination` — weighted up by
+  a line on file or a debt — and `_REALM_SEQUENCE`): she's sat at the mirror, read her own valuation/
+  account aloud, the lineage advanced, the books reinvested, and conditioned by *knowing her number*.
+- **The ledger-tattoo (player zone install, `_ledger_tattoo`):** a real freeform mark on her hip that
+  displays her running total (get dropped + current valuation), inked once and refreshed in place
+  each records visit — the body kept as its own legible account.
+- **New contract clause `ledger` (Bethany):** "Your account is mine; what you owe me, you owe with
+  your body." Enforced: sets `bethany_ledger_bond`, seeds a standing debt marker (`allow_debt`), inks
+  the ledger-tattoo.
+- **New drug `arrears`:** laces being used with debt-relief — she reads being worked as *paying
+  down* a balance that only ever climbs. Pairs with the hall and the clause.
+- **Two new upgrades on the ladder:** `archive` (richer get-bounty + standing) and `collections`
+  (markers called harder — `collections_level`), both honored in `_apply_upgrade`.
+  → *Backlog (deliberately next):* a live shakedown of the new room/mechanics/indenture on the running
+  engine; auto-starting an indentured member's *own* cycle when there's no realm context; the records
+  hall's NPC dialogue tree; a true shared house-account object.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.
