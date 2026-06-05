@@ -206,12 +206,19 @@ area, with overlap/improvement notes. (Inventoried by size + module purpose.)
 
 ## B7. Non-facility improvement notes
 - → **Split `character_commands.py`** (4.4k lines) along concern lines.
-- → **Resolve the two cmdset collisions** (`aside`, `knock`) — pick the canonical impl.
+- → **Resolve the two cmdset collisions** (`aside`, `knock`) — ✅ done (AUDIT §1d); two now-
+  dead classes left to delete whenever (AUDIT §0a).
+- → **Centralise duplicated name-helpers** — `_char_name`/`_char`/`_name`/`_mood_color`/
+  `_find_character` are copy-pasted across 2–5 modules each. One `commands/_helpers.py` would
+  DRY them. (AUDIT §0a)
 - → **Per-NPC `rp_name` alias** (the PC fix applied to NPCs) so `ask`/targeting is robust.
 - → Many `except Exception as e:` where `e` is only logged — fine, but a project-wide
   logging convention would make failures easier to trace.
 - ✅ No-key `search_object`, `hasattr`-account, bare `except:`, mutable defaults, stray-brace
   `.format`, unguarded `[0]`/`int()` — all swept clean game-wide (see AUDIT).
+- ✅ **`print()` audit:** all 56 are in `world/` build/migration/loader scripts (run via `@py`
+  by staff, where console output is intended) — **none in live command/typeclass paths.** Not
+  a bug. (Could route through Evennia's logger for consistency, but low value.)
 
 *Loop pass 13: created this catalogue; made `board` the canonical full dossier.*
 *Loop pass 14: extended the catalogue to the wider game (Part B — ~45 command modules + core

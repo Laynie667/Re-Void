@@ -6,6 +6,25 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ---
 
+## 0a. Deferred / TODO (action items needing your call or a live test)
+
+- ⏳ **OOC / wisp login-path rework** (`accounts.py` `at_post_login` + the unpuppet flow +
+  `wisp_commands.py`). Phase 2 (afk) is **DONE & shipped**. Remaining — reskin "wisp"→OOC,
+  cut the roaming-ghost (`wisp_location`/`wisp_visible`/`wisp_preference`), and slim the
+  ~1.76k-line wisp cmdset — all touch the **login path, which can't be run-tested in the
+  sandbox**, and the reskin is coupled to the roaming cut. **Land together with one live
+  login test.** Plan + keep/cut triage: `world/OOC_REDESIGN_PROPOSAL.md`. KEEP regardless:
+  `sheet`, `portrait`, character `mood`/say-pose colour (all character-level, unaffected).
+- 🟢 **Dead code from the cmdset-collision fix** (low priority cleanup): `scene_commands.
+  CmdKnock` (now unexported — superseded by the unified `door_commands.CmdKnock`) and
+  `proximity_commands.CmdAside` (no longer added — RP `aside` is canonical). Both classes can
+  be deleted whenever; harmless as-is.
+- 🟢 **Duplicated name-helpers** (DRY): `_char_name` (5 modules), `_char` (4), `_name` (3),
+  `_mood_color` (2), `_find_character` (2) are copy-pasted. → Centralise into a shared
+  `commands/_helpers.py`. Low-risk but touches many files — a deliberate refactor, not a blind one.
+- 🟢 **One TODO marker:** `world/build_forming.py:936` — placeholder `#2` to swap for the
+  real hub dbref "once it exists." Cosmetic.
+
 ## 0. Operational note (read first)
 
 - 🟡→✅ **Getting new rooms without losing state.** Previously you had to `teardown_realm`
