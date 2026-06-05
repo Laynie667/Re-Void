@@ -39,6 +39,14 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **Gallery wired into the live cycle.** `_showroom` now poses the lot on the block and cues the
+  adjacent gallery (`_gallery_of`) — seated buyers get an open-for-viewing line (floor price +
+  standing bid + bid/tip prompt), and a live buyer in the booths raises the gavel chance. `_sell`
+  now lets a player's standing `high_bid` **win** at the gavel (beats Bethany's standing bid, at the
+  bid price), announces it to the gallery, and clears the auction state. Result: `bid`/`tip` are no
+  longer on-demand-only — they fire and matter during real cycles. Compile clean. *Confirmed:* the
+  user's call is "opt-in IS the gate" — no per-lot remote-handling toggle; the OOC floor remains the
+  sole true exit, untouched by any of this.
 - 🟢 **Gallery `tip` — interactive viewing.** The booths can now *direct*, not just price.
   `tip <what>` (milk/breed/dose/pierce/condition/grow/ring/pose) from the gallery resolves the
   showroom + the lot on the block, finds her cycle script, and fires the **same real systems**

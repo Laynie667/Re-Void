@@ -34,6 +34,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   the showroom (visible), the gallery (buyers watching through glass), and the lot (felt, source
   hidden). Demands logged to `db.gallery_demands` (reset-spec'd). CNC-on-demand by an audience she
   can't see — and every effect routes through a real subsystem, nothing faked.
+- **Gallery ↔ cycle integration (`_showroom`/`_sell`/`_gallery_of`):** the gallery is now live
+  *inside the real cycle*, not just on demand. When a lot hits her **display** phase, `_showroom`
+  poses her on the block (`body_language`), and `_gallery_of(room)` cues the adjacent gallery —
+  buyers seated behind the glass get an "open for viewing" line with her floor price + any standing
+  bid + the `bid`/`tip` prompt. A live buyer present raises the gavel chance (+0.25). At the gavel,
+  `_sell` now honours a **player's standing `high_bid`** — the high bidder actually *wins* her at
+  their price (beating Bethany's standing bid), the gallery's told, and the auction state is cleared.
+  Player bids/tips have real consequence in the cycle now.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

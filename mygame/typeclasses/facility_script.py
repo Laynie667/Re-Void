@@ -2866,28 +2866,63 @@ class FacilityScript(DefaultScript):
         target.db.sale_price = price
         return price
 
+    def _gallery_of(self, room):
+        """The buyers' gallery adjacent to this showroom, if dug."""
+        if not room:
+            return None
+        for ex in room.exits:
+            dest = getattr(ex, "destination", None)
+            if dest and "gallery" in (getattr(dest, "key", "") or "").lower():
+                return dest
+        return None
+
     def _showroom(self, room, target, t, cond):
         """Posed on the block, appraised aloud, bid on through the glass, and — when
         the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her)."""
         price = self._appraise(target)
+        target.db.body_language = "posed on the block — lit, spread, turning for the glass"
         room.msg_contents("|W" + random.choice(_SHOW_BEATS).format(t=t) + "|n")
         room.msg_contents("|c" + random.choice(_SHOW_APPRAISE).format(t=t, price=f"{price:,}")
                           + "|n")
+        # Cue the booths: if anyone's seated behind the glass, open her for viewing so
+        # bid/tip light up during the real cycle, not just on demand.
+        gallery = self._gallery_of(room)
+        if gallery:
+            occupied = any(getattr(o.db, "is_pc", False) or o.has_account
+                           for o in gallery.contents if o is not target)
+            high = int(getattr(target.db, "high_bid", 0) or 0)
+            standing = (f" Standing bid behind the glass: |w{high:,}|c." if high else "")
+            gallery.msg_contents(
+                f"|cThe glass brightens: a new lot is led onto the block. {t} is posed and lit "
+                f"for the booths — grade read out, floor at |w{price:,}|c.{standing} "
+                f"(|wbid {t.split()[0].lower()}|c · |wtip <what>|c)|n")
+        else:
+            occupied = False
         try:
             from world.conditioning import add_conditioning
             add_conditioning(target, 1.0 + cond * 0.004, source="showroom")
         except Exception:
             pass
-        # The gavel falls sometimes — and she's sold, owned by someone new.
-        if not getattr(target.db, "facility_owner", None) and random.random() < 0.30:
+        # The gavel falls sometimes — and she's sold, owned by someone new. A live buyer
+        # in the booths makes the gavel likelier (someone's actually in the room to bid).
+        sell_chance = 0.30 + (0.25 if occupied else 0.0)
+        if not getattr(target.db, "facility_owner", None) and random.random() < sell_chance:
             self._sell(room, target, t, price)
         else:
             target.msg("  |m" + random.choice(_SHOW_DEGRADE).format(t=t) + "|n")
 
     def _sell(self, room, target, t, price):
-        # Intake's futa keeps a standing bid; she usually wins the ones she wants.
-        bethany_bid = getattr(target.db, "bethany_owned", False) or random.random() < 0.4
-        if bethany_bid:
+        # A live player's standing high bid wins at the gavel — bidding has consequence.
+        high     = int(getattr(target.db, "high_bid", 0) or 0)
+        high_who = getattr(target.db, "high_bidder", None)
+        # Intake's futa keeps a standing bid; she usually wins the ones she wants — but only
+        # if no player has topped her. A real high bid takes precedence.
+        bethany_bid = (not high) and (getattr(target.db, "bethany_owned", False)
+                                      or random.random() < 0.4)
+        if high and high_who:
+            owner, suffix = high_who, f"— {high_who}'s"
+            price = max(price, high)
+        elif bethany_bid:
             owner, suffix = "Bethany", "— Bethany's"
             target.db.bethany_owned = True
         else:
@@ -2910,6 +2945,15 @@ class FacilityScript(DefaultScript):
                         mode="on")
         except Exception:
             pass
+        # Gavel's down: the auction's settled, so the standing bid is consumed. If a live
+        # buyer won, tell the gallery their bid took her.
+        if high and high_who:
+            gallery = self._gallery_of(room)
+            if gallery:
+                gallery.msg_contents(f"|RThe gavel falls in the dark: {t} goes to {high_who} "
+                                     f"for |w{price:,}|R. Sold, tagged, yours.|n")
+        target.db.high_bid = None
+        target.db.high_bidder = None
 
     def _made_to_beg(self, room, target, t):
         """She's made to beg — out loud, for it — and begging is the only path to the
