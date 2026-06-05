@@ -315,6 +315,25 @@ latex-default, plumbed into a pod, still milked and bred but **through the lines
 no scene, no begging** — the lowest hum of conditioning forever and the engineered peace of
 being finished. Warden askable. The arc has an end: Intake → … → Perfected → stored on the lines.
 
+### Room 10 — The Nursery — COMPLETE
+The lineage made physical. `_birth_offspring` sends each newborn here; `_mature_get` walks
+the grown ones on to the pens — so the room holds her get at every stage, generation-carded
+(sire = her own number, more and more). `_nurse` (chosen once she has get): hooked to the
+nursing frame, milked for real and piped to the pens, made to face and feed the brood while
+it grows toward the stalls; matured get present can breed her there. Cribs / nursing frame /
+lineage ledger (every branch curving back to one number, empty rows waiting). Matron askable.
+
+### Witness / other-player hooks — COMPLETE
+`process <subject> <action>` (opt-in: target must be facility_active) now drives the whole
+machine on the stock: breed, milk, dose, pierce, ring, latex, grow, condition, punish,
+reward, beg, **appraise** (read her live lot price + stats), **buy** (own her — owner +
+title + SOLD tag). Saying her installed triggers already fires them for any speaker.
+
+### Bethany — room-aware
+Her chance visits now read the room she catches you in (mid-milking on the Floor, in the
+stocks reeking of dog, in the cradle under the drone, at the Dairy rack, on toilet duty, on
+the Showroom block for the glass, cracking your pod in Deep Stock) — generic fallback intact.
+
 ### Room 8 — The Showroom — COMPLETE
 Appraised and **sold**. `_appraise` prices her live off her own particulars (grade, get,
 trained capabilities, conditioning, milk, gravid bonus → `db.sale_price`, shown on the
