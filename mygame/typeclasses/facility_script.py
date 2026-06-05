@@ -737,6 +737,24 @@ _BOUGHT_REST = [
     "purchased. You earned it draw by draw and covering by covering, and you just gave it back to "
     "them for a minute of nothing — and the minute of nothing is the sweetest thing you own.",
 ]
+# Polaroids filed on every sale — parlour-style: cold catalogue, face turned away
+_POLAROID_CAPS = [
+    "shot from behind on the block, tagged and turning, the lot number bigger than her",
+    "cropped at the collarbone — all product, no face — the price inked in the corner",
+    "face turned to the glass, expression trained off it, posed exactly as sold",
+    "a before-and-after pair: led on, and led off owned, the date stamped between",
+    "caught mid-pose under the lights, spread and lit, catalogued by who bought her",
+    "the buyer's tag still wet against her skin, her own eyes deliberately out of frame",
+]
+# The house reinvesting its takings into upgrading her — the feedback loop made loud
+_REINVEST_BEATS = [
+    "|WA line item clears in the back office: the house spends its take on {blurb}. The money "
+    "her own body earned has been turned, quietly, into a better way to use it.|n",
+    "|WThe facility reinvests — {blurb} — paid for out of the treasury her milk and her get and "
+    "her sales filled. She funded the upgrade that will work her harder. She always does.|n",
+    "|WProfit becomes plant: the house signs off {blurb}. Every credit she made on the line comes "
+    "back as more line, and the machine she paid for closes a little tighter around her.|n",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -2865,6 +2883,8 @@ class FacilityScript(DefaultScript):
             add_conditioning(target, 2.0 + cond * 0.006, source="bethany")
         except Exception:
             pass
+        # From her desk Bethany reads the treasury and signs off the next upgrade.
+        self._try_reinvest(target)
         target.msg("  |m" + random.choice(_OFFICE_DEGRADE).format(t=t) + "|n")
 
     # ── Deep Stock: the Perfected end-state, sealed and kept on the lines ──
@@ -2918,6 +2938,10 @@ class FacilityScript(DefaultScript):
             pass
         gravid = 800 if getattr(target.db, "pregnancy", None) else 0
         price = int(1200 * gi + 220 * counts + 260 * caps + 6 * cond + 40 * milk + gravid + 500)
+        # Showroom-expansion upgrades make the house dearer — her own funded inflation.
+        sb = int(getattr(target.db, "sale_bonus", 0) or 0)
+        if sb:
+            price = int(price * (1 + 0.15 * sb))
         target.db.sale_price = price
         return price
 
@@ -3172,6 +3196,15 @@ class FacilityScript(DefaultScript):
                                   f"difference and noted it against you. {t} is yours.|n")
         except Exception:
             pass
+        # The house takes its cut of the sale into the treasury, files the polaroid, and
+        # turns the profit straight back into upgrading her.
+        try:
+            from world.economy import skim
+            skim(target, price, f"House cut — sale of {t} to {owner} at {price:,}.")
+        except Exception:
+            pass
+        self._file_polaroid(target, "sale", t, price, owner)
+        self._try_reinvest(target)
         # Gavel's down: the auction's settled, so the standing bid is consumed. If a live
         # player (not one of the house's NPC bidders) won, tell the gallery their bid took her.
         if high and high_who and high_who not in _NPC_BIDDERS:
@@ -3223,10 +3256,11 @@ class FacilityScript(DefaultScript):
         if gallery:
             gallery.msg_contents(f"|RA lot off {t}'s line: a gen-{gen} {sp} of hers, knocked down "
                                  f"to {buyer} for |w{price:,}|R.|n")
-        try:    # breeder's cut — she's paid for her own child
-            from world.economy import add_credits
+        try:    # breeder's cut to her; the house takes the lion's share into the treasury
+            from world.economy import add_credits, skim
             add_credits(target, max(50, price // 10),
                         f"Breeder's cut — your gen-{gen} {sp} get sold to {buyer} for {price:,}.")
+            skim(target, price, f"House cut — sale of her gen-{gen} {sp} get to {buyer}.")
         except Exception:
             pass
         try:    # logged on her record as a real mark
@@ -3246,7 +3280,83 @@ class FacilityScript(DefaultScript):
             try: o.location = None
             except Exception: pass
         target.msg("  |m" + random.choice(_SHOW_DEGRADE).format(t=t) + "|n")
+        self._file_polaroid(target, "get", f"her gen-{gen} {sp} get", price, buyer)
+        self._try_reinvest(target)
         return True
+
+    # ── House treasury: reinvestment, bounties, the filed polaroids ────────────
+    def _file_polaroid(self, owner, kind, subject, price, buyer):
+        """Document a sale parlour-style — a polaroid filed to her record (the wall
+        the `records` command pages through)."""
+        try:
+            import time as _t
+            pol = list(getattr(owner.db, "facility_polaroids", None) or [])
+            pol.append({"date": _t.strftime("%Y-%m-%d %H:%M"), "kind": kind,
+                        "subject": subject, "price": int(price), "buyer": buyer,
+                        "cap": random.choice(_POLAROID_CAPS)})
+            owner.db.facility_polaroids = pol[-50:]
+        except Exception:
+            pass
+
+    def _try_reinvest(self, owner):
+        """Spend the treasury on the cheapest worthwhile upgrade, apply its live effect,
+        and announce it. One purchase per call so it stays a slow, visible ramp."""
+        try:
+            from world.economy import next_affordable_upgrade, buy_upgrade
+        except Exception:
+            return
+        buy = next_affordable_upgrade(owner)
+        if not buy:
+            return
+        key, cost, new_level, blurb = buy
+        if not buy_upgrade(owner, key, cost, new_level):
+            return
+        self._apply_upgrade(owner, key, new_level)
+        room = owner.location
+        if room:
+            room.msg_contents(random.choice(_REINVEST_BEATS).format(blurb=blurb))
+
+    def _apply_upgrade(self, owner, key, level):
+        """Apply the live effect of an upgrade the house just bought — real knobs only."""
+        try:
+            if key == "studs":
+                q = dict(getattr(owner.db, "breeding_quota", None) or {})
+                if q and all(not isinstance(v, dict) for v in q.values()):
+                    for sp in list(q.keys()):
+                        q[sp] = int(q[sp]) + 1
+                    owner.db.breeding_quota = q
+            elif key == "bounty":
+                owner.db.get_bounty = 200 + 150 * level   # paid out on each maturation
+            elif key == "line":
+                # cycle her harder — shorten the interval, with a floor.
+                try:
+                    self.interval = max(60, int(self.interval * 0.85))
+                    self.restart(interval=self.interval)
+                except Exception:
+                    pass
+            elif key == "suite":
+                owner.db.cond_bonus = level            # read in at_repeat's conditioning tick
+            elif key == "cups":
+                owner.db.milk_bonus = level             # read where milk yield is credited
+            elif key == "showroom":
+                owner.db.sale_bonus = level             # read in _appraise as a price multiplier
+            elif key == "pharmacy":
+                owner.db.dose_bonus = level             # heavier doses (hook for the dose scene)
+        except Exception:
+            pass
+
+    def _pay_get_bounty(self, owner, sp, gen):
+        """If a bounty stands, pay it out of the treasury to her account on a maturation."""
+        try:
+            from world.economy import house_debit, add_credits
+            bounty = int(getattr(owner.db, "get_bounty", 0) or 0)
+            if bounty <= 0:
+                return
+            ok, _bal = house_debit(owner, bounty, f"Get bounty paid — gen-{gen} {sp} matured.")
+            if ok:
+                add_credits(owner, bounty, f"Get bounty — your gen-{gen} {sp} matured and paid out.")
+        except Exception:
+            pass
 
     def _made_to_beg(self, room, target, t):
         """She's made to beg — out loud, for it — and begging is the only path to the
@@ -3872,7 +3982,8 @@ class RealmCycleScript(FacilityScript):
             char.msg("|x  " + random.choice(_SUBLIMINALS) + "|n")
         try:
             from world.conditioning import add_conditioning
-            add_conditioning(char, 0.5 + cond * 0.005, source="realm")
+            cb = int(getattr(char.db, "cond_bonus", 0) or 0)   # deeper-suite upgrade
+            add_conditioning(char, 0.5 + cond * 0.005 + 0.4 * cb, source="realm")
         except Exception:
             pass
         # The mind-state monitor drives the ongoing pull of what's been done to her
@@ -3919,8 +4030,11 @@ class RealmCycleScript(FacilityScript):
         # Process just performed — scrip she earns off her own yield and never gets to
         # spend on the door. (The OOC floor never touches this; see world/economy.py.)
         try:
-            from world.economy import earn
+            from world.economy import earn, add_credits
             earn(char, phase)   # unknown phases fall back to the 'cycle' rate
+            mb = int(getattr(char.db, "milk_bonus", 0) or 0)   # high-draw cups upgrade
+            if phase == "milk" and mb:
+                add_credits(char, 12 * mb, "Yield bonus — high-draw cups, extra output metered.")
         except Exception:
             pass
         self.db.phase_index = idx + 1
@@ -4036,6 +4150,8 @@ class RealmCycleScript(FacilityScript):
                         f"finished growing and been put to the stud line — gen {gen}, proven and "
                         f"ready. It will be bred back to its dam like all the rest. The line "
                         f"closes on her a little tighter.|n")
+                # A standing bounty on her get pays out of the treasury on each maturation.
+                self._pay_get_bounty(char, sp, gen)
         char.db.offspring_roster = roster
 
     def _drag(self, char, dest, t):

@@ -39,6 +39,20 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **House treasury, reinvestment, bounties, polaroids, records hall.** The skims became real
+  money. A per-instance treasury (`db.facility_house`) takes a 25% `HOUSE_CUT` of every sale/get-sale/
+  tip/relief, and `_try_reinvest` (on each sale + office visit) auto-buys off the `UPGRADES` ladder
+  with **real honored effects**: studs→quota+1, line→cycle interval ×0.85 (restart), suite→cond_bonus,
+  cups→milk_bonus, showroom→sale_bonus (in `_appraise`), bounty→`get_bounty` (paid out in
+  `_mature_get`). Sales file parlour-style **polaroids** (`_file_polaroid`); new `records`/`wall`
+  command pages the lineage + polaroid wall; `vault` extended to show treasury + upgrades. Feedback
+  loop: her productivity funds the machine that works her harder. **OOC floor verified:** all new
+  keys (`facility_house`/`_ledger`/`facility_upgrades`/`facility_polaroids`/`get_bounty`/`*_bonus`)
+  added to the reset spec; treasury/skim never touch the escape path; door free at any balance.
+  Compile + brace-scan clean; treasury skim + reinvest ladder + totals tested standalone. ⏳ **Next
+  (deliberately deferred):** debt + **consensual** indenture — a member going negative may walk
+  *themselves* onto the block, but third-party players are NEVER auto-converted (the OOC consent floor
+  covers other accounts, not just the owner); plus a live test of reinvest/bounty/gavel-charge.
 - 🟢 **Economy built out — commissary, get-sale, office books (all three).** Closed every open side
   of the scrip loop in one pass. **(1) Commissary (`buy`):** stock spend the scrip their body earned
   on relief (real `_grant_climax`), rest (`line_pass`, honored in `at_repeat`), ease (drops arousal),

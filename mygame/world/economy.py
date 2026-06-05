@@ -199,3 +199,132 @@ def clear_wallet(char):
         char.db.facility_ledger  = None
     except Exception:
         pass
+
+
+# ── The house treasury + reinvestment ───────────────────────────────────────
+# What the facility skims and takes pools in a treasury anchored on the resident,
+# so each built instance keeps its own books. The house does not hoard it: it
+# REINVESTS its takings into upgrading her own processing — a feedback loop where
+# her productivity funds the machine that works her harder. None of it touches the
+# OOC floor; the door stays free at any balance, house or personal.
+
+HOUSE_CUT = 0.25   # the house's standard skim on what changes hands
+
+
+def house_balance(owner):
+    try:
+        return int(owner.db.facility_house or 0)
+    except Exception:
+        return 0
+
+
+def _house_record(owner, delta, reason):
+    try:
+        led = list(owner.db.facility_house_ledger or [])
+        led.append({"stamp": time.strftime("%Y-%m-%d %H:%M"), "delta": int(delta),
+                    "balance": int(owner.db.facility_house or 0), "reason": str(reason)})
+        owner.db.facility_house_ledger = led[-LEDGER_CAP:]
+    except Exception:
+        pass
+
+
+def house_credit(owner, amount, reason="takings"):
+    """Pool money into the treasury. Returns the new house balance."""
+    amount = int(amount)
+    if owner is None or amount <= 0:
+        return house_balance(owner)
+    owner.db.facility_house = house_balance(owner) + amount
+    _house_record(owner, amount, reason)
+    return int(owner.db.facility_house)
+
+
+def house_debit(owner, amount, reason="reinvested"):
+    """Spend from the treasury if it covers it. Returns (ok, balance)."""
+    amount = int(amount)
+    if amount <= 0:
+        return True, house_balance(owner)
+    if house_balance(owner) < amount:
+        return False, house_balance(owner)
+    owner.db.facility_house = house_balance(owner) - amount
+    _house_record(owner, -amount, reason)
+    return True, int(owner.db.facility_house)
+
+
+def house_totals(owner):
+    earned = spent = 0
+    for e in (owner.db.facility_house_ledger or []):
+        d = int(e.get("delta", 0))
+        if d >= 0:
+            earned += d
+        else:
+            spent += -d
+    return earned, spent, house_balance(owner)
+
+
+def skim(owner, amount, reason="house cut"):
+    """Take the house's standard cut of a transaction into the treasury; return the cut."""
+    cut = int(int(amount) * HOUSE_CUT)
+    if cut > 0:
+        house_credit(owner, cut, reason)
+    return cut
+
+
+# The reinvestment ladder — the upgrades the house buys, cheapest worth-it first.
+# (key, base_cost, cap_level, blurb). Cost of the next level scales with how many
+# of that kind are already owned, so the burn accelerates but never for free.
+UPGRADES = [
+    ("studs",    3500, 5, "premium studs on retainer — her breeding quota raised, the pens busier"),
+    ("cups",     3000, 5, "high-draw cups — more drawn each session, glands run fuller"),
+    ("line",     4000, 4, "a faster line — she's cycled harder, with less rest between"),
+    ("suite",    5000, 4, "a deeper conditioning suite — every session in the cell presses harder"),
+    ("bounty",   5500, 3, "standing bounties on her get — every drop and maturation pays out"),
+    ("showroom", 6000, 3, "a showroom expansion — a bigger house, dearer sales off the block"),
+    ("pharmacy", 4500, 4, "the good pharmacy — heavier doses, faster dependence"),
+]
+_UP_BLURB = {k: b for (k, _c, _cap, b) in UPGRADES}
+
+
+def upgrade_level(owner, key):
+    try:
+        return int((owner.db.facility_upgrades or {}).get(key, 0))
+    except Exception:
+        return 0
+
+
+def next_affordable_upgrade(owner):
+    """The cheapest upgrade the treasury can currently afford that isn't capped.
+    Returns (key, cost, new_level, blurb) or None."""
+    bal = house_balance(owner)
+    best = None
+    for key, base, cap, blurb in UPGRADES:
+        lvl = upgrade_level(owner, key)
+        if lvl >= cap:
+            continue
+        cost = int(base * (1 + lvl))      # each owned level dearer than the last
+        if cost <= bal and (best is None or cost < best[1]):
+            best = (key, cost, lvl + 1, blurb)
+    return best
+
+
+def buy_upgrade(owner, key, cost, new_level, reason=None):
+    """Debit the treasury and record the new level. Returns ok. Caller applies the
+    live effect on the cycle/state."""
+    ok, _bal = house_debit(owner, cost, reason or f"Reinvested — {key} upgraded to L{new_level}.")
+    if not ok:
+        return False
+    ups = dict(owner.db.facility_upgrades or {})
+    ups[key] = int(new_level)
+    owner.db.facility_upgrades = ups
+    return True
+
+
+def clear_house(owner):
+    """Wipe the treasury, ledger, upgrades and bounty (reset bookkeeping; not the floor)."""
+    try:
+        owner.db.facility_house = None
+        owner.db.facility_house_ledger = None
+        owner.db.facility_upgrades = None
+        owner.db.get_bounty = None
+    except Exception:
+        pass
+

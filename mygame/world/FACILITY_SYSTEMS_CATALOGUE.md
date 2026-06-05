@@ -98,8 +98,29 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `economy.totals` (paid in / spent / on the books) and a Bethany-voiced reckoning of what she spent
   the stock's own earnings on ("on you, on more of you"). Office-gated for stock (the number is hers
   out on the line) — closes by reminding her not one credit opens the door.
-  → *Backlog:* live test of the gavel charge + get-sale (need real objects/`delay`); a real house
-  account object so Bethany's "cut" lands somewhere instead of being flavour.
+- **The house treasury + reinvestment (`economy.house_*`/`skim`/`UPGRADES`/`_try_reinvest`):** the
+  skims are real money now. A per-instance treasury (`db.facility_house` + `db.facility_house_ledger`,
+  anchored on the resident) takes a `HOUSE_CUT` (25%) of every sale, get-sale, tip, and commissary
+  relief. The house doesn't hoard it — `_try_reinvest` (fired on every sale + each office visit)
+  auto-buys the cheapest affordable item off the `UPGRADES` ladder (studs/cups/line/suite/bounty/
+  showroom/pharmacy; each owned level dearer than the last) and `_apply_upgrade` applies a **real
+  live effect**: studs → `breeding_quota` +1/species; line → cycle `interval` ×0.85 (floor 60s) via
+  `restart`; suite → `cond_bonus` (deeper conditioning in `at_repeat`); cups → `milk_bonus` (yield
+  scrip on milk beats); showroom → `sale_bonus` (price ×(1+0.15·L) in `_appraise`); bounty →
+  `get_bounty`. The burn she funds accelerates the burn against her. Logic tested standalone.
+- **Bounties on the get (`get_bounty` + `_pay_get_bounty`):** the `bounty` upgrade posts a standing
+  bounty; `_mature_get` pays it out of the treasury into her account on every maturation — she's paid
+  for producing the line that breeds her, funded by the house she filled.
+- **Polaroids on every sale (`_file_polaroid` + `_POLAROID_CAPS`):** parlour-style — each sale of her
+  or her get files a dated polaroid (cold catalogue captions: shot from behind, face turned, cropped)
+  to `db.facility_polaroids`.
+- **The records hall (`records`/`wall`/`lineage` command):** renders her line — get dropped by
+  species, how many on the roster / grown and bred back / sold off — plus the polaroid wall, dated.
+  A readable "hall" without grid surgery. `vault` now also shows the **treasury** (taken in /
+  reinvested / on hand) and the **upgrades bought with it**, in Bethany's voice.
+  → *Backlog (deliberately next):* **debt + consensual indenture** — let a member go negative and,
+  *with their own consent only* (third-party players keep the floor), walk themselves onto the block;
+  a true house-account object/room; live test of the reinvest+bounty+gavel-charge paths.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

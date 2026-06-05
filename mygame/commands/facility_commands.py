@@ -958,8 +958,14 @@ class CmdBuy(Command):
                 _grant_climax(caller)
             except Exception:
                 caller.msg("|MPermission — just this once.|n")
+            try:
+                from world.economy import skim
+                skim(caller, cost, "House cut — commissary relief.")
+            except Exception:
+                pass
             caller.msg(f"|x(— {cost:,} scrip. The orgasm your body paid for deepens the very thing "
-                       f"that owns it; Bethany keeps her cut. Balance |w{bal:,}|x.)|n")
+                       f"that owns it; Bethany keeps her cut, and it goes back into the house. "
+                       f"Balance |w{bal:,}|x.)|n")
         elif what == "rest":
             caller.db.line_pass = int(getattr(caller.db, "line_pass", 0) or 0) + 1
             caller.msg(f"|GYou buy a beat off the line — the handlers will pass your station once. "
@@ -1009,16 +1015,86 @@ class CmdVault(Command):
             return
         earned, spent, net = totals(caller)
         caller.msg(statement(caller, n=25))
+        # The house treasury + what it has reinvested in her.
+        try:
+            from world.economy import house_totals, house_balance, _UP_BLURB
+            h_in, h_out, h_bal = house_totals(caller)
+            ups = dict(getattr(caller.db, "facility_upgrades", None) or {})
+            up_lines = "\n".join(f"    |Y{k} L{lvl}|n — {_UP_BLURB.get(k, '')}"
+                                 for k, lvl in ups.items()) or "    |x(none yet)|n"
+            house = (f"\n|M── the house treasury ──|n\n"
+                     f"  |xTaken in (skim + sales):|n |g{h_in:,}|n   |xReinvested:|n |r{h_out:,}|n"
+                     f"   |xon hand:|n |w{h_bal:,}|n\n  |xupgrades bought with it:|n\n{up_lines}")
+        except Exception:
+            house = ""
         caller.msg(f"\n|M── Bethany's accounting ──|n\n"
                    f"  |xPaid in by your body:|n |g{earned:,}|n   |xSpent:|n |r{spent:,}|n   "
-                   f"|xon the books:|n |w{get_balance(caller):,}|n\n"
+                   f"|xon the books:|n |w{get_balance(caller):,}|n{house}\n"
                    f"  |M\"Every figure in the black you made on your back, sweetheart — milked, "
                    f"bred, shown, your own get sold off the block. Every figure in the red I spent, "
-                   f"on you, on more of you. I keep the books so you never wonder what you're worth: "
-                   f"exactly this — and not one credit of it opens the door. The door was always "
-                   f"free. This was never about the door.\"|n")
+                   f"on you, on more of you. The treasury you filled bought the cups that drain you "
+                   f"faster and the studs that fill you fuller. I keep the books so you never wonder "
+                   f"what you're worth: exactly this — and not one credit of it opens the door. The "
+                   f"door was always free. This was never about the door.\"|n")
 
 ALL_FACILITY_VERBS.append(CmdVault)
+
+
+class CmdRecords(Command):
+    """
+    The records hall — your lineage and the polaroids the house keeps of you.
+
+    Usage:
+        records          — your get (living, grown, and sold off) and the sale wall
+
+    Every litter you've dropped, every one grown and bred back, every one sold off
+    the block — and a polaroid of each sale, filed and dated. The wall the facility
+    keeps so the line is never forgotten, only added to.
+    """
+    key           = "records"
+    aliases       = ["wall", "lineage", "portfolio"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from evennia import search_object
+        t = caller.db.rp_name or caller.key
+        counts = dict(getattr(caller.db, "offspring_counts", None) or {})
+        total  = sum(int(v) for v in counts.values())
+        roster = list(getattr(caller.db, "offspring_roster", None) or [])
+        living = grown = 0
+        for ref in roster:
+            o = (search_object(ref) or [None])[0]
+            if not o:
+                continue
+            living += 1
+            if getattr(o.db, "matured", False):
+                grown += 1
+        pol = list(getattr(caller.db, "facility_polaroids", None) or [])
+        sold_get = sum(1 for p in pol if p.get("kind") == "get")
+
+        lines = [f"|W╔═══ RECORDS — the line of {t} ═══╗|n"]
+        if counts:
+            by_sp = "   ".join(f"|g{sp}:|n {n}" for sp, n in counts.items())
+            lines.append(f"  |xGet dropped:|n |w{total}|n   ({by_sp})")
+        else:
+            lines.append("  |xGet dropped:|n |w0|n — the line hasn't started. Yet.")
+        lines.append(f"  |xStill on the roster:|n {living}  "
+                     f"(|w{grown}|n grown and bred back to you)   |xsold off:|n {sold_get}")
+        if pol:
+            lines.append("  |x── the polaroid wall ──|n")
+            for p in pol[-12:]:
+                tag = "SOLD" if p.get("kind") == "sale" else "GET"
+                lines.append(f"  |W[{tag}]|n |x{p.get('date','')}|n  {p.get('subject','')} — "
+                             f"|w{int(p.get('price',0)):,}|n to {p.get('buyer','')}\n"
+                             f"        |x({p.get('cap','')})|n")
+        else:
+            lines.append("  |xNo polaroids on file. Nothing's been sold off the block — so far.|n")
+        lines.append("|W" + "═" * 38 + "|n")
+        caller.msg("\n".join(lines))
+
+ALL_FACILITY_VERBS.append(CmdRecords)
 
 
 class CmdBid(Command):
@@ -1324,10 +1400,12 @@ class CmdTip(Command):
         caller.msg(f"|RYou tip the floor to {what} {t} — |w{cost:,}|R scrip, balance "
                    f"|w{bal:,}|R. It happens on the block while you watch, and she never sees "
                    f"the seat it came from.|n")
-        # a cut of the buyer's tip is credited to her own account — paid for her own use
+        # a cut of the buyer's tip is credited to her own account; the house skims the rest
         try:
             add_credits(lot, max(10, cost // 4),
                         f"Tip cut credited — a buyer paid {cost:,} to use you on the block.")
+            from world.economy import skim
+            skim(lot, cost, f"House cut — tip ('{what}') on {t}.")
         except Exception:
             pass
         if felt_line:
