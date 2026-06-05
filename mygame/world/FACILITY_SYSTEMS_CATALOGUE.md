@@ -62,6 +62,24 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   **OOC-floor-safe:** `auction_open`/`auction_floor` are in the reset spec, so a purge mid-auction
   makes the pending gavel a silent no-op. Cycle interval is 180s, so the 80s window fits one visit.
   → *Needs a live test* (delay timing + reload behaviour can't be verified in-sandbox).
+- **The economy — scrip (`world/economy.py` + `scrip` command):** the house currency, finally giving
+  the block real weight. State lives on real db: `db.facility_credits` (int) + `db.facility_ledger`
+  (capped list of {when, stamp, delta, balance, reason}). API: `get_balance`, `add_credits`,
+  `spend_credits` (returns (ok, balance), never blocks anything but a purchase), `can_afford`, `earn`
+  (per-source EARN table), `statement` (Bethany-voiced payslip/account), `clear_wallet`. **Stock open
+  at 0 and earn scrip off their own bodies** — `at_repeat` credits `earn(char, phase)` every beat
+  (milk 45 / breed 80 / condition 20 / display 30 / punish 10 / …), itemised on a statement she can
+  read but (this pass) can't spend; **members open at a 5000 float** and earn `attend` scrip when
+  present in the gallery as a lot opens. **Spending is wired into the block:** `tip` now charges a
+  per-demand fee (`_TIP_COST`, 40–150) up front — refunded if the action no-ops (nothing to pierce) —
+  and credits the lot a ¼ cut ("paid for her own use"); `bid` requires `can_afford` and stamps
+  `high_bidder_id`, and `_sell` **charges the winning player** their bid at the gavel (house carries
+  any shortfall) while crediting the lot a pittance `sale_cut` of her own price. **OOC-floor-sacred:**
+  `spend_credits`/`can_afford` are never on the escape path — the door is free at any balance, even in
+  debt; the module docstring states this as an invariant. Wallet keys (`facility_credits`/
+  `facility_ledger`/`high_bidder_id`) are in the reset spec, so a purge wipes the account with the
+  rest. → *Backlog:* a **stock spend-sink** (buy relief/earn-back via `compliance.py`) so her own
+  account closes the loop; **selling the get** on the block; live test of the gavel charge path.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

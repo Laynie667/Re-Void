@@ -859,6 +859,38 @@ class CmdStanding(Command):
 ALL_FACILITY_VERBS.append(CmdStanding)
 
 
+class CmdScrip(Command):
+    """
+    Read your Facility account — scrip balance and statement.
+
+    Usage:
+        scrip            — your balance and recent statement
+        scrip full       — the full statement on file
+
+    Scrip is the only money that means anything in here. Stock earn it off their
+    own bodies — every draw, every covering, every turn on the block credited to
+    an account in their name — and members earn it in the booths and spend it on
+    the block and the floor. It buys nothing outside, and never the door: the OOC
+    exit (escape / force_clear / facilityreset) is always free and costs nothing.
+    """
+    key           = "scrip"
+    aliases       = ["wallet", "account", "ledger", "balance"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.economy import statement
+        except Exception:
+            caller.msg("|xNo account on file.|n")
+            return
+        n = 25 if self.args.strip().lower() in ("full", "all", "-a") else 12
+        caller.msg(statement(caller, n=n))
+
+ALL_FACILITY_VERBS.append(CmdScrip)
+
+
 class CmdBid(Command):
     """
     Bid on a lot from the Buyers' Gallery.
@@ -929,10 +961,18 @@ class CmdBid(Command):
         if amount <= high:
             caller.msg(f"|xThe standing bid is {high:,}. You'll need to top it.|n")
             return
+        # your bid has to be money you actually have — it's charged if you win the gavel
+        from world.economy import get_balance
+        if get_balance(caller) < amount:
+            caller.msg(f"|xYou can't back {amount:,}; your account holds |w{get_balance(caller):,}|x "
+                       f"scrip. Bid what you can cover — the gavel charges the winner.|n")
+            return
 
-        target.db.high_bid    = amount
-        target.db.high_bidder = cn
-        caller.msg(f"|RYou put {amount:,} on {t}. It's the high bid — logged on her card.|n")
+        target.db.high_bid       = amount
+        target.db.high_bidder    = cn
+        target.db.high_bidder_id = caller.id
+        caller.msg(f"|RYou put {amount:,} on {t} (you hold {get_balance(caller):,} scrip). It's "
+                   f"the high bid — logged on her card, charged if it stands at the gavel.|n")
         room.msg_contents(f"|R{cn} bids |w{amount:,}|R on {t} — high bid, logged.|n",
                           exclude=[caller])
         # carry it through the glass: she feels the number land even if she can't hear it
@@ -1002,6 +1042,9 @@ class CmdTip(Command):
     help_category = "Interaction"
 
     _MENU = ("milk", "breed", "dose", "pierce", "condition", "grow", "ring", "pose")
+    # what the floor charges to do each thing, in scrip
+    _TIP_COST = {"milk": 60, "breed": 150, "dose": 90, "pierce": 120,
+                 "condition": 110, "grow": 130, "ring": 120, "pose": 40}
 
     def func(self):
         caller = self.caller
@@ -1018,10 +1061,13 @@ class CmdTip(Command):
         t  = lot.db.rp_name or lot.name
         what = self.args.strip().lower()
 
+        from world.economy import get_balance, spend_credits, add_credits
+
         if not what:
-            caller.msg(f"|W{t} is on the block.|n  |xTip the floor to:|n "
-                       f"|w{', '.join(self._MENU)}|n\n  |x(e.g. |wtip breed|x — done to her now, "
-                       f"through the glass.)|n")
+            menu = "  ".join(f"|w{m}|n |x({self._TIP_COST.get(m, 80):,})|n" for m in self._MENU)
+            caller.msg(f"|W{t} is on the block.|n  |xYour scrip:|n |w{get_balance(caller):,}|n"
+                       f"\n  |xTip the floor to:|n {menu}\n  |x(e.g. |wtip breed|x — done to her "
+                       f"now, through the glass. The floor doesn't work on credit.)|n")
             return
 
         # normalise a few synonyms onto the menu
@@ -1030,6 +1076,14 @@ class CmdTip(Command):
         what = alias.get(what, what)
         if what not in self._MENU:
             caller.msg(f"|xThe floor doesn't do '{what}'. Try: |w{', '.join(self._MENU)}|n")
+            return
+
+        # the floor takes its fee up front — no scrip, no service
+        cost = self._TIP_COST.get(what, 80)
+        ok, bal = spend_credits(caller, cost, f"Tip — '{what}' on lot {t}.")
+        if not ok:
+            caller.msg(f"|xThat costs |w{cost:,}|x scrip and you have |w{get_balance(caller):,}|x. "
+                       f"The floor doesn't work on credit.|n")
             return
 
         fs = _lot_script(lot)
@@ -1088,7 +1142,8 @@ class CmdTip(Command):
                 felt_line  = (f"|GThe gun bites — {d} — set into you on the turntable, lit and "
                               f"turning, a new ring paid for by a hand you'll never see.|n")
             else:
-                caller.msg(f"|xNothing left on {t} to pierce.|n")
+                add_credits(caller, cost, "Tip refunded — nothing left to pierce.")
+                caller.msg(f"|xNothing left on {t} to pierce. Your |w{cost:,}|x scrip is returned.|n")
                 return
         elif what == "condition":
             try:
@@ -1136,8 +1191,15 @@ class CmdTip(Command):
             show.msg_contents(floor_line, exclude=[lot])
         gallery.msg_contents(f"|x{cn} tips the floor — '{what}' — and you watch it done to {t} "
                              f"through the glass.|n", exclude=[caller])
-        caller.msg(f"|RYou tip the floor to {what} {t}. It happens on the block while you "
-                   f"watch, and she never sees the seat it came from.|n")
+        caller.msg(f"|RYou tip the floor to {what} {t} — |w{cost:,}|R scrip, balance "
+                   f"|w{bal:,}|R. It happens on the block while you watch, and she never sees "
+                   f"the seat it came from.|n")
+        # a cut of the buyer's tip is credited to her own account — paid for her own use
+        try:
+            add_credits(lot, max(10, cost // 4),
+                        f"Tip cut credited — a buyer paid {cost:,} to use you on the block.")
+        except Exception:
+            pass
         if felt_line:
             lot.msg(felt_line)
 

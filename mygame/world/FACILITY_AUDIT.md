@@ -39,6 +39,20 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **The economy — scrip + ledger (`world/economy.py`).** The block finally has money under it.
+  A real wallet (`db.facility_credits`) + statement (`db.facility_ledger`) on every character, with
+  a clean API (`get_balance`/`add_credits`/`spend_credits`/`can_afford`/`earn`/`statement`). Stock
+  open at 0 and **earn scrip off their own bodies** each cycle beat (the cruel payslip — `at_repeat`
+  → `earn(char, phase)`); members open at a 5000 float and earn `attend` scrip watching a lot open.
+  Spending wired in: `tip` charges a per-demand fee (refunded on no-op, ¼ credited to the lot), `bid`
+  requires affordability and the **gavel charges the winning player** (`_sell` via `high_bidder_id`),
+  crediting the lot a pittance cut of her own price. New `scrip`/`wallet`/`ledger` command (auto-
+  registered via `ALL_FACILITY_VERBS`). **OOC floor verified:** `spend_credits`/`can_afford` are
+  never on the escape path — the door is free at any balance, in debt or not (stated as a module
+  invariant); wallet keys added to the reset spec so a purge wipes the account. Standalone logic
+  test passed (seed/earn/spend/overspend-block/statement/clear). ⏳ **Backlog:** stock spend-sink
+  (buy relief via `compliance.py`) to close her side of the loop; selling the get; live test of the
+  gavel charge.
 - 🟢 **Live timed gavel.** A display now opens a real ~80s bidding window (`evennia.utils.delay`)
   instead of resolving in one tick: staged NPC rounds climb the price (20/40/58/70s) with a
   going-once/going-twice countdown, then `_auction_gavel` at 80s auto-resolves to the high bidder

@@ -33,7 +33,8 @@ FACILITY_FLAGS = {
     "pregnancy": None, "belly_desc_backup": None, "pregnancy_belly": None,
     "sleeve_desc_backup": None, "pen_plugged": None, "facility_owner": None,
     "sale_price": None, "facility_grade": None, "facility_brand": None,
-    "high_bid": None, "high_bidder": None, "auction_floor": None,
+    "high_bid": None, "high_bidder": None, "high_bidder_id": None, "auction_floor": None,
+    "facility_credits": None, "facility_ledger": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,

@@ -2925,8 +2925,9 @@ class FacilityScript(DefaultScript):
                 raise_by = int(raise_by * 1.6)
             current += raise_by
             topping_pc = pc_held
-            target.db.high_bid    = current
-            target.db.high_bidder = who
+            target.db.high_bid       = current
+            target.db.high_bidder    = who
+            target.db.high_bidder_id = None   # an NPC holds it now — no player to charge
             pc_held = False
             if gallery:
                 pool = _NPC_OUTBID_PC if topping_pc else _NPC_BID_LINES
@@ -2956,6 +2957,16 @@ class FacilityScript(DefaultScript):
         if gallery:
             gallery.msg_contents(open_line + f" |c(|wbid {t.split()[0].lower()}|c · "
                                  f"|wtip <what>|c)|n")
+            # the booths pay to be filled: members present earn attendance scrip to spend
+            try:
+                from world.economy import earn
+                for o in gallery.contents:
+                    if o is target:
+                        continue
+                    if getattr(o.db, "is_pc", False) or o.has_account:
+                        earn(o, "attend")
+            except Exception:
+                pass
         try:
             delay(20, self._auction_step,  target, room, t, 0)
             delay(40, self._auction_step,  target, room, t, 1)
@@ -3108,6 +3119,27 @@ class FacilityScript(DefaultScript):
                         mode="on")
         except Exception:
             pass
+        # Economy: settle the sale in scrip. The winning *player* is actually charged
+        # their bid; she's credited a pittance "cut" of her own price (a cruelty, not a
+        # kindness — money she'll never spend on the door). NPC buyers move house money.
+        try:
+            from world.economy import add_credits, spend_credits
+            add_credits(target, max(50, int(price) // 50),
+                        f"Sale cut credited — a pittance of your own price ({price:,}).")
+            buyer_id = getattr(target.db, "high_bidder_id", None)
+            if high and buyer_id:
+                from evennia import search_object
+                buyer = (search_object("#%d" % int(buyer_id)) or [None])[0]
+                if buyer and buyer is not target:
+                    ok, _bal = spend_credits(buyer, int(price),
+                                             f"Purchase — lot {t} taken at the gavel.")
+                    if ok:
+                        buyer.msg(f"|R{int(price):,} scrip clears your account — {t} is yours.|n")
+                    else:
+                        buyer.msg(f"|x{int(price):,} scrip wouldn't clear; the house carried the "
+                                  f"difference and noted it against you. {t} is yours.|n")
+        except Exception:
+            pass
         # Gavel's down: the auction's settled, so the standing bid is consumed. If a live
         # player (not one of the house's NPC bidders) won, tell the gallery their bid took her.
         if high and high_who and high_who not in _NPC_BIDDERS:
@@ -3117,6 +3149,7 @@ class FacilityScript(DefaultScript):
                                      f"for |w{price:,}|R. Sold, tagged, yours.|n")
         target.db.high_bid = None
         target.db.high_bidder = None
+        target.db.high_bidder_id = None
 
     def _made_to_beg(self, room, target, t):
         """She's made to beg — out loud, for it — and begging is the only path to the
@@ -3778,6 +3811,14 @@ class RealmCycleScript(FacilityScript):
             add_standing(char, source={"milk": "milk", "breed": "breed",
                                        "condition": "condition", "display": "cycle",
                                        "punish": "comply"}.get(phase, "cycle"))
+        except Exception:
+            pass
+        # The house keeps an account in her name and credits her body for the unit of
+        # Process just performed — scrip she earns off her own yield and never gets to
+        # spend on the door. (The OOC floor never touches this; see world/economy.py.)
+        try:
+            from world.economy import earn
+            earn(char, phase)   # unknown phases fall back to the 'cycle' rate
         except Exception:
             pass
         self.db.phase_index = idx + 1
