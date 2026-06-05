@@ -74,6 +74,17 @@ the other. Resolved on the user's call:
 - ✅ **Everything else dup'd** (say/pose/emote/look/whisper/mutter/ooc/shout) is the clean
   **wisp ↔ character** split — different cmdsets, intentional state-gating, no collision.
 
+**Room-lock answers + features (user Q&A):**
+- On a *normal grid room*, `scene/lock` (any room, anyone present) is the working lock —
+  it blocks non-invited entry via the room's scene gate; `housing lock` is housing-only.
+  Unlock requires being *in* the room (no remote unlock by design).
+- ✅ **Resident re-admit via `knock`** — a `housing_residents`/owner who locks their room and
+  steps out is added back to the scene invite list when they `knock`, so they get back in
+  (the compromise instead of remote-unlock).
+- ✅ **`home/tent` switch** — goes to a room you actually OWN (your housing plot), even if
+  your `sethome` is a grid room, so builders/residents with a grid home can still reach their
+  housing to work on it.
+
 **User design notes (for future work, not yet actioned):**
 - *Wisp/OOC layer* "has barely worked as intended" — `wisp` is flavour for being OOC and is a
   candidate for a **redesign/re-envisioning** of the whole OOC-presence concept.

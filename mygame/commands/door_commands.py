@@ -430,12 +430,29 @@ class CmdKnock(Command):
         # 2. EXIT knock — notify any destination room that's closed/locked/owned.
         name = caller.db.rp_name or caller.name
         notified = []
+        readmitted = []
         for exit_obj in room.exits:
             dest = getattr(exit_obj, "destination", None)
             if not dest:
                 continue
+            scene_locked = getattr(dest.db, "scene_locked", False)
+            # A resident/owner who locked their room and stepped out gets let
+            # back in by knocking — added to the scene invite list so they pass.
+            if scene_locked:
+                residents = list(getattr(dest.db, "housing_residents", None) or [])
+                is_owner = (getattr(dest.db, "housing_owner_id", None) == caller.id
+                            or getattr(dest.db, "owner_id", None) == caller.id)
+                if caller.id in residents or is_owner:
+                    inv = list(getattr(dest.db, "scene_invite_list", None) or [])
+                    if caller.id not in inv:
+                        inv.append(caller.id)
+                        dest.db.scene_invite_list = inv
+                    dest.msg_contents(
+                        f"|x[ {name} knocks — and lets themselves back in. ]|n")
+                    readmitted.append(exit_obj.key)
+                    continue
             # Only bother knocking where there's a closed/owned room beyond.
-            closed = (getattr(dest.db, "scene_locked", False)
+            closed = (scene_locked
                       or getattr(dest.db, "owner_id", None)
                       or getattr(dest.db, "owner", None))
             if not closed:
@@ -449,6 +466,10 @@ class CmdKnock(Command):
                     f"|x[ A knock — {name} is at the {exit_obj.key}, checking if anyone's "
                     f"inside. ]|n")
                 notified.append(exit_obj.key)
+
+        if readmitted:
+            caller.msg(f"|gYou knock at your own door and it knows you — you may go {', '.join(readmitted)} "
+                       f"back in.|n")
 
         if notified:
             room.msg_contents(f"|x{name} knocks, waiting outside.|n", exclude=caller)

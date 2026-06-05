@@ -63,22 +63,47 @@ def _is_housing_room(room):
 # home
 # ---------------------------------------------------------------------------
 
-class CmdHome(Command):
+class CmdHome(MuxCommand):
     """
     Teleport to your home room.
 
     Usage:
-        home
+        home          — go to the home you set with 'sethome'
+        home/tent     — go to your housing plot (your tent), even if your
+                        set home is a grid room — so you can get there to build
 
-    Your home room is the housing room you have set with 'sethome'.
+    'home' goes to wherever you set with 'sethome' (which can be a grid room).
+    'home/tent' always goes to a room you actually OWN, so builders/residents
+    who set a grid home can still reach their housing to work on it.
     Use 'grid' to return to the Wayfarer's Hall.
     """
     key = "home"
+    switch_options = ("tent",)
     locks = "cmd:all()"
     help_category = "Housing"
 
     def func(self):
         char = self.caller
+
+        # /tent — go to a room you actually own (your housing plot).
+        if "tent" in self.switches:
+            owned = _get_all_housing_rooms(char.id)
+            if not owned:
+                self.msg("|xYou don't own a housing plot. Buy a tent from Durgin Ironwood "
+                         "to get one.|n")
+                return
+            # Prefer a plot flagged as the entry/tent; else the first owned room.
+            dest = next((r for r in owned if r.db.is_tent_entry), None) or owned[0]
+            if char.location == dest:
+                self.msg("|xYou're already in your housing.|n")
+                return
+            name = _char_name(char)
+            char.move_to(dest, quiet=True)
+            char.msg("|xYou duck into your tent.|n")
+            dest.msg_contents(f"|x{name} ducks in.|n", exclude=char)
+            char.execute_cmd("look")
+            return
+
         home_id = char.db.housing_home_id
 
         if not home_id:
