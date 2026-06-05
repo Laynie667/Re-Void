@@ -453,6 +453,33 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── DEVOTION withdrawal — being away from her aches ──
+_DEVOTION_WITHDRAWAL = [
+    "the ache starts up again — not the machine's, a different one, lower and lonelier: you "
+    "want her. Bethany. The hand in your hair, the voice, the next dose she decides to give you. "
+    "Anywhere that isn't her office feels like being left out in the cold.",
+    "you catch yourself listening for her footsteps under the machine-noise, and they don't "
+    "come, and something in you keens for it — the devotion pulling taut, making the whole rest "
+    "of the facility feel like waiting, like the wrong room, like time spent away from where you "
+    "belong, which is at her feet.",
+    "withdrawal, the worst kind: not from a drug, from a person. You'd take anything to be back "
+    "in her office, on her throne, at the end of her short chain. The wanting-her she put in you "
+    "load by load doesn't quiet just because she's busy. It just aches, and waits, and wants.",
+    "you find your hand drifting to the collar at your throat — hers — and the touch of it "
+    "soothes and stings at once, a reminder she's real and a reminder she's elsewhere, and you "
+    "hate how badly the scrap of you that's left just wants her to come back and use you again.",
+]
+
+# ── FORGET — what the memory-edit takes ──
+_FORGET_POOL = [
+    "her surname", "the sound of her own name in her mother's voice", "the year it is",
+    "the face of someone she used to love", "the word for what she did before she came here",
+    "the way home", "the reason she signed", "a song she used to know all the words to",
+    "the last time she said no and meant it", "what her hands used to be for",
+    "the name she was about to give a child, once", "the colour of her own front door",
+    "the feeling of wanting to leave", "who she was angry at, and why", "her own safe-word",
+]
+
 # ── Bethany's Office: kept, owned, made hers ──
 _OFFICE_BEATS = [
     "Bethany has you brought to her office and straps you into the throne herself, unhurried, "
@@ -1796,7 +1823,7 @@ class FacilityScript(DefaultScript):
     # all permanent (cleared only by the reset). Effects are deliberately mixed.
     _DRUGS = ["swell", "yield", "sensitize", "capacity", "brood",
               "compliance", "bimbo", "dependence", "estrus", "lactation",
-              "solvent", "cumslut"]
+              "solvent", "cumslut", "forget", "devotion"]
     _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
                    "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood",
                    "latex", "udder", "rings", "cowset", "oneway"]
@@ -2000,6 +2027,42 @@ class FacilityScript(DefaultScript):
             f"|G  ▸ PERSONALITY SOLVENT — something dissolves a little more of whoever {t} "
             f"used to be and leaves room for whatever the facility writes in its place. "
             f"(deep conditioning + a trigger set)|n")
+
+    def _drug_forget(self, room, target, t):
+        # A real memory edit — takes a specific thing out and logs what it took.
+        taken = random.choice(_FORGET_POOL)
+        log = list(getattr(target.db, "facility_forgotten", None) or [])
+        log.append(taken)
+        target.db.facility_forgotten = log
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, random.uniform(6, 11), source="forget")
+        except Exception:
+            pass
+        # Deep enough, she forgets her own name (real designation/name loss).
+        if len(log) >= 3 and not getattr(target.db, "facility_name_backup", None):
+            target.db.facility_name_backup = target.db.rp_name or target.name
+            target.db.designation = target.db.designation or "Bethany's favourite"
+            target.db.rp_name = target.db.designation
+        room.msg_contents(
+            f"|G  ▸ FORGET — a measured dose, and {t} loses {taken} — not painfully, just "
+            f"quietly, the way a word you knew slides off the tongue and won't come back. She "
+            f"won't notice it's gone. There's a little more room for what's put in next. "
+            f"(memory edit — logged)|n")
+
+    def _drug_devotion(self, room, target, t):
+        # The DEVOTION serum — reorganises her around Bethany specifically.
+        self._devote(target, random.uniform(5, 9), room=room)
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, random.uniform(3, 6), source="devotion")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G  ▸ DEVOTION — it doesn't break {t}, it *files* her — every loose thought "
+            f"quietly re-shelved to point one way. Bethany stops being a thing that happens to "
+            f"her and starts being the thing she's for. She'll beg for the next dose, and mean "
+            f"it. (devotion deepened — keyed to Bethany)|n")
 
     # ── Procedures (intake phase) — surgical/permanent, with a lasting mark ──
     def _mark(self, target, text):
@@ -2490,10 +2553,14 @@ class FacilityScript(DefaultScript):
             self._dose(room, target, t)
         # She breeds you herself, with her own cock — her line, which joins the roster.
         try:
-            from world.gang_breeding import animal_holes
+            from world.gang_breeding import animal_holes, gang_inseminate
             holes = [z for z in animal_holes(target).values() if z]
+            beth = next((o for o in room.contents if (o.key or "").lower() == "bethany"), None)
             if holes and random.random() < 0.6:
-                self._breed_one(room, target, random.choice(holes), "bethany", cond)
+                z = random.choice(holes)
+                gang_inseminate(target, z, contributors=1, fluid_type="semen", species="bethany")
+                if beth:
+                    self._real_penetrate(room, beth, target, z, "bethany")
                 room.msg_contents("|r" + random.choice(_OFFICE_BREED).format(t=t) + "|n")
         except Exception:
             pass
@@ -3245,6 +3312,17 @@ class RealmCycleScript(FacilityScript):
         # Her get age toward joining the stud line that breeds her.
         try:
             self._mature_get(char)
+        except Exception:
+            pass
+        # Devotion withdrawal — once she's been keyed to Bethany, being away from her
+        # aches. The more devoted, the worse the pull when she's anywhere but the office.
+        try:
+            dev = float(getattr(char.db, "bethany_devotion", 0) or 0)
+            in_office = bool(char.location and "office" in (char.location.key or "").lower())
+            if dev >= 15 and not in_office and random.random() < min(0.5, dev / 120.0):
+                from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+                ensure_arousal_script(char); add_arousal(char, 6.0 + dev * 0.05)
+                char.msg("|M  " + random.choice(_DEVOTION_WITHDRAWAL) + "|n")
         except Exception:
             pass
         # Facility standing accrues SLOWLY from the processing — the slow burn.

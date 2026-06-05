@@ -1635,6 +1635,14 @@ def _furnish(room, key, owner):
             _tree = None
             if nkey.lower() == "bethany":
                 _tree = _BETHANY_OWNER_TRIGGERS if key == "office" else _BETHANY_TRIGGERS
+                # Give the office Bethany her real anatomy so `look` shows the
+                # multicock and her breeding actually engages it.
+                if key == "office":
+                    try:
+                        from typeclasses.bethany_script import provision_bethany
+                        provision_bethany(n)
+                    except Exception:
+                        pass
             elif nkey.lower() == "the handler":
                 _tree = _HANDLER_TRIGGERS
             elif nkey.lower() == "the stockman":
@@ -2000,7 +2008,8 @@ def force_clear(owner):
               "milk_quota", "holes", "gape", "offspring_progress", "offspring_counts",
               "facility_title_backup", "forced_posture", "body_language", "room_bound",
               "facility_zone", "facility_furniture", "intake_provocations",
-              "intake_suggestibility", "intake_door_opened", "found_captive_ring"):
+              "intake_suggestibility", "intake_door_opened", "found_captive_ring",
+              "facility_forgotten"):
         try: setattr(d, k, None)
         except Exception: pass
     # -> 0
