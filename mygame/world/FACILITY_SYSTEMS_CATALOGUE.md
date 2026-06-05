@@ -42,6 +42,15 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `_sell` now honours a **player's standing `high_bid`** — the high bidder actually *wins* her at
   their price (beating Bethany's standing bid), the gallery's told, and the auction state is cleared.
   Player bids/tips have real consequence in the cycle now.
+- **NPC clientele bidding (`_npc_bidding` + `_NPC_BIDDERS`/`_NPC_BID_LINES`/`_NPC_OUTBID_PC`):**
+  "both, layered" audience — the booths are never empty. On a display visit a round of NPC buyers
+  (a breeding concern, a kennel syndicate, the dairy interest, Bethany herself, …) bid the lot up
+  on their own, climbing `high_bid` and narrating into the gallery; an NPC can **top a live player's
+  standing bid** (they must re-`bid` to hold her), and Bethany bids 1.6× hard on ones she's claimed.
+  Gavel logic is fair to a present player: if the live buyer holds the top bid the hammer drops
+  (0.85) and they win; if they're present but outbid/idle it eases off (0.15) to give them ticks to
+  act; empty house resolves the NPC auction at 0.30. Bethany winning via the bid path sets
+  `bethany_owned`. Net: a self-running auction players can jump into and win.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

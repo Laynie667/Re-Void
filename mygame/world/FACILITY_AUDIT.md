@@ -39,6 +39,15 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **NPC clientele bid the block (both-layered audience).** `_npc_bidding` fills the booths with
+  a standing NPC clientele that bids the lot up on its own during a display visit — climbing
+  `high_bid`, narrating into the gallery, and able to **top a live player's standing bid** (Bethany
+  bids hard on hers). Gavel logic made fair to a present player: holds-top → 0.85 (wins), present
+  but outbid/idle → 0.15 (more ticks to act), empty house → 0.30. Bethany winning via the bid path
+  now sets `bethany_owned`; the player-won gallery announce is gated to non-NPC winners. Per the
+  user's "both, layered" call. Compile + brace-scan clean. *Design note:* an NPC can outbid and take
+  a lot a player wanted — intended auction tension; the player always has the OOC floor and can
+  re-bid while she's on the block.
 - 🟢 **Gallery wired into the live cycle.** `_showroom` now poses the lot on the block and cues the
   adjacent gallery (`_gallery_of`) — seated buyers get an open-for-viewing line (floor price +
   standing bid + bid/tip prompt), and a live buyer in the booths raises the gavel chance. `_sell`

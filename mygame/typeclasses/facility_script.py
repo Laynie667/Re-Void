@@ -690,6 +690,26 @@ _SHOW_DEGRADE = [
     "pride is the worst thing in the room, and you have it anyway.",
 ]
 
+# ── The standing clientele: NPC buyers who keep the booths full and bidding ──
+_NPC_BIDDERS = [
+    "a private breeding concern", "the deep-stock division", "a kennel syndicate",
+    "an anonymous bidder", "the dairy interest", "a collector in the back row",
+    "the show-line buyer", "a returning member", "the futa from the breeding floor",
+    "an out-of-house client", "the stud registry", "Bethany",
+]
+_NPC_BID_LINES = [
+    "|c{who} raises it to |w{amt}|c. The figure climbs in the dark.|n",
+    "|cA bid-light blinks: {who} bids |w{amt}|c.|n",
+    "|c{who} tops the room — |w{amt}|c — and the booths murmur.|n",
+    "|cFrom the back, {who} comes in at |w{amt}|c without hesitation.|n",
+    "|c{who} doesn't even put the drink down: |w{amt}|c.|n",
+]
+_NPC_OUTBID_PC = [
+    "|c{who} calmly tops your offer — |w{amt}|c. The glass doesn't care that you wanted her.|n",
+    "|cYour bid is beaten: {who} goes |w{amt}|c. Raise it, or lose the lot.|n",
+    "|c{who} outbids you at |w{amt}|c, unbothered, like reaching for a different drink.|n",
+]
+
 # ── Lineage: her own offspring, grown, breeding their mother (incest loop) ──
 _LINEAGE_BREED = [
     "It's one of her own offspring that mounts her this time — grown now, proven, walked back "
@@ -2876,6 +2896,35 @@ class FacilityScript(DefaultScript):
                 return dest
         return None
 
+    def _npc_bidding(self, room, target, floor):
+        """A round of the standing NPC clientele bidding the lot up. Keeps the booths
+        never-empty and the price climbing on its own; an NPC can top a live player's
+        standing bid (they must re-`bid` to hold her). Bethany bids hard on ones she's
+        claimed. Mutates db.high_bid/high_bidder and narrates into the gallery."""
+        gallery = self._gallery_of(room)
+        current = max(int(floor or 0), int(getattr(target.db, "high_bid", 0) or 0))
+        # a player holds it if the current high_bidder is a real name, not one of ours
+        pc_held = (int(getattr(target.db, "high_bid", 0) or 0) > 0
+                   and getattr(target.db, "high_bidder", None) not in _NPC_BIDDERS
+                   and getattr(target.db, "high_bidder", None) is not None)
+        for _ in range(random.randint(1, 3)):
+            # the room sometimes lets a standing player bid ride a round
+            if pc_held and random.random() < 0.45:
+                break
+            who = random.choice(_NPC_BIDDERS)
+            raise_by = random.randint(max(100, current // 20), max(300, current // 6))
+            if who == "Bethany" and (getattr(target.db, "bethany_owned", False)
+                                     or random.random() < 0.5):
+                raise_by = int(raise_by * 1.6)
+            current += raise_by
+            topping_pc = pc_held
+            target.db.high_bid    = current
+            target.db.high_bidder = who
+            pc_held = False
+            if gallery:
+                pool = _NPC_OUTBID_PC if topping_pc else _NPC_BID_LINES
+                gallery.msg_contents(random.choice(pool).format(who=who, amt=f"{current:,}"))
+
     def _showroom(self, room, target, t, cond):
         """Posed on the block, appraised aloud, bid on through the glass, and — when
         the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her)."""
@@ -2898,14 +2947,24 @@ class FacilityScript(DefaultScript):
                 f"(|wbid {t.split()[0].lower()}|c · |wtip <what>|c)|n")
         else:
             occupied = False
+        # The standing clientele bid her up — the booths are never empty.
+        self._npc_bidding(room, target, price)
         try:
             from world.conditioning import add_conditioning
             add_conditioning(target, 1.0 + cond * 0.004, source="showroom")
         except Exception:
             pass
-        # The gavel falls sometimes — and she's sold, owned by someone new. A live buyer
-        # in the booths makes the gavel likelier (someone's actually in the room to bid).
-        sell_chance = 0.30 + (0.25 if occupied else 0.0)
+        # Does the gavel fall this visit? Be fair to a live buyer in the booths: if the
+        # present player is winning, drop the hammer (they take her); if they're here but
+        # outbid / haven't bid, give them more ticks to act rather than snatching her to an
+        # NPC instantly. Empty house resolves the NPC auction at the normal rate.
+        pc_on_top = (int(getattr(target.db, "high_bid", 0) or 0) > 0
+                     and getattr(target.db, "high_bidder", None) not in _NPC_BIDDERS
+                     and getattr(target.db, "high_bidder", None) is not None)
+        if occupied:
+            sell_chance = 0.85 if pc_on_top else 0.15
+        else:
+            sell_chance = 0.30
         if not getattr(target.db, "facility_owner", None) and random.random() < sell_chance:
             self._sell(room, target, t, price)
         else:
@@ -2922,6 +2981,8 @@ class FacilityScript(DefaultScript):
         if high and high_who:
             owner, suffix = high_who, f"— {high_who}'s"
             price = max(price, high)
+            if high_who == "Bethany":
+                target.db.bethany_owned = True
         elif bethany_bid:
             owner, suffix = "Bethany", "— Bethany's"
             target.db.bethany_owned = True
@@ -2946,8 +3007,8 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
         # Gavel's down: the auction's settled, so the standing bid is consumed. If a live
-        # buyer won, tell the gallery their bid took her.
-        if high and high_who:
+        # player (not one of the house's NPC bidders) won, tell the gallery their bid took her.
+        if high and high_who and high_who not in _NPC_BIDDERS:
             gallery = self._gallery_of(room)
             if gallery:
                 gallery.msg_contents(f"|RThe gavel falls in the dark: {t} goes to {high_who} "
