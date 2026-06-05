@@ -180,10 +180,12 @@ class MilkingContract(WrittenItem):
         Signee signs the contract and all effects activate.
         Returns (True, "") or (False, reason).
         """
-        if self.db.signed:
+        # Block only a GENUINELY-complete signing. If a previous attempt set `signed` but
+        # crashed mid-binding (leaving the signee not actually bound), allow a re-sign so
+        # the effects get applied — otherwise the contract and the body desync forever.
+        if self.db.signed and getattr(signee.db, "facility_signed", False):
             return False, "This contract has already been signed."
 
-        self.db.signed     = True
         self.db.signee_id  = signee.id
         self.db.signed_at  = time.time()
 
@@ -206,13 +208,20 @@ class MilkingContract(WrittenItem):
             })
             signee.db.aphrodisiac_expirations = expirations
 
-        # Apply hidden binding effects silently
+        # Apply hidden binding effects silently. If this raises, the binding did NOT take —
+        # so do NOT mark the contract signed (leave it re-signable rather than desynced).
         if self.db.binding_effects:
             try:
                 from world.binding_effects import apply_effects
                 apply_effects(signee, self)
             except Exception:
-                pass
+                import traceback
+                traceback.print_exc()
+                return False, ("The binding faulted partway and did not take — nothing was "
+                               "signed. (Check the server log.) Try again.")
+
+        # Effects are in. Mark it signed now — only a completed binding counts.
+        self.db.signed = True
 
         # Auto-reveal the hidden clauses to the signee — they can read what they
         # agreed to, now that agreeing is done. Drop the full text on them.

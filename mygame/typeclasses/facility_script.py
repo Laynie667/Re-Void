@@ -4455,11 +4455,20 @@ class RealmCycleScript(FacilityScript):
         if getattr(char.db, "lactation_locked", False):
             add("floor", "milk", 2)
 
-        # Owed offspring — unmet breeding quota pulls her to the pens.
+        # Owed offspring — unmet breeding quota pulls her to the pens. Shape-tolerant:
+        # quota may be {sp: int} or the canonical {sp: {current, required}} (and comes back
+        # as a _SaverDict, not a real dict — so test via hasattr, never isinstance(dict)).
         q = getattr(char.db, "breeding_quota", None)
-        if isinstance(q, dict) and q:
+        if hasattr(q, "items") and q:
             counts = dict(getattr(char.db, "offspring_counts", None) or {})
-            unmet = any(int(v) > int(counts.get(k, 0)) for k, v in q.items())
+
+            def _req(v):
+                return int(v.get("required", 0)) if hasattr(v, "get") else int(v)
+
+            def _done(k, v):
+                return int(v.get("current", 0)) if hasattr(v, "get") else int(counts.get(k, 0))
+
+            unmet = any(_req(v) > _done(k, v) for k, v in q.items())
             add("pens", "breed", 5 if unmet else 2)
         else:
             add("pens", "breed", 3)

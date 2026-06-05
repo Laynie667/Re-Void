@@ -222,9 +222,11 @@ def apply_effects(character, item):
 
     # breeding_quota — a per-species ledger of required successful breedings.
     # Accepts a dict {species: required} or a bare int (-> 'contributor').
+    # NOTE: stored payloads come back as Evennia _SaverDict, which is NOT a dict
+    # subclass — so test for a mapping via hasattr("items"), never isinstance(dict).
     q = effects.get("breeding_quota")
     if q:
-        if isinstance(q, dict):
+        if hasattr(q, "items"):
             character.db.breeding_quota = {
                 str(sp): {"current": 0, "required": int(req)}
                 for sp, req in q.items()
