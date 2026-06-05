@@ -78,11 +78,10 @@ class Waypost(DefaultObject):
         Checks HubWaystone locations first, then waystone_hub tag.
         """
         try:
-            from evennia import search_object
-            stones = search_object(
-                None, typeclass="typeclasses.waystone.HubWaystone", quiet=True
-            ) or []
-            if stones and stones[0].location:
+            # search_object(None, typeclass=...) returns [] here — use the manager.
+            from typeclasses.waystone import HubWaystone
+            stones = [s for s in HubWaystone.objects.all() if s.location]
+            if stones:
                 return stones[0].location
         except Exception:
             pass
@@ -146,23 +145,20 @@ class Waypost(DefaultObject):
         addr = address.strip().lower()
 
         try:
-            from evennia import search_object
+            # search_object(None, typeclass=...) returns [] here — use the managers,
+            # or address-collision detection silently never fires.
+            from typeclasses.waypost import Waypost
+            from typeclasses.waystone import PortalWaystone
 
             # Check other wayposts
-            wayposts = search_object(
-                None, typeclass="typeclasses.waypost.Waypost", quiet=True
-            ) or []
-            for wp in wayposts:
+            for wp in Waypost.objects.all():
                 if exclude and wp.id == exclude.id:
                     continue
                 if (wp.db.realm_address or "").strip().lower() == addr:
                     return True
 
             # Check portal waystones
-            portals = search_object(
-                None, typeclass="typeclasses.waystone.PortalWaystone", quiet=True
-            ) or []
-            for p in portals:
+            for p in PortalWaystone.objects.all():
                 if (p.db.portal_label or "").strip().lower() == addr:
                     return True
 

@@ -392,16 +392,31 @@ class CmdStruggle(_FacilityVerb):
         if not self._ok():
             return
         c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        import random as _r
         room.msg_contents(
             f"|R{t} struggles — pulling against the restraints, twisting, refusing — and the "
             f"facility does not so much as pause to notice.|n")
+        # Owned stock gets a different futility: she WANTS you to fight.
+        if getattr(c.db, "bethany_owned", False) or float(getattr(c.db, "bethany_devotion", 0) or 0) > 0:
+            c.msg("|MShe looks up from her file, delighted. \"Oh, go on — wear yourself out. "
+                  "Every pull you waste on the straps is one less you've got left for me to take. "
+                  "I'm in no hurry at all.\"|n")
+        # register_defiance may swallow the struggle entirely if you're docile enough
+        # (it prints its own beat). Otherwise it's logged + punished.
         try:
             from world.compliance import register_defiance
             register_defiance(c, 1, reason="struggled against the line")
         except Exception:
             pass
-        c.msg("|xIt's logged as non-compliance, punished, and counted toward forfeiting your "
-              "freedom. The restraints don't give. Struggling only ever trained you faster.|n")
+        c.msg("|x" + _r.choice([
+            "The restraints don't give. Struggling only ever trained you faster.",
+            "No is a sound you make in here, not a door. The room has heard it before.",
+            "You fight the steel and the steel wins, the way it was built to, the way it always "
+            "will. The fight was never the part that mattered — outlasting it is.",
+            "The only thing your thrashing earns is a note in your file and a little more of the "
+            "fight spent. There's a finite amount of it in you. They have nothing but time.",
+        ]) + " |x(The one true way out is never the restraints — it's the OOC floor: escape / "
+              "force_clear / purge. That door is never locked.)|n")
 
 
 # keyword -> (scene_method_or_None, climb-on flavor)

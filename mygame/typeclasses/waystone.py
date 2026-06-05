@@ -267,11 +267,10 @@ class PortalWaystone(DefaultObject):
                 pass
 
         try:
-            from evennia import search_object
-            stones = search_object(
-                None, typeclass="typeclasses.waystone.HubWaystone", quiet=True
-            ) or []
-            if stones and stones[0].location:
+            # search_object(None, typeclass=...) returns [] here — use the manager.
+            from typeclasses.waystone import HubWaystone
+            stones = [s for s in HubWaystone.objects.all() if s.location]
+            if stones:
                 return stones[0].location
         except Exception:
             pass

@@ -38,6 +38,24 @@ Items get struck through / moved to "Resolved" as they're fixed.
   ever target the same zone, restore order would matter. *Fix idea:* one unified
   `db.facility_zone_backup` keyed by zone, written through a single helper.
 
+## 1c. ENTIRE-game sweep (waystone / waypost travel infra)
+
+Four real bugs, all the documented Evennia gotchas, in core travel code:
+- 🔴→✅ **Staff waystone registry showed nothing.** `waystone_commands._list_all` scanned
+  hubs/portals/wayposts via `search_object(None, typeclass=…)` (→ `[]`), so the whole
+  registry always printed `(0)`. **Fixed:** uses the typeclass managers.
+- 🔴→✅ **Wayposts always read `[inactive]`.** Same command used `not hasattr(w.location,
+  "account")` to mean "is in a room" — but `hasattr(_, "account")` is **always True**
+  (rooms included), so the test was always False and every waypost showed inactive.
+  **Fixed:** `isinstance(loc, Character)` check.
+- 🟡→✅ **Return-hub lookup degraded.** `waypost._get_hub_room` and `waystone.py`'s hub
+  resolver both scanned `search_object(None, …HubWaystone)` (→ `[]`), surviving only on a
+  `waystone_hub` *tag* fallback — so an untagged hub broke the return trip. **Fixed:**
+  `HubWaystone.objects.all()`.
+- 🟡→✅ **Address-collision detection disabled.** `waypost._address_in_use` scanned with the
+  same no-key trap → always returned False → two wayposts could silently share an address
+  (travel ambiguity). **Fixed:** managers.
+
 ## 1b. Codebase-wide sweep (beyond the facility)
 
 - 🔴→✅ **`watch/list` always empty (2 sites).** `safety_commands.py` `CmdWatch._list`
@@ -138,3 +156,7 @@ log (two improvement items resolved).*
 pool files. Content: the office "breaking frame" machine + CNC futility prose (`_CNC_BREAK`)
 on the first-day breaking — in-fiction helplessness layered on top of the never-gated OOC
 floor (the dread is built on the floor, not in place of it).*
+*Loop pass 7: ENTIRE-game bug-hunt — fixed 4 real waystone/waypost travel bugs (registry
+empty, wayposts always inactive, return-hub degraded, address-collision detection disabled
+— all the no-key `search_object` / `hasattr(...,"account")` gotchas). Content: deepened the
+`struggle` verb with CNC futility (owner-aware) + an explicit in-line OOC-floor reminder.*

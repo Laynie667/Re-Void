@@ -476,23 +476,27 @@ class CmdWaystone(MuxCommand):
     # ── /list ────────────────────────────────────────────────────────────
 
     def _list_all(self, caller):
-        from evennia import search_object
+        # NOTE: search_object(None, typeclass=...) returns [] in this Evennia
+        # (CLAUDE.md §4) — use the typeclass managers so the registry isn't empty.
         from typeclasses.waystone import HubWaystone, PortalWaystone
         from typeclasses.waypost import Waypost
+        from typeclasses.characters import Character
+
+        def _in_room(loc):
+            # A waypost is "placed" when it sits in a room, not carried by a
+            # character. hasattr(loc,"account") is ALWAYS True (rooms included), so
+            # test the typeclass instead.
+            return bool(loc) and not isinstance(loc, Character)
 
         lines = ["|wWaystone Registry|n", "|x" + "─" * 50 + "|n"]
 
-        hubs = search_object(
-            None, typeclass="typeclasses.waystone.HubWaystone", quiet=True
-        ) or []
+        hubs = list(HubWaystone.objects.all())
         lines.append(f"\n|wHub Waystones ({len(hubs)})|n")
         for h in hubs:
             loc = h.location.key if h.location else "nowhere"
             lines.append(f"  #{h.id:<5}  {h.db.display_name or h.key:<25}  @ {loc}")
 
-        portals = search_object(
-            None, typeclass="typeclasses.waystone.PortalWaystone", quiet=True
-        ) or []
+        portals = list(PortalWaystone.objects.all())
         lines.append(f"\n|wPortal Waystones ({len(portals)})|n")
         for p in portals:
             loc   = p.location.key if p.location else "nowhere"
@@ -502,19 +506,17 @@ class CmdWaystone(MuxCommand):
                 f"  #{p.id:<5}  [{label:<15}]  @ {loc:<20}  hub #{hub}"
             )
 
-        wayposts = search_object(
-            None, typeclass="typeclasses.waypost.Waypost", quiet=True
-        ) or []
+        wayposts = list(Waypost.objects.all())
         active = [
             w for w in wayposts
-            if w.db.realm_address and w.location and not hasattr(w.location, "account")
+            if w.db.realm_address and _in_room(w.location)
         ]
         lines.append(f"\n|wPlayer Wayposts — active ({len(active)}/{len(wayposts)})|n")
         for w in wayposts:
             addr  = w.db.realm_address or "|x(no address)|n"
             owner = w.db.owner_name or "?"
             loc   = w.location.key if w.location else "nowhere"
-            status = "" if (w.db.realm_address and w.location and not hasattr(w.location, "account")) else " |x[inactive]|n"
+            status = "" if (w.db.realm_address and _in_room(w.location)) else " |x[inactive]|n"
             lines.append(
                 f"  #{w.id:<5}  {addr:<20}  owner: {owner:<15}  @ {loc}{status}"
             )
