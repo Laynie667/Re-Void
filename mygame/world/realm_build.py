@@ -2335,6 +2335,13 @@ def force_clear(owner):
         d.title_faction = tb.get("faction", "")
         d.title_suffix  = tb.get("suffix", "")
     except Exception: pass
+    # Single source of truth for every flat facility flag (world/facility_state.py)
+    # — runs AFTER the name/title backups above are consumed. The per-attr loops
+    # below are now belt-and-suspenders / legacy and can be trimmed later.
+    try:
+        from world.facility_state import apply_reset_flags
+        apply_reset_flags(owner)
+    except Exception: pass
     # lists -> []
     for k in ("active_speech_filters", "installed_triggers", "facility_brands",
               "permanent_gape", "piercings", "pet_trigger_sources", "bred_by",

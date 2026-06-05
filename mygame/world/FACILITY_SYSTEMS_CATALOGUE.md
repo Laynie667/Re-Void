@@ -138,7 +138,11 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 ---
 
 ## Cross-system redundancies (catalogued)
-1. ⚠ **Two reset paths** (`force_clear` / `run_facility_reset`) — sync burden. *(§1)*
+1. ⚠→✅ **Two reset paths** (`force_clear` / `run_facility_reset`) — **mitigated.** New
+   `world/facility_state.py` (`FACILITY_FLAGS`, 86 flat flags, + `apply_reset_flags()`) is the
+   single source of truth; both paths now call it (after consuming the name/title backups), so
+   a new flag added to the spec is cleared by both automatically. The old per-attr loops remain
+   as belt-and-suspenders and can be trimmed later. Also addresses redundancy #6. *(§1)*
 2. ⚠ **Marks stored twice** (`facility_brands` strings + freeform items). *(§5)*
 3. ⚠ **`offspring_progress` legacy** vs the real pregnancy system. *(§5/§6)*
 4. ⚠ **Three state-views** (`board` / mind zone / board furniture) — now tiered & deliberate. *(§9)*
@@ -148,8 +152,10 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 7. ⚠ **Single-room `FacilityScript`** largely superseded by the realm cycle. *(§2)*
 
 ## Improvement backlog (by payoff)
-- **High:** unify the two reset paths behind one `FACILITY_STATE` spec (kills redundancies
-  1 & 6 and the whole "forgot to clear X" class). Then retire `offspring_progress` (3).
+- ✅ **DONE — unify the two reset paths** behind one spec (`world/facility_state.py`). Kills
+  redundancies 1 & 6 and the "forgot to clear X" class. *Next on this thread:* retire the now-
+  redundant per-attr clear loops in both paths (safe once the spec is confirmed live), then
+  retire `offspring_progress` (3).
 - **Medium:** make freeform the canonical mark store, `facility_brands` a derived cache (2).
   Unify zone-desc backups behind one helper (5).
 - **Low / polish:** dedupe Bethany NPCs (AUDIT); table-drive `_choose_destination` weights;

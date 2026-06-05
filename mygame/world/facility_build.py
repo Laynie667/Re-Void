@@ -886,6 +886,13 @@ def run_facility_reset(caller, purge=False):
         caller.db.title_suffix  = _tb.get("suffix", "")
         caller.db.facility_title_backup = None
         caller.db.factions             = {}
+        # Single source of truth — clears every flat facility flag AFTER the name
+        # (L725) and title (above) backups are consumed. (world/facility_state.py)
+        try:
+            from world.facility_state import apply_reset_flags
+            apply_reset_flags(caller)
+        except Exception:
+            pass
         # Remove the REAL piercing items and the facility's freeform marks.
         try:
             from typeclasses.piercing_item import PiercingItem
