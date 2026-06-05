@@ -118,6 +118,40 @@ def punish(character, reason="", severity=1):
         )
 
 
+def quota_status(character):
+    """Readable lines of what she owes before rest — breeding, milk, and arrears.
+    Shape-tolerant: breeding_quota may be {sp:int} or {sp:{current,required}}; milk_quota
+    is {current,required}. Returns (lines, all_met)."""
+    lines = []
+    all_met = True
+    bq = getattr(character.db, "breeding_quota", None)
+    if isinstance(bq, dict) and bq:
+        counts = dict(getattr(character.db, "offspring_counts", None) or {})
+        for sp, v in bq.items():
+            if isinstance(v, dict):
+                cur, req = int(v.get("current", 0)), int(v.get("required", 0))
+            else:
+                req, cur = int(v), int(counts.get(sp, 0))
+            met = cur >= req
+            all_met = all_met and met
+            lines.append(f"  |xbreeding · {sp}:|n {cur}/{req} " + ("|g✓|n" if met else "|r…|n"))
+    mq = getattr(character.db, "milk_quota", None)
+    if isinstance(mq, dict) and mq:
+        cur, req = int(mq.get("current", 0)), int(mq.get("required", 0))
+        met = cur >= req
+        all_met = all_met and met
+        lines.append(f"  |xmilk:|n {cur}/{req} ml " + ("|g✓|n" if met else "|r…|n"))
+    try:
+        from world.economy import debt_amount
+        owed = debt_amount(character)
+        if owed:
+            all_met = False
+            lines.append(f"  |xarrears:|n |r{owed:,}|n scrip owed on the marker")
+    except Exception:
+        pass
+    return lines, all_met
+
+
 def penalize_quota_shortfall(character):
     """Periodic review: if quotas aren't met, apply a penalty."""
     try:

@@ -59,7 +59,8 @@ FACILITY_FLAGS = {
     "animal_sleeve": False, "pen_filth": False, "pen_scented": False,
     "auction_open": False, "bethany_owned_get": False,
     "indentured": False, "bethany_ledger_bond": False, "arrears_laced": False,
-    "ledger_tattooed": False,
+    "ledger_tattooed": False, "bethany_tithe": False, "bethany_heir": False,
+    "curse_line_remembers": False, "curse_never_empty": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "",

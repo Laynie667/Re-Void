@@ -359,6 +359,24 @@ _ROOM_ZONES = {
                      "already assigned."]),
     },
     "floor": {
+        "milkstall": _z(
+            "A bank of automated milking stalls stands against one wall — articulated cup-clusters "
+            "on descending arms over graded collection bottles, a yield gauge ticking above each. "
+            "A unit locked into one is drawn on a timer, hands-free, whether or not she's ready.",
+            summary="the automated milking stalls",
+            study=["The cups find the teats themselves and seal, and the pull starts on the clock, "
+                   "not on a word. Once you're in a stall the stall decides when you're empty."],
+            mechanic=("milk",)),
+        "matingbench": _z(
+            "A heavy fucking-machine bench bolted to the floor mid-hall — a padded saddle that "
+            "folds an occupant over and locks her, a piston-driven shaft on a rail behind it set "
+            "to breed whatever's strapped on, on a cycle, until the gauge logs a deposit.",
+            summary="the fucking-machine breeding bench",
+            study=["It doesn't tire and it doesn't finish early. It runs its stroke on a timer and "
+                   "fills its gauge, and you are simply the thing bolted to the front of it."],
+            handle={"touch": "{actor} thumbs the bench's rail; the piston takes up its slack with "
+                             "a heavy, patient click."},
+            mechanic=("dildo", 1, "the breeding bench", "folded over and bred on the cycle")),
         "line": _z(
             "Padded breeding stations run the length of the hall on a slow conveyor, most of "
             "them empty, each fitted with restraints, a descending milking rig, and a "
@@ -453,6 +471,16 @@ _ROOM_ZONES = {
                      "schedule, ready for the next mess."]),
     },
     "pens": {
+        "machine": _z(
+            "A breaking machine stands in the centre of the run — a locking saddle bolted low, a "
+            "thick knotted shaft on a driven rail behind it, scaled to the animals. A unit cinched "
+            "into it is held presented and bred on a relentless mechanical cycle, knot and all, "
+            "for as long as the board says she's owed.",
+            summary="the animal breaking-machine",
+            study=["The shaft is moulded off the studs down the row — ridged, flared, knotted — and "
+                   "the saddle holds you at exactly their working height. It is how they break a "
+                   "new one in when no handler can be spared: by the clock, not the hand."],
+            mechanic=("dildo", 1, "the breaking machine", "cinched and bred on the cycle, knot and all")),
         "stalls": _z(
             "Heavy stalls line the far wall — a dull-eyed breeding bull in one, a rank tusked "
             "boar in a low pen, a big-barrelled stallion stamping in the last — proven stock "
@@ -638,7 +666,9 @@ _ROOM_ZONES = {
                             "for you to get to work.|n"},
             ambient=["A cock pushes through one of the holes, waits a beat, and withdraws — used, "
                      "or impatient.",
-                     "Knuckles rap the far side of the partition. The queue is not patient."]),
+                     "Knuckles rap the far side of the partition. The queue is not patient."],
+            mechanic=("dildo", 2, "the glory-hole partition", "knelt at the rail, mouth and holes "
+                      "at the wall, used by whoever's queued")),
         "stall": _z(
             "In the centre a low steel frame locks a body face-up beneath an open seat — a "
             "toilet built around a person, mouth and holes positioned under the gap to catch "
@@ -2053,6 +2083,13 @@ def _furnish(room, key, owner):
                 _tag(_c.create_object(FacilityLedgerBoard, key="the great ledger", location=room))
             except Exception:
                 pass
+        # The processing floor gets a live quota board (what's owed before rest).
+        if key == "floor":
+            try:
+                from typeclasses.facility_furniture import FacilityQuotaBoard
+                _tag(_c.create_object(FacilityQuotaBoard, key="the quota board", location=room))
+            except Exception:
+                pass
     except Exception:
         pass
     # NPCs
@@ -2214,6 +2251,24 @@ def facility_upgrade(owner):
         realm["rooms"][key] = r.dbref
         added_rooms.append(name.split("— ")[-1].strip())
 
+    # 1a. Merge any NEW zones (and their real mechanic installs) into existing rooms —
+    # so floor/restroom/pens etc. pick up later-added stalls, machines, and partitions.
+    added_zones = 0
+    for key, rm in rooms.items():
+        have = dict(getattr(rm.db, "zones", None) or {})
+        for zn, zd in (_ROOM_ZONES.get(key) or {}).items():
+            zname = zn.replace(" ", "_")
+            if zname in have:
+                continue
+            zd = dict(zd)
+            spec = zd.pop("_install", None)
+            zd["summary"] = ""
+            have[zname] = zd
+            rm.db.zones = have
+            if spec:
+                _install_mechanic(rm, zname, spec, owner)
+            added_zones += 1
+
     # 2. Ensure every adjacency in _EXITS exists (idempotent — skip if present).
     for src, dests in _EXITS.items():
         if src not in rooms:
@@ -2269,6 +2324,16 @@ def facility_upgrade(owner):
     except Exception:
         pass
 
+    # 3d. Ensure the processing floor has its live quota board.
+    try:
+        from typeclasses.facility_furniture import FacilityQuotaBoard
+        from evennia.utils import create as _c4
+        flr = rooms.get("floor")
+        if flr and not any(isinstance(o, FacilityQuotaBoard) for o in flr.contents):
+            _tag(_c4.create_object(FacilityQuotaBoard, key="the quota board", location=flr))
+    except Exception:
+        pass
+
     # 4. Provision the office Bethany's anatomy if the office was just added.
     try:
         from typeclasses.bethany_script import provision_bethany
@@ -2286,6 +2351,7 @@ def facility_upgrade(owner):
         f"|x  New rooms: {', '.join(added_rooms) if added_rooms else 'none'}\n"
         f"  New exits wired: {added_exits}\n"
         f"  Staff placards added: {added_placards}\n"
+        f"  New zones/installs merged: {added_zones}\n"
         f"  Your character state and progress are untouched.|n")
     return realm
 

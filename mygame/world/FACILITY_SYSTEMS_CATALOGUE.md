@@ -149,6 +149,27 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   → *Backlog (deliberately next):* a live shakedown of the new room/mechanics/indenture on the running
   engine; auto-starting an indentured member's *own* cycle when there's no realm context; the records
   hall's NPC dialogue tree; a true shared house-account object.
+- **Real room installs (data-driven, `_ROOM_ZONES` mechanic specs):** the rooms now *do* what they
+  describe. Floor: `milkstall` (real `milk` machine install) + `matingbench` (`dildo` cycle); pens:
+  `machine` breaking-saddle (`dildo`); restroom: the glory-hole `wall` is a real `dildo` install.
+  `facility_upgrade` step 1a **merges new zones + installs into existing rooms**, so older realms get
+  them too.
+- **Quota spine (`compliance.quota_status` + `quota` command + `FacilityQuotaBoard`):** what she owes
+  before rest — breeding/milk quotas + arrears, shape-tolerant (handles both breeding_quota shapes).
+  A `quota` command and a live floor board that reads the looker's own owed.
+- **Two curses (`_impose_curse`/`_tick_curses`):** laid in during deep conditioning, honored every
+  beat. `line_remembers` (a matured get sharing her room breeds its dam unprompted — the incest loop
+  self-driving) and `never_empty` (any unfilled beat spikes ache + arousal until she's filled).
+- **Two Bethany clauses:** `tithe` (a tenth of every earn skimmed to the house, honored in the earn
+  hook) and `heir` (one get per litter pulled and kept by Bethany — honored in `_mature_get`, skipped
+  by both sale paths).
+- **Live get-auctions (`_post_get_lot`/`_get_bid_step`/`_get_gavel`):** a grown get goes up as a
+  *live timed lot* players can `bid` and steal at the wire (isolated trio, reuses `_npc_bidding`/
+  `_GAVEL_COUNTDOWN`/the gallery bid path); the dam is credited her cut + made to watch, the house
+  skims, a polaroid's filed, the get removed from the roster and deleted (sold away). `_showroom`
+  posts live when a gallery is present, else the instant `_sell_get`.
+  → *Backlog:* fix the two-shape `breeding_quota` conflict (see AUDIT); live test of installs +
+  get-auction; the deferred `_drug`/item/furniture menu in `FACILITY_IDEAS.md`.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

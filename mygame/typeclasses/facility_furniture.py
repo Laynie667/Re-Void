@@ -133,3 +133,28 @@ class FacilityLedgerBoard(FacilityFurniture):
         except Exception:
             pass
         return f"{head}\n{body}{tail}"
+
+
+class FacilityQuotaBoard(FacilityFurniture):
+    """The Processing Floor's quota board — `look`/`read board` shows the looker exactly
+    what they owe before rest is permitted: breeding and milk quotas, and any arrears on
+    the marker. The number you're worked against, made legible."""
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.get_err_msg = ("It's a wall-mounted board the size of a door, lit from within. "
+                               "It isn't coming off the wall. You are, eventually, but not it.")
+
+    def get_display_desc(self, looker, **kwargs):
+        head = ("|wThe Quota Board|n — what the line is owed before rest.\n"
+                "|x" + "─" * 46 + "|n")
+        try:
+            from world.compliance import quota_status
+        except Exception:
+            return head + "\n  The board is dark."
+        lines, met = quota_status(looker)
+        if not lines:
+            return head + "\n  |xNo quota set against you yet. It fills in fast.|n"
+        foot = ("|g  Quotas met — rest permitted until the next is set.|n" if met
+                else "|r  Behind. The line does not stop, and rest is not yet yours.|n")
+        return head + "\n" + "\n".join(lines) + "\n" + foot

@@ -1097,6 +1097,37 @@ class CmdRecords(Command):
 ALL_FACILITY_VERBS.append(CmdRecords)
 
 
+class CmdQuota(Command):
+    """
+    What you owe before you're allowed rest — your quotas and arrears.
+
+    Usage:
+        quota          — your breeding / milk quota and any debt on the marker
+    """
+    key           = "quota"
+    aliases       = ["owed", "due"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.compliance import quota_status
+        except Exception:
+            caller.msg("|xNo quota on file.|n")
+            return
+        lines, met = quota_status(caller)
+        if not lines:
+            caller.msg("|xNo quota set against you — yet. The board fills in fast.|n")
+            return
+        head = "|W── WHAT YOU OWE ──|n"
+        foot = ("|g  All quotas met. Rest is permitted — until the board sets the next.|n" if met
+                else "|r  Behind. The line does not stop for it, and rest is not yet yours.|n")
+        caller.msg(head + "\n" + "\n".join(lines) + "\n" + foot)
+
+ALL_FACILITY_VERBS.append(CmdQuota)
+
+
 class CmdTab(Command):
     """
     Your tab — the debt the house is carrying against you, if any.

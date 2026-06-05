@@ -39,6 +39,31 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **The works, batch 1: quota spine, real installs, curses, clauses, live get-auctions.**
+  **Real room installs (data-driven):** floor gains automated `milkstall` (milk mechanic) + a
+  `matingbench` (dildo); pens gains a `machine` breaking-saddle (dildo); restroom's glory-hole `wall`
+  is now a real `dildo` install. `facility_upgrade` gained a **zone-merge step (1a)** so existing
+  realms pick these up, not just fresh builds. **Quota spine:** `compliance.quota_status` (shape-
+  tolerant — handles both breeding_quota shapes, milk, arrears; tested), the `quota` command, and a
+  `FacilityQuotaBoard` furniture on the floor (built + migrated). **Two curses:** `_impose_curse`
+  (laid in during deep conditioning) + `_tick_curses` honored every beat — `line_remembers` (a matured
+  get in the room breeds its dam unprompted) and `never_empty` (unfilled beats spike ache + arousal).
+  **Two Bethany clauses:** `tithe` (10% of every earn skimmed to the house, honored in the earn hook)
+  and `heir` (one get per litter pulled and kept by Bethany; honored in `_mature_get`, skipped by
+  `_sell_get`). **Live get-auctions:** `_post_get_lot`/`_get_bid_step`/`_get_gavel` — an isolated
+  timed trio that puts a grown get on the block as a live lot players can `bid` and steal at the wire;
+  `_showroom` posts live when a gallery's present, else the instant `_sell_get`. All new flags in the
+  reset spec. Compile + brace-scan clean; quota shape-tolerance tested. ⏳ **Needs a live test** (the
+  new installs, the get-auction delay/charge path, curse honoring on a running cycle).
+- ⚠ **CONFLICT (catalogued): two `breeding_quota` shapes.** `binding_effects`/`compliance`/
+  `gang_breeding.quota_met` use `{species: {current, required}}`; `facility_script._choose_destination`
+  reads `{species: int}` (does `int(v)` on the value, which would raise on a dict). They don't crash
+  today because the realm path seeds the int shape, but `quota_met` returns False against the int
+  shape and `_choose_destination` would error on the dict shape. `quota_status` is written to tolerate
+  both. **Fix owed:** pick one shape (recommend `{sp:{current,required}}`) and adapt
+  `_choose_destination` + the seeders. Not yet done — flagged for a dedicated pass.
+
+
 - 🟢 **The Records Hall & The Ledger (big themed pass).** Built #1 + #2 plus a connected bundle.
   **Records Hall:** a real 14th realm room (`records` in `realm_build.py`) — lineage wall, open
   ledger, appraisal mirror + cataloguing stool (real `seat` mechanic install); data-driven so both

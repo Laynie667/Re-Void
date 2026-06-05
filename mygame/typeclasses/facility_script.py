@@ -793,6 +793,35 @@ _LEDGER_TATTOO = [
     "a tidy itemised tattoo along her hip, headed OUTPUT / GET / VALUE — {total} get, {price} on "
     "the block — the body keeping its own books now, legible to anyone who turns her to read it",
 ]
+# ── Curses: standing afflictions that bite every applicable beat ──
+_CURSE_LINE_INSTALL = [
+    "Deep in a conditioning session they lay a curse into {t} they call |wthe line remembers|n: "
+    "her own grown get will know her on sight as the thing they were made on, and take her for it. "
+    "From now on, any of her matured offspring sharing her room will mount and breed their dam "
+    "without prompting — the lineage made compulsive, the incest loop now self-driving.",
+]
+_CURSE_EMPTY_INSTALL = [
+    "They press a curse into {t} called |wnever empty|n: a body taught that hollow is wrong. From "
+    "now on, any beat she's left unfilled and unplugged, the ache climbs and the arousal with it "
+    "until something — anyone, anything — is back inside her. She will seek being filled the way "
+    "lungs seek air, and the seeking never fully stops.",
+]
+_CURSE_LINE_BEAT = [
+    "One of {t}'s own grown get is in the room, and the curse takes — it knows her, crosses to her, "
+    "and mounts its dam without a flicker of anything but recognition, breeding her because she is "
+    "the thing it was bred to breed. The line remembers, and closes on her again.",
+    "Her matured get scents her and the compulsion fires on both sides: it climbs onto its mother "
+    "and ruts her open, seating deep, putting the next generation back into the womb it came out of. "
+    "Nobody ordered it. The curse did. The curse always will.",
+]
+_CURSE_EMPTY_BEAT = [
+    "The empty hours bite: {t} is unfilled, and the curse makes the hollow unbearable — a deep wrong "
+    "ache blooming through her holes, her hips already shifting to seek anything that would stop it. "
+    "She'll take the next thing offered gratefully, just to not be empty.",
+    "Nothing is in her and the curse reads that as an alarm — arousal spiking, need climbing, {t} "
+    "rubbing herself open on the air and the furniture, hunting the fullness that's the only thing "
+    "that quiets it. Empty is a wound now. They made sure of it.",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -2833,6 +2862,65 @@ class FacilityScript(DefaultScript):
                                   f"facility's mark, hers — and signs the ownership the one way "
                                   f"she never delegates.|n")
 
+    # ── Curses: installed afflictions honored every applicable beat ──
+    def _impose_curse(self, room, target, t):
+        """Lay one of the standing curses into her if she hasn't got it yet. Installed
+        during conditioning; honored thereafter by _tick_curses. Reset clears the flags."""
+        pool = []
+        if not getattr(target.db, "curse_line_remembers", False):
+            pool.append("line")
+        if not getattr(target.db, "curse_never_empty", False):
+            pool.append("empty")
+        if not pool:
+            return
+        which = random.choice(pool)
+        if which == "line":
+            target.db.curse_line_remembers = True
+            room.msg_contents("|M" + random.choice(_CURSE_LINE_INSTALL).format(t=t) + "|n")
+        else:
+            target.db.curse_never_empty = True
+            room.msg_contents("|M" + random.choice(_CURSE_EMPTY_INSTALL).format(t=t) + "|n")
+        try:
+            from world.gang_breeding import record_mark
+            record_mark(target, f"a curse-sigil set into her — '{which}', a standing affliction "
+                        f"the facility laid in and does not intend to lift", mode="on")
+        except Exception:
+            pass
+
+    def _tick_curses(self, char, t, cond):
+        """Each beat, the standing curses that apply bite. Defensive throughout."""
+        try:
+            room = char.location
+            # 'the line remembers' — a matured get in the room breeds its dam unprompted.
+            if getattr(char.db, "curse_line_remembers", False) and room:
+                roster = set(getattr(char.db, "offspring_roster", None) or [])
+                get_here = [o for o in room.contents
+                            if getattr(o, "dbref", None) in roster
+                            and getattr(o.db, "matured", False)]
+                if get_here and random.random() < 0.5:
+                    try:
+                        from world.gang_breeding import animal_holes, gang_inseminate
+                        holes = [z for z in animal_holes(char).values() if z]
+                        if holes:
+                            gang_inseminate(char, random.choice(holes), contributors=1,
+                                            fluid_type="semen", species="bethany")
+                    except Exception:
+                        pass
+                    room.msg_contents("|r" + random.choice(_CURSE_LINE_BEAT).format(t=t) + "|n")
+            # 'never empty' — left unfilled, the ache and arousal climb until she's filled.
+            if getattr(char.db, "curse_never_empty", False):
+                plugged = bool(getattr(char.db, "pen_plugged", None))
+                if not plugged and random.random() < 0.6:
+                    try:
+                        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+                        ensure_arousal_script(char)
+                        add_arousal(char, 10.0 + cond * 0.05)
+                    except Exception:
+                        pass
+                    char.msg("|m  " + random.choice(_CURSE_EMPTY_BEAT).format(t=t) + "|n")
+        except Exception:
+            pass
+
     # ── The Records Hall: catalogued, totted up, made to know her number ──
     def _records_hall(self, room, target, t, cond):
         """She's sat at the appraisal mirror and read off the ledger — her own account,
@@ -2900,6 +2988,14 @@ class FacilityScript(DefaultScript):
          "No covering yourself. I like to be able to see what I own, all of it, whenever I glance over the file."),
         ("line",      "You are bred by my line and mine alone — my get, in you, forever.",
          "The animals are for quota. You I keep for me. It'll be my eyes looking up at you out of every litter from now on."),
+        ("tithe",     "A tenth of everything you earn is mine, off the top, forever.",
+         "Every credit your body makes, a piece comes to me before it's even yours. You'll fund me "
+         "with your own milk and never miss it — that's ownership, sweetheart: I don't take what you "
+         "have, I take what you make."),
+        ("heir",      "One in every litter is mine to keep and name. My blood, kept back.",
+         "The rest go to quota and the block. But one from each drop I pull out and keep — named, "
+         "mine, raised to my hand. Your line forks into my house now, a child at a time, and you "
+         "make them for me."),
     ]
 
     def _impose_clause(self, room, target, t):
@@ -2945,6 +3041,10 @@ class FacilityScript(DefaultScript):
                 target.db.anti_clothing_active = True
             elif key == "line":
                 target.db.bethany_line_only = True
+            elif key == "tithe":
+                target.db.bethany_tithe = True
+            elif key == "heir":
+                target.db.bethany_heir = True
             elif key == "ledger":
                 # Her account is now Bethany's leash: a standing debt-bond she serves with
                 # her body. Seeds a marker against her and inks the ledger-tattoo.
@@ -3210,9 +3310,15 @@ class FacilityScript(DefaultScript):
         """Posed on the block, appraised aloud, bid on through the glass, and — when
         the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her).
         Some visits it's not her on the block but her own grown get, cashed out."""
-        # The lineage gets sold too: now and then the lot is her get, not her.
-        if random.random() < 0.4 and self._sell_get(room, target, t):
-            return
+        # The lineage gets sold too: now and then the lot is her get, not her. With a
+        # gallery present it goes up as a LIVE timed lot players can bid on; otherwise
+        # it's resolved instantly against the house.
+        if random.random() < 0.4:
+            gallery = self._gallery_of(room)
+            if gallery and self._post_get_lot(room, target, t):
+                return
+            if self._sell_get(room, target, t):
+                return
         price = self._appraise(target)
         target.db.body_language = "posed on the block — lit, spread, turning for the glass"
         room.msg_contents("|W" + random.choice(_SHOW_BEATS).format(t=t) + "|n")
@@ -3370,7 +3476,8 @@ class FacilityScript(DefaultScript):
         grown = []
         for ref in roster:
             o = (search_object(ref) or [None])[0]
-            if o and getattr(o.db, "matured", False) and not getattr(o.db, "sold_off", False):
+            if (o and getattr(o.db, "matured", False) and not getattr(o.db, "sold_off", False)
+                    and not getattr(o.db, "bethany_heir", False)):  # heirs are kept, never sold
                 grown.append((ref, o))
         if not grown:
             return False
@@ -3497,6 +3604,133 @@ class FacilityScript(DefaultScript):
             ok, _bal = house_debit(owner, bounty, f"Get bounty paid — gen-{gen} {sp} matured.")
             if ok:
                 add_credits(owner, bounty, f"Get bounty — your gen-{gen} {sp} matured and paid out.")
+        except Exception:
+            pass
+
+    # ── Live get auctions: a grown get on the timed block, bid on by real players ──
+    def _post_get_lot(self, room, dam, t):
+        """Put one of the dam's matured get up as a LIVE, timed lot — players can `bid`
+        it through the gallery and steal it at the wire; resolves in `_get_gavel`. Returns
+        True if one was posted. Isolated from her own auction so it can't disturb it."""
+        try:
+            from evennia.utils import delay
+        except Exception:
+            try:
+                from evennia.utils.utils import delay
+            except Exception:
+                return False
+        from evennia import search_object
+        grown = []
+        for ref in list(getattr(dam.db, "offspring_roster", None) or []):
+            o = (search_object(ref) or [None])[0]
+            if (o and getattr(o.db, "matured", False) and not getattr(o.db, "sold_off", False)
+                    and not getattr(o.db, "bethany_heir", False)
+                    and not getattr(o.db, "auction_open", False)):
+                grown.append(o)
+        if not grown:
+            return False
+        get = random.choice(grown)
+        sp  = getattr(get.db, "species", "get")
+        gen = int(getattr(get.db, "generation", 1) or 1)
+        try:
+            if get.location != room:
+                get.move_to(room, quiet=True)
+        except Exception:
+            pass
+        price = self._appraise_get(get, dam)
+        get.db.auction_open  = True
+        get.db.auction_floor = price
+        get.db.high_bid = 0
+        get.db.high_bidder = None
+        get.db.high_bidder_id = None
+        get.db.get_lot_dam = dam.id
+        gn = get.db.rp_name or get.key
+        open_line = (f"|W*** GET LOT OPEN — {t}'s own gen-{gen} {sp} on the block. Floor "
+                     f"|w{price:,}|W. Bid live; the hammer falls shortly. ***|n")
+        room.msg_contents(open_line)
+        gallery = self._gallery_of(room)
+        if gallery:
+            gallery.msg_contents(open_line + f" |c(|wbid {gn.split()[0].lower()}|c)|n")
+        try:
+            delay(20, self._get_bid_step, get, room, 1)
+            delay(45, self._get_bid_step, get, room, 2)
+            delay(65, self._get_bid_step, get, room, 3)
+            delay(80, self._get_gavel,    get, room)
+        except Exception:
+            get.db.auction_open = False
+            return False
+        dam.msg("  |m" + random.choice(_RECORDS_DEGRADE).format(t=t) + "|n")
+        return True
+
+    def _get_bid_step(self, get, room, stage):
+        try:
+            if not get or not get.pk or not getattr(get.db, "auction_open", False):
+                return
+            rm = room if (room and room.pk) else get.location
+            self._npc_bidding(rm, get, int(getattr(get.db, "auction_floor", 0) or 0))
+            if rm:
+                rm.msg_contents(_GAVEL_COUNTDOWN[max(0, min(stage, 3))].format(
+                    t=get.db.rp_name or get.key))
+        except Exception:
+            pass
+
+    def _get_gavel(self, get, room):
+        try:
+            if not get or not get.pk or not getattr(get.db, "auction_open", False):
+                return
+            get.db.auction_open = False
+            from evennia import search_object
+            dam = (search_object("#%d" % int(getattr(get.db, "get_lot_dam", 0) or 0))
+                   or [None])[0]
+            rm  = room if (room and room.pk) else get.location
+            sp  = getattr(get.db, "species", "get")
+            gen = int(getattr(get.db, "generation", 1) or 1)
+            high  = int(getattr(get.db, "high_bid", 0) or 0)
+            who   = getattr(get.db, "high_bidder", None)
+            price = max(high, int(getattr(get.db, "auction_floor", 0) or 0))
+            buyer = who or random.choice([b for b in _NPC_BIDDERS if b != "Bethany"])
+            bid_id = getattr(get.db, "high_bidder_id", None)
+            if high and bid_id:
+                pb = (search_object("#%d" % int(bid_id)) or [None])[0]
+                if pb and pb is not get:
+                    try:
+                        from world.economy import spend_credits
+                        ok, _b = spend_credits(pb, price, allow_debt=True,
+                                               reason=f"Purchase — gen-{gen} {sp} get at the gavel.")
+                        pb.msg(f"|R{price:,} scrip — the gen-{gen} {sp} is yours.|n")
+                    except Exception:
+                        pass
+            tname = (dam.db.rp_name or dam.key) if dam else "the dam"
+            if rm:
+                rm.msg_contents("|R" + random.choice(_GET_SALE).format(
+                    t=tname, sp=sp, gen=gen, buyer=buyer, price=f"{price:,}") + "|n")
+            if dam and getattr(dam.db, "facility_active", False):
+                try:
+                    from world.economy import add_credits, skim
+                    add_credits(dam, max(50, price // 10),
+                                f"Breeder's cut — your gen-{gen} {sp} get sold live to {buyer}.")
+                    skim(dam, price, f"House cut — live sale of gen-{gen} {sp} get to {buyer}.")
+                except Exception:
+                    pass
+                try:
+                    from world.gang_breeding import record_mark
+                    record_mark(dam, f"a sale record — her gen-{gen} {sp} get sold live on the "
+                                f"block to {buyer}, {price:,}", mode="on")
+                except Exception:
+                    pass
+                self._file_polaroid(dam, "get", f"her gen-{gen} {sp} get (live lot)", price, buyer)
+                roster = list(getattr(dam.db, "offspring_roster", None) or [])
+                if get.dbref in roster:
+                    roster.remove(get.dbref)
+                    dam.db.offspring_roster = roster
+                self._try_reinvest(dam)
+            try:
+                get.delete()
+            except Exception:
+                try:
+                    get.location = None
+                except Exception:
+                    pass
         except Exception:
             pass
 
@@ -3997,6 +4231,9 @@ class FacilityScript(DefaultScript):
         add_conditioning(target, gain, source="cell")
         if cond >= 40:
             self._reinforce(room, target, t)
+        # Deep in the cell, the standing curses get laid in — slow-burn, gated on depth.
+        if cond >= 70 and random.random() < 0.12:
+            self._impose_curse(room, target, t)
         room.msg_contents("|m" + random.choice(_DEGRADE_LINES).format(t=t) + "|n")
 
 
@@ -4176,13 +4413,21 @@ class RealmCycleScript(FacilityScript):
         # Process just performed — scrip she earns off her own yield and never gets to
         # spend on the door. (The OOC floor never touches this; see world/economy.py.)
         try:
-            from world.economy import earn, add_credits
+            from world.economy import earn, add_credits, EARN, spend_credits, house_credit
             earn(char, phase)   # unknown phases fall back to the 'cycle' rate
             mb = int(getattr(char.db, "milk_bonus", 0) or 0)   # high-draw cups upgrade
             if phase == "milk" and mb:
                 add_credits(char, 12 * mb, "Yield bonus — high-draw cups, extra output metered.")
+            # Bethany's tithe clause: a tenth of the beat's earn, off the top, to the house.
+            if getattr(char.db, "bethany_tithe", False):
+                tithe = max(1, int(EARN.get(phase, EARN["cycle"]) * 0.10))
+                ok, _b = spend_credits(char, tithe, "Tithe — a tenth off the top, to Bethany.")
+                if ok:
+                    house_credit(char, tithe, "Bethany's tithe — skimmed off her earnings.")
         except Exception:
             pass
+        # Curse honoring — the two standing curses bite every beat they apply.
+        self._tick_curses(char, t, cond)
         self.db.phase_index = idx + 1
 
     def _choose_destination(self, char, rooms):
@@ -4311,6 +4556,21 @@ class RealmCycleScript(FacilityScript):
                         f"closes on her a little tighter.|n")
                 # A standing bounty on her get pays out of the treasury on each maturation.
                 self._pay_get_bounty(char, sp, gen)
+                # Bethany's 'heir' clause: she pulls one from the litter and keeps it as hers.
+                if getattr(char.db, "bethany_heir", False) and random.random() < 0.5:
+                    o.db.bethany_heir = True
+                    try:
+                        from world.gang_breeding import record_mark
+                        record_mark(char, f"her gen-{gen} {sp} get pulled and kept by Bethany — "
+                                    f"named, hers, raised to her hand (the heir clause)", mode="on")
+                    except Exception:
+                        pass
+                    if where:
+                        where.msg_contents(f"|MBethany walks the row and lifts one of {tname}'s "
+                                           f"grown {sp} get out of the line herself — this one she "
+                                           f"keeps, names, and raises to her own hand. The heir "
+                                           f"clause, collected: a child of the line forked off into "
+                                           f"her house.|n")
         char.db.offspring_roster = roster
 
     def _drag(self, char, dest, t):
