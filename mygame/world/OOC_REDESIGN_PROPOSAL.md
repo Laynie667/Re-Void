@@ -22,7 +22,53 @@ unpuppets to the account level.** Good — that means the *mechanic* is fine; it
 
 ---
 
-## Proposal — three safe phases
+## Where things actually live (and your keepers are safe)
+
+I traced the three you named — **none of them are wisp/account flavour; they're all
+character-level and untouched by any OOC rework:**
+
+| Thing | Lives in | Level | Verdict |
+|---|---|---|---|
+| **`sheet`** | `character_commands.py` (`CmdSheet`) | character | ✅ **Keep, untouched** |
+| **`portrait`** | `character_commands.py` (`CmdSetPortrait`) | character | ✅ **Keep, untouched** |
+| **say/pose mood-colour** | `rp_commands._mood_color(char)` reads `char.db.mood` via `MOOD_COLOR_MAP` (`social_commands`) | character | ✅ **Keep, untouched** |
+
+So the per-player colour on your say/pose text comes from the **character's** `db.mood`, *not*
+the account's `wisp_mood`. The account has its *own* separate `wisp_mood`/`wisp_color` that
+only tints the OOC presence text — a different thing entirely. Reworking the wisp layer can't
+touch your IC sheet, portrait, or speech colours.
+
+## Keep / cut triage for the account layer (`typeclasses/accounts.py`, 726 lines)
+
+**✅ KEEP — real account management (not "wisp flavour", genuinely useful):**
+- `consent_flags`, `consent_grants` (account-level consent)
+- `block_list`, `friends`, `alert_on_friends`
+- `adult_verified` / `adult_verified_at` (gating)
+- `mail_inbox`
+- `channel_colors`, `muted_channels`, `dnd`, `highlight_keywords`, `output_filters`,
+  `custom_prompt`
+- `tutorial_stage` / `tutorial_complete`, `discoveries` (onboarding)
+
+**✂ CUT / SIMPLIFY — the over-built "wisp-as-a-creature" cosmetics (the part that "barely
+worked"):**
+- `wisp_size`, `wisp_movement`, `wisp_signature`, `wisp_sound`, `wisp_ambient_pool`,
+  `wisp_haunt`, `wisp_revealed_to`, `wisp_name_display`, `custom_wisp_name` — the ethereal-
+  creature dressing. Little/none of it pays off.
+- `wisp_location`, `wisp_visible`, `wisp_preference` — the "your OOC self wanders the grid as
+  a visible presence" idea. This is the bit that didn't work; OOC should be a menu/account
+  screen, not a roaming grid entity. **Strongest cut candidates.**
+- `wisp_mood`, `wisp_color`, `wisp_desc` — reduce to a **single OOC note + colour** (or drop
+  entirely), since the *character* mood already colours all your IC text. Only keep what tints
+  OOC-channel/presence text, if you want that at all.
+
+**Net:** keep the account doing real account things (consent/block/friends/mail/channels/
+verification/onboarding); strip the "wisp is a little ghost that drifts the map" layer; and
+let `ooc` simply mean "you're at the account screen." That alone removes most of the
+"barely worked" surface area, and it can't affect sheet / portrait / mood-colour.
+
+---
+
+## Original three-phase plan
 
 ### Phase 1 — reskin "wisp" → plain OOC (zero structural risk)
 Keep the unpuppet→account mechanic **exactly as is**. Change only the *flavour text* the
