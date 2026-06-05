@@ -492,9 +492,10 @@ class CmdProcess(Command):
       process <subject> [action]
 
     Actions: breed (use a hole), milk, dose (experimental drug), pierce, ring,
-             latex (seal as a drone), grow (force udder growth), condition,
-             punish, reward, beg (make her beg), appraise, buy (claim her),
-             inspect.  Default is 'breed'.
+             milkport, oneway (one-way ring), cowset (heavy cow piercings),
+             feed (force-feed her ports), latex (seal as a drone), grow (force
+             udder growth), condition, punish, reward, beg (make her beg),
+             appraise, buy (claim her), inspect.  Default is 'breed'.
 
     The subject must be in the facility (it's their opt-in). Everything you do
     drives the real systems — real deposits, real milking, real conditioning.
@@ -664,6 +665,41 @@ class CmdProcess(Command):
                 try: fs._made_to_beg(room, target, t)
                 except Exception: pass
             caller.msg(f"|mYou make {t} beg for it.|n")
+
+        elif action in ("milkport", "milkports", "ports"):
+            if fs:
+                try: fs._proc_milk_port(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou fit {t} with milk-ports.|n")
+
+        elif action in ("oneway", "gaugering", "gaugerings", "ringopen"):
+            if fs:
+                try: fs._proc_oneway(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou fit {t} with a one-way ring.|n")
+
+        elif action in ("cowset", "cow", "tag"):
+            if fs:
+                try: fs._proc_cowset(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou ring {t} out as a cow.|n")
+
+        elif action in ("feed", "forcefeed", "pump"):
+            import random as _r2
+            try:
+                from typeclasses.facility_implants import MilkPortItem
+                port = next((o for o in target.contents if isinstance(o, MilkPortItem)
+                             and o.db.installed_on_char == target), None)
+                if not port:
+                    fs and fs._proc_milk_port(room, target, t)
+                    port = next((o for o in target.contents if isinstance(o, MilkPortItem)), None)
+                if port:
+                    msg = port.feed(_r2.uniform(300, 700), fluid="semen")
+                    room.msg_contents(f"|r{msg}|n")
+                else:
+                    caller.msg(f"|x{t} has no milk-ports to feed.|n")
+            except Exception:
+                caller.msg(f"|x{t} has no milk-ports to feed.|n")
 
         else:
             caller.msg("|xUnknown action. Try: breed / milk / dose / pierce / ring / latex / "

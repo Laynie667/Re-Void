@@ -1694,7 +1694,7 @@ class FacilityScript(DefaultScript):
               "solvent", "cumslut"]
     _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
                    "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood",
-                   "latex", "udder", "rings"]
+                   "latex", "udder", "rings", "cowset", "oneway"]
 
     def _dose(self, room, target, t):
         room.msg_contents("|G" + random.choice(_DRUG_BEATS).format(t=t) + "|n")
@@ -1976,12 +1976,54 @@ class FacilityScript(DefaultScript):
 
     def _proc_milk_port(self, room, target, t):
         self._boost_production(target, 4.0)
-        target.db.lactation_locked = True   # re-plumbed: she leaks on command, always on
+        # Install the REAL milk-port item — creates/uses a 'nipples' zone wired to
+        # the ducts, tracks nipple length/girth, and can be force-fed for inflation.
+        try:
+            from evennia import create_object
+            from typeclasses.facility_implants import MilkPortItem
+            if not (((getattr(target.db, "zones", None) or {}).get("nipples") or {})
+                    .get("mechanics", {}) or {}).get("milk_port"):
+                create_object(MilkPortItem, key="surgical milk ports").install(target, "nipples")
+        except Exception:
+            target.db.lactation_locked = True
         self._mark(target, "surgical milk ports set under each areola — permanent")
         room.msg_contents(
             f"|GA milking port is surgically set under each of {t}'s areolae — clean valves her "
-            f"body is re-plumbed around, that she'll leak from on command for the rest of the term. "
-            f"(permanent — production up, lactation locked on)|n")
+            f"body is re-plumbed around, wired into the ducts, that she'll leak from on command "
+            f"and that anything can be fed back up into. (permanent milk-port item — nipple zone, "
+            f"force-feedable)|n")
+
+    def _proc_oneway(self, room, target, t):
+        # A real one-way gauging ring on a hole — everything in, nothing out.
+        try:
+            from evennia import create_object
+            from typeclasses.facility_implants import GaugeRingItem
+            from world.gang_breeding import animal_holes
+            zone = animal_holes(target).get("anus") or animal_holes(target).get("pussy")
+            create_object(GaugeRingItem, key="one-way gauging ring").install(target, zone)
+        except Exception:
+            return self._proc_ring_fit(room, target, t)
+        room.msg_contents(
+            f"|GA one-way gauging ring is locked into {t} — the hole cranked open around steel "
+            f"and fitted with an inward valve membrane: it takes everything pushed in and seals "
+            f"shut against anything leaving. Whatever's put in her now stays in, held by the "
+            f"fitting, kept full. (one-way ring item — traps loads)|n")
+
+    def _proc_cowset(self, room, target, t):
+        try:
+            from evennia import create_object
+            from typeclasses.facility_implants import CowRingSet
+            done = create_object(CowRingSet, key="cow piercing set").install(target)
+        except Exception:
+            done = []
+        if not done:
+            return self._proc_rings(room, target, t)
+        room.msg_contents(
+            f"|GThey ring {t} out as livestock in a single sitting — {', '.join(done)} — brass "
+            f"and steel through nose and nipples and clit and ears, a numbered tag punched in and "
+            f"a little udder-bell hung to ring when she's used. Heavily pierced, tagged, and led "
+            f"by the nose now: a dairy cow in hardware as well as function. (full cow piercing "
+            f"set — real piercings + herd tag)|n")
 
     def _proc_tail(self, room, target, t):
         target.db.pet_type = target.db.pet_type or "puppy"

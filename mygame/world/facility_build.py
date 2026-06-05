@@ -782,6 +782,15 @@ def run_facility_reset(caller, purge=False):
     caller.db.sale_price = None
     caller.db.offspring_roster = None
     caller.db.latex_sealed = False
+    # Strip any item-created zones (nipples/nose/ears/cervix) left behind.
+    try:
+        _zz = dict(getattr(caller.db, "zones", None) or {})
+        for _zn in list(getattr(caller.db, "facility_created_zones", None) or []):
+            _zz.pop(_zn, None)
+        caller.db.zones = _zz
+        caller.db.facility_created_zones = None
+    except Exception:
+        pass
     # drop the installed 'mind' zone (its monitor object is removed via facility_items)
     try:
         _z = dict(getattr(caller.db, "zones", None) or {})

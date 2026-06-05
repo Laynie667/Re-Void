@@ -1861,11 +1861,13 @@ def force_clear(owner):
               "suggestibility", "intake_suggestibility", "docility"):
         try: setattr(d, k, 0)
         except Exception: pass
-    # drop the installed 'mind' zone entirely (the monitor object is deleted below)
+    # drop the installed 'mind' zone + any item-created zones (nipples/nose/ears/…)
     try:
         z = dict(getattr(d, "zones", None) or {})
-        if "mind" in z:
-            z.pop("mind", None); d.zones = z
+        for zn in ["mind"] + list(getattr(d, "facility_created_zones", None) or []):
+            z.pop(zn, None)
+        d.zones = z
+        d.facility_created_zones = None
     except Exception: pass
     # -> False / ""
     for k in ("orgasm_denial", "exhibition_active", "self_cmds_locked", "endcycle_blocked",
