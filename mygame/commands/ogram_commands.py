@@ -61,6 +61,30 @@ _SERAPHINE_ARRIVALS = [
         "through the space as though she owns it. |wSeraphine|n. She says your name "
         "— or doesn't — and produces what she was sent to deliver."
     ),
+    (
+        "|wSeraphine|n arrives mid-laugh at some private joke she does not share, "
+        "crimson and warm and entirely composed, her tail curling once around her "
+        "ankle like a cat settling. She holds the Ogram a beat longer than she needs "
+        "to before she lets you take it — just to watch you reach."
+    ),
+    (
+        "There is a whisper of silk and smoke, and |wSeraphine|n is leaning against "
+        "the nearest surface as though she has been there an hour. \"For you,\" she "
+        "says, in a voice like a hand trailed down a spine, and offers the sealed "
+        "Ogram between two crimson fingers."
+    ),
+    (
+        "|wSeraphine|n crosses the room with the unhurried confidence of a woman who "
+        "has read what she carries and judged none of it — her horns low, her tail "
+        "high, her smile the kind that has heard your secrets and kept them only "
+        "because keeping them is more fun. The Ogram changes hands."
+    ),
+    (
+        "She comes in on a draught of something floral and faintly wicked. "
+        "|wSeraphine|n. Crimson, poised, her eyes already on yours as if the message "
+        "were a formality and you were the actual delivery. She presses the Ogram "
+        "into your palm and lets her fingers rest there a moment too long."
+    ),
 ]
 
 # Calix — the masculine courier.
@@ -91,6 +115,30 @@ _CALIX_ARRIVALS = [
         "A tiefling man with broad shoulders and the careful gravity of someone "
         "who moves through the world without breaking things places what he carries "
         "before you. |wCalix|n. He does not explain himself. He doesn't need to."
+    ),
+    (
+        "|wCalix|n ducks slightly under the threshold and straightens, charcoal-dark "
+        "and unhurried, the ram horns catching the light as he inclines his head. He "
+        "sets the Ogram down with the deliberate care of a man who has carried "
+        "fragile things across worse ground, and steps back to wait."
+    ),
+    (
+        "The room seems smaller once |wCalix|n is in it. He says nothing — he rarely "
+        "does — only meets your eyes once, level and unreadable, and extends the "
+        "sealed Ogram in one broad, scarred hand. Whatever it says, his face will "
+        "not tell you."
+    ),
+    (
+        "|wCalix|n arrives the way weather does: without announcement, impossible to "
+        "argue with. Deep charcoal skin, ram's horns, a stillness that fills the "
+        "space. He offers what he was sent to bring, waits the precise length of "
+        "courtesy, and is clearly prepared to wait far longer if he must."
+    ),
+    (
+        "A single heavy knock, though there was no door — just |wCalix|n, broad and "
+        "charcoal and patient, announcing himself the only way he cares to. He holds "
+        "the Ogram out, his expression the flat professional calm of a man who has "
+        "delivered worse news to harder people and felt nothing either time."
     ),
 ]
 
@@ -129,6 +177,34 @@ _VESPER_ARRIVALS = [
         "don't entirely make sense. They extend the Ogram. Their expression "
         "suggests they are thinking something very specific and will not be "
         "sharing it."
+    ),
+    (
+        "You do not hear |wVesper|n arrive so much as notice, belatedly, that the "
+        "quiet has acquired a shape. Opalescent, ambiguous, eyes drifting from silver "
+        "toward something violet and back, they hold the Ogram out at exactly the "
+        "moment you think to look for it — as though they had been waiting for the "
+        "thought itself."
+    ),
+    (
+        "|wVesper|n is simply present, the way a reflection is present — there, exact, "
+        "and somehow not quite accountable to the room around it. Their horns shift "
+        "at the edges of seeming. They say nothing, place the sealed Ogram in your "
+        "hands with cool deliberation, and watch you with an interest that has no "
+        "obvious bottom."
+    ),
+    (
+        "The lamplight bends a little wrong, and then |wVesper|n is standing in it — "
+        "opalescent skin, unreadable mouth, eyes the colour of a decision not yet "
+        "made. They offer the Ogram without a word and tilt their head a fraction, "
+        "studying your face as if your reaction were the message they were truly "
+        "sent to collect."
+    ),
+    (
+        "A hush arrives first, and |wVesper|n inside it — elegant, undisclosed, "
+        "their swept-back horns catching light that doesn't seem to come from "
+        "anywhere. They press the Ogram into your hands, hold the contact a beat "
+        "past comfort, and are already turning to leave before you can ask the "
+        "question forming behind your teeth."
     ),
 ]
 

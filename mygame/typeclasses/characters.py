@@ -665,6 +665,15 @@ class Character(ObjectParent, DefaultCharacter):
                     "Type |wchargen|n to see what to fill in."
                 )
 
+        # If they were cut off mid-edit, the editor cmdset is persistent and still
+        # loaded — remind them they're in it, so input doesn't vanish silently.
+        if self.db._editor_target is not None:
+            try:
+                from world.text_editor import editor_reminder
+                editor_reminder(self)
+            except Exception:
+                pass
+
 
     def at_pre_unpuppet(self, account=None, session=None, **kwargs):
         """

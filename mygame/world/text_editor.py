@@ -252,7 +252,8 @@ class CmdEditorCmd(Command):
     key = ":done"
     aliases = [
         ":save",
-        ":cancel",
+        ":cancel", ":quit", ":exit", ":q", ":abort", ":bye",
+        ":x",
         ":show",
         ":preview", ":p",
         ":add", ":a",
@@ -268,6 +269,12 @@ class CmdEditorCmd(Command):
         sub = self.cmdstring.lstrip(":").lower()
         rest = (self.args or "").strip()
         caller = self.caller
+
+        # Exit synonyms — so nobody is ever trapped for want of the exact word.
+        if sub in ("quit", "exit", "q", "abort", "bye"):
+            sub = "cancel"
+        elif sub == "x":
+            sub = "done"
 
         if sub == "done":
             buf = caller.db._editor_buffer or []
@@ -377,8 +384,9 @@ class CmdEditorCmd(Command):
             f"  |w:show|n                — preview the buffer\n"
             f"  |w:clear|n               — erase everything\n"
             f"  |w:save|n                — save without exiting\n"
-            f"  |w:done|n                — save and exit\n"
+            f"  |w:done|n  |w:x|n             — save and exit\n"
             f"  |w:cancel|n              — exit without saving\n"
+            f"    |x(also: |w:quit|x |w:exit|x |w:q|x |w:abort|x all exit without saving)|n\n"
             f"  |w:help|n  |w:?|n            — this help\n"
             f"{sep}\n"
             f"|wColor codes (Evennia markup):|n\n"
@@ -407,9 +415,25 @@ class CmdEditorDefault(Command):
     key = "_default"
     locks = "cmd:all()"
 
+    # Lone words that almost always mean "get me out of here", not "add this line".
+    _EXIT_WORDS = {"q", "quit", "exit", "cancel", "done", "abort", "bye",
+                   "stop", "leave", "end", ":wq", ":q!", ":q"}
+
     def func(self):
         raw = self.raw_string.strip()
         if not raw:
+            return
+        # Rescue the classic "I don't know how to leave" trap: don't silently swallow
+        # a lone exit-ish word as a line — point at the real exit instead.
+        if raw.lower() in self._EXIT_WORDS:
+            self.caller.msg(
+                "|y[Editor]|n You're in the text editor — that's why normal commands "
+                "aren't responding.\n"
+                "  |w:done|n save & exit   |w:cancel|n discard & exit   |w:show|n preview"
+                "   |w:help|n all commands\n"
+                f"|x  (To add the literal word \"{raw}\" as a line instead, type "
+                f"|w:add {raw}|x.)|n"
+            )
             return
         buf = self.caller.db._editor_buffer or []
         buf.append(raw)
@@ -474,10 +498,26 @@ def _enter_editor(caller, target_display, setter_key, initial_lines=None,
 
     lines.append(sep)
     lines.append(
-        "|xType lines to add them. Editor commands start with ':' — "
-        "type |w:help|n or |w:?|n to see all commands.|n"
+        "|xType your text — each line you enter is added to the draft. Commands start "
+        "with a colon:|n\n"
+        "|w  :done|n save & exit   |w:cancel|n discard & exit   |w:show|n preview   "
+        "|w:help|n all commands"
     )
     caller.msg("\n".join(lines))
+
+
+def editor_reminder(caller):
+    """Re-announce an active editor — call on reconnect/login so a player who got cut
+    off mid-edit isn't silently trapped (input would otherwise vanish into the buffer)."""
+    if getattr(caller.db, "_editor_target", None) is None:
+        return
+    buf = caller.db._editor_buffer or []
+    caller.msg(
+        f"\n|y[ You're still in the text editor: {caller.db._editor_target} ]|n\n"
+        f"|x  {len(buf)} line(s) in your draft. Normal commands won't work until you "
+        f"leave it.|n\n"
+        f"|w  :show|n view draft   |w:done|n save & exit   |w:cancel|n discard & exit"
+    )
 
 
 def _apply_setter(caller, setter_key, target_display, lines):
