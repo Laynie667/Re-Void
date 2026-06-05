@@ -79,6 +79,15 @@ _ROOMS = [
      "to the pens. A wall-ledger charts the generations. It is the most domestic room in the "
      "facility and by some distance the most obscene: a mother kept to feed and breed her own "
      "replacements, deeper every generation."),
+    ("office",       "Bethany's Office",
+     "|wA plush, private, off-the-books office that looks nothing like the rest of the place — "
+     "warm lamplight, a deep carpet, a big leather chair behind a bigger desk.|n It is the only "
+     "room here that is somebody's rather than the facility's, and that somebody is Bethany. A "
+     "padded throne-rig stands to one side, plumbed and strapped, angled at the desk so she can "
+     "work while it works whatever's locked in it. A low kennel-bed sits by her chair. One wall "
+     "is a trophy shelf of tags, brands, and framed lineage charts — her favourites, her "
+     "personal line. This is where the ones she buys off the block come to belong to her, and "
+     "where the cruelty stops being procedure and starts being personal."),
     ("deepstock",    "The Facility — Deep Stock (Sub-Level P)",
      "|wThe deepest room: a vast, dim, climate-controlled vault, silent but for the hum of "
      "machines and the soft tick of fluid lines.|n Rows of upright pods line the walls, each "
@@ -101,6 +110,7 @@ _EXITS = {
     "showroom":     ["floor"],
     "deepstock":    ["floor"],
     "nursery":      ["floor", "pens"],
+    "office":       ["floor", "lobby"],
 }
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
@@ -656,6 +666,75 @@ _ROOM_ZONES = {
             ],
             ambient=["A higher-graded lot is led past to the block, and the gallery stirs."]),
     },
+    "office": {
+        "throne": _z(
+            "A padded throne-rig stands by the desk — part chair, part machine: restraints at "
+            "wrist, ankle, throat and waist, a descending milking head, a piston breeding-arm, a "
+            "dosing line and a conditioning hood, all of it angled so Bethany can run it from her "
+            "seat without looking up from her paperwork.",
+            summary="Bethany's personal throne-rig",
+            study=[
+                "It does everything the whole upstairs does — milks, breeds, doses, conditions — "
+                "in one chair, on one dial, under one hand. She had it built so she'd never have "
+                "to choose: she just turns it all on at once and watches over the rim of her "
+                "coffee while it works you through every system she owns.",
+                "The straps are worn soft and dark in the shape of the ones she's kept here "
+                "before you. The throne faces her desk, not the door, because the point of it "
+                "isn't display. The point is that she gets to watch your face while it happens.",
+            ],
+            handle={"throne": "|xYou touch the throne-rig — warm leather and cold steel, every "
+                            "strap and arm and line of it built to hold one body and do "
+                            "everything to it at once, at her dial, for as long as she feels "
+                            "like working at her desk.|n"}),
+        "desk": _z(
+            "A big leather-topped desk dominates the room, stacked with files — and one drawer "
+            "left pointedly open, full of personal tools: a branding iron with her own initial, "
+            "a locking collar, vials in her own handwriting.",
+            summary="Bethany's desk and personal drawer",
+            study=[
+                "The files are all on one subject at a time — her current favourite, worked up "
+                "in obsessive detail, every measurement and milestone in her own hand. When she "
+                "tires of one the file goes to the trophy shelf and a new one opens. Yours is on "
+                "top right now.",
+                "The open drawer is the personal kit: a brand that reads |wB|x, not the "
+                "facility's mark; a heavy collar with a tag blank but for a hook; vials labelled "
+                "in looping cursive — DEVOTION, FORGET, MINE. She likes to do the important bits "
+                "herself.",
+            ],
+            handle={"desk": "|xYou rest a hand on the desk and the open drawer is right there — "
+                            "her brand, her collar, her own labelled vials — the tools she keeps "
+                            "for the parts of owning you she won't delegate.|n"}),
+        "trophy": _z(
+            "One wall is a trophy shelf — rows of tags and brands and framed lineage charts, "
+            "each a subject she's kept and finished, her personal line laid out like a hunter's "
+            "wall.",
+            summary="Bethany's trophy shelf of past favourites",
+            study=[
+                "Every tag is a person she owned to the end. The lineage charts branch and curl "
+                "and all run back to her hand on the leash. She keeps them where the current one "
+                "can see them — so you learn exactly what belonging to Bethany means, and how it "
+                "ends, and how little say you'll have in either.",
+                "There's a blank frame at the end of the row, glass clean, waiting. A little "
+                "brass plate under it is already engraved. You don't have to be told whose name.",
+            ],
+            ambient=["A draught stirs the framed charts on the trophy wall, and one tag turns on "
+                     "its hook with a tiny sound."]),
+        "kennel": _z(
+            "A low padded kennel-bed sits beside the big leather chair, a short chain and a water "
+            "bowl beside it — where she keeps her favourite when she wants it close and quiet.",
+            summary="a kennel-bed at the foot of her chair",
+            study=[
+                "It's positioned so whatever's chained to it spends the day at her feet while she "
+                "works — used absently, footrested on, fed by hand or not at all, kept like a dog "
+                "she's fond of and never once like a person she remembers was one.",
+                "The chain is short. The reach of it ends exactly at her chair. That's the whole "
+                "geography of being hers: everything you can reach is her, and there's nothing "
+                "else within the chain.",
+            ],
+            handle={"kennel": "|xYou touch the kennel-bed at the foot of her chair — soft, warm, "
+                            "a short chain and a water bowl, fitted for a favourite kept close: "
+                            "the comfortable, total smallness of belonging to her.|n"}),
+    },
     "nursery": {
         "cribs": _z(
             "Rows of straw-bedded pens and cribs hold her get at every stage — squirming "
@@ -882,6 +961,20 @@ _ROOM_NPCS = {
          "occasional rap of impatient knuckles, the shuffle of someone stepping up. You never "
          "see a face. That is the entire point of the wall."),
     ],
+    "office": [
+        ("Bethany", "attendant",
+         "Bethany, at home and in charge — out from behind the intake desk and behind her own "
+         "instead, jacket off, sleeves up, the futa cock she never bothers hiding tenting her "
+         "slacks as she works a file. This is her room and her rules and her favourite, and the "
+         "warmth in her smile here is somehow worse than the cruelty downstairs: it's the warmth "
+         "of someone genuinely fond of a thing she owns completely and intends to keep until it's "
+         "used all the way up."),
+        ("a former favourite", "resident",
+         "Chained to the kennel-bed at the foot of her chair, a hollowed-out thing that was a "
+         "resident once and is now just Bethany's — placid, branded with a |wB|n, gone soft and "
+         "wordless and content in the small reach of its chain. It watches you arrive with no "
+         "alarm at all. It is what she's making of you, sitting at her feet."),
+    ],
     "nursery": [
         ("the matron", "attendant", "A brisk, motherly woman in a stained apron who runs the "
          "Nursery the way a farmer runs a calf-shed — fond of the stock, sentimental about none "
@@ -960,6 +1053,10 @@ _ROOM_MECHANICS = {
         "frame": ("restrain", 1, "the nursing frame",
                   "The nursing frame locks you kneeling and presented, tits clamped to the feed-lines, facing the pens. You stay, and you feed them, and you watch them grow toward you."),
     },
+    "office": {
+        "throne": ("restrain", 1, "Bethany's throne-rig",
+                   "The throne-rig takes your wrists, ankles, waist and throat and seats you facing her desk. Milking head, breeding arm, dosing line, conditioning hood — all of it on her dial. You wait, held, for whatever she feels like running while she works."),
+    },
     "deepstock": {
         "pods": ("restrain", 1, "your maintenance pod",
                  "The pod closes around you, latex to the lines, and holds you upright and still in the humming dark. There is nothing to do now. There is nothing asked. You are stored."),
@@ -1011,6 +1108,12 @@ _ROOM_AMBIENT = {
         "|xA bid-light winks red behind the glass; somewhere a number that is you goes up.|n",
         "|xThe auctioneer's patter drifts over — warm, practiced, talking up the lot to the dark.|n",
         "|xA buyer leans close to the one-way glass, studies the lot a long moment, and sits back.|n",
+    ],
+    "office": [
+        "|xBethany turns a page in your file, makes a note, and adjusts a dial without looking up.|n",
+        "|xThe favourite chained at her feet shifts, settles, and goes still again with a soft contented sound.|n",
+        "|xA tag turns on its hook on the trophy wall. The blank frame at the end waits.|n",
+        "|xShe sips her coffee and watches you over the rim, fond and unhurried and entirely in charge.|n",
     ],
     "nursery": [
         "|xA litter mewls and snuffles in the straw. Somewhere a milk-line draws and fills a trough.|n",
@@ -1323,6 +1426,52 @@ _AUCTIONEER_TRIGGERS = {
         "most.\"", "say"),
 }
 
+# Bethany in her office — possessive, fond, total. Warm ownership, which is worse.
+_BETHANY_OWNER_TRIGGERS = {
+    "office": ("\"My room,\" Bethany says, not looking up from your file, a fond smile playing. "
+        "\"Out from behind that desk where I have to be *professional.* In here I get to just... "
+        "have you. No schedule but mine. No processing — just keeping. You're going to like it "
+        "here, eventually. They all do. It's so much easier than being a person.\"", "say"),
+    "throne": ("She nods at the throne-rig with real affection. \"My favourite toy. Milks, breeds, "
+        "doses, conditions — all at once, all on my dial, while I get my paperwork done.\" She "
+        "pats the leather. \"Up you get. I like to watch your face while it works you. That's the "
+        "part I bought you for.\"", "emote"),
+    "collar": ("Bethany lifts the heavy collar out of her drawer and lets it swing. \"This goes "
+        "on and it doesn't come off. Not facility property — *mine*, specifically. There's a "
+        "difference and you'll feel it.\" The warmth doesn't waver. \"Hold still. Owning you "
+        "properly is the part I never delegate.\"", "emote"),
+    "brand": ("\"The facility brands its stock,\" she says, heating the little iron with the |wB|n "
+        "on it. \"I brand *mine*. Different mark, different meaning. Theirs says you're inventory. "
+        "Mine says you're loved.\" A small, terrible smile. \"By me. Which is worse, and you're "
+        "about to learn exactly how much.\"", "emote"),
+    "devotion": ("She rolls a vial labelled DEVOTION between her fingers. \"This one's my "
+        "favourite. It doesn't break you — breaking's crude. It just... reorganises you around "
+        "*me.* So that I stop being the thing that's happening to you and start being the thing "
+        "you're *for.* You'll beg me for the next dose. You'll mean it. That's the magic of it.\"",
+        "say"),
+    "forget": ("\"FORGET,\" she reads off the vial, fond. \"For when there's a you I'd rather you "
+        "didn't have anymore. A memory, a name, a person you were before me. I take it out, you "
+        "don't miss it, and there's a little more room for me.\" She taps your temple. \"I've "
+        "redecorated in here quite a bit already. You haven't noticed. That's how I know it works.\"",
+        "emote"),
+    "favourite": ("She glances at the hollowed thing chained at her feet, fond. \"That was my last "
+        "one. Lovely, by the end. No fuss left in it at all.\" Back to you, warm. \"You'll get "
+        "there. I'm very patient with my favourites. I have all the time in the world and you've "
+        "no time that isn't mine.\"", "emote"),
+    "leaving": ("Bethany actually laughs, delighted, like you've said something charming. \"Oh, "
+        "*leave.* No, sweetheart. I bought you. People don't return what they've bought; they "
+        "use it up and keep the tag.\" She pats the kennel-bed beside her chair. \"Down. You're "
+        "home. This is the last place you'll ever be, and I'll make sure it's a comfortable one.\"",
+        "emote"),
+    "love": ("\"Do I love you?\" She considers it, head tilted, genuinely. \"You know — I think I "
+        "do. The way you love a good chair, or a dog that's finally stopped barking. Completely, "
+        "and without ever once wondering what you want.\" The smile is awful and sincere. \"It's "
+        "the realest thing you'll get in here. Be grateful. Most stock just gets used.\"", "say"),
+    "help": ("\"Ask me about my office, the throne, your collar, my brand, devotion, forgetting, "
+        "or my last favourite. Or climb onto the rig and save us both the small talk. I do love "
+        "a chat, but I bought you for other things.\"", "say"),
+}
+
 # The matron runs the Nursery — farms her own get on her milk, fond and pitiless.
 _MATRON_TRIGGERS = {
     "nursery": ("\"This is where we raise your young,\" the matron says warmly, hooking a "
@@ -1485,7 +1634,7 @@ def _furnish(room, key, owner):
             # Askable NPCs — wire their conversation trees (scripted tier).
             _tree = None
             if nkey.lower() == "bethany":
-                _tree = _BETHANY_TRIGGERS
+                _tree = _BETHANY_OWNER_TRIGGERS if key == "office" else _BETHANY_TRIGGERS
             elif nkey.lower() == "the handler":
                 _tree = _HANDLER_TRIGGERS
             elif nkey.lower() == "the stockman":
@@ -1858,7 +2007,7 @@ def force_clear(owner):
     for k in ("conditioning", "arousal_floor", "stim_per_tick", "bladder_ml", "arousal",
               "defiance", "compliance_threshold", "compliance_streak", "processing_tier",
               "facility_standing", "drug_dependence", "milk_baseline_ml",
-              "suggestibility", "intake_suggestibility", "docility"):
+              "suggestibility", "intake_suggestibility", "docility", "bethany_devotion"):
         try: setattr(d, k, 0)
         except Exception: pass
     # drop the installed 'mind' zone + any item-created zones (nipples/nose/ears/…)
@@ -1874,7 +2023,7 @@ def force_clear(owner):
               "navigation_locked", "anti_clothing_active", "conditioning_permanent",
               "freedom_forfeited", "facility_signed", "facility_active", "perpetual_heat",
               "cum_craving", "lactation_locked", "body_processing_locked", "aura_dimmed",
-              "bethany_busy", "bethany_owned", "latex_sealed"):
+              "bethany_busy", "bethany_owned", "latex_sealed", "bethany_branded"):
         try: setattr(d, k, False)
         except Exception: pass
     for k in ("orgasm_release_word", "required_honorific", "facility_grade", "facility_brand"):

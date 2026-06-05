@@ -79,7 +79,7 @@ def gang_inseminate(target, zone_name, contributors=3,
     # deposit during her fertile window may catch; the pregnancy system then carries
     # it to a real gestation and delivery. (Falls back to the abstract progress
     # counter only if the pregnancy module is unavailable.)
-    if species in ("hound", "bull", "boar", "stallion"):
+    if species in ("hound", "bull", "boar", "stallion", "bethany"):
         try:
             from world.pregnancy import on_bred
             on_bred(target, species, generation=generation)
@@ -221,7 +221,8 @@ def quota_met(target):
                for v in quota.values())
 
 
-_OFFSPRING_TERM = {"hound": "pup", "bull": "calf", "boar": "piglet", "stallion": "foal"}
+_OFFSPRING_TERM = {"hound": "pup", "bull": "calf", "boar": "piglet", "stallion": "foal",
+                   "bethany": "futa daughter"}
 _OFFSPRING_VARIANT = [
     "leggy", "oversized", "pale", "dark-coated", "twin-born", "heavy-shouldered",
     "quick", "feral", "golden-eyed", "silver-marked", "violet-eyed", "runtish-but-vicious",

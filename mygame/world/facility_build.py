@@ -782,6 +782,8 @@ def run_facility_reset(caller, purge=False):
     caller.db.sale_price = None
     caller.db.offspring_roster = None
     caller.db.latex_sealed = False
+    caller.db.bethany_devotion = 0.0
+    caller.db.bethany_branded = False
     # Strip any item-created zones (nipples/nose/ears/cervix) left behind.
     try:
         _zz = dict(getattr(caller.db, "zones", None) or {})

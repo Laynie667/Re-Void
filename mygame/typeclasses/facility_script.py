@@ -453,6 +453,60 @@ _KNOTTRAIN_BEATS = [
     "until the lock lets go. She's measured after: looser, readier, trained.",
 ]
 
+# ── Bethany's Office: kept, owned, made hers ──
+_OFFICE_BEATS = [
+    "Bethany has you brought to her office and straps you into the throne herself, unhurried, "
+    "humming — then settles behind her desk with a file and a coffee and turns the whole rig on "
+    "at once. Cups on your tits, the breeding-arm seating deep, the dosing line opening, the "
+    "hood lowering — every system the upstairs runs, all at her dial, while she does her "
+    "paperwork and watches your face over the rim of her cup. \"Don't mind me. I like company "
+    "while I work.\"",
+    "\"There's my girl,\" Bethany murmurs, locking you into the throne-rig at her elbow. She "
+    "doesn't even watch the straps — she knows them by heart. A flick of one dial and the rig "
+    "milks and breeds and doses and conditions you all together, and she goes back to her file, "
+    "reaching over now and then to adjust you the way you'd absently pet a dog you're fond of.",
+    "Off the line and into the office: Bethany seats you in the throne facing her desk, where "
+    "she can see you, and runs you through everything at once on a single lazy dial. It isn't "
+    "processing anymore — there's no schedule, no grade, no point but that she enjoys having you "
+    "here, worked and helpless and hers, while she gets on with her day.",
+]
+_OFFICE_BREED = [
+    "She comes around the desk when the mood takes her, frees that heavy futa cock, and breeds "
+    "you herself — slow, possessive, fond — pumping her own line into you because the get with "
+    "her eyes are the ones she keeps. \"Mm. Let's make some more of you. I do love a big family.\"",
+    "Bethany mounts you in the throne and takes you with her own cock, unhurried and total, "
+    "filling you with her seed and her ownership at once. \"The facility breeds you for quota,\" "
+    "she breathes. \"I breed you because you're *mine* and I feel like it. Feel the difference?\"",
+]
+_OFFICE_OWN = [
+    "She locks the heavy personal collar around your throat — hers, not the facility's — and "
+    "tucks the tag against your pulse. \"There. Now everyone who reads it knows you're spoken "
+    "for. By me. Specifically.\"",
+    "She feeds you a dose from a vial in her own hand, labelled in cursive. \"DEVOTION, sweetheart. "
+    "It doesn't break you. It just files you around me, so I stop being a thing that happens to "
+    "you and start being the thing you're *for.* You'll thank me. You'll beg me for the next one.\"",
+    "She unchains you only to move you to the kennel-bed at her feet, clips the short chain, and "
+    "goes back to work with one hand resting idly in your hair. \"Stay. Good. The whole world's "
+    "right here at the end of that chain now, and the whole world is me. Isn't that simpler.\"",
+    "\"FORGET,\" she says softly, pressing a different vial to your lips, and names something — a "
+    "person, a year, a want — and takes it. \"You won't miss it. There's more room for me now. "
+    "I've been redecorating in here for a while. You never noticed. That's how I know it takes.\"",
+]
+_OFFICE_DEGRADE = [
+    "There's no grade to climb in here, no quota, no end you're working toward — just her, and "
+    "the chair, and the slow contented certainty of being owned by someone who is genuinely fond "
+    "of you and will never once wonder what you want. It is, horribly, the safest you've felt "
+    "since you came down the waystone.",
+    "She isn't breaking you. Breaking would mean she still saw a person to break. She's just "
+    "*keeping* you — pleased, possessive, patient — and the part of you that should scream at "
+    "that has gone warm and quiet and started, God help you, to settle into the small reach of "
+    "her chain.",
+    "You catch yourself listening for her voice, leaning into the hand in your hair, wanting the "
+    "next dose she decides to give you. That's the devotion taking. That's what she bought. Not "
+    "your holes — those came free with the lot. *This.* The wanting her. She's so pleased with "
+    "how it's coming along.",
+]
+
 # ── Deep Stock: the Perfected terminus ──
 _DEEP_BEATS = [
     "{t} is walked to her pod and sealed in — latex to the lines, ports aligned, the lid drawn "
@@ -2340,6 +2394,69 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    # ── Bethany's Office: she keeps you, on her throne, and makes you hers ──
+    def _devote(self, target, amount, room=None):
+        """Reorganise her around Bethany specifically — devotion, not just breaking.
+        Installs Bethany-keyed triggers, a craving for her, a designation, and at the
+        deep end a personal brand. The owner arc."""
+        dev = float(getattr(target.db, "bethany_devotion", 0) or 0) + amount
+        target.db.bethany_devotion = dev
+        try:
+            from world.binding_effects import install_trigger
+            install_trigger(target, "good girl for bethany", response="kneel", strength=1,
+                            mantra="i'm bethany's")
+            if dev >= 30:
+                install_trigger(target, "bethany owns you", response="blank", strength=1,
+                                permanent=(dev >= 60))
+        except Exception:
+            pass
+        if dev >= 25 and getattr(target.db, "designation", None) != "Bethany's favourite":
+            target.db.designation = "Bethany's favourite"
+        if dev >= 50 and not getattr(target.db, "bethany_branded", False):
+            target.db.bethany_branded = True
+            try:
+                from world.gang_breeding import record_mark
+                record_mark(target, "branded with a personal B — Property of Bethany, not the "
+                            "facility: owned, specifically, and fond of it", mode="on", prefer="ass")
+            except Exception:
+                pass
+            if room:
+                room.msg_contents(f"|RBethany heats her own little iron and presses the |wB|R "
+                                  f"into {target.db.rp_name or target.name} herself — not the "
+                                  f"facility's mark, hers — and signs the ownership the one way "
+                                  f"she never delegates.|n")
+
+    def _office(self, room, target, t, cond):
+        """Bethany has bought you and pulled you off the line into her office. The
+        throne does everything at once on her dial while she works and watches — and
+        every visit reorganises you a little more thoroughly around her."""
+        room.msg_contents("|y" + random.choice(_OFFICE_BEATS).format(t=t) + "|n")
+        # The throne runs every system at once, hands-free, on her dial.
+        self._do_milk(room, target, t)
+        if random.random() < 0.5:
+            self._grow_udder(room, target, t)
+        if random.random() < 0.6:
+            self._dose(room, target, t)
+        # She breeds you herself, with her own cock — her line, which joins the roster.
+        try:
+            from world.gang_breeding import animal_holes
+            holes = [z for z in animal_holes(target).values() if z]
+            if holes and random.random() < 0.6:
+                self._breed_one(room, target, random.choice(holes), "bethany", cond)
+                room.msg_contents("|r" + random.choice(_OFFICE_BREED).format(t=t) + "|n")
+        except Exception:
+            pass
+        # Devotion + the occasional possessive set-piece (collar, brand, a soft cruelty).
+        self._devote(target, random.uniform(2.0, 4.0), room=room)
+        if random.random() < 0.4:
+            room.msg_contents("|M" + random.choice(_OFFICE_OWN).format(t=t) + "|n")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 2.0 + cond * 0.006, source="bethany")
+        except Exception:
+            pass
+        target.msg("  |m" + random.choice(_OFFICE_DEGRADE).format(t=t) + "|n")
+
     # ── Deep Stock: the Perfected end-state, sealed and kept on the lines ──
     def _deepstock(self, room, target, t, cond):
         """Grade-gated terminus: she's sealed into her pod and run on the lines —
@@ -3038,6 +3155,9 @@ class RealmCycleScript(FacilityScript):
             elif phase == "nurse":
                 room.msg_contents(f"\n|w━━━━ THE NURSERY ━━━━|n")
                 self._nurse(room, char, t, cond)
+            elif phase == "owned":
+                room.msg_contents(f"\n|w━━━━ BETHANY'S OFFICE ━━━━|n")
+                self._office(room, char, t, cond)
             elif phase == "display":
                 room.msg_contents(f"\n|w━━━━ OUTPUT & DISPLAY ━━━━|n")
                 self._dairy(room, char, t, cond)
@@ -3134,6 +3254,15 @@ class RealmCycleScript(FacilityScript):
         # Once she's dropped get, she's brought to the Nursery to feed them her milk.
         if getattr(char.db, "offspring_roster", None):
             add("nursery", "nurse", 2)
+
+        # Once Bethany owns her, Bethany seizes the cycle — she's mostly kept in the
+        # office now, pulled off the line into private use, the more so the more devoted.
+        if getattr(char.db, "bethany_owned", False) and "office" in avail:
+            dev = float(getattr(char.db, "bethany_devotion", 0) or 0)
+            weights.clear()   # her schedule overrides the facility's
+            add("office", "owned", 8 + min(dev / 10.0, 8))
+            add("pens", "breed", 2)      # she still lets the line have you sometimes
+            add("nursery", "nurse", 2 if getattr(char.db, "offspring_roster", None) else 0)
 
         # Perfected stock (standing >= 1800) is mostly kept down in Deep Stock now —
         # the loop's terminus, weighted to dominate once she's finished.

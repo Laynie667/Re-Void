@@ -29,7 +29,7 @@ CONCEIVE_CHANCE = 0.55         # per stud-breeding while fertile and womb-free
 SUPERFETATION   = 0.10         # chance a breeding adds to the litter while already gravid
 
 _LITTER = {"hound": (3, 7), "bull": (1, 1), "boar": (4, 8),
-           "stallion": (1, 1), "contributor": (1, 2)}
+           "stallion": (1, 1), "contributor": (1, 2), "bethany": (1, 2)}
 
 # (min fraction of term, stage key, belly desc)
 _BELLY_STAGES = [
