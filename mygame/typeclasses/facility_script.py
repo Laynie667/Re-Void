@@ -709,6 +709,34 @@ _NPC_OUTBID_PC = [
     "|cYour bid is beaten: {who} goes |w{amt}|c. Raise it, or lose the lot.|n",
     "|c{who} outbids you at |w{amt}|c, unbothered, like reaching for a different drink.|n",
 ]
+# ── Selling her own get on the block (the lineage cashed out) ──
+_GET_SALE = [
+    "They don't bring {t} up today — they bring one of her get. Her own {sp}, gen {gen}, grown out "
+    "of the litters she dropped, is walked onto the block in her place and posed under the lights. "
+    "{t} watches her own child appraised, bid on, and knocked down to {buyer} for |w{price}|R — and "
+    "the house credits her a breeder's cut, as if being paid makes selling her young any cleaner.",
+    "A {sp} of hers — gen {gen}, her blood, weaned on her own milk in the nursery — is set on the "
+    "turntable and sold over her head to {buyer} for |w{price}|R. {t}'s line is being cashed out one "
+    "head at a time, and her account ticks up a breeder's percentage of the child she'll never see "
+    "again. Incest bred them; commerce disperses them; she is paid for both.",
+    "The gavel falls on {t}'s own get — {sp}, gen {gen} — sold to {buyer}, |w{price}|R, tagged and "
+    "led off to a buyer in the dark. She made it, carried it, dropped it, fed it; the facility grew "
+    "it and now sells it, and drops a finder's cut into the account it keeps in her name. Her "
+    "offspring are inventory, and she is their unpaid, then barely-paid, supplier.",
+    "One of her proven get goes up — gen {gen} {sp}, out of her own bred-back line — and the booths "
+    "take it fast: |w{price}|R to {buyer}. {t} is made to watch the whole sale, her child turned and "
+    "spread and knocked down, and then handed a number: her cut, logged, as though the money could "
+    "ever be the point. The point is that she watched.",
+]
+# The spend-sink beats — relief bought with the scrip her own body earned
+_BOUGHT_REST = [
+    "You spend down the account your body filled and the line lets you sit — one whole beat unworked, "
+    "bought and paid for with milk and get. The rest is real. So is knowing you paid the house for "
+    "the privilege of a pause in what the house does to you.",
+    "Scrip clears and the handlers walk past your station without stopping. A beat off the line, "
+    "purchased. You earned it draw by draw and covering by covering, and you just gave it back to "
+    "them for a minute of nothing — and the minute of nothing is the sweetest thing you own.",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -3034,7 +3062,11 @@ class FacilityScript(DefaultScript):
 
     def _showroom(self, room, target, t, cond):
         """Posed on the block, appraised aloud, bid on through the glass, and — when
-        the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her)."""
+        the gavel falls — sold. Sale is in-fiction (the OOC floor still frees her).
+        Some visits it's not her on the block but her own grown get, cashed out."""
+        # The lineage gets sold too: now and then the lot is her get, not her.
+        if random.random() < 0.4 and self._sell_get(room, target, t):
+            return
         price = self._appraise(target)
         target.db.body_language = "posed on the block — lit, spread, turning for the glass"
         room.msg_contents("|W" + random.choice(_SHOW_BEATS).format(t=t) + "|n")
@@ -3150,6 +3182,71 @@ class FacilityScript(DefaultScript):
         target.db.high_bid = None
         target.db.high_bidder = None
         target.db.high_bidder_id = None
+
+    def _appraise_get(self, o, dam):
+        """Price one of her grown get from its generation/species and the dam's grade."""
+        gen = int(getattr(o.db, "generation", 1) or 1)
+        sp  = getattr(o.db, "species", "get")
+        dg  = getattr(dam.db, "facility_grade", None)
+        di  = self._GRADE_ORDER.index(dg) if dg in self._GRADE_ORDER else 0
+        base = 800 + 300 * gen + 150 * di
+        if sp == "bethany":
+            base = int(base * 1.5)   # Bethany's own line sells dear
+        return int(base * random.uniform(0.85, 1.3))
+
+    def _sell_get(self, room, target, t):
+        """Put one of her matured get on the block in her place — appraised, bid up by
+        the house, sold, and a breeder's cut dropped into the dam's account while she's
+        made to watch. Pulls it out of the bred-back roster. Returns True if one sold."""
+        try:
+            from evennia import search_object
+        except Exception:
+            return False
+        roster = list(getattr(target.db, "offspring_roster", None) or [])
+        grown = []
+        for ref in roster:
+            o = (search_object(ref) or [None])[0]
+            if o and getattr(o.db, "matured", False) and not getattr(o.db, "sold_off", False):
+                grown.append((ref, o))
+        if not grown:
+            return False
+        ref, o = random.choice(grown)
+        sp  = getattr(o.db, "species", "get")
+        gen = int(getattr(o.db, "generation", 1) or 1)
+        price = self._appraise_get(o, target)
+        for _ in range(random.randint(1, 3)):     # a quick house bidding climb
+            price += random.randint(max(50, price // 12), max(120, price // 5))
+        buyer = random.choice([b for b in _NPC_BIDDERS if b != "Bethany"] + ["Bethany", "Bethany"])
+        room.msg_contents("|R" + random.choice(_GET_SALE).format(
+            t=t, sp=sp, gen=gen, buyer=buyer, price=f"{price:,}") + "|n")
+        gallery = self._gallery_of(room)
+        if gallery:
+            gallery.msg_contents(f"|RA lot off {t}'s line: a gen-{gen} {sp} of hers, knocked down "
+                                 f"to {buyer} for |w{price:,}|R.|n")
+        try:    # breeder's cut — she's paid for her own child
+            from world.economy import add_credits
+            add_credits(target, max(50, price // 10),
+                        f"Breeder's cut — your gen-{gen} {sp} get sold to {buyer} for {price:,}.")
+        except Exception:
+            pass
+        try:    # logged on her record as a real mark
+            from world.gang_breeding import record_mark
+            record_mark(target, f"a sale record wired to her — her gen-{gen} {sp} get sold off "
+                                f"to {buyer}, {price:,}", mode="on")
+        except Exception:
+            pass
+        if ref in roster:
+            roster.remove(ref)
+            target.db.offspring_roster = roster
+        if buyer == "Bethany":
+            target.db.bethany_owned_get = True
+        try:    # it's sold away — gone from the grid (and the bred-back loop)
+            o.delete()
+        except Exception:
+            try: o.location = None
+            except Exception: pass
+        target.msg("  |m" + random.choice(_SHOW_DEGRADE).format(t=t) + "|n")
+        return True
 
     def _made_to_beg(self, room, target, t):
         """She's made to beg — out loud, for it — and begging is the only path to the
@@ -3695,6 +3792,11 @@ class RealmCycleScript(FacilityScript):
             return   # the cycle starts only after she signs
         if getattr(char.db, "bethany_busy", False):
             return   # the line waits — processing resumes only after Bethany's done
+        # A beat off the line she bought with her own scrip (commissary 'rest').
+        if int(getattr(char.db, "line_pass", 0) or 0) > 0:
+            char.db.line_pass = int(char.db.line_pass) - 1
+            char.msg("|G  " + random.choice(_BOUGHT_REST) + "|n")
+            return
 
         t    = char.db.rp_name or char.name
         cond = float(getattr(char.db, "conditioning", 0) or 0)
@@ -3835,9 +3937,13 @@ class RealmCycleScript(FacilityScript):
             if rk in avail and w > 0:
                 weights[(rk, phase)] = weights.get((rk, phase), 0.0) + float(w)
 
-        # Slipped stock gets sent down to be punished.
+        # Slipped stock gets sent down to be punished — unless she's bought a reprieve
+        # (commissary 'mercy') with the scrip her own body earned.
         if getattr(char.db, "freedom_forfeited", False):
-            add("pigsty", "punish", 7)
+            if int(getattr(char.db, "punish_shield", 0) or 0) > 0:
+                char.db.punish_shield = int(char.db.punish_shield) - 1
+            else:
+                add("pigsty", "punish", 7)
 
         # Owed milk — always a pull to the floor, more if she's switched permanently on.
         add("floor", "milk", 4)

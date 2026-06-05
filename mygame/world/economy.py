@@ -177,6 +177,19 @@ def statement(char, n=12):
     return "\n".join(lines)
 
 
+def totals(char):
+    """(earned, spent, net) across the whole ledger on file — for the office books."""
+    _ensure(char)
+    earned = spent = 0
+    for e in (char.db.facility_ledger or []):
+        d = int(e.get("delta", 0))
+        if d >= 0:
+            earned += d
+        else:
+            spent += -d
+    return earned, spent, earned - spent
+
+
 def clear_wallet(char):
     """Wipe the wallet + ledger. Called by the reset path when she's purged out — the
     account dies with the rest of the facility state. (Not the OOC exit itself; this is

@@ -78,8 +78,28 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `spend_credits`/`can_afford` are never on the escape path — the door is free at any balance, even in
   debt; the module docstring states this as an invariant. Wallet keys (`facility_credits`/
   `facility_ledger`/`high_bidder_id`) are in the reset spec, so a purge wipes the account with the
-  rest. → *Backlog:* a **stock spend-sink** (buy relief/earn-back via `compliance.py`) so her own
-  account closes the loop; **selling the get** on the block; live test of the gavel charge path.
+  rest.
+- **The commissary — her spend-sink (`buy`/`commissary` command):** closes the stock side of the
+  economy. She spends the scrip her own body earned on the only things it buys *inside* the Process,
+  each routed through a real system: **relief** (350 → `compliance._grant_climax`, a granted climax
+  that deepens conditioning — the leash she pays for), **rest** (250 → `db.line_pass`, consumed in
+  `at_repeat` to skip a beat off the line), **ease** (180 → drops `db.arousal`), **mercy** (300 →
+  clears defiance + sets `db.punish_shield`, consumed in `_choose_destination` to buy off the next
+  few sty trips). Stock-only; the help + every line repeats that none of it buys the door — the OOC
+  exit is always free, even in debt.
+- **Selling the get (`_sell_get`/`_appraise_get` + `_GET_SALE`):** the lineage cashed out. ~40% of
+  showroom visits the lot on the block is one of her **matured get** (a real `FacilityScion` from
+  `offspring_roster`), not her — appraised off generation/species + dam's grade, bid up by the house,
+  sold to an NPC buyer (or Bethany), then **a breeder's cut is credited to the dam** (paid for her
+  own child) and logged as a real `record_mark`; the get is pulled from the bred-back roster and
+  `delete()`d (sold away). She's made to watch. Incest breeds them, commerce disperses them, she's
+  paid for both.
+- **The office books (`vault`/`books` command):** Bethany's accounting. Shows the full statement +
+  `economy.totals` (paid in / spent / on the books) and a Bethany-voiced reckoning of what she spent
+  the stock's own earnings on ("on you, on more of you"). Office-gated for stock (the number is hers
+  out on the line) — closes by reminding her not one credit opens the door.
+  → *Backlog:* live test of the gavel charge + get-sale (need real objects/`delay`); a real house
+  account object so Bethany's "cut" lands somewhere instead of being flavour.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

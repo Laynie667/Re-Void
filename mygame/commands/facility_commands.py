@@ -891,6 +891,136 @@ class CmdScrip(Command):
 ALL_FACILITY_VERBS.append(CmdScrip)
 
 
+class CmdBuy(Command):
+    """
+    The commissary — spend scrip on the only things it buys in here.
+
+    Usage:
+        buy             — the menu and your balance
+        buy <thing>     — pay for it now
+
+    Menu:
+        relief   a granted climax — permission, just this once
+        rest     a beat off the line, unworked
+        ease     the edge and the empty-ache taken down for now
+        mercy    buy off the next few trips to the sty
+
+    Every credit you spend here your own body earned — milked, bred, shown, sold.
+    It buys comfort inside the Process and nothing outside it. It does NOT buy the
+    door: the OOC exit (escape / force_clear / facilityreset) is always free and
+    costs nothing, at any balance — even in debt.
+    """
+    key           = "buy"
+    aliases       = ["commissary", "comfort"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    _MENU = {
+        "relief": (350, "a granted climax — permission, just this once"),
+        "rest":   (250, "a beat off the line, unworked"),
+        "ease":   (180, "the edge and the empty-ache taken down for now"),
+        "mercy":  (300, "buy off the next few trips to the sty"),
+    }
+
+    def func(self):
+        caller = self.caller
+        from world.economy import get_balance, spend_credits
+        if not (getattr(caller.db, "facility_active", False)
+                or getattr(caller.db, "facility_signed", False)):
+            caller.msg("|xThe commissary is for stock. You hold no account on the line.|n")
+            return
+        what = self.args.strip().lower()
+        if not what:
+            lines = [f"|W── COMMISSARY ──|n  |xyour scrip:|n |w{get_balance(caller):,}|n"]
+            for k, (c, desc) in self._MENU.items():
+                lines.append(f"  |w{k}|n |x({c:,})|n — {desc}")
+            lines.append("  |x(Bought with what your body earned. None of it is the door — the "
+                         "door is always free.)|n")
+            caller.msg("\n".join(lines))
+            return
+        alias = {"cum": "relief", "climax": "relief", "orgasm": "relief", "come": "relief",
+                 "pause": "rest", "sleep": "rest", "calm": "ease", "down": "ease",
+                 "spare": "mercy", "skip": "mercy"}
+        what = alias.get(what, what)
+        if what not in self._MENU:
+            caller.msg(f"|xThe commissary doesn't stock '{what}'. Try: {', '.join(self._MENU)}|n")
+            return
+        cost, _desc = self._MENU[what]
+        ok, bal = spend_credits(caller, cost, f"Commissary — {what}.")
+        if not ok:
+            caller.msg(f"|x'{what}' costs |w{cost:,}|x scrip and you have |w{bal:,}|x. Earn more "
+                       f"on the line.|n")
+            return
+
+        if what == "relief":
+            try:
+                from world.compliance import _grant_climax
+                _grant_climax(caller)
+            except Exception:
+                caller.msg("|MPermission — just this once.|n")
+            caller.msg(f"|x(— {cost:,} scrip. The orgasm your body paid for deepens the very thing "
+                       f"that owns it; Bethany keeps her cut. Balance |w{bal:,}|x.)|n")
+        elif what == "rest":
+            caller.db.line_pass = int(getattr(caller.db, "line_pass", 0) or 0) + 1
+            caller.msg(f"|GYou buy a beat off the line — the handlers will pass your station once. "
+                       f"(— {cost:,} scrip, balance |w{bal:,}|G.)|n")
+        elif what == "ease":
+            try:
+                cur = float(getattr(caller.db, "arousal", 0) or 0)
+                caller.db.arousal = max(0.0, cur - 45.0)
+            except Exception:
+                pass
+            caller.msg(f"|GThe edge comes down and the empty-ache eases — bought, not granted, and "
+                       f"only for now. (— {cost:,} scrip, balance |w{bal:,}|G.)|n")
+        elif what == "mercy":
+            caller.db.defiance = 0
+            caller.db.punish_shield = max(int(getattr(caller.db, "punish_shield", 0) or 0), 3)
+            caller.msg(f"|GYou buy off the sty — the next few slips won't send you down. "
+                       f"(— {cost:,} scrip, balance |w{bal:,}|G.)|n")
+
+ALL_FACILITY_VERBS.append(CmdBuy)
+
+
+class CmdVault(Command):
+    """
+    Bethany's books — the account she keeps on you, and what she's spent of it.
+
+    Usage:
+        vault        — the full statement plus Bethany's accounting
+
+    She keeps her ledgers in her office. As stock, you only get to see them when
+    she has you in there; the rest of the time the number is hers, not yours.
+    """
+    key           = "vault"
+    aliases       = ["books"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world.economy import statement, totals, get_balance
+        loc   = caller.location
+        stock = (getattr(caller.db, "facility_active", False)
+                 or getattr(caller.db, "facility_signed", False))
+        in_office = bool(loc and "office" in (loc.key or "").lower())
+        if stock and not in_office:
+            caller.msg("|xBethany keeps her books in her office. The account is hers out here — you "
+                       "only see what she's made of you when she has you at her desk.|n")
+            return
+        earned, spent, net = totals(caller)
+        caller.msg(statement(caller, n=25))
+        caller.msg(f"\n|M── Bethany's accounting ──|n\n"
+                   f"  |xPaid in by your body:|n |g{earned:,}|n   |xSpent:|n |r{spent:,}|n   "
+                   f"|xon the books:|n |w{get_balance(caller):,}|n\n"
+                   f"  |M\"Every figure in the black you made on your back, sweetheart — milked, "
+                   f"bred, shown, your own get sold off the block. Every figure in the red I spent, "
+                   f"on you, on more of you. I keep the books so you never wonder what you're worth: "
+                   f"exactly this — and not one credit of it opens the door. The door was always "
+                   f"free. This was never about the door.\"|n")
+
+ALL_FACILITY_VERBS.append(CmdVault)
+
+
 class CmdBid(Command):
     """
     Bid on a lot from the Buyers' Gallery.

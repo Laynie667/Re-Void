@@ -42,6 +42,7 @@ FACILITY_FLAGS = {
     "processing_tier": 0, "facility_standing": 0, "drug_dependence": 0,
     "milk_baseline_ml": 0, "suggestibility": 0, "intake_suggestibility": 0,
     "docility": 0, "bethany_devotion": 0, "cycle_day": 0,
+    "line_pass": 0, "punish_shield": 0,
 
     # --- booleans -> False ---
     "orgasm_denial": False, "exhibition_active": False, "self_cmds_locked": False,
@@ -52,7 +53,7 @@ FACILITY_FLAGS = {
     "bethany_busy": False, "bethany_owned": False, "latex_sealed": False,
     "bethany_branded": False, "bethany_collar": False, "bethany_line_only": False,
     "animal_sleeve": False, "pen_filth": False, "pen_scented": False,
-    "auction_open": False,
+    "auction_open": False, "bethany_owned_get": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "",

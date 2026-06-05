@@ -39,6 +39,20 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **Economy built out — commissary, get-sale, office books (all three).** Closed every open side
+  of the scrip loop in one pass. **(1) Commissary (`buy`):** stock spend the scrip their body earned
+  on relief (real `_grant_climax`), rest (`line_pass`, honored in `at_repeat`), ease (drops arousal),
+  mercy (`punish_shield`, honored in `_choose_destination` to buy off the sty) — every path routed
+  through a real system, every line repeating the door is still free. **(2) Selling the get
+  (`_sell_get`):** ~40% of showroom visits put one of her matured `FacilityScion` get on the block
+  instead of her — appraised, house-bid, sold, a breeder's cut credited to the dam, logged as a real
+  mark, pulled from the bred-back roster and deleted (sold away). **(3) Office books (`vault`):**
+  Bethany's accounting — full statement + `totals()` + her reckoning of what she spent the stock's
+  earnings on; office-gated for stock. **OOC floor verified:** new flags (`line_pass`/`punish_shield`/
+  `bethany_owned_get`) added to the reset spec; the commissary never touches the escape path; the door
+  is free at any balance, and every surface says so. Compile + brace-scan clean; economy logic
+  (earn/spend-gate/totals) tested standalone. ⏳ **Backlog:** live test of get-sale + gavel charge
+  (need real objects); a real house-account object so Bethany's skim lands somewhere.
 - 🟢 **The economy — scrip + ledger (`world/economy.py`).** The block finally has money under it.
   A real wallet (`db.facility_credits`) + statement (`db.facility_ledger`) on every character, with
   a clean API (`get_balance`/`add_credits`/`spend_credits`/`can_afford`/`earn`/`statement`). Stock
