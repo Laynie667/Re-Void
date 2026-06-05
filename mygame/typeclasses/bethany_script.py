@@ -48,22 +48,27 @@ def provision_bethany(npc):
                           "visibility": "look", "intimate": True,
                           "covered_by": None, "contents": []}
         npc.db.zones = zones
-    # An all-powerful, consuming facility-bred futa cock — monstrous, impossible,
-    # built not to breed her but to overwrite her. (mod_type 'penis' for mechanical
-    # compatibility; everything else is its own thing.)
+    # Her cock is a multicock — a single monstrous facility-bred futa base that
+    # splits into THREE prehensile, self-directing heads, each able to take a hole on
+    # its own, so she can fill every one of you at once and never be using just the
+    # one. Bred not to breed her so much as to OVERWRITE her, and her seed is laced.
+    npc.db.multicock = True
+    npc.db.cock_heads = 3
     try:
         cock = create.create_object(BodyModItem, key="Bethany's cock", location=npc)
         cock.db.mod_type = "penis"
-        cock.db.size = 32.0     # monumental — past anything the body should take
+        cock.db.size = 36.0     # past Architecturally Significant — Beyond Classification
         cock.db.player_desc = (
-            "a monstrous, all-consuming futa cock — far past anything the line keeps, "
-            "longer than a forearm and thicker than a wrist, dark with blood and slick "
-            "to the root, the flared head the size of a fist and weeping clear strings "
-            "before she's even touched anyone. A heavy knot the size of an apple swells "
-            "at the base. It does not look like it should fit anywhere on a person. That "
-            "is the point: it is made to fit anyway, to take whatever it's put in and "
-            "leave it permanently reshaped around the memory of it. Just the sight of it "
-            "scrambles something — the eye keeps sliding back, the mouth keeps wanting"
+            "a single monstrous futa cock at the root that splits — obscenely, impossibly — into "
+            "THREE separate prehensile heads, each one already the size of a fist, each weaving "
+            "and weeping and seeking on its own like the heads of some patient hydra. The base is "
+            "thicker than a wrist and dark with blood, the shafts longer than a forearm, and a "
+            "knot the size of an apple swells at every fork. She can seat one in your mouth, one "
+            "in your cunt, and one in your ass at the same moment and still have her hands free "
+            "for her coffee. It does not look like it should exist, let alone fit. It fits anyway, "
+            "everywhere at once, and leaves every hole permanently reshaped around the memory. "
+            "Just the sight of it scrambles something behind the eyes — they keep sliding back, "
+            "and the mouth, traitor that it is, keeps wanting"
         )
         cock.install(npc, "shaft")
     except Exception:
@@ -75,14 +80,17 @@ def provision_bethany(npc):
             k.install(npc, "shaft")
     except Exception:
         pass
-    # Real cum production — an obscene standing load she dumps until the belly swells.
+    # Real cum production — a vast standing load from balls the size of fists, dumped
+    # until the belly visibly swells. Her seed is laced: it carries the devotion.
     try:
         cum = create.create_object(ProductionItem, key="Bethany's balls", location=npc)
         cum.db.fluid_type = "semen"
-        cum.db.fluid_flavor = ("thick, hot, scalding facility seed — heavy as cream and "
-                               "wrong somehow, leaving the head swimming and the mouth craving more")
-        cum.db.base_rate_ml_per_tick = 80.0
-        cum.db.current_volume_ml = random.uniform(2500.0, 4500.0)
+        cum.db.fluid_flavor = ("thick, hot, scalding futa seed — heavy as cream and wrong "
+                               "somehow, leaving the head swimming, the body warm and agreeable, "
+                               "and the mouth craving the next load before this one's even down")
+        cum.db.base_rate_ml_per_tick = 120.0
+        cum.db.current_volume_ml = random.uniform(4000.0, 8000.0)
+        cum.db.laced = True      # her cum carries the devotion (see bethany_deposit_effect)
         if hasattr(cum, "install"):
             cum.install(npc, "shaft")
     except Exception:
@@ -91,13 +99,40 @@ def provision_bethany(npc):
     try:
         piss = create.create_object(ProductionItem, key="Bethany's bladder", location=npc)
         piss.db.fluid_type = "urine"
-        piss.db.base_rate_ml_per_tick = 15.0
-        piss.db.current_volume_ml = random.uniform(700.0, 1400.0)
+        piss.db.base_rate_ml_per_tick = 20.0
+        piss.db.current_volume_ml = random.uniform(1000.0, 1800.0)
         if hasattr(piss, "install"):
             piss.install(npc, "shaft")
     except Exception:
         pass
     npc.db.facility_anatomy = True
+
+
+def bethany_deposit_effect(target, devotion=4.0):
+    """Her cum is laced — every load she puts in carries the devotion that reorganises
+    the subject around her specifically. Routes through the realm cycle's _devote if it's
+    running (so designation/brand thresholds fire), else applies a plain bump. Also seats
+    the craving keyed to her and a little dependence on the next load."""
+    if not target:
+        return
+    applied = False
+    try:
+        from typeclasses.facility_script import RealmCycleScript
+        scr = next((s for s in target.scripts.all() if isinstance(s, RealmCycleScript)), None)
+        if scr:
+            scr._devote(target, devotion, room=target.location)
+            applied = True
+    except Exception:
+        pass
+    if not applied:
+        target.db.bethany_devotion = float(getattr(target.db, "bethany_devotion", 0) or 0) + devotion
+        try:
+            from world.binding_effects import install_trigger
+            install_trigger(target, "good girl for bethany", response="kneel", strength=1,
+                            mantra="i'm bethany's")
+        except Exception:
+            pass
+    target.db.cum_craving = True
 
 
 def _drain_shaft(npc, fluid_type):
@@ -386,6 +421,26 @@ class BethanyScript(DefaultScript):
                 pass
             char.msg(f"|G  {ml:.0f}ml of her in you, swallowed, banked, and bloating you "
                      f"tight from the inside.|n")
+        # Multicock: all three heads finish at once — she breeds every hole, for real,
+        # her own line (which joins the roster and breeds you), not just your mouth.
+        if getattr(beth.db, "multicock", False):
+            try:
+                from world.gang_breeding import animal_holes, gang_inseminate
+                bred = [z for z in animal_holes(char).values() if z]
+                for z in bred:
+                    gang_inseminate(char, z, contributors=1, fluid_type="semen", species="bethany")
+                if bred:
+                    room.msg_contents(
+                        f"|rAll three heads spurt at once — mouth, cunt, and ass flooded in the "
+                        f"same breath, {t} bred at every end by the same cock, Bethany's own line "
+                        f"pumped into all of her while she sighs and holds them all knotted.|n")
+            except Exception:
+                pass
+        # Her seed is laced — it carries the devotion that makes her yours.
+        try:
+            bethany_deposit_effect(char, devotion=random.uniform(3.0, 6.0))
+        except Exception:
+            pass
         # The cock is CONSUMING — its finish overwrites a piece of her for good:
         # a hard slug of conditioning, a Bethany-keyed trigger seated, a craving to be
         # filled, and a dependence on the next time she comes.
