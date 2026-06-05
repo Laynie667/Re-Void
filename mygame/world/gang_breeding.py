@@ -256,10 +256,11 @@ def _birth_offspring(target, species, generation=1):
     if not room:
         return
     try:
-        from typeclasses.facility_script import FacilityBeast
+        from typeclasses.facility_script import FacilityBeast, FacilityScion
         from evennia.utils import create
     except Exception:
         return
+    cls = FacilityScion if species == "bethany" else FacilityBeast
     counts = dict(getattr(target.db, "offspring_counts", None) or {})
     counts[species] = int(counts.get(species, 0)) + 1
     target.db.offspring_counts = counts
@@ -270,7 +271,7 @@ def _birth_offspring(target, species, generation=1):
     gen_tag = "" if generation <= 1 else f" (gen {generation})"
     key     = f"a {variant} {species} {term}{gen_tag}"
 
-    o = create.create_object(FacilityBeast, key=key, location=room)
+    o = create.create_object(cls, key=key, location=room)
     o.db.rp_name       = key
     o.db.facility_role = "beast"
     o.db.species       = species

@@ -102,6 +102,15 @@ def _apply_facility_title(character, standing):
             "faction": getattr(character.db, "title_faction", "") or "",
             "suffix":  getattr(character.db, "title_suffix", "") or "",
         }
+    character.db.facility_grade = name
+    # Ownership wins the suffix: if she's been bought/owned, her owner's stamp
+    # (— Bethany's / — <owner>'s) outranks the grade, so a standing tick doesn't
+    # quietly overwrite who she belongs to. The faction slot still reads property.
+    owner = getattr(character.db, "facility_owner", None)
+    if getattr(character.db, "bethany_owned", False) or owner:
+        character.db.title_faction = "of The Facility"
+        if not (getattr(character.db, "title_suffix", "") or "").endswith("'s"):
+            character.db.title_suffix = f"— {owner}'s" if owner else "— Bethany's"
+        return
     character.db.title_faction = "of The Facility"
     character.db.title_suffix  = (f"— {title}" if title else "")
-    character.db.facility_grade = name

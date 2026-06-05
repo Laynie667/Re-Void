@@ -21,13 +21,11 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 1. Conflicts
 
-- 🟡 **Title-suffix stomping.** Three systems write `db.title_suffix`: the faction grade
-  (`factions._apply_facility_title`), the sale (`_sell` / `process buy`), and Bethany's
-  ownership (`_devote`/`_mark_owned`). They all share one backup (`facility_title_backup`,
-  guarded so the *true* original is preserved), but they overwrite each other *live* — so
-  a standing-up grade tick can replace "— Bethany's" with "— Broodmare" until the next
-  ownership beat re-stamps it. *Fix idea:* an ownership-wins rule (if `bethany_owned` or
-  `facility_owner`, the grade system skips the suffix), or a priority field.
+- 🟡→✅ **Title-suffix stomping.** The faction grade, the sale, and Bethany's ownership all
+  wrote `db.title_suffix` and overwrote each other live (a grade tick could replace "—
+  Bethany's"). **Fixed:** `_apply_facility_title` now applies an **ownership-wins** rule —
+  if `bethany_owned`/`facility_owner` is set, the grade keeps the faction slot but won't
+  overwrite an owner suffix.
 - 🟡 **Installed-trigger phrases overlap staff dialogue.** `_check_installed_triggers`
   fires for ANY speaker, and some NPC trees contain words that are also common trigger
   phrases ("good girl", "present", "heel"). `ask`-ing a staffer could incidentally fire
@@ -50,10 +48,10 @@ Items get struck through / moved to "Resolved" as they're fixed.
   and a visit spawns a third transient one. In a room with two, `ask Bethany` / targeting
   multimatches. *Fix idea:* the roaming visit should reuse a single canonical Bethany
   (move her in) rather than spawn, or tag the office/intake ones distinctly.
-- 🟡 **`bethany`-line get spawn as `FacilityBeast`.** Her offspring are flavoured "futa
-  daughter" but instantiated as animal beasts (so `_provision_beast` gives them a generic
-  animal cock if they ever breed her). *Fix idea:* a small `FacilityScion` typeclass (futa
-  attendant w/ a Bethany-style cock) for `species == "bethany"`.
+- 🟡→✅ **`bethany`-line get spawn as `FacilityBeast`.** **Fixed:** new `FacilityScion`
+  typeclass (futa get, knotted flare-tipped cock) is used for `species == "bethany"`, and
+  `_provision_beast` now gives scions a real futa cock + knot — so her own line breeds her
+  back as futa, not animals.
 - 🟡 **Demoting a key staffer removes a cycle voice.** `_demote_staff` can demote the
   handler/stockman; the demoted NPC keeps its trigger tree (so `ask` still works) but
   `_drag`'s handler-attribution and `_choose_destination`'s flavour lose their actor.
@@ -101,5 +99,8 @@ state, add it here and to all three reset paths.**
 
 ---
 
-*Last build-loop pass added: office-Bethany anatomy fix, FORGET + DEVOTION drugs + the
-devotion-withdrawal ache, the flared+knotted multicock, employees-as-stock (`demote`).*
+*Loop pass 1: office-Bethany anatomy fix, FORGET + DEVOTION drugs + the devotion-withdrawal
+ache, the flared+knotted multicock, employees-as-stock (`demote`).*
+*Loop pass 2: title-suffix ownership-wins fix, `FacilityScion` (futa get), and Bethany's
+bespoke personal clauses (honorific/name/collar/crave/display/line — each a real enforced
+term, imposed one at a time in the office, logged + reset-safe).*

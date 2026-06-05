@@ -51,6 +51,22 @@ class FacilityBeast(NPC):
         self.db.facility_role = "beast"
 
 
+class FacilityScion(FacilityBeast):
+    """Bethany's own line — a futa get, not an animal. Grows up, joins the studs,
+    and breeds its own dam, the same loop the beasts run but with her eyes."""
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.species = "bethany"
+        self.db.is_offspring = True
+        self.db.physical_desc = (
+            "A futa scion of Bethany's own line — pretty and cruel-mouthed like her dam, "
+            "and hung like her too: a heavy, knotted, flare-tipped cock she never bothers "
+            "to hide. Raised on her mother's milk to breed her mother, and entirely at home "
+            "with the arrangement."
+        )
+
+
 # ── Driver ──────────────────────────────────────────────────────────────────
 # Beats are grounded: each describes something physically happening to the
 # subject right now, so the scene stays legible. One primary beat fires per
@@ -2346,14 +2362,21 @@ class FacilityScript(DefaultScript):
                               "visibility": "look", "intimate": True,
                               "covered_by": None, "contents": []}
             npc.db.zones = zones
-        size = {"hound": 7.0, "bull": 13.0, "boar": 9.0, "stallion": 15.0}.get(species, 8.0)
+        size = {"hound": 7.0, "bull": 13.0, "boar": 9.0, "stallion": 15.0,
+                "bethany": 20.0}.get(species, 8.0)
+        cock_key = "futa cock" if species == "bethany" else f"{species} cock"
         try:
-            p = create.create_object(BodyModItem, key=f"{species} cock", location=npc)
+            p = create.create_object(BodyModItem, key=cock_key, location=npc)
             p.db.mod_type = "penis"; p.db.size = size
+            if species == "bethany":
+                p.db.player_desc = ("a heavy, knotted, flare-tipped futa cock — her dam's line "
+                                    "bred true, built to put the next generation back into the "
+                                    "body it came out of")
             p.install(npc, "shaft")
         except Exception:
             pass
-        if species == "hound":
+        # Hounds and the futa scions both knot — they lock what they breed.
+        if species in ("hound", "bethany"):
             try:
                 from typeclasses.knot_item import KnotItem
                 k = create.create_object(KnotItem, key="knot", location=npc)
@@ -2540,6 +2563,58 @@ class FacilityScript(DefaultScript):
                                   f"facility's mark, hers — and signs the ownership the one way "
                                   f"she never delegates.|n")
 
+    # Bethany's bespoke clauses — the facility's contract is boilerplate; what she
+    # adds to her own property is not. Each is a real, enforced term, imposed one at a
+    # time as she keeps you, logged in db.bethany_clauses (cleared by the reset).
+    _BETHANY_CLAUSES = [
+        ("honorific", "You will address me as Mistress, and answer when I call.",
+         "Now say it. 'Yes, Mistress.' Good. You'll say it every time, or you won't be heard at all."),
+        ("name",      "Your name is mine to use or not. You answer to what I call you.",
+         "I'll decide what you're called. You don't need the old one; it kept getting in the way of what you are."),
+        ("collar",    "My collar stays on. It is not yours to question or remove.",
+         "It locks here and it locks for good. You don't get a vote on your own throat anymore — that's rather the point."),
+        ("crave",     "You will want me. Being empty of me will read as wrong.",
+         "There. Now the having-me is a need, not a thing done to you. You'll ache for it between visits. You already are."),
+        ("display",   "You stay bare and on display for me whenever I please.",
+         "No covering yourself. I like to be able to see what I own, all of it, whenever I glance over the file."),
+        ("line",      "You are bred by my line and mine alone — my get, in you, forever.",
+         "The animals are for quota. You I keep for me. It'll be my eyes looking up at you out of every litter from now on."),
+    ]
+
+    def _impose_clause(self, room, target, t):
+        log = list(getattr(target.db, "bethany_clauses", None) or [])
+        remaining = [c for c in self._BETHANY_CLAUSES if c[0] not in log]
+        if not remaining:
+            return
+        key, clause, line = random.choice(remaining)
+        log.append(key)
+        target.db.bethany_clauses = log
+        # Real enforcement per clause.
+        try:
+            if key == "honorific":
+                target.db.required_honorific = "Mistress"
+            elif key == "name":
+                if not getattr(target.db, "facility_name_backup", None):
+                    target.db.facility_name_backup = target.db.rp_name or target.name
+                target.db.designation = target.db.designation or "Bethany's favourite"
+                target.db.rp_name = target.db.designation
+            elif key == "collar":
+                target.db.bethany_collar = True
+                target.db.self_cmds_locked = True
+            elif key == "crave":
+                target.db.cum_craving = True
+            elif key == "display":
+                target.db.exhibition_active = True
+                target.db.anti_clothing_active = True
+            elif key == "line":
+                target.db.bethany_line_only = True
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|MBethany adds a line to your file in her own hand — a personal clause, not the "
+            f"facility's: |w\"{clause}\"|M — and reads it to you soft and fond as she signs it "
+            f"into you. \"{line}\"|n")
+
     def _office(self, room, target, t, cond):
         """Bethany has bought you and pulled you off the line into her office. The
         throne does everything at once on her dial while she works and watches — and
@@ -2568,6 +2643,9 @@ class FacilityScript(DefaultScript):
         self._devote(target, random.uniform(2.0, 4.0), room=room)
         if random.random() < 0.4:
             room.msg_contents("|M" + random.choice(_OFFICE_OWN).format(t=t) + "|n")
+        # And now and then she writes you a new personal clause.
+        if random.random() < 0.3:
+            self._impose_clause(room, target, t)
         try:
             from world.conditioning import add_conditioning
             add_conditioning(target, 2.0 + cond * 0.006, source="bethany")
