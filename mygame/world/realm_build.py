@@ -32,6 +32,13 @@ _ROOMS = [
      "far wall, a stack of intake forms weighted under a brand. There is one door in, and "
      "it has already closed behind you. A standing waystone glows faintly in the corner — "
      "the only obvious way anywhere, and it only answers to words it knows."),
+    ("holding",      "The Facility — Holding",
+     "|wA bare waiting room off the lobby — bolted benches, a ticket board, and one long "
+     "window of thick glass into the rooms beyond.|n This is where fresh applicants are held "
+     "before their number's called: made to sit, made to wait, and made to *watch*. The window "
+     "looks straight onto the processing floor, and the glass is not soundproof. Nobody explains "
+     "anything. They just let you see what you signed up for — or are about to — and let the "
+     "waiting do the work the paperwork hasn't yet."),
     ("floor",        "The Facility — Processing Floor",
      "|wA long low hall of padded breeding stations on a slow conveyor.|n Coiled tubing and "
      "steel fixtures hang from the walls; collection bottles rack beneath each milking rig. "
@@ -110,7 +117,8 @@ _ROOMS = [
 
 # Adjacency (non-linear): which rooms connect to which.
 _EXITS = {
-    "lobby":        ["floor"],
+    "lobby":        ["floor", "holding"],
+    "holding":      ["lobby"],
     "floor":        ["lobby", "pens", "conditioning", "dairy", "restroom", "showroom"],
     "pens":         ["floor", "pigsty"],
     "conditioning": ["floor", "dairy"],
@@ -284,6 +292,51 @@ _ROOM_ZONES = {
                     "soft, pleasant heaviness settles behind your eyes a moment later.|n"},
             ambient=["The cooler glugs and sends up a friendly string of bubbles. It is the only "
                      "kind sound in the room, and it was put here on purpose."]),
+    },
+    "holding": {
+        "window": _z(
+            "One long wall is thick glass onto the processing floor — and it is not soundproof. "
+            "Whatever's being done out there is right here at eye level, lit and close, with the "
+            "wet rhythmic sound coming through the seams.",
+            summary="a long window onto the processing floor",
+            study=[
+                "You watch the line for a while because there's nothing else to do, and that's "
+                "the trick of the room: by the time your number's called you've already seen the "
+                "whole of it, so nothing past the desk will be a surprise — only a turn.",
+                "One of the things on the line glances up, finds the glass, finds you behind it, "
+                "and holds your eye with an expression you can't read and won't forget. Then a "
+                "rig descends over her face and the moment's over, and the waiting goes on.",
+                "There's no clock in here, only the window, and the window only runs one way. You "
+                "can see exactly what's coming. You cannot see a way around it.",
+            ],
+            handle={"window": "|xYou put a hand to the cold glass and the floor is right there "
+                            "through it — close, lit, wet, ongoing — the sound of it coming "
+                            "through the seam under your palm. It does not stop because you're "
+                            "watching. Nothing here does.|n"},
+            ambient=["Through the glass, out on the floor, a rig descends, works, and rises wet. "
+                     "The sound carries.",
+                     "Someone on the line makes a noise that the glass doesn't quite hold back, "
+                     "and the benches in here go very still for a moment."]),
+        "benches": _z(
+            "Rows of bolted benches face the window, worn smooth at the front edge, a ticket "
+            "dispenser at one end and a NOW SERVING board above it that ticks too slowly.",
+            summary="bolted waiting benches facing the glass",
+            study=[
+                "The benches face the window and only the window — there's nowhere to sit that "
+                "isn't looking at the floor. You can shut your eyes. The sound's still there. "
+                "Most people stop shutting their eyes after a while; watching is easier than "
+                "imagining.",
+                "The NOW SERVING number crawls up, and every time it ticks the room flinches a "
+                "little, because each number is somebody walked through to the desk and not "
+                "walked back. Yours is on the ticket in your hand. It's close.",
+            ],
+            handle={"benches": "|xYou sit where everyone sits, on the worn front edge, facing "
+                            "the glass because the bench gives you nowhere else to face, your "
+                            "ticket number creeping closer on the board above.|n"},
+            ambient=["The NOW SERVING board ticks up one. A number is called. Someone rises and "
+                     "doesn't come back.",
+                     "A ticket slides from the dispenser and no one takes it. The number was "
+                     "already assigned."]),
     },
     "floor": {
         "line": _z(
@@ -990,6 +1043,17 @@ _ROOM_NPCS = {
          "someone the loop has already started on. She still has her name. She doesn't know that's "
          "a thing she has."),
     ],
+    "holding": [
+        ("the usher", "attendant", "A bored usher with a clipboard and a clicker-counter who "
+         "calls the numbers, one at a time, and never hurries. They don't answer questions so "
+         "much as wait them out, and they watch the new ones watch the glass with the patience "
+         "of someone who has seen exactly how this goes, every time, for a very long time."),
+        ("the waiting", "resident", "The other applicants on the benches — some fresh and "
+         "flinching, some gone quiet and glassy, all of them facing the window because the room "
+         "won't let them face anything else. Nobody talks. Everybody watches. One by one their "
+         "numbers are called, and one by one they rise and go to the desk and do not come back "
+         "this way."),
+    ],
     "floor": [
         ("the attendant", "attendant", "An attendant in a clean grey coverall working the "
          "gauges along the line with unbothered efficiency."),
@@ -1096,6 +1160,9 @@ _ROOM_MECHANICS = {
         "counter": ("restrain", 1, "the intake counter",
                     "You're bent over the counter and held there while the forms are filled in. You wait."),
     },
+    "holding": {
+        "benches": ("seat", 8, "the waiting benches", "on the worn front edge of a bench, facing the glass"),
+    },
     "floor": {
         "line":   ("restrain", 4, "the line restraints",
                    "The station folds you into presentation and locks. You can't move until the line decides to advance."),
@@ -1151,6 +1218,12 @@ _ROOM_AMBIENT = {
         "|xThe sodium lamps hum a half-tone flat, and the light never quite settles.|n",
         "|xThe clerk stamps another form without looking up. The stack never gets shorter.|n",
         "|xA draught carries the smell up from below — milk, animal, disinfectant — and the door stays shut.|n",
+    ],
+    "holding": [
+        "|xThe NOW SERVING board ticks up one. A number is called. Someone rises and goes to the desk.|n",
+        "|xThrough the glass, the floor goes on — wet, rhythmic, lit, indifferent to who's watching.|n",
+        "|xA new applicant is brought in, sees the window, and stops talking. They all stop talking.|n",
+        "|xThe usher clicks the counter and checks a number against the board, unhurried.|n",
     ],
     "floor": [
         "|xDown the line a rig descends, works wetly, and rises again. The conveyor ticks one notch.|n",
@@ -1514,6 +1587,29 @@ _AUCTIONEER_TRIGGERS = {
         "most.\"", "say"),
 }
 
+# The usher runs Holding — calls the numbers, answers nothing, lets the room work.
+_USHER_TRIGGERS = {
+    "holding": ("The usher clicks the counter without looking up. \"Waiting room. You sit, you "
+        "watch, your number gets called. That's the whole of it. No, I can't tell you how long. "
+        "No, you can't skip it. Sit down. Watch the glass. It's educational.\"", "emote"),
+    "window": ("\"The window?\" A flat glance at the floor beyond it. \"That's processing. That's "
+        "where you're going. We don't make anyone explain it to you — cheaper to just let you "
+        "look. You'll have stopped being surprised by it long before your number's up. That's "
+        "rather the point of the wait.\"", "say"),
+    "number": ("\"Your number's on your ticket. The board's on the wall. When they match, you go "
+        "to the desk.\" The usher clicks the counter. \"They always match eventually. Nobody's "
+        "number doesn't come up. Sit down.\"", "emote"),
+    "leaving": ("\"Out's back the way you came, sure — until your number's called. After that "
+        "there isn't an out, there's a desk, and then there's the door behind it.\" A shrug. "
+        "\"Most stop trying to leave around the time they see what's through the glass. Saves "
+        "everyone the scene.\"", "emote"),
+    "waiting": ("\"The others? Same as you, further along the bench. The quiet ones have been "
+        "here a while. You'll get quiet too.\" The usher clicks the counter. \"It's not the wait "
+        "that does it. It's the watching. We let the watching do the work.\"", "say"),
+    "help": ("\"Ask about holding, the window, your number, or the others. Or don't, and watch "
+        "the glass like you're supposed to. Your number'll be up soon enough.\"", "say"),
+}
+
 # The marker runs the Marking Parlour — an artist, exacting and fond of the work.
 _MARKER_TRIGGERS = {
     "parlour": ("\"This is where it's made permanent,\" the marker says, testing an iron's "
@@ -1803,6 +1899,8 @@ def _furnish(room, key, owner):
                 _tree = _MATRON_TRIGGERS
             elif nkey.lower() == "the marker":
                 _tree = _MARKER_TRIGGERS
+            elif nkey.lower() == "the usher":
+                _tree = _USHER_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {
