@@ -84,6 +84,18 @@ def build_board_text(who):
         lines.append(f"  Conditioning:   {cond:6.0f}  ({_stage(cond)}){perm}")
         if getattr(d, "designation", None):
             lines.append(f"  Designation:    {d.designation}")
+        # Ownership / devotion (canonical here — board is the full dossier).
+        owner = getattr(d, "facility_owner", None)
+        dev = float(getattr(d, "bethany_devotion", 0) or 0)
+        if owner or getattr(d, "bethany_owned", False) or dev > 0:
+            lines.append(f"  Owner:          |M{owner or 'Bethany'}|n   (devotion {dev:.0f})")
+        clauses = list(getattr(d, "bethany_clauses", None) or [])
+        if clauses:
+            lines.append(f"  Personal clauses: {', '.join(clauses)}")
+        sug = float(getattr(d, "suggestibility", 0) or 0)
+        doc = float(getattr(d, "docility", 0) or 0)
+        if sug or doc:
+            lines.append(f"  Suggestibility: {sug:.0f}    Docility: {doc:.0f}")
         lines.append(f"  Heat:           {'|rPERPETUAL|n' if getattr(d,'perpetual_heat',False) else 'off'}")
         if getattr(d, "lactation_locked", False):
             lines.append("  Lactation:      |rLOCKED ON|n")
@@ -156,6 +168,13 @@ def build_board_text(who):
         trig = len(getattr(d, "installed_triggers", None) or [])
         if trig:
             lines.append(f"  Installed responses: {trig}")
+
+        # FORGET log — what's been redacted out of her (the dossier remembers).
+        forgotten = list(getattr(d, "facility_forgotten", None) or [])
+        if forgotten:
+            lines.append(f"|wREDACTED (FORGET):|n  {len(forgotten)}")
+            for item in forgotten[-6:]:
+                lines.append(f"    • {item}")
 
         lines.append("|w" + "═" * 46 + "|n")
     return "\n".join(lines)
