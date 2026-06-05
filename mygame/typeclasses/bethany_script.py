@@ -135,6 +135,59 @@ _ENTER = [
     "veined and already wet at the tip. \"They told me you were coming along nicely. I thought "
     "I'd sample the work myself.\" She feeds the head to {t}'s lips.",
 ]
+# Room-aware entrances — she catches you mid-whatever and makes it about her.
+_ENTER_ROOM = {
+    "floor": [
+        "Bethany strolls onto the Processing Floor while {t} is still strapped to the line, "
+        "cups dragging at her tits, and doesn't even wait for them to finish. \"Don't stop on my "
+        "account — multitask, sweetheart.\" She frees her cock and feeds it to {t}'s mouth while "
+        "the machine works the other end. \"There. Milked at both ends. Efficient.\"",
+        "\"Ooh, mid-milking, perfect,\" Bethany purrs, sauntering up to {t}'s station with her "
+        "slacks already down. \"You're so much more agreeable when the cups have you distracted.\" "
+        "She tips {t}'s head back over the edge of the rig and slides in. \"Keep producing. I "
+        "like the noises the gauge makes while I use your face.\"",
+    ],
+    "pens": [
+        "Bethany picks her way into the Breeding Pens, wrinkling her nose at the stink and "
+        "grinning at {t} bent in the stocks. \"Look at you. Absolutely reeking of dog.\" She "
+        "drops her pants anyway and lines up at {t}'s mouth while the stock waits its turn. "
+        "\"Let's give you something that at least had a shower this morning. Open.\"",
+        "\"Started without me?\" Bethany tuts, stepping over the muck to where {t} is locked "
+        "presented in the pen. \"The animals can wait. I outrank the bull.\" She seats herself "
+        "in {t}'s throat as a hound whines behind them. \"Mm. Bred front and back. You really "
+        "are coming along.\"",
+    ],
+    "conditioning": [
+        "The cell door opens and Bethany's voice arrives before her cock does, cutting under the "
+        "grille's drone. \"Don't surface, sweetheart, this won't take long.\" She uses {t} right "
+        "there in the cradle, in the dark, while the conditioning hums on. \"Take the suggestion "
+        "*and* the cock. Multitask. You're learning.\"",
+    ],
+    "dairy": [
+        "Bethany leans in the Dairy doorway watching {t} get drained, then crosses and lifts a "
+        "full bottle off the rack, considering it. \"This is you. Litres of you.\" She sets it "
+        "down and takes {t}'s mouth instead. \"Let's add to your output a different way. Swallow "
+        "this lot for the protein.\"",
+    ],
+    "restroom": [
+        "Bethany finds {t} fixed in the Sanitation Block and laughs, delighted. \"Oh, they've "
+        "got you on toilet duty. How are the *mighty.*\" She steps up to use the unit personally, "
+        "unbuckling. \"Don't worry, I'm not here to piss. I'm here for the other thing. Open up "
+        "— let's see if a sold hole sucks any better.\"",
+    ],
+    "showroom": [
+        "Bethany strides into the Showroom mid-viewing, waves off the auctioneer, and steps up "
+        "onto the block with {t}. \"My lot. I'm sampling before I finalise.\" She uses {t} right "
+        "there under the spotlight, for the glass, turning them both on the slow turntable. "
+        "\"Buyers love a demonstration. Show them what they're bidding on.\"",
+    ],
+    "deepstock": [
+        "Even down in Deep Stock Bethany comes for {t} — has the warden crack the pod, peels the "
+        "latex back from the mouth alone, and uses that one unsealed hole while the rest of {t} "
+        "stays plumbed and idle. \"Can't have you finished and off the menu, can I,\" she "
+        "murmurs. \"Some things I keep using long after they've stopped being anyone.\"",
+    ],
+}
 _THRUST = [
     "She drives in past the knot in one savage shove, punching the breath out of {t}, and sets a "
     "merciless pace — using the throat like a thing she rents by the hour, balls slapping her "
@@ -260,7 +313,20 @@ class BethanyScript(DefaultScript):
         self.db.target = random.randint(2, 3)
         self.db.bethany_ref = beth.dbref
         room.msg_contents("\n|w━━━━ A VISIT FROM INTAKE ━━━━|n")
-        room.msg_contents("|y" + random.choice(_ENTER).format(t=t) + "|n")
+        # She catches you wherever you are — and remarks on it.
+        rk = self._room_key(char)
+        pool = _ENTER_ROOM.get(rk) or _ENTER
+        room.msg_contents("|y" + random.choice(pool).format(t=t) + "|n")
+
+    def _room_key(self, char):
+        realm = getattr(char.db, "realm", None) or {}
+        rooms = realm.get("rooms") or {}
+        loc = char.location
+        if loc:
+            for k, ref in rooms.items():
+                if ref == loc.dbref:
+                    return k
+        return None
 
     def _continue_visit(self, char):
         room = char.location

@@ -491,8 +491,10 @@ class CmdProcess(Command):
     Usage:
       process <subject> [action]
 
-    Actions: breed (use a hole), milk, dose (experimental drug), pierce,
-             punish, condition, reward, inspect.  Default is 'breed'.
+    Actions: breed (use a hole), milk, dose (experimental drug), pierce, ring,
+             latex (seal as a drone), grow (force udder growth), condition,
+             punish, reward, beg (make her beg), appraise, buy (claim her),
+             inspect.  Default is 'breed'.
 
     The subject must be in the facility (it's their opt-in). Everything you do
     drives the real systems — real deposits, real milking, real conditioning.
@@ -605,9 +607,67 @@ class CmdProcess(Command):
         elif action in ("inspect", "board", "check"):
             caller.execute_cmd(f"board {parts[0]}")
 
+        elif action in ("appraise", "price", "value"):
+            price = 0
+            if fs:
+                try: price = fs._appraise(target)
+                except Exception: pass
+            grade = getattr(target.db, "facility_grade", None) or "Unprocessed"
+            counts = sum(int(v) for v in (getattr(target.db, "offspring_counts", None) or {}).values())
+            caller.msg(f"|W{t} — lot appraisal|n\n  |xGrade:|n {grade}   |xGet dropped:|n {counts}"
+                       f"   |xConditioning:|n {float(getattr(target.db,'conditioning',0) or 0):.0f}"
+                       f"\n  |xAsking price:|n |w{price:,}|n")
+            target.msg(f"|m{cn} walks around you, reads your card, and prices you at |w{price:,}|m "
+                       f"— out loud, like you can't hear it. You hope it's enough.|n")
+
+        elif action in ("sell", "buy", "claim", "own"):
+            price = 0
+            if fs:
+                try: price = fs._appraise(target)
+                except Exception: pass
+            if not getattr(target.db, "facility_title_backup", None):
+                target.db.facility_title_backup = {
+                    "faction": getattr(target.db, "title_faction", "") or "",
+                    "suffix":  getattr(target.db, "title_suffix", "") or ""}
+            target.db.facility_owner = cn
+            target.db.title_suffix = f"— {cn}'s"
+            try:
+                from world.gang_breeding import record_mark
+                record_mark(target, f"a sale tag wired to her — SOLD to {cn} for {price:,}", mode="on")
+            except Exception: pass
+            room.msg_contents(f"|R{cn} buys {t} outright — {price:,}, paid, done. She's tagged "
+                              f"SOLD and belongs to {cn} now.|n", exclude=[caller, target])
+            caller.msg(f"|RYou buy {t}. She's yours — tagged, logged, owned.|n")
+            target.msg(f"|R{cn} buys you. Over your head, while you're posed and turning, a line "
+                       f"in a ledger changes and you belong to {cn} now.|n")
+
+        elif action in ("latex", "seal", "drone"):
+            if fs:
+                try: fs._proc_latex(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t} sealed into facility latex.|n")
+
+        elif action in ("grow", "udder", "swell"):
+            if fs:
+                try: fs._proc_udder(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou pump {t}'s glands into a growth cycle.|n")
+
+        elif action in ("ring", "rings"):
+            if fs:
+                try: fs._proc_rings(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t} ringed.|n")
+
+        elif action in ("beg", "make beg"):
+            if fs:
+                try: fs._made_to_beg(room, target, t)
+                except Exception: pass
+            caller.msg(f"|mYou make {t} beg for it.|n")
+
         else:
-            caller.msg("|xUnknown action. Try: breed / milk / dose / pierce / punish / "
-                       "condition / reward / inspect|n")
+            caller.msg("|xUnknown action. Try: breed / milk / dose / pierce / ring / latex / "
+                       "grow / condition / punish / reward / beg / appraise / buy / inspect|n")
 
 
 ALL_FACILITY_VERBS.append(CmdProcess)

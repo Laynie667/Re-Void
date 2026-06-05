@@ -1921,6 +1921,27 @@ class FacilityScript(DefaultScript):
     def _proc_ring_fit(self, room, target, t):
         target.db.cum_receptacle = True
         self._drug_capacity(room, target, t)  # also raises inflation max
+        # Make "permanently fitted open" mechanically true — gape the cunt + ass for
+        # good (unlocks knot/double/fist/prolapse on those holes).
+        try:
+            from world.gang_breeding import animal_holes, record_use
+            ah = animal_holes(target)
+            perm = list(getattr(target.db, "permanent_gape", None) or [])
+            holes = dict(getattr(target.db, "holes", None) or {})
+            for key in ("pussy", "anus"):
+                z = ah.get(key)
+                if not z:
+                    continue
+                h = dict(holes.get(z) or {"use": 0, "gape": 0.0})
+                h["use"] = max(int(h.get("use", 0)), 22)
+                h["gape"] = max(float(h.get("gape", 0.0)), 16.0)
+                holes[z] = h
+                if z not in perm:
+                    perm.append(z)
+            target.db.holes = holes
+            target.db.permanent_gape = perm
+        except Exception:
+            pass
         self._mark(target, "steel gauging rings fitted in cunt and ass, holding her permanently open")
         room.msg_contents(
             f"|GThey fit {t}'s holes with steel — a wide gauging ring worked into her cunt and "
@@ -1930,11 +1951,12 @@ class FacilityScript(DefaultScript):
 
     def _proc_milk_port(self, room, target, t):
         self._boost_production(target, 4.0)
+        target.db.lactation_locked = True   # re-plumbed: she leaks on command, always on
         self._mark(target, "surgical milk ports set under each areola — permanent")
         room.msg_contents(
             f"|GA milking port is surgically set under each of {t}'s areolae — clean valves her "
             f"body is re-plumbed around, that she'll leak from on command for the rest of the term. "
-            f"(permanent — production up)|n")
+            f"(permanent — production up, lactation locked on)|n")
 
     def _proc_tail(self, room, target, t):
         target.db.pet_type = target.db.pet_type or "puppy"
