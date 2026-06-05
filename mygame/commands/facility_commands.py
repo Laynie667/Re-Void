@@ -857,3 +857,93 @@ class CmdStanding(Command):
         caller.msg("\n".join(lines))
 
 ALL_FACILITY_VERBS.append(CmdStanding)
+
+
+class CmdBid(Command):
+    """
+    Bid on a lot from the Buyers' Gallery.
+
+    Usage:
+        bid <subject>            — read the lot's asking price and the standing bid
+        bid <subject> <amount>   — enter a number; if it tops the floor it stands
+
+    You watch through the one-way glass while she's posed, opened, and run on the
+    floor below, and you put a number on her. The high bid is logged against her
+    card. It does not buy her — an owner closes the sale with 'process <her> buy'
+    — but it sets what she's worth tonight, out loud, where she can't hear it.
+    """
+    key           = "bid"
+    aliases       = ["offer"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        parts  = self.args.strip().split(None, 1)
+        if not parts:
+            caller.msg("|xUsage: bid <subject> [amount]|n")
+            return
+        target = caller.search(parts[0])
+        if not target:
+            return
+        room = caller.location
+        fs   = _fac_script(room)
+        cn   = caller.db.rp_name or caller.key
+        t    = target.db.rp_name or target.name
+
+        # current floor price from the real appraisal
+        floor = 0
+        if fs:
+            try:    floor = int(fs._appraise(target) or 0)
+            except Exception: floor = 0
+        high  = int(getattr(target.db, "high_bid", 0) or 0)
+        bidder = getattr(target.db, "high_bidder", None)
+        ask   = max(floor, high)
+
+        # ── read-only: just look at the card ──────────────────────────────
+        if len(parts) == 1:
+            grade  = getattr(target.db, "facility_grade", None) or "Unprocessed"
+            counts = sum(int(v) for v in (getattr(target.db, "offspring_counts", None) or {}).values())
+            line = (f"|W{t} — lot card|n\n  |xGrade:|n {grade}   |xGet dropped:|n {counts}"
+                    f"   |xConditioning:|n {float(getattr(target.db,'conditioning',0) or 0):.0f}"
+                    f"\n  |xFloor:|n |w{floor:,}|n")
+            if high:
+                line += f"   |xStanding bid:|n |w{high:,}|n" + (f" |x({bidder})|n" if bidder else "")
+            else:
+                line += "   |xNo bids yet.|n"
+            caller.msg(line)
+            return
+
+        # ── place a bid ───────────────────────────────────────────────────
+        raw = parts[1].strip().replace(",", "").replace("$", "")
+        if not raw.lstrip("-").isdigit():
+            caller.msg("|xA bid is a number. Try: bid <subject> 4000|n")
+            return
+        amount = int(raw)
+        if amount <= 0:
+            caller.msg("|xBid something real.|n")
+            return
+        if amount < floor:
+            caller.msg(f"|x{floor:,} is the floor on this lot. Bid {floor:,} or more.|n")
+            return
+        if amount <= high:
+            caller.msg(f"|xThe standing bid is {high:,}. You'll need to top it.|n")
+            return
+
+        target.db.high_bid    = amount
+        target.db.high_bidder = cn
+        caller.msg(f"|RYou put {amount:,} on {t}. It's the high bid — logged on her card.|n")
+        room.msg_contents(f"|R{cn} bids |w{amount:,}|R on {t} — high bid, logged.|n",
+                          exclude=[caller])
+        # carry it through the glass: she feels the number land even if she can't hear it
+        try:
+            tloc = target.location
+            if tloc and tloc is not room:
+                tloc.msg_contents(f"|mSomewhere behind the glass a number changes; {t}'s "
+                                  f"card now reads |w{amount:,}|m. She doesn't know why the "
+                                  f"handlers suddenly reposition her.|n")
+        except Exception:
+            pass
+
+
+ALL_FACILITY_VERBS.append(CmdBid)

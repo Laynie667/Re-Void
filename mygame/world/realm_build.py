@@ -105,6 +105,14 @@ _ROOMS = [
      "is a trophy shelf of tags, brands, and framed lineage charts — her favourites, her "
      "personal line. This is where the ones she buys off the block come to belong to her, and "
      "where the cruelty stops being procedure and starts being personal."),
+    ("gallery",      "The Facility — The Buyers' Gallery",
+     "|wA dim, comfortable viewing lounge behind the showroom's one-way glass — tiered booths "
+     "of deep leather, a low rail, a bid panel glowing at each seat.|n This is the other side of "
+     "the mirror: where buyers sit in the dark and watch the lot on the block be posed, "
+     "appraised, and turned, close enough to read every reaction off its face while it can see "
+     "nothing but its own reflection. Drinks are brought round. Numbers climb on the panels. "
+     "Nobody here is in any hurry, because the thing on the other side of the glass is going "
+     "nowhere it isn't sold to."),
     ("deepstock",    "The Facility — Deep Stock (Sub-Level P)",
      "|wThe deepest room: a vast, dim, climate-controlled vault, silent but for the hum of "
      "machines and the soft tick of fluid lines.|n Rows of upright pods line the walls, each "
@@ -125,7 +133,8 @@ _EXITS = {
     "dairy":        ["floor", "pigsty"],
     "pigsty":       ["pens", "dairy", "restroom"],
     "restroom":     ["floor", "pigsty"],
-    "showroom":     ["floor"],
+    "showroom":     ["floor", "gallery"],
+    "gallery":      ["showroom"],
     "deepstock":    ["floor"],
     "nursery":      ["floor", "pens"],
     "office":       ["floor", "lobby"],
@@ -668,6 +677,56 @@ _ROOM_ZONES = {
             ambient=["Water trickles to the drain and is gone. The block is built to be sluiced.",
                      "The hose drips against the tile, coiled and waiting for the end of shift."]),
     },
+    "gallery": {
+        "glass": _z(
+            "The front wall is the one-way glass — mirror on the showroom side, clear in here — "
+            "looking straight onto the lit display block. Whatever's posed and turning out there "
+            "is right in front of you, lit and close, and it cannot see you watching.",
+            summary="the one-way glass onto the block",
+            study=[
+                "From this side every flinch and flush on the lot's face is legible, magnified by "
+                "the dark and the quiet. It performs for its own reflection, never knowing the "
+                "booths behind the mirror are full and reading it like a book.",
+                "The asymmetry is the luxury you're paying for: you appraise without ever being "
+                "appraised back. A buyer likes to take their time with a lot that can't take its "
+                "time with them.",
+            ],
+            handle={"glass": "|xYou rest a hand on the cool glass — the lot on the block is right "
+                            "there through it, lit and turning and oblivious, and the only face "
+                            "it can see is its own.|n"}),
+        "booths": _z(
+            "Tiered booths of deep buttoned leather face the glass, a low brass rail before "
+            "them, a side table at each for the drinks that get brought round.",
+            summary="tiered leather viewing booths",
+            study=[
+                "The booths are angled so every seat has the block dead-centre. You sink into the "
+                "leather and a lot's whole processing plays out in front of you like theatre — "
+                "except theatre doesn't end with you owning the cast.",
+                "The wear on these seats is the wear of long, comfortable watching. People spend "
+                "hours here. The lots on the block spend the rest of their lives wherever the "
+                "hours end.",
+            ],
+            handle={"booths": "|xYou settle into a leather booth facing the glass, a drink "
+                            "appearing at your elbow, the lit block and its turning lot framed "
+                            "perfectly in front of you. Comfortable. Unhurried. Yours to watch.|n"}),
+        "panel": _z(
+            "A brass-trimmed bid panel glows at each booth — the lot's number, its live asking "
+            "price, and a lit key to raise it, the figures ticking as the room competes.",
+            summary="a glowing bid panel",
+            study=[
+                "The panel shows the lot on the block and its price, climbing in the dark as the "
+                "booths outbid each other. A press of the key adds to your offer. Buying is done "
+                "from this seat, without ever rising, the way you'd order a drink.",
+                "There's something obscene in how *easy* it makes it — a person's whole future "
+                "reduced to a glowing figure and a key under your thumb, raised on a whim, settled "
+                "on a whim, while they pose on the far side of the glass and can't even see the "
+                "auction deciding them.",
+            ],
+            handle={"panel": "|xYou rest a thumb on the bid panel's lit key — the lot's price "
+                            "glowing under it, a number you could raise or settle with a press, "
+                            "deciding a person from a leather booth like ordering dinner. "
+                            "(|wbid <lot> [amount]|x · |wprocess <lot> buy|x)|n"}),
+    },
     "showroom": {
         "block": _z(
             "A raised, lit display block stands at the centre of the carpet, a brass rail around "
@@ -1138,6 +1197,17 @@ _ROOM_NPCS = {
          "not stir when you're brought past. They are what the whole place is for, and what it "
          "intends to make of you."),
     ],
+    "gallery": [
+        ("the host", "attendant", "A silk-smooth gallery host who circulates with a drinks tray "
+         "and a tablet, taking bids, refilling glasses, and murmuring particulars about the "
+         "current lot to anyone who leans in. They treat the buyers like valued members and the "
+         "thing on the block like the wine list — something to be discussed, priced, and "
+         "selected, never something that might be listening."),
+        ("the buyers", "resident", "The others in the booths — shapes in the dark, the glint of "
+         "a glass, the soft red glow of a bid panel raised. Comfortable, unhurried, appraising. "
+         "You never see them clearly; they're here to look, not be looked at. On the far side of "
+         "the glass, a lot turns under the lights for all of you at once."),
+    ],
     "showroom": [
         ("the auctioneer", "attendant", "A smooth, well-dressed auctioneer with a headset and a "
          "laser pointer, working the block like a luxury salesman — because to them that's the "
@@ -1189,6 +1259,9 @@ _ROOM_MECHANICS = {
                   "The frame folds you face-up beneath the seat and locks. You are in service now; you hold still and you catch what comes."),
         "wall":  ("seat", 1, "the glory-hole rail", "kneeling at the holed wall, mouth at working height"),
         "urinal":("seat", 1, "the urinal fixture", "clamped face-up under the trough's run"),
+    },
+    "gallery": {
+        "booths": ("seat", 8, "a viewing booth", "sunk into a leather booth facing the glass, drink in hand"),
     },
     "showroom": {
         "block": ("restrain", 1, "the display block",
@@ -1257,6 +1330,12 @@ _ROOM_AMBIENT = {
         "|xKnuckles rap the partition. Someone's been waiting. Someone's always waiting.|n",
         "|xThe trough trickles toward the drain. The reek of ammonia is kept, not cleaned.|n",
         "|xThe custodian ticks the use-tally without looking, and moves on.|n",
+    ],
+    "gallery": [
+        "|xA bid panel raises in a dark booth, the figure on the glass ticking up a notch.|n",
+        "|xThe host glides past with a tray, murmurs a particular about the lot, and moves on.|n",
+        "|xThrough the glass the lot turns under the lights, performing for its own reflection.|n",
+        "|xIce settles in a glass somewhere in the dark. Nobody here is in any hurry at all.|n",
     ],
     "showroom": [
         "|xThe display block turns its slow half-revolution, and the spotlight follows.|n",
@@ -1610,6 +1689,36 @@ _USHER_TRIGGERS = {
         "the glass like you're supposed to. Your number'll be up soon enough.\"", "say"),
 }
 
+# The gallery host — circulates with drinks and a bid tablet, all member-service warmth.
+_HOST_TRIGGERS = {
+    "gallery": ("\"Welcome to viewing, sit anywhere,\" the host says warmly, offering the tray. "
+        "\"Best seats in the facility — you see everything, they see nothing but the glass. "
+        "Drink? Bid? Both? Whatever's on the block, I can tell you its particulars and take your "
+        "offer right from your seat.\"", "say"),
+    "bid": ("\"Bidding's from the panel, or just tell me.\" The host taps the tablet. "
+        "\"|wbid <lot> <amount>|n to raise it, |wbid <lot>|n to see where it stands, and "
+        "|wprocess <lot> buy|n when you want to take it. The room competes; the figure climbs; "
+        "eventually it goes to somebody. Often the lady from intake, between you and me.\"", "emote"),
+    "glass": ("\"One-way, of course. They see a mirror; you see them.\" The host smiles. "
+        "\"Discretion's half of what you're paying for. A buyer does so prefer to appraise a "
+        "thing that can't appraise back. Have a look — go on. It can't tell you're looking.\"",
+        "say"),
+    "lot": ("The host checks the tablet. \"Current lot's particulars are all on the panel — "
+        "grade, yield, get, what it takes. Climbing nicely. You can read its face through the "
+        "glass too; that's the real catalogue, if you ask me. Nervous ones go for less and last "
+        "longer. This one's nervous.\"", "emote"),
+    "buyers": ("\"The other members? Regulars, mostly. Private parties, the breeding concern, "
+        "intake's standing bids.\" A discreet nod at the dark. \"Everyone here owns a few. "
+        "Nobody here has ever come just to watch — though watching's included.\"", "say"),
+    "leaving": ("\"Leave whenever you like — you're a *member*, not a lot.\" The host's smile is "
+        "warm and absolute, and the distinction hangs in the air a moment. \"The ones who don't "
+        "get to leave are on the other side of the glass. Mind the difference. Another drink?\"",
+        "say"),
+    "help": ("\"Ask me about the gallery, bidding, the glass, the current lot, or the other "
+        "buyers. Or just sit, watch, and raise the panel when something catches your eye. "
+        "That's rather the whole pleasure of the room.\"", "say"),
+}
+
 # The marker runs the Marking Parlour — an artist, exacting and fond of the work.
 _MARKER_TRIGGERS = {
     "parlour": ("\"This is where it's made permanent,\" the marker says, testing an iron's "
@@ -1901,6 +2010,8 @@ def _furnish(room, key, owner):
                 _tree = _MARKER_TRIGGERS
             elif nkey.lower() == "the usher":
                 _tree = _USHER_TRIGGERS
+            elif nkey.lower() == "the host":
+                _tree = _HOST_TRIGGERS
             if _tree:
                 n.db.npc_tier = NPC_TIER_SCRIPTED
                 n.db.triggers = {

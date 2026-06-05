@@ -17,8 +17,15 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   home+purge), `force_clear` (bulletproof per-attr reset), `reveal_return` (gate the way home),
   `_furnish` (zones/tokens/mechanics/furniture/NPCs/placard), `_install_mechanic`.
 - **st:** `db.realm` (rooms/words/return_wp), area tags, `_REALM_TAG`.
-- **Data:** `_ROOMS` (13), `_EXITS`, `_ROOM_ZONES`, `_ROOM_FURNITURE`, `_ROOM_NPCS`,
-  `_ROOM_MECHANICS`, `_ROOM_AMBIENT`, all the NPC trigger trees.
+- **Data:** `_ROOMS` (14: lobby, holding, floor, pens, conditioning, dairy, pigsty, restroom,
+  showroom, **gallery**, nursery, parlour, office, deepstock), `_EXITS`, `_ROOM_ZONES`,
+  `_ROOM_FURNITURE`, `_ROOM_NPCS`, `_ROOM_MECHANICS`, `_ROOM_AMBIENT`, all the NPC trigger trees.
+- **Buyers' Gallery** (behind the showroom's one-way glass): tiered viewing booths (`seat` mech),
+  a live **bid panel** zone, the gallery host (`_HOST_TRIGGERS`) + the buyers. Players sit, watch a
+  lot worked on the showroom block through the mirror, and price her. Drives the `bid` verb
+  (`facility_commands.CmdBid`): `bid <lot> [amount]` reads/raises `db.high_bid`/`high_bidder`
+  off the real `_appraise` floor; an owner closes with `process <lot> buy`. The high bid carries
+  *through the glass* — the lot is reposed but never told her number.
 - ⚠ **Two reset paths:** `force_clear` here and `run_facility_reset` in `facility_build.py`
   must be kept in lockstep — every new persistent attr has to be added to both. Real
   maintenance burden and the single biggest source of "forgot to clear X" risk.

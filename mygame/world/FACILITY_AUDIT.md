@@ -37,6 +37,17 @@ Items get struck through / moved to "Resolved" as they're fixed.
   characters (`at_post_puppet`). If page/tell/emote still can't find someone mid-session,
   they should relog once (or `setname <same name>`).
 
+## 0b. Recent passes (build log, newest first)
+
+- 🟢 **Buyers' Gallery + `bid`.** New room behind the showroom glass (tiered viewing booths
+  `seat` mech, bid-panel zone, the host + buyers NPCs) and a real multiplayer hook: `bid <lot>
+  [amount]` (`facility_commands.CmdBid`) reads/raises `db.high_bid`/`high_bidder` off the live
+  `_appraise` floor; owners still close with `process <lot> buy`. Both new flags added to the
+  `FACILITY_STATE` spec (cleared by both reset paths). The high bid carries through the glass to
+  the lot's room as a reposition she's never told the number behind. Compile + brace-scan clean.
+  *Note:* `_appraise` is the single source of price truth — gallery, `process appraise`, and `bid`
+  all read it, so price stays consistent across the three surfaces.
+
 ---
 
 ## 1. Conflicts
