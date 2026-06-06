@@ -321,13 +321,14 @@ class Character(ObjectParent, DefaultCharacter):
         self.db.species = "human"
 
         # ---------------------------------------------------------------
-        # Title system — PREFIX LEVEL INTERFIX FACTION SUFFIX
+        # Title system — PREFIX LEVEL(grade) INTERFIX FACTION SUFFIX REALM
         # ---------------------------------------------------------------
         self.db.title_prefix = ""
         self.db.title_interfix = ""
         self.db.title_suffix = ""
         self.db.title_level = ""
         self.db.title_faction = ""
+        self.db.title_realm = ""
         self.db.titles_earned = []
 
         # ---------------------------------------------------------------
@@ -1778,6 +1779,7 @@ class Character(ObjectParent, DefaultCharacter):
         interfix = self.db.title_interfix or ""
         faction = self.db.title_faction or ""
         suffix = self.db.title_suffix or ""
+        realm = self.db.title_realm or ""
 
         if prefix:
             parts.append(prefix)
@@ -1789,6 +1791,8 @@ class Character(ObjectParent, DefaultCharacter):
             parts.append(faction)
         if suffix:
             parts.append(suffix)
+        if realm:
+            parts.append(realm)
 
         return " ".join(parts)
 

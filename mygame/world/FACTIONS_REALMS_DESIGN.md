@@ -71,7 +71,9 @@ realm claim <key>                 — mark current room as a realm's hub
 - **Shards** = the game-wide currency (existing `typeclasses.economy`), unchanged as the
   backbone.
 - **Realm-local currencies** (Facility `scrip`, Helena's whatever) — only spendable inside
-  realms that list them. Earn/spend is gated by `room.db.realm`'s `currencies`.
+  realms that list them. Earn/spend is gated by `room.db.realm`'s `currencies`. The governing
+  faction **names** its currency, decides whether **outside currency (shards) is accepted** at
+  all, and sets the **exchange rate** its shops use (per-realm config).
 - **Better wallet:** one unified store + command.
   ```
   character.db.wallet = {"shards": N, "scrip": N, ...}   # shards mirrors db.shards for back-comp
@@ -87,9 +89,15 @@ realm claim <key>                 — mark current room as a realm's hub
 - `invite <player> to <faction>` (leader/rank/staff) → grants membership + seeds standing.
   `kick`, `leave`, `roster` round it out. Invite-only factions can't be standing-grinded
   into; neutral/open ones can.
-- **Housing connection:** a faction member may link their **personal housing** room to the
-  realm's grid — `connect housing` from a realm housing-nexus, gated on membership. Leaving
-  the faction unlinks it. (Helena's wood + Void both flagged `housing:True`.)
+- **Residency ≠ membership.** Someone may want to **live in a realm without joining its
+  faction**. So realm **residency** is a separate grant from faction **membership** — you can be
+  a resident (housing linked, allowed in) without any faction tie. Examine the existing **ogram
+  realm-invite** and add a **faction-invite** alongside it (Phase 4): realm-invite grants
+  residency; faction-invite grants membership/rank. Independent residents just get the former.
+- **Housing connection:** a **resident** may link their **personal housing** room to the
+  realm's grid — `connect housing` from a realm housing-nexus, gated on residency (not
+  necessarily faction membership). Losing residency unlinks it. (Helena's wood + Void both
+  `housing:True`.)
 
 ---
 
@@ -155,18 +163,29 @@ Three distinct things, cleanly separated:
   **equal to or above** your own — so a **leader cannot create another leader**, a mid-rank
   can only move people below them.
 - **Demotion** is the same gate in reverse (higher rank can demote lower).
+- **Owner/top-authority override:** the one *on top of it all* (faction owner / parent owner)
+  can move members up and down ladders **beyond** a sub-faction's own power — override authority
+  sits above the in-faction gate. Sub-factions still self-govern internal moves; the owner can
+  reach past that. The owner also **sets their own title** freely at the top.
 - Factions **define their own rank names + count + advancement method** at creation
   (`faction setrank`, `faction setadvance points|rep|quest|granted`).
 - Non-player factions (Facility, House Helena) advance however the faction's owner decides —
   quest-driven, financial, rep, or staff fiat — same data model, NPC/owner pulls the levers.
 
 ## F. Phasing (so we ship working increments)
-1. **Foundation:** the two registries + room `realm`/`faction` stamps + `designate`/flood-fill
-   + the Void default. (Everything else needs this.)
-2. **Titles** unified across factions (cheap once the registry exists).
-3. **Multi-currency wallet** + realm-local currency gating (Facility scrip migrates in).
-4. **Membership** (invites/roster) + **housing connection**.
-5. Sub-factions surfaced (NPC crews, player cliques) once 1–4 are solid.
+1. ✅ **Foundation (DONE):** `world/realms.py` registries + room `realm`/`faction` stamps +
+   `designate` flood-fill + `realmhere` + the Void default.
+2. ✅ **Titles (DONE):** the existing title system already had prefix/level/interfix/faction/
+   suffix slots + a player `title` command (prefix/interfix/suffix customizable). Added the
+   **realm slot** (`title_realm`, rendered after suffix → grade→faction→realm), a `title realm`
+   setter, and `realms.apply_realm_title(char, key)` to fill it from the registry on residency.
+   *Reconcile-later note:* the `{level}` slot is driven by a **global** `db.reputation` tier,
+   separate from per-faction `db.factions` standing — Phase 4 makes `{grade}` faction-rank-aware.
+3. **Multi-currency wallet** + realm-local currency gating (Facility scrip migrates in;
+   per-realm: currency name, accept-shards flag, shop exchange rate).
+4. **Residency + Membership + Ranks** — realm-invite (residency) vs faction-invite (membership),
+   roster, the grant/demote authority + owner override, advancement methods, housing-link.
+5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.
 
 ---
 

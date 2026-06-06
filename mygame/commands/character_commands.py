@@ -3689,7 +3689,9 @@ class CmdTitle(MuxCommand):
                 f"{char.db.title_faction or '[not set]'} "
                 f"(faction-driven)\n"
                 f"  Suffix:   "
-                f"{char.db.title_suffix or '[not set]'}"
+                f"{char.db.title_suffix or '[not set]'}\n"
+                f"  Realm:    "
+                f"{char.db.title_realm or '[not set]'}"
             )
             return
 
@@ -3738,9 +3740,22 @@ class CmdTitle(MuxCommand):
                     f"{char.db.title_suffix or '[not set]'}"
                 )
 
+        elif component == "realm":
+            if clearing:
+                char.db.title_realm = ""
+                self.msg("Title realm cleared.")
+            elif value:
+                char.db.title_realm = value
+                self.msg(f"Title realm set: |w{value}|n")
+            else:
+                self.msg(
+                    f"Current realm: "
+                    f"{char.db.title_realm or '[not set]'}"
+                )
+
         else:
             self.msg(
-                "Usage: title prefix/interfix/suffix <text>\n"
+                "Usage: title prefix/interfix/suffix/realm <text>\n"
                 "Or: title show"
             )
 

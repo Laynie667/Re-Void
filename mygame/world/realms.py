@@ -120,6 +120,21 @@ def realm_currencies(room):
     return cur
 
 
+def apply_realm_title(character, realm_key, connective="of"):
+    """Set a character's title realm slot from the registry, e.g. 'of The Facility'.
+    Used by residency/membership (and staff) to fill the realm slot on the unified
+    title. Pass realm_key=None/'' to clear it."""
+    try:
+        if not realm_key:
+            character.db.title_realm = ""
+            return ""
+        name = realm_name(realm_key)
+        character.db.title_realm = f"{connective} {name}".strip()
+        return character.db.title_realm
+    except Exception:
+        return ""
+
+
 def stamp_room(room, realm=None, faction=None):
     """Stamp a room's realm and/or sub-faction override. Pass "" to clear a slot.
     Returns the resolved (realm_key, faction_key) after stamping."""
