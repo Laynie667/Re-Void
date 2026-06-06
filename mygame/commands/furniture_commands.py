@@ -441,15 +441,31 @@ class CmdInstallHorse(Command):
             caller.msg("|xThere's already a rocking horse here (clear it with "
                        "|w@set here/horse_zone =|x).|n")
             return
-        zone = (self.args.strip() or "saddle").lower().replace(" ", "_")
+        arg = self.args.strip()
+        # `installhorse perfect` — the full dream rig.
+        if arg.lower() == "perfect":
+            room.db.horse_zone = "saddle"
+            room.db.horse_pace = "steady"
+            room.db.horse_upgrades = ["vibrating", "restrained", "knot", "breeding", "little"]
+            caller.msg(
+                "|m✦ The perfect rocking horse is installed (zone '|wsaddle|m').|n\n"
+                "|x  It works you harder the faster you ride, cuffs you in like tucking you "
+                "in (|wrestrained|x), breeds and fills you (|wbreeding|x), knots to hold you "
+                "through it (|wknot|x), and keeps you little and helpless the whole time "
+                "(|wlittle|x — caretaker voice + baby-talk + drifting conditioning).|n\n"
+                "|x  horsemount → horsestart → ride. The knot won't let you down until it's "
+                "done with you. (escape always frees you, instantly.)|n")
+            return
+        zone = (arg or "saddle").lower().replace(" ", "_")
         room.db.horse_zone = zone
         room.db.horse_pace = "steady"
         if getattr(room.db, "horse_upgrades", None) is None:
             room.db.horse_upgrades = []     # clean: a plain ride, NOT a milker
         caller.msg(f"|g✦ Rocking horse installed (zone '|w{zone}|g', plain — no milking).|n\n"
                    f"|x  horsemount → horsestart → horsestop.  Add bits with "
-                   f"|whorseupgrade add breeding|x (deposit + inflate), |winflation|x, "
-                   f"|wrestrained|x, |wvibrating|x, |wknot|x.|n")
+                   f"|whorseupgrade add breeding|x (deposit + inflate), |wlittle|x (helpless "
+                   f"headspace), |winflation|x, |wrestrained|x, |wvibrating|x, |wknot|x.\n"
+                   f"  Or the whole dream rig at once: |winstallhorse perfect|x.|n")
 
 
 ALL_FURNITURE_CMDS = [

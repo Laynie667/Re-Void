@@ -103,6 +103,18 @@ class CmdHorseDismount(Command):
         caller.db.seated_zone   = None
         caller.db.restrained_zone = None
         caller.db.horse_facing  = None
+
+        # 'little' upgrade teardown — remove only the baby-talk the horse itself added,
+        # and only if a facility binding isn't also relying on it (don't clobber that).
+        if getattr(caller.db, "horse_baby_talk", False):
+            if not getattr(caller.db, "facility_active", False):
+                active = list(getattr(caller.db, "active_speech_filters", None) or [])
+                if "baby_talk" in active:
+                    active.remove("baby_talk")
+                    caller.db.active_speech_filters = active
+            caller.db.horse_baby_talk = False
+            caller.msg("|xYour words come back to you as you climb down — bigger again, "
+                       "steadier, a little reluctant to be.|n")
         caller_name = caller.db.rp_name or caller.name
         room.msg_contents(f"|x{caller_name} dismounts the horse.|n")
         caller.msg("|wYou dismount the horse.|n")
@@ -235,7 +247,7 @@ class CmdHorseUpgrade(MuxCommand):
     switch_options = ("add", "remove", "list")
 
     _VALID = {"motorized", "vibrating", "milking", "restrained", "knot",
-              "inflation", "breeding"}
+              "inflation", "breeding", "little"}
 
     def func(self):
         room = self.caller.location

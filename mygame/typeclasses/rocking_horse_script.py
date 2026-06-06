@@ -30,6 +30,28 @@ import random
 from typeclasses.furniture_session import FurnitureSessionScript
 
 
+# The 'little' upgrade — the horse treats its rider as a small, helpless thing to be
+# kept somewhere safe. Warm caretaker voice; helplessness delivered as comfort.
+_LITTLE_BEATS = [
+    "The horse's voice is soft and warm and close — |i'there we go, good girl, up you "
+    "get'|n — and something behind your eyes goes quiet and small at being talked to "
+    "like that.",
+    "It rocks you the way you'd rock a fussy child: slow, deep, |ifor your own good|n. "
+    "The squirming and the riding stop being different things.",
+    "You reach for a grown-up thought and it slips — the warmth has it, the rhythm has "
+    "it. There's just the rock, and the full, and the voice calling you good.",
+    "|i'You don't have to do anything,'|n the horse murmurs into the top of your head. "
+    "|i'Just be carried. Someone will come collect you.'|n And the not-having-to is the "
+    "sweetest part.",
+    "Your hands are put away and you can't quite remember agreeing to it. Helpless "
+    "doesn't feel done to you — it feels like being |ilooked after|n, and that's worse.",
+    "It tells you little things ride to be filled, sweetly, certainly, while your belly "
+    "rounds out warm and heavy and your thoughts drift another inch toward nothing.",
+    "You make a small sound instead of a word, and the horse praises it like you've done "
+    "something clever. You do it again, just to be told again.",
+]
+
+
 class RockingHorseScript(FurnitureSessionScript):
     """Drives an active rocking horse session."""
 
@@ -98,6 +120,9 @@ class RockingHorseScript(FurnitureSessionScript):
             if "breeding" in upgrades:
                 self._tick_breeding(char, room)
 
+            if "little" in upgrades:
+                self._tick_little(char, room)
+
     def at_start(self):
         room = self.obj
         if not room:
@@ -151,6 +176,30 @@ class RockingHorseScript(FurnitureSessionScript):
             if (zd or {}).get("zone_type") in ("orifice", "both"):
                 return zn
         return None
+
+    def _tick_little(self, char, room):
+        """The 'little'/helpless headspace: a caretaker voice, drifting conditioning, and
+        a baby-talk speech filter applied once (cleanly removed on dismount)."""
+        try:
+            if not getattr(char.db, "horse_baby_talk", False):
+                active = list(getattr(char.db, "active_speech_filters", None) or [])
+                if "baby_talk" not in active:
+                    active.append("baby_talk")
+                    char.db.active_speech_filters = active
+                    char.db.horse_baby_talk = True
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 1.0, source="rocking_horse")
+        except Exception:
+            pass
+        try:
+            from typeclasses.arousal_script import add_arousal
+            add_arousal(char, 3.0)
+        except Exception:
+            pass
+        char.msg("|x  " + random.choice(_LITTLE_BEATS) + "|n")
 
     def _tick_breeding(self, char, room):
         """Breeding upgrade: the dildos cum into the seated rider and the belly fills —
