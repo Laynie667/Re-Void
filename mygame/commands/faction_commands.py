@@ -71,9 +71,38 @@ class CmdFaction(MuxCommand):
             return self._manage(caller, sub, rest)
         if sub == "setrank":
             return self._setrank(caller, rest)
+        if sub in ("befriend", "enemy", "subsidiary", "unrelate"):
+            return self._relate(caller, sub, rest)
 
         caller.msg("|xUsage: faction [info|roster|invite|kick|promote|demote|resident|evict|"
-                   "setrank] …|n")
+                   "setrank|befriend|enemy|subsidiary|unrelate] …|n")
+
+    def _relate(self, caller, sub, rest):
+        """faction befriend|enemy|subsidiary|unrelate <other> [= <key>] — owner manages relations."""
+        from world.factions import _key, is_owner
+        from world.realms import get_faction, faction_name
+        from world.realm_state import set_relation
+        if "=" in rest:
+            other_arg, key_arg = [p.strip() for p in rest.split("=", 1)]
+        else:
+            other_arg, key_arg = rest.strip(), ""
+        k = _resolve_faction_key(caller, key_arg)
+        other = _key(other_arg)
+        if not get_faction(k) or not get_faction(other):
+            caller.msg("|xUsage: faction befriend|enemy|subsidiary|unrelate <faction> = <yourfaction>|n")
+            return
+        if not (is_owner(caller, k) or caller.check_permstring("Builder")):
+            caller.msg(f"|xOnly {faction_name(k)}'s owner may set its relations.|n")
+            return
+        kind = {"befriend": "friends", "enemy": "enemies", "subsidiary": "subsidiaries"}.get(sub)
+        if sub == "unrelate":
+            for kd in ("friends", "enemies", "subsidiaries"):
+                set_relation(k, kd, other, add=False)
+            caller.msg(f"|g{faction_name(k)} now regards {faction_name(other)} as neutral.|n")
+            return
+        set_relation(k, kind, other, add=True)
+        caller.msg(f"|g{faction_name(k)} now regards {faction_name(other)} as "
+                   f"{sub if sub != 'befriend' else 'a friend'}.|n")
 
     def _setrank(self, caller, rest):
         """faction setrank <key> = Name1, Name2, ... — owner sets the rank-name ladder."""

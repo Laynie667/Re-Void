@@ -60,12 +60,12 @@ FACTIONS = {
         "blurb": "A consensual livestock-processing operation. Owns its realm and takes a "
                  "piece of the product as its own.",
     },
-    "helena": {
+    "helena": {  # placeholder only — Helena is a PLAYER; her real faction is hers to create.
         "name": "House Helena", "kind": "family", "parent": None,
         "colour": "|c", "invite_only": True, "currency": "shards",
         "owner": "Helena", "advance": "granted", "standing_key": "House Helena", "ranks": [],
         "relations": {"friends": [], "enemies": [], "subsidiaries": []},
-        "blurb": "Helena's house, and the wood it keeps.",
+        "blurb": "PLACEHOLDER — Helena is a player; replace with the faction she creates.",
     },
 }
 
@@ -102,10 +102,12 @@ REALMS = {
         "blurb": "The disconnected processing grid, reached only by waystone.",
     },
     "wildwood": {
-        "name": "Helena's Wood", "faction": "helena", "housing": True,
+        "name": "Helena's Wood", "faction": "void", "housing": True,
         "currencies": ["shards"], "local_currency": None,
         "accepts_shards": True, "exchange_rate": 0,
-        "blurb": "A forested, snow-touched valley under House Helena. (Cabin moves here.)",
+        "blurb": "A forested, snow-touched valley — the cabin's future home. Unassigned for "
+                 "now; hand it to the player Helena's faction (realmowner wildwood = <key>) "
+                 "once she raises one.",
     },
 }
 
@@ -163,9 +165,23 @@ def room_faction(room):
     return realm_owner(room_realm(room))
 
 
+def realm_config(realm_key):
+    """A realm's config dict with owner-set currency overrides (currency_name/
+    accepts_shards/exchange_rate) merged over the registry defaults."""
+    base = dict(get_realm(realm_key) or {})
+    try:
+        from world.realm_state import get_realm_currency_override
+        ov = get_realm_currency_override(realm_key)
+        if ov:
+            base.update({k: v for k, v in ov.items() if v is not None})
+    except Exception:
+        pass
+    return base
+
+
 def realm_currencies(room):
     """Currencies valid in this room's realm (always includes shards)."""
-    r = get_realm(room_realm(room))
+    r = realm_config(room_realm(room))
     cur = list(r.get("currencies", [])) if r else []
     if "shards" not in cur:
         cur = ["shards"] + cur

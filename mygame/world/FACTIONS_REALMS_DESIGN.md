@@ -207,9 +207,12 @@ Three distinct things, cleanly separated:
      instantly (`realms.realm_owner` consults the override). **Owner-editable rank names done:**
      `faction setrank <key> = A, B, C` (owner-only) writes a custom ladder to the store;
      `factions.ranks()` merges it over the registry, so granted factions define their own ladder
-     and rep-driven ones (Facility) can be *renamed* while keeping their grade thresholds. Remaining
-     4c: owner-editable currency (name/accept/rate) + relations, and player-created factions, on the
-     same store; then `faction setcurrency/befriend/enemy/subsidiary`.
+     and rep-driven ones (Facility) can be *renamed* while keeping their grade thresholds.
+     **Relations done:** `faction befriend|enemy|subsidiary|unrelate <other> = <key>` (owner) writes
+     to the store; `factions._rel` merges over the registry. **Currency config done:** `realmcurrency
+     <realm> name=/shards=on|off/rate=N` (owner of the realm's faction) overrides per-realm currency
+     policy; `realms.realm_config` merges it and the wallet reads through it. Remaining 4c: **player-
+     created factions** (`faction create`, writing a full def to the store).
    - **4d: residency invites via ograms** — examine the ogram realm-invite, add a faction-invite;
      housing-link gated on residency.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.

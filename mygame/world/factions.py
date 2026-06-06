@@ -244,8 +244,19 @@ def remove_resident(character, realm):
 
 # ── relations ─────────────────────────────────────────────────────────────────
 def _rel(faction, kind):
-    f = get_faction(_key(faction))
-    return list((f.get("relations", {}) if f else {}).get(kind, []))
+    """A faction's relation list of `kind`, with owner-set overrides from the store merged
+    over the registry defaults."""
+    k = _key(faction)
+    f = get_faction(k)
+    base = list((f.get("relations", {}) if f else {}).get(kind, []))
+    try:
+        from world.realm_state import get_relations_override
+        ov = get_relations_override(k) if k else None
+        if ov and kind in ov:
+            return list(dict.fromkeys(base + list(ov[kind])))
+    except Exception:
+        pass
+    return base
 
 
 def friends_of(faction):

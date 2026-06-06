@@ -96,8 +96,8 @@ def debit(char, currency, amount, reason="debit", allow_debt=False):
 
 # ── realm-awareness ───────────────────────────────────────────────────────────
 def _realm_cfg(room):
-    from world.realms import get_realm, room_realm
-    return get_realm(room_realm(room)) or {}
+    from world.realms import realm_config, room_realm
+    return realm_config(room_realm(room)) or {}
 
 
 def valid_here(room, currency):

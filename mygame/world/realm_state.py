@@ -84,3 +84,56 @@ def set_rank_names(faction_key, names):
     data["faction_rank_names"] = table
     _save(data)
     return table.get(fk)
+
+
+# ── faction relation overrides (owner-editable friends/enemies/subsidiaries) ──
+def get_relations_override(faction_key):
+    """Owner-set relations {friends,enemies,subsidiaries} for a faction, or None."""
+    rels = _load().get("faction_relations") or {}
+    return rels.get((faction_key or "").lower())
+
+
+def set_relation(faction_key, kind, other_key, add=True):
+    """Add/remove `other_key` to/from a faction's friends|enemies|subsidiaries list."""
+    if kind not in ("friends", "enemies", "subsidiaries"):
+        return None
+    data = _load()
+    rels = dict(data.get("faction_relations") or {})
+    fk = (faction_key or "").lower()
+    entry = dict(rels.get(fk) or {})
+    lst = list(entry.get(kind) or [])
+    ok = (other_key or "").lower()
+    if add and ok and ok not in lst:
+        lst.append(ok)
+    elif not add and ok in lst:
+        lst.remove(ok)
+    entry[kind] = lst
+    rels[fk] = entry
+    data["faction_relations"] = rels
+    _save(data)
+    return lst
+
+
+# ── realm currency-config overrides (governing faction's call) ────────────────
+def get_realm_currency_override(realm_key):
+    """Owner-set currency config for a realm, or None. Keys: currency_name,
+    accepts_shards, exchange_rate."""
+    cur = _load().get("realm_currency") or {}
+    return cur.get((realm_key or "").lower())
+
+
+def set_realm_currency(realm_key, **fields):
+    """Merge currency-config fields onto a realm (currency_name/accepts_shards/exchange_rate)."""
+    data = _load()
+    cur = dict(data.get("realm_currency") or {})
+    rk = (realm_key or "").lower()
+    entry = dict(cur.get(rk) or {})
+    for k, v in fields.items():
+        if v is None:
+            entry.pop(k, None)
+        else:
+            entry[k] = v
+    cur[rk] = entry
+    data["realm_currency"] = cur
+    _save(data)
+    return entry

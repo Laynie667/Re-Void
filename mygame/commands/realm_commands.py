@@ -239,4 +239,70 @@ class CmdRealmOwner(MuxCommand):
                    f"|x(persistent)|n")
 
 
-ALL_REALM_CMDS = [CmdDesignate, CmdRealmHere, CmdRealmOwner]
+class CmdRealmCurrency(MuxCommand):
+    """
+    Set a realm's currency policy — the governing faction's call.
+
+    Usage:
+        realmcurrency <realm>                       — show the realm's currency config
+        realmcurrency <realm> name = <text>         — name the realm's local currency
+        realmcurrency <realm> shards = on|off       — accept outside shards, or not
+        realmcurrency <realm> rate = <number>       — shards per 1 local unit (0 = no exchange)
+
+    Local currency is sovereign by default (no exchange). Persistent. Allowed to the
+    realm's owning-faction owner (or a Builder).
+    """
+
+    key = "realmcurrency"
+    aliases = ["realmcur"]
+    locks = _LOCK
+    help_category = "Building"
+
+    def func(self):
+        from world.realms import get_realm, realm_config, realm_owner, realm_name
+        from world.realm_state import set_realm_currency
+        from world.factions import is_owner
+        caller = self.caller
+        args = (self.args or "").strip()
+        parts = args.split(None, 1)
+        if not parts:
+            caller.msg("|xUsage: realmcurrency <realm> [name=.. | shards=on/off | rate=N]|n")
+            return
+        rk = parts[0].lower()
+        if not get_realm(rk):
+            caller.msg(f"|xNo realm '{parts[0]}'. Try: designate realms|n")
+            return
+        cfg = realm_config(rk)
+        if len(parts) == 1 or "=" not in parts[1]:
+            caller.msg(f"|w{realm_name(rk)} currency|n\n"
+                       f"  |xlocal:|n {cfg.get('currency_name') or cfg.get('local_currency') or '—'}"
+                       f"   |xaccepts shards:|n {cfg.get('accepts_shards', True)}"
+                       f"   |xexchange rate:|n {cfg.get('exchange_rate', 0)}")
+            return
+        # authority: the realm's owning faction's owner (or a builder)
+        if not (is_owner(caller, realm_owner(rk)) or caller.check_permstring("Builder")):
+            caller.msg(f"|xOnly {realm_name(rk)}'s owning faction may set its currency.|n")
+            return
+        field, value = [p.strip() for p in parts[1].split("=", 1)]
+        field = field.lower()
+        if field == "name":
+            set_realm_currency(rk, currency_name=value or None)
+            caller.msg(f"|g{realm_name(rk)}'s local currency is now '|w{value}|g'.|n")
+        elif field == "shards":
+            on = value.lower() in ("on", "yes", "true", "1", "accept")
+            set_realm_currency(rk, accepts_shards=on)
+            caller.msg(f"|g{realm_name(rk)} {'accepts' if on else 'refuses'} outside shards.|n")
+        elif field == "rate":
+            try:
+                rate = float(value)
+            except ValueError:
+                caller.msg("|xRate must be a number (0 = no exchange).|n")
+                return
+            set_realm_currency(rk, exchange_rate=rate)
+            caller.msg(f"|g{realm_name(rk)} exchange rate set: |w{rate}|g shards per local unit"
+                       f"{' (no exchange)' if rate == 0 else ''}.|n")
+        else:
+            caller.msg("|xField must be name, shards, or rate.|n")
+
+
+ALL_REALM_CMDS = [CmdDesignate, CmdRealmHere, CmdRealmOwner, CmdRealmCurrency]
