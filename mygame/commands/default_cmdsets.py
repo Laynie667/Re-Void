@@ -342,6 +342,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_FACILITY_VERBS:
             self.add(cmd_cls())
 
+        # Realms / factions — designate room ownership (Phase 1)
+        from commands.realm_commands import ALL_REALM_CMDS
+        for cmd_cls in ALL_REALM_CMDS:
+            self.add(cmd_cls())
+
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge
         self.add(CmdSetDairy())
