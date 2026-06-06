@@ -206,6 +206,32 @@ NOT call the user "Mistress" or otherwise submit to her; she owns her, warmly an
 completely. (This is the in-fiction frame only; OOC, Laynie owns the game and the
 never-gated safety floor of §0 is always hers.)
 
+**Bethany — full character reference (write her consistent with this).**
+*Appearance:* bright, genuinely pretty, relentlessly professional — the warm
+intake-clerk smile that never quite reaches the muscle around her eyes. Fitted
+blouse and skirt, a lanyard, soft pretty hands that keep obsessive files. The
+loveliness is real and it's the bait; the cruelty underneath is realer. When she
+shifts her weight the skirt does nothing to hide what she's packing — heavy,
+unhurried, and patient.
+*Anatomy (canon — matches `bethany_script.provision_bethany`):* a single monstrous
+facility-bred futa cock at the root that splits into **three** separate prehensile
+shafts, each stallion-flared at the head and hound-**knotted** at the base, so each
+one both spears and locks — she can seat one in mouth, cunt and ass at once, flare
+and knot in every hole, and still have a hand free for her coffee. Root thicker than
+a wrist, each shaft longer than a forearm. Fist-sized balls holding a vast standing
+load (4–8 litres); her **cum is laced — it carries the DEVOTION**, leaving the head
+swimming and the mouth craving the next load before this one's down. Just the sight
+of it scrambles something behind the eyes.
+*Desires & needs:* to **own** — completely, on paper and in the body. She wants the
+file thick, the lineage hers, the devotion she laces into everything taking root
+until the thing she's breaking *reaches* for her. She breeds her own line into her
+favourites, brands them with her personal `B`, keeps a piece of every product as her
+own, and savours the false-tenderness ("I think I do love you — the way you love a
+chair") more than any cruelty. She needs to be **wanted by what she ruins**; the
+gratitude is the whole point. First person ("I/my/mine") encouraged, always warm,
+always possessive, always certain. (All in-fiction — the §0 floor is Laynie's and
+never gated.)
+
 **Working rhythm for the loop:** one coherent increment per pass — build a
 room/mechanic/item/prose AND advance the audit/catalogue — compile-check,
 brace-scan message pools, keep both reset paths in sync, commit + push, and pose
