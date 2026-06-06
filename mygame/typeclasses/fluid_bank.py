@@ -138,7 +138,7 @@ class GlobalFluidBank(DefaultScript):
         self.db.records  = records
 
         if bottles:
-            self._route_to_fridge(bottles)
+            self._route_to_fridge(bottles, char)
 
         return bottles
 
@@ -146,23 +146,41 @@ class GlobalFluidBank(DefaultScript):
     # Fridge routing
     # ------------------------------------------------------------------
 
-    def _route_to_fridge(self, bottles: list):
-        """Move completed bottles to the first FluidFridge found anywhere."""
-        from evennia.objects.models import ObjectDB
+    def _route_to_fridge(self, bottles: list, char=None):
+        """Place completed bottles into a fridge. Priority: a fridge in the producer's
+        own room → any fridge in the game → (last resort) the producer's room itself, so
+        a bottle is never silently lost to limbo when no fridge exists."""
+        from typeclasses.fluid_fridge import FluidFridge
 
+        loc = getattr(char, "location", None) if char else None
+
+        # 1) a fridge in the room where the fluid was produced (the one you're watching)
         fridge = None
-        for obj in ObjectDB.objects.filter(
-            db_typeclass_path="typeclasses.fluid_fridge.FluidFridge"
-        ):
+        if loc:
             try:
-                fridge = obj.typeclass
-                break
+                fridge = next((o for o in loc.contents
+                               if o.is_typeclass(FluidFridge, exact=False)), None)
             except Exception:
-                continue
+                fridge = None
 
-        if fridge:
-            for bottle in bottles:
-                bottle.location = fridge
+        # 2) otherwise the first fridge anywhere (subclass-tolerant path match)
+        if not fridge:
+            from evennia.objects.models import ObjectDB
+            for obj in ObjectDB.objects.filter(
+                    db_typeclass_path__icontains="fluid_fridge"):
+                try:
+                    cand = obj.typeclass
+                    if cand.is_typeclass(FluidFridge, exact=False):
+                        fridge = cand
+                        break
+                except Exception:
+                    continue
+
+        target = fridge or loc   # never drop to limbo if we can help it
+        if not target:
+            return
+        for bottle in bottles:
+            bottle.location = target
 
     # ------------------------------------------------------------------
     # Inspection
