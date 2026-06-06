@@ -126,7 +126,31 @@ Three distinct things, cleanly separated:
   - `quest` — flag-gated by completing faction objectives;
   - or a mix (e.g. Facility = rep+quest; a player guild = points+granted).
 
-### Grant / demote rules (player factions)
+### Affiliation, sub-factions, and the owner (refined)
+- **Affiliation is optional.** A `sub` faction *may* set `parent = <realm's main faction>`
+  (an **affiliate** — e.g. the Facility's crews), or keep `parent = None` and remain
+  **independent** even while operating inside a realm. Being *in* a realm ≠ being *owned by*
+  its main faction. Only the realm's declared owner controls its rooms by default; other
+  factions can exist there sovereignly.
+- **Multiple ladders, two ways** (both supported; pick per faction):
+  1. one faction with several internal **rank tracks**; or
+  2. a parent faction with **affiliated sub-factions**, each effectively its own ladder.
+  Recommended for the Facility: option 2 — crews as affiliated subs (Handlers, Dairy,
+  Marker, Bethany's stable), which also map 1:1 to website lore/portrait pages.
+- **Owner role.** Each faction has an **owner/CEO** sitting *above* the rank ladders, with
+  authority to rename the faction, define its ranks, set advancement, and restructure. The
+  owner's name/style is theirs to set in-game (the system supplies machinery, not fixed
+  names) — e.g. Bethany names the corporate entity that runs the Facility ("…Inc", etc.).
+- **Cross-faction authority (affiliates only).** A high rank / owner in a **parent** faction
+  has authority over its **affiliated** children: they can grant/demote *across* affiliated
+  sub-factions, including pushing someone **down into a lower affiliate** — e.g. Bethany (top
+  of Handlers / Facility owner) demotes a Handler straight into the **Stock** sub-faction.
+  **Independent** factions are sovereign: no external grant/demote reaches them.
+- **Bethany, concretely:** owns/names the Facility faction; sits atop the **Handlers** ladder
+  (so she can demote handlers); keeps her **own private faction** (her personal stable/line);
+  and the demotion path Handlers→Stock is just a cross-affiliate demotion under her authority.
+
+
 - You may grant or demote **any rank strictly below your own**. You cannot grant a rank
   **equal to or above** your own — so a **leader cannot create another leader**, a mid-rank
   can only move people below them.
