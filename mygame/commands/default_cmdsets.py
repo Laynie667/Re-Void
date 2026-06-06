@@ -354,10 +354,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
             self.add(cmd_cls())
 
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
-        from commands.dairy_commands import CmdSetDairy, CmdFridge, CmdFluids
+        from commands.dairy_commands import CmdSetDairy, CmdFridge, CmdFluids, CmdDrink
         self.add(CmdSetDairy())
         self.add(CmdFridge())
         self.add(CmdFluids())
+        self.add(CmdDrink())
 
         # WombRoom — enter/leave/pulse/wombroom management
         from commands.womb_commands import ALL_WOMB_CMDS

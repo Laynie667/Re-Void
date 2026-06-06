@@ -401,4 +401,62 @@ class CmdFluids(Command):
             self.caller.msg(f"|xNo fluid bank available: {e}|n")
 
 
-ALL_DAIRY_CMDS = [CmdSetDairy, CmdFridge, CmdFluids]
+
+class CmdDrink(Command):
+    """
+    Drink from a bottle — one you're holding, or one in the room/fridge.
+
+    Usage:
+        drink <bottle>          — take a sip
+        sip <bottle>            — same
+        quaff <bottle>          — finish it in one go (same as drink/drain)
+        drink/drain <bottle>    — finish the whole bottle
+
+    Works on any FluidBottle — your own milk, someone else's, whatever's chilled on
+    the shelf. (A general food/eat system is separate; this is for bottled fluids.)
+    """
+
+    key   = "drink"
+    aliases = ["sip", "quaff"]
+    switch_options = ("drain",)
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        name = self.args.strip()
+        if not name:
+            caller.msg("|xDrink what? (|wdrink <bottle>|x)|n")
+            return
+        from typeclasses.fluid_bottle import FluidBottle
+        # search: inventory, then the room, then inside a FluidFridge here
+        pool = list(caller.contents)
+        room = caller.location
+        if room:
+            pool += list(room.contents)
+            try:
+                from typeclasses.fluid_fridge import FluidFridge
+                for o in room.contents:
+                    if isinstance(o, FluidFridge):
+                        pool += list(o.contents)
+            except Exception:
+                pass
+        low = name.lower()
+        target = next((o for o in pool if isinstance(o, FluidBottle)
+                       and (low in (o.key or "").lower()
+                            or low in (getattr(o.db, "fluid_type", "") or "").lower()
+                            or low in (getattr(o.db, "producer_name", "") or "").lower())), None)
+        if not target:
+            caller.msg(f"|xNo bottle matching '{name}' to drink.|n")
+            return
+        drain = ("drain" in self.switches) or (self.cmdstring.lower() == "quaff")
+        try:
+            msg = target.do_drink(caller, drain=drain)
+        except TypeError:
+            msg = target.do_drink(caller)
+        caller.msg(msg)
+        if getattr(target.db, "is_empty", False):
+            target.delete()
+
+
+ALL_DAIRY_CMDS = [CmdSetDairy, CmdFridge, CmdFluids, CmdDrink]
