@@ -78,8 +78,29 @@ def add_standing(character, source="cycle", amount=None, faction=FACILITY):
 
 # ── ranks (registry-driven, generalised) ──────────────────────────────────────
 def ranks(faction):
-    f = get_faction(_key(faction))
-    return list(f.get("ranks", [])) if f else []
+    """The faction's ordered rank ladder (low->high). Owner-set custom names (from the
+    persistent store) override the registry names by position; rep thresholds/titles are
+    kept from the registry where they line up, so renaming a rep-driven ladder (the
+    Facility) preserves its grade thresholds."""
+    k = _key(faction)
+    base = list((get_faction(k) or {}).get("ranks", [])) if k else []
+    try:
+        from world.realm_state import get_rank_names_override
+        names = get_rank_names_override(k) if k else None
+    except Exception:
+        names = None
+    if not names:
+        return base
+    merged = []
+    for i, nm in enumerate(names):
+        if i < len(base):
+            r = dict(base[i])
+            r["name"] = nm
+            r["title"] = r.get("title") or nm
+        else:
+            r = {"name": nm, "rep": 0, "title": nm}
+        merged.append(r)
+    return merged
 
 
 def advance_method(faction):

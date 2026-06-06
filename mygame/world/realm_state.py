@@ -63,3 +63,24 @@ def set_realm_owner(realm_key, faction_key):
 
 def all_realm_owner_overrides():
     return dict(_load().get("realm_owners") or {})
+
+
+# ── faction rank-name overrides (owner-editable ladders) ──────────────────────
+def get_rank_names_override(faction_key):
+    """The owner-set ordered rank-name list for a faction, or None for the default ladder."""
+    names = _load().get("faction_rank_names") or {}
+    return names.get((faction_key or "").lower())
+
+
+def set_rank_names(faction_key, names):
+    """Set (or clear, with falsy `names`) a faction's custom ordered rank-name ladder."""
+    data = _load()
+    table = dict(data.get("faction_rank_names") or {})
+    fk = (faction_key or "").lower()
+    if names:
+        table[fk] = [str(n).strip() for n in names if str(n).strip()]
+    else:
+        table.pop(fk, None)
+    data["faction_rank_names"] = table
+    _save(data)
+    return table.get(fk)

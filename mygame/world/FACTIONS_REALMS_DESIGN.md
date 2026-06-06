@@ -204,9 +204,12 @@ Three distinct things, cleanly separated:
      persistent (ServerConfig-backed, in-memory fallback) override layer over the code registries.
      First use: **realm ownership is reassignable in-game** — `realmowner <realm> = <faction>`
      (Builder), persists across reloads, and every room in the realm picks up the new owner
-     instantly (`realms.realm_owner` consults the override). Remaining 4c: extend the same store
-     to owner-editable rank names / currency / relations + player-created factions, then
-     `faction setrank/setcurrency/befriend/enemy/subsidiary`.
+     instantly (`realms.realm_owner` consults the override). **Owner-editable rank names done:**
+     `faction setrank <key> = A, B, C` (owner-only) writes a custom ladder to the store;
+     `factions.ranks()` merges it over the registry, so granted factions define their own ladder
+     and rep-driven ones (Facility) can be *renamed* while keeping their grade thresholds. Remaining
+     4c: owner-editable currency (name/accept/rate) + relations, and player-created factions, on the
+     same store; then `faction setcurrency/befriend/enemy/subsidiary`.
    - **4d: residency invites via ograms** — examine the ogram realm-invite, add a faction-invite;
      housing-link gated on residency.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.

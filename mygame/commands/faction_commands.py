@@ -40,6 +40,7 @@ class CmdFaction(MuxCommand):
         faction demote <player> [= <key>]    — lower a member one rank (authority required)
         faction resident <player> = <realm>  — grant realm residency (authority required)
         faction evict <player> = <realm>     — remove realm residency (authority required)
+        faction setrank <key> = A, B, C      — owner: name the rank ladder (low → high)
 
     Authority: you may move someone to any rank strictly below your own; a faction's
     owner (and a parent faction's owner, over an affiliated sub) may move across the
@@ -68,8 +69,46 @@ class CmdFaction(MuxCommand):
             return self._roster(caller, rest)
         if sub in ("invite", "kick", "promote", "demote", "resident", "evict"):
             return self._manage(caller, sub, rest)
+        if sub == "setrank":
+            return self._setrank(caller, rest)
 
-        caller.msg("|xUsage: faction [info|roster|invite|kick|promote|demote|resident|evict] …|n")
+        caller.msg("|xUsage: faction [info|roster|invite|kick|promote|demote|resident|evict|"
+                   "setrank] …|n")
+
+    def _setrank(self, caller, rest):
+        """faction setrank <key> = Name1, Name2, ... — owner sets the rank-name ladder."""
+        from world.factions import _key, is_owner, ranks, advance_method
+        from world.realms import get_faction, faction_name
+        from world.realm_state import set_rank_names
+        if "=" not in rest:
+            caller.msg("|xUsage: faction setrank <key> = Rank1, Rank2, Rank3 "
+                       "(low → high; 'default' to reset)|n")
+            return
+        key_arg, names_arg = [p.strip() for p in rest.split("=", 1)]
+        k = _key(key_arg)
+        if not get_faction(k):
+            caller.msg(f"|xNo faction '{key_arg}'. Try: designate factions|n")
+            return
+        if not (is_owner(caller, k) or caller.check_permstring("Builder")):
+            caller.msg(f"|xOnly {faction_name(k)}'s owner may rename its ranks.|n")
+            return
+        if names_arg.lower() in ("default", "reset", "none", ""):
+            set_rank_names(k, None)
+            caller.msg(f"|g{faction_name(k)} rank ladder reset to default.|n")
+            return
+        names = [n.strip() for n in names_arg.split(",") if n.strip()]
+        if not names:
+            caller.msg("|xGive at least one rank name.|n")
+            return
+        # Rep-driven ladders (e.g. the Facility) must keep their tier count so grade
+        # thresholds still line up — renaming only, not resizing.
+        base = list((get_faction(k) or {}).get("ranks", []))
+        if advance_method(k) == "rep" and base and len(names) != len(base):
+            caller.msg(f"|x{faction_name(k)} is rep-driven: give exactly {len(base)} names "
+                       f"(rename only — resizing would break its grade thresholds).|n")
+            return
+        set_rank_names(k, names)
+        caller.msg(f"|g{faction_name(k)} ranks set: |c{' → '.join(ranks(k)[i]['name'] for i in range(len(ranks(k))))}|g.|n")
 
     # ── read-only ────────────────────────────────────────────────────────────
     def _mine(self, caller):
