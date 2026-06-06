@@ -1,4 +1,0 @@
-"""
-Complete game implementations/engines.
-
-"""

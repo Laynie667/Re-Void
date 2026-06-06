@@ -1,0 +1,41 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.Python
+build/
+dist/
+
+# ── Virtualenvs (NEVER commit these) ────────────────────
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Evennia runtime / server state ──────────────────────
+mygame/server/*.db3
+mygame/server/*.db3-journal
+mygame/server/evennia.db3
+mygame/server/*.pid
+mygame/server/*.restart
+mygame/server/logs/
+# Local secrets — keep these OUT of git
+mygame/server/conf/secret_settings.py
+local_settings.py
+*.log
+
+# ── OS / editor / download cruft ────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*Zone.Identifier
+.idea/
+.vscode/
+*.swp
+*~
+
+# ── Stray Windows zip-extraction duplicate ──────────────
+New folder/
