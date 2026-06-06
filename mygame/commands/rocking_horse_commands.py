@@ -158,6 +158,13 @@ class CmdHorseStart(Command):
                 room.msg_contents(msg.replace("{rider}", rider_name))
                 break
         self.caller.msg(f"|wRocking horse started at {pace} pace.|n")
+        # Fire an immediate first rock so it doesn't sit dead until the next interval.
+        try:
+            for char in room.contents:
+                if isinstance(char, Character) and getattr(char.db, "seated_zone", None) == zone_name:
+                    script.apply_rider_tick(char, room)
+        except Exception:
+            pass
 
 
 class CmdHorseStop(Command):
@@ -310,6 +317,46 @@ class CmdHorseStatus(Command):
         )
 
 
+class CmdRock(Command):
+    """
+    Rock the horse yourself — set your own rhythm and feel it answer.
+
+    Usage:
+        rock
+
+    You don't have to wait for it. Each rock works you the way a tick does — and the
+    harder/faster you go, the more it gives back. (The horse also rocks on its own once
+    started; this is you driving.)
+    """
+    key   = "rock"
+    aliases = ["ride", "buck"]
+    locks = "cmd:all()"
+    help_category = "Furniture"
+
+    def func(self):
+        caller = self.caller
+        room = caller.location
+        zone_name = getattr(room.db, "horse_zone", None) if room else None
+        if not zone_name or getattr(caller.db, "seated_zone", None) != zone_name:
+            caller.msg("|xYou're not on the horse. (|whorsemount|x first.)|n")
+            return
+        from typeclasses.rocking_horse_script import RockingHorseScript
+        from evennia.utils import create
+        script = next((s for s in room.scripts.all()
+                       if isinstance(s, RockingHorseScript)), None)
+        if not script:
+            # rocking it yourself can wake a stopped horse
+            script = create.create_script(RockingHorseScript, obj=room,
+                                          persistent=True, autostart=True)
+        # rocking yourself nudges arousal a touch extra — the harder you ride.
+        try:
+            from typeclasses.arousal_script import add_arousal
+            add_arousal(caller, 3.0)
+        except Exception:
+            pass
+        script.apply_rider_tick(caller, room)
+
+
 ALL_HORSE_CMDS = [
     CmdHorseMount,
     CmdHorseDismount,
@@ -318,4 +365,5 @@ ALL_HORSE_CMDS = [
     CmdHorsePace,
     CmdHorseUpgrade,
     CmdHorseStatus,
+    CmdRock,
 ]

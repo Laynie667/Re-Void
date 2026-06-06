@@ -92,36 +92,41 @@ class RockingHorseScript(FurnitureSessionScript):
         arousal_gain = config.get("arousal_per_tick", 6.0)
 
         for char in riders:
-            rider_name = char.db.rp_name or char.name
+            self.apply_rider_tick(char, room, upgrades, pace, arousal_gain)
 
-            # Running message
-            msg = pick_horse_msg(pace, "running")
-            if msg:
-                room.msg_contents(msg.replace("{rider}", rider_name))
+    def apply_rider_tick(self, char, room, upgrades=None, pace=None, arousal_gain=None):
+        """One rock's worth of effects on a rider — shared by the auto-rhythm (at_repeat)
+        and the manual `rock` command, so rocking it yourself does exactly what waiting does."""
+        from typeclasses.arousal_script import add_arousal
+        from world.rocking_horse_loader import pick_horse_msg, get_horse_config
+        if upgrades is None:
+            upgrades = list(getattr(room.db, "horse_upgrades", None) or [])
+        if pace is None:
+            pace = getattr(room.db, "horse_pace", "steady") or "steady"
+        if arousal_gain is None:
+            arousal_gain = get_horse_config(pace).get("arousal_per_tick", 6.0)
+        rider_name = char.db.rp_name or char.name
 
-            # Arousal gain
-            add_arousal(char, arousal_gain)
+        msg = pick_horse_msg(pace, "running")
+        if msg:
+            room.msg_contents(msg.replace("{rider}", rider_name))
 
-            # Upgrade effects
-            if "vibrating" in upgrades:
-                import random as _r
-                if _r.random() < 0.50:
-                    char.msg("|xThe seat pulses between rocks.|n")
+        add_arousal(char, arousal_gain)
 
-            if "milking" in upgrades:
-                self._tick_milking(char, room)
-
-            if "inflation" in upgrades:
-                self._tick_inflation(char, room, zone_name, upgrades)
-
-            if "knot" in upgrades:
-                self._check_knot(char, room, upgrades)
-
-            if "breeding" in upgrades:
-                self._tick_breeding(char, room)
-
-            if "little" in upgrades:
-                self._tick_little(char, room)
+        if "vibrating" in upgrades:
+            if random.random() < 0.50:
+                char.msg("|xThe seat pulses between rocks.|n")
+        if "milking" in upgrades:
+            self._tick_milking(char, room)
+        if "inflation" in upgrades:
+            zone_name = getattr(room.db, "horse_zone", None)
+            self._tick_inflation(char, room, zone_name, upgrades)
+        if "knot" in upgrades:
+            self._check_knot(char, room, upgrades)
+        if "breeding" in upgrades:
+            self._tick_breeding(char, room)
+        if "little" in upgrades:
+            self._tick_little(char, room)
 
     def at_start(self):
         room = self.obj
