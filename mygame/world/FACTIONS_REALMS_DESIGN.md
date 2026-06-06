@@ -197,10 +197,15 @@ Three distinct things, cleanly separated:
      membership), owner-authority `can_grant` (strictly-below-own + owner/parent-owner override),
      relations (`friends/enemies/subsidiaries`, `relation_between`). Registry gained
      `ranks`/`relations`/`owner`/`standing_key`; Facility grade ladder migrated into it. Tested.
-   - **4b (next): faction-admin command suite** — `faction info/roster/invite/kick/promote/demote/
-     setrank/setcurrency/relations`, gated by the authority rules; relationship management
-     (friends/enemies/subsidiaries).
-   - **4c: residency + invites** — examine the ogram realm-invite, add a faction-invite; housing-link.
+   - ✅ **4b (DONE): `faction` command suite** — `faction` (your ties), `info`, `roster`, `invite`,
+     `kick`, `promote`, `demote`, `resident`, `evict`; authority-gated (can_grant / owner override).
+     Operates on per-character membership/rank/residency (persistent). Registered in cmdset.
+   - **4c (next): persistent faction store + owner-config** — move faction *definitions* (rank
+     names, currency, relations) to a persistent store so owners can edit them in-game and players
+     can create factions (the code registry stays the seed/defaults). Then `faction setrank/
+     setcurrency/befriend/enemy/subsidiary`.
+   - **4d: residency invites via ograms** — examine the ogram realm-invite, add a faction-invite;
+     housing-link gated on residency.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.
 
 ---
