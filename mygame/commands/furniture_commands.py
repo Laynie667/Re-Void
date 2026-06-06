@@ -304,7 +304,94 @@ class CmdShowFurniture(Command):
         self.caller.msg("|wInstalled furniture here:|n\n" + "\n".join(lines))
 
 
+def _can_furnish(caller, room):
+    """May this character install furniture here? Staff anywhere; players in their own
+    housing (the tent/home they own, or any room they have control/edit access to)."""
+    if caller.is_superuser or caller.check_permstring("Builder"):
+        return True
+    if getattr(caller.db, "housing_home_id", None) == getattr(room, "id", None):
+        return True
+    try:
+        return room.access(caller, "control") or room.access(caller, "edit")
+    except Exception:
+        return False
+
+
+class CmdInstallFridge(Command):
+    """
+    Install a fluid fridge here. Bottles minted by the fluid bank route to the fridge
+    in the room they were produced in (then any fridge), so stock yours where you milk.
+
+    Usage:
+        installfridge [name]
+    """
+    key = "installfridge"
+    locks = "cmd:all()"
+    help_category = "Furniture"
+
+    def func(self):
+        caller = self.caller
+        room = caller.location
+        if not room:
+            caller.msg("|xYou're nowhere.|n")
+            return
+        if not _can_furnish(caller, room):
+            caller.msg("|xYou don't have build rights here.|n")
+            return
+        from typeclasses.fluid_fridge import FluidFridge
+        from typeclasses.fluid_bottle import FluidBottle
+        from evennia.utils import create
+        name = self.args.strip() or "a refrigerator"
+        fridge = create.create_object(FluidFridge, key=name, location=room)
+        lost = [b for b in FluidBottle.objects.all() if b.location is None]
+        for b in lost:
+            b.location = fridge
+        extra = f" Recovered |w{len(lost)}|g orphaned bottle(s) into it." if lost else ""
+        caller.msg(f"|g✦ Installed |w{name}|g (#{fridge.id}). Bottles will stock here.{extra}|n")
+
+
+class CmdInstallHorse(Command):
+    """
+    Install a rocking horse here — a dildo ride that works you harder the faster it
+    goes. Installs PLAIN (no milking, no breeding); add behaviours with `horseupgrade`.
+
+    Usage:
+        installhorse [zone-label]
+
+    Then: horsemount → horsestart → horsepace <slow|steady|fast|intense> → horsestop.
+    Upgrades: horseupgrade add <vibrating|restrained|knot|inflation|breeding|milking>.
+    """
+    key = "installhorse"
+    locks = "cmd:all()"
+    help_category = "Furniture"
+
+    def func(self):
+        caller = self.caller
+        room = caller.location
+        if not room:
+            caller.msg("|xYou're nowhere.|n")
+            return
+        if not _can_furnish(caller, room):
+            caller.msg("|xYou don't have build rights here.|n")
+            return
+        if getattr(room.db, "horse_zone", None):
+            caller.msg("|xThere's already a rocking horse here (clear it with "
+                       "|w@set here/horse_zone =|x).|n")
+            return
+        zone = (self.args.strip() or "saddle").lower().replace(" ", "_")
+        room.db.horse_zone = zone
+        room.db.horse_pace = "steady"
+        if getattr(room.db, "horse_upgrades", None) is None:
+            room.db.horse_upgrades = []     # clean: a plain ride, NOT a milker
+        caller.msg(f"|g✦ Rocking horse installed (zone '|w{zone}|g', plain — no milking).|n\n"
+                   f"|x  horsemount → horsestart → horsestop.  Add bits with "
+                   f"|whorseupgrade add breeding|x (deposit + inflate), |winflation|x, "
+                   f"|wrestrained|x, |wvibrating|x, |wknot|x.|n")
+
+
 ALL_FURNITURE_CMDS = [
+    CmdInstallFridge,
+    CmdInstallHorse,
     CmdEdgeStart,
     CmdEdgeStop,
     CmdStanchionStart,
