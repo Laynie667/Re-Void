@@ -84,9 +84,13 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   `achievements [player]` (trophy wall, secret-aware). **Authoring** (faction owner / builder):
   `quest create/step/reward/grant/delete`, `achievement create/grant/delete` — so faction owners
   author their own achievements and players/owners write quests beyond the built-ins, persisted.
-- ⏳ Next: wire scene hooks to `advance_quest` (facility cycle milk/breed/etc.), faction
-  `advance:"quest"/"exp"` → auto-promote, gate Facility depth (Deep Stock/heir/drugs) via `meets()`,
-  and seed the Facility's full quest line. Sheet/website surfacing.
+- ✅ **Wired live:** faction `get_rank_index` now derives rank from the EXP pool for
+  `advance="exp"` factions (reusing the rank thresholds as exp gates); the facility cycle grants
+  Facility EXP per beat and advances the `facility_intake` quest (milk→milked, breed→bred); signing
+  (`binding_effects` mark_signed) auto-starts the intake quest and ticks its `sign` step. So: sign →
+  quest starts → process → auto-completes → grants `first_day` + 50 facility EXP.
+- ⏳ Next: gate Facility depth (Deep Stock / heir / drug unlocks) via `meets()`; seed the Facility's
+  full multi-quest descent; sheet/website surfacing of quests & trophies.
 
 ## G. Build phasing (when we get here)
 1. `world/quests.py` API + `db.exp/quests/achievements` model + the `meets()` gate.

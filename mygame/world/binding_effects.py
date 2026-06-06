@@ -268,6 +268,13 @@ def apply_effects(character, item):
             seed_facility_title(character)
         except Exception:
             pass
+        # Begin the intake quest line and tick its 'signed' step — progression starts here.
+        try:
+            from world.quests import start_quest, advance_quest
+            start_quest(character, "facility_intake")
+            advance_quest(character, "facility_intake", "sign", 1)
+        except Exception:
+            pass
         # Install her real body systems (milk glands, womb, arousal) so milking and
         # breeding on the Floor actually engage — the realm never did this before.
         try:

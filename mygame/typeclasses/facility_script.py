@@ -4426,6 +4426,16 @@ class RealmCycleScript(FacilityScript):
                     house_credit(char, tithe, "Bethany's tithe — skimmed off her earnings.")
         except Exception:
             pass
+        # Progression: the Process earns Facility EXP and advances the intake quest line.
+        try:
+            from world.quests import grant_exp, advance_quest
+            grant_exp(char, {"milk": 2, "breed": 3, "condition": 2}.get(phase, 1), "facility")
+            if phase == "milk":
+                advance_quest(char, "facility_intake", "milked", 1)
+            elif phase == "breed":
+                advance_quest(char, "facility_intake", "bred", 1)
+        except Exception:
+            pass
         # Curse honoring — the two standing curses bite every beat they apply.
         self._tick_curses(char, t, cond)
         self.db.phase_index = idx + 1

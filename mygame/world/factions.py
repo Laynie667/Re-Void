@@ -119,13 +119,21 @@ def rank_index_by_rep(faction, rep):
 
 
 def get_rank_index(character, faction):
-    """A character's rank index in a faction. For advance='rep' it's derived from
-    standing; otherwise it's the granted index in db.faction_ranks."""
+    """A character's rank index in a faction. Derived from standing (advance='rep') or
+    from the faction's EXP pool (advance='exp', reusing the ranks' thresholds as exp
+    gates); otherwise the granted index in db.faction_ranks (granted/quest)."""
     k = _key(faction)
     if not k:
         return 0
-    if advance_method(k) == "rep":
+    method = advance_method(k)
+    if method == "rep":
         return rank_index_by_rep(k, get_standing(character, k))
+    if method == "exp":
+        try:
+            from world.quests import get_exp
+            return rank_index_by_rep(k, get_exp(character, k))
+        except Exception:
+            return 0
     return int((getattr(character.db, "faction_ranks", None) or {}).get(k, 0))
 
 
