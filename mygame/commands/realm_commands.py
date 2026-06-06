@@ -307,4 +307,106 @@ class CmdRealmCurrency(MuxCommand):
             caller.msg("|xField must be name, shards, or rate.|n")
 
 
-ALL_REALM_CMDS = [CmdDesignate, CmdRealmHere, CmdRealmOwner, CmdRealmCurrency]
+class CmdConnectHousing(MuxCommand):
+    """
+    Weave your personal home into a realm's grid — reachable from its waystones.
+
+    Usage:
+        connecthome [to <realm>] [as <word>]   — link your home (residency required)
+        disconnecthome                         — take your home back off the grid
+
+    Your tent/home is off-grid until you connect it. Connecting places an active waypost
+    in your home keyed to an address word; speak that word at a hub waystone to travel
+    home. Requires residency in the realm (accept a realm invite first).
+    """
+
+    key = "connecthome"
+    aliases = ["linkhome"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        import re
+        from evennia import search_object
+        from world.factions import is_resident
+        from world.realms import room_realm, realm_name, get_realm
+        caller = self.caller
+        low = (self.args or "").strip().lower()
+
+        realm = None
+        word = None
+        m = re.search(r'\bto\s+([a-z0-9_-]+)', low)
+        if m:
+            realm = m.group(1)
+        m2 = re.search(r'\bas\s+([a-z0-9_-]+)', low)
+        if m2:
+            word = m2.group(1)
+        if not realm:
+            realm = room_realm(caller.location) if caller.location else None
+        if not get_realm(realm):
+            caller.msg("|xWhich realm? Usage: connecthome to <realm> [as <word>]|n")
+            return
+        if not (is_resident(caller, realm) or caller.check_permstring("Builder")):
+            caller.msg(f"|xYou must be a resident of {realm_name(realm)} to weave your home "
+                       f"into it — get a realm invite and accept it first.|n")
+            return
+        home_id = getattr(caller.db, "housing_home_id", None)
+        if not home_id:
+            caller.msg("|xYou have no home yet — buy a tent from Durgin first.|n")
+            return
+        res = search_object(f"#{home_id}")
+        home = res[0] if res else None
+        if not home:
+            caller.msg("|xYour home couldn't be located.|n")
+            return
+        from typeclasses.waypost import Waypost
+        wp = next((o for o in home.contents if o.is_typeclass(Waypost, exact=False)), None)
+        if not wp:
+            from evennia.utils import create
+            wp = create.create_object(Waypost, key="a waypost", location=home)
+        if not word:
+            base = (caller.db.rp_name or caller.key or "home").lower()
+            word = re.sub(r'[^a-z0-9_-]', '', base.replace(" ", "")) or "home"
+        ok, msg = wp.set_address(word)
+        if not ok:
+            caller.msg("|x" + msg + "|n")
+            return
+        caller.db.housing_realm = realm
+        caller.msg(f"|gYour home is woven into |w{realm_name(realm)}|g — speak |w{word}|g at a "
+                   f"hub waystone to come home. (|wdisconnecthome|g to take it back off-grid.)|n")
+
+
+class CmdDisconnectHousing(MuxCommand):
+    """
+    Take your home back off the grid — its waypost goes silent.
+
+    Usage:
+        disconnecthome
+    """
+
+    key = "disconnecthome"
+    aliases = ["unlinkhome"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        from evennia import search_object
+        caller = self.caller
+        home_id = getattr(caller.db, "housing_home_id", None)
+        res = search_object(f"#{home_id}") if home_id else None
+        home = res[0] if res else None
+        if not home:
+            caller.msg("|xYou have no home on file.|n")
+            return
+        from typeclasses.waypost import Waypost
+        wp = next((o for o in home.contents if o.is_typeclass(Waypost, exact=False)), None)
+        if not wp:
+            caller.msg("|xYour home isn't connected to any grid.|n")
+            return
+        msg = wp.clear_address()
+        caller.db.housing_realm = None
+        caller.msg("|g" + msg + " Your home is off-grid again.|n")
+
+
+ALL_REALM_CMDS = [CmdDesignate, CmdRealmHere, CmdRealmOwner, CmdRealmCurrency,
+                  CmdConnectHousing, CmdDisconnectHousing]

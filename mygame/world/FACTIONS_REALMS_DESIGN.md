@@ -224,8 +224,12 @@ Three distinct things, cleanly separated:
      (residency ≠ membership), exactly as required. Plus owner-editable **faction pages**:
      `faction setportrait/setabout`, `faction note add|del`, `faction gallery add|del`, browsable by
      anyone via `faction about <key>` (feeds the website portrait/lore-page roadmap). Stored on the
-     persistent faction-meta store. Remaining 4d: **`connect housing`** — link a resident's personal
-     housing onto the realm grid (needs the tent/waypost housing system examined first).
+     persistent faction-meta store.
+   - ✅ **4d COMPLETE — `connecthome`.** Residency-gated home-linking: `connecthome [to <realm>]
+     [as <word>]` places/keys an active `Waypost` in the resident's tent/home (`db.housing_home_id`)
+     so its address word reaches it from any hub waystone — "woven in"; `disconnecthome` clears it
+     (off-grid again). Reuses the existing waypost travel system. Needs a live test (waypost
+     create/teleport can't be verified in-sandbox).
    - **4d: residency invites via ograms** — examine the ogram realm-invite, add a faction-invite;
      housing-link gated on residency.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.

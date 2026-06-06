@@ -353,4 +353,30 @@ class CmdFridge(Command):
 # Export
 # ---------------------------------------------------------------------------
 
-ALL_DAIRY_CMDS = [CmdSetDairy, CmdFridge]
+
+class CmdFluids(Command):
+    """
+    Check your fluid bank — lifetime produced and how much is pending a bottle.
+
+    Usage:
+        fluids
+
+    The bank accumulates what you produce and mints a 591ml (20 fl oz) bottle each
+    time the pending buffer fills; bottles route to the fridge in the room they were
+    produced in (or any fridge). This shows how close the next bottle is.
+    """
+
+    key           = "fluids"
+    aliases       = ["fluidbalance", "fluidbank"]
+    locks         = "cmd:all()"
+    help_category = "Economy"
+
+    def func(self):
+        try:
+            from typeclasses.fluid_bank import GlobalFluidBank
+            self.caller.msg(GlobalFluidBank.get().get_deposit_summary(self.caller))
+        except Exception as e:
+            self.caller.msg(f"|xNo fluid bank available: {e}|n")
+
+
+ALL_DAIRY_CMDS = [CmdSetDairy, CmdFridge, CmdFluids]
