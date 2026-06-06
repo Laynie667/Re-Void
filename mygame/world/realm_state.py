@@ -173,3 +173,58 @@ def delete_created_faction(key):
     cf.pop((key or "").lower(), None)
     d["created_factions"] = cf
     _save(d)
+
+
+# ── faction metadata (portrait / about / notes / gallery) ─────────────────────
+def get_faction_meta(faction_key):
+    """Owner-set metadata for a faction: {portrait, about, notes:[...], gallery:[...]}."""
+    meta = _load().get("faction_meta") or {}
+    return dict(meta.get((faction_key or "").lower()) or {})
+
+
+def set_faction_meta(faction_key, **fields):
+    """Merge scalar metadata fields (portrait/about) onto a faction."""
+    d = _load()
+    meta = dict(d.get("faction_meta") or {})
+    fk = (faction_key or "").lower()
+    entry = dict(meta.get(fk) or {})
+    for k, v in fields.items():
+        if v is None:
+            entry.pop(k, None)
+        else:
+            entry[k] = v
+    meta[fk] = entry
+    d["faction_meta"] = meta
+    _save(d)
+    return entry
+
+
+def add_faction_list_item(faction_key, field, item, cap=50):
+    """Append to a faction's list-valued metadata (field='notes' or 'gallery')."""
+    d = _load()
+    meta = dict(d.get("faction_meta") or {})
+    fk = (faction_key or "").lower()
+    entry = dict(meta.get(fk) or {})
+    lst = list(entry.get(field) or [])
+    lst.append(item)
+    entry[field] = lst[-cap:]
+    meta[fk] = entry
+    d["faction_meta"] = meta
+    _save(d)
+    return len(entry[field])
+
+
+def remove_faction_list_item(faction_key, field, index):
+    d = _load()
+    meta = dict(d.get("faction_meta") or {})
+    fk = (faction_key or "").lower()
+    entry = dict(meta.get(fk) or {})
+    lst = list(entry.get(field) or [])
+    if 0 <= index < len(lst):
+        lst.pop(index)
+        entry[field] = lst
+        meta[fk] = entry
+        d["faction_meta"] = meta
+        _save(d)
+        return True
+    return False

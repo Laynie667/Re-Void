@@ -44,7 +44,13 @@ class CmdFaction(MuxCommand):
         faction befriend|enemy|subsidiary <other> = <key>  — owner: set relations
         faction create <key> = <Name>        — found your own faction (you become owner)
         faction disband <key>                — owner: dissolve a player-made faction
+        faction about <key>                  — a faction's public page (portrait/about/notes/gallery)
+        faction invites / accept <#> / decline <#>  — answer invitations
+        faction setportrait/setabout <key> = …      — owner: page portrait / description
+        faction note|gallery <key> add|del <…>      — owner: public notes / gallery
 
+    Invites are consent-based: an authorised member offers, the recipient accepts. This
+    lets someone take realm residency WITHOUT joining a faction (residency ≠ membership).
     Authority: you may move someone to any rank strictly below your own; a faction's
     owner (and a parent faction's owner, over an affiliated sub) may move across the
     whole ladder. Rep-driven factions (like the Facility) derive rank from standing —
@@ -72,6 +78,14 @@ class CmdFaction(MuxCommand):
             return self._roster(caller, rest)
         if sub in ("invite", "kick", "promote", "demote", "resident", "evict"):
             return self._manage(caller, sub, rest)
+        if sub == "invites":
+            return self._invites(caller)
+        if sub in ("accept", "decline"):
+            return self._respond(caller, sub, rest)
+        if sub == "about":
+            return self._about(caller, rest)
+        if sub in ("setportrait", "setabout", "note", "gallery"):
+            return self._meta(caller, sub, rest)
         if sub == "create":
             return self._create(caller, rest)
         if sub == "disband":
@@ -81,8 +95,150 @@ class CmdFaction(MuxCommand):
         if sub in ("befriend", "enemy", "subsidiary", "unrelate"):
             return self._relate(caller, sub, rest)
 
-        caller.msg("|xUsage: faction [info|roster|invite|kick|promote|demote|resident|evict|"
-                   "setrank|befriend|enemy|subsidiary|unrelate] …|n")
+        caller.msg("|xfaction [info|about|roster|invites|accept|decline|invite|kick|promote|"
+                   "demote|resident|evict|setrank|befriend|enemy|subsidiary|unrelate|setportrait|"
+                   "setabout|note|gallery|create|disband] …|n")
+
+    # ── consent invites (residency / membership) ──────────────────────────────
+    def _offer(self, caller, target, rec):
+        """Record a pending invite on the recipient and notify them; they accept/decline."""
+        pend = list(getattr(target.db, "faction_invites", None) or [])
+        # de-dupe identical pending offers
+        if any(p.get("kind") == rec["kind"] and p.get("key") == rec["key"] for p in pend):
+            caller.msg(f"|x{target.db.rp_name or target.key} already has that invite pending.|n")
+            return
+        pend.append(rec)
+        target.db.faction_invites = pend
+        what = "membership in" if rec["kind"] == "membership" else "residency in"
+        caller.msg(f"|gInvitation sent: {what} |w{rec['name']}|g → "
+                   f"{target.db.rp_name or target.key}.|n")
+        target.msg(f"|Y✦ {rec['from']} invites you to {what} |w{rec['name']}|Y. "
+                   f"|x(faction invites · faction accept <#> · faction decline <#>)|n")
+        # leave an offline notice too, if the ogram model is available
+        try:
+            from web.mail.models import OgramMessage
+            OgramMessage(
+                sender_object_id=caller.id, sender_name=rec["from"],
+                recipient_object_id=target.id, recipient_name=target.db.rp_name or target.key,
+                msg_type="invite",
+                body=(f"An invitation to {what} {rec['name']}. "
+                      f"Use 'faction invites' then 'faction accept <#>' in-world."),
+            ).save()
+        except Exception:
+            pass
+
+    def _invites(self, caller):
+        pend = list(getattr(caller.db, "faction_invites", None) or [])
+        if not pend:
+            caller.msg("|xNo pending invites.|n")
+            return
+        lines = ["|wPending invites:|n"]
+        for i, p in enumerate(pend, 1):
+            what = "membership in" if p.get("kind") == "membership" else "residency in"
+            lines.append(f"  |w{i}.|n {what} |c{p.get('name')}|n  |x(from {p.get('from')})|n")
+        lines.append("|xfaction accept <#>  ·  faction decline <#>|n")
+        caller.msg("\n".join(lines))
+
+    def _respond(self, caller, sub, rest):
+        from world.factions import join_faction, add_resident
+        from world.realms import apply_realm_title
+        pend = list(getattr(caller.db, "faction_invites", None) or [])
+        if not pend:
+            caller.msg("|xNo pending invites.|n")
+            return
+        try:
+            idx = int(rest.strip()) - 1
+        except ValueError:
+            idx = 0 if len(pend) == 1 else -1
+        if not (0 <= idx < len(pend)):
+            caller.msg("|xWhich invite? See: faction invites|n")
+            return
+        rec = pend.pop(idx)
+        caller.db.faction_invites = pend
+        if sub == "decline":
+            caller.msg(f"|xYou decline the invitation to {rec.get('name')}.|n")
+            return
+        if rec["kind"] == "membership":
+            join_faction(caller, rec["key"], 0)
+            caller.msg(f"|gYou accept — you're now a member of |w{rec['name']}|g.|n")
+        else:
+            add_resident(caller, rec["key"])
+            try:
+                apply_realm_title(caller, rec["key"])
+            except Exception:
+                pass
+            caller.msg(f"|gYou accept — you're now a resident of |w{rec['name']}|g.|n")
+
+    def _about(self, caller, key_arg):
+        """Browsable faction page: portrait ref, about text, notes, gallery captions."""
+        from world.factions import _key
+        from world.realms import get_faction, faction_name
+        from world.realm_state import get_faction_meta
+        k = _key(key_arg) or _resolve_faction_key(caller, None)
+        f = get_faction(k)
+        if not f:
+            caller.msg("|xNo such faction. Try: designate factions|n")
+            return
+        meta = get_faction_meta(k)
+        col = f.get("colour", "|w")
+        lines = [f"{col}{f['name']}|n  |x({k})|n"]
+        if meta.get("portrait"):
+            lines.append(f"  |xportrait:|n {meta['portrait']}")
+        about = meta.get("about") or f.get("blurb") or "|x(no description set)|n"
+        lines.append(f"  {about}")
+        notes = meta.get("notes") or []
+        if notes:
+            lines.append("  |x── notes ──|n")
+            for n in notes[-10:]:
+                lines.append(f"  • {n}")
+        gallery = meta.get("gallery") or []
+        if gallery:
+            lines.append(f"  |x── gallery ({len(gallery)}) ──|n")
+            for g in gallery[-10:]:
+                lines.append(f"  ◦ {g}")
+        caller.msg("\n".join(lines))
+
+    def _meta(self, caller, sub, rest):
+        """Owner-editable faction metadata: setportrait, setabout, note add/del, gallery add/del."""
+        from world.factions import _key, is_owner
+        from world.realms import get_faction, faction_name
+        from world.realm_state import (set_faction_meta, add_faction_list_item,
+                                       remove_faction_list_item)
+        if "=" in rest:
+            key_arg, value = [p.strip() for p in rest.split("=", 1)]
+        else:
+            key_arg, value = rest.strip(), ""
+        # for note/gallery the form is: faction note <key> add <text> / del <#>
+        parts = key_arg.split(None, 1)
+        k = _key(parts[0]) if parts else None
+        if not get_faction(k):
+            caller.msg(f"|xUsage: faction {sub} <key> = <value>  (or  faction note <key> add <text>)|n")
+            return
+        if not (is_owner(caller, k) or caller.check_permstring("Builder")):
+            caller.msg(f"|xOnly {faction_name(k)}'s owner may edit its page.|n")
+            return
+
+        if sub == "setportrait":
+            set_faction_meta(k, portrait=value or None)
+            caller.msg(f"|g{faction_name(k)} portrait {'set' if value else 'cleared'}.|n")
+            return
+        if sub == "setabout":
+            set_faction_meta(k, about=value or None)
+            caller.msg(f"|g{faction_name(k)} description {'set' if value else 'cleared'}.|n")
+            return
+        # note / gallery: "<key> add <text>" or "<key> del <#>"
+        op = (parts[1] if len(parts) > 1 else "").split(None, 1)
+        action = op[0].lower() if op else ""
+        payload = op[1].strip() if len(op) > 1 else ""
+        field = "notes" if sub == "note" else "gallery"
+        if action == "add" and payload:
+            n = add_faction_list_item(k, field, payload)
+            caller.msg(f"|g{faction_name(k)} {field}: added (#{n}).|n")
+        elif action in ("del", "remove", "rm") and payload.isdigit():
+            ok = remove_faction_list_item(k, field, int(payload) - 1)
+            caller.msg(f"|g{field} #{payload} removed.|n" if ok else f"|xNo {field} #{payload}.|n")
+        else:
+            caller.msg(f"|xUsage: faction {sub} <key> add <text>   |   faction {sub} <key> del <#>|n")
 
     _CREATE_CAP = 3   # factions one player may own (anti-spam)
 
@@ -312,15 +468,9 @@ class CmdFaction(MuxCommand):
                            f"{realm_name(realm)}.|n")
                 return
             if sub == "resident":
-                add_resident(target, realm)
-                try:
-                    from world.realms import apply_realm_title
-                    apply_realm_title(target, realm)
-                except Exception:
-                    pass
-                caller.msg(f"|g{target.db.rp_name or target.key} is now a resident of "
-                           f"{realm_name(realm)}.|n")
-                target.msg(f"|gYou've been granted residency in {realm_name(realm)}.|n")
+                self._offer(caller, target, {"kind": "residency", "key": realm,
+                                             "name": realm_name(realm),
+                                             "from": caller.db.rp_name or caller.key})
             else:
                 remove_resident(target, realm)
                 caller.msg(f"|g{target.db.rp_name or target.key} is no longer a resident of "
@@ -336,9 +486,9 @@ class CmdFaction(MuxCommand):
             if not can_grant(caller, k, 0):
                 caller.msg(f"|xYou lack the authority to induct into {faction_name(k)}.|n")
                 return
-            join_faction(target, k, 0)
-            caller.msg(f"|g{target.db.rp_name or target.key} is inducted into {faction_name(k)}.|n")
-            target.msg(f"|gYou've been inducted into {faction_name(k)}.|n")
+            self._offer(caller, target, {"kind": "membership", "key": k,
+                                         "name": faction_name(k),
+                                         "from": caller.db.rp_name or caller.key})
             return
 
         if sub == "kick":

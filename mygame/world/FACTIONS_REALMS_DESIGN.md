@@ -217,8 +217,15 @@ Three distinct things, cleanly separated:
      disband` dissolves it. `realms.all_factions`/`get_faction`/`faction_key_for_name` and
      `factions._key`/`is_owner` all see store factions, so created factions work everywhere
      (designate, realmowner, setrank, relations, currency, membership). Tested.
-   - **4d (next): residency invites via ograms** — examine the ogram realm-invite, add a
-     faction-invite; `connect housing` gated on residency.
+   - ◑ **4d (started): consent invites + faction pages.** The old ogram "invite" type was pure
+     flavour; invites are now **consent-based** — `faction invite`/`faction resident` create a
+     *pending* offer (+ an ogram notice), and the recipient runs `faction invites` →
+     `faction accept|decline <#>`. Residency invites grant residency **without** faction membership
+     (residency ≠ membership), exactly as required. Plus owner-editable **faction pages**:
+     `faction setportrait/setabout`, `faction note add|del`, `faction gallery add|del`, browsable by
+     anyone via `faction about <key>` (feeds the website portrait/lore-page roadmap). Stored on the
+     persistent faction-meta store. Remaining 4d: **`connect housing`** — link a resident's personal
+     housing onto the realm grid (needs the tent/waypost housing system examined first).
    - **4d: residency invites via ograms** — examine the ogram realm-invite, add a faction-invite;
      housing-link gated on residency.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.
