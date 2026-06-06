@@ -451,6 +451,17 @@ def _exit_editor(caller):
         caller.cmdset.remove(EditorCmdSet)
     except Exception:
         pass
+    # Tidy any per-caller dynamic target we registered (no slow leak / stale closures).
+    try:
+        skey = caller.db._editor_setter_key or ""
+        if skey and skey.endswith(f"_{caller.id}") or (skey.startswith("_womb_") and f"_{caller.id}_" in skey):
+            EDITOR_TARGETS.pop(skey, None)
+    except Exception:
+        pass
+    try:
+        _PENDING_SETTERS.pop(str(caller.dbref), None)
+    except Exception:
+        pass
     caller.db._editor_buffer = None
     caller.db._editor_target = None
     caller.db._editor_setter_key = None
@@ -528,6 +539,17 @@ def _apply_setter(caller, setter_key, target_display, lines):
     """
     key = setter_key.lower()
 
+    # --- Ogram: reload-safe. The draft lives on db._ogram_draft, so we can rebuild
+    #     the save without a closure even after a server reload wiped _PENDING_SETTERS.
+    if key == "_ogram":
+        try:
+            from commands.ogram_commands import _save_ogram
+            _save_ogram(caller, "\n".join(lines))
+            return True
+        except Exception as e:
+            caller.msg(f"|rError sealing Ogram: {e}|n")
+            return False
+
     # --- Static registry ---
     if key in EDITOR_TARGETS:
         _, setter = EDITOR_TARGETS[key]
@@ -598,15 +620,20 @@ def _apply_setter(caller, setter_key, target_display, lines):
             caller.msg(f"|rError saving: {e}|n")
             return False
 
-    # Setter was lost (server reloaded while editor was open).
-    if setter_key == "_room_field":
-        caller.msg(
-            "|xSave target was lost — the server likely reloaded while you were editing.\n"
-            "Type |w:cancel|n to exit, then re-open the editor to try again.|n"
-        )
-        return False
-
-    caller.msg(f"|xUnknown edit target: '{setter_key}'.|n")
+    # Setter was lost — almost always because the server reloaded while the editor
+    # was open (the cmdset is persistent, but the in-memory save link isn't). Don't
+    # eat the player's work: show it back so they can copy it, and tell them how.
+    buf = list(lines or [])
+    msg = [
+        "|rCouldn't save — the save link was lost (the server reloaded while you were "
+        "editing). Your text is safe below; copy it, |w:cancel|r, then re-open and paste.|n"
+    ]
+    if buf:
+        sep = f"|x{'─' * 44}|n"
+        msg.append(sep)
+        msg.extend(buf)
+        msg.append(sep)
+    caller.msg("\n".join(msg))
     return False
 
 
@@ -749,8 +776,9 @@ class CmdEdit(MuxCommand):
                     return v.split("\n") if v else []
                 def setter(c, lines):
                     room.db.desc = "\n".join(lines)
-                EDITOR_TARGETS["_rdesc_dynamic"] = (getter, setter)
-                return getter, "_rdesc_dynamic", f"room desc: {room.key}"
+                key = f"_rdesc_{self.caller.id}"
+                EDITOR_TARGETS[key] = (getter, setter)
+                return getter, key, f"room desc: {room.key}"
 
             if target_str == "rentry":
                 def getter(c):
@@ -758,8 +786,9 @@ class CmdEdit(MuxCommand):
                     return v.split("\n") if v else []
                 def setter(c, lines):
                     room.db.entry_desc = "\n".join(lines)
-                EDITOR_TARGETS["_rentry_dynamic"] = (getter, setter)
-                return getter, "_rentry_dynamic", f"room entry: {room.key}"
+                key = f"_rentry_{self.caller.id}"
+                EDITOR_TARGETS[key] = (getter, setter)
+                return getter, key, f"room entry: {room.key}"
 
             if target_str == "rexamine":
                 def getter(c):
@@ -767,16 +796,18 @@ class CmdEdit(MuxCommand):
                     return v.split("\n") if v else []
                 def setter(c, lines):
                     room.db.examine_desc = "\n".join(lines)
-                EDITOR_TARGETS["_rexamine_dynamic"] = (getter, setter)
-                return getter, "_rexamine_dynamic", f"room examine: {room.key}"
+                key = f"_rexamine_{self.caller.id}"
+                EDITOR_TARGETS[key] = (getter, setter)
+                return getter, key, f"room examine: {room.key}"
 
             if target_str == "rambient":
                 def getter(c):
                     return list(room.db.ambient_msgs or [])
                 def setter(c, lines):
                     room.db.ambient_msgs = list(lines)
-                EDITOR_TARGETS["_rambient_dynamic"] = (getter, setter)
-                return getter, "_rambient_dynamic", f"room ambient: {room.key}"
+                key = f"_rambient_{self.caller.id}"
+                EDITOR_TARGETS[key] = (getter, setter)
+                return getter, key, f"room ambient: {room.key}"
 
         # prop / extra — handled via freeform; just open with empty getter
         if target_str.startswith('prop "') or target_str.startswith("prop '"):

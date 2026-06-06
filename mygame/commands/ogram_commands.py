@@ -366,6 +366,73 @@ _AFFECTION_LINES = {
         "a moment's attention, and then {name} steps back with the composure of "
         "someone who has done their job well. |xFrom {sender}.|n",
     ],
+    "nibble": [
+        "{name} tilts your head aside with two fingers and sets teeth to the side of "
+        "your throat — a slow, deliberate graze that ends in a kiss over the sting. "
+        "|xFrom {sender}, who wanted to leave a little reminder.|n",
+
+        "Warm breath at your ear first, then the soft scrape of teeth along its edge, "
+        "unhurried, until you shiver — and {name} pulls back satisfied. |xFrom {sender}.|n",
+
+        "{name} catches your lower lip gently between their teeth, holds it a beat too "
+        "long, and lets it go pink and stinging. |xFrom {sender}, with appetite.|n",
+    ],
+    "tease": [
+        "{name}'s hands map you slow and certain — to the edge of everywhere that "
+        "matters and then, deliberately, no further. They step back smiling, leaving "
+        "you wound tight and wanting. |xFrom {sender}, who wants you thinking about it.|n",
+
+        "Fingertips trail your spine, your inner wrist, the soft skin just below your "
+        "navel — promising, promising, and never once delivering. {name} withdraws "
+        "before you can chase it. |xFrom {sender}.|n",
+
+        "{name} brings their mouth to within a breath of yours, lets you feel the heat "
+        "of it, then turns it into a chaste kiss to the cheek and leaves. The ache is "
+        "the message. |xFrom {sender}.|n",
+    ],
+    "worship": [
+        "{name} sinks to their knees before you without a word and presses slow, "
+        "reverent kisses up the inside of your thigh, hands spread worshipful on your "
+        "hips — devotion delivered by proxy. |xFrom {sender}, who thinks you a thing "
+        "to be adored.|n",
+
+        "{name} takes your hand, turns it over, and kisses the palm, the wrist, the "
+        "pulse — then lower, slower, with the patience of someone offering tribute. "
+        "|xFrom {sender}, in worship.|n",
+
+        "On bended knee, {name} bows their head to your body and tends to it like an "
+        "altar — unhurried, thorough, grateful. |xFrom {sender}, who would have you "
+        "feel adored.|n",
+    ],
+    "claim": [
+        "{name} fists a hand in your hair, bares your throat, and sets a deep, "
+        "deliberate bite where a collar would sit — sucking a mark up dark beneath "
+        "the skin that will last for days. |xFrom {sender}. You're spoken for, and now "
+        "everyone will know it.|n",
+
+        "{name} pins you with one hand and works a bruise high on your neck, slow and "
+        "possessive, until it blooms — a brand of ownership left by someone else's "
+        "order. |xFrom {sender}, staking a claim.|n",
+
+        "Teeth, then tongue, then the slow ache of a mark pressed into the soft of your "
+        "throat where it cannot be hidden. {name} smooths a thumb over it, pleased. "
+        "|xFrom {sender} — property, labelled.|n",
+    ],
+    "ravish": [
+        "{name} crowds you back against the nearest wall, thigh between yours, mouth "
+        "hot at your throat and hands everywhere at once — a thorough, breathless, "
+        "filthy proxy of exactly what {sender} would do if they had you in reach. You "
+        "are left flushed and unsteady. |xFrom {sender}, who couldn't wait.|n",
+
+        "There is no preamble. {name} takes a fistful of you and kisses you open and "
+        "deep while their free hand learns you without mercy — slow where it counts, "
+        "until your knees are honestly in question — then steps back, composed, leaving "
+        "you wrecked. |xFrom {sender}, with very specific intentions.|n",
+
+        "{name} delivers it the way it was meant: pressed against you, breath ragged, "
+        "hands and mouth conspiring to undo you by degrees and stopping just short of "
+        "ruin. The promise of the rest hangs in the air. |xFrom {sender}.|n",
+    ],
 }
 
 
@@ -450,6 +517,31 @@ def node_affection(caller, raw_string, **kwargs):
             "key": ("4", "grope", "hands"),
             "desc": "|wWandering hands|n",
             "goto": (_set_affection, {"affection_type": "grope"}),
+        },
+        {
+            "key": ("5", "nibble", "bite_soft"),
+            "desc": "|wA teasing nibble|n — teeth at the throat",
+            "goto": (_set_affection, {"affection_type": "nibble"}),
+        },
+        {
+            "key": ("6", "tease"),
+            "desc": "|wA slow tease|n — promise, no delivery",
+            "goto": (_set_affection, {"affection_type": "tease"}),
+        },
+        {
+            "key": ("7", "worship", "adore"),
+            "desc": "|wBody worship|n — kneeling tribute",
+            "goto": (_set_affection, {"affection_type": "worship"}),
+        },
+        {
+            "key": ("8", "claim", "mark", "bite"),
+            "desc": "|rA claiming mark|n — a possessive love-bite",
+            "goto": (_set_affection, {"affection_type": "claim"}),
+        },
+        {
+            "key": ("9", "ravish", "wreck"),
+            "desc": "|rRavished|n — thorough, filthy, breathless",
+            "goto": (_set_affection, {"affection_type": "ravish"}),
         },
         {
             "key": ("b", "back"),
@@ -665,20 +757,21 @@ def _set_gender(caller, raw_string, **kwargs):
 
 
 def _open_editor(caller, raw_string, **kwargs):
-    """Exit EvMenu and enter the text editor to compose the body."""
-    from world.text_editor import _enter_editor, _PENDING_SETTERS
+    """Exit EvMenu and enter the text editor to compose the body.
+
+    Uses the reload-safe "_ogram" setter_key: the draft lives on db._ogram_draft,
+    so the editor can seal the Ogram even if a server reload wiped the in-memory
+    setter mid-compose (previously this silently failed).
+    """
+    from world.text_editor import _enter_editor
 
     draft = caller.db._ogram_draft or {}
     target_name = draft.get("target_name", "someone")
 
-    def _ogram_setter(c, lines):
-        _save_ogram(c, "\n".join(lines))
-
-    _PENDING_SETTERS[str(caller.dbref)] = _ogram_setter
     _enter_editor(
         caller,
         target_display=f"Ogram → {target_name}",
-        setter_key="_room_field",
+        setter_key="_ogram",
         initial_lines=[],
     )
     return None  # exit EvMenu

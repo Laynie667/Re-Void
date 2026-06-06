@@ -129,9 +129,18 @@ house-treasury denominate in **shards** so takings are real money; (c) generalis
 
 ---
 
-## Quick-fix candidates (low-risk, high-value — pending your go)
-1. 🔴 Per-caller dynamic editor keys (`_rdesc_{caller.id}`) — kills the cross-builder save-to-wrong-room bug.
-2. 🔴 Reload-safe editor saves (serializable descriptor) — fixes the ogram/desc "can't save after reload"
-   gap across all 7 integrations.
-3. 🟠 `EDITOR_TARGETS` cleanup on `_exit_editor`.
-4. 🟠 Menu-wide abort for the ogram EvMenu.
+## Quick-fix candidates
+1. ✅ **DONE** — Per-caller dynamic editor keys (`_rdesc_{caller.id}`, `_womb_{caller.id}_{zone}`):
+   the cross-builder save-to-wrong-room bug is closed.
+2. ✅ **DONE (ogram)** — Reload-safe save: the ogram now uses a `_ogram` setter_key that rebuilds the
+   save from `db._ogram_draft` (no closure to lose), so composing-then-reload no longer eats the send.
+   Other closure callers now get a real recovery message that **shows the buffer back** so text isn't
+   lost. (A fully serializable descriptor for *every* caller is still the long-term ideal.)
+3. ✅ **DONE** — `_exit_editor` now pops per-caller dynamic targets + the pending setter (no leak).
+4. 🟠 Menu-wide abort for the ogram EvMenu — still open (every node carries `q/cancel` today, so it's
+   not currently a trap; deferred).
+
+## Naughty additions (done)
+- Affection ograms grew from 4 → **9** types: `kiss`, `french_kiss`, `hug`, `grope`, plus **`nibble`,
+  `tease`, `worship`, `claim`, `ravish`** — each with 3 courier-delivered variants in the house voice,
+  graded from teasing to filthy, wired into the affection menu (claim/ravish flagged red).

@@ -451,14 +451,15 @@ class CmdWombRoom(MuxCommand):
                 c.msg("|wWombRoom interior description saved.|n")
 
             from world.text_editor import _enter_editor, EDITOR_TARGETS
-            EDITOR_TARGETS[f"_womb_{zone_name}"] = (
-                lambda c: lines,
+            _wkey = f"_womb_{caller.id}_{zone_name}"
+            EDITOR_TARGETS[_wkey] = (
+                lambda c, _l=lines: list(_l),
                 _setter,
             )
             _enter_editor(
                 caller,
                 f"wombroom interior: {zone_name.replace('_', ' ')}",
-                f"_womb_{zone_name}",
+                _wkey,
                 lines,
                 extra={"setter": _setter},
             )
