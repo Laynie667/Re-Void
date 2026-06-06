@@ -184,4 +184,59 @@ class CmdRealmHere(MuxCommand):
         )
 
 
-ALL_REALM_CMDS = [CmdDesignate, CmdRealmHere]
+class CmdRealmOwner(MuxCommand):
+    """
+    View or reassign which faction OWNS a realm — control shifts over time.
+
+    Usage:
+        realmowner                          — list realms and their current owners
+        realmowner <realm> = <faction>      — reassign the realm's owning faction
+        realmowner <realm> = default        — revert to the seeded default
+
+    The change is persistent (survives reload). Every room in the realm that hasn't a
+    sub-faction override immediately reports the new owner.
+    """
+
+    key = "realmowner"
+    aliases = ["realmown"]
+    locks = _LOCK
+    help_category = "Building"
+
+    def func(self):
+        from world.realms import REALMS, get_realm, get_faction, realm_owner, faction_name
+        from world.realm_state import set_realm_owner, get_realm_owner_override
+        caller = self.caller
+        args = (self.args or "").strip()
+
+        if not args:
+            lines = ["|wRealm ownership:|n"]
+            for rk, rv in REALMS.items():
+                cur = realm_owner(rk)
+                ov = get_realm_owner_override(rk)
+                tag = " |Y(reassigned)|n" if ov else ""
+                lines.append(f"  |w{rv['name']}|n |x({rk})|n → |c{faction_name(cur)}|n{tag}")
+            caller.msg("\n".join(lines))
+            return
+
+        if "=" not in args:
+            caller.msg("|xUsage: realmowner <realm> = <faction|default>|n")
+            return
+        realm_arg, fac_arg = [p.strip() for p in args.split("=", 1)]
+        rk = (realm_arg or "").lower()
+        if not get_realm(rk):
+            caller.msg(f"|xNo realm '{realm_arg}'. Try: designate realms|n")
+            return
+        if fac_arg.lower() in ("default", "none", "revert", ""):
+            set_realm_owner(rk, None)
+            caller.msg(f"|g{REALMS[rk]['name']} reverted to its default owner: "
+                       f"|c{faction_name(realm_owner(rk))}|g.|n")
+            return
+        if not get_faction(fac_arg):
+            caller.msg(f"|xNo faction '{fac_arg}'. Try: designate factions|n")
+            return
+        set_realm_owner(rk, fac_arg.lower())
+        caller.msg(f"|g{REALMS[rk]['name']} is now owned by |c{faction_name(fac_arg)}|g. "
+                   f"|x(persistent)|n")
+
+
+ALL_REALM_CMDS = [CmdDesignate, CmdRealmHere, CmdRealmOwner]

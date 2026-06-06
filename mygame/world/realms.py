@@ -137,17 +137,30 @@ def room_realm(room):
         return DEFAULT_REALM
 
 
+def realm_owner(realm_key):
+    """The faction that currently OWNS a realm — a persistent override if one's been set
+    (control shifts over time), else the registry default."""
+    try:
+        from world.realm_state import get_realm_owner_override
+        ov = get_realm_owner_override(realm_key)
+        if ov:
+            return ov
+    except Exception:
+        pass
+    r = get_realm(realm_key)
+    return (r.get("faction") if r else DEFAULT_FACTION) or DEFAULT_FACTION
+
+
 def room_faction(room):
-    """The faction controlling a room: an explicit `room.db.faction` override, else
-    the owning faction of the room's realm."""
+    """The faction controlling a room: an explicit `room.db.faction` sub-faction override,
+    else the current owner of the room's realm (which itself may be overridden)."""
     try:
         override = getattr(room.db, "faction", None)
         if override:
             return override
     except Exception:
         pass
-    realm = get_realm(room_realm(room))
-    return (realm.get("faction") if realm else DEFAULT_FACTION) or DEFAULT_FACTION
+    return realm_owner(room_realm(room))
 
 
 def realm_currencies(room):

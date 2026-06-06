@@ -200,10 +200,13 @@ Three distinct things, cleanly separated:
    - ✅ **4b (DONE): `faction` command suite** — `faction` (your ties), `info`, `roster`, `invite`,
      `kick`, `promote`, `demote`, `resident`, `evict`; authority-gated (can_grant / owner override).
      Operates on per-character membership/rank/residency (persistent). Registered in cmdset.
-   - **4c (next): persistent faction store + owner-config** — move faction *definitions* (rank
-     names, currency, relations) to a persistent store so owners can edit them in-game and players
-     can create factions (the code registry stays the seed/defaults). Then `faction setrank/
-     setcurrency/befriend/enemy/subsidiary`.
+   - ◑ **4c (started): persistent override store + realm ownership.** `world/realm_state.py` — a
+     persistent (ServerConfig-backed, in-memory fallback) override layer over the code registries.
+     First use: **realm ownership is reassignable in-game** — `realmowner <realm> = <faction>`
+     (Builder), persists across reloads, and every room in the realm picks up the new owner
+     instantly (`realms.realm_owner` consults the override). Remaining 4c: extend the same store
+     to owner-editable rank names / currency / relations + player-created factions, then
+     `faction setrank/setcurrency/befriend/enemy/subsidiary`.
    - **4d: residency invites via ograms** — examine the ogram realm-invite, add a faction-invite;
      housing-link gated on residency.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.

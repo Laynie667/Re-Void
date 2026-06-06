@@ -1,0 +1,65 @@
+"""
+world/realm_state.py
+
+Persistent runtime overrides for realm/faction configuration — the things that should
+be changeable in-game and *stick* across reloads, because control shifts over time.
+
+The code registries (world/realms.FACTIONS / REALMS) are the seeded DEFAULTS. This layer
+holds the live overrides on top of them, backed by Evennia's ServerConfig (a persistent
+global key/value store). If ServerConfig isn't available (e.g. an out-of-game sanity
+check), it degrades to an in-memory dict so callers never crash.
+
+Currently stores:
+  realm_owners : {realm_key: faction_key}   — who currently OWNS a realm (reassignable)
+
+Designed to grow: faction rank-name/currency/relation overrides and player-created
+factions can live here too when we build owner-config (Phase 4c).
+"""
+
+_KEY = "revoid_realm_state"
+_MEM = {}   # in-memory fallback + cache
+
+
+def _load():
+    try:
+        from evennia.server.models import ServerConfig
+        data = ServerConfig.objects.conf(_KEY, default=None)
+        return dict(data) if data else dict(_MEM)
+    except Exception:
+        return dict(_MEM)
+
+
+def _save(data):
+    # keep the in-memory cache in sync regardless of backend
+    _MEM.clear()
+    _MEM.update(data)
+    try:
+        from evennia.server.models import ServerConfig
+        ServerConfig.objects.conf(_KEY, value=dict(data))
+    except Exception:
+        pass
+
+
+# ── realm ownership overrides ─────────────────────────────────────────────────
+def get_realm_owner_override(realm_key):
+    """The override faction key for a realm, or None if it's still on the registry default."""
+    owners = _load().get("realm_owners") or {}
+    return owners.get((realm_key or "").lower())
+
+
+def set_realm_owner(realm_key, faction_key):
+    """Reassign (or, with faction_key falsy, revert) a realm's owning faction. Persists."""
+    data = _load()
+    owners = dict(data.get("realm_owners") or {})
+    rk = (realm_key or "").lower()
+    if faction_key:
+        owners[rk] = faction_key.lower()
+    else:
+        owners.pop(rk, None)
+    data["realm_owners"] = owners
+    _save(data)
+    return owners.get(rk)
+
+
+def all_realm_owner_overrides():
+    return dict(_load().get("realm_owners") or {})
