@@ -189,8 +189,18 @@ Three distinct things, cleanly separated:
    `accepts_shards`, `exchange_rate`). Realm-local currency is **non-convertible by default**
    — a realm opts in by setting a rate. Logic tested. (Faction-editable currency config —
    set the name/accept/rate in-game — comes with the faction-admin commands in Phase 4/5.)
-4. **Residency + Membership + Ranks** — realm-invite (residency) vs faction-invite (membership),
-   roster, the grant/demote authority + owner override, advancement methods, housing-link.
+4. **Residency + Membership + Ranks** — in progress:
+   - ✅ **4a (DONE): data model + generalised `factions.py`.** Registry-driven (reads
+     `realms.FACTIONS`), Facility back-compat fully preserved (`add_standing`/`get_standing`/
+     `get_facility_tier`/`next_threshold`/`seed_facility_title`/`FACILITY`). New layer: ranks
+     (rep-derived or granted), membership (`join/leave/is_member`), residency (separate from
+     membership), owner-authority `can_grant` (strictly-below-own + owner/parent-owner override),
+     relations (`friends/enemies/subsidiaries`, `relation_between`). Registry gained
+     `ranks`/`relations`/`owner`/`standing_key`; Facility grade ladder migrated into it. Tested.
+   - **4b (next): faction-admin command suite** — `faction info/roster/invite/kick/promote/demote/
+     setrank/setcurrency/relations`, gated by the authority rules; relationship management
+     (friends/enemies/subsidiaries).
+   - **4c: residency + invites** — examine the ogram realm-invite, add a faction-invite; housing-link.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.
 
 ---

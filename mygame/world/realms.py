@@ -26,28 +26,57 @@ FLOOD_CAP = 200
 # kind:    neutral | guild | family | realm | sub   (a 'sub' points at a parent)
 # advance: granted | rep | points | quest           (used by the later rank phase)
 # ranks:   ordered list of rank names (low -> high); [] = no ranks (neutral)
+# A faction entry:
+#   name, kind (neutral|guild|family|realm|sub), parent (sub -> parent key, else None)
+#   colour, invite_only, currency, owner (CEO/leader, above the ladders)
+#   advance: granted | rep | points | quest   (how rank is gained)
+#   standing_key: the key under which this faction's rep lives in db.factions
+#                 (kept as the display name for the Facility so legacy data isn't orphaned)
+#   ranks: ordered low->high list of {"name", "rep"(threshold, rep-advance), "title"(optional)}
+#   relations: {"friends":[keys], "enemies":[keys], "subsidiaries":[keys]}
 FACTIONS = {
     "void": {
         "name": "The Void", "kind": "neutral", "parent": None,
         "colour": "|w", "invite_only": False, "currency": "shards",
-        "leader": None, "advance": "rep", "ranks": [],
+        "owner": None, "advance": "rep", "standing_key": "The Void", "ranks": [],
+        "relations": {"friends": [], "enemies": [], "subsidiaries": []},
         "blurb": "The neutral commons — the hub and the spaces between. Owned by no one, "
                  "kept by a distant, disinterested custodian.",
     },
     "facility": {
         "name": "The Facility", "kind": "realm", "parent": None,
         "colour": "|m", "invite_only": True, "currency": "scrip",
-        "leader": "Bethany", "advance": "rep", "ranks": [],
+        "owner": "Bethany", "advance": "rep", "standing_key": "The Facility",
+        # Stock grade ladder (rep-driven) — migrated from the old _FACILITY_TIERS.
+        "ranks": [
+            {"name": "Unprocessed",         "rep": 0,    "title": ""},
+            {"name": "Intake",              "rep": 40,   "title": "an Intake"},
+            {"name": "Breaking In",         "rep": 150,  "title": "Breaking-In Stock"},
+            {"name": "Breeding Stock",      "rep": 400,  "title": "Breeding Stock"},
+            {"name": "Broodmare",           "rep": 900,  "title": "a Broodmare"},
+            {"name": "Perfected Livestock", "rep": 1800, "title": "Perfected Livestock"},
+        ],
+        "relations": {"friends": [], "enemies": [], "subsidiaries": []},
         "blurb": "A consensual livestock-processing operation. Owns its realm and takes a "
                  "piece of the product as its own.",
     },
     "helena": {
         "name": "House Helena", "kind": "family", "parent": None,
         "colour": "|c", "invite_only": True, "currency": "shards",
-        "leader": "Helena", "advance": "granted", "ranks": [],
+        "owner": "Helena", "advance": "granted", "standing_key": "House Helena", "ranks": [],
+        "relations": {"friends": [], "enemies": [], "subsidiaries": []},
         "blurb": "Helena's house, and the wood it keeps.",
     },
 }
+
+
+def faction_key_for_name(name):
+    """Resolve a display name (db.factions key) back to a registry key, if known."""
+    low = (name or "").lower()
+    for k, v in FACTIONS.items():
+        if k == low or (v.get("name", "").lower() == low) or (v.get("standing_key", "").lower() == low):
+            return k
+    return None
 
 # ── Realm registry ──────────────────────────────────────────────────────────
 # currencies: always effectively includes 'shards'; may add a realm-local one.
