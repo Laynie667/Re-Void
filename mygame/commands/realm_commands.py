@@ -55,10 +55,12 @@ class CmdDesignate(MuxCommand):
                 for k, v in REALMS.items()))
             return
         if low == "factions":
+            from world.realms import all_factions
             caller.msg("|wKnown factions:|n\n" + "\n".join(
                 f"  |w{k}|n — {v['name']}  |x({v.get('kind')}"
-                f"{', sub of ' + v['parent'] if v.get('parent') else ''})|n"
-                for k, v in FACTIONS.items()))
+                f"{', sub of ' + v['parent'] if v.get('parent') else ''}"
+                f"{', player-made' if k not in FACTIONS else ''})|n"
+                for k, v in all_factions().items()))
             return
 
         if not room:

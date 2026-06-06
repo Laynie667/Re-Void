@@ -70,10 +70,22 @@ FACTIONS = {
 }
 
 
+def all_factions():
+    """The code registry merged with player-created factions from the store."""
+    merged = dict(FACTIONS)
+    try:
+        from world.realm_state import get_created_factions
+        merged.update(get_created_factions())
+    except Exception:
+        pass
+    return merged
+
+
 def faction_key_for_name(name):
-    """Resolve a display name (db.factions key) back to a registry key, if known."""
+    """Resolve a display name (db.factions key) back to a registry key, if known —
+    across both code-defined and player-created factions."""
     low = (name or "").lower()
-    for k, v in FACTIONS.items():
+    for k, v in all_factions().items():
         if k == low or (v.get("name", "").lower() == low) or (v.get("standing_key", "").lower() == low):
             return k
     return None
@@ -114,7 +126,14 @@ REALMS = {
 
 # ── Lookups ───────────────────────────────────────────────────────────────────
 def get_faction(key):
-    return FACTIONS.get((key or "").lower())
+    k = (key or "").lower()
+    if k in FACTIONS:
+        return FACTIONS[k]
+    try:
+        from world.realm_state import get_created_factions
+        return get_created_factions().get(k)
+    except Exception:
+        return None
 
 
 def get_realm(key):

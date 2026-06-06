@@ -41,6 +41,9 @@ class CmdFaction(MuxCommand):
         faction resident <player> = <realm>  — grant realm residency (authority required)
         faction evict <player> = <realm>     — remove realm residency (authority required)
         faction setrank <key> = A, B, C      — owner: name the rank ladder (low → high)
+        faction befriend|enemy|subsidiary <other> = <key>  — owner: set relations
+        faction create <key> = <Name>        — found your own faction (you become owner)
+        faction disband <key>                — owner: dissolve a player-made faction
 
     Authority: you may move someone to any rank strictly below your own; a faction's
     owner (and a parent faction's owner, over an affiliated sub) may move across the
@@ -69,6 +72,10 @@ class CmdFaction(MuxCommand):
             return self._roster(caller, rest)
         if sub in ("invite", "kick", "promote", "demote", "resident", "evict"):
             return self._manage(caller, sub, rest)
+        if sub == "create":
+            return self._create(caller, rest)
+        if sub == "disband":
+            return self._disband(caller, rest)
         if sub == "setrank":
             return self._setrank(caller, rest)
         if sub in ("befriend", "enemy", "subsidiary", "unrelate"):
@@ -76,6 +83,66 @@ class CmdFaction(MuxCommand):
 
         caller.msg("|xUsage: faction [info|roster|invite|kick|promote|demote|resident|evict|"
                    "setrank|befriend|enemy|subsidiary|unrelate] …|n")
+
+    _CREATE_CAP = 3   # factions one player may own (anti-spam)
+
+    def _create(self, caller, rest):
+        """faction create <key> = <Display Name> — found a faction; you become its owner."""
+        from world.realms import get_faction, all_factions
+        from world.realm_state import create_faction, get_created_factions
+        from world.factions import join_faction
+        if "=" not in rest:
+            caller.msg("|xUsage: faction create <key> = <Display Name>  "
+                       "(key: one short word, letters/numbers)|n")
+            return
+        key_arg, name = [p.strip() for p in rest.split("=", 1)]
+        key = key_arg.lower()
+        if not key.isalnum() or len(key) < 2 or len(key) > 20:
+            caller.msg("|xKey must be a single alphanumeric word, 2–20 chars.|n")
+            return
+        if get_faction(key):
+            caller.msg(f"|xA faction keyed '{key}' already exists.|n")
+            return
+        if not name:
+            caller.msg("|xGive it a display name.|n")
+            return
+        owned = sum(1 for v in get_created_factions().values() if v.get("owner_id") == caller.id)
+        if owned >= self._CREATE_CAP and not caller.check_permstring("Builder"):
+            caller.msg(f"|xYou already own {owned} factions (cap {self._CREATE_CAP}).|n")
+            return
+        create_faction(key, {
+            "name": name, "kind": "guild", "parent": None, "colour": "|w",
+            "invite_only": True, "currency": "shards",
+            "owner": caller.db.rp_name or caller.key, "owner_id": caller.id,
+            "advance": "granted", "standing_key": name,
+            "ranks": [{"name": "Member", "rep": 0, "title": "Member"},
+                      {"name": "Officer", "rep": 0, "title": "Officer"},
+                      {"name": "Leader", "rep": 0, "title": "Leader"}],
+            "relations": {"friends": [], "enemies": [], "subsidiaries": []},
+            "blurb": "",
+        })
+        join_faction(caller, key, 2)   # owner seats at the top rank
+        caller.msg(f"|g✦ You found |w{name}|g |x({key})|g and take its highest seat. "
+                   f"Name its ranks with |wfaction setrank {key} = …|g.|n")
+
+    def _disband(self, caller, rest):
+        """faction disband <key> — the owner dissolves a player-created faction."""
+        from world.realms import get_faction, faction_name, FACTIONS
+        from world.realm_state import delete_created_faction
+        from world.factions import _key, is_owner
+        k = _key(rest.strip())
+        if not get_faction(k):
+            caller.msg("|xNo such faction.|n")
+            return
+        if k in FACTIONS:
+            caller.msg("|xCore factions can't be disbanded.|n")
+            return
+        if not (is_owner(caller, k) or caller.check_permstring("Builder")):
+            caller.msg("|xOnly the owner may disband it.|n")
+            return
+        nm = faction_name(k)
+        delete_created_faction(k)
+        caller.msg(f"|g{nm} is disbanded.|n")
 
     def _relate(self, caller, sub, rest):
         """faction befriend|enemy|subsidiary|unrelate <other> [= <key>] — owner manages relations."""

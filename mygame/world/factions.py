@@ -21,7 +21,7 @@ Distinctions:
   - resident = allowed to live in a realm; separate from faction membership.
 """
 
-from world.realms import (FACTIONS, get_faction, faction_key_for_name,
+from world.realms import (FACTIONS, all_factions, get_faction, faction_key_for_name,
                           get_realm, realm_name)
 
 # Back-compat: callers import FACILITY and use it as the db.factions key (display name).
@@ -40,7 +40,7 @@ def _key(faction):
     if not faction:
         return None
     low = faction.lower()
-    if low in FACTIONS:
+    if low in all_factions():
         return low
     return faction_key_for_name(faction)
 
@@ -172,6 +172,10 @@ def is_owner(actor, faction):
     f = get_faction(k)
     if not f:
         return False
+    # Player-created factions record the owner's object id.
+    oid = f.get("owner_id")
+    if oid and getattr(actor, "id", None) == oid:
+        return True
     owner = f.get("owner")
     aname = (getattr(actor.db, "rp_name", None) or actor.key or "")
     if owner and aname.lower() == owner.lower():

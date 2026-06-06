@@ -137,3 +137,39 @@ def set_realm_currency(realm_key, **fields):
     data["realm_currency"] = cur
     _save(data)
     return entry
+
+
+# ── player-created factions (full definitions live here) ──────────────────────
+def get_created_factions():
+    return dict(_load().get("created_factions") or {})
+
+
+def create_faction(key, data):
+    d = _load()
+    cf = dict(d.get("created_factions") or {})
+    cf[(key or "").lower()] = dict(data)
+    d["created_factions"] = cf
+    _save(d)
+    return cf[(key or "").lower()]
+
+
+def update_created_faction(key, **fields):
+    d = _load()
+    cf = dict(d.get("created_factions") or {})
+    k = (key or "").lower()
+    if k not in cf:
+        return None
+    entry = dict(cf[k])
+    entry.update(fields)
+    cf[k] = entry
+    d["created_factions"] = cf
+    _save(d)
+    return entry
+
+
+def delete_created_faction(key):
+    d = _load()
+    cf = dict(d.get("created_factions") or {})
+    cf.pop((key or "").lower(), None)
+    d["created_factions"] = cf
+    _save(d)
