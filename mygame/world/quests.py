@@ -57,13 +57,43 @@ QUESTS = {
             {"id": "bred",   "desc": "Be bred in the pens", "count": 1},
         ],
         "rewards": {"exp": {"facility": 50}, "achievement": "first_day"},
+        "then": "facility_breaking",
+    },
+    "facility_breaking": {
+        "name": "Breaking In", "faction": "facility", "realm": "facility",
+        "desc": "Submit to the Process — let the line have you, again and again, until "
+                "resisting it stops occurring to you.",
+        "repeatable": False, "hidden": False, "prereq": {"quests": ["facility_intake"]},
+        "steps": [{"id": "process", "desc": "Be processed by the line", "count": 15}],
+        "rewards": {"exp": {"facility": 150}, "achievement": "broken_in"},
+        "then": "facility_broodmare",
+    },
+    "facility_broodmare": {
+        "name": "Broodmare", "faction": "facility", "realm": "facility",
+        "desc": "Become what you produce — bred and milked and bred again, your line the "
+                "facility's reliable supply.",
+        "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["facility_breaking"], "exp": {"facility": 300}},
+        "steps": [{"id": "process", "desc": "Serve the line as a broodmare", "count": 30}],
+        "rewards": {"exp": {"facility": 400}, "achievement": "broodmare"},
+        "then": "facility_perfected",
+    },
+    "facility_perfected": {
+        "name": "Perfected", "faction": "facility", "realm": "facility",
+        "desc": "The terminus: past lessons, past self — finished product, racked and humming.",
+        "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["facility_broodmare"]},
+        "steps": [{"id": "process", "desc": "Be perfected on the lines", "count": 50}],
+        "rewards": {"exp": {"facility": 1000}, "achievement": "perfected"},
     },
 }
 
 # Achievement def: {name, desc, faction, secret}
 ACHIEVEMENTS = {
     "first_day":  {"name": "First Day", "desc": "Completed intake.", "faction": "facility", "secret": False},
-    "broodmare":  {"name": "Broodmare", "desc": "Carried a full brood to term.", "faction": "facility", "secret": False},
+    "broken_in":  {"name": "Broken In", "desc": "Stopped resisting the Process.", "faction": "facility", "secret": False},
+    "broodmare":  {"name": "Broodmare", "desc": "Became the line's reliable supply.", "faction": "facility", "secret": False},
+    "perfected":  {"name": "Perfected Livestock", "desc": "Reached the terminus of the Process — Deep Stock opens.", "faction": "facility", "secret": False},
 }
 
 
@@ -237,6 +267,12 @@ def complete_quest(char, qid):
     _set_quest(char, qid, st)
     char.msg(f"|G✦ Quest complete: {qdef.get('name', qid)}|n")
     _grant_rewards(char, qdef.get("rewards") or {})
+    # Chain: auto-start the next quest in the line, if its prereqs are now met.
+    nxt = qdef.get("then")
+    if nxt and get_quest(nxt):
+        ok, _m = start_quest(char, nxt)
+        if ok:
+            char.msg(f"|x  …and the next stage opens: |Y{get_quest(nxt).get('name', nxt)}|x.|n")
     return True
 
 

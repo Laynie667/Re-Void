@@ -4428,12 +4428,20 @@ class RealmCycleScript(FacilityScript):
             pass
         # Progression: the Process earns Facility EXP and advances the intake quest line.
         try:
-            from world.quests import grant_exp, advance_quest
+            from world.quests import grant_exp, advance_quest, quest_state, available_quests, start_quest
             grant_exp(char, {"milk": 2, "breed": 3, "condition": 2}.get(phase, 1), "facility")
+            # Auto-enrol into any facility quest whose prereqs are now met — keeps the
+            # descent flowing the moment a stage opens (e.g. once EXP crosses a gate).
+            for qid in available_quests(char, "facility"):
+                start_quest(char, qid)
             if phase == "milk":
                 advance_quest(char, "facility_intake", "milked", 1)
             elif phase == "breed":
                 advance_quest(char, "facility_intake", "bred", 1)
+            # The deeper chain quests advance by sheer processing — one 'process' per beat.
+            for qid in ("facility_breaking", "facility_broodmare", "facility_perfected"):
+                if quest_state(char, qid).get("state") == "active":
+                    advance_quest(char, qid, "process", 1)
         except Exception:
             pass
         # Curse honoring — the two standing curses bite every beat they apply.
@@ -4527,9 +4535,16 @@ class RealmCycleScript(FacilityScript):
             add("pens", "breed", 2)      # she still lets the line have you sometimes
             add("nursery", "nurse", 2 if getattr(char.db, "offspring_roster", None) else 0)
 
-        # Perfected stock (standing >= 1800) is mostly kept down in Deep Stock now —
-        # the loop's terminus, weighted to dominate once she's finished.
-        if standing >= 1800:
+        # Perfected stock is mostly kept down in Deep Stock now — the loop's terminus.
+        # Opened by deep standing OR by earning the 'perfected' achievement (the quest
+        # descent), so the depth is genuinely earned, not just metered.
+        perfected = False
+        try:
+            from world.quests import has_achievement
+            perfected = has_achievement(char, "perfected")
+        except Exception:
+            pass
+        if standing >= 1800 or perfected:
             add("deepstock", "deep", 12)
 
         if not weights:

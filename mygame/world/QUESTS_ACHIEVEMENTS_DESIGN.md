@@ -89,8 +89,15 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   Facility EXP per beat and advances the `facility_intake` quest (milk→milked, breed→bred); signing
   (`binding_effects` mark_signed) auto-starts the intake quest and ticks its `sign` step. So: sign →
   quest starts → process → auto-completes → grants `first_day` + 50 facility EXP.
-- ⏳ Next: gate Facility depth (Deep Stock / heir / drug unlocks) via `meets()`; seed the Facility's
-  full multi-quest descent; sheet/website surfacing of quests & trophies.
+- ✅ **The Facility descent is seeded + gated.** A four-quest chain — Intake → Breaking In →
+  Broodmare → Perfected — each auto-starting the next (`then`) and re-enrolled by the cycle the moment
+  prereqs (incl. EXP gates) are met, advanced by sheer processing ('process' per beat). Completing
+  them grants the tier achievements (first_day/broken_in/broodmare/**perfected**). **Deep Stock now
+  opens on the `perfected` achievement** (or deep standing) via `meets()` — depth genuinely earned by
+  the descent, not just metered. Walked end-to-end in a standalone sim: sign → process → all four
+  complete → Deep Stock unlocks.
+- ⏳ Next: gate the **heir clause / drug & procedure unlocks** via `meets()` too; sheet/website
+  surfacing of quests & trophies; per-other-faction quest lines.
 
 ## G. Build phasing (when we get here)
 1. `world/quests.py` API + `db.exp/quests/achievements` model + the `meets()` gate.
