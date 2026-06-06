@@ -181,8 +181,14 @@ Three distinct things, cleanly separated:
    setter, and `realms.apply_realm_title(char, key)` to fill it from the registry on residency.
    *Reconcile-later note:* the `{level}` slot is driven by a **global** `db.reputation` tier,
    separate from per-faction `db.factions` standing — Phase 4 makes `{grade}` faction-rank-aware.
-3. **Multi-currency wallet** + realm-local currency gating (Facility scrip migrates in;
-   per-realm: currency name, accept-shards flag, shop exchange rate).
+3. ✅ **Multi-currency wallet (DONE):** `world/wallet.py` — a view/routing layer over the
+   existing stores (shards→`typeclasses.economy`, scrip→`world.economy`, others→`db.wallet`),
+   so nothing migrated destructively. `balance/credit/debit/can_afford/exchange`,
+   `valid_here` (realm-gated), `wallet_lines`. `wallet` command shows all currencies + where
+   each is good; new `exchange` command. Per-realm config in REALMS (`local_currency`,
+   `accepts_shards`, `exchange_rate`). Realm-local currency is **non-convertible by default**
+   — a realm opts in by setting a rate. Logic tested. (Faction-editable currency config —
+   set the name/accept/rate in-game — comes with the faction-admin commands in Phase 4/5.)
 4. **Residency + Membership + Ranks** — realm-invite (residency) vs faction-invite (membership),
    roster, the grant/demote authority + owner override, advancement methods, housing-link.
 5. Sub-factions surfaced (Facility crews, independent groups) once 1–4 are solid.

@@ -39,9 +39,14 @@ class CmdWallet(MuxCommand):
             f"\n{_SEP}",
             f"|m✦ Wallet  —  {caller.db.rp_name or caller.key}|n",
             _SEP,
-            f"  Balance:  |w{balance:,}|n shards",
-            "",
         ]
+        # Multi-currency: shards plus any realm-local currencies held (Phase 3).
+        try:
+            from world.wallet import wallet_lines
+            lines.extend(wallet_lines(caller))
+        except Exception:
+            lines.append(f"  Balance:  |w{balance:,}|n shards")
+        lines.append("")
 
         try:
             from django.db.models import Q
@@ -158,3 +163,38 @@ class CmdPay(MuxCommand):
                 f"|xBalance: {result:,}.|n"
             )
             target.msg(f"|m✦|n |w{caller_display}|n pays you |w{amount:,}|n shards.")
+
+
+class CmdExchange(MuxCommand):
+    """
+    Exchange a realm's local currency into shards — where the realm allows it.
+
+    Usage:
+        exchange <amount> <currency>     — e.g. exchange 200 scrip
+
+    Realm-local currencies are sovereign by default and do NOT convert; a realm
+    only allows exchange if its governing faction has set a rate. Shards are the
+    universal tender, so there's nothing to exchange them into.
+    """
+
+    key           = "exchange"
+    aliases       = ["convert"]
+    locks         = "cmd:all()"
+    help_category = "Economy"
+
+    def func(self):
+        caller = self.caller
+        room = caller.location
+        parts = self.args.strip().split()
+        if len(parts) < 2 or not parts[0].lstrip("-").isdigit():
+            caller.msg("|xUsage: exchange <amount> <currency>  (e.g. exchange 200 scrip)|n")
+            return
+        amount = int(parts[0])
+        currency = parts[1].lower()
+        try:
+            from world.wallet import exchange
+            ok, msg = exchange(caller, room, currency, amount)
+        except Exception as e:
+            caller.msg(f"|rExchange unavailable: {e}|n")
+            return
+        caller.msg(("|g✨ " if ok else "|x") + msg + "|n")

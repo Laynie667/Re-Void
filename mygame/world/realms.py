@@ -52,20 +52,30 @@ FACTIONS = {
 # ── Realm registry ──────────────────────────────────────────────────────────
 # currencies: always effectively includes 'shards'; may add a realm-local one.
 # housing: whether members may link personal housing onto this realm's grid.
+# Currency config per realm (governing faction's call, editable in-game later):
+#   currencies     : currency keys valid here (shards is global tender by default)
+#   local_currency : this realm's own currency key, or None
+#   accepts_shards : do this realm's shops take outside shards? (faction may opt out)
+#   exchange_rate  : shards per 1 unit of the local currency; 0/None = NO exchange
+#                    (realms opt IN to convertibility — local money is sovereign by default)
 REALMS = {
     "void": {
-        "name": "The Void", "faction": "void", "currencies": ["shards"], "housing": True,
+        "name": "The Void", "faction": "void", "housing": True,
+        "currencies": ["shards"], "local_currency": None,
+        "accepts_shards": True, "exchange_rate": 0,
         "blurb": "The semi-fantasy/medieval commons — Durgin's shop, the Wayfarers' Hall, "
                  "the post office, and the void threaded between.",
     },
     "facility": {
-        "name": "The Facility", "faction": "facility",
-        "currencies": ["shards", "scrip"], "housing": False,
+        "name": "The Facility", "faction": "facility", "housing": False,
+        "currencies": ["shards", "scrip"], "local_currency": "scrip",
+        "accepts_shards": True, "exchange_rate": 0,
         "blurb": "The disconnected processing grid, reached only by waystone.",
     },
     "wildwood": {
-        "name": "Helena's Wood", "faction": "helena",
-        "currencies": ["shards"], "housing": True,
+        "name": "Helena's Wood", "faction": "helena", "housing": True,
+        "currencies": ["shards"], "local_currency": None,
+        "accepts_shards": True, "exchange_rate": 0,
         "blurb": "A forested, snow-touched valley under House Helena. (Cabin moves here.)",
     },
 }

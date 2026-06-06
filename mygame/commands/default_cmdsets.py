@@ -173,9 +173,10 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdOgram())
 
         # Economy — shards, wallet, pay, tip
-        from commands.economy_commands import CmdWallet, CmdPay
+        from commands.economy_commands import CmdWallet, CmdPay, CmdExchange
         self.add(CmdWallet())
         self.add(CmdPay())
+        self.add(CmdExchange())
 
         # Prefs (dnd, afk, highlight, filter, notify, friends, moodcarry, wispname)
         from commands.prefs_commands import ALL_PREFS_CHAR_CMDS
