@@ -319,11 +319,18 @@ def _can_furnish(caller, room):
 
 class CmdInstallFridge(Command):
     """
-    Install a fluid fridge here. Bottles minted by the fluid bank route to the fridge
-    in the room they were produced in (then any fridge), so stock yours where you milk.
+    Install (or convert) a fluid fridge here. Bottles minted by the fluid bank route to
+    the fridge in the room they were produced in (then any fridge), so stock yours where
+    you milk.
 
     Usage:
-        installfridge [name]
+        installfridge [name]              — create a new fridge object
+        installfridge convert <object>    — make an EXISTING object (e.g. your decorative
+                                            fridge) a working fridge, keeping its prose,
+                                            and pull every bottle in the room into it
+
+    Use 'convert' when the room already describes a fridge — it gains the function without
+    a duplicate object, and the room's prose/`look` keep referring to the right thing.
     """
     key = "installfridge"
     locks = "cmd:all()"
@@ -341,7 +348,63 @@ class CmdInstallFridge(Command):
         from typeclasses.fluid_fridge import FluidFridge
         from typeclasses.fluid_bottle import FluidBottle
         from evennia.utils import create
-        name = self.args.strip() or "a refrigerator"
+        args = self.args.strip()
+
+        # ── convert mode: upgrade an existing object into a working fridge ──
+        if args.lower().startswith("convert"):
+            target_name = args[len("convert"):].strip()
+            if not target_name:
+                caller.msg("|xUsage: installfridge convert <object>|n")
+                return
+            target = caller.search(target_name)
+            if not target:
+                return
+            if target.is_typeclass(FluidFridge, exact=False):
+                caller.msg(f"|x{target.key} is already a working fridge.|n")
+                return
+            saved_desc = target.db.desc
+            saved_key = target.key
+            try:
+                target.swap_typeclass("typeclasses.fluid_fridge.FluidFridge",
+                                      clean_attributes=False)
+            except Exception as e:
+                caller.msg(f"|rCouldn't convert {saved_key}: {e}|n")
+                return
+            # preserve the original prose/name through the swap
+            if saved_desc is not None:
+                target.db.desc = saved_desc
+            if saved_key:
+                target.key = saved_key
+            # pull every bottle in the room (other fridges, loose) + orphans into it
+            moved = 0
+            for o in list(room.contents):
+                if o is target:
+                    continue
+                src = ([o] if o.is_typeclass(FluidBottle, exact=False) else
+                       list(o.contents) if o.is_typeclass(FluidFridge, exact=False) else [])
+                for b in src:
+                    if b.is_typeclass(FluidBottle, exact=False):
+                        b.location = target
+                        moved += 1
+            for b in [x for x in FluidBottle.objects.all() if x.location is None]:
+                b.location = target
+                moved += 1
+            caller.msg(f"|g✦ |w{target.key}|g is now a working fridge — its description is "
+                       f"untouched. Moved |w{moved}|g bottle(s) into it. Delete any leftover "
+                       f"fridge with |w@del <name>|g.|n")
+            return
+
+        # ── create mode: a fresh fridge object ──
+        # Warn if the room already describes/holds a fridge-like object.
+        existing = [o for o in room.contents
+                    if any(w in (o.key or "").lower() for w in ("fridge", "cooler", "case", "freezer"))
+                    and not o.is_typeclass(FluidFridge, exact=False)]
+        if existing:
+            caller.msg(f"|yThere's already a '{existing[0].key}' here that isn't functional. "
+                       f"To make IT the working fridge (keeping its description), use:|n\n"
+                       f"  |winstallfridge convert {existing[0].key}|n")
+            return
+        name = args or "a refrigerator"
         fridge = create.create_object(FluidFridge, key=name, location=room)
         lost = [b for b in FluidBottle.objects.all() if b.location is None]
         for b in lost:
