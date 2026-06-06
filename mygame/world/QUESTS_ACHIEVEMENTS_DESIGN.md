@@ -73,6 +73,21 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
 - Website: an achievements showcase + quest-line lore pages per faction (ties the portrait/
   lore-page work already on the roadmap).
 
+## STATUS — Phase 1 BUILT
+- ✅ `world/quests.py`: the engine — `db.exp/quests/achievements` model; `grant_exp/get_exp`;
+  `start_quest/advance_quest`(auto-completes when steps met)`/complete_quest/fail_quest`;
+  `grant/revoke/has_achievement`, `achievements_of`; `_grant_rewards` (exp/achievement/shards/
+  scrip via the wallet/rank); and the universal `meets(char, req)` gate
+  (quests/achievements/exp/rank). Built-in seeds + a ServerConfig-backed **custom store** so
+  factions/players add their own. Tested standalone (quest flow, rewards, meets, custom authoring).
+- ✅ `commands/quest_commands.py`: `quests`/`quest <id>`/`quest start|abandon` (player log);
+  `achievements [player]` (trophy wall, secret-aware). **Authoring** (faction owner / builder):
+  `quest create/step/reward/grant/delete`, `achievement create/grant/delete` — so faction owners
+  author their own achievements and players/owners write quests beyond the built-ins, persisted.
+- ⏳ Next: wire scene hooks to `advance_quest` (facility cycle milk/breed/etc.), faction
+  `advance:"quest"/"exp"` → auto-promote, gate Facility depth (Deep Stock/heir/drugs) via `meets()`,
+  and seed the Facility's full quest line. Sheet/website surfacing.
+
 ## G. Build phasing (when we get here)
 1. `world/quests.py` API + `db.exp/quests/achievements` model + the `meets()` gate.
 2. QUESTS/ACHIEVEMENTS registries (seed the Facility intake line first).

@@ -353,6 +353,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_FACTION_CMDS:
             self.add(cmd_cls())
 
+        # Quests / achievements / exp (progression)
+        from commands.quest_commands import ALL_QUEST_CMDS
+        for cmd_cls in ALL_QUEST_CMDS:
+            self.add(cmd_cls())
+
         # Dairy / fridge (setdairy, fridge — milk is now in body_mod_commands)
         from commands.dairy_commands import CmdSetDairy, CmdFridge, CmdFluids, CmdDrink
         self.add(CmdSetDairy())
