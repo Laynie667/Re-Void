@@ -16,6 +16,7 @@ Character attributes:
 """
 
 from evennia import Command
+from evennia.commands.default.muxcommand import MuxCommand
 from datetime import datetime
 
 
@@ -402,7 +403,7 @@ class CmdFluids(Command):
 
 
 
-class CmdDrink(Command):
+class CmdDrink(MuxCommand):
     """
     Drink from a bottle — one you're holding, or one in the room/fridge.
 
