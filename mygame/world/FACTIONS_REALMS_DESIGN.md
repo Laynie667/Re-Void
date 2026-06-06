@@ -41,11 +41,12 @@ FACTIONS = {
   generalise `factions.py` so **every** faction (not just the Facility) reads its tiers,
   title, colour, and currency from this registry. Facility becomes row 0, not a hardcode.
 
-### The default: **The Void** (neutral)
+### The default: **The Void** (neutral) — LOCKED
 - The hub and everything currently hanging off it get `realm="void"`, `faction="void"`.
-- Neutral mechanically (no grades forced, no invite needed, shards-only). I'd give it a
-  whisper of lore — a distant, disinterested **custodian/“the Sheik of nothing”** figure —
-  flavour only, so the default realm isn't characterless. Easy to expand later.
+- Neutral mechanically (no grades forced, no invite needed, shards-only).
+- **Theme:** semi-fantasy / medieval with **void elements** threaded through. Existing
+  anchors: **Durgin's shop**, the **Wayfarers' Hall**, the **post office**. More shops/places
+  to come. Light custodian lore (a distant, disinterested keeper) — flavour only, expandable.
 
 ---
 
@@ -94,20 +95,46 @@ realm claim <key>                 — mark current room as a realm's hub
 
 ## E. Titles — unified, customizable slots
 
-One template, all factions, all realms:
+One template, all factions, all realms — **order: grade → faction → realm** (confirmed):
 ```
 {prefix} {grade} {interfix} {faction} {suffix} {realm}
 ```
-- **System-filled:** `grade` (from faction standing tier), `faction` (membership), `realm`
-  (current location or home realm).
+- **System-filled:** `grade` (= the member's current **rank title** in that faction; see §G),
+  `faction` (membership), `realm` (home/current realm).
 - **Player-customizable connectives:** `prefix`, `interfix`, `suffix` — free text the player
-  sets (`title prefix the lovely`, `title interfix a devoted`, `title suffix kept in`).
-- Renders cleanest as, e.g.: *“the lovely **Breeding Stock**, a devoted **servant of The
-  Facility**, kept in **the Deep Stock**.”*
+  sets, the "the"/"of"/"of" glue between slots.
+- Reads as: *"**the** Footman **of** House Dorman **of** Elsewhere"* — prefix="the",
+  grade="Footman", interfix="of", faction="House Dorman", suffix="of", realm="Elsewhere".
 - Generalises the current Facility-only `title_faction`/`title_suffix` logic; ownership
-  stamps (— Bethany's) still win their slot where they apply.
+  stamps (— Bethany's) still win where they apply.
 
 ---
+
+## G. Ranks, rep, and advancement (per-faction)
+
+Three distinct things, cleanly separated:
+- **Rep / standing** — the numeric score per faction (`db.factions[key]`). The "grade,
+  standing, rep" you mentioned are one and the same number.
+- **Rank** — a *named position* in the faction hierarchy, **custom-named per faction**
+  (House Dorman: Footman → Steward → Lord; Facility livestock: Intake → Breeding Stock →
+  Broodmare; Facility staff: Handler → Stockman → Overseer). The rank's name fills the
+  `{grade}` title slot. So `_FACILITY_TIERS` generalises into each faction's own rank table.
+- **Advancement method** (set per faction):
+  - `granted` — set by a higher-ranked member (see grant rules);
+  - `rep` — auto-derived from rep thresholds (the Facility model);
+  - `points` — a faction-internal points pool awarded for doing things, spent/accrued toward rank;
+  - `quest` — flag-gated by completing faction objectives;
+  - or a mix (e.g. Facility = rep+quest; a player guild = points+granted).
+
+### Grant / demote rules (player factions)
+- You may grant or demote **any rank strictly below your own**. You cannot grant a rank
+  **equal to or above** your own — so a **leader cannot create another leader**, a mid-rank
+  can only move people below them.
+- **Demotion** is the same gate in reverse (higher rank can demote lower).
+- Factions **define their own rank names + count + advancement method** at creation
+  (`faction setrank`, `faction setadvance points|rep|quest|granted`).
+- Non-player factions (Facility, House Helena) advance however the faction's owner decides —
+  quest-driven, financial, rep, or staff fiat — same data model, NPC/owner pulls the levers.
 
 ## F. Phasing (so we ship working increments)
 1. **Foundation:** the two registries + room `realm`/`faction` stamps + `designate`/flood-fill
@@ -119,16 +146,20 @@ One template, all factions, all realms:
 
 ---
 
-## Open decisions (need your call before Phase 1)
-1. **Faction on rooms:** store `room.db.faction` always, or derive from the realm and only
-   store an override when a sub-faction holds the room? (I lean: realm always, faction only
-   as override — less to maintain.)
-2. **The Void custodian/Sheik:** pure-neutral and faceless, or give it the light custodian
-   lore? (I lean: light lore, mechanically neutral.)
-3. **Title order:** is `{prefix} {grade} {interfix} {faction} {suffix} {realm}` the order you
-   want, or should `realm` come before `faction`? Confirm the read.
-4. **Standing for invite-only factions:** does standing still accrue (for internal rank) once
-   invited, or is rank set purely by grant? (I lean: invited → then standing drives rank.)
+## Decisions — LOCKED
+1. ✅ **Faction on rooms:** the **realm** stamp carries the controlling faction; store
+   `room.db.faction` **only** when a sub-faction owns that specific room (override).
+2. ✅ **The Void:** light lore, mechanically neutral; semi-fantasy/medieval + void elements
+   (Durgin's, Wayfarers' Hall, post office as anchors).
+3. ✅ **Title order:** `grade → faction → realm` ("the Footman of House Dorman of Elsewhere").
+4. ✅ **Rank vs rep:** rep = the score; rank = named, custom, per-faction position. Player
+   factions grant/demote strictly below own rank (no leader makes a leader); advancement is
+   `granted|rep|points|quest` (configurable). NPC factions advance by owner's chosen method.
+
+## Still to gather
+- **Facility faction ideas** (you're bringing these) — its rank ladders (livestock grade track
+  vs staff hierarchy), advancement mix, and how Bethany / sub-crews fit.
+- Helena's wood specifics when the cabin moves.
 
 ---
 
