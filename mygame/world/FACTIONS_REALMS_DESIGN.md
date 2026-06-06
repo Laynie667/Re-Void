@@ -163,11 +163,14 @@ Three distinct things, cleanly separated:
 
 ---
 
-## Side bug (tracked separately): mechanics cross-triggering
-Symptom: the barn **ladder** fires the passage's **creaking stair**; suspected with dildo
-seats / rocking horse / stairs. Hypothesis: interactions resolve by a **shared, non-unique
-key or substring zone match** (`_find_detail` matches `name in dkey`), not the specific
-installed instance — so same-named zones/triggers in different rooms cross-fire. Needs a
-dedicated pass: dump the two rooms' zone+mechanic data, find the shared key, and switch the
-resolver to instance/room-scoped matching. (See the editor `_rdesc_dynamic` fix — same class
-of "global key where a scoped one was needed.")
+## Side bug (RESOLVED): mechanics cross-flavour
+Two separate things, neither a global-id cross-wire:
+- **Stairs/ladder** — *not* a bug. The barn hayloft and the passage staircase are independent
+  `stair` installs; both just inherited the same **default** creak text, so they looked linked.
+  Fix is data: `stair msg <zone> up/down = <text>` to give the ladder its own voice.
+- **Dildo seats "referencing the jacuzzi"** — *real* and **fixed**. `DildoSeatMechanic` was built
+  jacuzzi-first; its sit/locked **message pools** (`_DILDO_SIT_MSGS`/`_DILDO_LOCKED_MSGS`) were all
+  water/panel/throne flavour and were used for *every* dildo seat everywhere. Added jacuzzi-free
+  `*_PLAIN` pools + an `_is_jacuzzi(room)` branch: jacuzzi rooms keep the water flavour, every other
+  dildo seat (breeding bench, barn stocks, facility rig) now reads generically. Install message
+  de-jacuzzi'd too. The jacuzzi *commands* were already correctly gated to `has_jacuzzi`.

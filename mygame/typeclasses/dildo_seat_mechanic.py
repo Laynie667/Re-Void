@@ -76,7 +76,7 @@ class DildoSeatMechanic(SeatMechanic):
         capacity = self.db.capacity or 2
         return True, (
             f"|wDildo seat installed in zone '|w{zone_name}|w'.|n\n"
-            f"|x(Capacity: {capacity}. "
-            f"Players sit with |wsit {zone_name}|x. "
-            f"Lock/release via the panel command or JacuzziStateScript.)|n"
+            f"|x(Capacity: {capacity}. Players sit with |wsit {zone_name}|x. "
+            f"Lock/release by setting the zone's seat 'locked' flag — in a jacuzzi the "
+            f"panel does this; elsewhere a script or @py toggles it.)|n"
         )

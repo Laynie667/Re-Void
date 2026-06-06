@@ -150,6 +150,68 @@ _DILDO_LOCKED_MSGS = [
 ]
 
 
+# ── Generic (NON-jacuzzi) dildo-seat pools ───────────────────────────────
+# The pools above are jacuzzi toe-seat flavour (water/panel/throne). Those bled
+# into EVERY dildo seat regardless of where it was installed. These plain pools
+# carry no water/panel references, so a breeding bench, barn stocks, facility
+# rig, etc. read correctly. Selected when the room is NOT a jacuzzi.
+
+_DILDO_SIT_MSGS_PLAIN = [
+    ("|mYou lower onto the seat and the fixture finds your {orifice} as your weight "
+     "settles. The shaft is long and the knot at the base is the part that decides "
+     "things — broader than everything above it — and once you've seated it, it holds.|n"),
+
+    ("|mYou settle onto the fixture and it presses into your {orifice} inch by inch. "
+     "The knot at the base makes reaching the bottom a commitment; you make it, and it "
+     "seats with a finality you feel everywhere. The seat has you.|n"),
+
+    ("|mThe shaft locates your {orifice} as you take the seat and your own weight does "
+     "the rest — gradual, thorough, the knot widening until it's clear you aren't rising "
+     "casually. You are seated.|n"),
+
+    ("|mYou lower yourself onto it and feel every inch find its place in your {orifice}. "
+     "The knot at the base is what settles the matter; when it seats, it stays. This is "
+     "what the seat was built to do.|n"),
+]
+
+_DILDO_SIT_MSG_PLAIN_GENERIC = (
+    "|mYou lower onto the fixture. The shaft is long and the knot at the base is broad — "
+    "full seating is a process rather than a moment, and it holds once you've completed "
+    "it. The seat has you.|n"
+)
+
+_DILDO_ROOM_SIT_MSGS_PLAIN = [
+    "|x{char_name} lowers onto the {label}. Their expression changes as they settle fully.|n",
+    "|x{char_name} takes the {label}. There is a pause — brief, visible — before they are fully settled.|n",
+    "|x{char_name} settles onto the {label}. What the seat involves makes itself apparent in their face.|n",
+]
+
+_DILDO_LOCKED_MSGS_PLAIN = [
+    ("|xThe knot holds. You press upward and feel exactly how wide the base of the fixture "
+     "is from the inside — it has not changed. You aren't rising until you're released.|n"),
+
+    ("|xRising means clearing the knot, and the knot, from this side, isn't interested in "
+     "that. You stay seated.|n"),
+
+    ("|rThe seat doesn't release.|n The lock is engaged and the knot is what it is. Whoever "
+     "holds the key decides when you come off it.|n"),
+
+    ("|xYou push against the seat. The knot has spent the last while making a case for "
+     "staying, and it wins. You settle back.|n"),
+
+    ("|xThe seat is locked. The knot was wide going in; it has not changed. Rising is not "
+     "what this seat allows right now.|n"),
+]
+
+
+def _is_jacuzzi(room):
+    """True if this room is a jacuzzi (so dildo seats use the water/panel flavour)."""
+    try:
+        return bool(getattr(room.db, "has_jacuzzi", False))
+    except Exception:
+        return False
+
+
 def _check_dildo_seat_locked(char):
     """
     Check whether char is currently sitting in a locked dildo seat.
@@ -175,7 +237,8 @@ def _check_dildo_seat_locked(char):
         if not seat:
             return False, None
         if seat.get("seat_type") == "dildo" and seat.get("locked"):
-            return True, random.choice(_DILDO_LOCKED_MSGS)
+            pool = _DILDO_LOCKED_MSGS if _is_jacuzzi(room) else _DILDO_LOCKED_MSGS_PLAIN
+            return True, random.choice(pool)
     except Exception:
         pass
     return False, None
@@ -387,14 +450,18 @@ def _take_position(caller, zone_arg, position, db_attr,
     orifice_key = None   # stored in occupied for later reference
 
     if is_dildo:
+        jac        = _is_jacuzzi(room)
+        sit_pool   = _DILDO_SIT_MSGS        if jac else _DILDO_SIT_MSGS_PLAIN
+        sit_plain  = _DILDO_SIT_MSG_GENERIC if jac else _DILDO_SIT_MSG_PLAIN_GENERIC
+        room_pool  = _DILDO_ROOM_SIT_MSGS   if jac else _DILDO_ROOM_SIT_MSGS_PLAIN
         orifices = _get_groin_orifices(caller)
         if orifices:
             orifice_key     = random.choice(orifices)
             orifice_display = orifice_key.replace("_", " ")
-            sit_msg    = random.choice(_DILDO_SIT_MSGS).format(orifice=orifice_display)
+            sit_msg    = random.choice(sit_pool).format(orifice=orifice_display)
         else:
-            sit_msg    = _DILDO_SIT_MSG_GENERIC
-        room_sit_msg = random.choice(_DILDO_ROOM_SIT_MSGS)
+            sit_msg    = sit_plain
+        room_sit_msg = random.choice(room_pool)
     # ─────────────────────────────────────────────────────────────────────
 
     if is_dildo:
