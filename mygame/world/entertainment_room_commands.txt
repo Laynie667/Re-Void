@@ -147,8 +147,10 @@ roomzone inscribe/enable east
 -- Inspect contents with:                                                        --
 --   look fridge                                                                 --
 
-@create Helena's Dairy Fridge:typeclasses.fluid_fridge.FluidFridge
+@create/drop Helena's Dairy Fridge:typeclasses.fluid_fridge.FluidFridge
 @desc Helena's Dairy Fridge = A small glass-door refrigerator, humming with the contentment of something kept cold and full. The interior lighting is clean and white; the bottles inside are arranged in a neat row, each labeled with Helena's Dairy Farms branding — the blonde and the auburn fae in matching cow-print, both thoroughly damp, both grinning. |xPut FluidBottle objects in with: put <bottle> in fridge|n
+-- NOTE: use @create/drop (not @create) so the fridge lands in THIS room, not your
+-- inventory. In-game you can also just run:  installfridge Helena's Dairy Fridge
 
 
 -- STEP 11: Add drinks to the bar (east zone) --
