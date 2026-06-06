@@ -224,7 +224,8 @@ class CmdHorseUpgrade(MuxCommand):
     Manage rocking horse upgrades.
 
     Usage:
-      horseupgrade add <motorized/vibrating/milking/restrained/knot/inflation>
+      horseupgrade add <motorized/vibrating/milking/restrained/knot/inflation/breeding>
+        (breeding = the dildos cum into you and the belly fills — deposit + inflate)
       horseupgrade remove <flag>
       horseupgrade list
     """
@@ -233,7 +234,8 @@ class CmdHorseUpgrade(MuxCommand):
     help_category = "Furniture"
     switch_options = ("add", "remove", "list")
 
-    _VALID = {"motorized", "vibrating", "milking", "restrained", "knot", "inflation"}
+    _VALID = {"motorized", "vibrating", "milking", "restrained", "knot",
+              "inflation", "breeding"}
 
     def func(self):
         room = self.caller.location

@@ -95,6 +95,9 @@ class RockingHorseScript(FurnitureSessionScript):
             if "knot" in upgrades:
                 self._check_knot(char, room, upgrades)
 
+            if "breeding" in upgrades:
+                self._tick_breeding(char, room)
+
     def at_start(self):
         room = self.obj
         if not room:
@@ -134,6 +137,37 @@ class RockingHorseScript(FurnitureSessionScript):
                 GlobalFluidBank.get().deposit(
                     char, extract, item.db.fluid_type, item.db.fluid_flavor
                 )
+        except Exception:
+            pass
+
+    def _rider_orifice(self, char):
+        """The orifice the seat is working — prefer cunt/ass over mouth; any orifice else."""
+        zones = getattr(char.db, "zones", None) or {}
+        pref = ("cunt", "pussy", "vagina", "sex", "ass", "anus", "hole")
+        for zn, zd in zones.items():
+            if (zd or {}).get("zone_type") in ("orifice", "both") and any(w in zn for w in pref):
+                return zn
+        for zn, zd in zones.items():
+            if (zd or {}).get("zone_type") in ("orifice", "both"):
+                return zn
+        return None
+
+    def _tick_breeding(self, char, room):
+        """Breeding upgrade: the dildos cum into the seated rider and the belly fills —
+        a real fluid deposit (which the inflation/pregnancy systems pick up). Optional;
+        this is what makes the horse *deposit and inflate* rather than just ride."""
+        try:
+            import random as _r
+            from typeclasses.insemination_item import do_inseminate
+            zone = self._rider_orifice(char)
+            if not zone:
+                return
+            msg = do_inseminate(None, char, zone, {
+                "source": "machine", "fluid_type": "semen",
+                "volume_per_tick": _r.uniform(60.0, 160.0), "ttl_hours": 12.0,
+            })
+            if msg:
+                room.msg_contents(msg)
         except Exception:
             pass
 
