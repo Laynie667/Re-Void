@@ -131,13 +131,29 @@ class CmdSetDairy(Command):
 # MilkingSessionScript + GlobalFluidBank + FluidFridge).
 # ---------------------------------------------------------------------------
 
+def _fridge_object(room):
+    """The FluidFridge container object in this room, if any (the bank routes bottles
+    into it; the dairy 'fridge' command presents its contents on the shelf)."""
+    try:
+        from typeclasses.fluid_fridge import FluidFridge
+        return next((o for o in room.contents if isinstance(o, FluidFridge)), None)
+    except Exception:
+        return None
+
+
 def _fridge_bottles(room):
-    """Return FluidBottle objects stocked in this room's fridge."""
+    """FluidBottle objects on this room's shelf — both loose-and-flagged in the room AND
+    inside a FluidFridge object here (where the fluid bank deposits them). Unifies the two
+    fridge models so one 'fridge' command shows everything."""
     from typeclasses.fluid_bottle import FluidBottle
-    return [
-        obj for obj in room.contents
-        if isinstance(obj, FluidBottle) and getattr(obj.db, "in_fridge", False)
-    ]
+    found = [obj for obj in room.contents
+             if isinstance(obj, FluidBottle) and getattr(obj.db, "in_fridge", False)]
+    fr = _fridge_object(room)
+    if fr:
+        for obj in fr.contents:
+            if isinstance(obj, FluidBottle) and obj not in found:
+                found.append(obj)
+    return found
 
 
 class CmdFridge(Command):
@@ -333,8 +349,14 @@ class CmdFridge(Command):
                 + " to store.|n"
             )
             return
-        target.db.in_fridge = True
-        target.location = room
+        # Prefer a real FluidFridge object in the room; else loose-and-flagged.
+        fr = _fridge_object(room)
+        if fr:
+            target.location = fr
+            target.db.in_fridge = False
+        else:
+            target.db.in_fridge = True
+            target.location = room
         c_name = caller.db.rp_name or caller.name
         from typeclasses.production_item import format_volume
         vol = format_volume(target.db.volume_ml or 0)
