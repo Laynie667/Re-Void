@@ -346,8 +346,15 @@ designation/name, title slots (+ ownership/grade), consent (facility + binding b
 piercings (facility-tagged), freeform marks, body installs (glands/womb/breast/inflation/
 mind monitor + item-created zones), animal-sleeve descs + barriers, pregnancy/belly/cycle,
 offspring roster + spawned get, sale/owner, latex, bethany devotion/brand, FORGET log,
-realm scripts (realm_cycle/heat/bethany_visit/milking). **When adding ANY new persistent
-state, add it here and to all three reset paths.**
+realm scripts (realm_cycle/heat/bethany_visit/milking), the escaped meta-loop flags
+(`facility_escaped`/`liberation_runs`, both in `FACILITY_FLAGS` → cleared by every reset
+path). **When adding ANY new persistent state, add it here and to all three reset paths.**
+
+**Escaped meta-loop OOC-floor verification:** the Deep Stock malfunction escape, `turnin`, and
+`springstock` are pure in-fiction quest resolvers (rolls); none touch `escape`/`force_clear`/
+`/purge`, which always work and clear `facility_escaped` along with everything else. The
+malfunction is the *building's* way out (rollable, recapturable); the §0 floor is the player's
+(never a roll, never gated).
 
 ---
 

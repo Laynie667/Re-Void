@@ -737,6 +737,29 @@ _BOUGHT_REST = [
     "purchased. You earned it draw by draw and covering by covering, and you just gave it back to "
     "them for a minute of nothing — and the minute of nothing is the sweetest thing you own.",
 ]
+# ── Out there: a beat spent loose after a malfunction run. No processing — just the
+#    clock, the ache, and the building hunting the gap. The freedom is real and so is the
+#    pull dragging at the inside of you to go back. (§0 OOC floor is untouched; this is fiction.)
+_OUT_THERE = [
+    "Out. Actually out — sky, or whatever passes for it, and no hand at your neck. You keep "
+    "waiting for the floor to lurch you to the next room and it doesn't, and the not-happening "
+    "is so loud you can't sleep for it. The line is somewhere behind you, holding the gap you left.",
+    "Nobody's milked you in days and your chest aches with it, full and unworked and wrong. "
+    "The body the facility built keeps its appointments whether or not the facility's there to "
+    "keep them — and it wants the cups, the schedule, the certainty. Freedom feels like withdrawal.",
+    "You're free and you can't stop listening for the red light. Every quiet hum out here sounds "
+    "like a pump about to stall; every locked door, like one about to drop. The malfunction got "
+    "you out and left the shape of the place printed on the inside of your skull.",
+    "Somewhere a file with your number on it sits open on a desk, and you can feel it like a hook. "
+    "Bethany hasn't closed it. She doesn't close files; she keeps them. Out here, knowing that, you "
+    "understand the leash was never the collar — it was the wanting, and you brought that with you.",
+    "The days out here are shapeless without the board telling you where you're owed. You catch "
+    "yourself standing where a station would be, presenting to a cart that isn't there, and the "
+    "shame of how easily the body offers itself up is sharper than any hand the place ever laid on you.",
+    "Loose, hunted, and aching — and underneath all of it the small treacherous voice that knows "
+    "the way back through the lobby waystone, and recites the word for it in your own thoughts when "
+    "you're too tired to stop it. You got out. Staying out is the part nobody trained you for.",
+]
 # Polaroids filed on every sale — parlour-style: cold catalogue, face turned away
 _POLAROID_CAPS = [
     "shot from behind on the block, tagged and turning, the lot number bigger than her",
@@ -4349,6 +4372,14 @@ class RealmCycleScript(FacilityScript):
             return   # the cycle starts only after she signs
         if getattr(char.db, "bethany_busy", False):
             return   # the line waits — processing resumes only after Bethany's done
+        # She's loose (in-fiction) — a malfunction run got her out. The Process pauses
+        # around the gap she left; instead of being dragged room to room, each beat is a
+        # beat spent OUT THERE — advancing the escaped-meta quests (turn yourself in /
+        # spring the stock) until she comes back or is recaptured. The §0 OOC floor is
+        # untouched; this is just the line holding its breath while she's gone.
+        if getattr(char.db, "facility_escaped", False):
+            self._escaped_beat(char, t=(char.db.rp_name or char.name))
+            return
         # A beat off the line she bought with her own scrip (commissary 'rest').
         if int(getattr(char.db, "line_pass", 0) or 0) > 0:
             char.db.line_pass = int(char.db.line_pass) - 1
@@ -4524,6 +4555,21 @@ class RealmCycleScript(FacilityScript):
         # Curse honoring — the two standing curses bite every beat they apply.
         self._tick_curses(char, t, cond)
         self.db.phase_index = idx + 1
+
+    def _escaped_beat(self, char, t):
+        """A beat spent loose in the world after a malfunction run (db.facility_escaped).
+        No processing, no dragging — nothing out here moves unless SHE acts (via the
+        `turnin` / `springstock` commands). The beat is just the ache of being off the
+        line and the Process still pulling at her from the inside. The §0 OOC floor is
+        untouched; this is fiction holding its breath while she's gone."""
+        if random.random() < 0.6:
+            char.msg("|x  " + random.choice(_OUT_THERE) + "|n")
+        # The Process printed itself on her; even free, it keeps a low pull on her.
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 0.3, source="escaped")
+        except Exception:
+            pass
 
     def _choose_destination(self, char, rooms):
         """The handler reads her board and decides where she's owed next — a real,
@@ -4769,8 +4815,148 @@ def _escape_resolver(char, qid):
         fail_quest(char, qid)   # the run failed; re-plot to try again
 
 
+# ── The Deep Stock MALFUNCTION resolver (IN-FICTION ONLY) ─────────────────────
+# Unlike the run_* gambits (which always end recaptured), the malfunction CAN actually
+# get her out — the building's own fault, not a plan she can be talked out of. Success
+# sets db.facility_escaped (the cycle then holds its breath; she's loose and hunted).
+# Failure here is the worst the place does. Still never the §0 OOC floor — that's
+# `escape`/`facilityreset`, always, never a roll.
+def _malfunction_resolver(char, qid):
+    import random as _r
+    from world.quests import grant_achievement, fail_quest
+    t = char.db.rp_name or char.key
+    room = char.location
+    cond = float(getattr(char.db, "conditioning", 0) or 0)
+    dev = float(getattr(char.db, "bethany_devotion", 0) or 0)
+    # A genuine chance — the fault is real and the locks really drop. It falls with how
+    # deep she's keyed in (the conditioned and the devoted don't run when the door opens;
+    # they wait to be told to), but it never closes to nothing.
+    chance = max(0.12, 0.42 - cond / 320.0 - dev / 260.0)
+    if _r.random() < chance:
+        char.db.facility_escaped = True
+        grant_achievement(char, "malfunction")
+        grant_achievement(char, "escaped")
+        if room:
+            room.msg_contents(
+                f"|WThe red light hits and the whole sub-level drops at once — pumps dying mid-draw, "
+                f"the lines going slack, every lock on the level thunking open in the dark. {t} is "
+                f"already moving, up through the fault she learned by heart, through the gap where a "
+                f"door should hold and doesn't — and then there's cold air, and no hand, and no board, "
+                f"and no next room. Out. Actually out.|n")
+        char.msg(
+            "|gYou're loose. The facility falls away behind you and for the first time the floor "
+            "doesn't take you anywhere you didn't choose. It won't last — they'll hunt the gap, and "
+            "the line aches at you already to come back — but right now you are OUT, and it's real.|n\n"
+            "|x(`turnin` to walk back through the lobby and put yourself on the board, or `springstock` "
+            "to slip back in and cut a unit loose. The processing line is paused while you're gone.)|n")
+        # Loose stock isn't dragged room to room; pause any active processing quests so
+        # only the escaped-meta line (turn_in / spring_stock) moves while she's out.
+        # (The cycle's _escaped_beat handles the rest each tick.)
+    else:
+        grant_achievement(char, "recaptured")
+        if room:
+            room.msg_contents(
+                f"|R{t} makes it three doors and a stairwell before the lights come back up amber and "
+                f"the level locks her in with it — caught in the fault she thought was hers, hauled back "
+                f"down with the pumps still gasping, and made the lesson the whole sub-level learns: the "
+                f"malfunction belongs to the house too, and the house lets you taste the door precisely so "
+                f"it can take it back. What follows is the worst this place does, and it does it slow.|n")
+        try:
+            from world.compliance import punish, register_defiance
+            punish(char, reason="rode the malfunction", severity=3)
+            register_defiance(char, amount=3, reason="malfunction run")
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 25.0, source="punishment")
+        except Exception:
+            pass
+        fail_quest(char, qid)   # the run failed; wait for the next red light
+
+
+# ── The escaped meta-loop resolvers (IN-FICTION ONLY) ─────────────────────────
+# Only fire while db.facility_escaped. `turn_in` walks her back onto the board (penitent,
+# resumes processing). `spring_stock` runs a rescue: success pays in standing + liberator;
+# getting caught springs the trap and makes her the example — dragged back in and broken.
+def _turnin_resolver(char, qid):
+    from world.quests import grant_achievement
+    t = char.db.rp_name or char.key
+    room = char.location
+    char.db.facility_escaped = False
+    grant_achievement(char, "penitent")
+    if room:
+        room.msg_contents(
+            f"|M{t} walks back in on her own feet — through the lobby waystone, across the floor she "
+            f"knows the shape of, to the desk — and asks, in so many words, to be put back on the board. "
+            f"Bethany doesn't gloat. She just opens the file, finds the page she left open, and says "
+            f"\"Welcome back, sweetheart,\" like the door was never anything but ajar.|n")
+    char.msg("|xThe line takes you back like it never let go. Processing resumes.|n")
+    try:
+        from world.factions import add_standing
+        add_standing(char, source="comply")
+    except Exception:
+        pass
+
+
+def _springstock_resolver(char, qid):
+    import random as _r
+    from world.quests import grant_achievement, fail_quest
+    t = char.db.rp_name or char.key
+    room = char.location
+    # The rescue is a real gamble. It gets harder the more you've pushed your luck (each
+    # liberation makes the house watch the gaps you use), but a clean run pays well.
+    runs = int(getattr(char.db, "liberation_runs", 0) or 0)
+    chance = max(0.25, 0.6 - runs * 0.08)
+    char.db.liberation_runs = runs + 1
+    if _r.random() < chance:
+        grant_achievement(char, "liberator")
+        if room:
+            room.msg_contents(
+                f"|g{t} goes back in through the gap she learned and comes out with someone else — a unit "
+                f"cut loose off the lines in the dark, half-carried up through the fault, blinking at air "
+                f"they'd been processed out of believing in. Two get clear before the lights steady. The "
+                f"house will know by morning that the malfunction has hands now, and a name.|n")
+        char.msg("|gClean. They're out, you're out, and the gap held. The facility just learned to be "
+                 "afraid of the thing it made.|n")
+        try:
+            from world.factions import add_standing
+            add_standing(char, source="defy")
+        except Exception:
+            pass
+    else:
+        # Caught in the act — the trap springs, and she's made the example.
+        char.db.facility_escaped = False
+        char.db.liberation_runs = 0
+        grant_achievement(char, "made_example")
+        grant_achievement(char, "recaptured")
+        if room:
+            room.msg_contents(
+                f"|R{t} gets the unit as far as the threshold before the lights flood white and the gap "
+                f"she trusted turns out to have been watched the whole time. Bethany is standing in it. "
+                f"She doesn't raise her voice. She has the whole house turned out to see what springing "
+                f"stock costs — the rescuer dragged back down past the very unit she came for, made the "
+                f"lesson, made the warning, made the example — and the door she rode out of is welded shut "
+                f"behind her by morning.|n")
+        try:
+            from world.compliance import punish, register_defiance
+            punish(char, reason="caught springing stock", severity=3)
+            register_defiance(char, amount=3, reason="liberation run")
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 25.0, source="punishment")
+        except Exception:
+            pass
+        fail_quest(char, qid)   # caught — back on the board, and the rescue line resets
+
+
 try:
     from world.quests import register_resolver
     register_resolver("escape", _escape_resolver)
+    register_resolver("escape_malfunction", _malfunction_resolver)
+    register_resolver("turn_in", _turnin_resolver)
+    register_resolver("spring_stock", _springstock_resolver)
 except Exception:
     pass

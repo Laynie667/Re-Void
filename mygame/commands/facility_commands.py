@@ -1230,6 +1230,86 @@ class CmdTab(Command):
 ALL_FACILITY_VERBS.append(CmdTab)
 
 
+def _drive_quest(caller, qid):
+    """Start (if needed) and run an escaped-meta quest straight to completion so its
+    resolver fires now — the loose-stock actions play out on use, not on a slow cycle
+    beat. Returns (ok, msg) where ok is False if it couldn't be started."""
+    import world.quests as Q
+    qdef = Q.get_quest(qid)
+    if not qdef:
+        return False, "No such action."
+    if Q.quest_state(caller, qid).get("state") != "active":
+        ok, msg = Q.start_quest(caller, qid)
+        if not ok:
+            return False, msg
+    # Advance the plot to completion — fires the registered resolver via complete_quest.
+    total = sum(int(s.get("count", 1)) for s in qdef.get("steps", []))
+    step = (qdef.get("steps") or [{"id": "process"}])[0].get("id", "process")
+    Q.advance_quest(caller, qid, step, total)
+    return True, ""
+
+
+class CmdTurnIn(Command):
+    """
+    Walk back in and put yourself on the board (only while you're loose).
+
+    Usage:
+        turnin
+
+    After a malfunction lets you out, the ache for the line doesn't leave. This walks
+    you back through the lobby and asks Bethany to take you back. (In-fiction only — the
+    |wescape|n / |wfacilityreset|n OOC floor is something else entirely, and always works.)
+    """
+    key = "turnin"
+    aliases = ["turn-in", "turnmein"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        if not getattr(caller.db, "facility_escaped", False):
+            caller.msg("|xYou're not loose — you're already on the board. (This is for after a "
+                       "malfunction run gets you out.)|n")
+            return
+        ok, msg = _drive_quest(caller, "turn_in")
+        if not ok:
+            caller.msg(f"|x{msg}|n")
+
+
+ALL_FACILITY_VERBS.append(CmdTurnIn)
+
+
+class CmdSpringStock(Command):
+    """
+    Slip back in and try to cut a unit loose (only while you're loose).
+
+    Usage:
+        springstock
+
+    You know the gaps now — the fault timings, the pen routes, the waystone word. Going
+    back in to free a unit pays in standing if you get away with it, and is catastrophic
+    if you're caught: the house will make you the example. (In-fiction only — the OOC
+    |wescape|n floor is never this and never rolls.)
+    """
+    key = "springstock"
+    aliases = ["spring", "liberate", "rescue"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        if not getattr(caller.db, "facility_escaped", False):
+            caller.msg("|xYou're inside — you can't spring stock from the board. Get loose first "
+                       "(the Deep Stock malfunction), then come back for them.|n")
+            return
+        ok, msg = _drive_quest(caller, "spring_stock")
+        if not ok:
+            caller.msg(f"|x{msg}|n")
+
+
+ALL_FACILITY_VERBS.append(CmdSpringStock)
+
+
 def _do_indenture(caller):
     """Consensually convert a member into indentured facility stock — flags, mark,
     conditioning seed, debt cleared, and (if a realm context exists) the cycle picks

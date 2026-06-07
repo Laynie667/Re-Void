@@ -162,6 +162,45 @@ QUESTS = {
         "steps": [{"id": "serve", "desc": "Settle into being kept", "count": 5}],
         "rewards": {"exp": {"facility": 600}, "achievement": "wholly_hers"},
     },
+    # ── The Deep Stock malfunction — the one run that can ACTUALLY get you out. Only the
+    #    deepest stock are wired into the lines that fault; you ride the gap when the
+    #    pumps cut and the locks drop. Unlike the run_* gambits (which always end with a
+    #    hand at your neck), this CAN succeed — and being loose just means being hunted.
+    #    Failure here is the worst in the place. (The §0 OOC floor is never this; it's
+    #    `escape`/`facilityreset`, always, and it never rolls.)
+    "run_malfunction": {
+        "name": "The Malfunction", "faction": "facility", "realm": "facility",
+        "desc": "Down on Sub-Level P the lines fault sometimes — pumps stall, locks drop, the "
+                "lights go red. Learn the rhythm of it, and the next time it happens, be ready "
+                "to move. This is the one way out that the building itself can give you.",
+        "manual": True, "repeatable": True, "hidden": False,
+        "prereq": {"achievements": ["deep_stock"], "not_flags": ["facility_escaped"]},
+        "steps": [{"id": "process", "desc": "Learn the fault, and wait for the red light", "count": 3}],
+        "rewards": {}, "resolve": "escape_malfunction",
+    },
+    # ── The escaped meta-loop — only available once you're actually OUT (db.facility_escaped).
+    #    Turn yourself back in (penitent; resumes processing), or run the rescue line and
+    #    spring other stock — which pays in standing and the liberator badge if you get away
+    #    with it, and is catastrophic if you don't.
+    "turn_in": {
+        "name": "Turn Yourself In", "faction": "facility", "realm": "facility",
+        "desc": "The ache for the line doesn't leave you out here. Walk back through the lobby "
+                "waystone, sit down at her desk, and ask to be put back on the board.",
+        "manual": True, "repeatable": True, "hidden": False,
+        "prereq": {"flags": ["facility_escaped"]},
+        "steps": [{"id": "process", "desc": "Make your way back to the intake door", "count": 1}],
+        "rewards": {}, "resolve": "turn_in",
+    },
+    "spring_stock": {
+        "name": "Spring the Stock", "faction": "facility", "realm": "facility",
+        "desc": "You know the gaps now — the fault timings, the pen routes, the word the "
+                "waystone answers to. Slip back in while you can, and get a unit out the way "
+                "you got out. If they catch you doing it, the whole house will watch what it costs.",
+        "manual": True, "repeatable": True, "hidden": False,
+        "prereq": {"flags": ["facility_escaped"]},
+        "steps": [{"id": "process", "desc": "Get in, cut a unit loose, and get clear", "count": 4}],
+        "rewards": {}, "resolve": "spring_stock",
+    },
 }
 
 # Achievement def: {name, desc, faction, secret}
@@ -192,6 +231,12 @@ ACHIEVEMENTS = {
     "devoted":    {"name": "Devoted", "desc": "Reorganised around Bethany — reaches for her.", "faction": "facility", "secret": False},
     "her_mark":   {"name": "Her Mark", "desc": "Wears Bethany's personal B — owned, specifically.", "faction": "facility", "secret": False},
     "wholly_hers":{"name": "Wholly Hers", "desc": "Bought, collared, devoted, branded, and kept — entirely Bethany's.", "faction": "facility", "secret": False},
+    # ── The Deep Stock malfunction + the escaped meta-loop.
+    "malfunction":{"name": "Malfunction", "desc": "A fault in the lines opened — and you took it.", "faction": "facility", "secret": True},
+    "escaped":    {"name": "Escaped", "desc": "Got out of the facility (in-fiction). For now.", "faction": "facility", "secret": False},
+    "penitent":   {"name": "Penitent", "desc": "Turned yourself back in.", "faction": "facility", "secret": False},
+    "liberator":  {"name": "Liberator", "desc": "Sprang stock from the facility and got away with it.", "faction": "facility", "secret": False},
+    "made_example":{"name": "Made an Example", "desc": "Caught springing stock — and the whole house watched the price.", "faction": "facility", "secret": False},
 }
 
 # ── resolvers — let a quest trigger custom logic on completion (e.g. an escape roll) ──
@@ -465,6 +510,16 @@ def meets(char, req):
             return False
     for qid in req.get("not_quests", []):
         if quest_state(char, qid).get("state") in ("active", "done"):
+            return False
+    # Live-state flags — gate on a current character db flag being set/unset (e.g.
+    # `facility_escaped`: the escaped-meta quests only open while you're actually loose,
+    # and the malfunction run only while you're not). Lets a winding line read live state,
+    # not just permanent badges.
+    for flag in req.get("flags", []):
+        if not getattr(char.db, flag, False):
+            return False
+    for flag in req.get("not_flags", []):
+        if getattr(char.db, flag, False):
             return False
     rk = req.get("rank")
     if rk:

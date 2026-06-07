@@ -119,6 +119,22 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   devotion, failure is brutal (punish + defiance + conditioning spike + the quest fails so you
   re-plot). **Loud OOC line every time: the real exit (`escape`/`facilityreset`, the §0 floor) is
   never this, never gated, never fails.** Achievements: bolted / recaptured.
+- ✅ **The Deep Stock MALFUNCTION + the escaped meta-loop (a real way out — and back).** A unique
+  escape unlike the always-recaptured run_* gambits: `run_malfunction` (manual/repeatable, prereq
+  `deep_stock` achievement + `not_flags:["facility_escaped"]`) plots over deep-stock beats, then
+  `_malfunction_resolver` ROLLS with a *genuine* success chance (≥12%, falls with conditioning/
+  devotion) — success sets `db.facility_escaped=True`, grants `malfunction`+`escaped`, and the cycle
+  switches to `_escaped_beat` (no processing/dragging — just the ache + a slow inward conditioning
+  pull while she's loose and hunted). Failure is the worst the place does (severity-3 punish + big
+  conditioning spike). **Escaped meta-loop** (gated live on `flags:["facility_escaped"]`): the
+  `turnin`/`springstock` **commands** drive the `turn_in` / `spring_stock` quests to immediate
+  resolution — `turn_in` walks her back onto the board (`penitent`, clears the flag, resumes the
+  line); `spring_stock` rolls a rescue (success → `liberator` + standing, scaling harder each run via
+  `db.liberation_runs`; caught → `made_example`+`recaptured`, dragged back in as the example, flag
+  cleared). New `meets()` requirement keys **`flags` / `not_flags`** gate on live character state, not
+  just permanent badges. Achievements: malfunction(secret)/escaped/penitent/liberator/made_example.
+  Tested standalone (flag gating, availability flips, resolver firing). **The §0 OOC floor is never
+  any of this and never rolls** — `escape`/`facilityreset` always works.
 - ✅ **Bethany's hand on the file (`bethany` cmd, owner/staff):** `bethany <player> = reset` (wipe
   Facility quests + EXP → back to Intake), `= deepend` (straight to Perfected, Deep Stock opens),
   `= pluck <quest>` (yank them from one). In-fiction power; never touches the OOC floor.
