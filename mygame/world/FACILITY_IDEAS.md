@@ -346,3 +346,106 @@ the defiance system all call — picks temporary vs permanent by severity + repe
 (`quota_behind`/`defiance`), narrates it, and applies via the hooks above. One primitive, every
 system feeds it, escalation built in. (Pairs with `make_example`, which it would call for the
 spectacle layer.)
+
+---
+
+# §22. THE NUGGET — terminal reduction (and what it opens)
+The facility's deepest dollification terminus, past Perfected / Rendered Down: a unit reduced
+to a **torso** — limbs bound or sealed away, sensory input managed, speech gone, reduced to a
+thing that is bred, milked, used, fed, emptied, displayed, and *kept*. A nugget cannot do
+anything for itself. That total helplessness is the point — and it's only ever safe to go this
+far because the §0 floor is *untouched*: a nugget's `escape`/`force_clear`/`facilityreset` works
+instantly, no limbs required, never gated. The fiction reduces everything; the fire-exit stays.
+
+**State / effects it sets** (all reset-safe flags + existing hooks):
+- `limb_lock` — `navigation_locked` hard + `self_cmds_locked` (can't move, can't use hands/objects).
+- `sensory_hood` — managed sight/sound (room descs filtered/muffled; speech filter → mute).
+- `total_dependence` — must be fed, milked, watered, and emptied *by others or machines* on a tick;
+  hunger/withdrawal/bladder run on their own (ties the milk/bladder/Hollow systems).
+- `nugget` (master flag) + name struck from records (designation/name-fade), grade frozen.
+
+**Furniture / machines it opens** (typeclasses + `install_into_zone`):
+- **The Nugget Cradle** — holds, rocks, feeds, and empties her on a tick; the auto-everything rig.
+- **The Wall Socket / Display Shelf** — mounts her as decor; anyone in the room can `use` the mounted
+  nugget (gallery-style). The Showroom and Bethany's office both get one.
+- **The Transport Crate** — a furniture she's carried/shipped in (ties auctions/get-sales: nuggets sell high).
+
+**What it opens for Bethany:** her *perfect* possession — limbless, fond, wholly dependent, kept on a
+shelf in her office and taken down when she wants her. The false-tenderness register peaks here ("you
+don't need arms to be loved, sweetheart — you just need to be *mine*"). She breeds her own line into a
+nugget, displays her, names her something small, and the gratitude/devotion runs hottest because the
+nugget literally cannot reach for anything *but* her. A personal-line capstone parallel to Wholly Hers.
+
+**Quest line — "The Nugget" (consent-gated, very deep):** reduction stages —
+`offered → bound (limbs)` → `sealed (sensory)` → `kept (the cradle/shelf)` → `nugget` (terminus).
+Manual fork off Perfected/Rendered Down; mutually exclusive with the active escape lines while in it.
+Achievements: `bound_away`, `sealed`, `nugget`. Bethany can `bethany <player> = nugget` to set it.
+
+# §23. More EFFECTS / conditions (reuse arousal/conditioning/binding_effects/mind-monitor)
+- 🔴 **Touch-starved** — inverse of denial: goes into withdrawal/ache when NOT being touched/used for N beats.
+- 🔴 **Leash-sense** — a pull toward her owner's location; aches with distance (generalises devotion-withdrawal).
+- 🔴 **Suggestible-on-cue** — a trigger word drops her into a high-suggestibility window (pairs with conditioning).
+- 🟢 **Blush-tell / scent-tell** — body broadcasts arousal/heat to the room (the "Bloom" curse as a soft effect).
+- 🔴 **Milk-let on cue** — a word/sound makes her let down milk involuntarily (Pavlovian, ties the dairy line).
+- 🔴 **Climax-lock** — can only come on a cue word/permission, and *must* come when it's spoken (both directions).
+- 🔴 **Headspace-drop** — a cue that drops her into doll/animal/little headspace for a window (ties petplay/age-play).
+- 🔴 **Sympathetic-heat** — goes into heat when near another unit in heat (herd synchrony; ties the pens).
+
+# §24. More TRIGGERS (installed phrases; `binding_effects` installed-trigger system, fire for ANY speaker)
+- **"Good girl"** → arousal spike + devotion/docility bump (the reward trigger).
+- **"Present"** → forces the `present` pose, holes offered, can't refuse for a beat.
+- **"Empty"** / **"Fill"** → forced release / forced need-to-be-filled.
+- **"Sleep" / "Wake"** → drops to dollstate / out of it (a hard on-off, owner-only optional).
+- **"Count"** → compelled to recite her number, brood count, cycles served aloud (Records-line synergy).
+- **"Beg"** → compelled to beg out loud for use (auto-fires the `beg` verb).
+- **A personal safeword-shaped IN-FICTION trigger** Bethany installs that *sounds* like control but is
+  pure fiction — and the real safeword (§0) is loudly never this. (Design note: keep the contrast explicit.)
+- **Chained triggers** — one phrase that arms a second; a sequence she's conditioned to complete.
+
+# §25. More CONDITIONING — including PLAYER-TO-PLAYER brainwashing (new system)
+Built-in conditioning is facility-driven today. Open it up so **players can condition each other**:
+- **`condition` / `brainwash` command** (consent-gated): a conditioner runs a session on a consenting
+  target — deepen `conditioning`, raise `suggestibility`/`docility`, install a trigger phrase, plant a
+  designation, drift speech. Uses the SAME real systems (`world/conditioning`, `binding_effects` installed
+  triggers, speech_filters) so it actually shows up in the target's state/look/speech.
+- **Consent model (the safety spine):** a target opts in via a consent handshake (like the indenture/invite
+  flows) that sets *what* may be done (a scope: triggers? name? speech? designation?). The conditioner can
+  only do what's in scope. **The §0 floor is per-player and absolute:** the target's own `escape`/`force_clear`
+  wipes EVERYTHING any conditioner did, instantly, no matter who did it — player-conditioning can never
+  install something another player can't self-clear. No conditioning routed through Claude; no gating the exit.
+- **Conditioner tools:** a `triggers` view (what's installed on a consenting partner), `installtrigger <phrase>
+  = <effect>`, `deepen`, `designate <name>`, `driftspeech <filter>`, `forget <thing>` — each scope-checked.
+- **Mutual / reciprocal:** two players can condition each other; a "handler/pet" pair bond; a player-run
+  "conditioning suite" room (a furniture that lets a conditioner run sessions on whoever's locked in).
+- **Reuse, don't fork:** route every effect through the existing APIs so player-conditioning and
+  facility-conditioning are the same plumbing — and the same single reset clears both.
+
+# §26. More FURNITURE / MACHINES (typeclasses + `install_into_zone`; readable on `look`)
+- **The Conditioning Suite / Chair** — a `seat` install that runs a conditioning session on whoever's
+  locked in (player- or facility-driven); the player-to-player conditioning station.
+- **The Breeding Mill** — an industrial multi-station rig (Cull-line): locks several units, breeds on a tick.
+- **The Milk Organ** — a wall of cups that milks a whole row at once; the Dairy set-piece (readable board).
+- **The Doll Shelf / Nugget Wall** — mounts reduced units as decor; `use` to take one down.
+- **The Stockade Carousel** — a slow public rotation in the Showroom; bidders `use` the lot as it turns.
+- **The Confessional** — a `seat` that pairs with the Echo curse: speak, and it conditions your words back.
+- **The Auto-Dam Rig** — feeds her get on her on a tick (Nursery), hands-free nursing (Prize/Nugget synergy).
+- **The Sounding Bench / Pump Station / Inflation Rig** — procedure-grade machines for the deeper lines.
+
+# §27. More CURSES (standing per-beat; `_impose_curse`/`_tick_curses`)
+- 🔴 **"The Pull"** — periodically drags her to the nearest active mechanic/seat and locks her a beat.
+- 🟢 **"Bloom"** — visible arousal/heat tells broadcast to the room (the soft humiliation curse).
+- 🔴 **"Tithe"** — every climax she has feeds devotion/conditioning (pleasure itself processes her).
+- 🔴 **"Mimic"** — she involuntarily copies the posture/act of anyone being used near her (herd compulsion).
+- 🔴 **"Ledger"** — every use is spoken aloud as a tally to the room (Records/Tally synergy; public counting).
+- 🔴 **"Doll-drift"** — left idle too long, she drifts toward dollstate on her own (Nugget on-ramp).
+
+# §28. THEMED BUNDLES (ship a path WHOLE so it feels distinct)
+Each = a curse + effect + trigger + body-mod + machine + clothing + drug + a quest beat, themed.
+- **PET bundle** — headspace-drop effect + "good girl" trigger + tail/ear body-mods + the kennel furniture +
+  collar/leash clothing + a docility drug + the Pet branch. (Pairs with Pet vs Product fork.)
+- **DAIRY bundle** — milk-let-on-cue effect + permanent ports body-mod + the Milk Organ + the auto-milker
+  harness + Curdle drug + a lactation-lock quest beat.
+- **CULL bundle** — Hollow/never-empty curses + the Breeding Mill + locked plug clothing + Rut drug +
+  numberless designation. (Pairs with the Cull line, already built.)
+- **DOLL / NUGGET bundle** — Doll-drift curse + headspace-drop + sensory hood + limb-lock + the Nugget Cradle
+  + latex sleeve + Blank drug + the Nugget quest line. The terminus bundle.
