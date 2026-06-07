@@ -159,3 +159,141 @@ arousal script, `gang_breeding`, `pregnancy`.
    actually *do* the thing on a tick.
 4. **The `tithe`/`heir` Bethany clauses** (#5) — personal, permanent, and they feed the treasury and
    the line.
+
+---
+
+# THE BIG WEAVE — a full progression lattice (added this pass)
+
+The user's ask: *a huge weave of quests, repeatable quests, loops that reset progress,
+and extensions — new items, effects, curses, body mods, equipment, clothing — escapes
+and punishments, extreme and light.* Everything below names its **real system hook**.
+Tags: 🟢 light · 🔴 extreme · 🔁 repeatable · ♻️ resets progress · 🌿 branch · 🧩 extends existing.
+
+## 11. The quest lattice — spine, branches, and loops
+Engine: `world/quests.py` (QUESTS/ACHIEVEMENTS, `meets()` with quests/achievements/exp/rank/
+flags/not_flags, `then` chaining, `manual` forks, `resolve:` hooks, repeatable). Cycle wires
+phase→step in `RealmCycleScript.at_repeat`.
+
+**Spine extensions (auto, after Perfected):**
+- 🔴🧩 **"Decommissioned"** — terminal stage past Perfected: name fully lost, designation-only,
+  cycle weights collapse to milk/breed/deep. Achievement `decommissioned`. (conditioning ≥ top stage.)
+- 🔴 **"Rendered Down"** — the dollification/latex terminus (`latex_sealed`, body_processing_locked):
+  she becomes a fixture, processed without scenes for N beats, then released changed.
+
+**New branch lines (manual forks, mutually exclusive via not_quests/not_achievements):**
+- 🌿 **"The Prize Line"** vs **"The Cull Line"** — after Broodmare, choose to be bred for *quality*
+  (heir/kept_heir focus, Bethany's own line, slow) or *volume* (quota spikes, gangbreeding, fast/brutal).
+- 🌿 **"Pet"** vs **"Product"** — petplay/dollification branch (designation→animal imprint, `_sty`/
+  pens) vs pure-dairy branch (lactation_locked, ports, the cooler). Colours which rooms pull her.
+- 🌿 **"Bethany's"** vs **"The House's"** — extends the owned_hers capstone: be a *person's* property
+  (devotion/collar/brand, office) or institutional stock (grade/standing, anonymised). Each forecloses.
+
+**Discoverable side-quests (hidden until a trigger):**
+- 🧩 **"What the File Knows"** — break into your own records (Records Hall) to read your file;
+  reading it spikes conditioning (the descriptions take root) but unlocks an intel edge on the
+  malfunction roll. resolve:"read_file".
+- 🧩 **"The Word Keeper"** *(MAYBE — user flagged)* — hub stranger teaches waystone words for a debt.
+- 🌿 **"The One You Sprang"** — a liberated unit returns later (broken elsewhere); fork: free again,
+  or turn them back in for standing. Reads `liberation_runs`.
+- 🔴 **"Recall"** — Bethany-planted craving-quest that fires while you're loose; completes itself if
+  you stay out too long, auto-triggering `turnin`. The leash you carry out the door.
+
+## 12. Repeatable loops & loops that RESET progress
+- 🔁 **"Daily Quota"** — repeatable: hit the milk/breed numbers on the board each cycle for scrip +
+  small standing; miss it → debt + a punishment beat. Ties `quota`/`CmdQuota` + economy. resolve:"quota".
+- 🔁 **"Earn-Back"** — already-seeded compliance earn-back as a formal repeatable quest with a streak.
+- 🔁🌿 **"The Showing"** — repeatable showroom display for buyers; high marks raise sale value, a
+  bad showing drops you a grade. Reuses `_showroom`/auction.
+- ♻️ **"Relapse"** (curse-driven) — if conditioning/devotion fall below a floor (via `escape`-adjacent
+  in-fiction lulls or a drug wearing off), a quest re-opens an EARLIER spine stage and **resets that
+  stage's progress** — you climb it again. The descent that won't stay descended.
+- ♻️ **"Fresh File"** — the in-fiction version of Bethany's `reset` power as a *quest outcome*: certain
+  failures (caught escaping, defying past a threshold) wipe Facility quests/EXP back to Intake
+  (`reset_quests`), in fiction "a clean file, a second first day." ♻️ resets ALL facility progress.
+- ♻️ **"Re-Breaking"** — fail the defiant/Unbroken path too hard → forcibly enrolled back into Breaking
+  In with progress zeroed; the favourite path opens instead. Branch + partial reset.
+- 🔁🔴 **"Deep Rotation"** — repeatable Deep Stock loop: each completion racks you deeper (a tier of
+  `collections_level`), raising baseline conditioning and lowering the malfunction-escape odds.
+
+## 13. Escapes (more routes — each a `resolve:` roll, never the OOC floor)
+- 🔴 **The Malfunction** (BUILT) — deep-stock fault, can truly get out. resolve:"escape_malfunction".
+- 🔁 Waystone / Pens / Keys gambits (BUILT, always recaptured). resolve:"escape".
+- 🌿 **"Buy Your Papers"** — economic escape: clear a vast scrip debt to be released on paper
+  (then the debt-trap/arrears-laced clauses fight you). Ties economy + indenture. resolve:"buyout".
+- 🔴 **"The Sympathetic Hand"** — a staff/NPC offers to look away for a price (a hole, a favour, a
+  betrayal of another unit); branch with a high catch-chance and a cruel double-cross option.
+- 🟢 **"Walk Out the Front"** — for low-conditioning early units only: literally leave via the lobby
+  before the contract's hidden clauses bite; trivial early, impossible later (gated on stage).
+- 🔴 **"Ride the Cull Truck"** — hide in an outbound get/product shipment; success = escaped, failure =
+  sold off to an unknown owner (worse than recapture). Ties `_sell`/auction.
+
+## 14. Punishments (light → extreme; reuse `world/compliance.punish`, `register_defiance`, `_sty`)
+- 🟢 **Corner time** — a beat posed/stilled (navigation_locked one tick), mild.
+- 🟢 **Denial** — orgasm_denial toggled for N beats (arousal_script), aching but light.
+- 🟢 **Extra quota** — punishment as added milk/breed owed on the board.
+- 🔴 **The Trough** (sty) — extended pigsty rotation, pen_filth/pen_scented, designation slip.
+- 🔴 **Public lesson** — the made_example treatment generalised: whole-room broadcast, standing hit,
+  conditioning spike. A reusable `make_example(char, severity)` helper.
+- 🔴 **Milk-to-empty** — punitive over-milking past comfort (cumflation/udder growth beats), `_do_milk` hard mode.
+- 🔴 **Breaking-down** — forced conditioning session that ratchets a stage and installs a trigger
+  (`binding_effects` installed trigger). The punishment that rewrites you.
+- 🔴 **Solitary in Deep Stock** — racked, processed scene-less, time skips; emerges with a stage gained.
+
+## 15. New CURSES (standing per-beat effects; pattern: `_impose_curse` / `_tick_curses`)
+Existing: line_remembers, never_empty. Add:
+- 🔴 **"The Clock"** — every beat not spent being used raises arousal/withdrawal; idleness itself punishes.
+- 🔴 **"Echo"** — anything said to her is repeated back in her own voice a beat later (speech filter),
+  conditioning her own words into her.
+- 🔴 **"Tally"** — a visible body tally (freeform mark) that must be "paid down" by use; grows if not.
+- 🔴 **"The Pull"** — periodically drags her toward the nearest active mechanic/seat and locks her a beat.
+- 🟢 **"Bloom"** — cosmetic: she scents/flushes visibly when aroused, broadcast to the room (humiliation, light).
+- 🔴 **"Hollow"** — caps how full she can feel; cum/milk never satisfies, the empty-ache is permanent-on.
+
+## 16. New EFFECTS / conditions (reuse arousal_script, conditioning, binding_effects, mind monitor)
+- 🔴 **Imprint-on-owner** — keyed to whoever last used/bought her; devotion-style pull toward THEM.
+- 🔴 **Heat-lock tiers** — perpetual_heat with stages (drip → leak → in-heat broadcast → can't-not-present).
+- 🟢 **Afterglow** — temporary docility/suggestibility bump after orgasm (a window for conditioning).
+- 🔴 **Withdrawal web** — separate withdrawal tracks (milk, cock, devotion, a named drug) each with its own ache.
+- 🔴 **Name-fade** — staged loss of her real name in her own speech/look until only the designation remains.
+
+## 17. New BODY MODS / procedures (reuse `_procedure` dispatch + body-install items)
+- 🔴 **Knot-trained holes** — `record_use` capability unlocks become permanent body descs (gaping/prolapse-set).
+- 🔴 **Permanent milk ports** (extend `_proc_milk_port`) — fixed taps, always-on dairy, visible in look.
+- 🔴 **Breeding stamp** — a womb tattoo that displays brood count / "BRED" while gravid (extend `_proc_womb_tattoo`).
+- 🔴 **Saddle-rings / anchor points** — sub-dermal rings (PiercingItem) that equipment locks to.
+- 🔴 **Tail / ear sets** — petplay body installs (animal_sleeve-adjacent) for the Pet branch.
+- 🔴 **Cum-marbling / inflation set** — semi-permanent cumflation that doesn't fully drain (Hollow-adjacent).
+- 🟢 **Cosmetic ink** — owner's mark, lot number, quota tally as real freeform marks (overlaps #10).
+
+## 18. New EQUIPMENT / installs / furniture (FreeformManager / install_into_zone / furniture typeclasses)
+- 🔴 **The Rack** — multi-point restrain furniture for Deep Stock (capacity, scene-less processing).
+- 🔴 **The Carousel** — a rotating breeding bench that cycles partners/animals each beat (dildo+seat).
+- 🔴 **The Stocks v2** — public pillory in the showroom anyone can `use` on a displayed lot.
+- 🔴 **Auto-milker harness** — a worn install (not room-bound) that milks her on a tick anywhere (extends the rocking-horse worn-tick pattern).
+- 🟢 **The Comfort Pen** — a soft bought-rest furniture (commissary), the only kindness, and a leash for it.
+- 🔴 **Insemination chair** — a `dildo` seat that runs `do_inseminate` on lock + broadcasts the deposit.
+
+## 19. New CLOTHING / worn items (wear/remove + binding_effects payloads; PiercingItem for locked)
+- 🔴 **The Locked Collar v2** — extends BethanyCollar: tiers (tag → leash-ring → muzzle), each a clause.
+- 🔴 **Breeding harness** — worn, presents holes, can't self-remove, broadcasts availability.
+- 🔴 **The Display Set** — showroom lingerie that raises sale value but locks on for the showing.
+- 🔴 **Latex sleeve** — the dollification garment (latex_sealed), seals voice/identity.
+- 🟢 **Uniform of grade** — cosmetic worn item that reflects processing tier (a visible rank she can't change).
+- 🔴 **Plug set** — locked plugs (PiercingItem-style lock) that keep a deposit in; tie to "never_empty"/Hollow.
+- 🟢 **Bell / tag** — a cosmetic worn tag that jingles in room messages (light humiliation, petplay).
+
+## 20. New CONSUMABLES / drugs (extend the ×14 drug table + `_dose`/`_drug_pool` gating)
+- 🔴 **Rut** — spikes breeding drive + lowers escape-roll for a window.
+- 🔴 **Curdle** — forces lactation hard, painful overfill.
+- 🟢 **Haze** — light, pleasant suggestibility bump (the "gateway" dose).
+- 🔴 **Anchor** — deepens imprint-on-owner; withdrawal if away from them.
+- 🔴 **Blank** — temporary name/identity fog (Name-fade accelerant).
+- 🟢 **Treat** — a reward dose (afterglow + devotion bump) for compliance — the carrot to the others' stick.
+
+---
+
+### Suggested first weave to build (one coherent pass each)
+1. 🧩 **Quota loop** (#12 Daily Quota) + **make_example helper** (#14) — gives repeatable spine + a reusable punishment primitive everything else can call.
+2. 🌿 **One full branch pair** (#11 Pet vs Product *or* Prize vs Cull) wired into cycle weighting — proves the lattice end to end with new content.
+3. ♻️ **Relapse / Fresh File / Re-Breaking** (#12) — the progress-reset loops the user specifically asked for.
+4. A themed **bundle**: pick a branch and ship its matching curse + effect + body mod + equipment + clothing + drug together (e.g. the Pet bundle, or the Dairy bundle) so each branch *feels* distinct.
