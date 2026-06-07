@@ -297,3 +297,49 @@ Existing: line_remembers, never_empty. Add:
 2. 🌿 **One full branch pair** (#11 Pet vs Product *or* Prize vs Cull) wired into cycle weighting — proves the lattice end to end with new content.
 3. ♻️ **Relapse / Fresh File / Re-Breaking** (#12) — the progress-reset loops the user specifically asked for.
 4. A themed **bundle**: pick a branch and ship its matching curse + effect + body mod + equipment + clothing + drug together (e.g. the Pet bundle, or the Dairy bundle) so each branch *feels* distinct.
+
+---
+
+# §21. Punishments — PERMANENT vs TEMPORARY (asked for directly)
+All route through `compliance.make_example` / `punish` / `register_defiance` for the
+mechanical hit; what follows is the *shape* of the consequence. Permanent = survives the
+beat, written into the body/file (but NEVER survives the OOC floor — `escape`/`force_clear`/
+`facilityreset` wipe all of it). Temporary = a timed state that lifts on its own.
+
+## Temporary (timed, lifts on its own) — 🟢 light · 🔴 heavy
+- 🟢 **Corner-time / stillness** — `navigation_locked` for N beats; posed and made to wait.
+- 🟢 **Denial window** — `orgasm_denial` + raised `arousal_floor` for N beats (arousal_script).
+- 🟢 **Mute / babytalk / honorific-lock** — a temporary speech filter (binding_effects) for N beats.
+- 🟢 **Extra quota** — a one-off bump to milk/breed owed (clears when met).
+- 🔴 **Overstim hold** — pinned to a `dildo`/`milk` mechanic for a fixed run, can't dismount.
+- 🔴 **Edge-marathon** — repeated denial + forced arousal across several beats, no release permitted.
+- 🔴 **The Trough rotation** — a fixed number of pigsty beats (`pen_filth`/`pen_scented`), then released.
+- 🔴 **Solitary in Deep Stock** — scene-less processing for N beats, time-skipped, emerges drained.
+- 🔴 **Public lesson** — `make_example(severity)` itself: the one-beat spectacle (already built).
+- 🔴 **Line-pass revoked** — any bought `line_pass`/`punish_shield` stripped (back on the line now).
+
+## Permanent (written in until the OOC floor wipes it) — body / file / mind
+- 🔴 **A procedure as penalty** — trigger `_procedure` (brand / milk-port / ring / womb-tattoo) as
+  the punishment outcome, not a random beat. "You earned the iron." Real freeform mark / PiercingItem.
+- 🔴 **A punitive piercing/plug locked on** — `PiercingItem.wear` a locked plug/ring she can't remove
+  (ties the "never-empty" curse / cull line).
+- 🔴 **Conditioning ratchet** — force a conditioning STAGE (speech drift / designation / name-loss).
+  `conditioning_permanent` + `add_conditioning` past a threshold; the punishment that rewrites you.
+- 🔴 **Installed trigger** — `binding_effects` installs a conditioned phrase that fires forever after
+  (any speaker). A word that drops you, earned by defiance.
+- 🔴 **A standing curse imposed** — `_impose_curse` (The Clock / Echo / Tally / Hollow — see §15) as a
+  sentence: a per-beat affliction that doesn't lift, only honoured.
+- 🔴 **Quota raised for good** — a permanent bump to `breeding_quota.required` (the cull-line move).
+- 🔴 **Designation downgrade** — name struck from the records, designation-only (Name-fade, §16).
+- 🔴 **Demotion of grade / standing burn** — a permanent standing setback that drops her processing tier.
+- 🔴 **Forfeiture** — trip the contract's `forfeit_freedom` clause early as a sentence (convenient exit
+  locks in-fiction; the §0 floor stays free — that's the whole invariant).
+- 🔴 **A clause imposed** — any Bethany personal clause (collar / honorific / display / line-only)
+  applied as punishment via `_impose_clause` — owned harder for stepping wrong.
+
+### Suggested punishment build (when chosen)
+A `sentence(char, kind, severity)` dispatcher that the quota review, the escape-fail resolvers, and
+the defiance system all call — picks temporary vs permanent by severity + repeat-offender count
+(`quota_behind`/`defiance`), narrates it, and applies via the hooks above. One primitive, every
+system feeds it, escalation built in. (Pairs with `make_example`, which it would call for the
+spectacle layer.)

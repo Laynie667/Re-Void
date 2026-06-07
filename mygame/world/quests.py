@@ -121,6 +121,123 @@ QUESTS = {
         "steps": [{"id": "resist", "desc": "Take the sty rather than submit", "count": 8}],
         "rewards": {"exp": {"facility": 250}, "achievement": "unbroken"},
     },
+    # ══════════════════════════════════════════════════════════════════════════════
+    #  THE BREEDING-LINE FORK — a winding, mutually-exclusive pair (Morrowind-style).
+    #  After Broodmare the house sorts her by what her body is worth: bred for QUALITY
+    #  (the Prize line — curated, possessive, Bethany's own stud line, the get kept and
+    #  graded) or bred for VOLUME (the Cull line — gangbred, animal-bred, numberless,
+    #  the get sold off anonymous). Each ENTRY quest is a manual fork that forecloses the
+    #  other; the rest of each line auto-chains via `then` and the cycle drives it on the
+    #  matching scenes. Both bend the whole cycle's room-weighting (see _choose_destination
+    #  / breeding_line). Explicit, filthy, cruel — and never the OOC floor.
+    # ══════════════════════════════════════════════════════════════════════════════
+    # ── PRIZE LINE ────────────────────────────────────────────────────────────────
+    "prize_selected": {
+        "name": "Selected for the Line", "faction": "facility", "realm": "facility",
+        "desc": "Bethany pulls your file to the top of the stack and reads you like a pedigree — "
+                "hips, output, how well you took the last covering, what your get graded at. You're "
+                "not volume. You're breeding-quality, and that means she'll curate you: her own stud "
+                "line, her own timing, her hands parting you to check you're ripe before she lets the "
+                "chosen cock have you. A prize is kept. A prize is also never, ever left alone. "
+                "(Manual: choosing this forecloses the Cull line.)",
+        "manual": True, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["facility_broodmare"],
+                   "not_quests": ["cull_flagged"], "not_achievements": ["cull_flagged"]},
+        "steps": [{"id": "serve", "desc": "Be assessed, measured, and selected", "count": 3}],
+        "rewards": {"exp": {"facility": 200}, "achievement": "prize_selected"},
+        "resolve": "line_prize", "then": "prize_covered",
+    },
+    "prize_covered": {
+        "name": "Covered by the Line", "faction": "facility", "realm": "facility",
+        "desc": "Now the curated coverings begin — not the pen's indifferent rotation but Bethany's "
+                "chosen studs and her own three-headed cock, scheduled to your ripest days, each "
+                "mounting logged and the load held in you on purpose with a locked plug so nothing "
+                "she paid for runs back out. You are bred deliberately, by quality, watched the whole "
+                "time, told in that warm fond voice exactly what's being put in you and why.",
+        "manual": False, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["prize_selected"]},
+        "steps": [{"id": "bred", "desc": "Take the curated coverings", "count": 5}],
+        "rewards": {"exp": {"facility": 250}},
+        "then": "prize_carried",
+    },
+    "prize_carried": {
+        "name": "Carried to Term", "faction": "facility", "realm": "facility",
+        "desc": "You catch, and swell, and are managed like the valuable livestock you've become — "
+                "monitored, palpated, your belly measured against the line's records, your milk "
+                "brought in early to prove the udder's ready for what's coming. The get you drop is "
+                "graded against Bethany's standard while it's still wet, and the ones that make grade "
+                "are kept for the line. You feed them on you in the nursery. Then she breeds you again.",
+        "manual": False, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["prize_covered"]},
+        "steps": [{"id": "nursed", "desc": "Carry, drop, and nurse the graded get", "count": 4}],
+        "rewards": {"exp": {"facility": 300}, "achievement": "bred_true"},
+        "then": "prize_matron",
+    },
+    "prize_matron": {
+        "name": "Brood-Matron of the Line", "faction": "facility", "realm": "facility",
+        "desc": "You are enshrined: a foundation matron of Bethany's own pedigree, your file thick, "
+                "your lineage branching down the records wall, your worth measured purely in the "
+                "quality of what you drop. Kept, curated, covered to schedule for the rest of it — "
+                "a prized brood animal who reaches for the hand that breeds her, and is told, fondly, "
+                "how very good she is.",
+        "manual": False, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["prize_carried"]},
+        "steps": [{"id": "serve", "desc": "Settle into being the line's prize", "count": 5}],
+        "rewards": {"exp": {"facility": 500}, "achievement": "brood_matron"},
+    },
+    # ── CULL LINE ─────────────────────────────────────────────────────────────────
+    "cull_flagged": {
+        "name": "Flagged for Volume", "faction": "facility", "realm": "facility",
+        "desc": "Bethany doesn't read your file so much as stamp it. Not breeding-quality — "
+                "throughput. You go on the high-volume schedule: no curation, no chosen studs, no "
+                "keeping the get. Your quota doubles on the spot and the pens stop caring what mounts "
+                "you. You're not a line. You're a number the line runs to keep its averages up, and "
+                "the number only goes one way. (Manual: choosing this forecloses the Prize line.)",
+        "manual": True, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["facility_broodmare"],
+                   "not_quests": ["prize_selected"], "not_achievements": ["prize_selected"]},
+        "steps": [{"id": "bred", "desc": "Be put on the volume schedule", "count": 3}],
+        "rewards": {"exp": {"facility": 200}, "achievement": "cull_flagged"},
+        "resolve": "line_cull", "then": "cull_open",
+    },
+    "cull_open": {
+        "name": "Open to the Pens", "faction": "facility", "realm": "facility",
+        "desc": "The schedule opens you to all of it — the gang rotation, the facility animals, "
+                "whatever's standing and ready, one after another with no gap and no record of which "
+                "took. You're bred in a queue, filled and refilled and left dripping for the next, "
+                "the holes worked past soreness into slack indifference. Nobody tells you what's "
+                "being put in you. It doesn't matter. The point is only how many times.",
+        "manual": False, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["cull_flagged"]},
+        "steps": [{"id": "bred", "desc": "Take the open rotation", "count": 8}],
+        "rewards": {"exp": {"facility": 250}},
+        "then": "cull_numberless",
+    },
+    "cull_numberless": {
+        "name": "Bred Past Counting", "faction": "facility", "realm": "facility",
+        "desc": "Your quota stops being a number you could meet and starts being a rate you're held "
+                "at. The get you drop is culled or carted to the block before you've seen it — none of "
+                "it is yours, none of it is kept, and you stop being shown the totals because the "
+                "totals are the point and you are not. Designation only now. Slopped down to the sty "
+                "between coverings because a volume unit doesn't rate better.",
+        "manual": False, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["cull_open"]},
+        "steps": [{"id": "resist", "desc": "Be bred and slopped past counting", "count": 6}],
+        "rewards": {"exp": {"facility": 300}, "achievement": "sold_off"},
+        "then": "cull_rendered",
+    },
+    "cull_rendered": {
+        "name": "Production Unit", "faction": "facility", "realm": "facility",
+        "desc": "You are rendered all the way down to function: a numberless production unit, bred and "
+                "milked on a rate sheet, your get sold off anonymous, your name a thing the records no "
+                "longer bother to print. No curation, no keeping, no specialness — just throughput, "
+                "indefinitely, a hole and a womb and an udder the facility runs because running them "
+                "is what it has you for. The cheapest, hardest-used stock in the place. And it never lets up.",
+        "manual": False, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["cull_numberless"]},
+        "steps": [{"id": "bred", "desc": "Become pure throughput", "count": 6}],
+        "rewards": {"exp": {"facility": 500}, "achievement": "production_unit"},
+    },
     # ── The Daily Quota — the repeatable grind loop. Auto-enrolled by the cycle once you're
     #    through Intake; meet the milk + breeding numbers and it pays (scrip + standing + EXP),
     #    then re-opens for the next "day". Falling behind is handled by the cycle's quota review
@@ -249,6 +366,11 @@ ACHIEVEMENTS = {
     "devoted":    {"name": "Devoted", "desc": "Reorganised around Bethany — reaches for her.", "faction": "facility", "secret": False},
     "her_mark":   {"name": "Her Mark", "desc": "Wears Bethany's personal B — owned, specifically.", "faction": "facility", "secret": False},
     "wholly_hers":{"name": "Wholly Hers", "desc": "Bought, collared, devoted, branded, and kept — entirely Bethany's.", "faction": "facility", "secret": False},
+    # ── The breeding-line fork (Prize vs Cull) — mutually exclusive termini.
+    "prize_selected":  {"name": "Selected for the Line", "desc": "Pulled out of the stock as breeding-quality — Bethany's to curate.", "faction": "facility", "secret": False},
+    "brood_matron":    {"name": "Brood-Matron of the Line", "desc": "Enshrined as a foundation matron of Bethany's pedigree.", "faction": "facility", "secret": False},
+    "cull_flagged":    {"name": "Flagged for Volume", "desc": "Stamped for throughput, not quality — quota doubled, get unkept.", "faction": "facility", "secret": False},
+    "production_unit": {"name": "Production Unit", "desc": "Rendered all the way down to function — numberless, anonymous, hardest-used.", "faction": "facility", "secret": False},
     # ── The Deep Stock malfunction + the escaped meta-loop.
     "malfunction":{"name": "Malfunction", "desc": "A fault in the lines opened — and you took it.", "faction": "facility", "secret": True},
     "escaped":    {"name": "Escaped", "desc": "Got out of the facility (in-fiction). For now.", "faction": "facility", "secret": False},

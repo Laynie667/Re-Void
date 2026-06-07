@@ -63,7 +63,7 @@ FACILITY_FLAGS = {
     "curse_line_remembers": False, "curse_never_empty": False,
 
     # --- strings -> "" ---
-    "orgasm_release_word": "", "required_honorific": "",
+    "orgasm_release_word": "", "required_honorific": "", "breeding_line": "",
 }
 
 

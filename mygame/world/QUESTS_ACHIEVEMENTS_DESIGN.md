@@ -135,6 +135,20 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   just permanent badges. Achievements: malfunction(secret)/escaped/penitent/liberator/made_example.
   Tested standalone (flag gating, availability flips, resolver firing). **The §0 OOC floor is never
   any of this and never rolls** — `escape`/`facilityreset` always works.
+- ✅ **The breeding-line fork (Prize vs Cull) — a full winding, mutually-exclusive line pair.**
+  After Broodmare the house sorts her by what her body is worth. **Prize** (`prize_selected` →
+  `prize_covered` → `prize_carried` → `prize_matron`): curated quality breeding — Bethany's own stud
+  line, locked plugs, the get graded and kept, the nursery, the pedigree wall; terminus `brood_matron`.
+  **Cull** (`cull_flagged` → `cull_open` → `cull_numberless` → `cull_rendered`): industrial volume —
+  gang/animal rotation, quota DOUBLED on entry, get culled/sold anonymous, slopped to the sty,
+  designation-only; terminus `production_unit`. Each ENTRY quest is a `manual` fork that forecloses the
+  other (not_quests/not_achievements); the rest auto-chains via `then` and the cycle drives it on the
+  matching scenes (bred/serve/nursed/resist). Both set `db.breeding_line` (via `line_prize`/`line_cull`
+  resolvers) which **bends the cycle's room-weighting** in `_choose_destination` — Prize pulls
+  pens(curated)/nursery/office/records; Cull pulls pens(hard)/pigsty/restroom/floor. `breeding_line`
+  added to FACILITY_FLAGS (reset-safe). Explicit/filthy/cruel prose throughout. Tested standalone (both
+  paths auto-chain to terminus, mutual exclusion, quota-doubling). Layers on top of the existing
+  Favourite/Unbroken fork — two independent axes of descent now.
 - ✅ **Foundations pass — the Daily Quota loop + the `make_example()` primitive.** `quota_daily`
   (auto, repeatable, prereq Intake) is the grind loop: meet milk(3)+breed(1) and it auto-completes →
   pays scrip + facility EXP + standing (`_quota_met_resolver`), then re-opens for the next "day".

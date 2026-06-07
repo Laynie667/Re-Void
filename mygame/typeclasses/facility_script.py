@@ -4670,6 +4670,24 @@ class RealmCycleScript(FacilityScript):
             pass
         add("records", "records", rec_w)
 
+        # Breeding-line branch: which philosophy she's been sorted into bends the whole
+        # schedule. The Prize line CURATES her — slow, possessive, the pens for Bethany's own
+        # stud line, the nursery for the graded get she's allowed to keep, the records wall for
+        # her pedigree. The Cull line RENDERS her down to volume — the pens worked hard, the
+        # animals, the sty she's slopped to between coverings, milked dry as production too.
+        line = getattr(char.db, "breeding_line", None)
+        if line == "prize":
+            add("pens", "breed", 4)
+            add("nursery", "nurse", 3 if getattr(char.db, "offspring_roster", None) else 0)
+            if "office" in avail:
+                add("office", "owned", 3)
+            add("records", "records", 2)
+        elif line == "cull":
+            add("pens", "breed", 8)
+            add("pigsty", "punish", 4)
+            add("restroom", "toilet", 2)
+            add("floor", "milk", 3)
+
         # Once Bethany owns her, Bethany seizes the cycle — she's mostly kept in the
         # office now, pulled off the line into private use, the more so the more devoted.
         if getattr(char.db, "bethany_owned", False) and "office" in avail:
@@ -4984,6 +5002,53 @@ def _quota_met_resolver(char, qid):
                           f"pays it, and sets the next number a fraction higher.|n", exclude=[char])
 
 
+# ── Breeding-line fork resolvers — sort her into Prize or Cull ────────────────
+# Fire when the ENTRY quest of each line (prize_selected / cull_flagged) completes. They
+# set db.breeding_line (which bends the cycle's room-weighting in _choose_destination),
+# adjust her quota to the line's philosophy, and narrate the sorting. Mutually exclusive
+# is enforced by the quests' own not_quests/not_achievements prereqs.
+def _line_prize_resolver(char, qid):
+    room = char.location
+    t = char.db.rp_name or char.key
+    char.db.breeding_line = "prize"
+    if room:
+        room.msg_contents(
+            f"|r{t} is sorted into the Prize line — pulled off the indifferent rotation and reserved "
+            f"for curated, quality breeding: Bethany's own studs, Bethany's own timing, every covering "
+            f"chosen and logged. She is kept now, and watched, and bred deliberately by what she's worth.|n")
+    char.msg("|MBethany cups your jaw and reads you like a pedigree. \"Oh, you're not throughput, "
+             "sweetheart. You're *good.* I'm going to breed you properly — my line, my hands, my "
+             "schedule — and keep the ones that come out as lovely as their dam.\"|n")
+
+
+def _line_cull_resolver(char, qid):
+    room = char.location
+    t = char.db.rp_name or char.key
+    char.db.breeding_line = "cull"
+    # Volume philosophy: the quota doubles on the spot (shape-tolerant; _SaverDict-safe).
+    try:
+        q = getattr(char.db, "breeding_quota", None)
+        if hasattr(q, "items") and q:
+            newq = {}
+            for sp, v in q.items():
+                if hasattr(v, "get"):
+                    e = dict(v); e["required"] = int(e.get("required", 0)) * 2
+                    newq[sp] = e
+                else:
+                    newq[sp] = int(v) * 2
+            char.db.breeding_quota = newq
+    except Exception:
+        pass
+    if room:
+        room.msg_contents(
+            f"|r{t} is stamped for the Cull line — high-volume, uncurated, the get unkept. The quota "
+            f"doubles on the spot and the pens stop caring what mounts her. Not a line; a number the "
+            f"line runs to keep its averages up.|n")
+    char.msg("|MBethany stamps your file without quite looking at you. \"Not breeding-quality, this "
+             "one — but the body still works, so we'll just run it. Volume, not vanity. Don't fret "
+             "about the get; you won't be keeping any of it.\"|n")
+
+
 try:
     from world.quests import register_resolver
     register_resolver("escape", _escape_resolver)
@@ -4991,5 +5056,7 @@ try:
     register_resolver("turn_in", _turnin_resolver)
     register_resolver("spring_stock", _springstock_resolver)
     register_resolver("quota_met", _quota_met_resolver)
+    register_resolver("line_prize", _line_prize_resolver)
+    register_resolver("line_cull", _line_cull_resolver)
 except Exception:
     pass
