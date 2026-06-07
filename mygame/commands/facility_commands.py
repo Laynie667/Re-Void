@@ -1128,6 +1128,74 @@ class CmdQuota(Command):
 ALL_FACILITY_VERBS.append(CmdQuota)
 
 
+class CmdBethany(Command):
+    """
+    Bethany's hand on the file — move a unit's progress around (owner / staff).
+
+    Usage:
+        bethany <player> = reset           — wipe their Facility quests + EXP (back to Intake)
+        bethany <player> = deepend         — throw them straight to Perfected (Deep Stock opens)
+        bethany <player> = pluck <quest>   — pull them out of a specific quest
+
+    Authority: the Facility's owner (Bethany), or staff/Builder. This is in-fiction power —
+    it never touches the OOC floor; the unit's own |wescape|n always works regardless.
+    """
+    key = "bethany"
+    aliases = ["fadmin"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world.factions import is_owner
+        if not (caller.is_superuser or caller.check_permstring("Builder")
+                or is_owner(caller, "facility")):
+            caller.msg("|xOnly the Facility's owner reaches into the files like that.|n")
+            return
+        if "=" not in (self.args or ""):
+            caller.msg("|xUsage: bethany <player> = reset | deepend | pluck <quest>|n")
+            return
+        who, action = [p.strip() for p in self.args.split("=", 1)]
+        target = caller.search(who, global_search=True)
+        if not target:
+            return
+        import world.quests as Q
+        tname = target.db.rp_name or target.key
+        a = action.lower()
+
+        if a == "reset":
+            Q.reset_quests(target, "facility", also_exp=True)
+            Q.start_quest(target, "facility_intake")
+            caller.msg(f"|gReset {tname}'s Facility progress — back to Intake.|n")
+            target.msg("|MBethany closes your file and opens a fresh one. \"Let's start you over, "
+                       "sweetheart. From the top. I do so enjoy a second first day.\"|n")
+        elif a == "deepend":
+            for qid in ("facility_intake", "facility_breaking",
+                        "facility_broodmare", "facility_perfected"):
+                Q.complete_quest(target, qid)
+            Q.grant_achievement(target, "perfected")
+            Q.grant_exp(target, 1800, "facility")
+            caller.msg(f"|gThrew {tname} in at the deep end — Perfected; Deep Stock is open.|n")
+            target.msg("|MNo gentle descent for you. Bethany signs you straight to the bottom — "
+                       "Perfected, finished, racked. \"Some of you don't need the lessons. You "
+                       "just need putting away.\"|n")
+        elif a.startswith("pluck"):
+            bits = action.split(None, 1)
+            qid = bits[1].strip().lower() if len(bits) > 1 else ""
+            if not Q.get_quest(qid):
+                caller.msg("|xUsage: bethany <player> = pluck <quest_id>|n")
+                return
+            Q.fail_quest(target, qid)
+            caller.msg(f"|gPlucked {tname} out of '{qid}'.|n")
+            target.msg("|MBethany reaches into your plans and simply removes one. \"No. Not that. "
+                       "I decide where you're going.\"|n")
+        else:
+            caller.msg("|xActions: reset | deepend | pluck <quest>|n")
+
+
+ALL_FACILITY_VERBS.append(CmdBethany)
+
+
 class CmdTab(Command):
     """
     Your tab — the debt the house is carrying against you, if any.

@@ -112,9 +112,18 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   Compliance↔Defiance fork (favourite vs unbroken, now seeded) colouring later content; discoverable
   side-quests; name-loss/designation as gated milestones; quests that read each other's outcomes via
   exclusions. The engine now supports all of this — it's authoring from here.
-- ⏳ Next: build out a second/third fork + the Bethany "Owned" parallel line; gate deep content on
-  branch outcomes; per-other-faction & Void onboarding quest lines; sheet/website surfacing (done on
-  sheet).
+- ✅ **Escape attempts (IN-FICTION) + resolver hook.** Quests can carry `resolve: "<name>"`; the
+  quest engine calls a registered resolver on completion (`register_resolver`, kept decoupled).
+  Three repeatable manual escape quests (Waystone Gambit / Through the Pens / Bethany's Keys): you
+  plot across cycle beats, and completing the plan ROLLS — success chance falls with conditioning/
+  devotion, failure is brutal (punish + defiance + conditioning spike + the quest fails so you
+  re-plot). **Loud OOC line every time: the real exit (`escape`/`facilityreset`, the §0 floor) is
+  never this, never gated, never fails.** Achievements: bolted / recaptured.
+- ✅ **Bethany's hand on the file (`bethany` cmd, owner/staff):** `bethany <player> = reset` (wipe
+  Facility quests + EXP → back to Intake), `= deepend` (straight to Perfected, Deep Stock opens),
+  `= pluck <quest>` (yank them from one). In-fiction power; never touches the OOC floor.
+- ⏳ Next: build out the Bethany "Owned" parallel line; gate deep content on branch outcomes;
+  per-other-faction & Void onboarding quest lines; sheet/website surfacing (done on sheet).
 
 ## G. Build phasing (when we get here)
 1. `world/quests.py` API + `db.exp/quests/achievements` model + the `meets()` gate.

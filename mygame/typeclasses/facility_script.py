@@ -4720,3 +4720,54 @@ class RealmCycleScript(FacilityScript):
         dest.msg_contents(
             f"|x{t} is brought in and locked into place, presented for whatever this room is "
             f"for.|n", exclude=[char])
+
+
+# ── Escape-attempt resolver (IN-FICTION ONLY) ────────────────────────────────
+# Registered with the quest engine: an escape quest with resolve="escape" rolls here
+# when its plotting completes. The deeper she's conditioned, the less likely even an
+# in-fiction "out" — and failure is brutal. The REAL exit (escape / facilityreset, the
+# §0 OOC floor) is never this, never gated, and never fails.
+def _escape_resolver(char, qid):
+    import random as _r
+    from world.quests import grant_achievement, fail_quest
+    t = char.db.rp_name or char.key
+    room = char.location
+    cond = float(getattr(char.db, "conditioning", 0) or 0)
+    dev = float(getattr(char.db, "bethany_devotion", 0) or 0)
+    chance = max(0.04, 0.45 - cond / 220.0 - dev / 300.0)
+    if _r.random() < chance:
+        grant_achievement(char, "bolted")
+        if room:
+            room.msg_contents(f"|Y{t} reaches the threshold — the air thins, the way opens — and "
+                              f"for one whole breath it could go either way...|n")
+        char.msg("|x...and then it doesn't. The door opens onto Bethany's office, and she's "
+                 "already smiling, already reaching for the file. \"There you are. I wondered how "
+                 "long you'd take to try. Sit.\" You were never not caught.|n")
+    else:
+        grant_achievement(char, "recaptured")
+        if room:
+            room.msg_contents(f"|R{t}'s run ends the way runs end here — a hand at the back of the "
+                              f"neck, the floor, and the whole house turned out to watch the lesson "
+                              f"land.|n")
+        try:
+            from world.compliance import punish, register_defiance
+            punish(char, reason="tried to run", severity=2)
+            register_defiance(char, amount=2, reason="escape attempt")
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 15.0, source="punishment")
+        except Exception:
+            pass
+        fail_quest(char, qid)   # the run failed; re-plot to try again
+    char.msg("|w[OOC: that was an in-fiction escape attempt — it can fail and it bites. The REAL "
+             "exit, |yescape|w / |yfacilityreset|w, always works instantly and is never gated, no "
+             "matter how deep you are.]|n")
+
+
+try:
+    from world.quests import register_resolver
+    register_resolver("escape", _escape_resolver)
+except Exception:
+    pass

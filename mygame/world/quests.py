@@ -121,6 +121,36 @@ QUESTS = {
         "steps": [{"id": "resist", "desc": "Take the sty rather than submit", "count": 8}],
         "rewards": {"exp": {"facility": 250}, "achievement": "unbroken"},
     },
+    # ── Escape attempts (IN-FICTION ONLY). Plot it out across cycles ('plot' ticks each
+    #    beat via the generic 'process'); when the plan's ready it RESOLVES as a run that
+    #    usually FAILS the deeper you are, and failure is brutal. The real exit is never
+    #    these — `escape`/`facilityreset` (the §0 OOC floor) always works and never fails.
+    "run_waystone": {
+        "name": "The Waystone Gambit", "faction": "facility", "realm": "facility",
+        "desc": "Learn the word the lobby waystone answers to, and slip out the way you came "
+                "in. |rIn-fiction only — the real way out is always |wescape|r, ungated.|n",
+        "manual": True, "repeatable": True, "hidden": False,
+        "prereq": {"quests": ["facility_intake"]},
+        "steps": [{"id": "process", "desc": "Watch, wait, and learn the word", "count": 4}],
+        "rewards": {}, "resolve": "escape",
+    },
+    "run_pens": {
+        "name": "Through the Pens", "faction": "facility", "realm": "facility",
+        "desc": "Slip out the animals' route while the handlers are busy. |rIn-fiction only.|n",
+        "manual": True, "repeatable": True, "hidden": False,
+        "prereq": {"quests": ["facility_intake"]},
+        "steps": [{"id": "process", "desc": "Find the gap and time the run", "count": 5}],
+        "rewards": {}, "resolve": "escape",
+    },
+    "run_keys": {
+        "name": "Bethany's Keys", "faction": "facility", "realm": "facility",
+        "desc": "Lift the keys from her office while she's distracted with you. |rIn-fiction "
+                "only — and she is never as distracted as you hope.|n",
+        "manual": True, "repeatable": True, "hidden": False,
+        "prereq": {"quests": ["facility_intake"]},
+        "steps": [{"id": "process", "desc": "Get close enough, often enough, to palm them", "count": 7}],
+        "rewards": {}, "resolve": "escape",
+    },
 }
 
 # Achievement def: {name, desc, faction, secret}
@@ -143,7 +173,35 @@ ACHIEVEMENTS = {
     "nursed":    {"name": "Wet Nurse", "desc": "Fed your own get on your own milk.", "faction": "facility", "secret": False},
     "favourite":  {"name": "Bethany's Favourite", "desc": "Reached for her, and was kept.", "faction": "facility", "secret": False},
     "unbroken":   {"name": "Unbroken", "desc": "Took the sty over the comfort, and stayed yourself.", "faction": "facility", "secret": False},
+    "bolted":     {"name": "Bolted", "desc": "Made a run for it. (The in-fiction kind.)", "faction": "facility", "secret": False},
+    "recaptured": {"name": "Recaptured", "desc": "Ran, was caught, and was broken for it.", "faction": "facility", "secret": False},
 }
+
+# ── resolvers — let a quest trigger custom logic on completion (e.g. an escape roll) ──
+RESOLVERS = {}
+
+
+def register_resolver(name, fn):
+    """Register a completion resolver; a quest with `resolve: <name>` calls fn(char, qid)
+    when it completes (used for escape-attempt rolls, etc.). Registered by the system that
+    owns the logic, so this module stays decoupled."""
+    RESOLVERS[name] = fn
+
+
+def reset_quests(char, faction=None, also_exp=False):
+    """Wipe a character's quest progress (optionally only for one faction), and optionally
+    the matching EXP pool. Used by Bethany's 'reset' power. Never touches the OOC floor."""
+    quests = dict(getattr(char.db, "quests", None) or {})
+    if faction is None:
+        char.db.quests = {}
+    else:
+        keep = {q: r for q, r in quests.items()
+                if (all_quests().get(q) or {}).get("faction") != faction}
+        char.db.quests = keep
+    if also_exp and faction:
+        pools = dict(getattr(char.db, "exp", None) or {})
+        pools.pop(faction, None)
+        char.db.exp = pools
 
 
 def all_quests():
@@ -319,6 +377,13 @@ def complete_quest(char, qid):
     _set_quest(char, qid, st)
     char.msg(f"|G✦ Quest complete: {qdef.get('name', qid)}|n")
     _grant_rewards(char, qdef.get("rewards") or {})
+    # Custom resolver (e.g. an escape attempt rolls here — and may flip this to 'failed').
+    res = qdef.get("resolve")
+    if res and res in RESOLVERS:
+        try:
+            RESOLVERS[res](char, qid)
+        except Exception:
+            pass
     # Chain: auto-start the next quest in the line, if its prereqs are now met.
     nxt = qdef.get("then")
     if nxt and get_quest(nxt):
