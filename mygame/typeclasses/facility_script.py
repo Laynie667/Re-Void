@@ -2382,12 +2382,34 @@ class FacilityScript(DefaultScript):
             marks = list(getattr(target.db, "facility_brands", None) or [])
             marks.append(text); target.db.facility_brands = marks
 
+    # Permanent work -> the trophy/quest milestone it earns (and the Marked Property step).
+    _PROC_MILESTONE = {
+        "brand": ("branded", "branded"), "pierce": ("pierced", "pierced"),
+        "ring_fit": ("pierced", "pierced"), "rings": ("pierced", "pierced"),
+        "womb_tattoo": ("tattooed", "tattooed"), "clit_hood": ("pierced", "pierced"),
+        "milk_port": ("tattooed", "tattooed"), "tongue": ("pierced", "pierced"),
+    }
+
+    def _milestone(self, target, achievement=None, quest=None, step=None, n=1):
+        """Grant a milestone achievement and/or advance a quest step from a real event."""
+        try:
+            from world.quests import grant_achievement, advance_quest
+            if achievement:
+                grant_achievement(target, achievement)
+            if quest and step:
+                advance_quest(target, quest, step, n)
+        except Exception:
+            pass
+
     def _procedure(self, room, target, t):
         name = random.choice(self._PROCEDURES)
         try:
             getattr(self, f"_proc_{name}")(room, target, t)
         except Exception:
             pass
+        m = self._PROC_MILESTONE.get(name)
+        if m:
+            self._milestone(target, achievement=m[0], quest="facility_marked", step=m[1])
 
     def _proc_pierce(self, room, target, t):
         # One or two new piercings, each a real permanent mark + sensitivity.
@@ -3774,6 +3796,7 @@ class FacilityScript(DefaultScript):
         """She's made to beg — out loud, for it — and begging is the only path to the
         granted release denial otherwise withholds. Conditioned, it becomes reflex."""
         room.msg_contents("|m" + random.choice(_BEG_BEATS).format(t=t) + "|n")
+        self._milestone(target, achievement="begged")
         try:
             from world.binding_effects import install_trigger, _inst_beg
             _inst_beg(target, target, room, {})          # the begging itself
@@ -3812,6 +3835,7 @@ class FacilityScript(DefaultScript):
         pens, made to watch the generations she's raising grow toward the stalls — and
         bred here too, sometimes, by the ones already grown."""
         room.msg_contents("|c" + random.choice(_NURSE_BEATS).format(t=t) + "|n")
+        self._milestone(target, achievement="nursed")
         self._do_milk(room, target, t)          # real drain — piped to her get
         # If any of her get have matured back into the pens, one may be brought to breed her.
         try:
@@ -3836,6 +3860,7 @@ class FacilityScript(DefaultScript):
         """Punishment / bottom-tier: she's kept on all fours in the filth, slopped,
         hosed, and rutted — and the lesson lands as conditioning + degradation."""
         room.msg_contents("|y" + random.choice(_STY_BEATS).format(t=t) + "|n")
+        self._milestone(target, achievement="pigsty")
         # The sty breeds her too, in the muck — real deposit when stock's about.
         try:
             from world.gang_breeding import animal_holes, apply_filth

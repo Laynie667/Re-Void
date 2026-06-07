@@ -86,6 +86,19 @@ QUESTS = {
         "steps": [{"id": "process", "desc": "Be perfected on the lines", "count": 50}],
         "rewards": {"exp": {"facility": 1000}, "achievement": "perfected"},
     },
+    # An optional, parallel line — completed by the permanent work happening TO you,
+    # whenever it happens (early or late). Auto-enrolled by the cycle once intake's done.
+    "facility_marked": {
+        "name": "Marked Property", "faction": "facility", "realm": "facility",
+        "desc": "Made legible as owned — branded, pierced, and tattooed where it shows.",
+        "repeatable": False, "hidden": False, "prereq": {"quests": ["facility_intake"]},
+        "steps": [
+            {"id": "branded",  "desc": "Take a brand", "count": 1},
+            {"id": "pierced",  "desc": "Take a piercing or ring", "count": 1},
+            {"id": "tattooed", "desc": "Take a permanent tattoo", "count": 1},
+        ],
+        "rewards": {"exp": {"facility": 120}, "achievement": "marked_property"},
+    },
 }
 
 # Achievement def: {name, desc, faction, secret}
@@ -98,6 +111,14 @@ ACHIEVEMENTS = {
     "kept_heir":  {"name": "Kept", "desc": "Bethany pulled one of your get to keep as her own.", "faction": "facility", "secret": False},
     "sold_off":   {"name": "Sold", "desc": "Knocked down on the block to a new owner.", "faction": "facility", "secret": False},
     "deep_stock": {"name": "Deep Stock", "desc": "Sealed into the lines on Sub-Level P.", "faction": "facility", "secret": True},
+    # Finer milestones — fired from real events, early or late.
+    "branded":   {"name": "Branded", "desc": "Took the iron — owned, and it shows.", "faction": "facility", "secret": False},
+    "pierced":   {"name": "Ringed", "desc": "Took steel through the skin.", "faction": "facility", "secret": False},
+    "tattooed":  {"name": "Inked", "desc": "Took permanent ink where it shows.", "faction": "facility", "secret": False},
+    "marked_property": {"name": "Marked Property", "desc": "Branded, ringed, and inked — legible as owned.", "faction": "facility", "secret": False},
+    "begged":    {"name": "Made to Beg", "desc": "Begged out loud for it.", "faction": "facility", "secret": False},
+    "pigsty":    {"name": "Slopped", "desc": "Sent down to the pigsty.", "faction": "facility", "secret": False},
+    "nursed":    {"name": "Wet Nurse", "desc": "Fed your own get on your own milk.", "faction": "facility", "secret": False},
 }
 
 
