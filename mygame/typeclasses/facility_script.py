@@ -3001,6 +3001,13 @@ class FacilityScript(DefaultScript):
     def _impose_clause(self, room, target, t):
         log = list(getattr(target.db, "bethany_clauses", None) or [])
         remaining = [c for c in self._BETHANY_CLAUSES if c[0] not in log]
+        # The 'heir' clause only becomes available once a line exists to take an heir from.
+        try:
+            from world.quests import has_achievement
+            if not has_achievement(target, "bred_true"):
+                remaining = [c for c in remaining if c[0] != "heir"]
+        except Exception:
+            pass
         if not remaining:
             return
         key, clause, line = random.choice(remaining)
@@ -3113,6 +3120,11 @@ class FacilityScript(DefaultScript):
     def _deepstock(self, room, target, t, cond):
         """Grade-gated terminus: she's sealed into her pod and run on the lines —
         milked and bred through ports without being woken, the loop's quiet end."""
+        try:
+            from world.quests import grant_achievement
+            grant_achievement(target, "deep_stock")
+        except Exception:
+            pass
         # Down here she's kept latex-sealed by default.
         if not getattr(target.db, "latex_sealed", False):
             try:
@@ -3452,6 +3464,11 @@ class FacilityScript(DefaultScript):
         target.db.high_bid = None
         target.db.high_bidder = None
         target.db.high_bidder_id = None
+        try:
+            from world.quests import grant_achievement
+            grant_achievement(target, "sold_off")
+        except Exception:
+            pass
 
     def _appraise_get(self, o, dam):
         """Price one of her grown get from its generation/species and the dam's grade."""
@@ -4605,6 +4622,11 @@ class RealmCycleScript(FacilityScript):
                                            f"keeps, names, and raises to her own hand. The heir "
                                            f"clause, collected: a child of the line forked off into "
                                            f"her house.|n")
+                    try:
+                        from world.quests import grant_achievement
+                        grant_achievement(char, "kept_heir")
+                    except Exception:
+                        pass
         char.db.offspring_roster = roster
 
     def _drag(self, char, dest, t):

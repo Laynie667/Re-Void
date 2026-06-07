@@ -94,6 +94,10 @@ ACHIEVEMENTS = {
     "broken_in":  {"name": "Broken In", "desc": "Stopped resisting the Process.", "faction": "facility", "secret": False},
     "broodmare":  {"name": "Broodmare", "desc": "Became the line's reliable supply.", "faction": "facility", "secret": False},
     "perfected":  {"name": "Perfected Livestock", "desc": "Reached the terminus of the Process — Deep Stock opens.", "faction": "facility", "secret": False},
+    "bred_true":  {"name": "Bred True", "desc": "Dropped your first get — the line begins.", "faction": "facility", "secret": False},
+    "kept_heir":  {"name": "Kept", "desc": "Bethany pulled one of your get to keep as her own.", "faction": "facility", "secret": False},
+    "sold_off":   {"name": "Sold", "desc": "Knocked down on the block to a new owner.", "faction": "facility", "secret": False},
+    "deep_stock": {"name": "Deep Stock", "desc": "Sealed into the lines on Sub-Level P.", "faction": "facility", "secret": True},
 }
 
 

@@ -284,6 +284,12 @@ def _birth_offspring(target, species, generation=1):
     roster = list(getattr(target.db, "offspring_roster", None) or [])
     roster.append(o.dbref)
     target.db.offspring_roster = roster
+    # Milestone: her line has begun (gates Bethany's 'heir' clause).
+    try:
+        from world.quests import grant_achievement
+        grant_achievement(target, "bred_true")
+    except Exception:
+        pass
     # Send the newborn to the nursery to be raised on her milk, if the realm has one.
     try:
         from evennia import search_object
