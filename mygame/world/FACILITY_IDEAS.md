@@ -293,7 +293,7 @@ Existing: line_remembers, never_empty. Add:
 ---
 
 ### Suggested first weave to build (one coherent pass each)
-1. 🧩 **Quota loop** (#12 Daily Quota) + **make_example helper** (#14) — gives repeatable spine + a reusable punishment primitive everything else can call.
+1. ✅ **BUILT — Foundations pass:** 🧩 **Quota loop** (#12 Daily Quota — `quota_daily`, auto/repeatable, pays scrip+EXP+standing; the cycle quota-review bites the miss) + **`make_example()` helper** (#14 — graded light/hard/extreme public-lesson primitive in `world/compliance.py`; the escape/rescue resolvers now route through it).
 2. 🌿 **One full branch pair** (#11 Pet vs Product *or* Prize vs Cull) wired into cycle weighting — proves the lattice end to end with new content.
 3. ♻️ **Relapse / Fresh File / Re-Breaking** (#12) — the progress-reset loops the user specifically asked for.
 4. A themed **bundle**: pick a branch and ship its matching curse + effect + body mod + equipment + clothing + drug together (e.g. the Pet bundle, or the Dairy bundle) so each branch *feels* distinct.

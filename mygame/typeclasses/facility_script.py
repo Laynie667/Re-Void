@@ -4552,6 +4552,27 @@ class RealmCycleScript(FacilityScript):
                     advance_quest(char, qid, phase_step, 1)
         except Exception:
             pass
+        # Daily-quota review — every few beats the board is read against her numbers. Behind,
+        # and it bites: the targets accrue interest (penalize_quota_shortfall) and, if she stays
+        # behind across reviews, the house makes a light public example of the shortfall. Meeting
+        # the numbers is paid by the quota_daily quest's own completion (_quota_met_resolver).
+        try:
+            rc = int(getattr(self.db, "quota_review", 0) or 0) + 1
+            self.db.quota_review = rc
+            if rc % 6 == 0:
+                from world.compliance import quota_status, penalize_quota_shortfall
+                _lines, met = quota_status(char)
+                if not met:
+                    behind = int(getattr(char.db, "quota_behind", 0) or 0) + 1
+                    char.db.quota_behind = behind
+                    penalize_quota_shortfall(char)
+                    if behind >= 2 and random.random() < 0.5:
+                        from world.compliance import make_example
+                        make_example(char, severity=1, reason="behind on the daily quota")
+                else:
+                    char.db.quota_behind = 0
+        except Exception:
+            pass
         # Curse honoring — the two standing curses bite every beat they apply.
         self._tick_curses(char, t, cond)
         self.db.phase_index = idx + 1
@@ -4861,15 +4882,10 @@ def _malfunction_resolver(char, qid):
                 f"down with the pumps still gasping, and made the lesson the whole sub-level learns: the "
                 f"malfunction belongs to the house too, and the house lets you taste the door precisely so "
                 f"it can take it back. What follows is the worst this place does, and it does it slow.|n")
+        # The mechanical lesson — broadcast=False, the bespoke prose above already narrated it.
         try:
-            from world.compliance import punish, register_defiance
-            punish(char, reason="rode the malfunction", severity=3)
-            register_defiance(char, amount=3, reason="malfunction run")
-        except Exception:
-            pass
-        try:
-            from world.conditioning import add_conditioning
-            add_conditioning(char, 25.0, source="punishment")
+            from world.compliance import make_example
+            make_example(char, severity=3, reason="rode the malfunction", broadcast=False)
         except Exception:
             pass
         fail_quest(char, qid)   # the run failed; wait for the next red light
@@ -4938,18 +4954,34 @@ def _springstock_resolver(char, qid):
                 f"stock costs — the rescuer dragged back down past the very unit she came for, made the "
                 f"lesson, made the warning, made the example — and the door she rode out of is welded shut "
                 f"behind her by morning.|n")
+        # The mechanical lesson — broadcast=False, the bespoke prose above already narrated it.
         try:
-            from world.compliance import punish, register_defiance
-            punish(char, reason="caught springing stock", severity=3)
-            register_defiance(char, amount=3, reason="liberation run")
-        except Exception:
-            pass
-        try:
-            from world.conditioning import add_conditioning
-            add_conditioning(char, 25.0, source="punishment")
+            from world.compliance import make_example
+            make_example(char, severity=3, reason="caught springing stock", broadcast=False)
         except Exception:
             pass
         fail_quest(char, qid)   # caught — back on the board, and the rescue line resets
+
+
+# ── Daily Quota resolver — the repeatable grind paid off ──────────────────────
+# Fires when quota_daily auto-completes (scrip + EXP already granted by its rewards).
+# Adds standing and a warm payoff beat, and clears the 'behind' streak. The miss side is
+# handled by the cycle's quota review (penalize_quota_shortfall + a light make_example).
+def _quota_met_resolver(char, qid):
+    room = char.location
+    t = char.db.rp_name or char.key
+    try:
+        from world.factions import add_standing
+        add_standing(char, source="comply")
+    except Exception:
+        pass
+    char.db.quota_behind = 0
+    char.msg("|GThe board clears green against your number for the day. The house credits your "
+             "account off your own yield — scrip you earned draw by draw and covering by covering, "
+             "and a notch of standing for making your quota like good stock.|n")
+    if room and random.random() < 0.5:
+        room.msg_contents(f"|m{t}'s board ticks green — quota met, for now. The line notes it, "
+                          f"pays it, and sets the next number a fraction higher.|n", exclude=[char])
 
 
 try:
@@ -4958,5 +4990,6 @@ try:
     register_resolver("escape_malfunction", _malfunction_resolver)
     register_resolver("turn_in", _turnin_resolver)
     register_resolver("spring_stock", _springstock_resolver)
+    register_resolver("quota_met", _quota_met_resolver)
 except Exception:
     pass

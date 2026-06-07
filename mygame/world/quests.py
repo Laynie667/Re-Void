@@ -121,6 +121,24 @@ QUESTS = {
         "steps": [{"id": "resist", "desc": "Take the sty rather than submit", "count": 8}],
         "rewards": {"exp": {"facility": 250}, "achievement": "unbroken"},
     },
+    # ── The Daily Quota — the repeatable grind loop. Auto-enrolled by the cycle once you're
+    #    through Intake; meet the milk + breeding numbers and it pays (scrip + standing + EXP),
+    #    then re-opens for the next "day". Falling behind is handled by the cycle's quota review
+    #    (compliance.penalize_quota_shortfall + a light make_example), so the miss has teeth too.
+    "quota_daily": {
+        "name": "The Daily Quota", "faction": "facility", "realm": "facility",
+        "desc": "What the board says you owe before you're allowed to rest: yield on the floor "
+                "and get in the pens. Make the numbers and the house pays you off your own body; "
+                "miss them and the board remembers, with interest.",
+        "manual": False, "repeatable": True, "hidden": False,
+        "prereq": {"quests": ["facility_intake"]},
+        "steps": [
+            {"id": "milked", "desc": "Make the milk quota", "count": 3},
+            {"id": "bred",   "desc": "Make the breeding quota", "count": 1},
+        ],
+        "rewards": {"exp": {"facility": 20}, "scrip": 40},
+        "resolve": "quota_met",
+    },
     # ── Escape attempts (IN-FICTION ONLY). Plot it out across cycles ('plot' ticks each
     #    beat via the generic 'process'); when the plan's ready it RESOLVES as a run that
     #    usually FAILS the deeper you are, and failure is brutal. The real exit is never

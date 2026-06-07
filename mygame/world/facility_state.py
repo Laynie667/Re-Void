@@ -44,7 +44,7 @@ FACILITY_FLAGS = {
     "processing_tier": 0, "facility_standing": 0, "drug_dependence": 0,
     "milk_baseline_ml": 0, "suggestibility": 0, "intake_suggestibility": 0,
     "docility": 0, "bethany_devotion": 0, "cycle_day": 0,
-    "line_pass": 0, "punish_shield": 0, "liberation_runs": 0,
+    "line_pass": 0, "punish_shield": 0, "liberation_runs": 0, "quota_behind": 0,
     "cond_bonus": 0, "milk_bonus": 0, "sale_bonus": 0, "dose_bonus": 0,
     "collections_level": 0,
 

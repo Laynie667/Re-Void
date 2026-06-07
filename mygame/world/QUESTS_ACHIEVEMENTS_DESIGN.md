@@ -135,6 +135,17 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   just permanent badges. Achievements: malfunction(secret)/escaped/penitent/liberator/made_example.
   Tested standalone (flag gating, availability flips, resolver firing). **The §0 OOC floor is never
   any of this and never rolls** — `escape`/`facilityreset` always works.
+- ✅ **Foundations pass — the Daily Quota loop + the `make_example()` primitive.** `quota_daily`
+  (auto, repeatable, prereq Intake) is the grind loop: meet milk(3)+breed(1) and it auto-completes →
+  pays scrip + facility EXP + standing (`_quota_met_resolver`), then re-opens for the next "day".
+  The miss side has teeth: the realm cycle runs a quota review every 6 beats — behind →
+  `penalize_quota_shortfall` (interest) + a `quota_behind` streak; behind across reviews → a *light*
+  public lesson. That lesson is the new reusable **`compliance.make_example(char, severity=1..3,
+  reason, broadcast=True)`** — graded room broadcast (light/hard/extreme pools) + punish + a bigger
+  conditioning spike + a standing setback + a logged non-compliance count, in one call. The
+  malfunction-fail and springstock-caught resolvers now route their punishment through it
+  (`broadcast=False`, since they narrate their own scene). `quota_behind` added to FACILITY_FLAGS
+  (reset-safe). Tested standalone (quota auto-enrol/complete/repeat + resolver; make_example mechanics).
 - ✅ **Bethany's hand on the file (`bethany` cmd, owner/staff):** `bethany <player> = reset` (wipe
   Facility quests + EXP → back to Intake), `= deepend` (straight to Perfected, Deep Stock opens),
   `= pluck <quest>` (yank them from one). In-fiction power; never touches the OOC floor.

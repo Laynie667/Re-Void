@@ -118,6 +118,84 @@ def punish(character, reason="", severity=1):
         )
 
 
+# ── make_example: the reusable "public lesson" primitive ──────────────────────
+# A graded, whole-room punishment spectacle the rest of the systems can call with one
+# line (quests, resolvers, curses, quota review). severity 1 (light) .. 3 (extreme).
+# Never touches the OOC floor.
+_EXAMPLE_LIGHT = [
+    "The floor is made to pause and watch while {t} is corrected — nothing dramatic, just a "
+    "quiet, public adjustment, the kind that says this is routine, this is what you are, and "
+    "everyone goes back to work having seen it.",
+    "A handler taps the board and reads {t}'s shortfall aloud to the room — flat, bored, "
+    "itemised — so the lesson isn't pain so much as being *itemised in front of everyone*, a "
+    "line of stock that didn't make its number.",
+    "{t} is stood up, turned once for the room to see, and sat back down — a small public "
+    "marking, more bookkeeping than cruelty, and somehow the smallness of it is the sting.",
+]
+_EXAMPLE_HARD = [
+    "The whole room is turned out to watch {t} taught the lesson properly — held, used as "
+    "demonstration, narrated to the others as it happens so they learn the price on someone "
+    "else's body. The point was never private. The point was the audience.",
+    "{t} is made the example: put on display mid-correction while a handler explains, evenly, "
+    "to the assembled stock exactly what this is and why, and what it costs to earn it. By the "
+    "end {t} is reciting it back, because that's the part that sticks.",
+    "They don't hide it. {t} is dragged to the centre of the floor and processed where everyone "
+    "can see, the overhead lights brought up like a stage, the lesson landed slow and legible so "
+    "no one in the room mistakes what happens to stock that steps wrong.",
+]
+_EXAMPLE_EXTREME = [
+    "The whole house is turned out for it. {t} is made the example in front of all of it — the "
+    "floor, the gallery, the buyers — broken slow and public and thorough, every stage announced, "
+    "the price of whatever {t} did paid in full where not one unit can look away. They will talk "
+    "about this one. That is the entire point.",
+    "It is total and it is theatre. {t} is hauled up under the lights and made into the warning "
+    "the whole facility gets to keep — used, marked, narrated, the lesson driven past comfort and "
+    "past dignity and out the other side into something the room will flinch at remembering. The "
+    "house does not raise its voice. It just makes sure everyone watches the cost.",
+    "{t} becomes the lesson the house writes on a body so it doesn't have to repeat it: dragged "
+    "to the centre, stripped of every comfort and every name, processed past the point of protest "
+    "in front of the assembled stock — and when it's done the room understands, exactly, what the "
+    "facility will spend to be obeyed.",
+]
+
+
+def make_example(character, severity=2, reason="", broadcast=True):
+    """A public lesson — the facility turning the whole room out to watch the price of
+    something. The reusable punishment primitive: a graded broadcast, the punishment
+    itself, a conditioning spike, a standing setback, and a logged non-compliance count.
+    severity 1 (light) .. 3 (extreme). Pass broadcast=False if the caller already narrated
+    its own scene (then only the mechanical effect applies). Returns the broadcast line.
+    Never touches the OOC floor — `escape`/`force_clear`/`facilityreset` always free."""
+    if not character:
+        return ""
+    severity = max(1, min(3, int(severity)))
+    room = character.location
+    t = character.db.rp_name or character.name
+    pool = {1: _EXAMPLE_LIGHT, 2: _EXAMPLE_HARD, 3: _EXAMPLE_EXTREME}[severity]
+    line = random.choice(pool).format(t=t)
+    if broadcast and room:
+        room.msg_contents("|R" + line + "|n")
+    # The lesson lands on the body (overstim/denial/heavier schedule, scaled).
+    punish(character, reason=reason or "made an example", severity=severity)
+    # And drives conditioning harder than a plain punishment — public lessons stick.
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, 8.0 * severity, source="punishment")
+    except Exception:
+        pass
+    # And on the file — standing drops; the house remembers what it had to spend.
+    try:
+        from world.factions import add_standing
+        add_standing(character, amount=-3.0 * severity)
+    except Exception:
+        pass
+    # It also logs as non-compliance toward any forfeiture clause (without re-punishing —
+    # punish() already fired above).
+    character.db.defiance = int(getattr(character.db, "defiance", 0) or 0) + severity
+    character.db.compliance_streak = 0
+    return line
+
+
 def quota_status(character):
     """Readable lines of what she owes before rest — breeding, milk, and arrears.
     Shape-tolerant: breeding_quota may be {sp:int} or {sp:{current,required}}; milk_quota
