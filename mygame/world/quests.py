@@ -127,8 +127,7 @@ QUESTS = {
     #    these — `escape`/`facilityreset` (the §0 OOC floor) always works and never fails.
     "run_waystone": {
         "name": "The Waystone Gambit", "faction": "facility", "realm": "facility",
-        "desc": "Learn the word the lobby waystone answers to, and slip out the way you came "
-                "in. |rIn-fiction only — the real way out is always |wescape|r, ungated.|n",
+        "desc": "Learn the word the lobby waystone answers to, and slip out the way you came in.",
         "manual": True, "repeatable": True, "hidden": False,
         "prereq": {"quests": ["facility_intake"]},
         "steps": [{"id": "process", "desc": "Watch, wait, and learn the word", "count": 4}],
@@ -136,7 +135,7 @@ QUESTS = {
     },
     "run_pens": {
         "name": "Through the Pens", "faction": "facility", "realm": "facility",
-        "desc": "Slip out the animals' route while the handlers are busy. |rIn-fiction only.|n",
+        "desc": "Slip out the animals' route while the handlers are busy.",
         "manual": True, "repeatable": True, "hidden": False,
         "prereq": {"quests": ["facility_intake"]},
         "steps": [{"id": "process", "desc": "Find the gap and time the run", "count": 5}],
@@ -144,12 +143,24 @@ QUESTS = {
     },
     "run_keys": {
         "name": "Bethany's Keys", "faction": "facility", "realm": "facility",
-        "desc": "Lift the keys from her office while she's distracted with you. |rIn-fiction "
-                "only — and she is never as distracted as you hope.|n",
+        "desc": "Lift the keys from her office while she's distracted with you — and she is never "
+                "as distracted as you hope.",
         "manual": True, "repeatable": True, "hidden": False,
         "prereq": {"quests": ["facility_intake"]},
         "steps": [{"id": "process", "desc": "Get close enough, often enough, to palm them", "count": 7}],
         "rewards": {}, "resolve": "escape",
+    },
+    # ── The Owned capstone — opens once she's bought, collared, devoted, and branded;
+    #    a little more time at the desk, and she's wholly Bethany's (a parallel terminus to
+    #    the institutional 'Perfected'). Earned via the office milestones, not the grade.
+    "owned_hers": {
+        "name": "Wholly Hers", "faction": "facility", "realm": "facility",
+        "desc": "Stop being the facility's product and become Bethany's, specifically — kept "
+                "at her desk, named, marked, and reaching for her.",
+        "manual": True, "repeatable": False, "hidden": False,
+        "prereq": {"achievements": ["bought", "collared", "devoted", "her_mark"]},
+        "steps": [{"id": "serve", "desc": "Settle into being kept", "count": 5}],
+        "rewards": {"exp": {"facility": 600}, "achievement": "wholly_hers"},
     },
 }
 
@@ -175,6 +186,12 @@ ACHIEVEMENTS = {
     "unbroken":   {"name": "Unbroken", "desc": "Took the sty over the comfort, and stayed yourself.", "faction": "facility", "secret": False},
     "bolted":     {"name": "Bolted", "desc": "Made a run for it. (The in-fiction kind.)", "faction": "facility", "secret": False},
     "recaptured": {"name": "Recaptured", "desc": "Ran, was caught, and was broken for it.", "faction": "facility", "secret": False},
+    # ── The Bethany 'Owned' track — being HERS, not just stock.
+    "bought":     {"name": "Bought", "desc": "Bethany took you off the block as her own.", "faction": "facility", "secret": False},
+    "collared":   {"name": "Collared", "desc": "Wears Bethany's collar, locked.", "faction": "facility", "secret": False},
+    "devoted":    {"name": "Devoted", "desc": "Reorganised around Bethany — reaches for her.", "faction": "facility", "secret": False},
+    "her_mark":   {"name": "Her Mark", "desc": "Wears Bethany's personal B — owned, specifically.", "faction": "facility", "secret": False},
+    "wholly_hers":{"name": "Wholly Hers", "desc": "Bought, collared, devoted, branded, and kept — entirely Bethany's.", "faction": "facility", "secret": False},
 }
 
 # ── resolvers — let a quest trigger custom logic on completion (e.g. an escape roll) ──

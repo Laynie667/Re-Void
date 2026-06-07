@@ -2878,6 +2878,8 @@ class FacilityScript(DefaultScript):
         deep end a personal brand. The owner arc."""
         dev = float(getattr(target.db, "bethany_devotion", 0) or 0) + amount
         target.db.bethany_devotion = dev
+        if dev >= 40:
+            self._milestone(target, achievement="devoted")
         try:
             from world.binding_effects import install_trigger
             install_trigger(target, "good girl for bethany", response="kneel", strength=1,
@@ -2891,6 +2893,7 @@ class FacilityScript(DefaultScript):
             target.db.designation = "Bethany's favourite"
         if dev >= 50 and not getattr(target.db, "bethany_branded", False):
             target.db.bethany_branded = True
+            self._milestone(target, achievement="her_mark")
             try:
                 from world.gang_breeding import record_mark
                 record_mark(target, "branded with a personal B — Property of Bethany, not the "
@@ -3066,6 +3069,7 @@ class FacilityScript(DefaultScript):
             elif key == "collar":
                 target.db.bethany_collar = True
                 target.db.self_cmds_locked = True
+                self._milestone(target, achievement="collared")
                 # Lock a real personal collar on her — worn, binding, hers.
                 try:
                     from evennia import create_object
@@ -3441,6 +3445,8 @@ class FacilityScript(DefaultScript):
                                    "the deep-stock division", "a kennel syndicate"])
             suffix = "— Sold Stock"
         target.db.facility_owner = owner
+        if getattr(target.db, "bethany_owned", False):
+            self._milestone(target, achievement="bought")
         # Back up the title once so the reset restores it; stamp the new owner.
         if not getattr(target.db, "facility_title_backup", None):
             target.db.facility_title_backup = {
@@ -4761,9 +4767,6 @@ def _escape_resolver(char, qid):
         except Exception:
             pass
         fail_quest(char, qid)   # the run failed; re-plot to try again
-    char.msg("|w[OOC: that was an in-fiction escape attempt — it can fail and it bites. The REAL "
-             "exit, |yescape|w / |yfacilityreset|w, always works instantly and is never gated, no "
-             "matter how deep you are.]|n")
 
 
 try:
