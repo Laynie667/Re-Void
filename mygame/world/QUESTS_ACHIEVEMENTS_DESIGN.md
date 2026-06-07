@@ -96,8 +96,25 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   opens on the `perfected` achievement** (or deep standing) via `meets()` — depth genuinely earned by
   the descent, not just metered. Walked end-to-end in a standalone sim: sign → process → all four
   complete → Deep Stock unlocks.
-- ⏳ Next: gate the **heir clause / drug & procedure unlocks** via `meets()` too; sheet/website
-  surfacing of quests & trophies; per-other-faction quest lines.
+- ✅ **Branching engine (Morrowind-style winding).** `meets()` now supports **exclusions**
+  (`not_quests` [active-or-done] / `not_achievements`) so a path can require you HAVEN'T taken
+  another; quests can be `manual` (player-chosen fork points the cycle won't auto-enrol). The
+  facility cycle auto-flows only the non-manual *spine* and advances every active facility quest by
+  a phase-matched step (milk→milked, breed→bred, office→serve, pigsty→resist, …), so winding/branch
+  quests progress on the right *kind* of scene. **First fork seeded:** after Breaking In, choose
+  **Bethany's Favourite** (devotion/office) *or* **The Unbroken** (sty/defiance) — mutually exclusive,
+  each forecloses the other on the spot. Tested.
+- ✅ Finer milestones fire from real events (branded/pierced/tattooed/begged/pigsty/nursed) + the
+  optional **Marked Property** quest; procedures stay EARLY (ungated).
+- 🎯 **Design intent — the winding web (build out as desired):** a relentless institutional *spine*
+  (Intake→Breaking→Broodmare→Perfected, auto) with a *web of choice* wound around it — the Bethany
+  "Owned" track (collar/devotion/heir/ledger as a parallel line, being *hers* vs *stock*); a
+  Compliance↔Defiance fork (favourite vs unbroken, now seeded) colouring later content; discoverable
+  side-quests; name-loss/designation as gated milestones; quests that read each other's outcomes via
+  exclusions. The engine now supports all of this — it's authoring from here.
+- ⏳ Next: build out a second/third fork + the Bethany "Owned" parallel line; gate deep content on
+  branch outcomes; per-other-faction & Void onboarding quest lines; sheet/website surfacing (done on
+  sheet).
 
 ## G. Build phasing (when we get here)
 1. `world/quests.py` API + `db.exp/quests/achievements` model + the `meets()` gate.

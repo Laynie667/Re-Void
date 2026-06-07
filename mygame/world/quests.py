@@ -99,6 +99,28 @@ QUESTS = {
         ],
         "rewards": {"exp": {"facility": 120}, "achievement": "marked_property"},
     },
+    # ── A fork (player choice, mutually exclusive) — taking one forecloses the other.
+    #    `manual` so the cycle won't auto-enrol you; you choose with `quest start`.
+    "facility_favourite": {
+        "name": "Bethany's Favourite", "faction": "facility", "realm": "facility",
+        "desc": "Reach FOR her instead of away — earn a place at her desk, kept and owned and "
+                "fond of it. (Closes the Unbroken path.)",
+        "manual": True, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["facility_breaking"],
+                   "not_quests": ["facility_defiant"], "not_achievements": ["unbroken"]},
+        "steps": [{"id": "serve", "desc": "Be kept and used in the office", "count": 8}],
+        "rewards": {"exp": {"facility": 250}, "achievement": "favourite"},
+    },
+    "facility_defiant": {
+        "name": "The Unbroken", "faction": "facility", "realm": "facility",
+        "desc": "Refuse the Process the only way left — take the sty and the punishment over "
+                "the comfort, and stay yourself a while longer. (Closes the Favourite path.)",
+        "manual": True, "repeatable": False, "hidden": False,
+        "prereq": {"quests": ["facility_breaking"],
+                   "not_quests": ["facility_favourite"], "not_achievements": ["favourite"]},
+        "steps": [{"id": "resist", "desc": "Take the sty rather than submit", "count": 8}],
+        "rewards": {"exp": {"facility": 250}, "achievement": "unbroken"},
+    },
 }
 
 # Achievement def: {name, desc, faction, secret}
@@ -119,6 +141,8 @@ ACHIEVEMENTS = {
     "begged":    {"name": "Made to Beg", "desc": "Begged out loud for it.", "faction": "facility", "secret": False},
     "pigsty":    {"name": "Slopped", "desc": "Sent down to the pigsty.", "faction": "facility", "secret": False},
     "nursed":    {"name": "Wet Nurse", "desc": "Fed your own get on your own milk.", "faction": "facility", "secret": False},
+    "favourite":  {"name": "Bethany's Favourite", "desc": "Reached for her, and was kept.", "faction": "facility", "secret": False},
+    "unbroken":   {"name": "Unbroken", "desc": "Took the sty over the comfort, and stayed yourself.", "faction": "facility", "secret": False},
 }
 
 
@@ -228,12 +252,15 @@ def _set_quest(char, qid, rec):
     char.db.quests = q
 
 
-def available_quests(char, faction=None):
+def available_quests(char, faction=None, auto_only=False):
     """Quests whose prereqs are met, not already done (unless repeatable), optionally
-    filtered to a faction."""
+    filtered to a faction. With auto_only=True, skip `manual` quests — those are
+    player-chosen fork points the cycle should NOT auto-enrol you into."""
     out = []
     for qid, qdef in all_quests().items():
         if faction and qdef.get("faction") != faction:
+            continue
+        if auto_only and qdef.get("manual"):
             continue
         st = quest_state(char, qid).get("state")
         if st == "active":
@@ -348,6 +375,14 @@ def meets(char, req):
             return False
     for pool, n in (req.get("exp") or {}).items():
         if get_exp(char, pool) < int(n):
+            return False
+    # Exclusions — the heart of a winding, mutually-exclusive web: a path can require
+    # that you HAVEN'T taken another (achievement earned / quest completed forecloses it).
+    for aid in req.get("not_achievements", []):
+        if has_achievement(char, aid):
+            return False
+    for qid in req.get("not_quests", []):
+        if quest_state(char, qid).get("state") in ("active", "done"):
             return False
     rk = req.get("rank")
     if rk:

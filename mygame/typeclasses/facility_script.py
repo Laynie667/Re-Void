@@ -4489,20 +4489,30 @@ class RealmCycleScript(FacilityScript):
             pass
         # Progression: the Process earns Facility EXP and advances the intake quest line.
         try:
-            from world.quests import grant_exp, advance_quest, quest_state, available_quests, start_quest
+            from world.quests import (grant_exp, advance_quest, available_quests,
+                                       start_quest, all_quests)
             grant_exp(char, {"milk": 2, "breed": 3, "condition": 2}.get(phase, 1), "facility")
-            # Auto-enrol into any facility quest whose prereqs are now met — keeps the
-            # descent flowing the moment a stage opens (e.g. once EXP crosses a gate).
-            for qid in available_quests(char, "facility"):
+            # Auto-enrol into the AUTO (non-manual) facility quests whose prereqs are met —
+            # the institution's relentless spine flows hands-free; manual fork-quests wait
+            # for the player to choose them with `quest start`.
+            for qid in available_quests(char, "facility", auto_only=True):
                 start_quest(char, qid)
-            if phase == "milk":
-                advance_quest(char, "facility_intake", "milked", 1)
-            elif phase == "breed":
-                advance_quest(char, "facility_intake", "bred", 1)
-            # The deeper chain quests advance by sheer processing — one 'process' per beat.
-            for qid in ("facility_breaking", "facility_broodmare", "facility_perfected"):
-                if quest_state(char, qid).get("state") == "active":
-                    advance_quest(char, qid, "process", 1)
+            # Advance every ACTIVE facility quest: a generic 'process' tick each beat, plus
+            # the step that matches this phase (so winding/branch quests progress on the
+            # right kind of scene — office=serve, pigsty=resist, etc.).
+            phase_step = {"milk": "milked", "breed": "bred", "owned": "serve",
+                          "punish": "resist", "condition": "conditioned", "nurse": "nursed"}.get(phase)
+            quests = getattr(char.db, "quests", None) or {}
+            allq = all_quests()
+            for qid, rec in quests.items():
+                if rec.get("state") != "active":
+                    continue
+                qd = allq.get(qid)
+                if not qd or qd.get("faction") != "facility":
+                    continue
+                advance_quest(char, qid, "process", 1)
+                if phase_step:
+                    advance_quest(char, qid, phase_step, 1)
         except Exception:
             pass
         # Curse honoring — the two standing curses bite every beat they apply.
