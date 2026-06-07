@@ -845,6 +845,45 @@ _CURSE_EMPTY_BEAT = [
     "rubbing herself open on the air and the furniture, hunting the fullness that's the only thing "
     "that quiets it. Empty is a wound now. They made sure of it.",
 ]
+# ── Three new standing curses: Tally, Echo, Hollow ──
+_CURSE_TALLY_INSTALL = [
+    "They cut a curse into {t} they call |wthe tally|n: a running mark scored into the skin of her "
+    "hip that counts the beats she goes unused. Every idle beat adds a stroke; every time she's "
+    "bred or milked or made to serve, a few are paid back off. Let it climb and the ache climbs "
+    "with it — a debt written on her body in her own neglect, and the only currency it takes is use.",
+]
+_CURSE_ECHO_INSTALL = [
+    "They lay the |wecho|n into {t} during conditioning: from now on her own spoken words come back "
+    "at her a beat after she says them, in her own voice, until the saying and the believing wear "
+    "into the same groove. She will agree with herself, eventually, about everything — because she "
+    "keeps hearing herself say it.",
+]
+_CURSE_HOLLOW_INSTALL = [
+    "They press the |whollow|n into {t}: a body retuned so that full never registers as enough. Cum, "
+    "milk, knot, fist — whatever's put in her, the satisfaction won't land and won't stay; the "
+    "empty-ache is switched permanently on under everything, so even stuffed and dripping she reads "
+    "as starving. They've taken the off from her hunger.",
+]
+_CURSE_TALLY_BEAT = [
+    "The tally on {t}'s hip cuts another stroke — {n} now, unworked and counting — and the fresh "
+    "mark pulls a thin needy heat up through her, the debt itching to be paid in the only coin it takes.",
+    "Another idle beat, another stroke scored into the tally; {t} feels it added, feels the count at "
+    "{n} pressing at her like a held breath, her body starting to hunt the use that would pay it down.",
+]
+_CURSE_TALLY_PAID = [
+    "The use pays the tally down — strokes struck through on {t}'s hip as she's worked, the count "
+    "easing toward {n}, the relief of the debt shrinking almost as good as the using itself.",
+    "Bred and counted, {t} feels the tally pay back a little — down to {n} — and the easing of it "
+    "lands as gratitude, which is exactly the lesson: being used is how the wrong on her skin gets right.",
+]
+_CURSE_HOLLOW_BEAT = [
+    "The hollow bites under everything: {t} is full — or was just filled — and her body refuses to "
+    "register it, the empty-ache running on regardless, need stacking on top of need with no floor "
+    "to settle back down to. Nothing reaches the bottom of her, because they took the bottom out.",
+    "Even sated, {t} reads as starving — the hollow keeps the ache lit, keeps the arousal from ever "
+    "fully banking, so satisfaction slides off her and leaves only the wanting, louder for having "
+    "been almost answered. Full means nothing now. They made sure of it.",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -2938,15 +2977,36 @@ class FacilityScript(DefaultScript):
             pool.append("line")
         if not getattr(target.db, "curse_never_empty", False):
             pool.append("empty")
+        if not getattr(target.db, "curse_tally", False):
+            pool.append("tally")
+        if not getattr(target.db, "curse_echo", False):
+            pool.append("echo")
+        if not getattr(target.db, "curse_hollow", False):
+            pool.append("hollow")
         if not pool:
             return
         which = random.choice(pool)
         if which == "line":
             target.db.curse_line_remembers = True
             room.msg_contents("|M" + random.choice(_CURSE_LINE_INSTALL).format(t=t) + "|n")
-        else:
+        elif which == "empty":
             target.db.curse_never_empty = True
             room.msg_contents("|M" + random.choice(_CURSE_EMPTY_INSTALL).format(t=t) + "|n")
+        elif which == "tally":
+            target.db.curse_tally = True
+            target.db.curse_tally_count = int(getattr(target.db, "curse_tally_count", 0) or 0)
+            room.msg_contents("|M" + random.choice(_CURSE_TALLY_INSTALL).format(t=t) + "|n")
+        elif which == "echo":
+            target.db.curse_echo = True
+            # ride the real speech-filter system — reset clears active_speech_filters
+            active = list(getattr(target.db, "active_speech_filters", None) or [])
+            if "echo_self" not in active:
+                active.append("echo_self")
+            target.db.active_speech_filters = active
+            room.msg_contents("|M" + random.choice(_CURSE_ECHO_INSTALL).format(t=t) + "|n")
+        else:  # hollow
+            target.db.curse_hollow = True
+            room.msg_contents("|M" + random.choice(_CURSE_HOLLOW_INSTALL).format(t=t) + "|n")
         try:
             from world.gang_breeding import record_mark
             record_mark(target, f"a curse-sigil set into her — '{which}', a standing affliction "
@@ -2954,10 +3014,51 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
-    def _tick_curses(self, char, t, cond):
-        """Each beat, the standing curses that apply bite. Defensive throughout."""
+    def _tick_curses(self, char, t, cond, phase=None):
+        """Each beat, the standing curses that apply bite. Defensive throughout.
+        `phase` (the scene this beat ran) lets use-driven curses read whether she was
+        worked this beat (Tally pays down on use, grows on idleness)."""
         try:
             room = char.location
+            used_this_beat = phase in ("milk", "breed", "owned", "toilet", "punish", "deep", "nurse")
+            # 'the tally' — strokes scored for idle beats, paid down by use; the debt itches.
+            if getattr(char.db, "curse_tally", False):
+                count = int(getattr(char.db, "curse_tally_count", 0) or 0)
+                if used_this_beat:
+                    if count > 0:
+                        count = max(0, count - random.randint(2, 3))
+                        char.db.curse_tally_count = count
+                        if random.random() < 0.6:
+                            char.msg("|m  " + random.choice(_CURSE_TALLY_PAID).format(t=t, n=count) + "|n")
+                else:
+                    count += 1
+                    char.db.curse_tally_count = count
+                    # the higher the unpaid tally, the worse the itch to be used
+                    try:
+                        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+                        ensure_arousal_script(char); add_arousal(char, 3.0 + min(count, 20) * 0.8)
+                    except Exception:
+                        pass
+                    if count >= 12:
+                        try:
+                            from world.conditioning import add_conditioning
+                            add_conditioning(char, 1.0, source="tally")
+                        except Exception:
+                            pass
+                    if random.random() < 0.6:
+                        char.msg("|m  " + random.choice(_CURSE_TALLY_BEAT).format(t=t, n=count) + "|n")
+            # 'the hollow' — full never registers; the empty-ache runs under everything,
+            # unconditionally (unlike never-empty, being filled does NOT quiet it).
+            if getattr(char.db, "curse_hollow", False):
+                try:
+                    from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+                    ensure_arousal_script(char); add_arousal(char, 8.0 + cond * 0.04)
+                    # keep a floor under her so satisfaction can't bank her all the way down
+                    char.db.arousal_floor = max(float(getattr(char.db, "arousal_floor", 0) or 0), 35.0)
+                except Exception:
+                    pass
+                if random.random() < 0.5:
+                    char.msg("|m  " + random.choice(_CURSE_HOLLOW_BEAT).format(t=t) + "|n")
             # 'the line remembers' — a matured get in the room breeds its dam unprompted.
             if getattr(char.db, "curse_line_remembers", False) and room:
                 roster = set(getattr(char.db, "offspring_roster", None) or [])
@@ -4573,8 +4674,9 @@ class RealmCycleScript(FacilityScript):
                     char.db.quota_behind = 0
         except Exception:
             pass
-        # Curse honoring — the two standing curses bite every beat they apply.
-        self._tick_curses(char, t, cond)
+        # Curse honoring — the standing curses bite every beat they apply (phase lets the
+        # use-driven ones, like the tally, read whether she was worked this beat).
+        self._tick_curses(char, t, cond, phase=phase)
         self.db.phase_index = idx + 1
 
     def _escaped_beat(self, char, t):

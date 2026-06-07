@@ -73,6 +73,9 @@ def apply_speech_filters(character, text: str) -> tuple:
     if "echo_holder" in filters:
         _side_echo_holder(character, text)
 
+    if "echo_self" in filters:
+        _side_echo_self(character, text)
+
     if "honorific_required" in filters:
         blocked, reason = _check_honorific(character, text)
         if blocked:
@@ -275,6 +278,35 @@ def _check_honorific(char, text: str) -> tuple:
     return True, (
         f"|xYou remember the correct form of address. ({required})|n"
     )
+
+
+_ECHO_SELF_FRAMES = [
+    "|x  …and a beat later your own voice comes back at you, flat and patient, in your own head: "
+    "\"{text}\" — and it lands a little truer the second time, the way a thing does when you've "
+    "said it about yourself.|n",
+    "|x  The Echo returns it to you in your own voice, unhurried: \"{text}\". You hear how it sounds "
+    "coming from you, and something in you files it as fact.|n",
+    "|x  Your words loop back through you a moment after you let them go — \"{text}\" — repeated in "
+    "your own voice until the saying and the being-true blur at the edges.|n",
+    "|x  \"{text}\" — it echoes back off the inside of your skull in your own tone, and each return "
+    "wears the groove a little deeper. You taught yourself that, just now. You keep teaching yourself.|n",
+]
+
+
+def _side_echo_self(char, text: str):
+    """The 'Echo' curse: re-deliver the character's own spoken words back to her a beat
+    after she says them, in her own voice — and let the repetition condition her own words
+    into her (a small conditioning drip). She is made to agree with herself."""
+    try:
+        if not (text or "").strip():
+            return
+        import random
+        frame = random.choice(_ECHO_SELF_FRAMES).format(text=text.strip())
+        char.msg(frame)
+        from world.conditioning import add_conditioning
+        add_conditioning(char, 0.6, source="echo")
+    except Exception:
+        pass
 
 
 def _side_echo_holder(char, text: str):

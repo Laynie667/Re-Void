@@ -348,8 +348,10 @@ mind monitor + item-created zones), animal-sleeve descs + barriers, pregnancy/be
 offspring roster + spawned get, sale/owner, latex, bethany devotion/brand, FORGET log,
 realm scripts (realm_cycle/heat/bethany_visit/milking), the escaped meta-loop flags
 (`facility_escaped`/`liberation_runs`) + the daily-quota streak (`quota_behind`) + the
-breeding-line sort (`breeding_line`), all in `FACILITY_FLAGS` → cleared by every reset path.
-**When adding ANY new persistent state, add it here and to all three reset paths.**
+breeding-line sort (`breeding_line`) + the three new curse flags (`curse_tally`/`curse_echo`/
+`curse_hollow` + `curse_tally_count`; Echo's `echo_self` rides `active_speech_filters`, already
+cleared), all in `FACILITY_FLAGS` → cleared by every reset path. **When adding ANY new persistent
+state, add it here and to all three reset paths.**
 
 **Escaped meta-loop OOC-floor verification:** the Deep Stock malfunction escape, `turnin`, and
 `springstock` are pure in-fiction quest resolvers (rolls); none touch `escape`/`force_clear`/

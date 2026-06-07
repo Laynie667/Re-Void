@@ -240,14 +240,17 @@ phase→step in `RealmCycleScript.at_repeat`.
 - 🔴 **Solitary in Deep Stock** — racked, processed scene-less, time skips; emerges with a stage gained.
 
 ## 15. New CURSES (standing per-beat effects; pattern: `_impose_curse` / `_tick_curses`)
-Existing: line_remembers, never_empty. Add:
+Existing: line_remembers, never_empty. **BUILT this pass: Tally, Echo, Hollow.** Remaining:
 - 🔴 **"The Clock"** — every beat not spent being used raises arousal/withdrawal; idleness itself punishes.
-- 🔴 **"Echo"** — anything said to her is repeated back in her own voice a beat later (speech filter),
-  conditioning her own words into her.
-- 🔴 **"Tally"** — a visible body tally (freeform mark) that must be "paid down" by use; grows if not.
+  (Largely subsumed by the built **Tally**, which already counts idle beats and aches harder as it climbs.)
+- ✅ 🔴 **"Echo"** — BUILT: a real `echo_self` speech filter (rides `active_speech_filters`) repeats her own
+  words back to her in her own voice after she speaks, with a small conditioning drip — she agrees with herself.
+- ✅ 🔴 **"Tally"** — BUILT: `curse_tally` + `curse_tally_count` — strokes scored for every idle beat (arousal
+  climbs with the count), paid down when she's used. A debt written on her body in her own neglect.
 - 🔴 **"The Pull"** — periodically drags her toward the nearest active mechanic/seat and locks her a beat.
 - 🟢 **"Bloom"** — cosmetic: she scents/flushes visibly when aroused, broadcast to the room (humiliation, light).
-- 🔴 **"Hollow"** — caps how full she can feel; cum/milk never satisfies, the empty-ache is permanent-on.
+- ✅ 🔴 **"Hollow"** — BUILT: `curse_hollow` — full never registers; adds ache every beat regardless of being
+  filled and holds an `arousal_floor` so satisfaction can't ever bank her down. The off taken from her hunger.
 
 ## 16. New EFFECTS / conditions (reuse arousal_script, conditioning, binding_effects, mind monitor)
 - 🔴 **Imprint-on-owner** — keyed to whoever last used/bought her; devotion-style pull toward THEM.
