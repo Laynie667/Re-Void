@@ -2096,9 +2096,28 @@ class FacilityScript(DefaultScript):
                    "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood",
                    "latex", "udder", "rings", "cowset", "oneway"]
 
+    # The heaviest drugs are earned, not handed out day one — they unlock as the descent
+    # deepens (gated on the quest-line achievements via meets()).
+    _DRUG_GATES = {
+        "bimbo": "broken_in", "dependence": "broken_in", "cumslut": "broken_in",
+        "solvent": "broken_in",
+        "forget": "broodmare", "devotion": "broodmare", "arrears": "broodmare",
+    }
+
+    def _drug_pool(self, target):
+        """Drugs available to dose `target` right now — milder ones always, the heavy ones
+        only once the matching achievement is earned."""
+        try:
+            from world.quests import has_achievement
+            return [d for d in self._DRUGS
+                    if d not in self._DRUG_GATES or has_achievement(target, self._DRUG_GATES[d])]
+        except Exception:
+            return list(self._DRUGS)
+
     def _dose(self, room, target, t):
         room.msg_contents("|G" + random.choice(_DRUG_BEATS).format(t=t) + "|n")
-        for drug in random.sample(self._DRUGS, k=random.randint(1, 2)):
+        pool = self._drug_pool(target) or self._DRUGS
+        for drug in random.sample(pool, k=min(random.randint(1, 2), len(pool))):
             try:
                 getattr(self, f"_drug_{drug}")(room, target, t)
             except Exception:

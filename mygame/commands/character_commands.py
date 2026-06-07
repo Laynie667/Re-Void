@@ -3970,6 +3970,21 @@ class CmdSheet(MuxCommand):
                 fac_line += f"   |xRank:|n  {faction_rank}"
             lines.append(fac_line)
 
+        # Progression — active quests + earned trophies (secrets hidden when viewing others)
+        try:
+            import world.quests as Q
+            quests = getattr(target.db, "quests", None) or {}
+            active = [Q.get_quest(q).get("name", q) for q, r in quests.items()
+                      if r.get("state") == "active" and Q.get_quest(q)]
+            trophies = Q.achievements_of(target, include_secret=is_self)
+            if active:
+                lines.append(f"|xQuests:|n     {', '.join(active)}")
+            if trophies:
+                names = [(Q.get_achievement(a) or {}).get("name", a) for a in trophies]
+                lines.append(f"|xTrophies:|n   |Y{'|n, |Y'.join(names)}|n")
+        except Exception:
+            pass
+
         # Custom bio fields
         if bio_fields:
             lines.append("")
