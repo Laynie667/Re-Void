@@ -484,8 +484,20 @@ multi-stage parts** — and it's the single highest-leverage system to build.
   so changes are legible and stack. Flexible Survival's "you are 60% hound" → a per-species TF meter
   that, past thresholds, swaps descs/holes/capabilities (ties `animal_sleeve`, the Pet branch, `_proc_*`).
 - **TF gels/zones** in rooms (a `dildo`/`milk` mechanic that also TFs whoever's locked in over beats).
-- **"Bad end" thresholds** — pass a TF/conditioning ceiling and you're auto-sorted (the Nugget, a
-  permanent feral, a drone) — Flexible Survival's signature, already half-built via the descent termini.
+- **SOFT "bad end" thresholds only** (user ruling): pass a TF/conditioning ceiling and you're
+  auto-sorted into a deep state (Nugget, feral, drone) — but it is NEVER a hard game-over; escape
+  always works and the state is escapable. No end-of-game. Soft bad-ends that allow escape are the
+  ceiling; the descent termini already follow this (the §0 floor is the whole point).
+
+### TF authority ruling (user) — who may reshape whom
+- **Self:** your body, your parts — players set the parts they WANT for themselves (via items / the
+  `transform` self-path / chargen). Adding/removing/scaling your own anatomy is yours.
+- **Player → player:** SCALE ONLY (`condition <them> = body`, `allow_add=False`) — grow/shrink, force
+  production, etc., on parts they ALREADY have. A player may NEVER give another a fundamental part
+  (ADD_PART_TRACKS = cock/feral) they didn't choose.
+- **The facility / owner (Bethany):** anything (`transform`, procedures, the Nugget) — "it's not up to
+  the stock." Delivery is intended to be ITEMS (drugs that scale up/down, force production); the
+  commands are the underlying mechanism items will call. (BUILT this pass.)
 
 ## B. A RULES engine (BondageClub / BCX "rules" + LSCG)
 The biggest BC-family idea we don't have: an **owner-set rule list** a unit must obey, each with a

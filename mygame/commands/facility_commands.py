@@ -1541,12 +1541,15 @@ class CmdCondition(MuxCommand):
                 amt = float(bits[1]) if len(bits) > 1 else 1.0
             except ValueError:
                 amt = 1.0
-            crossed, msg = apply_tf(target, track, amt)
+            # Player-to-player: SCALE what they have / force production — never add a part
+            # they didn't choose (allow_add=False). The facility is what adds parts.
+            crossed, msg = apply_tf(target, track, amt, allow_add=False)
             room = target.location
-            if room and msg:
+            if crossed and room and msg:
                 room.msg_contents(msg)
-            caller.msg(f"|MYou push {tn}'s body along ({track} +{amt:g}).|n"
-                       + ("" if crossed else " |x(not a new stage yet)|n"))
+                caller.msg(f"|MYou push {tn}'s body along ({track} {amt:+g}).|n")
+            else:
+                caller.msg(msg or "|x(nothing changed)|n")
 
     def _speech(self, caller, target, tn, verb, rest):
         def _ensure_filter(name):
@@ -1660,13 +1663,14 @@ class CmdTransform(Command):
         transform tracks                         — list the tracks
 
     Tracks: cock, balls, breasts, lips, clit, ass, lactation, feral. Repeated doses cross
-    thresholds that permanently rewrite how the part reads (shows in `body` / `marks`).
-    Authority: the Facility's owner (Bethany) or staff/Builder. (Consenting players reshape
-    each other with `condition <player> = body <track>`.) In-fiction only — the |wescape|n
-    floor clears all of it.
+    thresholds that rewrite how the part reads (shows in `body` / `marks`); negative shrinks.
+    Authority: on YOURSELF, freely — your body, your parts (the parts you want are yours to set).
+    On ANOTHER, only the Facility's owner (Bethany) / staff/Builder may add or force parts; a
+    consenting player can SCALE what you have with `condition <player> = body <track>`, but not
+    give you parts you didn't choose. In-fiction only — |wescape|n clears all of it.
     """
     key = "transform"
-    aliases = ["tf"]
+    aliases = ["tf", "morph"]
     locks = "cmd:all()"
     help_category = "Interaction"
 
@@ -1676,18 +1680,21 @@ class CmdTransform(Command):
         if (self.args or "").strip().lower() == "tracks":
             caller.msg("|wTF tracks:|n " + ", ".join(TRACKS))
             return
-        from world.factions import is_owner
-        if not (caller.is_superuser or caller.check_permstring("Builder")
-                or is_owner(caller, "facility")):
-            caller.msg("|xOnly the Facility's owner reshapes a unit like that.|n")
-            return
         if "=" not in (self.args or ""):
-            caller.msg("|xUsage: transform <player> = <track> [amount]|n")
+            caller.msg("|xUsage: transform [<player> =] <track> [amount]   (no player = yourself)|n")
             return
         who, spec = [p.strip() for p in self.args.split("=", 1)]
-        target = caller.search(who, global_search=True)
+        target = caller.search(who, global_search=True) if who else caller
         if not target:
             return
+        # Your own body is yours to shape. Reshaping ANOTHER (adding/forcing parts) is facility power.
+        if target != caller:
+            from world.factions import is_owner
+            if not (caller.is_superuser or caller.check_permstring("Builder")
+                    or is_owner(caller, "facility")):
+                caller.msg("|xThat's not yours to do — only the facility reshapes another unit. "
+                           "(A consenting player can SCALE, not add, via `condition <them> = body`.)|n")
+                return
         bits = spec.split()
         track = bits[0].lower() if bits else ""
         if track not in TRACKS:
@@ -1697,12 +1704,12 @@ class CmdTransform(Command):
             amt = float(bits[1]) if len(bits) > 1 else 1.0
         except ValueError:
             amt = 1.0
-        crossed, msg = apply_tf(target, track, amt)
+        crossed, msg = apply_tf(target, track, amt, allow_add=True)
         room = target.location
         if room and msg:
             room.msg_contents(msg)
-        tn = target.db.rp_name or target.key
-        caller.msg(f"|gReshaped {tn}: {track} +{amt:g}" + ("." if crossed else " (no new stage yet).") + "|n")
+        tn = "yourself" if target == caller else (target.db.rp_name or target.key)
+        caller.msg(f"|gReshaped {tn}: {track} {amt:+g}" + ("." if crossed else " (no new stage yet).") + "|n")
 
 
 ALL_FACILITY_VERBS.append(CmdTransform)

@@ -80,18 +80,34 @@ def _stage_index(track, level):
     return idx
 
 
+# Tracks that ADD a fundamental part/identity from baseline (vs merely scaling something
+# a body already has). Players choose these for themselves; another player can only SCALE a
+# part you already have, never give you one you didn't pick. The facility/owner can do anything.
+ADD_PART_TRACKS = {"cock", "feral"}
+
+
 def body_level(char, track):
     return float((getattr(char.db, "body_parts", None) or {}).get(track, 0) or 0)
 
 
-def apply_tf(char, track, amount=1.0):
-    """Push `track` by `amount`. If it crosses into a new stage, records a permanent mark
-    and returns (True, transformation message); otherwise (False, a small creep message).
-    Unknown tracks are a no-op. Never touches the OOC floor."""
+def apply_tf(char, track, amount=1.0, allow_add=True):
+    """Push `track` by `amount` (negative shrinks). If it crosses into a new stage, records a
+    permanent mark and returns (True, message); else (False, a small creep message).
+
+    `allow_add=False` (player-to-player, and self-drugs that only scale): refuses to bring an
+    ADD_PART track up from baseline — you can grow/shrink/force what a body HAS, but you can't
+    give someone a part they didn't choose. The facility/owner pass allow_add=True (it's not up
+    to the stock). Unknown tracks / blocked adds return (False, message). Never touches the floor."""
     if not char or track not in TRACKS:
         return False, ""
     parts = dict(getattr(char.db, "body_parts", None) or {})
     before = float(parts.get(track, 0) or 0)
+    # Guard: don't let one player ADD a fundamental part to another from nothing.
+    if (not allow_add) and track in ADD_PART_TRACKS and before <= 0 and amount > 0:
+        t = char.db.rp_name or char.key
+        return False, (f"|x{t} doesn't have that to scale — and adding a part they didn't choose "
+                       f"isn't yours to do. (Scaling what they have is fine; the rest is theirs, or "
+                       f"the facility's.)|n")
     after = max(0.0, before + float(amount))
     parts[track] = after
     char.db.body_parts = parts
