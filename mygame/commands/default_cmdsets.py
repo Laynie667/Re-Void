@@ -353,6 +353,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_FACTION_CMDS:
             self.add(cmd_cls())
 
+        # Relationships — the authority-stack spine (Layer 1)
+        from commands.relationship_commands import ALL_RELATIONSHIP_CMDS
+        for cmd_cls in ALL_RELATIONSHIP_CMDS:
+            self.add(cmd_cls())
+
         # Quests / achievements / exp (progression)
         from commands.quest_commands import ALL_QUEST_CMDS
         for cmd_cls in ALL_QUEST_CMDS:

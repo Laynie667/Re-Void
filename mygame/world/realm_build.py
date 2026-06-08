@@ -2717,6 +2717,12 @@ def force_clear(owner):
         from world.gang_breeding import clear_animal_sleeve
         clear_animal_sleeve(owner)
     except Exception: pass
+    # drop owner-FORCED relationship ties (e.g. a forced bloodline mother); leave
+    # mutual player-set lover/family bonds alone — they're wider-game state.
+    try:
+        from world.relationships import clear_forced
+        clear_forced(owner)
+    except Exception: pass
     # end any pregnancy + restore the belly desc
     try:
         from world.pregnancy import clear as _preg_clear

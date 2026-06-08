@@ -35,12 +35,15 @@ Tiers a viewer can hold toward a target (a viewer may hold several at once):
   drives flavour, the sheet/`standing` display, honorifics ("mommy", "sire"), and the lineage system.
   Default **mutual** opt-in (`relate <who> = sister`), but an **owner may FORCE** a role
   (`relate/force <who> = daughter`) — sets herself mother/sire and the reciprocal on the target, logged.
-  **Lineage tie-in (the real hook):** the breeding systems already track who bred whom
-  (`bred_by`, `offspring_roster`, pregnancy/`gang_breeding`). Real offspring should AUTO-register the
-  dam/sire ↔ get family relations, so incest = breeding back into a line the game actually knows about,
-  and Bethany making herself `dam`/`mother`/`sire` of her stock keys directly off it. Ageplay (the
-  horse `little` upgrade + infantilizing conditioning) stacks with the mother/child roles for the
-  mommy-and-baby register — one coherent knot, not three.
+  Ageplay (the horse `little` upgrade + infantilizing conditioning) stacks with the mother/child roles
+  for the mommy-and-baby register — one coherent knot, not three.
+  **DECISIONS (user):** (1) **Core role set only** for v1 — mother/father/sire/dam, daughter/son/get,
+  sister/brother (+ generic parent/child/sibling); extended kin (grandam, aunt, cousin…) deferred.
+  (2) **lover + family CAN coexist** — `tiers_of` returns both; incest-lovers are intended.
+  (3) **Manual only** — offspring do NOT auto-register as family; roles are set deliberately via
+  `relate` / owner-force. (Auto-lineage from `bred_by`/`offspring_roster` kept as a future option.)
+  **Cleanup:** owner-FORCED ties (`forced=True`) are undone by the OOC floor (`force_clear`); mutual
+  player-set lover/family relations are NOT wiped by a facility purge (they're wider-game state).
 - **faction** — shares a faction with you (`factions.py` membership).
 - **hostile** — a faction at enmity with yours (faction relations already exist).
 - **all** — anyone (the catch-all / default tier).
@@ -141,6 +144,12 @@ These are different objects. Conflating them is the trap; splitting them gives t
 ## Build order (proposed — confirm before each)
 1. **Relationships** (Layer 1) — small, foundational; lover/family handshake + `tiers_of` + owner
    derivation + reuse faction membership/enmity.
+   → **BUILT** (`world/relationships.py` + `relate` cmd). `tiers_of(viewer,target)` returns
+   self/owner/lover/family/faction/hostile/all from factions + ownership + explicit links. Granular
+   family with auto-gendered reciprocals; mutual offer/accept; owner-force (logged to behaviour_log);
+   lover+family stack; `clear_forced` wired into the OOC floor. Flow-tested standalone. NEXT: Layer 2
+   consent matrix folds the existing conditioning-consent into `consent <feature> allow|block <who>`
+   over these tiers, with a `may()` resolver calling `tiers_of`.
 2. **Consent matrix** (Layer 2) — fold the existing conditioning consent into `consent <feature>
    allow|block <who>` over tiers; `may()` resolver; behaviour log + lockout.
 3. **Rules** (Layer 3) — the curated rule set + condition/consequence + checker hooks.
