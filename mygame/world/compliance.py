@@ -291,6 +291,9 @@ def _grant_climax(character):
     """Lift denial for one real release — and rewire a little for the privilege."""
     # Actually permit the climax — orgasm_denial otherwise caps her at 99.
     character.db.orgasm_denial_lifted = True
+    # This climax IS permitted — set the one-shot ask_to_come permit so the rule
+    # (if any) doesn't punish a release she was granted. deepen_on_climax consumes it.
+    character.db.rule_come_permit = True
     try:
         from typeclasses.arousal_script import add_arousal, ensure_arousal_script
         ensure_arousal_script(character)

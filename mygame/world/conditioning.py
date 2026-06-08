@@ -61,7 +61,17 @@ _THRESHOLDS = [
 
 def deepen_on_climax(character, amount=5.0):
     """Every release rewires a little more — called when a conditioned climax fires."""
-    return add_conditioning(character, amount, source="climax")
+    result = add_conditioning(character, amount, source="climax")
+    # Standing-rule check (ask_to_come) — Layer 3. A granted climax sets a one-shot
+    # permit (rule_come_permit) which we consume here; an unpermitted climax is punished.
+    try:
+        from world.rules import enforce
+        enforce(character, "orgasm")
+        if getattr(character.db, "rule_come_permit", False):
+            character.db.rule_come_permit = False
+    except Exception:
+        pass
+    return result
 
 
 def _apply_thresholds(character, old_value, new_value):

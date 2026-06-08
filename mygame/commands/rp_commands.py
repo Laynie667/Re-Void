@@ -596,6 +596,13 @@ class CmdSay(MuxCommand):
             except Exception:
                 pass
 
+            # Standing-rule check (banned_words / honorific) — Layer 3.
+            try:
+                from world.rules import enforce
+                enforce(char, "say", actor=char, text=text)
+            except Exception:
+                pass
+
 
 # -------------------------------------------------------------------
 # CmdPose

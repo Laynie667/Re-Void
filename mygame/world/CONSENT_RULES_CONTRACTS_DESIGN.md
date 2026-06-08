@@ -93,17 +93,13 @@ matrix (BCX's authority module, expressed through the consent verb the user alre
   a `log` view; and access to view/edit it is itself a matrix feature — someone with sufficient
   authority can LOCK a unit out of their own log (BCX behaviour-log + lockout).
 
-> **Layer 3 status: BEGUN (v1 engine live).** `world/rules.py` + the `rule` command. A rule =
-> `{id, name, set_by, condition, consequence, params}` on `db.rules`. `enforce(target, event, ...)`
-> is the single hook-call; returns `{allowed, fired}` (allowed=False when a `block` rule fires).
-> Conditions: always/in_room/owner_present/owner_absent/arousal_over/flag. Consequences are REAL:
-> `punish`→`compliance.punish`, `notify`→behaviour-log + ping the setter, `block`→caller prevents it.
-> Curated catalogue (present/kneel_on_enter, no_leave, banned_words, honorific, ask_to_come,
-> no_clothing, posture_hold, curfew). Setting needs `may(setter, target, "rule.set")` (so an owner
-> needs it granted — facility/contract grants it — or self). **Wired:** ambient rules fire every
-> facility-cycle beat (`enforce_ambient` in the tick). `db.rules` + permit flags cleared by both reset
-> paths. **NOT yet wired:** the `say`/`leave`/`orgasm`/`enter` enforce() calls into the live say/move/
-> climax/move-in command paths — that's the next pass (engine is ready; those hooks just need adding).
+> **Layer 3 status: BUILT + WIRED.** Engine as below; now hooked into the live game at every event:
+> `say` → `rp_commands.CmdSay` (banned_words/honorific), `enter` → `Character.at_post_move`
+> (present/kneel/posture directives), `leave` → new `Character.at_pre_move` (blocks `no_leave` ONLY
+> on `move_type=='traverse'` — player exit-walking; escape/force_clear/facility-drag all use 'move' and
+> the param defaults to 'move', so the OOC floor can never be trapped), `orgasm` →
+> `conditioning.deepen_on_climax` (ask_to_come; `compliance._grant_climax` sets a one-shot
+> `rule_come_permit` so granted climaxes aren't punished). Ambient still fires each facility beat.
 
 ## Layer 3 — RULES (new; standing obligations, gated by Layer 2, enforced by what we have)
 `db.rules = [{id, name, set_by, scope_tier, condition, consequence}]`. Setting a rule requires

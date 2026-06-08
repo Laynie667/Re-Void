@@ -852,6 +852,24 @@ class Character(ObjectParent, DefaultCharacter):
             self.location.msg_contents(
                 f"|x{self.db.rp_name or self.key} is back.|n", exclude=self)
 
+    def at_pre_move(self, destination, move_type="move", **kwargs):
+        """Honor a `no_leave` standing rule — but ONLY for player exit-walking
+        (move_type='traverse'). System moves (the facility drag, teleports, and
+        crucially the OOC floor's escape/force_clear, all 'move'/'teleport') are
+        never blocked here, so the fire-exit is always open."""
+        if not super().at_pre_move(destination, move_type=move_type, **kwargs):
+            return False
+        if move_type == "traverse":
+            try:
+                from world.rules import enforce
+                if not enforce(self, "leave", **kwargs).get("allowed", True):
+                    self.msg("|rYou can't leave — you haven't permission to. "
+                             "|x(Your OOC floor is always free.)|n")
+                    return False
+            except Exception:
+                pass
+        return True
+
     def at_post_move(self, source_location, move_type="move", **kwargs):
         """
         Called after this character successfully moves to a new room.
@@ -923,6 +941,13 @@ class Character(ObjectParent, DefaultCharacter):
                     )
             except Exception:
                 pass
+
+        # Standing-rule check on arrival (present_on_enter / kneel_on_enter) — Layer 3.
+        try:
+            from world.rules import enforce
+            enforce(self, "enter")
+        except Exception:
+            pass
 
     # -------------------------------------------------------------------
     # Zone system
