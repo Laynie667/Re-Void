@@ -20,9 +20,27 @@ Tiers a viewer can hold toward a target (a viewer may hold several at once):
 - **owner** — holds you: facility owner (`is_owner`), your conditioning-consent holder, or an
   explicit owned-by link. The cruellest tier; Bethany lives here.
 - **lover** — a mutually-set bond.
-- **family** — lineage / kin. Default **mutual** opt-in, but an **owner may FORCE** a family tie
-  (set herself your biological mother/sister; name you her daughter/son) — on-theme for the
-  breeding line. Forced ties are logged to the behaviour log.
+- **family** — lineage / kin, and **granular by role** (for incest/lineage play, which is core to
+  Bethany — she breeds her own line and makes herself its origin). A relation entry stores a ROLE,
+  not just the bare tier:
+    `db.relationships[target_id] = {"family": "<role>", "lover": bool, "owner": bool,
+                                    "set_by": id, "forced": bool}`
+  Role catalogue (with reciprocals; the reciprocal is auto-set on the other party, gendered by their
+  sex/pronouns):
+    - parent side: **mother / father / sire / dam** (sire & dam = the breeding terms) / generic *parent*
+    - child side:  **daughter / son / get / offspring** / generic *child*
+    - sibling:     **sister / brother / sibling**
+    - (later, optional) grandam/grandsire, aunt/uncle
+  `tiers_of` collapses ANY family role → the **`family`** tier for authority checks; the role STRING
+  drives flavour, the sheet/`standing` display, honorifics ("mommy", "sire"), and the lineage system.
+  Default **mutual** opt-in (`relate <who> = sister`), but an **owner may FORCE** a role
+  (`relate/force <who> = daughter`) — sets herself mother/sire and the reciprocal on the target, logged.
+  **Lineage tie-in (the real hook):** the breeding systems already track who bred whom
+  (`bred_by`, `offspring_roster`, pregnancy/`gang_breeding`). Real offspring should AUTO-register the
+  dam/sire ↔ get family relations, so incest = breeding back into a line the game actually knows about,
+  and Bethany making herself `dam`/`mother`/`sire` of her stock keys directly off it. Ageplay (the
+  horse `little` upgrade + infantilizing conditioning) stacks with the mother/child roles for the
+  mommy-and-baby register — one coherent knot, not three.
 - **faction** — shares a faction with you (`factions.py` membership).
 - **hostile** — a faction at enmity with yours (faction relations already exist).
 - **all** — anyone (the catch-all / default tier).
