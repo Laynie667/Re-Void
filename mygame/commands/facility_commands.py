@@ -987,6 +987,47 @@ class CmdBuy(Command):
 ALL_FACILITY_VERBS.append(CmdBuy)
 
 
+class CmdRelease(Command):
+    """
+    Manumission — the way out of the Process, on her terms.
+
+    Usage:
+        release         — where you stand with the door: her price and what's left
+        release ask     — ask her to name a price (she likes being asked)
+        release pay     — pay the named price once you can meet it
+
+    This is the IN-FICTION door, and it is Bethany's to price, dangle, honor, or
+    slam shut again on a whim. Paying it does not open it — only she does, when she
+    feels like it, if she feels like it. That wait is the whole point.
+
+    It is NOT your real way out. The real exit — escape / force_clear /
+    facilityreset — is always free, instant, and costs nothing, at any balance,
+    in any state, no matter what she's signed or shredded. Manumission is a story.
+    The floor is not.
+    """
+    key           = "release"
+    aliases       = ["manumission", "freedom", "buyout"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world import release as rel
+        except Exception:
+            caller.msg("|xNo release process is available here.|n")
+            return
+        arg = self.args.strip().lower()
+        if arg in ("ask", "petition", "beg", "request"):
+            rel.petition(caller)
+        elif arg in ("pay", "buy", "sign", "settle"):
+            rel.pay(caller)
+        else:
+            caller.msg(rel.status(caller))
+
+ALL_FACILITY_VERBS.append(CmdRelease)
+
+
 class CmdVault(Command):
     """
     Bethany's books — the account she keeps on you, and what she's spent of it.

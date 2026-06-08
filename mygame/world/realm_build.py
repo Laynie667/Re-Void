@@ -2639,7 +2639,7 @@ def force_clear(owner):
               "facility_title_backup", "forced_posture", "body_language", "room_bound",
               "facility_zone", "facility_furniture", "intake_provocations",
               "intake_suggestibility", "intake_door_opened", "found_captive_ring",
-              "facility_forgotten", "bethany_clauses"):
+              "facility_forgotten", "bethany_clauses", "release_terms"):
         try: setattr(d, k, None)
         except Exception: pass
     # -> 0

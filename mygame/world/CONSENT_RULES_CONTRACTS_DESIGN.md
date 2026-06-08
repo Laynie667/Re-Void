@@ -106,6 +106,11 @@ These are different objects. Conflating them is the trap; splitting them gives t
   dangle, revoke, hide the price, write a clause that voids it. This is the "available but not
   abusable" texture the user wants, and it's hotter gated than the OOC command could ever be, because
   it adds in-fiction stakes WITHOUT ever cornering a real person. Build this on top of the floor.
+  → **BUILT** (`world/release.py` + `release` command). Manumission: Bethany `offer()`s a price
+  (scrip + devotion-ceiling + standing-floor), the unit `release ask`/`pay`s toward it, only her
+  `grant()` opens the door (drives `reveal_return`), and `revoke()`/`gouge()` slam it shut / raise
+  the price. Every message reminds: the OOC floor is separate and always free. Scrip-comfort
+  (commissary) still never buys the door; manumission is the only in-fiction door, and it's hers.
 
 ---
 

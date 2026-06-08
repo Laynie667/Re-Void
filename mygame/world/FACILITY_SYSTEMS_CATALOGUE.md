@@ -175,6 +175,23 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   maintenance burden and the single biggest source of "forgot to clear X" risk.
   → Extract a single `FACILITY_STATE` spec (attr → default) both paths consume.
 
+## 1b. Manumission — the IN-FICTION escape  (`world/release.py` + `release` cmd)
+- **Purpose:** the diegetic door out of the Process, distinct from the OOC floor. Bethany's to
+  price, dangle, honor, gouge, and revoke. The "available but not abusable" texture, in fiction only.
+- **fn (Bethany, via @py):** `offer(stock, scrip, devotion_max, standing_min, note, by)` names/edits
+  the price; `gouge(add_scrip, …)` raises it; `grant(stock)` honors it → drives
+  `realm_build.reveal_return` (opens the held return word); `revoke(stock, regouge=)` slams it shut
+  (pulls the return-wp `realm_address` back to None) + can re-price; `withdraw` clears the offer.
+- **fn (unit, via `release` cmd):** `status` (price + met/unmet conditions), `petition` (`release ask`),
+  `pay` (`release pay` — spends REAL scrip via `economy.spend_credits`; conditions must be met;
+  paying does NOT open the door, only Bethany's `grant` does — the wait is the point).
+- **st:** `db.release_terms` {offered, scrip, devotion_max, standing_min, note, set_by, paid, granted}.
+  Reads real `bethany_devotion` / faction `get_standing` / scrip balance. Cleared by BOTH reset
+  paths (`release_terms` added to `facility_state` defaults + `force_clear`'s None-list) — a purge
+  wipes any pending/granted release with everything else.
+- **§0:** every message reprints the floor reminder; nothing here gates `escape`/`force_clear`/purge.
+  Commissary scrip still never buys the door (unchanged); manumission is the only in-fiction door.
+
 ## 2. The cycle  (`typeclasses/facility_script.py` · `RealmCycleScript`)
 - **Purpose:** the phase machine that drags her room-to-room and runs each room's scene.
 - **fn:** `at_repeat` (drive), `_choose_destination` (handler-weighted next room),
