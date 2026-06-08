@@ -237,7 +237,7 @@ def status(stock):
         lines.append("|MPaid. Now it waits on her pen — and her pen waits on her mood.|n")
     else:
         ready = (bal >= owe) and not _unmet(stock, t)
-        lines.append("|MReady to pay — |wrelease pay|M when you can stand to.|n" if ready
+        lines.append("|MReady to pay — |wfreedom pay|M when you can stand to.|n" if ready
                      else "|xNot yet within reach. Earn it, or want her less.|n")
     lines.append(_FLOOR)
     lines.append("|M" + "═" * 46 + "|n")
@@ -260,7 +260,7 @@ def pay(stock):
     Paying does NOT open the door — only Bethany's grant() does. That wait is the point."""
     t = terms(stock)
     if not t["offered"]:
-        stock.msg("|xThere is no price on the table to pay. Ask her first — |wrelease ask|x.|n")
+        stock.msg("|xThere is no price on the table to pay. Ask her first — |wfreedom ask|x.|n")
         return
     if t["granted"]:
         stock.msg("|gIt's already signed. The way home is open — go, if you're going.|n")

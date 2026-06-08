@@ -178,13 +178,16 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 ## 1b. Manumission — the IN-FICTION escape  (`world/release.py` + `release` cmd)
 - **Purpose:** the diegetic door out of the Process, distinct from the OOC floor. Bethany's to
   price, dangle, honor, gouge, and revoke. The "available but not abusable" texture, in fiction only.
-- **fn (Bethany, via @py):** `offer(stock, scrip, devotion_max, standing_min, note, by)` names/edits
-  the price; `gouge(add_scrip, …)` raises it; `grant(stock)` honors it → drives
-  `realm_build.reveal_return` (opens the held return word); `revoke(stock, regouge=)` slams it shut
-  (pulls the return-wp `realm_address` back to None) + can re-price; `withdraw` clears the offer.
-- **fn (unit, via `release` cmd):** `status` (price + met/unmet conditions), `petition` (`release ask`),
-  `pay` (`release pay` — spends REAL scrip via `economy.spend_credits`; conditions must be met;
-  paying does NOT open the door, only Bethany's `grant` does — the wait is the point).
+- **fn (Bethany, via the `manumit` ADMIN command — `cmd:perm(Developer) or perm(Admin)`, so players
+  can't loophole it):** `offer(stock, scrip, devotion_max, standing_min, note, by)` names/edits the
+  price; `gouge(add_scrip, …)` raises it; `grant(stock)` honors it → drives `realm_build.reveal_return`
+  (opens the held return word); `revoke(stock, regouge=)` slams it shut (pulls the return-wp
+  `realm_address` back to None) + can re-price; `withdraw` clears the offer. Command:
+  `manumit[/offer|/gouge|/grant|/revoke|/withdraw] <target> [= <scrip> dev N stand N note…]`.
+- **fn (unit, via the `freedom` cmd — keyed `freedom`, NOT `release`, which the restraint system owns):**
+  `status` (price + met/unmet conditions), `petition` (`freedom ask`), `pay` (`freedom pay` — spends
+  REAL scrip via `economy.spend_credits`; conditions must be met; paying does NOT open the door, only
+  Bethany's `grant` does — the wait is the point).
 - **st:** `db.release_terms` {offered, scrip, devotion_max, standing_min, note, set_by, paid, granted}.
   Reads real `bethany_devotion` / faction `get_standing` / scrip balance. Cleared by BOTH reset
   paths (`release_terms` added to `facility_state` defaults + `force_clear`'s None-list) — a purge

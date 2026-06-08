@@ -987,14 +987,14 @@ class CmdBuy(Command):
 ALL_FACILITY_VERBS.append(CmdBuy)
 
 
-class CmdRelease(Command):
+class CmdManumission(Command):
     """
     Manumission — the way out of the Process, on her terms.
 
     Usage:
-        release         — where you stand with the door: her price and what's left
-        release ask     — ask her to name a price (she likes being asked)
-        release pay     — pay the named price once you can meet it
+        freedom         — where you stand with the door: her price and what's left
+        freedom ask     — ask her to name a price (she likes being asked)
+        freedom pay     — pay the named price once you can meet it
 
     This is the IN-FICTION door, and it is Bethany's to price, dangle, honor, or
     slam shut again on a whim. Paying it does not open it — only she does, when she
@@ -1005,8 +1005,8 @@ class CmdRelease(Command):
     in any state, no matter what she's signed or shredded. Manumission is a story.
     The floor is not.
     """
-    key           = "release"
-    aliases       = ["manumission", "freedom", "buyout"]
+    key           = "freedom"
+    aliases       = ["manumission", "buyout"]
     locks         = "cmd:all()"
     help_category = "Interaction"
 
@@ -1025,7 +1025,93 @@ class CmdRelease(Command):
         else:
             caller.msg(rel.status(caller))
 
-ALL_FACILITY_VERBS.append(CmdRelease)
+ALL_FACILITY_VERBS.append(CmdManumission)
+
+
+class CmdManumit(MuxCommand):
+    """
+    Bethany's side of manumission — name, honor, gouge, or revoke a release.
+
+    ADMIN ONLY. This is the lock that keeps the in-fiction door un-loopholable:
+    a unit can ask and pay, but only this command opens it, and it never touches
+    the OOC floor (escape / force_clear / facilityreset stay free regardless).
+
+    Usage:
+        manumit <target>                  — read their current release terms
+        manumit/offer <target> = <scrip> [dev <N>] [stand <N>] [<note...>]
+        manumit/gouge <target> = <scrip> [dev <N>] [stand <N>] [<note...>]
+        manumit/grant <target>            — honor it (opens the way home)
+        manumit/revoke <target> [= <add>] — slam it shut again (optionally re-price)
+        manumit/withdraw <target>         — clear the offer entirely
+
+    Examples:
+        manumit/offer Laynie = 8000 dev 20 stand 40 You'll want to stay, pet.
+        manumit/grant Laynie
+        manumit/revoke Laynie = 5000
+    """
+    key            = "manumit"
+    switch_options = ("offer", "gouge", "grant", "revoke", "withdraw")
+    locks          = "cmd:perm(Developer) or perm(Admin)"
+    help_category  = "Admin"
+
+    @staticmethod
+    def _parse_terms(rhs):
+        """'8000 dev 20 stand 40 note words' -> (scrip, devotion_max, standing_min, note)."""
+        toks = (rhs or "").split()
+        scrip = devmax = standmin = None
+        note_parts = []
+        i = 0
+        while i < len(toks):
+            t = toks[i].lower()
+            if t in ("dev", "devotion") and i + 1 < len(toks) and toks[i + 1].lstrip("<=").isdigit():
+                devmax = int(toks[i + 1].lstrip("<=")); i += 2; continue
+            if t in ("stand", "standing") and i + 1 < len(toks) and toks[i + 1].lstrip(">=").isdigit():
+                standmin = int(toks[i + 1].lstrip(">=")); i += 2; continue
+            if scrip is None and toks[i].replace(",", "").isdigit():
+                scrip = int(toks[i].replace(",", "")); i += 1; continue
+            note_parts.append(toks[i]); i += 1
+        return scrip, devmax, standmin, " ".join(note_parts).strip()
+
+    def func(self):
+        caller = self.caller
+        from world import release as rel
+        name = (self.lhs or self.args or "").strip()
+        if not name:
+            caller.msg("|xManumit whom? See |whelp manumit|x.|n")
+            return
+        target = caller.search(name, global_search=True)
+        if not target:
+            return
+
+        sw = self.switches
+        if "offer" in sw or "gouge" in sw:
+            scrip, devmax, standmin, note = self._parse_terms(self.rhs)
+            if "gouge" in sw:
+                rel.gouge(target, add_scrip=scrip or 0, devotion_max=devmax,
+                          standing_min=standmin, note=note)
+            else:
+                rel.offer(target, scrip=scrip or 0, devotion_max=devmax,
+                          standing_min=standmin, note=note, by=caller)
+            caller.msg(f"|g[manumit] terms set on {target.key}.|n")
+        elif "grant" in sw:
+            ok = rel.grant(target, by=caller)
+            caller.msg(f"|g[manumit] release {'GRANTED — door open' if ok else 'NOT granted (unpaid/no offer)'} "
+                       f"for {target.key}.|n")
+        elif "revoke" in sw:
+            regouge = 0
+            if self.rhs and self.rhs.strip().replace(",", "").isdigit():
+                regouge = int(self.rhs.strip().replace(",", ""))
+            rel.revoke(target, by=caller, regouge=regouge)
+            caller.msg(f"|g[manumit] release revoked — door shut for {target.key}"
+                       + (f"; re-priced +{regouge:,}." if regouge else ".") + "|n")
+        elif "withdraw" in sw:
+            rel.withdraw(target, by=caller)
+            caller.msg(f"|g[manumit] offer withdrawn for {target.key}.|n")
+        else:
+            # no switch — admin read of their terms
+            caller.msg(rel.status(target))
+
+ALL_FACILITY_VERBS.append(CmdManumit)
 
 
 class CmdVault(Command):
