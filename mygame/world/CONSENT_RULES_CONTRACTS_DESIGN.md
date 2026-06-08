@@ -54,6 +54,17 @@ API sketch (`world/relationships.py` or extend `world/factions.py`):
 - lover/family are **mutual opt-in** (offer/accept, like the conditioning handshake / faction invite).
 - owner is derived (facility owner / consent-holder / owned-by), not self-claimed.
 
+> **Layer 2 status: BUILT (v1, as a focused EXTENSION — not a parallel matrix).** The game already
+> had per-feature, per-person allow/block overrides (`db.consent_overrides = {"allow"/"block":
+> {type: set(ids)}}`) consulted by `social_commands._check_consent`, `teleport_commands`, etc. v1 just
+> lets those same sets ALSO hold relationship-tier strings (owner/lover/family/faction/hostile) and
+> teaches the resolvers to match via `tiers_of`. New `relationships.override_decision(actor, target,
+> allow, block)` returns block/allow/None (block>allow, then fall through to the global flag —
+> unchanged precedence); wired into `_check_consent` + the teleport resolver. `consent allow|block|
+> unblock <type> <who>` now accepts a tier keyword for `<who>` (`_resolve_who`); `consent` display
+> splits tiers from person-counts. NOT yet done: folding the conditioning-consent scopes in, the
+> consent LOCK as a matrix flag, and the behaviour-log lockout — those are Layer 2 v2.
+
 ## Layer 2 — CONSENT / AUTHORITY MATRIX (extend the existing consent system)
 The user's verb stays: **`consent <feature> allow|block <who>`** — where `<who>` is now any of:
 a specific person, a relationship tier, or `all`. This is the per-feature, per-tier permission

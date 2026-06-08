@@ -1447,14 +1447,17 @@ class SocialEmoteCommand(MuxCommand):
 
         tname = target.db.rp_name or target.name
 
-        if actor.id in blocked:
+        # Per-person id OR relationship-tier (owner/lover/family/faction/hostile).
+        from world.relationships import override_decision
+        decision = override_decision(actor, target, allowed, blocked)
+        if decision == "block":
             self.msg(
                 f"You reach toward {tname}, but something holds you back. "
                 f"|x({tname} has not enabled {label} with you.)|n"
             )
             return False
 
-        if actor.id in allowed:
+        if decision == "allow":
             return True
 
         flags = target.db.consent_flags or {}

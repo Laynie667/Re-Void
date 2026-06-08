@@ -56,11 +56,13 @@ def _check_consent(target, requester, flag):
     block_map  = overrides.get("block", {})
     allow_map  = overrides.get("allow", {})
 
-    # Per-player block
-    if requester.id in block_map.get(flag, set()):
+    # Per-player id OR relationship-tier (owner/lover/family/faction/hostile).
+    from world.relationships import override_decision
+    decision = override_decision(requester, target,
+                                 allow_map.get(flag, set()), block_map.get(flag, set()))
+    if decision == "block":
         return False
-    # Per-player allow
-    if requester.id in allow_map.get(flag, set()):
+    if decision == "allow":
         return True
     # Global flag (default True if missing)
     flags = target.db.consent_flags or {}

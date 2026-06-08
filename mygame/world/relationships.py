@@ -137,6 +137,32 @@ def is_lover(viewer, target):
     return bool(_rels(viewer).get(_id(target), {}).get("lover"))
 
 
+# Relationship-tier keywords that can stand in for a person in consent overrides.
+# ('all' is intentionally NOT here — the global consent flag already means "everyone".)
+TIER_KEYWORDS = ("owner", "lover", "family", "faction", "hostile")
+
+
+def override_decision(actor, target, allow_set, block_set):
+    """Resolve a stored allow/block override for `actor` toward `target`.
+
+    The override sets (from `consent_overrides`) may hold int character ids AND
+    relationship-tier strings (owner/lover/family/faction/hostile). An actor matches
+    by id OR by holding a tier present in the set. Block wins over allow, matching the
+    existing consent precedence. Returns 'block' / 'allow' / None (None → fall through
+    to the global flag, exactly as before for id-only sets)."""
+    if actor is None:
+        return None
+    bset = block_set or set()
+    aset = allow_set or set()
+    aid  = _id(actor)
+    tiers = tiers_of(actor, target)
+    if aid in bset or (tiers & {x for x in bset if isinstance(x, str)}):
+        return "block"
+    if aid in aset or (tiers & {x for x in aset if isinstance(x, str)}):
+        return "allow"
+    return None
+
+
 # ── mutation ──────────────────────────────────────────────────────────────────
 def _apply(viewer, target, role=None, lover=False, forced=False):
     """Write both directions of a relation. Internal — callers gate consent/ownership."""

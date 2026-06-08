@@ -4124,11 +4124,18 @@ class CmdConsent(MuxCommand):
         consent                             — see all flags and overrides
         consent on <type>                   — enable globally
         consent off <type>                  — disable globally
-        consent allow <type|all> <name>     — allow this person (even if global is off)
-        consent block <type|all> <name>     — block this person (even if global is on)
-        consent unblock <type|all> <name>   — remove per-player override
+        consent allow <type|all> <who>      — allow this person/tier (even if global is off)
+        consent block <type|all> <who>      — block this person/tier (even if global is on)
+        consent unblock <type|all> <who>    — remove per-person/tier override
 
     Aliases: 'give' = 'on', 'revoke' = 'off'
+
+    <who> may be a person's name OR a relationship tier:
+        owner / lover / family / faction / hostile
+    e.g. `consent block intimate hostile`, `consent allow bdsm owner`,
+         `consent allow mature family`. ('all' is the global flag — `consent on
+         <type>` — so it isn't a tier here.) Block beats allow; tiers resolve
+         through your relationships (see `relate`).
 
     Types: casual / intimate / mature / bdsm / lead_follow / restraint / plock
            allow_jump / allow_summon
@@ -4215,13 +4222,22 @@ class CmdConsent(MuxCommand):
             value = flags.get(flag, False)
             label = self.CONSENT_LABELS.get(flag, flag.capitalize())
             status = "|gon|n " if value else "|roff|n"
-            allowed_ids = allow_map.get(flag, set())
-            blocked_ids = block_map.get(flag, set())
+            allowed = allow_map.get(flag, set())
+            blocked = block_map.get(flag, set())
+            # split person-ids from relationship-tier strings for a readable line
+            def _split(s):
+                tiers = sorted(x for x in s if isinstance(x, str))
+                ids   = [x for x in s if not isinstance(x, str)]
+                parts = list(tiers)
+                if ids:
+                    parts.append(f"{len(ids)} ppl")
+                return parts
             extras = []
-            if allowed_ids:
-                extras.append(f"|g+{len(allowed_ids)} allowed|n")
-            if blocked_ids:
-                extras.append(f"|r-{len(blocked_ids)} blocked|n")
+            a_parts, b_parts = _split(allowed), _split(blocked)
+            if a_parts:
+                extras.append("|g+allow: " + ", ".join(a_parts) + "|n")
+            if b_parts:
+                extras.append("|r-block: " + ", ".join(b_parts) + "|n")
             extra = f"  {', '.join(extras)}" if extras else ""
             return f"  {label + ':':<22} {status}{extra}"
 
@@ -4248,10 +4264,25 @@ class CmdConsent(MuxCommand):
         )
         self.msg("\n".join(lines))
 
+    def _resolve_who(self, char, name):
+        """Resolve a consent-override target: either a relationship-TIER keyword
+        (owner/lover/family/faction/hostile) stored as a string, or a person
+        resolved to their id. Returns (key, label) or (None, None) on failure."""
+        from world.relationships import TIER_KEYWORDS
+        low = name.strip().lower()
+        if low in TIER_KEYWORDS:
+            return low, f"anyone who is your |w{low}|n"
+        target = char.search(name, location=char.location)
+        if not target:
+            return None, None
+        return target.id, (target.db.rp_name or target.key)
+
     def _allow_consent(self, char, args):
-        """consent allow <type|all> [name]
+        """consent allow <type|all> [name|tier]
         No name  → toggle global flag(s) on.
         With name → per-person allow override (works even if global is off).
+        'name' may be a person OR a relationship tier:
+        owner / lover / family / faction / hostile.
         """
         import copy
         parts = args.strip().split(None, 1)
@@ -4279,19 +4310,18 @@ class CmdConsent(MuxCommand):
             char.db.consent_flags = flags
             self.msg(f"{label}: |gENABLED|n globally.")
         else:
-            # Per-person allow
-            target = char.search(target_name, location=char.location)
-            if not target:
+            # Per-person OR per-tier allow
+            key, who = self._resolve_who(char, target_name)
+            if key is None:
                 return
             overrides = copy.deepcopy(char.db.consent_overrides or {})
             overrides.setdefault("allow", {})
             overrides.setdefault("block", {})
             for t in types:
-                overrides["allow"].setdefault(t, set()).add(target.id)
-                overrides["block"].get(t, set()).discard(target.id)
+                overrides["allow"].setdefault(t, set()).add(key)
+                overrides["block"].get(t, set()).discard(key)
             char.db.consent_overrides = overrides
-            tname = target.db.rp_name or target.key
-            self.msg(f"{label}: |gallowed|n for {tname} (overrides global).")
+            self.msg(f"{label}: |gallowed|n for {who} (overrides global).")
 
     def _disallow_consent(self, char, args):
         """consent disallow <type|all> [name]
@@ -4324,19 +4354,18 @@ class CmdConsent(MuxCommand):
             char.db.consent_flags = flags
             self.msg(f"{label}: |rDISABLED|n globally.")
         else:
-            # Per-person block
-            target = char.search(target_name, location=char.location)
-            if not target:
+            # Per-person OR per-tier block
+            key, who = self._resolve_who(char, target_name)
+            if key is None:
                 return
             overrides = copy.deepcopy(char.db.consent_overrides or {})
             overrides.setdefault("allow", {})
             overrides.setdefault("block", {})
             for t in types:
-                overrides["block"].setdefault(t, set()).add(target.id)
-                overrides["allow"].get(t, set()).discard(target.id)
+                overrides["block"].setdefault(t, set()).add(key)
+                overrides["allow"].get(t, set()).discard(key)
             char.db.consent_overrides = overrides
-            tname = target.db.rp_name or target.key
-            self.msg(f"{label}: |rblocked|n for {tname} (overrides global).")
+            self.msg(f"{label}: |rblocked|n for {who} (overrides global).")
 
     def _unblock_consent(self, char, args):
         """consent unblock <type|all> <name> — remove override, fall back to global."""
@@ -4354,8 +4383,8 @@ class CmdConsent(MuxCommand):
                 f"Valid: {', '.join(self.VALID_CONSENT_TYPES)}, all"
             )
             return
-        target = char.search(target_name, location=char.location)
-        if not target:
+        key, who = self._resolve_who(char, target_name)
+        if key is None:
             return
         overrides = copy.deepcopy(char.db.consent_overrides or {})
         changed = False
@@ -4364,14 +4393,13 @@ class CmdConsent(MuxCommand):
                 bucket_map = overrides.get(bucket, {})
                 if t in bucket_map:
                     before = len(bucket_map[t])
-                    bucket_map[t].discard(target.id)
+                    bucket_map[t].discard(key)
                     if len(bucket_map[t]) < before:
                         changed = True
         if changed:
             char.db.consent_overrides = overrides
-        tname = target.db.rp_name or target.key
         label = "all type" if consent_type == "all" else f"|w{consent_type}|n"
-        self.msg(f"{label} overrides for {tname} removed. Global flags now apply.")
+        self.msg(f"{label} overrides for {who} removed. Global flags now apply.")
 
 
 # -------------------------------------------------------------------
