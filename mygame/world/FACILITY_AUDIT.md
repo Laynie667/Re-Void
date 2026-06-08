@@ -355,6 +355,13 @@ cleared) + the **Nugget** state (`nugget`/`limb_lock`/`sensory_hood`/`total_depe
 `active_speech_filters`), all in `FACILITY_FLAGS` → cleared by every reset path. **When adding ANY
 new persistent state, add it here and to all three reset paths.**
 
+**Player-conditioning + TF OOC-floor verification:** the `condition` consent layer can be LOCKED
+(`conditioning_consent.locked`) so a unit can't self-revoke and `uncondition` refuses — but
+`escape`/`force_clear`/`facilityreset` ignore the lock entirely and clear `conditioning_consent`/
+`pending_conditioning`/`body_parts`/`banned_words`/`word_swaps`/`installed_triggers`/
+`active_speech_filters` (all in FACILITY_FLAGS or the force_clear list). So a locked, conditioned,
+transformed unit is still freed instantly by the floor. Verified by test.
+
 **Nugget OOC-floor verification:** the nugget sets `self_cmds_locked`/`navigation_locked`, but
 `escape()` (the `@py … escape(me)` superuser path) and `force_clear`/`facilityreset` never consult
 those checks (only waystone/teleport/say do), and `force_clear` runs `apply_reset_flags` + clears

@@ -1315,7 +1315,7 @@ ALL_FACILITY_VERBS.append(CmdWordCondition)
 # §0 floor: the target's own escape / force_clear / facilityreset wipes everything ANY
 # conditioner ever did, instantly — and a target can `uncondition` to revoke + clear the
 # soft bits themselves at any time. No conditioning is possible without the target's accept.
-_COND_SCOPES = ("deepen", "trigger", "speech", "name")
+_COND_SCOPES = ("deepen", "trigger", "speech", "name", "body")
 _TRIGGER_RESPONSES = ("kneel", "beg", "orgasm", "blank", "obey", "freeze", "leak", "recite")
 
 
@@ -1335,12 +1335,18 @@ class CmdCondition(MuxCommand):
         condition <player> = ban <word>             — they can no longer say <word>
         condition <player> = swap <from> > <to>      — they say <to> wherever they'd say <from>
         condition <player> = designate <name>        — give them a designation
+        condition <player> = body <track> [amount]   — reshape their body (see `transform tracks`)
+        condition <player> = lock | unlock            — seal/unseal their consent (they can't self-revoke)
         condition <player> = release                 — relinquish them (clears your hold)
+        condition/allow [scopes]                     — (on yourself) open to conditioning by ANYONE
+        condition/allow/lock [scopes]                — open AND lock it (rely on someone to unlock)
         uncondition                                  — (on yourself) revoke consent + clear the soft conditioning
 
-    Consent is required — nothing happens until they `condition/accept` you, and only within the
-    scopes they granted. The OOC floor is theirs and absolute: |wescape|n / |wforce_clear|n undoes
-    ALL of it, always, no matter who did it or how deep.
+    Consent is required — nothing happens until they `condition/accept` you (or `condition/allow`
+    everyone), and only within the granted scopes (deepen, trigger, speech, name, body). Consent can
+    be LOCKED so the unit can't take it back themselves — then they rely on a holder to `unlock`, or
+    a curse/quest can lock it. The OOC floor is theirs and absolute regardless: |wescape|n /
+    |wforce_clear|n undoes ALL of it, always, no matter who did it, how deep, or whether it's locked.
     """
     key = "condition"
     aliases = ["brainwash"]
@@ -1352,7 +1358,8 @@ class CmdCondition(MuxCommand):
 
     def _scope_ok(self, caller, target, need):
         c = self._consent(target)
-        if c.get("by") != caller.id:
+        # "any" = they've opened themselves to all comers (consent/allow); else must be you.
+        if c.get("by") not in (caller.id, "any"):
             return False, (f"|x{target.db.rp_name or target.key} hasn't consented to be conditioned "
                            f"by you. Try: condition {target.key} = offer|n")
         if need not in (c.get("scope") or []):
@@ -1385,6 +1392,21 @@ class CmdCondition(MuxCommand):
                        f"Your |wescape|M always undoes everything.|n")
             target.msg(f"|M{caller.db.rp_name or caller.key} accepts your conditioning. They're yours "
                        f"to work on — within scope, until they say stop.|n")
+            return
+
+        # switch: allow — open YOURSELF to conditioning by anyone (optionally lock it so you
+        # can't take it back yourself — only an owner unlocks, or the §0 floor).
+        #   condition/allow [scopes]            — open to all comers, can still uncondition
+        #   condition/allow/lock [scopes]       — open AND locked: you rely on someone to unlock
+        if "allow" in self.switches:
+            scope = [s for s in (self.args or "").lower().split() if s in _COND_SCOPES] or list(_COND_SCOPES)
+            locked = "lock" in self.switches
+            caller.db.conditioning_consent = {"by": "any", "by_name": "anyone", "scope": scope,
+                                              "locked": locked}
+            caller.msg(f"|MYou open yourself to conditioning by anyone (scope: |w{', '.join(scope)}|M)"
+                       + ("|M, and |rlock it|M — you can't take it back yourself now; someone has to "
+                          "`condition you = unlock`. " if locked else "|M. ")
+                       + "Your |wescape|M / |wfacilityreset|M still undoes everything, always.|n")
             return
 
         if not self.args:
@@ -1431,7 +1453,7 @@ class CmdCondition(MuxCommand):
             return
 
         if verb == "release":
-            if self._consent(target).get("by") == caller.id:
+            if self._consent(target).get("by") in (caller.id, "any"):
                 target.db.conditioning_consent = None
                 caller.msg(f"|gYou relinquish your hold on {tn}.|n")
                 target.msg(f"|x{caller.db.rp_name or caller.key} relinquishes conditioning of you. "
@@ -1440,12 +1462,29 @@ class CmdCondition(MuxCommand):
                 caller.msg("|xYou don't hold them.|n")
             return
 
+        # lock / unlock — the holder can seal their consent so the unit can't take it back
+        # themselves (they rely on an owner to unlock, or on the §0 floor). Curses/quests can
+        # set the same `locked` flag.
+        if verb in ("lock", "unlock"):
+            c = self._consent(target)
+            if c.get("by") not in (caller.id, "any") or not c:
+                caller.msg("|xYou don't hold their consent to lock.|n")
+                return
+            c["locked"] = (verb == "lock")
+            target.db.conditioning_consent = c
+            caller.msg(f"|g{'Locked' if verb=='lock' else 'Unlocked'} {tn}'s conditioning consent.|n")
+            target.msg(f"|M{caller.db.rp_name or caller.key} "
+                       + ("|rlocks|M your consent — you can't revoke it yourself now. (Your |wescape|M "
+                          "still frees you, always.)" if verb == "lock"
+                          else "unlocks your consent — you can `uncondition` again.") + "|n")
+            return
+
         # everything below needs scoped consent
         scope_needed = {"deepen": "deepen", "trigger": "trigger", "ban": "speech",
-                        "swap": "speech", "designate": "name"}.get(verb)
+                        "swap": "speech", "designate": "name", "body": "body"}.get(verb)
         if scope_needed is None:
             caller.msg("|xActions: offer | deepen | trigger <phrase> > <response> | ban <word> | "
-                       "swap <from> > <to> | designate <name> | release|n")
+                       "swap <from> > <to> | designate <name> | body <track> [amt] | lock | unlock | release|n")
             return
         ok, reason = self._scope_ok(caller, target, scope_needed)
         if not ok:
@@ -1490,6 +1529,24 @@ class CmdCondition(MuxCommand):
             caller.msg(f"|MYou designate {tn}: \"{rest}\".|n")
             target.msg(f"|m{caller.db.rp_name or caller.key} gives you a designation: \"{rest}\". "
                        f"It starts to feel more true than your name.|n")
+        elif verb == "body":
+            from world.transformation import apply_tf, TRACKS
+            bits = rest.split()
+            track = bits[0].lower() if bits else ""
+            if track not in TRACKS:
+                caller.msg(f"|xUsage: condition <player> = body <track> [amount]. "
+                           f"Tracks: {', '.join(TRACKS)}|n")
+                return
+            try:
+                amt = float(bits[1]) if len(bits) > 1 else 1.0
+            except ValueError:
+                amt = 1.0
+            crossed, msg = apply_tf(target, track, amt)
+            room = target.location
+            if room and msg:
+                room.msg_contents(msg)
+            caller.msg(f"|MYou push {tn}'s body along ({track} +{amt:g}).|n"
+                       + ("" if crossed else " |x(not a new stage yet)|n"))
 
     def _speech(self, caller, target, tn, verb, rest):
         def _ensure_filter(name):
@@ -1539,6 +1596,12 @@ class CmdUncondition(Command):
 
     def func(self):
         caller = self.caller
+        c = dict(getattr(caller.db, "conditioning_consent", None) or {})
+        if c.get("locked"):
+            caller.msg("|rYour conditioning consent is locked — you can't take it back yourself. "
+                       "Someone has to `condition you = unlock`.\n|x(The OOC floor is always yours, "
+                       "though: |wescape|x / |wfacilityreset|x frees you completely, no matter what.)|n")
+            return
         caller.db.conditioning_consent = None
         caller.db.pending_conditioning = None
         caller.db.banned_words = []
@@ -1554,6 +1617,95 @@ class CmdUncondition(Command):
 
 
 ALL_FACILITY_VERBS.append(CmdUncondition)
+
+
+class CmdBody(Command):
+    """
+    Read a body's current transformation — the parts the serums and the Process reshaped.
+
+    Usage:
+        body            — your own reshaped anatomy
+        body <player>   — read another's (what shows to anyone who looks)
+    """
+    key = "body"
+    aliases = ["anatomy"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        target = caller
+        if self.args.strip():
+            target = caller.search(self.args.strip(), global_search=True)
+            if not target:
+                return
+        from world.transformation import body_summary
+        lines = body_summary(target)
+        tn = target.db.rp_name or target.key
+        if not lines:
+            caller.msg(f"|x{tn}'s body is unremarkable — nothing reshaped (yet).|n")
+            return
+        caller.msg(f"|w── {tn}'s body ──|n\n" + "\n".join(lines))
+
+
+ALL_FACILITY_VERBS.append(CmdBody)
+
+
+class CmdTransform(Command):
+    """
+    Reshape a unit's body (owner / staff) — push a transformation track.
+
+    Usage:
+        transform <player> = <track> [amount]
+        transform tracks                         — list the tracks
+
+    Tracks: cock, balls, breasts, lips, clit, ass, lactation, feral. Repeated doses cross
+    thresholds that permanently rewrite how the part reads (shows in `body` / `marks`).
+    Authority: the Facility's owner (Bethany) or staff/Builder. (Consenting players reshape
+    each other with `condition <player> = body <track>`.) In-fiction only — the |wescape|n
+    floor clears all of it.
+    """
+    key = "transform"
+    aliases = ["tf"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world.transformation import apply_tf, TRACKS
+        if (self.args or "").strip().lower() == "tracks":
+            caller.msg("|wTF tracks:|n " + ", ".join(TRACKS))
+            return
+        from world.factions import is_owner
+        if not (caller.is_superuser or caller.check_permstring("Builder")
+                or is_owner(caller, "facility")):
+            caller.msg("|xOnly the Facility's owner reshapes a unit like that.|n")
+            return
+        if "=" not in (self.args or ""):
+            caller.msg("|xUsage: transform <player> = <track> [amount]|n")
+            return
+        who, spec = [p.strip() for p in self.args.split("=", 1)]
+        target = caller.search(who, global_search=True)
+        if not target:
+            return
+        bits = spec.split()
+        track = bits[0].lower() if bits else ""
+        if track not in TRACKS:
+            caller.msg(f"|xTracks: {', '.join(TRACKS)}|n")
+            return
+        try:
+            amt = float(bits[1]) if len(bits) > 1 else 1.0
+        except ValueError:
+            amt = 1.0
+        crossed, msg = apply_tf(target, track, amt)
+        room = target.location
+        if room and msg:
+            room.msg_contents(msg)
+        tn = target.db.rp_name or target.key
+        caller.msg(f"|gReshaped {tn}: {track} +{amt:g}" + ("." if crossed else " (no new stage yet).") + "|n")
+
+
+ALL_FACILITY_VERBS.append(CmdTransform)
 
 
 class CmdTab(Command):

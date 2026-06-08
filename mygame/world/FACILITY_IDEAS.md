@@ -549,3 +549,53 @@ We have arousal + denial flags; make it a real subsystem.
 - 🎯 **Recommended next big builds (in order):** (A) the TF/body framework — highest leverage, feeds
   everything; (D) the orgasm/denial subsystem; (C) sensory tiers; (B) the rules-engine checker; then
   (E) locked/layered wardrobe and (F) addiction meters. Each is one coherent pass.
+
+---
+
+# §30. RESEARCH NOTES — BCX perms/rules/scripts & TrapQuest traps (and what we take)
+Grounding for B–F, from looking at the actual projects.
+
+## BCX (Bondage Club Extended) — structure worth copying
+Modular: **Basic** (permission management), **Behaviour logging** (records rule violations),
+**Relationships** (nicknames/ownership), **Curses** (item-slot locks that AUTO-REAPPLY when a
+cursed item is removed), **Commands** (one-shot actions, e.g. force a pose), **Rules** (70+
+toggleable, each with **conditions** — only in certain rooms, only in your owner's presence/
+absence — and **consequences**), **Speech** (gag/doll-talk integrated with rules).
+- **Permission tiers** (the bit we should adopt): every feature is gated by WHO may use it —
+  self / owner / "mistress"/lover / whitelist / everyone — set per-feature in an authority module.
+  Map to Re:Void: a `db.authority = {feature: tier}` and a `_perm_ok(actor, target, feature)` gate,
+  reusing factions `is_owner` + the new conditioning-consent holder + a whitelist. (This generalises
+  the consent layer just built — consent IS a per-feature authority grant.)
+- **Curse auto-reapply** → our locked items should re-lock if removed (a worn-item tick that re-wears).
+- **Rule conditions** → our rules-engine (B) should support: room-scoped, owner-present/absent,
+  time/curfew, arousal-threshold, only-while-a-flag — exactly the `meets()`-style gate we already have.
+
+## TrapQuest — mechanics worth copying
+Roguelike feminisation/**bimbofication** + latex TF that ESCALATES; **cursed vessels** (drinking
+from a cursed container curses ANY drink, even a good one); trap tiles (glue, etc.); arousal/orgasm
+loop with **bad ends** (pass a threshold and you're permanently transformed/captured).
+- **Cursed-vessel mechanic** → a TF-serum/drink can be "cursed": it ignores the intended track and
+  forces a random/worse one, and a cursed cup taints the next drink. Cheap, nasty, very on-theme.
+- **Traps** (a real new system): tile/furniture/room hazards that fire on enter/sit/open — glue (stuck
+  N beats = navigation_locked), milk-trap (forced milking), aphrodisiac gas (arousal), TF-gas (apply_tf),
+  restraint-snare (locks an item on), breeding-trap (gang_inseminate). Reuse rooms + furniture + the
+  systems we have; `db.traps` on a room, checked on entry/sit.
+- **Escalating statuses / bad ends** → already modelled by the descent termini (Nugget, production_unit);
+  add bimbo-creep / latex-creep / feral-creep meters (§F) that auto-advance and end in a sort.
+
+## STATUS
+- ✅ **BUILT — A. The TF / body framework.** `world/transformation.py`: TRACKS (cock/balls/breasts/
+  lips/clit/ass/lactation/feral), each with thresholded stages that rewrite the part's read;
+  `apply_tf(char, track, amount)` crosses stages → transformation beat + a real permanent mark;
+  `body_summary` for the `body` command. Commands: `body [player]` (read anatomy), `transform <player>
+  = <track> [amt]` (owner/staff), and `condition <player> = body <track>` (consenting player, new
+  "body" scope). `db.body_parts` reset-safe in FACILITY_FLAGS. Tested.
+- ✅ **BUILT — consent enhancements (your asks):** `condition/allow [scopes]` (open yourself to ALL
+  comers), `condition/allow/lock` (open AND lock so you can't self-revoke), `condition <p> = lock|unlock`
+  (holder seals/unseals), and `uncondition` now refuses while locked (pointing to the always-free §0
+  floor). Consent "by: any" honoured everywhere. A curse/quest can set `conditioning_consent.locked`
+  to make a unit rely on someone else (or escape) to get free in-fiction. Tested.
+- 🎯 **Next, informed by the research:** (B) the **rules engine** with BCX-style conditions + a
+  per-feature **authority/permission** layer (generalising consent); (D) the orgasm/denial subsystem;
+  (TrapQuest) a **traps** system on rooms/furniture; (C) sensory tiers; (E) locked/auto-reapplying
+  wardrobe; (F) creep-meters & cursed vessels. Each one coherent pass.
