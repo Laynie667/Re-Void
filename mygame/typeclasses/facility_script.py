@@ -4751,6 +4751,12 @@ class RealmCycleScript(FacilityScript):
         # Curse honoring — the standing curses bite every beat they apply (phase lets the
         # use-driven ones, like the tally, read whether she was worked this beat).
         self._tick_curses(char, t, cond, phase=phase)
+        # Standing-rule honoring — ambient rules (posture/clothing/curfew) bite each beat.
+        try:
+            from world.rules import enforce_ambient
+            enforce_ambient(char)
+        except Exception:
+            pass
         self.db.phase_index = idx + 1
 
     def _escaped_beat(self, char, t):

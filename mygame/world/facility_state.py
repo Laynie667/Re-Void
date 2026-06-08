@@ -38,7 +38,7 @@ FACILITY_FLAGS = {
     "facility_house": None, "facility_house_ledger": None, "facility_upgrades": None,
     "facility_polaroids": None, "get_bounty": None, "word_swaps": None,
     "conditioning_consent": None, "pending_conditioning": None, "body_parts": None,
-    "release_terms": None, "behaviour_log": None,
+    "release_terms": None, "behaviour_log": None, "rules": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,
@@ -60,6 +60,7 @@ FACILITY_FLAGS = {
     "bethany_busy": False, "bethany_owned": False, "latex_sealed": False,
     "bethany_branded": False, "bethany_collar": False, "bethany_line_only": False,
     "consent_locked": False, "log_locked_out": False,
+    "rule_leave_permit": False, "rule_come_permit": False,
     "animal_sleeve": False, "pen_filth": False, "pen_scented": False,
     "auction_open": False, "bethany_owned_get": False, "facility_escaped": False,
     "nugget": False, "limb_lock": False, "sensory_hood": False, "total_dependence": False,
