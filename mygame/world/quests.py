@@ -371,6 +371,10 @@ ACHIEVEMENTS = {
     "brood_matron":    {"name": "Brood-Matron of the Line", "desc": "Enshrined as a foundation matron of Bethany's pedigree.", "faction": "facility", "secret": False},
     "cull_flagged":    {"name": "Flagged for Volume", "desc": "Stamped for throughput, not quality — quota doubled, get unkept.", "faction": "facility", "secret": False},
     "production_unit": {"name": "Production Unit", "desc": "Rendered all the way down to function — numberless, anonymous, hardest-used.", "faction": "facility", "secret": False},
+    # ── The Nugget — the dollification/reduction terminus.
+    "bound_away":     {"name": "Bound Away", "desc": "Limbs taken to ringed stumps — nothing left to do for yourself.", "faction": "facility", "secret": False},
+    "sealed":         {"name": "Sealed", "desc": "Senses and voice managed away — input on someone else's terms.", "faction": "facility", "secret": False},
+    "nugget":         {"name": "Nugget", "desc": "Reduced to a kept torso — bred, milked, used, displayed, owned. (escape always works.)", "faction": "facility", "secret": False},
     # ── The Deep Stock malfunction + the escaped meta-loop.
     "malfunction":{"name": "Malfunction", "desc": "A fault in the lines opened — and you took it.", "faction": "facility", "secret": True},
     "escaped":    {"name": "Escaped", "desc": "Got out of the facility (in-fiction). For now.", "faction": "facility", "secret": False},

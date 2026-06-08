@@ -349,7 +349,24 @@ spectacle layer.)
 
 ---
 
-# §22. THE NUGGET — terminal reduction (and what it opens)
+# §22. THE NUGGET — terminal reduction (and what it opens)  ✅ CORE BUILT
+**BUILT this pass (procedure + state + cycle beat + command + escape-safety):**
+- `apply_nugget(target, appendages="stumps"|"paws"|"hooves")` (module-level in facility_script) +
+  `_proc_nugget` procedure: limbs→ringed stumps, voice→sounds (animal_sounds/no_self_name filters),
+  `limb_lock`/`sensory_hood`/`total_dependence`/`navigation_locked`/`self_cmds_locked`, a forced
+  monstrous udder (`lactation_locked` + `milk_baseline_ml`≥4000), every hole gauged permanently open
+  (titfuck/any-hole made real via `permanent_gape`), name→designation (backed up), real freeform
+  marks, conditioning spike, achievements `bound_away`/`sealed`/`nugget`.
+- `_nugget_beat` (realm cycle): a kept nugget isn't dragged room to room — she's maintained
+  (milked/emptied/fed), then USED in place: suspended doggy/any-hole/titfuck off the stump-rings,
+  walked on paws/hooves, or doted on by Bethany (the false-tenderness pool). Real breeding via
+  `gang_inseminate`; conditioning + curses still tick.
+- `bethany <player> = nugget [stumps|paws|hooves]` applies it. **OOC floor verified:** all flags in
+  FACILITY_FLAGS, escape/force_clear never gated by the locks — a limbless nugget frees instantly.
+- **Still TODO (follow-ups):** the Nugget Cradle / Wall-Socket / Transport-Crate furniture objects
+  (readable + a real auto-care tick of their own); the offered→bound→sealed→kept→nugget quest line;
+  the "organize denial" scheduling; the full player-to-player consent handshake (the staff/owner
+  `wordcondition` tool is built — ban words / swap words, riding the real speech filters).
 The facility's deepest dollification terminus, past Perfected / Rendered Down: a unit reduced
 to a **torso** — limbs bound or sealed away, sensory input managed, speech gone, reduced to a
 thing that is bred, milked, used, fed, emptied, displayed, and *kept*. A nugget cannot do

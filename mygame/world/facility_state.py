@@ -20,7 +20,7 @@ FACILITY_FLAGS = {
     "permanent_gape": [], "piercings": [], "pet_trigger_sources": [], "bred_by": [],
     "sensation_broadcast_targets": [], "aphrodisiac_expirations": [],
     "conditioning_applied": [], "facility_items": [], "facility_room_zones": [],
-    "gallery_demands": [],
+    "gallery_demands": [], "banned_words": [],
 
     # --- dicts/scalars -> None ---
     "pet_type": None, "designation": None, "facility_name_backup": None,
@@ -36,7 +36,7 @@ FACILITY_FLAGS = {
     "high_bid": None, "high_bidder": None, "high_bidder_id": None, "auction_floor": None,
     "facility_credits": None, "facility_ledger": None,
     "facility_house": None, "facility_house_ledger": None, "facility_upgrades": None,
-    "facility_polaroids": None, "get_bounty": None,
+    "facility_polaroids": None, "get_bounty": None, "word_swaps": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,
@@ -59,6 +59,8 @@ FACILITY_FLAGS = {
     "bethany_branded": False, "bethany_collar": False, "bethany_line_only": False,
     "animal_sleeve": False, "pen_filth": False, "pen_scented": False,
     "auction_open": False, "bethany_owned_get": False, "facility_escaped": False,
+    "nugget": False, "limb_lock": False, "sensory_hood": False, "total_dependence": False,
+    "nugget_rings": False,
     "indentured": False, "bethany_ledger_bond": False, "arrears_laced": False,
     "ledger_tattooed": False, "bethany_tithe": False, "bethany_heir": False,
     "curse_line_remembers": False, "curse_never_empty": False,
@@ -66,6 +68,7 @@ FACILITY_FLAGS = {
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "", "breeding_line": "",
+    "nugget_appendages": "",
 }
 
 

@@ -1136,6 +1136,7 @@ class CmdBethany(Command):
         bethany <player> = reset           — wipe their Facility quests + EXP (back to Intake)
         bethany <player> = deepend         — throw them straight to Perfected (Deep Stock opens)
         bethany <player> = pluck <quest>   — pull them out of a specific quest
+        bethany <player> = nugget [kind]   — reduce to a kept nugget (kind: stumps|paws|hooves)
 
     Authority: the Facility's owner (Bethany), or staff/Builder. This is in-fiction power —
     it never touches the OOC floor; the unit's own |wescape|n always works regardless.
@@ -1189,11 +1190,123 @@ class CmdBethany(Command):
             caller.msg(f"|gPlucked {tname} out of '{qid}'.|n")
             target.msg("|MBethany reaches into your plans and simply removes one. \"No. Not that. "
                        "I decide where you're going.\"|n")
+        elif a.startswith("nugget"):
+            # bethany <player> = nugget [stumps|paws|hooves]
+            bits = action.split(None, 1)
+            app = (bits[1].strip().lower() if len(bits) > 1 else "stumps")
+            if app not in ("stumps", "paws", "hooves"):
+                app = "stumps"
+            try:
+                from typeclasses.facility_script import apply_nugget
+                apply_nugget(target, appendages=app, room=target.location)
+                caller.msg(f"|gReduced {tname} to a kept nugget ({app}). Her OOC escape still "
+                           f"works instantly — reduction is in-fiction only.|n")
+            except Exception as e:
+                caller.msg(f"|xCouldn't apply: {e}|n")
         else:
-            caller.msg("|xActions: reset | deepend | pluck <quest>|n")
+            caller.msg("|xActions: reset | deepend | pluck <quest> | nugget [stumps|paws|hooves]|n")
 
 
 ALL_FACILITY_VERBS.append(CmdBethany)
+
+
+class CmdWordCondition(Command):
+    """
+    Configurable speech conditioning — ban words, or retrain words into others.
+
+    Usage:
+        wordcondition <player>                       — show what's set on them
+        wordcondition <player> = ban <word>          — she can no longer say <word>
+        wordcondition <player> = unban <word>        — lift a ban
+        wordcondition <player> = swap <from> > <to>   — she says <to> wherever she'd say <from>
+        wordcondition <player> = unswap <from>       — lift a swap
+        wordcondition <player> = clear               — clear all word conditioning
+
+    Rides the real speech-filter system (banned_words / word_swap), so it shows in her actual
+    speech. Authority: the Facility's owner (Bethany) or staff/Builder. (Player-to-player
+    conditioning with a consent handshake is the next build; this is the staff/owner tool.)
+    In-fiction only — her own |wescape|n / |wforce_clear|n wipes all of it, instantly.
+    """
+    key = "wordcondition"
+    aliases = ["wordlock", "wordswap"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world.factions import is_owner
+        if not (caller.is_superuser or caller.check_permstring("Builder")
+                or is_owner(caller, "facility")):
+            caller.msg("|xOnly the Facility's owner reaches into a unit's speech like that.|n")
+            return
+        if "=" not in (self.args or ""):
+            who = (self.args or "").strip()
+            target = caller.search(who, global_search=True) if who else None
+            if not target:
+                caller.msg("|xUsage: wordcondition <player> = ban|unban|swap|unswap|clear ...|n")
+                return
+            banned = list(getattr(target.db, "banned_words", None) or [])
+            swaps = dict(getattr(target.db, "word_swaps", None) or {})
+            tn = target.db.rp_name or target.key
+            caller.msg(f"|wWord conditioning on {tn}:|n\n"
+                       f"  banned: |r{', '.join(banned) or '(none)'}|n\n"
+                       f"  swaps: |y{', '.join(f'{k}->{v}' for k, v in swaps.items()) or '(none)'}|n")
+            return
+        who, action = [p.strip() for p in self.args.split("=", 1)]
+        target = caller.search(who, global_search=True)
+        if not target:
+            return
+        tn = target.db.rp_name or target.key
+        parts = action.split(None, 1)
+        verb = parts[0].lower() if parts else ""
+        rest = parts[1].strip() if len(parts) > 1 else ""
+
+        def _ensure_filter(name, on):
+            flt = list(getattr(target.db, "active_speech_filters", None) or [])
+            if on and name not in flt:
+                flt.append(name)
+            target.db.active_speech_filters = flt
+
+        if verb == "ban" and rest:
+            banned = list(getattr(target.db, "banned_words", None) or [])
+            if rest.lower() not in [b.lower() for b in banned]:
+                banned.append(rest)
+            target.db.banned_words = banned
+            _ensure_filter("banned_words", True)
+            caller.msg(f"|gConditioned out: {tn} can no longer say '{rest}'.|n")
+            target.msg(f"|MThe word '{rest}' is taken from you — you reach for it and it isn't there.|n")
+        elif verb == "unban" and rest:
+            banned = [b for b in (getattr(target.db, "banned_words", None) or [])
+                      if b.lower() != rest.lower()]
+            target.db.banned_words = banned
+            caller.msg(f"|gLifted the ban on '{rest}' for {tn}.|n")
+        elif verb == "swap" and ">" in rest:
+            frm, to = [p.strip() for p in rest.split(">", 1)]
+            if frm:
+                swaps = dict(getattr(target.db, "word_swaps", None) or {})
+                swaps[frm] = to
+                target.db.word_swaps = swaps
+                _ensure_filter("word_swap", True)
+                caller.msg(f"|gRetrained {tn}: '{frm}' -> '{to}'.|n")
+                target.msg(f"|MWhere you'd say '{frm}', now you say '{to}'. You won't notice you're doing it.|n")
+        elif verb == "unswap" and rest:
+            swaps = dict(getattr(target.db, "word_swaps", None) or {})
+            swaps.pop(rest, None)
+            target.db.word_swaps = swaps
+            caller.msg(f"|gLifted the swap on '{rest}' for {tn}.|n")
+        elif verb == "clear":
+            target.db.banned_words = []
+            target.db.word_swaps = None
+            flt = [f for f in (getattr(target.db, "active_speech_filters", None) or [])
+                   if f not in ("banned_words", "word_swap")]
+            target.db.active_speech_filters = flt
+            caller.msg(f"|gCleared all word conditioning on {tn}.|n")
+        else:
+            caller.msg("|xUsage: wordcondition <player> = ban <word> | unban <word> | "
+                       "swap <from> > <to> | unswap <from> | clear|n")
+
+
+ALL_FACILITY_VERBS.append(CmdWordCondition)
 
 
 class CmdTab(Command):

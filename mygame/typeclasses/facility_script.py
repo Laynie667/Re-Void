@@ -884,6 +884,66 @@ _CURSE_HOLLOW_BEAT = [
     "fully banking, so satisfaction slides off her and leaves only the wanting, louder for having "
     "been almost answered. Full means nothing now. They made sure of it.",
 ]
+# ── The Nugget: the reduction terminus (dollification taken all the way down) ──
+_NUGGET_APPLY = [
+    "|WThey take {t} all the way down. The limbs go first — arms and legs drawn off to neat, "
+    "rounded stumps and capped, each one ringed with heavy mounted steel for hanging and hauling. "
+    "What's left is a torso and a head: a fuckable, milkable, breedable trunk with a face still on "
+    "it to watch. The udder is forced up huge and left to hang and swing, every hole gauged open "
+    "and rimmed and kept that way. A nugget. Bethany's nugget. (She cannot do one thing for herself "
+    "now — and the OOC floor still frees her instantly, limbless or not. That's the only reason this "
+    "is allowed to be this total.)|n",
+    "|WReduction, completed. {t} is unmade into a kept thing: arms and legs taken to ringed stumps, "
+    "voice managed down to sounds, the senses hooded to whatever they choose to let in. The breasts "
+    "are swollen monstrous and left dangling; the holes are propped permanently open. She is carried "
+    "to the cradle and set there, a nugget — to be bred, drained, used, displayed, and owned, with "
+    "nothing left she can refuse with and no part of her that can reach for anything but the hand "
+    "that lifts her. (The fire-exit stays lit: escape works the instant she calls it.)|n",
+]
+_NUGGET_CARE = [
+    "|cThe cradle tends {t} on its schedule: cups close over the dangling udder and draw it down "
+    "till it's slack, a catheter empties her, a tube feeds her, and she takes all of it because "
+    "there is no longer any version of her that could do otherwise. Kept alive, kept full, kept used.|n",
+    "|cMaintenance beat: {t} is milked dry through the hanging udder, emptied, watered, wiped, and "
+    "left rocking gently in the cradle. A well-kept nugget is a clean one. She has nothing to do but "
+    "be maintained, and the not-having-anything-to-do settles into her like sediment.|n",
+    "|cThe rig works {t} over without a word — drained at the chest, emptied below, the gauged holes "
+    "checked and re-slicked for whatever's next. She's livestock plant now, serviced on a timer, and "
+    "her body has stopped expecting anything else.|n",
+]
+_NUGGET_USE_SUSPENDED = [
+    "|y{t} is hauled up by the stump-rings and left hanging at exactly the right height — and used "
+    "from behind, doggy off the floor entirely, swinging on the cock with every thrust, the huge "
+    "udder bouncing under her. A nugget makes a perfect hole to mount: no legs to get in the way, "
+    "nothing to do but take it and swing.|n",
+    "|y{t} is clipped to the breeding bench by her rings and bred in every hole in turn — mouth, "
+    "cunt, ass worked one after another, the trunk of her just shifted and re-seated when they want "
+    "a different one, filled and plugged and left dripping. She is a thing with holes now, and the "
+    "holes are the entire point of her.|n",
+    "|yThey suspend {t} and fuck the heavy hanging tits — cock dragged between them, the slick of her "
+    "own milk easing it, her face right there above to watch herself be used as a place to rut. When "
+    "they finish across her it's left to dry; a nugget doesn't get to wipe anything.|n",
+    "|y{t} is hung from the office hook by her stumps so Bethany can use her one-handed over coffee — "
+    "rocked onto the cock with a lazy push, swinging back for the next, the udder swaying, the whole "
+    "of her reduced to a warm weight on the end of three shafts and a fond look from above.|n",
+]
+_NUGGET_WALK = [
+    "|g{t}'s {limb} are clipped on and she's taken out — carried-walked through the rooms like a "
+    "prize pet, displayed stump-to-stump to whoever's about, no say in where she goes or who looks. "
+    "A nugget on her {limb} is a popular sight, and she's paraded for it.|n",
+    "|gThey fit {t}'s {limb} and lead her round on a short lead, the limbless trunk of her balanced "
+    "and posed and shown off, the giant udder swinging with each handled step. Walkies for the "
+    "nugget — and everyone gets to watch the thing that used to be a person being taken for them.|n",
+]
+_NUGGET_KEPT = [
+    "|MBethany lifts {t} off the shelf and holds her against herself a moment, fond and warm. \"There's "
+    "my perfect little thing. You don't need arms to be loved, sweetheart — you just need to be mine, "
+    "and look: you are, completely.\" Then she sets her to a hole and goes back to her files.|n",
+    "|MBethany dotes on her nugget — wipes her face, tells her she's good, kisses the top of her head — "
+    "and the tenderness is somehow worse than any cruelty, because it's real, and because there's "
+    "nothing of {t} left that could ever do anything but bask in it. \"Mine,\" Bethany says. \"All of you. "
+    "What's left.\"|n",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -2692,6 +2752,13 @@ class FacilityScript(DefaultScript):
             f"locked, each one a fresh handle to lead and hang and tug her by, every pull of them "
             f"singing straight to the nerve. (multiple permanent piercings)|n")
 
+    def _proc_nugget(self, room, target, t):
+        # The terminal procedure: reduce her to a kept nugget. Deliberate, not random
+        # (not in _PROCEDURES) — driven by the bethany command / quest. Delegates to the
+        # module-level apply_nugget so commands can apply it without a script instance.
+        apply_nugget(target, appendages=(getattr(target.db, "nugget_appendages", None) or "stumps"),
+                     room=room)
+
     # ── Orifices / breeders ──
     def _orifices(self, target):
         zones = getattr(target.db, "zones", None) or {}
@@ -4481,6 +4548,13 @@ class RealmCycleScript(FacilityScript):
         if getattr(char.db, "facility_escaped", False):
             self._escaped_beat(char, t=(char.db.rp_name or char.name))
             return
+        # A nugget isn't dragged room to room — she's kept, maintained, and used where she's
+        # set. The nugget beat handles her care + use in place. (The §0 floor still frees her
+        # instantly; reduction is in-fiction only.)
+        if getattr(char.db, "nugget", False):
+            self._nugget_beat(char, t=(char.db.rp_name or char.name),
+                              cond=float(getattr(char.db, "conditioning", 0) or 0))
+            return
         # A beat off the line she bought with her own scrip (commissary 'rest').
         if int(getattr(char.db, "line_pass", 0) or 0) > 0:
             char.db.line_pass = int(char.db.line_pass) - 1
@@ -4693,6 +4767,52 @@ class RealmCycleScript(FacilityScript):
             add_conditioning(char, 0.3, source="escaped")
         except Exception:
             pass
+
+    def _nugget_beat(self, char, t, cond):
+        """A beat in the life of a kept nugget: maintained (milked/emptied/fed), then used
+        in place — suspended and bred/fucked/tit-fucked off her rings, walked on her paws/
+        hooves, or doted on by Bethany. No room-drag, no quotas to meet. Conditioning and the
+        standing curses still bite. The §0 floor is untouched."""
+        room = char.location
+        # Maintenance — the cradle/rig keeps her drained, emptied, fed.
+        if random.random() < 0.7 and room:
+            room.msg_contents(random.choice(_NUGGET_CARE).format(t=t))
+            try:
+                char.db.bladder_ml = 0
+            except Exception:
+                pass
+        # Use — what she's for now.
+        if room:
+            roll = random.random()
+            appendages = getattr(char.db, "nugget_appendages", None) or "stumps"
+            if roll < 0.18 and appendages in ("paws", "hooves"):
+                limb = "paws" if appendages == "paws" else "hooves"
+                room.msg_contents(random.choice(_NUGGET_WALK).format(t=t, limb=limb))
+            elif roll < 0.40 and getattr(char.db, "bethany_owned", False):
+                room.msg_contents(random.choice(_NUGGET_KEPT).format(t=t))
+            else:
+                room.msg_contents(random.choice(_NUGGET_USE_SUSPENDED).format(t=t))
+                # the use is real — she's bred/used; deposit + breeding where applicable
+                try:
+                    from world.gang_breeding import animal_holes, gang_inseminate
+                    holes = [z for z in animal_holes(char).values() if z]
+                    if holes and random.random() < 0.5:
+                        gang_inseminate(char, random.choice(holes), contributors=1,
+                                        fluid_type="semen", species="bethany")
+                except Exception:
+                    pass
+        # The Process keeps printing on her even now; and the curses still bite.
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 0.5 + cond * 0.004, source="nugget")
+        except Exception:
+            pass
+        try:
+            from world.pregnancy import gestation_tick
+            gestation_tick(char)
+        except Exception:
+            pass
+        self._tick_curses(char, t, cond, phase="owned")
 
     def _choose_destination(self, char, rooms):
         """The handler reads her board and decides where she's owed next — a real,
@@ -5162,3 +5282,103 @@ try:
     register_resolver("line_cull", _line_cull_resolver)
 except Exception:
     pass
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  THE NUGGET — reduction terminus (module-level so commands/quests can apply it)
+# ══════════════════════════════════════════════════════════════════════════════
+def apply_nugget(target, appendages="stumps", room=None):
+    """Reduce `target` to a kept nugget: limbs to ringed stumps, senses/voice managed,
+    total dependence, a forced giant udder, every hole gauged permanently open. Sets the
+    reset-safe nugget flags (FACILITY_FLAGS) so the §0 floor wipes ALL of it — escape /
+    force_clear / facilityreset free a nugget instantly, limbless or not. In-fiction only.
+    `appendages`: 'stumps' (ringed, for suspension), 'paws' (puppy) or 'hooves' (pony)."""
+    if not target:
+        return False
+    appendages = appendages if appendages in ("stumps", "paws", "hooves") else "stumps"
+    room = room or target.location
+    t = target.db.rp_name or target.key
+    d = target.db
+    # ── the reduction state (all in FACILITY_FLAGS → cleared by every reset path) ──
+    d.nugget = True
+    d.limb_lock = True
+    d.sensory_hood = True
+    d.total_dependence = True
+    d.navigation_locked = True
+    d.self_cmds_locked = True
+    d.nugget_rings = (appendages == "stumps")
+    d.nugget_appendages = appendages
+    # ── forced giant udder + permanent lactation ──
+    try:
+        d.lactation_locked = True
+        d.milk_baseline_ml = max(int(getattr(d, "milk_baseline_ml", 0) or 0), 4000)
+        d.arousal_floor = max(float(getattr(d, "arousal_floor", 0) or 0), 45.0)
+        d.body_language = "a limbless trunk, set where it's put, the heavy udder swinging"
+    except Exception:
+        pass
+    # ── every hole gauged permanently open (titfuck/any-hole made mechanically real) ──
+    try:
+        from world.gang_breeding import animal_holes
+        ah = animal_holes(target)
+        perm = list(getattr(d, "permanent_gape", None) or [])
+        holes = dict(getattr(d, "holes", None) or {})
+        for key in ("pussy", "anus", "mouth", "throat"):
+            z = ah.get(key)
+            if not z:
+                continue
+            h = dict(holes.get(z) or {"use": 0, "gape": 0.0})
+            h["use"] = max(int(h.get("use", 0)), 24)
+            h["gape"] = max(float(h.get("gape", 0.0)), 18.0)
+            holes[z] = h
+            if z not in perm:
+                perm.append(z)
+        d.holes = holes
+        d.permanent_gape = perm
+    except Exception:
+        pass
+    # ── voice managed down to sounds ──
+    try:
+        filters = list(getattr(d, "active_speech_filters", None) or [])
+        for f in ("animal_sounds", "no_self_name"):
+            if f not in filters:
+                filters.append(f)
+        d.active_speech_filters = filters
+    except Exception:
+        pass
+    # ── name struck to designation (backed up so force_clear restores it) ──
+    try:
+        if not getattr(d, "facility_name_backup", None):
+            d.facility_name_backup = d.rp_name or target.key
+        d.designation = "the nugget"
+    except Exception:
+        pass
+    # ── real permanent marks (show in marks/brands/look) ──
+    limbword = {"stumps": "neat ringed stumps", "paws": "soft locked paws",
+                "hooves": "locked pony-hooves"}[appendages]
+    for mk in (
+        f"arms and legs taken to {limbword} — nothing left to do for herself",
+        "heavy suspension rings mounted in each stump, for hanging and hauling and the breeding bench",
+        "a monstrous forced udder left to hang and swing, milked on a timer",
+        "every hole gauged permanently open and rimmed — kept ready for use",
+    ):
+        try:
+            from world.gang_breeding import record_mark
+            record_mark(target, mk)
+        except Exception:
+            pass
+    # ── it settles deep ──
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(target, 20.0, source="nugget")
+    except Exception:
+        pass
+    if room:
+        room.msg_contents(random.choice(_NUGGET_APPLY).format(t=t))
+    # ── milestones ──
+    try:
+        from world.quests import grant_achievement
+        for aid in ("bound_away", "sealed", "nugget"):
+            grant_achievement(target, aid)
+    except Exception:
+        pass
+    return True

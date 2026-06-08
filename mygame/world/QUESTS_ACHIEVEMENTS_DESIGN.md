@@ -135,6 +135,14 @@ progression is its own — the Facility's quest line is wholly Bethany's to auth
   just permanent badges. Achievements: malfunction(secret)/escaped/penitent/liberator/made_example.
   Tested standalone (flag gating, availability flips, resolver firing). **The §0 OOC floor is never
   any of this and never rolls** — `escape`/`facilityreset` always works.
+- ✅ **The Nugget terminus + configurable word-conditioning.** `apply_nugget`/`_proc_nugget` reduce a
+  unit to a kept torso (ringed stumps / paws / hooves, voice→sounds, forced giant udder, every hole
+  gauged open, total dependence, locks on) — driven by `bethany <player> = nugget [kind]`; the realm
+  cycle's `_nugget_beat` maintains and *uses* her in place (suspended doggy/any-hole/titfuck, walks,
+  Bethany's doting) instead of room-dragging. Achievements `bound_away`/`sealed`/`nugget`. New speech
+  filters `banned_words` + `word_swap` (ride `active_speech_filters`) + a staff/owner `wordcondition`
+  command (ban / unban / swap / unswap / clear). All reset-safe in FACILITY_FLAGS; OOC floor verified
+  for a limbless unit (escape/force_clear never consult the locks; reset wipes every flag). Tested.
 - ✅ **The breeding-line fork (Prize vs Cull) — a full winding, mutually-exclusive line pair.**
   After Broodmare the house sorts her by what her body is worth. **Prize** (`prize_selected` →
   `prize_covered` → `prize_carried` → `prize_matron`): curated quality breeding — Bethany's own stud

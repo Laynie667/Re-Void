@@ -62,6 +62,8 @@ def apply_speech_filters(character, text: str) -> tuple:
         "stutter":            _filter_stutter,
         "third_person_coy":   _filter_third_person_coy,
         "animal_sounds":      _filter_animal_sounds,
+        "banned_words":       _filter_banned_words,
+        "word_swap":          _filter_word_swap,
     }
 
     for fname in filters:
@@ -291,6 +293,38 @@ _ECHO_SELF_FRAMES = [
     "|x  \"{text}\" — it echoes back off the inside of your skull in your own tone, and each return "
     "wears the groove a little deeper. You taught yourself that, just now. You keep teaching yourself.|n",
 ]
+
+
+def _filter_banned_words(char, text: str) -> str:
+    """Configurable conditioning: a list of words the character has been conditioned out of
+    saying. Each is struck from her speech (whole-word, case-insensitive). Set per-character
+    on char.db.banned_words (a list). The conditioner picks the list; the §0 floor clears it."""
+    try:
+        banned = list(getattr(char.db, "banned_words", None) or [])
+        for w in banned:
+            w = (w or "").strip()
+            if not w:
+                continue
+            text = re.sub(rf"\b{re.escape(w)}\b", "—", text, flags=re.IGNORECASE)
+    except Exception:
+        pass
+    return text
+
+
+def _filter_word_swap(char, text: str) -> str:
+    """Configurable conditioning: a mapping of words she's been retrained to say in place of
+    others (e.g. 'no'->'yes', 'I'->'this unit', her own name->her designation). Set on
+    char.db.word_swaps as a dict {from: to}. Whole-word, case-insensitive."""
+    try:
+        swaps = dict(getattr(char.db, "word_swaps", None) or {})
+        for frm, to in swaps.items():
+            frm = (frm or "").strip()
+            if not frm:
+                continue
+            text = re.sub(rf"\b{re.escape(frm)}\b", str(to), text, flags=re.IGNORECASE)
+    except Exception:
+        pass
+    return text
 
 
 def _side_echo_self(char, text: str):

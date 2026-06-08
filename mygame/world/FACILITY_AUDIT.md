@@ -350,8 +350,16 @@ realm scripts (realm_cycle/heat/bethany_visit/milking), the escaped meta-loop fl
 (`facility_escaped`/`liberation_runs`) + the daily-quota streak (`quota_behind`) + the
 breeding-line sort (`breeding_line`) + the three new curse flags (`curse_tally`/`curse_echo`/
 `curse_hollow` + `curse_tally_count`; Echo's `echo_self` rides `active_speech_filters`, already
-cleared), all in `FACILITY_FLAGS` → cleared by every reset path. **When adding ANY new persistent
-state, add it here and to all three reset paths.**
+cleared) + the **Nugget** state (`nugget`/`limb_lock`/`sensory_hood`/`total_dependence`/
+`nugget_rings`/`nugget_appendages`) + word-conditioning (`banned_words`/`word_swaps`, filters ride
+`active_speech_filters`), all in `FACILITY_FLAGS` → cleared by every reset path. **When adding ANY
+new persistent state, add it here and to all three reset paths.**
+
+**Nugget OOC-floor verification:** the nugget sets `self_cmds_locked`/`navigation_locked`, but
+`escape()` (the `@py … escape(me)` superuser path) and `force_clear`/`facilityreset` never consult
+those checks (only waystone/teleport/say do), and `force_clear` runs `apply_reset_flags` + clears
+`active_speech_filters` — so a limbless nugget's floor works instantly and wipes every nugget/
+word-conditioning flag. Verified by test (`apply_reset_flags` clears all of it).
 
 **Escaped meta-loop OOC-floor verification:** the Deep Stock malfunction escape, `turnin`, and
 `springstock` are pure in-fiction quest resolvers (rolls); none touch `escape`/`force_clear`/
