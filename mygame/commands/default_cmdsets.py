@@ -358,6 +358,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_RELATIONSHIP_CMDS:
             self.add(cmd_cls())
 
+        # Consent stack — behaviour log + lockout (Layer 2 v2)
+        from commands.consent_commands import ALL_CONSENT_CMDS
+        for cmd_cls in ALL_CONSENT_CMDS:
+            self.add(cmd_cls())
+
         # Quests / achievements / exp (progression)
         from commands.quest_commands import ALL_QUEST_CMDS
         for cmd_cls in ALL_QUEST_CMDS:

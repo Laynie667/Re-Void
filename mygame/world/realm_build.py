@@ -2639,7 +2639,7 @@ def force_clear(owner):
               "facility_title_backup", "forced_posture", "body_language", "room_bound",
               "facility_zone", "facility_furniture", "intake_provocations",
               "intake_suggestibility", "intake_door_opened", "found_captive_ring",
-              "facility_forgotten", "bethany_clauses", "release_terms"):
+              "facility_forgotten", "bethany_clauses", "release_terms", "behaviour_log"):
         try: setattr(d, k, None)
         except Exception: pass
     # -> 0
@@ -2663,7 +2663,8 @@ def force_clear(owner):
               "freedom_forfeited", "facility_signed", "facility_active", "perpetual_heat",
               "cum_craving", "lactation_locked", "body_processing_locked", "aura_dimmed",
               "bethany_busy", "bethany_owned", "latex_sealed", "bethany_branded",
-              "bethany_collar", "bethany_line_only"):
+              "bethany_collar", "bethany_line_only",
+              "consent_locked", "log_locked_out"):
         try: setattr(d, k, False)
         except Exception: pass
     for k in ("orgasm_release_word", "required_honorific", "facility_grade", "facility_brand"):

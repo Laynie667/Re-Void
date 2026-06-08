@@ -62,8 +62,17 @@ API sketch (`world/relationships.py` or extend `world/factions.py`):
 > allow, block)` returns block/allow/None (block>allow, then fall through to the global flag —
 > unchanged precedence); wired into `_check_consent` + the teleport resolver. `consent allow|block|
 > unblock <type> <who>` now accepts a tier keyword for `<who>` (`_resolve_who`); `consent` display
-> splits tiers from person-counts. NOT yet done: folding the conditioning-consent scopes in, the
-> consent LOCK as a matrix flag, and the behaviour-log lockout — those are Layer 2 v2.
+> splits tiers from person-counts.
+>
+> **Layer 2 v2: BUILT.** `world/consent.py` adds the single resolver `may(actor, target, feature)`
+> the rest of the stack calls — it READS both stores (general overrides+flags via override_decision;
+> `conditioning_consent` by/scope for `cond.*` features, plus a tier/person umbrella via a general
+> `condition` feature, so `consent allow condition owner` hands an owner full conditioning). The
+> consent LOCK (`consent_locked`): a unit can `consent lock` themselves (can't self-unlock), an owner
+> can `consent lock|unlock <who>`, and a locked unit's self-edits are refused — §0 floor lifts it.
+> Behaviour LOG + lockout: `world/consent.log_event/render_log`, the `log` command (own log; owner
+> reads/locks via `log/lock`/`log/unlock`); `can_view_log` gates it. New state (`behaviour_log`,
+> `consent_locked`, `log_locked_out`) cleared by both reset paths. All resolution tested standalone.
 
 ## Layer 2 — CONSENT / AUTHORITY MATRIX (extend the existing consent system)
 The user's verb stays: **`consent <feature> allow|block <who>`** — where `<who>` is now any of:

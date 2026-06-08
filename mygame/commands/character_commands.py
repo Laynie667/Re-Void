@@ -4153,7 +4153,7 @@ class CmdConsent(MuxCommand):
     ACT_TYPES = [
         "undress", "blindfold", "gag", "tieup",
         "strip", "examclose", "restrain", "claimmark",
-        "milking",
+        "milking", "condition",
     ]
     # Privacy / movement flags
     PRIVACY_TYPES = [
@@ -4181,6 +4181,7 @@ class CmdConsent(MuxCommand):
         "examclose":   "Examine closely",
         "restrain":    "Restrain",
         "claimmark":   "Claimmark",
+        "condition":   "Conditioning (umbrella)",
         # Privacy
         "allow_jump":   "Allow jump-to",
         "allow_summon": "Allow summon",
@@ -4198,6 +4199,20 @@ class CmdConsent(MuxCommand):
         subcmd = parts[0].lower()
         rest = parts[1] if len(parts) > 1 else ""
 
+        if subcmd in ("lock", "unlock"):
+            self._lock_consent(char, subcmd, rest)
+            return
+
+        # While LOCKED, the unit can't edit their own consent — a holder (owner) or
+        # the §0 floor (escape / force_clear) must lift it. The lock IS the point.
+        from world.consent import is_locked
+        if subcmd in ("allow", "on", "give", "disallow", "off", "revoke", "block", "unblock") \
+                and is_locked(char):
+            self.msg("|rYour consent is locked. You can't change it yourself — a holder must "
+                     "|wconsent unlock|r you, or use your OOC floor (|wescape|r / |wforce_clear|r, "
+                     "always free).|n")
+            return
+
         if subcmd in ("allow", "on", "give"):
             self._allow_consent(char, rest)
         elif subcmd in ("disallow", "off", "revoke", "block"):
@@ -4206,11 +4221,50 @@ class CmdConsent(MuxCommand):
             self._unblock_consent(char, rest)
         else:
             self.msg(
-                "Usage: consent allow <type|all> [name]\n"
-                "       consent disallow <type|all> [name]\n"
-                "       consent unblock <type|all> <name>\n"
-                f"Types: {', '.join(self.VALID_CONSENT_TYPES)}, all"
+                "Usage: consent allow <type|all> [name|tier]\n"
+                "       consent disallow <type|all> [name|tier]\n"
+                "       consent unblock <type|all> <name|tier>\n"
+                "       consent lock              (lock yourself — a holder must lift it)\n"
+                "       consent lock <name>       (owner: lock someone you own)\n"
+                "       consent unlock <name>     (owner: lift their lock)\n"
+                f"Types: {', '.join(self.VALID_CONSENT_TYPES)}, all\n"
+                "Tiers: owner, lover, family, faction, hostile"
             )
+
+    def _lock_consent(self, char, verb, rest):
+        """consent lock / unlock — self-lock, or an OWNER locks/unlocks someone they own.
+        A locked unit can't self-unlock; only a holder or the §0 floor lifts it."""
+        from world.consent import set_lock, is_locked
+        from world.relationships import tiers_of
+        name = rest.strip()
+        if not name:
+            # self
+            if verb == "lock":
+                set_lock(char, True, by=char)
+                self.msg("|MYou lock your own consent. You can't change it yourself now — "
+                         "someone has to lift it for you. (|wescape|M / |wforce_clear|M still free you, always.)|n")
+            else:
+                if is_locked(char):
+                    self.msg("|rYou can't unlock yourself — that's the point of locking it. A holder "
+                             "must, or use your OOC floor (always free).|n")
+                else:
+                    self.msg("|xYour consent isn't locked.|n")
+            return
+        # owner targeting someone
+        target = char.search(name, location=char.location) or char.search(name, global_search=True)
+        if not target:
+            return
+        if "owner" not in tiers_of(char, target):
+            self.msg(f"|xYou don't own {target.db.rp_name or target.key}. Only a holder may lock or "
+                     f"unlock another's consent.|n")
+            return
+        set_lock(target, verb == "lock", by=char)
+        tn = target.db.rp_name or target.key
+        self.msg(f"|g{'Locked' if verb=='lock' else 'Unlocked'} {tn}'s consent.|n")
+        target.msg(f"|M{char.db.rp_name or char.key} "
+                   + ("|rlocks|M your consent — you can't change it yourself now. (Your |wescape|M "
+                      "still frees you, always.)" if verb == "lock"
+                      else "lifts the lock on your consent — it's yours to set again.") + "|n")
 
     def _show_consent(self, char):
         flags = char.db.consent_flags or {}
