@@ -37,6 +37,7 @@ FACILITY_FLAGS = {
     "facility_credits": None, "facility_ledger": None,
     "facility_house": None, "facility_house_ledger": None, "facility_upgrades": None,
     "facility_polaroids": None, "get_bounty": None, "word_swaps": None,
+    "conditioning_consent": None, "pending_conditioning": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,

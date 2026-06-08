@@ -1309,6 +1309,253 @@ class CmdWordCondition(Command):
 ALL_FACILITY_VERBS.append(CmdWordCondition)
 
 
+# ── Player-to-player conditioning (consent-gated) ─────────────────────────────
+# Anyone can condition a CONSENTING partner, through the same real systems the facility
+# uses (conditioning / installed triggers / speech filters / designation). The spine is the
+# §0 floor: the target's own escape / force_clear / facilityreset wipes everything ANY
+# conditioner ever did, instantly — and a target can `uncondition` to revoke + clear the
+# soft bits themselves at any time. No conditioning is possible without the target's accept.
+_COND_SCOPES = ("deepen", "trigger", "speech", "name")
+_TRIGGER_RESPONSES = ("kneel", "beg", "orgasm", "blank", "obey", "freeze", "leak", "recite")
+
+
+class CmdCondition(MuxCommand):
+    """
+    Condition a consenting partner — brainwash, trigger, retrain speech (player-to-player).
+
+    Usage:
+        condition <player>                          — what you may do to them / your status
+        condition <player> = offer [scopes]         — ask to condition them (scopes: deepen
+                                                       trigger speech name; default all)
+        condition/accept <conditioner>              — accept a pending offer
+        condition/refuse <conditioner>              — decline a pending offer
+        condition <player> = deepen                 — sink them deeper (conditioning + suggestibility)
+        condition <player> = trigger <phrase> > <response>   — install a trigger word
+                                                       (response: kneel beg orgasm blank freeze leak recite)
+        condition <player> = ban <word>             — they can no longer say <word>
+        condition <player> = swap <from> > <to>      — they say <to> wherever they'd say <from>
+        condition <player> = designate <name>        — give them a designation
+        condition <player> = release                 — relinquish them (clears your hold)
+        uncondition                                  — (on yourself) revoke consent + clear the soft conditioning
+
+    Consent is required — nothing happens until they `condition/accept` you, and only within the
+    scopes they granted. The OOC floor is theirs and absolute: |wescape|n / |wforce_clear|n undoes
+    ALL of it, always, no matter who did it or how deep.
+    """
+    key = "condition"
+    aliases = ["brainwash"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def _consent(self, target):
+        return dict(getattr(target.db, "conditioning_consent", None) or {})
+
+    def _scope_ok(self, caller, target, need):
+        c = self._consent(target)
+        if c.get("by") != caller.id:
+            return False, (f"|x{target.db.rp_name or target.key} hasn't consented to be conditioned "
+                           f"by you. Try: condition {target.key} = offer|n")
+        if need not in (c.get("scope") or []):
+            return False, f"|xThat's outside what they consented to (scope: {', '.join(c.get('scope') or [])}).|n"
+        return True, ""
+
+    def func(self):
+        caller = self.caller
+
+        # switches: accept / refuse a pending offer
+        if "accept" in self.switches or "refuse" in self.switches:
+            who = self.args.strip()
+            target = caller.search(who, global_search=True) if who else None
+            if not target:
+                caller.msg("|xWhose offer? Usage: condition/accept <conditioner>|n")
+                return
+            pend = dict(getattr(caller.db, "pending_conditioning", None) or {})
+            if pend.get("by") != target.id:
+                caller.msg("|xNo pending conditioning offer from them.|n")
+                return
+            caller.db.pending_conditioning = None
+            if "refuse" in self.switches:
+                caller.msg(f"|gYou refuse {target.db.rp_name or target.key}'s offer.|n")
+                target.msg(f"|x{caller.db.rp_name or caller.key} refused your conditioning offer.|n")
+                return
+            caller.db.conditioning_consent = {"by": target.id, "by_name": target.key,
+                                              "scope": list(pend.get("scope") or _COND_SCOPES)}
+            caller.msg(f"|MYou consent to be conditioned by {target.db.rp_name or target.key} "
+                       f"(scope: {', '.join(pend.get('scope') or _COND_SCOPES)}). "
+                       f"Your |wescape|M always undoes everything.|n")
+            target.msg(f"|M{caller.db.rp_name or caller.key} accepts your conditioning. They're yours "
+                       f"to work on — within scope, until they say stop.|n")
+            return
+
+        if not self.args:
+            caller.msg("|xUsage: condition <player> [= offer|deepen|trigger|ban|swap|designate|release ...]|n")
+            return
+
+        # view
+        if "=" not in self.args:
+            target = caller.search(self.args.strip(), global_search=True)
+            if not target:
+                return
+            c = self._consent(target)
+            tn = target.db.rp_name or target.key
+            if c.get("by") == caller.id:
+                caller.msg(f"|w{tn} has consented to your conditioning.|n Scope: "
+                           f"|g{', '.join(c.get('scope') or [])}|n.")
+            else:
+                caller.msg(f"|x{tn} has not consented to be conditioned by you. "
+                           f"condition {target.key} = offer|n")
+            return
+
+        who, action = [p.strip() for p in self.args.split("=", 1)]
+        target = caller.search(who, global_search=True)
+        if not target:
+            return
+        if target == caller:
+            caller.msg("|xCondition yourself? Use the facility for that. This is for others.|n")
+            return
+        tn = target.db.rp_name or target.key
+        parts = action.split(None, 1)
+        verb = parts[0].lower() if parts else ""
+        rest = parts[1].strip() if len(parts) > 1 else ""
+
+        # offer — request consent (target accepts with condition/accept)
+        if verb == "offer":
+            scope = [s for s in rest.lower().split() if s in _COND_SCOPES] or list(_COND_SCOPES)
+            target.db.pending_conditioning = {"by": caller.id, "by_name": caller.key, "scope": scope}
+            caller.msg(f"|gYou offer to condition {tn} (scope: {', '.join(scope)}). "
+                       f"Waiting on their consent.|n")
+            target.msg(f"|M{caller.db.rp_name or caller.key} offers to condition you "
+                       f"(scope: |w{', '.join(scope)}|M).\n  Accept: |wcondition/accept {caller.key}|M   "
+                       f"Refuse: |wcondition/refuse {caller.key}|M\n  (Your |wescape|M always undoes "
+                       f"anything done to you, no matter what.)|n")
+            return
+
+        if verb == "release":
+            if self._consent(target).get("by") == caller.id:
+                target.db.conditioning_consent = None
+                caller.msg(f"|gYou relinquish your hold on {tn}.|n")
+                target.msg(f"|x{caller.db.rp_name or caller.key} relinquishes conditioning of you. "
+                           f"(What's already in stays until you clear it — `uncondition` or `escape`.)|n")
+            else:
+                caller.msg("|xYou don't hold them.|n")
+            return
+
+        # everything below needs scoped consent
+        scope_needed = {"deepen": "deepen", "trigger": "trigger", "ban": "speech",
+                        "swap": "speech", "designate": "name"}.get(verb)
+        if scope_needed is None:
+            caller.msg("|xActions: offer | deepen | trigger <phrase> > <response> | ban <word> | "
+                       "swap <from> > <to> | designate <name> | release|n")
+            return
+        ok, reason = self._scope_ok(caller, target, scope_needed)
+        if not ok:
+            caller.msg(reason)
+            return
+
+        if verb == "deepen":
+            try:
+                from world.conditioning import add_conditioning
+                add_conditioning(target, 6.0, source="player")
+            except Exception:
+                pass
+            target.db.suggestibility = float(getattr(target.db, "suggestibility", 0) or 0) + 2.0
+            caller.msg(f"|MYou sink {tn} a little deeper.|n")
+            target.msg(f"|m{caller.db.rp_name or caller.key}'s voice works at you, patient and low, "
+                       f"and something in you settles further down where they're putting you.|n")
+        elif verb == "trigger":
+            if ">" not in rest:
+                caller.msg("|xUsage: condition <player> = trigger <phrase> > <response>  "
+                           f"(response: {', '.join(_TRIGGER_RESPONSES)})|n")
+                return
+            phrase, response = [p.strip() for p in rest.split(">", 1)]
+            response = response.lower()
+            if response not in _TRIGGER_RESPONSES:
+                caller.msg(f"|xResponse must be one of: {', '.join(_TRIGGER_RESPONSES)}|n")
+                return
+            try:
+                from world.binding_effects import install_trigger
+                install_trigger(target, phrase, response=response, strength=2)
+                caller.msg(f"|MYou seat a trigger in {tn}: \"{phrase}\" -> {response}.|n")
+                target.msg(f"|m{caller.db.rp_name or caller.key} works a phrase into you until it sits "
+                           f"below thinking. You won't feel it there — until someone says it.|n")
+            except Exception as e:
+                caller.msg(f"|xCouldn't seat it: {e}|n")
+        elif verb in ("ban", "swap"):
+            self._speech(caller, target, tn, verb, rest)
+        elif verb == "designate":
+            if not rest:
+                caller.msg("|xUsage: condition <player> = designate <name>|n")
+                return
+            target.db.designation = rest
+            caller.msg(f"|MYou designate {tn}: \"{rest}\".|n")
+            target.msg(f"|m{caller.db.rp_name or caller.key} gives you a designation: \"{rest}\". "
+                       f"It starts to feel more true than your name.|n")
+
+    def _speech(self, caller, target, tn, verb, rest):
+        def _ensure_filter(name):
+            flt = list(getattr(target.db, "active_speech_filters", None) or [])
+            if name not in flt:
+                flt.append(name); target.db.active_speech_filters = flt
+        if verb == "ban" and rest:
+            banned = list(getattr(target.db, "banned_words", None) or [])
+            if rest.lower() not in [b.lower() for b in banned]:
+                banned.append(rest)
+            target.db.banned_words = banned
+            _ensure_filter("banned_words")
+            caller.msg(f"|MYou take the word '{rest}' from {tn}.|n")
+            target.msg(f"|mThe word '{rest}' goes missing from your mouth — you reach and it isn't there.|n")
+        elif verb == "swap" and ">" in rest:
+            frm, to = [p.strip() for p in rest.split(">", 1)]
+            if frm:
+                swaps = dict(getattr(target.db, "word_swaps", None) or {})
+                swaps[frm] = to
+                target.db.word_swaps = swaps
+                _ensure_filter("word_swap")
+                caller.msg(f"|MYou retrain {tn}: '{frm}' -> '{to}'.|n")
+                target.msg(f"|mWhere you'd say '{frm}', now '{to}' comes out instead. You stop noticing.|n")
+        else:
+            caller.msg("|xUsage: = ban <word>  |  = swap <from> > <to>|n")
+
+
+ALL_FACILITY_VERBS.append(CmdCondition)
+
+
+class CmdUncondition(Command):
+    """
+    Walk back conditioning done to you by another player (a soft self-clear).
+
+    Usage:
+        uncondition
+
+    Revokes any player's consent to condition you and clears the configurable conditioning
+    (banned/swapped words, designation, the echo filter). For a TOTAL wipe of everything —
+    facility processing, triggers, the lot — use the OOC floor: |wescape|n / |wfacilityreset|n,
+    which is always free and never gated.
+    """
+    key = "uncondition"
+    aliases = ["unbrainwash"]
+    locks = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        caller.db.conditioning_consent = None
+        caller.db.pending_conditioning = None
+        caller.db.banned_words = []
+        caller.db.word_swaps = None
+        flt = [f for f in (getattr(caller.db, "active_speech_filters", None) or [])
+               if f not in ("banned_words", "word_swap", "echo_self")]
+        caller.db.active_speech_filters = flt
+        caller.db.designation = None
+        caller.msg("|gYou shake off the words and the retraining you can reach. Your speech is your "
+                   "own again, and no one holds your conditioning.\n"
+                   "|x(Triggers and deeper conditioning, and anything the facility did, clear with the "
+                   "full floor: |wescape|x / |wfacilityreset|x.)|n")
+
+
+ALL_FACILITY_VERBS.append(CmdUncondition)
+
+
 class CmdTab(Command):
     """
     Your tab — the debt the house is carrying against you, if any.

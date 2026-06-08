@@ -466,3 +466,86 @@ Each = a curse + effect + trigger + body-mod + machine + clothing + drug + a que
   numberless designation. (Pairs with the Cull line, already built.)
 - **DOLL / NUGGET bundle** — Doll-drift curse + headspace-drop + sensory hood + limb-lock + the Nugget Cradle
   + latex sleeve + Blank drug + the Nugget quest line. The terminus bundle.
+
+---
+
+# §29. INSPIRATION MINE — FlexSurvival / TiTS / TrapQuest / BondageClub (+BCX/LSCG/MBCS)
+Not combat — the *systems* these do well, mapped to Re:Void's real hooks. Grouped by the big
+buildable systems they collectively point at. (§0 floor invariant applies to every one.)
+
+## A. A real BODY / TRANSFORMATION framework (TiTS + Flexible Survival)
+Today body changes are one-off procedures. TiTS/FlexSurvival do **incremental, thresholded,
+multi-stage parts** — and it's the single highest-leverage system to build.
+- **TF-serum items** (reuse `_procedure` effects + `binding_effects` payloads + `do_inseminate`
+  fluids): a drink/inject item nudges ONE stat toward a target (cock count/length, breast row/size,
+  hips, lips, clit, balls/load volume, height, taur/feral frame, skin/fur, fluid type). Repeated doses
+  cross **thresholds** that rewrite the body desc — exactly TiTS' "your third dose; a knot forms".
+- **Part registry on the character** (`db.body_parts = {part: level}`) the `look`/marks system reads,
+  so changes are legible and stack. Flexible Survival's "you are 60% hound" → a per-species TF meter
+  that, past thresholds, swaps descs/holes/capabilities (ties `animal_sleeve`, the Pet branch, `_proc_*`).
+- **TF gels/zones** in rooms (a `dildo`/`milk` mechanic that also TFs whoever's locked in over beats).
+- **"Bad end" thresholds** — pass a TF/conditioning ceiling and you're auto-sorted (the Nugget, a
+  permanent feral, a drone) — Flexible Survival's signature, already half-built via the descent termini.
+
+## B. A RULES engine (BondageClub / BCX "rules" + LSCG)
+The biggest BC-family idea we don't have: an **owner-set rule list** a unit must obey, each with a
+consequence the systems already provide (`make_example`, `punish`, conditioning, arousal).
+- `db.rules = [{name, set_by, consequence}]`; a checker fires on the relevant action.
+- Rule types: **must kneel/present in <room>**, **may not leave without permission**, **must ask to
+  come** (orgasm rule), **must announce use / count aloud** (Records/Tally tie), **no clothing**,
+  **honorific required** (have the filter), **curfew/quota by time**, **must edge N times first**.
+- Reuses the consent layer just built (player-set) AND Bethany sets them as clauses (`_impose_clause`).
+- **"Restriction" rules** (BCX): blur/garble typing, slow speech, forced emotes — all speech-filter work.
+
+## C. SENSORY DEPRIVATION tiers (BondageClub blindfold/deaf/gag; MBCS)
+Generalise the Nugget's `sensory_hood` into a reusable, staged system any item/curse/proc can set.
+- **Blindness tiers** — filter `look`/room descs (full → blurred shapes → nothing); hoods/blindfolds set it.
+- **Deafness tiers** — filter incoming speech/room messages (muffle → garble → silence).
+- **Speech/gag tiers** — already have filters; add gag levels (muffled → unintelligible → silent) as items.
+- Each is an item OR a proc OR a curse; the nugget sets all three at max. (`db.sense_sight/sound/speech`.)
+
+## D. ORGASM / DENIAL system (TrapQuest arousal; BC orgasm rules; LSCG)
+We have arousal + denial flags; make it a real subsystem.
+- **Permission-to-come** (`db.climax_lock`): can't come without a cue word/owner say; ruined orgasms;
+  forced orgasms on a trigger (already have the `orgasm` trigger response).
+- **Denial scheduling** ("organize denial"): an owner sets a denial window/edge-count/permission cadence
+  (`db.denial = {edges_required, until, permission}`); the cycle + arousal script enforce it.
+- **Arousal consequences** (TrapQuest): high arousal degrades speech, raises suggestibility, can force
+  public display or a "leak" — a feedback loop where being turned on processes you.
+
+## E. RESTRAINT / WARDROBE LAYERING with locks + timers (BondageClub core)
+- **Locked items with timer/owner keys** (extend `PiercingItem.wear`/`BethanyCollar`): an item locks on,
+  unlockable only by the key-holder or a real timer (`db.locked_until`) — never by the wearer (OOC floor aside).
+- **Layered wardrobe** — undergarment/garment/restraint/accessory layers; outer locks pin inner.
+- **Crafting** (BC): combine items at a bench into bespoke restraints with chosen effects/lock types.
+- **Remote-controlled toys** (BC vibes): an owner triggers a worn toy's arousal tick from anywhere
+  (reuse the worn-tick pattern from the rocking horse + auto-milker harness).
+
+## F. ADDICTION / STATUS-ESCALATION (Flexible Survival infection; TrapQuest curses)
+- **Addiction tracks** (extend `drug_dependence`): per-substance, withdrawal worsens each idle beat,
+  satisfied only by the source — generalises the withdrawal-web (§16) into a real meter with stages.
+- **"Infections"/escalators** — a status that ticks WORSE over time unless treated (cum-addiction,
+  bimbo-creep, dollification-drift, feral-creep) — Flexible Survival's spread, on a timer; ties curses.
+- **Cure economy** — treatments cost scrip/standing or a task (TiTS' inhibitor items) — the only brakes,
+  and the house controls the supply.
+
+## G. MISC sharp ideas worth stealing
+- **TiTS "Codex"/perks** — unlock flavour perks/titles as you cross body/conditioning thresholds (ties
+  achievements + the sheet/website).
+- **TrapQuest "tutor"** — a roaming NPC that catches you breaking a rule and makes the example (we have
+  `make_example`; add a roamer).
+- **BC "online status" / activities** — a menu of interaction verbs between players (pet, milk, leash,
+  use, dress, lock) — a generalised `do <verb> <player>` activity system with consent + flavour pools.
+- **BCX "antigarble"/anti-cheat as fiction** — rules that *sound* like they trap you but whose real
+  override is loudly the §0 floor (keep the contrast explicit, as the contract clauses already do).
+
+## STATUS
+- ✅ **BUILT this pass — Player-to-player conditioning (B's consent layer + the verb):** `condition`/
+  `brainwash` with a scoped consent handshake (offer → `condition/accept` → scope: deepen/trigger/
+  speech/name), conditioner actions routed through the REAL systems (conditioning, `install_trigger`,
+  banned/swap speech filters, designation), `release`, and a target-side `uncondition` soft self-clear.
+  Reset-safe (`conditioning_consent`/`pending_conditioning` in FACILITY_FLAGS; triggers/filters/
+  designation all cleared by the floor). Consent required; the §0 floor is the absolute undo. Tested.
+- 🎯 **Recommended next big builds (in order):** (A) the TF/body framework — highest leverage, feeds
+  everything; (D) the orgasm/denial subsystem; (C) sensory tiers; (B) the rules-engine checker; then
+  (E) locked/layered wardrobe and (F) addiction meters. Each is one coherent pass.
