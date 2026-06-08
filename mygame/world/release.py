@@ -30,8 +30,12 @@ The player drives her side with the `release` command (status + petition + pay).
 
 from evennia import search_object
 
-# OOC-floor reminder appended to every player-facing message in this module.
-_FLOOR = ("|x(The real way out is not this and never costs anything: "
+# The OOC floor is documented in the `release` command help and shown ONCE, quietly,
+# on the deliberately-meta `status` screen — NOT recited on every immersive beat.
+# Reciting it would be exactly the hedging the brief forbids: the floor has to be
+# genuine and discoverable, not stapled to the prose. One dim line, on the status
+# readout a player calls up on purpose, is enough.
+_FLOOR = ("|x(The real way out isn't this and never costs anything — "
           "escape / force_clear / facilityreset are always free.)|n")
 
 
@@ -119,7 +123,6 @@ def offer(stock, scrip=0, devotion_max=None, standing_min=None, note="", by=None
     if note:
         msg.append(f"|M\"{note}\"|n")
     msg.append("|M\"Whenever you like, sweetheart. The number's only going one way, though.\"|n")
-    msg.append(_FLOOR)
     stock.msg("\n".join(msg))
 
 
@@ -141,7 +144,7 @@ def gouge(stock, add_scrip=0, devotion_max=None, standing_min=None, note=""):
     stock.msg("|MShe crosses out the figure without looking up and writes a larger one above it.|n\n"
               f"|Mthe door, today:|n |w{t['scrip']:,}|n scrip.\n"
               + (f"|M\"{note}\"|n\n" if note else "")
-              + "|M\"It went up. Things do, in here. You took your time.\"|n\n" + _FLOOR)
+              + "|M\"It went up. Things do, in here. You took your time.\"|n")
 
 
 def grant(stock, by=None, force=False):
@@ -163,8 +166,7 @@ def grant(stock, by=None, force=False):
     stock.msg("|MShe signs it. Both copies. Slides yours back and folds her hands.|n\n"
               "|M\"There. You're free — properly, on paper, mine no more. The word home works now; "
               "speak it at a stone whenever you're ready to go.\"|n\n"
-              "|M\"...You can always stay, of course. Most do, once it's actually a choice.\"|n\n"
-              + _FLOOR)
+              "|M\"...You can always stay, of course. Most do, once it's actually a choice.\"|n")
     return True
 
 
@@ -193,7 +195,7 @@ def revoke(stock, by=None, regouge=0):
               "beside her knee.|n\n"
               "|M\"Mm. No. I've reconsidered. The word stops working as of now — try it and see.\"|n\n"
               + (f"|MAnd the price for trying again is |w{t['scrip']:,}|M now.|n\n" if regouge else "")
-              + "|M\"Don't look at me like that. You signed knowing I could.\"|n\n" + _FLOOR)
+              + "|M\"Don't look at me like that. You signed knowing I could.\"|n")
 
 
 def withdraw(stock, by=None):
@@ -201,8 +203,7 @@ def withdraw(stock, by=None):
     t = _default()
     _save(stock, t)
     stock.msg("|MShe tucks the sheet back into your file and closes it.|n\n"
-              "|M\"Let's not talk about leaving today. You're not ready, and frankly neither am I.\"|n\n"
-              + _FLOOR)
+              "|M\"Let's not talk about leaving today. You're not ready, and frankly neither am I.\"|n")
 
 
 # ── the unit's side (the `release` command calls these) ───────────────────────
@@ -216,7 +217,7 @@ def status(stock):
                      "hasn't named a number. You could ask. She likes being asked.|n")
         lines.append(_FLOOR)
         lines.append("|M" + "═" * 46 + "|n")
-        return "\n".join(lines)
+        return "\n".join(lines)  # the one-time floor line stays on this meta screen
     bal = _balance(stock)
     owe = int(t["scrip"])
     paid = t["paid"]
@@ -251,8 +252,7 @@ def petition(stock):
         return
     stock.msg("|MYou ask, in so many words, what it would take to leave.|n\n"
               "|MShe doesn't laugh — that's the worst of it. She just turns to a fresh page, "
-              "uncaps her pen, and starts adding. \"Let me see what you're worth to me first.\"|n\n"
-              "|x(Bethany will name your price.)|n\n" + _FLOOR)
+              "uncaps her pen, and starts adding. \"Let me see what you're worth to me first.\"|n")
 
 
 def pay(stock):
@@ -263,15 +263,15 @@ def pay(stock):
         stock.msg("|xThere is no price on the table to pay. Ask her first — |wrelease ask|x.|n")
         return
     if t["granted"]:
-        stock.msg("|gIt's already signed. The way home is open — go, if you're going.|n\n" + _FLOOR)
+        stock.msg("|gIt's already signed. The way home is open — go, if you're going.|n")
         return
     if t["paid"]:
-        stock.msg("|MAlready paid. It waits on her pen now, not your purse.|n\n" + _FLOOR)
+        stock.msg("|MAlready paid. It waits on her pen now, not your purse.|n")
         return
     unmet = _unmet(stock, t)
     if unmet:
         stock.msg("|RShe won't even take the scrip until the rest is true:|n\n"
-                  + "\n".join(f"  |R✗ {lbl}:|n {d}" for lbl, d in unmet) + "\n" + _FLOOR)
+                  + "\n".join(f"  |R✗ {lbl}:|n {d}" for lbl, d in unmet))
         return
     owe = int(t["scrip"])
     try:
@@ -281,12 +281,10 @@ def pay(stock):
         ok, bal = False, 0
     if not ok:
         stock.msg(f"|xYou can't cover it. The door is |w{owe:,}|x and you hold |w{bal:,}|x.|n\n"
-                  "|xEarn the rest off your own body like everything else in here.|n\n" + _FLOOR)
+                  "|xEarn the rest off your own body like everything else in here.|n")
         return
     t["paid"] = True
     _save(stock, t)
     stock.msg(f"|MYou pay it — every credit, scraped out of what your own body earned on the line.|n\n"
               f"|MShe counts it without hurry, sets it aside, and says nothing about signing.|n\n"
-              "|M\"Good girl. I'll have a look at the paperwork. These things take time.\"|n\n"
-              "|x(It now waits on Bethany's grant. She is under no obligation, in fiction. "
-              "OOC, you never are: the floor is always free.)|n\n" + _FLOOR)
+              "|M\"Good girl. I'll have a look at the paperwork. These things take time.\"|n")
