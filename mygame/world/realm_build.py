@@ -2639,7 +2639,8 @@ def force_clear(owner):
               "facility_title_backup", "forced_posture", "body_language", "room_bound",
               "facility_zone", "facility_furniture", "intake_provocations",
               "intake_suggestibility", "intake_door_opened", "found_captive_ring",
-              "facility_forgotten", "bethany_clauses", "release_terms", "behaviour_log", "rules"):
+              "facility_forgotten", "bethany_clauses", "release_terms", "behaviour_log", "rules",
+              "contract_effects"):
         try: setattr(d, k, None)
         except Exception: pass
     # -> 0
@@ -2724,6 +2725,12 @@ def force_clear(owner):
     try:
         from world.relationships import clear_forced
         clear_forced(owner)
+    except Exception: pass
+    # undo exactly the consent GRANTS any signed contract wrote (Layer 4); leaves
+    # unrelated player consent overrides intact.
+    try:
+        from world.contract_clauses import revert_all
+        revert_all(owner)
     except Exception: pass
     # end any pregnancy + restore the belly desc
     try:

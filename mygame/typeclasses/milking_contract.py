@@ -76,19 +76,39 @@ class MilkingContract(WrittenItem):
     # Clause management
     # ------------------------------------------------------------------
 
-    def add_clause(self, text: str, hidden: bool = False) -> int:
-        """Add a clause. Returns its ID."""
+    def add_clause(self, text: str, hidden: bool = False, effect: dict = None) -> int:
+        """Add a clause. Returns its ID.
+
+        `effect` (Layer 4) is an optional machine-readable dict applied to the signee
+        on signing — see world/contract_clauses.apply_clause_effect. A 'binding' effect
+        is folded into this contract's binding_effects payload here at build time."""
         clauses = list(self.db.clauses or [])
         clause_id = len(clauses) + 1
+        if effect and effect.get("kind") == "binding":
+            try:
+                from world.contract_clauses import merge_binding
+                merge_binding(self, effect.get("payload"))
+            except Exception:
+                pass
         clauses.append({
             "id":       clause_id,
             "text":     text,
             "hidden":   hidden,
             "revealed": False,
             "added_at": time.time(),
+            "effect":   effect,
         })
         self.db.clauses = clauses
         return clause_id
+
+    def add_template_clause(self, name: str, hidden: bool = None) -> int:
+        """Add a clause from the contract_clauses TEMPLATES registry by name."""
+        from world.contract_clauses import template
+        t = template(name)
+        if not t:
+            return 0
+        return self.add_clause(t["text"], hidden=(t["hidden"] if hidden is None else hidden),
+                               effect=t.get("effect"))
 
     def add_addendum(self, text: str, hidden: bool = False) -> int:
         """Add an addendum. Returns its ID."""
@@ -219,6 +239,24 @@ class MilkingContract(WrittenItem):
                 traceback.print_exc()
                 return False, ("The binding faulted partway and did not take — nothing was "
                                "signed. (Check the server log.) Try again.")
+
+        # Apply each clause's machine-readable effect (Layer 4): grants, rules,
+        # forced relations, flags. Per-clause try/except — one bad clause can't abort
+        # the rest, and the binding above already took. Signing IS consent.
+        try:
+            from world.contract_clauses import apply_clause_effect
+            author = None
+            if self.db.author_id:
+                from evennia import search_object
+                res = search_object(f"#{self.db.author_id}")
+                author = res[0] if res else None
+            for c in list(self.db.clauses or []) + list(self.db.addendums or []):
+                eff = c.get("effect")
+                if eff:
+                    apply_clause_effect(signee, author, eff)
+        except Exception:
+            import traceback
+            traceback.print_exc()
 
         # Effects are in. Mark it signed now — only a completed binding counts.
         self.db.signed = True

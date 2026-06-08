@@ -117,6 +117,17 @@ matrix (BCX's authority module, expressed through the consent verb the user alre
 - Bethany sets the cruellest of these on her stock; consented players set them within scope;
   a unit can self-impose (and lock, relying on someone to lift).
 
+> **Layer 4 status: ENGINE BUILT.** `world/contract_clauses.py` + extended `MilkingContract`.
+> Clauses now carry a machine-readable `effect` applied on sign through the real systems:
+> `grant` (consent allow-override for a person/tier), `rule` (Layer-3 add_rule), `relation` (forced
+> family/role — contracts bypass the owner-gate since signing IS consent), `flag` (db flag), `binding`
+> (merged into the existing binding_effects payload). `add_template_clause(name)` pulls from a
+> `TEMPLATES` registry — the approved-kink CATALOGUE lands there entry-by-entry. Every grant is
+> recorded to `db.contract_effects` and undone by the §0 floor (`revert_all` wired into force_clear);
+> rules/relations/flags/binding already cleared by the other reset paths. Tested standalone.
+> **PENDING:** the clause CATALOGUE (soft→extreme) is being approved/vetoed by the user in chat;
+> approved clauses become TEMPLATES entries + get their enforcing system confirmed.
+
 ## Layer 4 — CONTRACTS (expand the existing `MilkingContract`; the keystone)
 **Signing is consent — fully informed or otherwise.** A contract is the instrument that GRANTS the
 consent-matrix entries, installs the rules, and applies the binding_effects, all at once, on sign.
