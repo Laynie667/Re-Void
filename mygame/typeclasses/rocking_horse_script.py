@@ -29,6 +29,45 @@ import time
 import random
 from typeclasses.furniture_session import FurnitureSessionScript
 
+# Arousal at/above which the frame straps the rider in (the lock-in is EARNED by
+# the ride working them up, not slammed on at mount).
+_RESTRAIN_THRESHOLD = 40.0
+# The horse only breeds (deposits) once worked up, and then only periodically —
+# a climactic event, not a per-rock thing. Threshold + refractory cooldown.
+_BREED_THRESHOLD    = 65.0
+_BREED_COOLDOWN_S   = 75.0
+
+_CUNT_WORDS = ("cunt", "pussy", "vagina", "sex")
+_ASS_WORDS  = ("ass", "anus", "rear", "behind")
+
+
+def rider_holes(char, facing="forward", upgrades=None):
+    """Which orifice zone(s) the seat works on this rider.
+
+    Returns a list of zone names. With the 'double' upgrade and both a cunt- and
+    an ass-type orifice available, returns BOTH; otherwise a single hole chosen by
+    facing (forward → cunt, backward → ass), falling back to whatever orifice exists.
+    """
+    upgrades = upgrades or []
+    zones = getattr(char.db, "zones", None) or {}
+    orifices = [zn for zn, zd in zones.items()
+                if (zd or {}).get("zone_type") in ("orifice", "both")]
+    cunt = next((zn for zn in orifices if any(w in zn for w in _CUNT_WORDS)), None)
+    ass  = next((zn for zn in orifices if any(w in zn for w in _ASS_WORDS)), None)
+    if "double" in upgrades and cunt and ass:
+        return [cunt, ass]
+    if facing == "backward":
+        return [ass or cunt or (orifices[0] if orifices else None)]
+    return [cunt or ass or (orifices[0] if orifices else None)]
+
+
+def holes_kind(holes):
+    """Classify a hole list for message-pool selection: 'both' / 'cunt' / 'ass'."""
+    if len([h for h in holes if h]) > 1:
+        return "both"
+    h = (holes[0] if holes else "") or ""
+    return "ass" if any(w in h for w in _ASS_WORDS) else "cunt"
+
 
 # The 'little' upgrade — the horse treats its rider as a small, helpless thing to be
 # kept somewhere safe. Warm caretaker voice; helplessness delivered as comfort.
@@ -113,6 +152,8 @@ class RockingHorseScript(FurnitureSessionScript):
 
         add_arousal(char, arousal_gain)
 
+        if "restrained" in upgrades:
+            self._check_restraint(char, room)
         if "vibrating" in upgrades:
             if random.random() < 0.50:
                 char.msg("|xThe seat pulses between rocks.|n")
@@ -124,9 +165,24 @@ class RockingHorseScript(FurnitureSessionScript):
         if "knot" in upgrades:
             self._check_knot(char, room, upgrades)
         if "breeding" in upgrades:
-            self._tick_breeding(char, room)
+            self._tick_breeding(char, room, upgrades)
         if "little" in upgrades:
             self._tick_little(char, room)
+
+    def _check_restraint(self, char, room):
+        """Strap the rider in once the ride has worked them past the threshold — NOT
+        on mount. Engages once; sets restrained_zone so occupancy/flavor hold."""
+        if getattr(char.db, "restrained_zone", None):
+            return
+        if float(char.db.arousal or 0.0) < _RESTRAIN_THRESHOLD:
+            return
+        zone_name = getattr(room.db, "horse_zone", None)
+        char.db.restrained_zone = zone_name
+        rider_name = char.db.rp_name or char.name
+        from world.rocking_horse_loader import pick_horse_msg
+        msg = (pick_horse_msg("upgrade", "restrain_threshold")
+               or "The restraints draw shut around {rider} now that the ride has them.")
+        room.msg_contents(msg.replace("{rider}", rider_name))
 
     def at_start(self):
         room = self.obj
@@ -206,22 +262,54 @@ class RockingHorseScript(FurnitureSessionScript):
             pass
         char.msg("|x  " + random.choice(_LITTLE_BEATS) + "|n")
 
-    def _tick_breeding(self, char, room):
-        """Breeding upgrade: the dildos cum into the seated rider and the belly fills —
-        a real fluid deposit (which the inflation/pregnancy systems pick up). Optional;
-        this is what makes the horse *deposit and inflate* rather than just ride."""
+    def _tick_breeding(self, char, room, upgrades=None):
+        """Breeding upgrade: the shaft(s) breed the rider — a CLIMACTIC deposit, not a
+        per-rock one. Gated behind an arousal threshold and a refractory cooldown so it
+        reads as the horse cumming when the ride peaks, then building back up to do it
+        again. Real fluid deposit (inflation/pregnancy/womb systems pick it up), but the
+        room message is the horse's own hot pool — not the clinical machine line."""
         try:
             import random as _r
             from typeclasses.insemination_item import do_inseminate
-            zone = self._rider_orifice(char)
-            if not zone:
+            from world.rocking_horse_loader import pick_horse_msg
+            from typeclasses.production_item import format_volume
+
+            # Gate: worked-up enough, and past the refractory window since the last load.
+            if float(char.db.arousal or 0.0) < _BREED_THRESHOLD:
                 return
-            msg = do_inseminate(None, char, zone, {
-                "source": "machine", "fluid_type": "semen",
-                "volume_per_tick": _r.uniform(60.0, 160.0), "ttl_hours": 12.0,
-            })
-            if msg:
-                room.msg_contents(msg)
+            now  = time.time()
+            last = float(getattr(char.db, "horse_last_breed_at", 0.0) or 0.0)
+            if now - last < _BREED_COOLDOWN_S:
+                return
+            upgrades = upgrades if upgrades is not None else \
+                list(getattr(room.db, "horse_upgrades", None) or [])
+            facing = getattr(char.db, "horse_facing", "forward") or "forward"
+            holes  = [h for h in rider_holes(char, facing, upgrades) if h]
+            if not holes:
+                return
+
+            char.db.horse_last_breed_at = now
+            total = _r.uniform(90.0, 180.0)
+            per   = total / len(holes)
+            for zone in holes:
+                # Deposit silently — we broadcast the horse's own message below.
+                do_inseminate(None, char, zone, {
+                    "source": "machine", "fluid_type": "semen",
+                    "volume_per_tick": per, "ttl_hours": 12.0,
+                })
+
+            rider_name = char.db.rp_name or char.name
+            kind = holes_kind(holes)
+            pool = "breeding_both" if kind == "both" else "breeding_deposit"
+            zone_disp = (" and ".join(h.replace("_", " ") for h in holes)
+                         if kind == "both" else holes[0].replace("_", " "))
+            msg = (pick_horse_msg("upgrade", pool)
+                   or "The horse breeds {rider} — {volume} pumped deep into their {zone}.")
+            room.msg_contents(
+                msg.replace("{rider}", rider_name)
+                   .replace("{volume}", format_volume(total))
+                   .replace("{zone}", zone_disp)
+            )
         except Exception:
             pass
 
@@ -261,6 +349,7 @@ class RockingHorseScript(FurnitureSessionScript):
                 continue
             char.db.horse_knotted         = False
             char.db.horse_knot_expires_at = 0.0
+            char.db.horse_last_breed_at   = 0.0
             if zone_name:
                 try:
                     from typeclasses.inflation_item import drain_inflation

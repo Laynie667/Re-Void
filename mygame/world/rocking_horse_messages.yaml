@@ -105,3 +105,36 @@ upgrade:
   restrained_mount:
     - "The restraints snap shut — wrists strapped to the handles, ankles locked to the stirrups. {rider}'s on the horse and the horse has got them, no take-backs."
     - "Handles and stirrups lock down tight. {rider}'s in position and going absolutely nowhere on their own."
+
+  # Penetration on mount — which hole the shaft finds. Tokens: {rider}
+  mount_cunt:
+    - "{rider} settles down and the seat's shaft finds the wet of them, parting their cunt and sliding up to the root in one slow, certain push. Seated, in both senses — full before the rocking's even started."
+    - "The horse's cock is already waiting, slick and patient, and {rider}'s own weight drives it home — up into their cunt, deep, the stretch blooming as they bottom out on it."
+    - "It slips into {rider}'s pussy as they sit, unhurried and inevitable, filling them out and pinning them there. Whatever they thought riding meant, this is it."
+
+  mount_ass:
+    - "{rider} lowers down and the shaft noses up against their asshole, then through it — a thick, deliberate breach that opens them and keeps opening them until they're sitting flush on the base, stuffed."
+    - "The seat's cock finds {rider}'s ass and works in, slow and merciless, their own weight doing the last of it. Seated to the root, plugged and going nowhere."
+    - "It spears up into {rider}'s ass as they settle, the stretch sharp and then deep, and the horse has them mounted on it like that's all they were ever for."
+
+  mount_both:
+    - "Both shafts find {rider} at once — one splitting their cunt, one breaching their ass — and their own settling weight drives the pair home together, double-stuffed and gaping around the fill before a single rock has landed."
+    - "The horse doesn't make {rider} choose: the front shaft sinks into their pussy as the back one forces up into their ass, and they're sat down hard on both, packed front and back, mounted twice over."
+    - "Two cocks, two holes — {rider}'s cunt and ass taken in the same slow, relentless descent, the seat filling them everywhere at once until there's nothing left to do but sit on it and be ridden."
+
+  # The lock-in, engaged once she's worked up — NOT on mount. Tokens: {rider}
+  restrain_threshold:
+    - "{rider}'s too far gone to notice the catch arm until it's done — wrists drawn to the handles, ankles dragged to the stirrups, locked down now that they're worked open and won't want to stop anyway."
+    - "Something in the frame decides {rider}'s ready: the restraints draw shut around their wrists and ankles with a soft hydraulic certainty. No take-backs — and at this point they wouldn't take them back."
+    - "The seat reads how worked-up {rider} is and answers by strapping them in — handles and stirrups clamping tight, committing their body to the ride now that the ride has them."
+
+  # Climactic deposit (gated by arousal + cooldown — NOT every rock). Tokens: {rider} {volume} {zone}
+  breeding_deposit:
+    - "The shaft swells and lets go — {volume} of hot seed pumped deep into {rider}'s {zone} in long, jerking pulses, the horse breeding them properly now and grinding it in deep so none of it goes to waste."
+    - "It cums. {rider}'s {zone} floods with {volume} of thick spend, the seat throbbing through it and rocking them onto the load again and again until their belly takes the warmth of it."
+    - "The horse finishes inside {rider} — {volume} of semen jetting up into their {zone}, pulse after pulse, and it doesn't pull out for it. It just keeps rocking, keeping every drop where it put it."
+    - "Deep in {rider}'s {zone} the shaft erupts: {volume} of cum, pumped and pumped, the horse breeding them full and steady like filling them is the whole point. It is."
+
+  breeding_both:
+    - "Both shafts go off in {rider} at once — {volume} split between their flooded cunt and their stuffed ass, the horse pumping seed into both holes together and rocking it all the way in."
+    - "The horse breeds {rider} front and back in the same heaving moment, {volume} of cum jetting into cunt and ass alike, double-filled and dripping before it grinds them down to keep it in."

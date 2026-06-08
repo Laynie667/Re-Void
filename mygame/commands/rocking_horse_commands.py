@@ -57,13 +57,19 @@ class CmdHorseMount(Command):
             msg = f"|x{caller_name} mounts the horse — hands on the handles, settled into the seat.|n"
         room.msg_contents(msg)
 
-        # Restraint upgrade — lock in on mount
-        if "restrained" in upgrades:
-            from world.rocking_horse_loader import pick_horse_msg
-            restraint_msg = pick_horse_msg("upgrade", "restrained_mount")
-            if restraint_msg:
-                room.msg_contents(restraint_msg.replace("{rider}", caller_name))
-            caller.db.restrained_zone = zone_name
+        # Penetration on mount — which hole(s) the shaft finds. (Restraint is NOT
+        # clamped on here any more — it engages at an arousal threshold during the
+        # ride, see RockingHorseScript._check_restraint.)
+        from world.rocking_horse_loader import pick_horse_msg
+        from typeclasses.rocking_horse_script import rider_holes, holes_kind
+        holes = [h for h in rider_holes(caller, facing, upgrades) if h]
+        if holes:
+            pool = {"both": "mount_both", "ass": "mount_ass", "cunt": "mount_cunt"}[holes_kind(holes)]
+            entry = pick_horse_msg("upgrade", pool)
+            if entry:
+                room.msg_contents("|r" + entry.replace("{rider}", caller_name) + "|n")
+        # Fresh ride — reset the breeding refractory clock.
+        caller.db.horse_last_breed_at = 0.0
 
         # Milking upgrade — start attachment
         if "milking" in upgrades:
@@ -100,9 +106,10 @@ class CmdHorseDismount(Command):
                 return
             caller.db.horse_knotted = False
 
-        caller.db.seated_zone   = None
+        caller.db.seated_zone     = None
         caller.db.restrained_zone = None
-        caller.db.horse_facing  = None
+        caller.db.horse_facing    = None
+        caller.db.horse_last_breed_at = 0.0
 
         # 'little' upgrade teardown — remove only the baby-talk the horse itself added,
         # and only if a facility binding isn't also relying on it (don't clobber that).
@@ -243,8 +250,9 @@ class CmdHorseUpgrade(MuxCommand):
     Manage rocking horse upgrades.
 
     Usage:
-      horseupgrade add <motorized/vibrating/milking/restrained/knot/inflation/breeding>
-        (breeding = the dildos cum into you and the belly fills — deposit + inflate)
+      horseupgrade add <motorized/vibrating/milking/restrained/knot/inflation/breeding/double/little>
+        (breeding = the shaft cums into you and the belly fills — deposit + inflate)
+        (double   = a second shaft; if you have both holes, it takes cunt AND ass at once)
       horseupgrade remove <flag>
       horseupgrade list
     """
@@ -254,7 +262,7 @@ class CmdHorseUpgrade(MuxCommand):
     switch_options = ("add", "remove", "list")
 
     _VALID = {"motorized", "vibrating", "milking", "restrained", "knot",
-              "inflation", "breeding", "little"}
+              "inflation", "breeding", "double", "little"}
 
     def func(self):
         room = self.caller.location

@@ -39,6 +39,21 @@ Items get struck through / moved to "Resolved" as they're fixed.
 
 ## 0b. Recent passes (build log, newest first)
 
+- 🟢 **Rocking horse — bugfix pass (user-reported "seems broke").** Four fixes:
+  (1) **Breeding fired on every rock** (`_tick_breeding` ran `do_inseminate` per tick → a fresh
+  deposit each rock, the 87ml-then-76ml spam) → now a CLIMACTIC, gated event: arousal ≥ 65 AND a
+  75s refractory cooldown (`horse_last_breed_at`), reset on mount/dismount/stop. (2) **Restraints
+  clamped on mount** ("locks right away") → moved to `_check_restraint`, engaging at arousal ≥ 40
+  during the ride (the lock-in is earned, like the knot). (3) **No "which hole" flavor** → new
+  `rider_holes()`/`holes_kind()` helpers + `mount_cunt`/`mount_ass`/`mount_both` entry pools fired on
+  mount, chosen by facing; the new `double` upgrade takes cunt AND ass at once when both exist.
+  (4) **Clinical/borrowed deposit text** (it used the generic machine insemination pool) → horse-owned
+  `breeding_deposit`/`breeding_both` pools, broadcast directly; `do_inseminate` still runs for the real
+  fluid deposit but silently. Compiled; hole-selection + token validation tested standalone.
+- 🟢 **Manumission — the in-fiction escape** (`world/release.py` + `freedom` cmd + `manumit` admin cmd).
+  Bethany prices/grants/gouges/revokes the diegetic door (drives `reveal_return`); admin-locked so no
+  player loophole; OOC floor untouched. `release_terms` cleared by both reset paths.
+
 - 🟢 **The works, batch 1: quota spine, real installs, curses, clauses, live get-auctions.**
   **Real room installs (data-driven):** floor gains automated `milkstall` (milk mechanic) + a
   `matingbench` (dildo); pens gains a `machine` breaking-saddle (dildo); restroom's glory-hole `wall`
