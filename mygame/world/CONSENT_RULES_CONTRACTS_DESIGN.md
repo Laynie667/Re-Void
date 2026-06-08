@@ -20,7 +20,9 @@ Tiers a viewer can hold toward a target (a viewer may hold several at once):
 - **owner** — holds you: facility owner (`is_owner`), your conditioning-consent holder, or an
   explicit owned-by link. The cruellest tier; Bethany lives here.
 - **lover** — a mutually-set bond.
-- **family** — lineage / mutually-set kin (ties the offspring/lineage system).
+- **family** — lineage / kin. Default **mutual** opt-in, but an **owner may FORCE** a family tie
+  (set herself your biological mother/sister; name you her daughter/son) — on-theme for the
+  breeding line. Forced ties are logged to the behaviour log.
 - **faction** — shares a faction with you (`factions.py` membership).
 - **hostile** — a faction at enmity with yours (faction relations already exist).
 - **all** — anyone (the catch-all / default tier).
@@ -77,10 +79,33 @@ a `binding_effects` payload) — we generalise it:
 - **Player-authored contracts** — not just the facility's: any player can draft a contract with
   clauses and offer it; signing grants what it says. (The conditioning-consent handshake becomes a
   special case of "signing a small contract.")
-- Expanded contract system (user has more ideas — TBD): templates, hidden/locked clauses, addenda
-  the signer pre-consented to, term/quota-defined length, transfer/sale of a contract, etc.
-- **§0 invariant:** no clause, signed or hidden, can gate the OOC floor. Signing grants everything
-  EXCEPT the fire-exit. (The facility contract's H29 already states this in-fiction.)
+- Expanded contract system: templates, hidden/locked clauses, addenda the signer pre-consented to,
+  term/quota-defined length, transfer/sale of a contract, etc.
+- **NPC scenario-contracts (user direction — the marquee use of Layer 4).** A contract need not be
+  paper signed at a desk; it can be a **trap that springs**: a clause whose "signing" is a CONDITION
+  being met, and whose payload is a scripted scene + the consents/rules it imposes for the duration.
+  Examples the user wants:
+  - **The Eevee plush, Auria's room** — when the user is the only one at the cabin, the plush wakes,
+    hunts her down, and makes her its bitch. (Condition: alone + at cabin + plush present → scene.)
+  - **The wolf pack** (later) — pack-scene scenario-contract.
+  - **Seraphine** — a contract written to her personality.
+  Each = a self-contained scene module + a contract whose trigger/payload fires it; reuses the
+  scene-pool / gang / conditioning machinery; cleans up on completion or via the §0 floor.
+- **§0 invariant:** no clause, signed or hidden or sprung, can gate the OOC floor. Signing/triggering
+  grants everything EXCEPT the fire-exit. (The facility contract's H29 already states this in-fiction.)
+
+## The TWO escapes (user asked: can the floor be bought from Bethany?) — ruling
+These are different objects. Conflating them is the trap; splitting them gives the user MORE.
+- **OOC safety floor** — `escape(me)` / `force_clear(me)` / `facilityreset|purge`. The REAL-LIFE
+  fire exit for the human at the keyboard. **Never bought, earned, gated, priced, or abusable** —
+  "not abusable" doesn't even apply: it only ever frees the player from a state the player is in,
+  against no one. It stays a free, always-available command. This is the beam; it is *because* it's
+  unlocked that every in-fiction door can be locked and the dread made real. NON-NEGOTIABLE (§0).
+- **In-fiction escape** — a diegetic "release" / "manumission" / contract-buyout: how the CHARACTER
+  gets free *inside the story*. **This one IS gateable** — Bethany can sell it, price it obscenely,
+  dangle, revoke, hide the price, write a clause that voids it. This is the "available but not
+  abusable" texture the user wants, and it's hotter gated than the OOC command could ever be, because
+  it adds in-fiction stakes WITHOUT ever cornering a real person. Build this on top of the floor.
 
 ---
 
