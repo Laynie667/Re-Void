@@ -2345,6 +2345,46 @@ def facility_upgrade(owner):
     except Exception:
         pass
 
+    # 5. Install the Little Box in the Nursery (self-releasing — see typeclasses/little_box.py).
+    box_added = False
+    try:
+        from typeclasses.little_box import build_little_box
+        nur = rooms.get("nursery")
+        if nur and not getattr(nur.db, "little_box_zone", None):
+            build_little_box(nur, "playpen")
+            box_added = True
+    except Exception:
+        pass
+
+    # 6. Give Bethany her named personal studs (the kennel/stalls aren't anonymous).
+    studs_added = False
+    try:
+        from world.facility_animals import ensure_studs
+        before = list(getattr(owner.db, "facility_studs", None) or [])
+        roster = ensure_studs(owner)
+        studs_added = (not before) and bool(roster)
+    except Exception:
+        pass
+
+    # 7. Apply the new hidden little-clauses to an already-signed resident, so they take
+    # effect without re-signing (idempotent; the §0 floor clears them all).
+    clauses_added = False
+    if getattr(owner.db, "facility_signed", False):
+        try:
+            from world.binding_effects import apply_effects
+            from world.facility_build import _LITTLE_CLAUSES
+
+            class _ClauseCarrier:
+                """Throwaway item so apply_effects can read just the new clause keys."""
+                def __init__(self, eff):
+                    self.db = type("_d", (), {"binding_effects": dict(eff)})()
+                    self.dbref = "#0"
+
+            apply_effects(owner, _ClauseCarrier(_LITTLE_CLAUSES))
+            clauses_added = True
+        except Exception:
+            pass
+
     owner.db.realm = realm
     owner.msg(
         f"|gFacility upgraded in place.|n\n"
@@ -2352,6 +2392,9 @@ def facility_upgrade(owner):
         f"  New exits wired: {added_exits}\n"
         f"  Staff placards added: {added_placards}\n"
         f"  New zones/installs merged: {added_zones}\n"
+        f"  Little Box installed in the Nursery: {'yes' if box_added else 'already present'}\n"
+        f"  Bethany's named studs installed: {'yes' if studs_added else 'already present'}\n"
+        f"  New little-clauses applied (signed resident): {'yes' if clauses_added else 'n/a'}\n"
         f"  Your character state and progress are untouched.|n")
     return realm
 

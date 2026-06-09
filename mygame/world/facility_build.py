@@ -113,6 +113,16 @@ _CONTRACT_TRIGGERS = [
      "mantra": "i'm a good bred bitch, i don't decide, i belong to the facility"},
 ]
 
+# The little-clause set (hidden): teat-gag / nurse-first / stuffed-mouth / beg-small /
+# star-chart. Broken out so facility_upgrade can apply them to an already-signed resident.
+_LITTLE_CLAUSES = {
+    "teat_gag":      {"gag_word": "hush little one", "uncork_word": "words back", "fluid": "semen"},
+    "nurse_first":   {"fluid": "semen"},
+    "stuffed_mouth": {"fluid": "semen"},
+    "beg_small":     True,
+    "star_chart":    True,
+}
+
 _CONTRACT_BINDING = {
     "auto_consent":           True,
     "lock_navigation":        True,
@@ -143,14 +153,8 @@ _CONTRACT_BINDING = {
     "milk_quota":             8,
     "compliance_threshold":   5,
     "install_triggers":       _CONTRACT_TRIGGERS,
-    # Little clauses (hidden): the Teat-Gag (a word anyone may speak seats a teat that
-    # silences-and-feeds her) and Nurse-First (no first sentence without nursing a load).
-    "teat_gag":               {"gag_word": "hush little one",
-                               "uncork_word": "words back", "fluid": "semen"},
-    "nurse_first":            {"fluid": "semen"},
-    "stuffed_mouth":          {"fluid": "semen"},
-    "beg_small":              True,
-    "star_chart":             True,
+    # Little clauses (hidden) — see _LITTLE_CLAUSES above.
+    **_LITTLE_CLAUSES,
 }
 
 

@@ -1359,6 +1359,46 @@ class CmdStars(Command):
 ALL_FACILITY_VERBS.append(CmdStars)
 
 
+class CmdFacilityUpgrade(MuxCommand):
+    """
+    Migrate an already-built facility realm in place to the latest systems.
+
+    Usage:
+        facilityupgrade [<target>]
+
+    Adds anything new without a teardown — keeping the resident's state and progress:
+    new rooms/exits/zones/placards, the Little Box in the Nursery, Bethany's named
+    personal studs, and (for a signed resident) the new hidden little-clauses. Idempotent:
+    re-running only fills in what's missing. With no target, upgrades your own realm; with
+    a target (a character in your location), upgrades theirs.
+
+    All of it stays under the §0 floor — facilityreset/force/purge clears everything.
+    """
+
+    key           = "facilityupgrade"
+    aliases       = ["facupgrade", "upgradefacility"]
+    locks         = "cmd:perm(Developer) or perm(Admin)"
+    help_category = "Admin"
+
+    def func(self):
+        caller = self.caller
+        target = caller
+        if self.args.strip():
+            target = caller.search(self.args.strip())
+            if not target:
+                return
+        try:
+            from world.realm_build import facility_upgrade
+        except Exception as e:
+            caller.msg(f"|rCould not load the upgrader: {e}|n")
+            return
+        facility_upgrade(target)
+        if target != caller:
+            caller.msg(f"|gRan the facility upgrade on {target.db.rp_name or target.key}.|n")
+
+ALL_FACILITY_VERBS.append(CmdFacilityUpgrade)
+
+
 class CmdBethany(Command):
     """
     Bethany's hand on the file — move a unit's progress around (owner / staff).

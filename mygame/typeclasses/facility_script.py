@@ -987,6 +987,28 @@ _NUGGET_LITTLE_ANIMAL = [
     "her, fond and final. \"We'll come see the doggies again tomorrow. You'd like that, wouldn't you. "
     "Of course you would. You don't get to like anything else.\"|n",
 ]
+# Named-stud variants — when one of Bethany's personal beasts ({stud}) does the breeding.
+_NUGGET_LITTLE_STUD = [
+    "|MBethany whistles once and {stud} comes — and she beams, hauling her little nugget into "
+    "presentation for him. \"Look who it is, sweetheart. Your favourite.\" {t} can't do anything "
+    "but be lined up and held as the great stud mounts the helpless little trunk of her and drives "
+    "home to the knot, Bethany cooing the whole time. \"There's my good girl. Take your stud. Take "
+    "what mummy picked out special for you.\"|n",
+    "|gIt's {stud} this time — Bethany's own, her best — and she settles the little nugget under "
+    "him herself, fond and unhurried. He knows the smell of her, mounts without being told, and "
+    "ties off deep in the propped-open little thing. |M\"Good boy. Good girl. That's a fine "
+    "match, that's my line going right back into my favourite toy.\"|g {t} can only rock on the "
+    "rings and take it.|n",
+    "|MBethany breeds her little nugget to {stud} like she's arranging a marriage she's terribly "
+    "pleased with. \"He's going to put such a good litter in you. He always does.\" She holds {t}'s "
+    "head and murmurs nursery-soft through the knot and the snarl, the whole helpless little length "
+    "of her shifted and re-seated for the stud whenever he wants a better angle. \"Mine breeding "
+    "mine. There's nothing tidier.\"|n",
+    "|gWhen {stud} is finished and tied, Bethany leaves the little nugget knotted to her prize stud "
+    "and crouches to watch, chin in hands, delighted. |M\"Stay stuck a while, baby. Let it take. "
+    "That's {stud_name}'s, that's mine, that's a whole new little one started in you and you didn't "
+    "have to do a single clever thing — just be little, and be held, and be bred. Aren't you lucky.\"|g|n",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -4342,6 +4364,17 @@ class FacilityScript(DefaultScript):
         zone = random.choice(self._holes_only(target) or orifices)
         self._breed_one(room, target, zone, "hound", cond, gape_mult=1.8)
         room.msg_contents("|r" + random.choice(_KNOTTRAIN_BEATS).format(t=t) + "|n")
+        # Sometimes it's one of Bethany's named studs heading the line — immersion + lineage.
+        try:
+            from world.facility_animals import pick_stud
+            stud = pick_stud(target, "hound")
+            if stud and random.random() < 0.5:
+                room.msg_contents(
+                    f"|g{stud['name']} takes his turn at the head of the line — {stud['desc']} — "
+                    f"and ties off in {t} with the unbothered ease of a stud who's done this to "
+                    f"her a hundred times and will a hundred more.|n")
+        except Exception:
+            pass
 
     def _scene_fist(self, room, target, t, cond, orifices):
         try:
@@ -4884,9 +4917,20 @@ class RealmCycleScript(FacilityScript):
         (gang_inseminate, animal species) wrapped in her nursery-keeper baby-talk, with the
         regression deepening for being used this helpless and praised for it. A star where
         the chart's on. The §0 floor still frees her instantly, limbless or not."""
-        room.msg_contents(random.choice(_NUGGET_LITTLE_ANIMAL).format(t=t))
         # Real animal breeding into her propped-open holes — mostly hounds (the kennel).
         species = random.choice(["hound", "hound", "hound", "boar", "stallion"])
+        # If one of Bethany's named personal studs of this species is on the roster, it's him.
+        stud = None
+        try:
+            from world.facility_animals import pick_stud, stud_line
+            stud = pick_stud(char, species)
+        except Exception:
+            stud = None
+        if stud:
+            line = random.choice(_NUGGET_LITTLE_STUD)
+            room.msg_contents(line.format(t=t, stud=stud_line(stud), stud_name=stud["name"]))
+        else:
+            room.msg_contents(random.choice(_NUGGET_LITTLE_ANIMAL).format(t=t))
         try:
             from world.gang_breeding import animal_holes, gang_inseminate, maybe_lineage_offspring
             holes = [z for z in animal_holes(char).values() if z]

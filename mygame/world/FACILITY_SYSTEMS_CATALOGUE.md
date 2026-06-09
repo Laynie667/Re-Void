@@ -13,7 +13,9 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 ## 1. Realm & world  (`world/realm_build.py`)
 - **Purpose:** dig the disconnected grid realm, furnish it, gate entry/return, tear it down.
 - **fn:** `build_realm` (full dig), `facility_upgrade` (in-place idempotent migration — adds
-  missing rooms/exits/placards/album/office-anatomy), `teardown_realm`, `escape` (OOC floor:
+  missing rooms/exits/placards/album/office-anatomy + the **Little Box** in the Nursery +
+  **Bethany's named studs** + the new **little-clauses** on a signed resident; in-game command
+  `facilityupgrade [<target>]`, perm Developer/Admin), `teardown_realm`, `escape` (OOC floor:
   home+purge), `force_clear` (bulletproof per-attr reset), `reveal_return` (gate the way home),
   `_furnish` (zones/tokens/mechanics/furniture/NPCs/placard), `_install_mechanic`.
 - **st:** `db.realm` (rooms/words/return_wp), area tags, `_REALM_TAG`.
@@ -338,6 +340,10 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   + `bethany_deposit_effect` laced devotion), `_spawn`/`_mark_owned`. Office Bethany is a
   static NPC; visit Bethany is spawned/despawned. ⚠ possible to have 2–3 Bethanys in one room
   momentarily (see AUDIT).
+- **Named studs** (`world/facility_animals.py`): Bethany's personal beasts — `DEFAULT_STUDS`
+  (Caesar/Duke hounds, Brutus bull, Goliath boar, Sultan stallion), `ensure_studs`/`pick_stud`/
+  `add_stud`/`stud_line`. Stored on `char.db.facility_studs` (FACILITY_FLAGS). Woven into
+  `_nugget_little_animals` (named-stud pool `_NUGGET_LITTLE_STUD`) and `_scene_knottrain`.
 - **Little-nugget animal beat** (`RealmCycleScript._nugget_beat` → `_nugget_little_animals`):
   when the kept nugget is also in little headspace (`headspace` little/small or `regression ≥ 50`),
   ~50% of use-beats run it — Bethany plays nursery-keeper while the kennel breeds the helpless
