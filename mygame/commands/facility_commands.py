@@ -333,6 +333,28 @@ class CmdBeg(_FacilityVerb):
         if not self._ok():
             return
         c = self.caller; room = c.location; t = c.db.rp_name or c.name
+        # Beg-Small clause: nothing is hers by default; she begs small for relief, and the
+        # begging itself is the permission. (Star-Chart relief is bought with stars instead —
+        # see the `stars` command — so begging there only earns the using, not the release.)
+        if getattr(c.db, "beg_small", False):
+            room.msg_contents(
+                f"|y{t} begs small and filthy for it — voice gone little and wet, |i'pwease, "
+                f"pwease let me come, m'been so good, pwease'|n — hips bucking at nothing, "
+                f"past dignity, past anything but the asking.|n")
+            self._comply(reward=False)
+            try:
+                from world.compliance import _grant_climax
+                _grant_climax(c)
+            except Exception:
+                self._arouse(10)
+            try:
+                from world.regression import regress
+                regress(c, 3.0, source="beg_small")
+            except Exception:
+                pass
+            c.msg("|xYou had to ask for it in your littlest voice, out loud, in front of "
+                  "everyone. They only let you come once you've begged small enough to mean it.|n")
+            return
         room.msg_contents(
             f"|y{t} begs — voice climbing, hips working against nothing — to be filled, to "
             f"be bred, to be used, please, anything.|n")
@@ -1286,6 +1308,55 @@ class CmdHeadspace(Command):
         caller.msg("\n".join(regression_status(caller)))
 
 ALL_FACILITY_VERBS.append(CmdHeadspace)
+
+
+class CmdStars(Command):
+    """
+    Your gold-star chart — earned the only way that counts, and spent on relief.
+
+    Usage:
+        stars          — your chart: stars saved, and what relief costs
+        stars spend    — spend stars to be allowed to come (if you've earned enough)
+
+    While the Star-Chart clause is on you, you're denied by default. Stars are earned by
+    swallowing, getting bred, taking the knot, making your milk — and only stars buy you off.
+    """
+    key           = "stars"
+    aliases       = ["chart", "starchart"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.star_chart import star_status, stars_balance, spend_stars, RELIEF_COST
+        except Exception:
+            caller.msg("|xNo chart on you.|n")
+            return
+        if not getattr(caller.db, "star_chart_on", False):
+            caller.msg("|xThere's no star chart on you right now.|n")
+            return
+        if "spend" in (self.args or "").lower():
+            if stars_balance(caller) < RELIEF_COST:
+                caller.msg(f"|rNot enough stars yet — you need {RELIEF_COST}. Earn them, good girl.|n")
+                return
+            spend_stars(caller, RELIEF_COST, "relief")
+            room = caller.location
+            t = caller.db.rp_name or caller.name
+            if room:
+                room.msg_contents(f"|W{t} cashes in {RELIEF_COST} hard-earned gold stars — and is "
+                                  f"finally, gratefully, allowed to come.|n")
+            try:
+                from world.compliance import _grant_climax
+                _grant_climax(caller)
+            except Exception:
+                pass
+            caller.msg("|xYou spent your stars to be allowed what used to be yours for free. "
+                       "That's the trade. You'll earn them all over again, gladly.|n")
+            return
+        caller.msg("\n".join(star_status(caller)))
+
+ALL_FACILITY_VERBS.append(CmdStars)
 
 
 class CmdBethany(Command):

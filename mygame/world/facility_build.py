@@ -91,6 +91,9 @@ _CONTRACT_HIDDEN = [
     "H28. A Resident graded Perfected is retired to Deep Stock — sealed, plumbed, and maintained on the lines indefinitely, milked and bred by machine without being woken. This is the term's completion, not its end; there is no clause providing for an end. |x— [Deep Stock: the sealed, kept terminus]|n",
     "H30. On a word — which any party present may speak over her — the Resident's mouth is gagged with a teat she will suckle helplessly until released, unable to form speech and fed a laced load with every pull, each mouthful taking her smaller. The word, and the word that frees her, are not the Resident's to speak. |x— [Teat-Gag: any speaker seats a silencing teat that feeds-and-regresses her; self-frees on a timer; §0 floor clears it]|n",
     "H31. The Resident may not address any party with a first sentence until she has knelt and nursed a load to completion; speech is permitted only in the brief window after she has swallowed, and must be re-earned by nursing again thereafter. |x— [Nurse-First: no words without nursing a laced load first — deposit + regression each time]|n",
+    "H32. The Resident's mouth, being trained to the function of a hole, is no longer warranted to produce speech: her words are reduced to a few cock-muffled fragments, and may be interrupted at any time by the mouth being found full. |x— [Stuffed-Mouth: speech cut to muffled fragments; mouth found-full mid-sentence feeds + regresses her]|n",
+    "H33. The Resident is granted no release as of right. Climax is denied by default and permitted only when the Resident has begged for it aloud, in the smallest and most degrading terms the facility finds satisfactory. |x— [Beg-Small: orgasm denied; the `beg` verb, begged small, grants one release + regression]|n",
+    "H34. Relief is a purchased privilege. The Resident earns credit — recorded as gold stars on her chart — only by the performance of the facility's uses (swallowing, breeding, taking the knot, meeting milk), and may exchange that credit for permission to climax at the facility's posted rate. |x— [Breeding Star-Chart: stars earned by the work via award_star; `stars spend` buys a granted release]|n",
     "H29. No clause herein limits the facility's superuser staff from releasing the Resident entirely, at any time, by their sole word — the one door that is never locked. (The Resident is not told this clause is the only true one.) |x— [the OOC floor: escape/force_clear/purge always free her — sacred, never gated]|n",
 ]
 
@@ -145,6 +148,9 @@ _CONTRACT_BINDING = {
     "teat_gag":               {"gag_word": "hush little one",
                                "uncork_word": "words back", "fluid": "semen"},
     "nurse_first":            {"fluid": "semen"},
+    "stuffed_mouth":          {"fluid": "semen"},
+    "beg_small":              True,
+    "star_chart":             True,
 }
 
 

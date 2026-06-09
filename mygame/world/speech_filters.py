@@ -61,6 +61,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "baby_talk":          _filter_baby_talk,
         "little_talk":        _filter_little_talk,
         "suckling":           _filter_suckling,
+        "stuffed":            _filter_stuffed,
         "stutter":            _filter_stutter,
         "third_person_coy":   _filter_third_person_coy,
         "animal_sounds":      _filter_animal_sounds,
@@ -294,6 +295,37 @@ def _filter_suckling(char, text: str) -> str:
     except Exception:
         pass
     return random.choice(_SUCKLE_NOISES)
+
+
+_STUFFED_FILLERS = [
+    " *around it*", " —mmf—", " *muffled*", " *drooling*", " *cock-stuffed*",
+    " *thick and wet*",
+]
+_STUFFED_FULL = [
+    "*gh-glk—* (mouth too full to talk)", "*muffled, throat working around it*",
+    "*tries to speak; only manages a wet, stuffed gurgle*", "*mmmf—* (something's in the way)",
+]
+
+def _filter_stuffed(char, text: str) -> str:
+    """The Stuffed-Mouth clause: a mouth trained to be a hole forgets sentences. Speech is
+    cut to a few cock-muffled words — and now and then her mouth is simply found full
+    mid-sentence (a wet gurgle + a swallowed-and-shrunk drip). Stacks with little_talk."""
+    # ~40% chance her mouth is full right now — only a stuffed gurgle comes out, and she
+    # swallows for it (a small laced drip + a touch littler).
+    if random.random() < 0.40:
+        try:
+            from world.binding_effects import _nurse_feed
+            _nurse_feed(char, getattr(char.db, "stuffed_fluid", "semen") or "semen", source="stuffed_mouth")
+        except Exception:
+            pass
+        return random.choice(_STUFFED_FULL)
+    # Otherwise: a few muffled words around whatever's seated, with a wet filler.
+    words = text.split()
+    keep = words[:random.randint(2, 3)]
+    out = " ".join(keep)
+    if random.random() < 0.6:
+        out += random.choice(_STUFFED_FILLERS)
+    return out or "*mmf*"
 
 
 def _filter_stutter(char, text: str) -> str:

@@ -42,8 +42,9 @@ FACILITY_FLAGS = {
     "headspace": None,
     # little box (self-releasing — see typeclasses/little_box.py)
     "in_box": None, "box_entered_at": 0, "box_release_at": 0,
-    # little clauses: teat-gag + nurse-first (world/binding_effects.py)
-    "teat_gag_fluid": None, "nurse_first_fluid": None,
+    # little clauses: teat-gag + nurse-first + stuffed-mouth + star-chart
+    "teat_gag_fluid": None, "nurse_first_fluid": None, "stuffed_fluid": None,
+    "star_chart": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,
@@ -77,6 +78,7 @@ FACILITY_FLAGS = {
     "curse_line_remembers": False, "curse_never_empty": False,
     "curse_tally": False, "curse_echo": False, "curse_hollow": False,
     "box_lid_locked": False, "teat_gagged": False, "nurse_first": False,
+    "stuffed_mouth": False, "beg_small": False, "star_chart_on": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "", "breeding_line": "",

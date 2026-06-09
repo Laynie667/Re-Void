@@ -267,9 +267,19 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   - **nurse_first** `{fluid}` — `check_say_allowed` gate: a first sentence is blocked until
     `_do_nurse_first` (kneel-and-nurse a load: deposit + regression), which opens a 90s
     speaking window; must re-nurse after. Floor clears it.
-  - Shared helper `_nurse_feed(char, fluid, source)`. New `suckling` filter in speech_filters.
-  - Flags (`teat_gagged`/`teat_gag_until`/`teat_gag_fluid`/`nurse_first`/`nursed_until`/
-    `nurse_first_fluid`) all in FACILITY_FLAGS.
+  - **stuffed_mouth** `{fluid}` — adds the `stuffed` speech filter: speech cut to a few
+    cock-muffled fragments, ~40% chance the mouth is "found full" (a wet gurgle + `_nurse_feed`).
+  - **beg_small** — sets `orgasm_denial`; the `beg` verb (begged small) grants one `_grant_climax`
+    + a regression drip. Nothing is hers by default; she begs little for relief.
+  - **star_chart** — sets `orgasm_denial` + `star_chart_on`; relief is bought with stars
+    (`world/star_chart.py`: `award_star`/`spend_stars`/`star_status`, gated on `star_chart_on`).
+    `award_star` hooked into Bethany's climax (seat=3/throat=1), the rocking-horse breeding
+    deposit + knot-lock. `stars` command (`commands/facility_commands.py`) views + spends
+    (RELIEF_COST=4 → a granted climax).
+  - Shared helper `_nurse_feed(char, fluid, source)`. New `suckling`/`stuffed` filters in
+    speech_filters. Flags (`teat_gagged`/`teat_gag_until`/`teat_gag_fluid`/`nurse_first`/
+    `nursed_until`/`nurse_first_fluid`/`stuffed_mouth`/`stuffed_fluid`/`beg_small`/
+    `star_chart_on`/`star_chart`) all in FACILITY_FLAGS.
 
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/

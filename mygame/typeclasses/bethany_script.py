@@ -617,6 +617,12 @@ class BethanyScript(DefaultScript):
             bethany_deposit_effect(char, devotion=dev)
         except Exception:
             pass
+        # Star-Chart clause: a gold star for the work (3 for a full seat, 1 for the throat).
+        try:
+            from world.star_chart import award_star
+            award_star(char, "allholes" if seat else "swallow", room=room)
+        except Exception:
+            pass
         # The cock is CONSUMING — its finish overwrites a piece of her for good:
         # a hard slug of conditioning, a Bethany-keyed trigger seated, a craving to be
         # filled, and a dependence on the next time she comes.

@@ -413,6 +413,11 @@ class RockingHorseScript(FurnitureSessionScript):
                    .replace("{volume}", format_volume(total))
                    .replace("{zone}", zone_disp)
             )
+            try:
+                from world.star_chart import award_star
+                award_star(char, "allholes" if kind == "both" else "bred", room=room)
+            except Exception:
+                pass
         except Exception:
             pass
 
@@ -476,6 +481,11 @@ class RockingHorseScript(FurnitureSessionScript):
             char.db.horse_knotted         = True
             char.db.horse_knot_expires_at = time.time() + _KNOT_LOCK_SECONDS
             say("knot_engage", "The knot swells past pulling-out and locks {rider} onto the seat.")
+            try:
+                from world.star_chart import award_star
+                award_star(char, "knot", room=room)
+            except Exception:
+                pass
 
     def at_stop(self):
         """Release all knots and inflation when session stops."""

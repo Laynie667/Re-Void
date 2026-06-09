@@ -366,6 +366,26 @@ def apply_effects(character, item):
         character.db.nurse_first_fluid = (
             cfg.get("fluid") if isinstance(cfg, dict) else None) or "semen"
 
+    # Stuffed-Mouth clause: a mouth trained to be a hole forgets sentences.
+    if effects.get("stuffed_mouth"):
+        cfg = effects["stuffed_mouth"]
+        character.db.stuffed_mouth = True
+        character.db.stuffed_fluid = (cfg.get("fluid") if isinstance(cfg, dict) else None) or "semen"
+        active = list(getattr(character.db, "active_speech_filters", None) or [])
+        if "stuffed" not in active:
+            active.append("stuffed")
+            character.db.active_speech_filters = active
+
+    # Beg-Small clause: nothing is hers by default — she begs small for relief.
+    if effects.get("beg_small"):
+        character.db.beg_small      = True
+        character.db.orgasm_denial  = True
+
+    # Breeding Star-Chart clause: relief is denied; only stars (earned by the work) buy it.
+    if effects.get("star_chart"):
+        character.db.star_chart_on  = True
+        character.db.orgasm_denial  = True
+
 
 def remove_effects(character, item):
     """
@@ -500,6 +520,21 @@ def remove_effects(character, item):
         character.db.nurse_first       = False
         character.db.nursed_until      = 0
         character.db.nurse_first_fluid = None
+
+    # Stuffed-Mouth — strip the filter.
+    if effects.get("stuffed_mouth"):
+        character.db.stuffed_mouth = False
+        character.db.stuffed_fluid = None
+        active = [f for f in (getattr(character.db, "active_speech_filters", None) or [])
+                  if f != "stuffed"]
+        character.db.active_speech_filters = active
+
+    # Beg-Small / Star-Chart — clear the gate flags (leave orgasm_denial to other items'
+    # ownership; force_clear zeroes it regardless).
+    if effects.get("beg_small"):
+        character.db.beg_small = False
+    if effects.get("star_chart"):
+        character.db.star_chart_on = False
 
 
 # ---------------------------------------------------------------------------
