@@ -125,17 +125,36 @@ The thesis of her character: not ownership on paper but *"I'm taking you home."*
       with **Bethany** for choice **Deep Stock** product — gives her a logistics
       reason to exist (she's a *buyer*) and ties post-office ↔ facility.
 
-### NEW SUBSYSTEM — "vessel" containment (unbirthing)
-- [ ] A captive can be **carried inside** a holder (womb / balls): teleport the
-      captive into a vessel-room owned by the holder; captive sees room events
-      from inside, muffled (`|x` internal); observers get a `look` status line
-      ("her belly shifts — someone's *in* there").
-- [ ] **Deposit / transfer** a captive between vessels (Seraphine → Bethany /
-      Wren / Sable). Witness the holder being fucked from inside.
-- [ ] **§0 FLOOR (non-negotiable):** every vessel answers to `escape(me)` /
-      `force_clear` — instant teleport out, void any unsigned contract, restore
-      prior location. No phrase, no gestation timer, no convincing anyone. The
-      womb may be a cell with no inside handle *only because* the fire-exit is real.
+### EXPAND existing `WombRoom` — captive carry (unbirthing) [NOT a new subsystem]
+`typeclasses/womb_room.py` + `womb_commands.py` ALREADY provide the vessel: an interior
+room on an orifice/`both` zone, `enter <host> [zone]`, fluid + flood states, shaft-visible
+messages, host `pulse` inward. Seraphine's "carry a captive" is an EXPANSION, four deltas:
+- [ ] **Held/captive mode** — resident can't self-`leave`; exit gated on host-release or a
+      signed contract (same lock as the eevee plush). The one genuinely new piece.
+- [ ] **Host-visible status** — a line on the HOST's `look` ("her belly shifts — someone's
+      *in* there"); WombRoom currently renders interior/flood only from inside.
+- [ ] **§0 CHECK (blocking):** WombRoom sets `jump_protected=True` — VERIFY `escape`/
+      `force_clear` overrides it and yanks a held captive out before shipping captive mode.
+- [ ] **Deposit / transfer** a captive between hosts (Seraphine -> Bethany / Wren /
+      Sable). Helper over install/uninstall. Witness the holder fucked from inside.
+
+### NEW room type — combination-lock / "Lost Woods" maze room
+A `MazeRoom` typeclass; directional exits all LOOP back to the same room, but each
+traverse advances a per-character sequence and checks it against solution(s):
+- [ ] Per-char `ndb.maze_seq` (non-persistent -> resets clean, floor-irrelevant).
+- [ ] One+ solutions: e.g. `[N,N,E,W]` -> deeper; a different combo -> back to the
+      preceding room (hub / realm).
+- [ ] Wrong/partial move fires a random **decoy** desc from a pool so it FEELS like you
+      moved & got lost. Tone knob: wrong move resets seq (punishing) vs no-advance (forgiving).
+- [ ] Skins: **forest** (hub / cabin realm, literal Lost Woods) AND facility **"hallway
+      after intake"** (the institution disorienting you on purpose - on-voice).
+- [ ] **Hints = economy:** Vesper sells a `map` item revealing the combo / pointing to a
+      linked "cool spot" (random rooms keyed to the solution). Ties NPCs to traversal.
+
+### Realm flesh-out (broader backlog)
+- [ ] Update / improve the Facility (ongoing per FACILITY_SYSTEMS_CATALOGUE backlog).
+- [ ] Flesh out the **hub realm**.
+- [ ] Flesh out the realm the **cabin** belongs in.
 
 ### Scenario-trap — the futa-eevee plush (trigger-fires-contract)
 - [ ] Player crawls into the plush's orifice (a container room); the only exit is
