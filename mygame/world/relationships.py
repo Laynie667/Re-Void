@@ -260,6 +260,31 @@ def clear_relation(a, b):
     br = _rels(b); br.pop(_id(a), None); b.db.relationships = br
 
 
+def set_owner(owner, target, forced=True):
+    """Mark `owner` as an owner of `target` (an explicit owner-tier link). Supports
+    multi-owner — several characters may each hold this over one target. Stored on the
+    owner's side; `_is_owner_of` reads it. `forced` lets the floor/contract revert it."""
+    vr = _rels(owner)
+    e = dict(vr.get(_id(target), {}))
+    e["owner"] = True
+    e["set_by"] = _id(owner)
+    e["forced"] = bool(forced) or bool(e.get("forced"))
+    vr[_id(target)] = e
+    owner.db.relationships = vr
+
+
+def drop_owner(owner, target):
+    """Remove an owner link owner→target (used by the contract/floor revert)."""
+    vr = _rels(owner)
+    e = dict(vr.get(_id(target), {}))
+    if e.pop("owner", None) is not None:
+        if e:
+            vr[_id(target)] = e
+        else:
+            vr.pop(_id(target), None)
+        owner.db.relationships = vr
+
+
 def clear_forced(char):
     """OOC-floor hook: drop every FORCED tie on char (and its reciprocal on the
     other party). Leaves mutual player-set ties intact. Returns count removed."""

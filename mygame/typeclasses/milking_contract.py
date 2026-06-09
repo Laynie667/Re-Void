@@ -69,6 +69,13 @@ class MilkingContract(WrittenItem):
         # you find out what you agreed to only once it's already binding.
         self.db.reveal_on_sign       = False
 
+        # Player-drafted contracts must be OFFICIATED at the post office before they
+        # bind (facility-spawned contracts leave requires_officiation False).
+        self.db.requires_officiation = False
+        self.db.officiated           = False
+        self.db.officiant            = None
+        self.db.co_author_ids        = []   # additional owners (multi-owner co-sign)
+
         self.db.player_desc  = ""
         self.db.desc_locked  = False
 
@@ -206,6 +213,11 @@ class MilkingContract(WrittenItem):
         if self.db.signed and getattr(signee.db, "facility_signed", False):
             return False, "This contract has already been signed."
 
+        # Player-drafted contracts must be officiated at the post office first.
+        if getattr(self.db, "requires_officiation", False) and not getattr(self.db, "officiated", False):
+            return False, ("This contract isn't binding until it's officiated at the post "
+                           "office. (contract officiate <contract>)")
+
         self.db.signee_id  = signee.id
         self.db.signed_at  = time.time()
 
@@ -250,10 +262,22 @@ class MilkingContract(WrittenItem):
                 from evennia import search_object
                 res = search_object(f"#{self.db.author_id}")
                 author = res[0] if res else None
-            for c in list(self.db.clauses or []) + list(self.db.addendums or []):
+            all_clauses = list(self.db.clauses or []) + list(self.db.addendums or [])
+            for c in all_clauses:
                 eff = c.get("effect")
                 if eff:
                     apply_clause_effect(signee, author, eff)
+            # Ownership (incl. multi-owner): if any clause grants it, make the author
+            # AND every co-author an owner of the signee.
+            if any((c.get("effect") or {}).get("kind") == "own" for c in all_clauses):
+                from world.contract_clauses import apply_ownership
+                from evennia import search_object
+                owners = [author] if author else []
+                for cid in (self.db.co_author_ids or []):
+                    res = search_object(f"#{cid}")
+                    if res:
+                        owners.append(res[0])
+                apply_ownership(signee, owners)
         except Exception:
             import traceback
             traceback.print_exc()
@@ -288,6 +312,11 @@ class CmdContract(MuxCommand):
     Interact with a milking contract.
 
     Usage:
+      contract clauses                          — list draftable clause templates
+      contract draft <who> = <clause names>     — draft a contract for someone
+      contract officiate <contract> [= clerk]   — officiate at the post office
+                                                  (clerk: calix / vesper / seraphine)
+      contract cosign <contract>                — add yourself as a co-owner (multi-owner)
       contract read <contract>                  — read visible clauses
       contract read/all <contract>              — read all clauses (author only)
       contract sign <contract>                  — sign and activate effects
@@ -296,12 +325,18 @@ class CmdContract(MuxCommand):
       contract reveal <contract> [clause_id]    — reveal a hidden clause
       contract reveal/all <contract>            — reveal all hidden clauses
       contract status <contract>                — show signing status
+
+    Player-drafted contracts must be OFFICIATED at the post office before they
+    bind. Who's on the desk shapes the deal: Calix notarises clean for a fee;
+    Vesper adds an ambiguous rider, free; Seraphine officiates free but writes in
+    a hidden clause of her own. The OOC floor undoes everything a contract does.
     """
 
     key     = "contract"
     locks   = "cmd:all()"
     help_category = "Items"
-    switch_options = ("read", "sign", "addend", "reveal", "status", "all", "hidden")
+    switch_options = ("read", "sign", "addend", "reveal", "status", "all", "hidden",
+                      "draft", "clauses", "officiate", "cosign")
 
     def func(self):
         caller   = self.caller
@@ -310,7 +345,8 @@ class CmdContract(MuxCommand):
 
         # Accept the action as a leading word too, so both 'contract/read X' and
         # 'contract read X' work. (The docstring promises the second form.)
-        _actions = ("read", "sign", "addend", "reveal", "status")
+        _actions = ("read", "sign", "addend", "reveal", "status",
+                    "draft", "clauses", "officiate", "cosign")
         parts = args.split(None, 1)
         if parts and parts[0].lower() in _actions and parts[0].lower() not in switches:
             switches.append(parts[0].lower())
@@ -321,7 +357,15 @@ class CmdContract(MuxCommand):
                 switches.append(sub[0].lower())
                 args = sub[1].strip() if len(sub) > 1 else ""
 
-        if "read" in switches:
+        if "clauses" in switches:
+            self._do_clauses(caller)
+        elif "draft" in switches:
+            self._do_draft(caller, args)
+        elif "officiate" in switches:
+            self._do_officiate(caller, args)
+        elif "cosign" in switches:
+            self._do_cosign(caller, args)
+        elif "read" in switches:
             self._do_read(caller, args, include_hidden="all" in switches)
         elif "sign" in switches:
             self._do_sign(caller, args)
@@ -333,8 +377,80 @@ class CmdContract(MuxCommand):
             self._do_status(caller, args)
         else:
             caller.msg(
-                "|xUsage: contract read/sign/addend/reveal/status <contract>|n"
+                "|xUsage: contract draft <who> = <clauses> · contract clauses · "
+                "contract officiate <contract> [= calix|vesper|seraphine] · "
+                "contract read/sign/cosign/status <contract>|n"
             )
+
+    def _do_clauses(self, caller):
+        from world.contract_clauses import TEMPLATES
+        lines = ["|wAvailable contract clauses|n  |x(contract draft <who> = name1 name2 ...)|n"]
+        for name in sorted(TEMPLATES):
+            lines.append(f"  |w{name}|n — {TEMPLATES[name]['text']}")
+        caller.msg("\n".join(lines))
+
+    def _do_draft(self, caller, args):
+        if "=" not in args:
+            caller.msg("|xUsage: contract draft <who> = <clause1> <clause2> ...  "
+                       "(see |wcontract clauses|x)|n")
+            return
+        who, _, clause_str = args.partition("=")
+        target = caller.search(who.strip(), global_search=True)
+        if not target:
+            return
+        from world.contract_clauses import TEMPLATES
+        names = [n.strip().lower() for n in clause_str.split() if n.strip()]
+        good = [n for n in names if n in TEMPLATES]
+        bad  = [n for n in names if n not in TEMPLATES]
+        if not good:
+            caller.msg(f"|xNo valid clauses. Unknown: {', '.join(bad) or '(none given)'}. "
+                       f"See |wcontract clauses|x.|n")
+            return
+        from evennia import create_object
+        from typeclasses.milking_contract import MilkingContract
+        contract = create_object(MilkingContract, key="contract", location=caller.location or caller)
+        contract.db.author_id           = caller.id
+        contract.db.signee_id           = target.id
+        contract.db.requires_officiation = True
+        for n in good:
+            contract.add_template_clause(n)
+        tn = target.db.rp_name or target.key
+        warn = f"  |x(ignored unknown: {', '.join(bad)})|n" if bad else ""
+        caller.msg(f"|wYou draft a contract for {tn} with: {', '.join(good)}.|n{warn}\n"
+                   f"|xIt isn't binding until officiated at the post office "
+                   f"(|wcontract officiate contract|x), then signed.|n")
+
+    def _do_officiate(self, caller, args):
+        name = args
+        who  = None
+        if "=" in args:
+            name, _, who = args.partition("=")
+            who = who.strip().lower() or None
+        contract = self._find_contract(caller, name.strip())
+        if not contract:
+            return
+        # Seraphine's deal: offer the free-but-hidden-clause route explicitly.
+        allow_sera = who == "seraphine"
+        from world.post_office import officiate
+        ok, msg = officiate(contract, caller, who=who, allow_seraphine=allow_sera)
+        caller.msg(("|g" if ok else "|x") + msg + "|n")
+
+    def _do_cosign(self, caller, args):
+        """A second (or third) owner adds themselves to a drafted contract before it's
+        signed — multi-owner. They opt in by cosigning."""
+        contract = self._find_contract(caller, args)
+        if not contract:
+            return
+        if contract.db.signed:
+            caller.msg("|xThat contract is already signed — too late to co-sign.|n")
+            return
+        co = list(contract.db.co_author_ids or [])
+        if caller.id == contract.db.author_id or caller.id in co:
+            caller.msg("|xYou're already a holder on this contract.|n")
+            return
+        co.append(caller.id)
+        contract.db.co_author_ids = co
+        caller.msg("|wYou co-sign as a holder. When it's signed, you'll share ownership.|n")
 
     def _find_contract(self, caller, name):
         from typeclasses.milking_contract import MilkingContract

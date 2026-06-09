@@ -70,14 +70,20 @@ def apply_clause_effect(signee, author, effect):
 
         if kind == "relation":
             from world import relationships as rel
-            # Signing IS the consent, so we apply the forced tie directly (no owner gate).
-            rel._apply(author, signee, role=effect["role"], forced=True)
-            return True, f"relation {effect['role']}"
+            # Signing IS the consent, so we apply the tie directly (no owner gate).
+            rel._apply(author, signee, role=effect.get("role"),
+                       lover=bool(effect.get("lover")), forced=True)
+            return True, f"relation {effect.get('role') or ('lover' if effect.get('lover') else '?')}"
 
         if kind == "flag":
             setattr(signee.db, effect["flag"], effect.get("value", True))
             _record(signee, {"kind": "flag", "flag": effect["flag"]})
             return True, f"flag {effect['flag']}"
+
+        if kind == "own":
+            # Ownership is applied for the author (and co-authors) by the contract's
+            # sign() via apply_ownership; nothing per-clause here.
+            return True, "ownership (applied at sign)"
 
         if kind == "binding":
             # binding payloads are merged into the contract at build time (see
@@ -95,10 +101,23 @@ def merge_binding(contract, payload):
     contract.db.binding_effects = cur
 
 
+def apply_ownership(signee, owners):
+    """Make each of `owners` an owner of the signee (multi-owner safe). Records each
+    so the §0 floor can drop it precisely. `owners` is a list of character objects."""
+    from world.relationships import set_owner
+    for o in owners:
+        if not o:
+            continue
+        set_owner(o, signee, forced=True)
+        _record(signee, {"kind": "own", "owner": getattr(o, "id", None)})
+
+
 def revert_all(signee):
-    """OOC-floor hook: undo every consent GRANT a contract wrote on the signee (rules,
-    forced relations, flags and binding effects are cleared by the other reset paths).
-    Returns count reverted."""
+    """OOC-floor hook: undo every consent GRANT and OWNER link a contract wrote on the
+    signee (rules, forced family relations, flags and binding effects are cleared by the
+    other reset paths). Returns count reverted."""
+    from evennia import search_object
+    from world.relationships import drop_owner
     effects = list(getattr(signee.db, "contract_effects", None) or [])
     n = 0
     ov = dict(getattr(signee.db, "consent_overrides", None) or {})
@@ -107,6 +126,14 @@ def revert_all(signee):
             try:
                 ov.get("allow", {}).get(e["feature"], set()).discard(e["key"])
                 n += 1
+            except Exception:
+                pass
+        elif e.get("kind") == "own":
+            try:
+                res = search_object(f"#{e['owner']}")
+                if res:
+                    drop_owner(res[0], signee)
+                    n += 1
             except Exception:
                 pass
     signee.db.consent_overrides = ov
@@ -119,15 +146,22 @@ def revert_all(signee):
 # Seeded with a few obviously-fine primitives as worked examples; the full catalogue
 # (soft → extreme) gets added here entry-by-entry as the user approves each.
 TEMPLATES = {
+    # ── player ↔ player: light D/s & service ──────────────────────────────────
     "obedience": {
         "hidden": False,
         "text": "The signee agrees to obey the holder in all reasonable instruction.",
         "effect": {"kind": "grant", "feature": "lead_follow", "who": "author"},
     },
-    "open_to_touch": {
+    "honorific": {
         "hidden": False,
-        "text": "The signee consents to intimate contact from the holder.",
-        "effect": {"kind": "grant", "feature": "intimate", "who": "author"},
+        "text": "The signee will address the holder by their proper honorific.",
+        "effect": {"kind": "rule", "name": "honorific", "consequence": "notify",
+                   "params": {"honorific": "Mistress"}},
+    },
+    "kneel_on_enter": {
+        "hidden": False,
+        "text": "The signee will present and kneel whenever the holder is present.",
+        "effect": {"kind": "rule", "name": "kneel_on_enter", "consequence": "notify"},
     },
     "kept_close": {
         "hidden": False,
@@ -135,8 +169,72 @@ TEMPLATES = {
         "effect": {"kind": "rule", "name": "no_leave", "consequence": "block",
                    "condition": {"type": "owner_present"}},
     },
+    # ── intimacy & use grants ─────────────────────────────────────────────────
+    "open_to_touch": {
+        "hidden": False,
+        "text": "The signee consents to intimate contact from the holder.",
+        "effect": {"kind": "grant", "feature": "intimate", "who": "author"},
+    },
+    "open_to_mature": {
+        "hidden": False,
+        "text": "The signee consents to mature contact from the holder.",
+        "effect": {"kind": "grant", "feature": "mature", "who": "author"},
+    },
+    "open_to_bdsm": {
+        "hidden": False,
+        "text": "The signee submits to the holder's BDSM use.",
+        "effect": {"kind": "grant", "feature": "bdsm", "who": "author"},
+    },
+    "open_to_restraint": {
+        "hidden": False,
+        "text": "The signee consents to be restrained by the holder.",
+        "effect": {"kind": "grant", "feature": "restraint", "who": "author"},
+    },
+    "free_use": {
+        "hidden": False,
+        "text": "The signee is free use to anyone sharing the holder's faction.",
+        "effect": {"kind": "grant", "feature": "mature", "who": "faction"},
+    },
+    # ── bonds & ownership ─────────────────────────────────────────────────────
+    "collar": {
+        "hidden": False,
+        "text": "The signee accepts the holder's collar and the holder as their owner.",
+        "effect": {"kind": "own"},
+    },
+    "lovers": {
+        "hidden": False,
+        "text": "The parties bind themselves to one another as lovers.",
+        "effect": {"kind": "relation", "role": None, "lover": True},
+    },
+    # ── control & training ────────────────────────────────────────────────────
+    "training": {
+        "hidden": False,
+        "text": "The signee submits to the holder's conditioning.",
+        "effect": {"kind": "grant", "feature": "condition", "who": "author"},
+    },
+    "chastity": {
+        "hidden": False,
+        "text": "The signee may not climax without the holder's leave.",
+        "effect": {"kind": "rule", "name": "ask_to_come", "consequence": "punish"},
+    },
+    "exposed": {
+        "hidden": False,
+        "text": "The signee will remain unclothed in the holder's presence.",
+        "effect": {"kind": "rule", "name": "no_clothing", "consequence": "notify",
+                   "condition": {"type": "owner_present"}},
+    },
+    "curfew": {
+        "hidden": False,
+        "text": "The signee will be where they are kept during curfew hours.",
+        "effect": {"kind": "rule", "name": "curfew", "consequence": "notify",
+                   "params": {"hours": (22, 6)}},
+    },
 }
 
 
 def template(name):
     return TEMPLATES.get(name)
+
+
+def template_names():
+    return sorted(TEMPLATES)

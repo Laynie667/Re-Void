@@ -128,6 +128,18 @@ matrix (BCX's authority module, expressed through the consent verb the user alre
 > **PENDING:** the clause CATALOGUE (soft→extreme) is being approved/vetoed by the user in chat;
 > approved clauses become TEMPLATES entries + get their enforcing system confirmed.
 
+> **Post-office contract package: BUILT.** Player-authored contracts now exist end-to-end:
+> `contract clauses` (lists the TEMPLATES library — player↔player D/s, intimacy/use grants, collar/
+> ownership, lovers, training, chastity, exposure, curfew), `contract draft <who> = <clause names>`
+> (creates a contract; sets `requires_officiation`), `contract officiate <contract> [= clerk]` (the
+> post-office step — `world/post_office.py`: **Calix** clean+paid, **Vesper** free + an ambiguous
+> rider, **Seraphine** free + a self-serving HIDDEN clause and `reveal_on_sign`), `contract cosign`
+> (multi-owner: a 2nd/3rd holder opts in; on sign all become owners). New `own` effect kind +
+> `relationships.set_owner/drop_owner`; `apply_ownership` records owners so the floor's `revert_all`
+> drops them too. `sign()` refuses player contracts until officiated. Full flow tested standalone.
+> NPC contract bundles (Auria=player, the triplets, Durgin the brander, Eevee/wolf scenario-traps)
+> are the next content layer on top of this.
+
 ## Layer 4 — CONTRACTS (expand the existing `MilkingContract`; the keystone)
 **Signing is consent — fully informed or otherwise.** A contract is the instrument that GRANTS the
 consent-matrix entries, installs the rules, and applies the binding_effects, all at once, on sign.
