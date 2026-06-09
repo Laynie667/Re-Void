@@ -147,10 +147,20 @@ classic (reset-on-wrong) + forgiving (trailing-match) modes both tested.
 Build in-game: `maze make`, `maze solution deeper = n n e w > #84`, `maze reveal`,
 `maze decoy add`, `maze mode classic|forgiving`, `maze show`.
 - [x] Per-char sequence, solutions, decoys, two modes, builder command.
-- [ ] **Map / hint item** (Vesper sells it) — reads a solution's sequence
-      (`MazeRoom.solution_hint`) or points to a linked "cool spot". NOT built yet.
 - [ ] Skin + place actual instances: facility "hallway after intake"; forest in the
       hub / cabin realm. (Needs the realm flesh-out below.)
+
+### NEW item type — Maps (maze hint item + general navigation)  [TODO]
+A readable `Map` item. Two jobs, one typeclass:
+1. **Maze hint** — bound to a MazeRoom + solution name; `read map` returns
+   `MazeRoom.solution_hint(name)` (the combo, possibly redacted/partial per tier).
+   Vesper sells these; ties the NPC economy to traversal.
+2. **General map** — a readable that reveals a region's room links / a "cool spot"
+   (random keyed room). Charges/uses optional. Reuses readable-item plumbing.
+- [ ] `typeclasses/map_item.py` (Map) + `read`/`study` hook.
+- [ ] Partial-hint mode: high facility standing = fewer redacted steps (cruel: she
+      *makes* you earn your way out of her halls).
+- [ ] Wire Vesper's stock + a price; place one maze instance to test against.
 
 ### Realm flesh-out (broader backlog)
 - [ ] Update / improve the Facility (ongoing per FACILITY_SYSTEMS_CATALOGUE backlog).
