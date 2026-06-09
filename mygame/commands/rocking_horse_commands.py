@@ -126,6 +126,12 @@ class CmdHorseDismount(Command):
         caller.db.restrained_zone = None
         caller.db.horse_facing    = None
         caller.db.horse_last_breed_at = 0.0
+        # Reset the per-ride scene state so the next mount starts a fresh build-up.
+        caller.db.horse_knot_stage     = 0
+        caller.db.horse_breed_warned   = False
+        caller.db.horse_arousal_band   = None
+        caller.db.horse_seat_fill      = 0.0
+        caller.db.horse_seat_full_said = False
 
         # 'little' upgrade teardown — remove only the baby-talk the horse itself added,
         # and only if a facility binding isn't also relying on it (don't clobber that).
@@ -327,18 +333,34 @@ class CmdHorseStatus(Command):
         running = any(isinstance(s, RockingHorseScript) for s in room.scripts.all())
         from typeclasses.characters import Character
         riders = [
-            obj.db.rp_name or obj.name
-            for obj in room.contents
+            obj for obj in room.contents
             if isinstance(obj, Character) and getattr(obj.db, "seated_zone", None) == zone
         ]
-        self.caller.msg(
-            f"|wRocking Horse|n\n"
-            f"  Zone:     {zone}\n"
-            f"  Pace:     {pace}\n"
-            f"  Running:  {'yes' if running else 'no'}\n"
-            f"  Upgrades: {', '.join(upgrades) or 'none'}\n"
-            f"  Riders:   {', '.join(riders) or 'none'}"
-        )
+        lines = [
+            "|wRocking Horse|n",
+            f"  Zone:     {zone}",
+            f"  Pace:     {pace}",
+            f"  Running:  {'yes' if running else 'no'}",
+            f"  Upgrades: {', '.join(upgrades) or 'none'}",
+        ]
+        if not riders:
+            lines.append("  Riders:   none")
+        for r in riders:
+            name = r.db.rp_name or r.name
+            arousal = float(getattr(r.db, "arousal", 0) or 0)
+            band = getattr(r.db, "horse_arousal_band", None) or "—"
+            restrained = "strapped in" if getattr(r.db, "restrained_zone", None) == zone else "free"
+            kstage = int(getattr(r.db, "horse_knot_stage", 0) or 0)
+            knot = {0: "none", 1: "swelling", 2: "LOCKED"}.get(kstage, "none")
+            bits = [f"arousal {arousal:.0f} ({band})", f"hands: {restrained}", f"knot: {knot}"]
+            if "inflation" in upgrades:
+                fill = float(getattr(r.db, "horse_seat_fill", 0) or 0)
+                bits.append(f"seat fill: {fill:.0f}ml"
+                            + (" |R(FULL)|n" if getattr(r.db, "horse_seat_full_said", False) else ""))
+            if "breeding" in upgrades and getattr(r.db, "horse_breed_warned", False):
+                bits.append("|rabout to breed|n")
+            lines.append(f"  Rider:    {name} — " + ", ".join(bits))
+        self.caller.msg("\n".join(lines))
 
 
 class CmdRock(Command):

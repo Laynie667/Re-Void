@@ -44,8 +44,8 @@ def pick_horse_msg(pace_or_section: str, pool: str) -> str | None:
         pool: "start"/"running"/"stop" or upgrade key
     """
     data = _load()
-    if pace_or_section == "upgrade":
-        msgs = data.get("upgrade", {}).get(pool, [])
+    if pace_or_section in ("upgrade", "arousal"):
+        msgs = data.get(pace_or_section, {}).get(pool, [])
     else:
         msgs = (
             data.get("speeds", {})

@@ -36,6 +36,18 @@ _RESTRAIN_THRESHOLD = 40.0
 # a climactic event, not a per-rock thing. Threshold + refractory cooldown.
 _BREED_THRESHOLD    = 65.0
 _BREED_COOLDOWN_S   = 75.0
+# The deposit telegraphs first: at/above _BREED_NEAR_THRESHOLD the shaft visibly winds up
+# (a build-up beat) and only fires on the NEXT qualifying tick, so it's never a surprise.
+_BREED_NEAR_THRESHOLD = 55.0
+
+# Knot stages — it swells (felt), then locks (held), then softens (released) on a timer.
+# Swell starts a little before the breeding telegraph so it lands as its own beat.
+_KNOT_SWELL_THRESHOLD = 45.0
+_KNOT_LOCK_THRESHOLD  = 80.0
+_KNOT_LOCK_SECONDS    = 180.0
+
+# Inflation seat: announce growth each step, and a one-time "full" beat at this cap (ml).
+_INFLATION_FULL_ML    = 200.0
 
 _CUNT_WORDS = ("cunt", "pussy", "vagina", "sex")
 _ASS_WORDS  = ("ass", "anus", "rear", "behind")
@@ -176,12 +188,16 @@ class RockingHorseScript(FurnitureSessionScript):
             room.msg_contents(msg.replace("{rider}", rider_name))
 
         add_arousal(char, arousal_gain)
+        # The build-up: announce the rider climbing into a new arousal band, so the ride
+        # reads as an escalating scene rather than a flat loop. (Fires on upward crossings.)
+        self._arousal_beat(char, room, rider_name)
 
         if "restrained" in upgrades:
             self._check_restraint(char, room)
         if "vibrating" in upgrades:
             if random.random() < 0.50:
-                char.msg("|xThe seat pulses between rocks.|n")
+                char.msg("|xThe seat buzzes hard between rocks, a relentless little pulse "
+                         "right where it's buried, never quite letting the edge off.|n")
         if "milking" in upgrades:
             self._tick_milking(char, room)
         if "inflation" in upgrades:
@@ -194,10 +210,38 @@ class RockingHorseScript(FurnitureSessionScript):
         if "little" in upgrades:
             self._tick_little(char, room)
 
+    # Arousal bands for the build-up beats (low -> high). Crossing UP narrates a beat.
+    _AROUSAL_BANDS = [(75.0, "edge"), (55.0, "rising"), (30.0, "building"), (0.0, "warming")]
+    _BAND_ORDER    = ["warming", "building", "rising", "edge"]
+
+    def _arousal_beat(self, char, room, rider_name):
+        """Narrate the rider crossing UP into a new arousal band — the scene's build-up."""
+        arousal = float(char.db.arousal or 0.0)
+        band = next(name for thr, name in self._AROUSAL_BANDS if arousal >= thr)
+        prev = getattr(char.db, "horse_arousal_band", None)
+        if band == prev:
+            return
+        char.db.horse_arousal_band = band
+        climbing = (prev is None
+                    or self._BAND_ORDER.index(band) > self._BAND_ORDER.index(prev))
+        if not climbing:
+            return
+        from world.rocking_horse_loader import pick_horse_msg
+        line = pick_horse_msg("arousal", band)
+        if line:
+            room.msg_contents("|r" + line.replace("{rider}", rider_name) + "|n")
+
     def _check_restraint(self, char, room):
         """Strap the rider in once the ride has worked them past the threshold — NOT
         on mount. Engages once; sets restrained_zone so occupancy/flavor hold."""
         if getattr(char.db, "restrained_zone", None):
+            # Already strapped in — an occasional reminder so the state stays present.
+            if random.random() < 0.25:
+                rider_name = char.db.rp_name or char.name
+                from world.rocking_horse_loader import pick_horse_msg
+                msg = (pick_horse_msg("upgrade", "restrain_reminder")
+                       or "{rider} pulls at the straps; they don't give.")
+                room.msg_contents("|x" + msg.replace("{rider}", rider_name) + "|n")
             return
         if float(char.db.arousal or 0.0) < _RESTRAIN_THRESHOLD:
             return
@@ -307,13 +351,38 @@ class RockingHorseScript(FurnitureSessionScript):
             from world.rocking_horse_loader import pick_horse_msg
             from typeclasses.production_item import format_volume
 
-            # Gate: worked-up enough, and past the refractory window since the last load.
-            if float(char.db.arousal or 0.0) < _BREED_THRESHOLD:
-                return
+            arousal = float(char.db.arousal or 0.0)
             now  = time.time()
             last = float(getattr(char.db, "horse_last_breed_at", 0.0) or 0.0)
-            if now - last < _BREED_COOLDOWN_S:
+            rider_name = char.db.rp_name or char.name
+
+            # Refractory window: narrate the afterglow / the shaft thickening up again,
+            # so the cooldown reads as recovery rather than dead air.
+            if now - last < _BREED_COOLDOWN_S and last > 0:
+                if random.random() < 0.5:
+                    msg = (pick_horse_msg("upgrade", "breed_after")
+                           or "The horse rocks {rider} through the afterglow, the load sitting deep.")
+                    room.msg_contents("|x" + msg.replace("{rider}", rider_name) + "|n")
                 return
+
+            # Build-up beat: once worked up but not yet at the deposit threshold, the shaft
+            # visibly winds up — and we DON'T fire the load until the next qualifying tick,
+            # so being bred is always telegraphed, never a surprise.
+            if arousal < _BREED_THRESHOLD:
+                if arousal >= _BREED_NEAR_THRESHOLD and not getattr(char.db, "horse_breed_warned", False):
+                    char.db.horse_breed_warned = True
+                    msg = (pick_horse_msg("upgrade", "breed_near")
+                           or "The shaft swells and jerks inside {rider} — the horse is close.")
+                    room.msg_contents("|r" + msg.replace("{rider}", rider_name) + "|n")
+                return
+            # At/over threshold: only go off if it warned first (guarantees a build-up beat).
+            if not getattr(char.db, "horse_breed_warned", False):
+                char.db.horse_breed_warned = True
+                msg = (pick_horse_msg("upgrade", "breed_near")
+                       or "The shaft swells and jerks inside {rider} — the horse is about to go off.")
+                room.msg_contents("|r" + msg.replace("{rider}", rider_name) + "|n")
+                return
+
             upgrades = upgrades if upgrades is not None else \
                 list(getattr(room.db, "horse_upgrades", None) or [])
             facing = getattr(char.db, "horse_facing", "forward") or "forward"
@@ -322,6 +391,7 @@ class RockingHorseScript(FurnitureSessionScript):
                 return
 
             char.db.horse_last_breed_at = now
+            char.db.horse_breed_warned  = False
             total = _r.uniform(90.0, 180.0)
             per   = total / len(holes)
             for zone in holes:
@@ -347,28 +417,65 @@ class RockingHorseScript(FurnitureSessionScript):
             pass
 
     def _tick_inflation(self, char, room, zone_name, upgrades):
-        """Incrementally inflate the seat inside the rider."""
+        """Incrementally inflate the seat inside the rider — and SAY so. Each step narrates
+        the swelling; crossing the cap fires a one-time 'full' beat."""
         try:
             from typeclasses.inflation_item import add_inflation_volume
             add_inflation_volume(char, zone_name, 25.0, "seat_fill")
         except Exception:
             pass
+        rider_name = char.db.rp_name or char.name
+        fill = float(getattr(char.db, "horse_seat_fill", 0.0) or 0.0) + 25.0
+        char.db.horse_seat_fill = fill
+        from world.rocking_horse_loader import pick_horse_msg
+        if fill >= _INFLATION_FULL_ML:
+            if not getattr(char.db, "horse_seat_full_said", False):
+                char.db.horse_seat_full_said = True
+                msg = (pick_horse_msg("upgrade", "inflation_full")
+                       or pick_horse_msg("upgrade", "inflation_peak")
+                       or "The seat is packed full inside {rider}, swollen to capacity.")
+                room.msg_contents("|R" + msg.replace("{rider}", rider_name) + "|n")
+        elif random.random() < 0.6:
+            msg = (pick_horse_msg("upgrade", "inflation_fill")
+                   or "The seat swells bigger inside {rider}, stretching them wider.")
+            room.msg_contents("|r" + msg.replace("{rider}", rider_name) + "|n")
 
     def _check_knot(self, char, room, upgrades):
-        """Engage a knot if arousal threshold met."""
-        arousal = float(char.db.arousal or 0.0)
-        if arousal < 75.0:
-            return
-        if getattr(char.db, "horse_knotted", False):
-            return
-        if random.random() > 0.20:
-            return
-        char.db.horse_knotted         = True
-        char.db.horse_knot_expires_at = time.time() + 180.0
+        """Staged knot you can feel coming and going:
+            stage 0 -> 1 (swelling) at _KNOT_SWELL_THRESHOLD,
+            stage 1 -> 2 (locked)   at _KNOT_LOCK_THRESHOLD,
+            stage 2 -> 0 (softens/releases) once the lock timer expires.
+        Every transition is announced, so the rider always knows whether it's inflating
+        or deflating and whether they're held."""
+        arousal    = float(char.db.arousal or 0.0)
+        stage      = int(getattr(char.db, "horse_knot_stage", 0) or 0)
         rider_name = char.db.rp_name or char.name
         from world.rocking_horse_loader import pick_horse_msg
-        msg = pick_horse_msg("upgrade", "knot_engage") or f"The horse catches — {rider_name} is locked onto the seat."
-        room.msg_contents(msg.replace("{rider}", rider_name))
+
+        def say(pool, fallback):
+            room.msg_contents("|r" + (pick_horse_msg("upgrade", pool) or fallback)
+                              .replace("{rider}", rider_name) + "|n")
+
+        if stage == 2 and getattr(char.db, "horse_knotted", False):
+            # Locked — release when the timer runs out, else an occasional held-fast reminder.
+            if time.time() >= float(getattr(char.db, "horse_knot_expires_at", 0.0) or 0.0):
+                char.db.horse_knotted   = False
+                char.db.horse_knot_stage = 0
+                char.db.horse_knot_expires_at = 0.0
+                say("knot_soften", "The knot softens and lets {rider} loose.")
+            elif random.random() < 0.30:
+                room.msg_contents(f"|x{rider_name} shifts and the knot holds them fast, "
+                                  f"sealed onto the seat, going nowhere yet.|n")
+            return
+        if stage == 0 and arousal >= _KNOT_SWELL_THRESHOLD:
+            char.db.horse_knot_stage = 1
+            say("knot_swell", "The knot at the base of the seat begins to swell inside {rider}.")
+            return
+        if stage == 1 and arousal >= _KNOT_LOCK_THRESHOLD:
+            char.db.horse_knot_stage      = 2
+            char.db.horse_knotted         = True
+            char.db.horse_knot_expires_at = time.time() + _KNOT_LOCK_SECONDS
+            say("knot_engage", "The knot swells past pulling-out and locks {rider} onto the seat.")
 
     def at_stop(self):
         """Release all knots and inflation when session stops."""
@@ -382,7 +489,12 @@ class RockingHorseScript(FurnitureSessionScript):
                 continue
             char.db.horse_knotted         = False
             char.db.horse_knot_expires_at = 0.0
+            char.db.horse_knot_stage      = 0
             char.db.horse_last_breed_at   = 0.0
+            char.db.horse_breed_warned    = False
+            char.db.horse_arousal_band    = None
+            char.db.horse_seat_fill       = 0.0
+            char.db.horse_seat_full_said  = False
             if zone_name:
                 try:
                     from typeclasses.inflation_item import drain_inflation

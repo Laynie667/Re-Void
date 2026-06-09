@@ -90,6 +90,36 @@ speeds:
       - "The horse drops from full speed to dead still sharp, the seat tearing free of {rider}. The quiet after has a weight to it."
       - "Full speed ends all at once. {rider} comes to rest, wrecked and seated, as the frame goes silent."
 
+# Arousal build-up beats — fired ONCE when the rider crosses up into a new band, so
+# the ride reads as an escalating scene instead of a flat loop. Tokens: {rider}
+arousal:
+
+  # 0–30: the slow warm start, body waking up to it.
+  warming:
+    - "It's just rocking, at first. Just the slow fill and the creak and {rider} telling themselves they've got this — and then the seat drags over something deep inside on the upstroke and their breath catches and the telling-themselves gets quieter."
+    - "{rider} settles in like it's nothing, like they can take this all day. The horse rocks. The warmth starts low and patient in their belly, a slow coal, in no hurry to be noticed — but it will be."
+    - "The first arcs are almost gentle. {rider}'s body takes the seat and starts, despite itself, to lean down into the next one — chasing the drag, the want still small and deniable and growing anyway."
+
+  # 30–55: hooked now, hips moving on their own.
+  building:
+    - "{rider}'s hips have started moving with it — not much, not on purpose, just rolling down to meet the seat at the top of each arc, greedy in a way the rest of them isn't admitting to yet. The horse feels it and rocks a fraction deeper."
+    - "The heat's climbing now, pooling thick and insistent, and {rider} catches themselves grinding down onto the shaft between the horse's own thrusts, taking it that bit deeper, wanting that bit more. Too late to call it just-riding."
+    - "Somewhere in here {rider} stops bracing against the rhythm and starts riding it — working down onto the seat, breath gone ragged, the want past deniable and into the part where they'd be embarrassed if they could still spare the thought."
+    - "Slick now, audibly, the seat sliding easier with every arc and {rider}'s body clenching down after it on the way out like it can't bear to let it go. The horse has them moving for it. They're not deciding to anymore."
+
+  # 55–75: getting loud, getting desperate, the edge in sight.
+  rising:
+    - "{rider}'s riding it openly now, shamelessly, slamming their hips down to drive the seat as deep as it'll go and whining when the arc pulls it back — chasing it, fucking themselves on the horse as hard as it's fucking them, the want gone feral."
+    - "The sounds {rider}'s making have stopped being words. They're bouncing on the seat between the horse's thrusts, greedy and frantic, every drag of it lighting them up brighter, the edge close enough now to taste and not close enough to reach."
+    - "Sweat-slick and wild-eyed, {rider} grinds down onto the shaft with everything they've got, clutching the handles, hips snapping, that high desperate building-note in their throat that means they're climbing toward something they can't get to fast enough."
+    - "It's got {rider} babbling now, please and more and oh god, hips working the seat in frantic little circles, so wet the horse glides in effortless and so close their whole body's drawn tight as a wire and singing."
+
+  # 75+: right on the edge, strung out, helpless.
+  edge:
+    - "{rider}'s strung out right on the brink, shaking, every arc threatening to tip them over and none of them quite doing it — the horse keeping them there on purpose, fucking them stupid an inch from release, drawing the agony of it out long and cruel and perfect."
+    - "Right at the edge and stranded there, {rider} sobs and rides and rides, the seat ramming that spot over and over, the climax so close it aches, the horse rocking them through the unbearable held breath of almost, almost, almost."
+    - "{rider}'s past words, past pride, past anything but the rocking and the building and the desperate full-body clench of a body wound to its absolute limit and held there, riding the brink, begging the horse with everything left in them to just let them—"
+
 # Upgrade-specific messages
 
 upgrade:
@@ -146,3 +176,41 @@ upgrade:
   breeding_both:
     - "Both shafts go off in {rider} at once — {volume} split between their flooded cunt and their stuffed ass, the horse pumping seed into both holes together and rocking it all the way in."
     - "The horse breeds {rider} front and back in the same heaving moment, {volume} of cum jetting into cunt and ass alike, double-filled and dripping before it grinds them down to keep it in."
+
+  # KNOT — staged so you can feel it coming. swell (starting) -> engage (locked) -> soften (releasing).
+  knot_swell:
+    - "Something at the base of the seat starts to thicken inside {rider} — the knot beginning to swell, fattening slow against their stretched rim, a promise of being locked down that isn't quite kept yet. Not yet. Soon."
+    - "{rider} feels it before they understand it: the root of the shaft growing, swelling wider with every arc, the knot starting to fatten up inside them. It's not holding them yet. It's getting ready to."
+    - "The base of the seat begins to bloat, fat and insistent, dragging harder at {rider}'s rim on each pull — the knot waking up, swelling toward the size that won't come back out. They can feel exactly where this is going."
+
+  knot_soften:
+    - "Finally the knot begins to deflate — the thick lock at the base of the seat softening, shrinking, easing its grip inside {rider} until it slips loose and lets the shaft move freely again. They could climb off now, if their legs worked."
+    - "The knot goes down. {rider} feels the fat lock that held them sealed onto the horse softening and receding, the awful stretched fullness easing, the seat suddenly loose and slick inside them where a moment ago it was iron."
+    - "Slowly the knot lets {rider} go — the swollen base softening, deflating out of them inch by inch, the tie undone, the horse releasing its grip and leaving them gaping and empty-rimmed where it had them locked."
+
+  # BREEDING — the build-up beat (fires BEFORE the deposit) and the afterglow/refractory.
+  breed_near:
+    - "The shaft inside {rider} starts to swell and jerk, the rhythm turning urgent and ragged — the horse is close, you can feel it thickening, twitching, the arcs going short and hard and greedy. It's going to come. It's going to come in them."
+    - "Something changes in the seat: it fattens, pulses, the rocking losing its patience and turning into something blunter and more insistent. {rider} feels the horse winding up toward its finish, the deposit building, seconds away from emptying itself into them."
+    - "The horse's rhythm breaks into something frantic and grinding, the shaft flexing and swelling inside {rider}, leaking hot and slick — the unmistakable build of a cock about to go off, buried deep in them, with nowhere for it to go but in."
+    - "{rider} feels it gathering — the seat swelling thick, the thrusts going deep and stuttering and urgent, the whole horse straining toward the finish it's about to pump into them. Right on the brink of being bred, and no way to stop it."
+
+  breed_after:
+    - "The shaft softens a little inside {rider}, spent and twitching, the load sitting hot and heavy where the horse left it — but it doesn't pull out, and under the afterglow {rider} can already feel it beginning, slowly, to thicken up again."
+    - "The horse rocks {rider} gently through the afterglow, seed dripping warm inside them, the seat resting deep and sated — for now. The pulse of it against their walls is already firming back up. It's not done. It's never done."
+    - "Bred and full and rocked slow through the comedown, {rider} feels the horse's cock soften and settle inside them — and then, unhurried, certain, start to harden again for the next one. The cooldown is just the horse taking aim."
+
+  # INFLATION — narrate the seat swelling bigger inside (instead of silent volume).
+  inflation_fill:
+    - "The seat swells another increment inside {rider}, pumping itself fatter, stretching them wider around it — more of them given over to being filled, the fullness climbing past comfortable and still climbing."
+    - "{rider} feels the shaft inflate another notch, ballooning thick inside them, forcing their walls to give and give and keep giving. There's more of it in them than there was a moment ago, and there'll be more again."
+    - "The inflating seat pumps bigger, packing {rider} tighter, the stretch deepening as it swells to fill every last bit of room and then make room it had no business making. They can feel themselves rounding out around it."
+
+  inflation_full:
+    - "The seat hits its limit, swollen vast and unyielding inside {rider}, packing them so full they can feel the shape of it pressing their belly out from the inside — and the horse keeps rocking them on it regardless, grinding them around a fullness with nowhere left to go."
+    - "Maxed out: the inflated seat is enormous inside {rider} now, stretching them to their absolute capacity and holding them there, every arc of the horse working them around a stuffing so complete they can't think past how full they are."
+
+  # RESTRAINT — an occasional reminder while strapped in, so the state stays present.
+  restrain_reminder:
+    - "{rider} pulls at the straps without meaning to and the restraints don't give an inch — wrists to the handles, ankles to the stirrups, going nowhere, riding this out whether they like it or not."
+    - "A reflexive tug, a reminder: {rider} is strapped down tight, locked to the frame, committed to the horse's rhythm with no way to slow it or rise off it. The straps hold. They always hold."
