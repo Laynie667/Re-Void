@@ -70,7 +70,9 @@ def holes_kind(holes):
 
 
 # The 'little' upgrade — the horse treats its rider as a small, helpless thing to be
-# kept somewhere safe. Warm caretaker voice; helplessness delivered as comfort.
+# kept somewhere safe. Warm caretaker voice; helplessness delivered as comfort. The
+# rocking is a cradle; the fullness is a pacifier; the regression is the point. (Feeds
+# the real world.regression meter — see _tick_little.)
 _LITTLE_BEATS = [
     "The horse's voice is soft and warm and close — |i'there we go, good girl, up you "
     "get'|n — and something behind your eyes goes quiet and small at being talked to "
@@ -88,6 +90,29 @@ _LITTLE_BEATS = [
     "rounds out warm and heavy and your thoughts drift another inch toward nothing.",
     "You make a small sound instead of a word, and the horse praises it like you've done "
     "something clever. You do it again, just to be told again.",
+    "The cradle-creak of the frame syncs up with something in your chest and the two of "
+    "them rock you down together — a size smaller with every arc, a year lighter, the big "
+    "heavy grown-up worries sliding off you like a coat too large to keep on.",
+    "|i'Who's a sleepy little thing,'|n it croons, and you are, you really are — the seat "
+    "filling you and the voice emptying you and somewhere in the middle the part of you "
+    "that does sums and makes plans just... sets itself down and toddles off.",
+    "You whine when the rhythm changes and the horse hushes you, patient as a nursery. "
+    "|i'I know, I know. Shh. Big feelings for such a little one.'|n You believe it about "
+    "yourself a little more each time it says it.",
+    "There's a soother-sweetness to being this full and this small at once — nothing "
+    "asked of you, nothing owed, just the rock and the stretch and the steady warm voice "
+    "telling you that little ones don't have to understand, they just have to be good.",
+    "Your thumb finds your mouth and you let it, because the horse said good girl when it "
+    "did, and good girl is the only grade that means anything down here where you are now.",
+    "The words in your head come out with their corners rounded off, small and wet and "
+    "easy, and you stop reaching past them. Past them is heavy. Here is warm. Here it "
+    "rocks you and calls you its baby and you let it be true.",
+    "|i'There's my good little ride,'|n it says, and you glow — actually glow, helplessly, "
+    "the praise landing somewhere far under the part of you that would once have been "
+    "embarrassed by how much you needed it.",
+    "Each arc tucks you in a little further: smaller in the shoulders, slower in the head, "
+    "softer in the want. By the bottom of this one you've half-forgotten there's a version "
+    "of you that stands up tall and does hard things. By the top you don't miss her.",
 ]
 
 
@@ -239,22 +264,30 @@ class RockingHorseScript(FurnitureSessionScript):
         return None
 
     def _tick_little(self, char, room):
-        """The 'little'/helpless headspace: a caretaker voice, drifting conditioning, and
-        a baby-talk speech filter applied once (cleanly removed on dismount)."""
+        """The 'little'/helpless headspace. Feeds the REAL regression meter
+        (world.regression) — the speech-drift, name-loss and little-talk are owned there
+        and cleared by the OOC floor — so the cradle actually walks the rider down over a
+        session instead of just flavour-texting it. Occasionally runs a full induction
+        (the horse's caretaker voice) for a bigger step; otherwise a small steady drift."""
         try:
-            if not getattr(char.db, "horse_baby_talk", False):
-                active = list(getattr(char.db, "active_speech_filters", None) or [])
-                if "baby_talk" not in active:
-                    active.append("baby_talk")
-                    char.db.active_speech_filters = active
-                    char.db.horse_baby_talk = True
+            from world.regression import regress, induce_regression
+            if random.random() < 0.25:
+                # The horse does a proper induction beat in its nursery-voice.
+                induce_regression(char, amount=random.uniform(2.0, 4.0),
+                                   room=room, source="rocking_horse")
+            else:
+                regress(char, random.uniform(1.0, 2.5), source="rocking_horse")
         except Exception:
-            pass
-        try:
-            from world.conditioning import add_conditioning
-            add_conditioning(char, 1.0, source="rocking_horse")
-        except Exception:
-            pass
+            # Fallback if regression isn't available: the old light baby-talk drift.
+            try:
+                if not getattr(char.db, "horse_baby_talk", False):
+                    active = list(getattr(char.db, "active_speech_filters", None) or [])
+                    if "baby_talk" not in active:
+                        active.append("baby_talk")
+                        char.db.active_speech_filters = active
+                        char.db.horse_baby_talk = True
+            except Exception:
+                pass
         try:
             from typeclasses.arousal_script import add_arousal
             add_arousal(char, 3.0)

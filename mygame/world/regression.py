@@ -235,3 +235,60 @@ def induce_regression(character, amount=6.0, technique=None, room=None, source="
     except Exception:
         pass
     return new, key
+
+
+# ── Read-out (for the little's own eyes — a private status command) ─────────
+
+# (value, label, descriptor) — how deep she's slipped, told soft, not clinical.
+_REG_STAGES = [
+    (0.0,   "big",        "all grown up, holding everything yourself"),
+    (15.0,  "drowsy",     "soft at the edges, easy to slip"),
+    (30.0,  "small words","the big words won't come; everything's rounder, simpler"),
+    (50.0,  "little",     "tucked down small — no decisions, just being good"),
+    (70.0,  "no-name",    "too little for your own name; you answer to little one"),
+    (100.0, "set",        "the way back up isn't there anymore, and you stopped looking"),
+    (140.0, "smallest",   "barely a word left; warm, held, kept, and content"),
+]
+
+
+def regression_stage(value):
+    label, desc = _REG_STAGES[0][1], _REG_STAGES[0][2]
+    for thresh, lab, d in _REG_STAGES:
+        if (value or 0) >= thresh:
+            label, desc = lab, d
+    return label, desc
+
+
+def _reg_bar(value, width=20):
+    cap = POINT_OF_NO_RETURN
+    frac = max(0.0, min(1.0, (value or 0) / cap)) if cap else 0.0
+    filled = int(round(frac * width))
+    return "█" * filled + "░" * (width - filled)
+
+
+def regression_status(character):
+    """A private read-out of how little she's gotten — for her own eyes. Returns a list of
+    lines (already coloured). Soft, second-person, and honest about the depth — and always
+    ends on the floor: the way out is never gated."""
+    val = float(getattr(character.db, "regression", 0.0) or 0.0)
+    headspace = getattr(character.db, "headspace", None)
+    label, desc = regression_stage(val)
+    permanent = bool(getattr(character.db, "regression_permanent", False))
+    filters = [f for f in (getattr(character.db, "active_speech_filters", None) or [])
+               if f in ("baby_talk", "little_talk", "single_word", "no_self_name")]
+    lines = ["|M── HOW LITTLE YOU'VE GOTTEN ──|n"]
+    lines.append(f"|m  headspace: |w{label}|n  |x({desc})|n")
+    lines.append(f"|m  depth:     |G{_reg_bar(val)}|n  |x{val:.0f}|n")
+    if headspace and headspace != label:
+        lines.append(f"|m  feeling:   |w{headspace}|n")
+    if filters:
+        pretty = {"baby_talk": "soft mouth", "little_talk": "little-talk",
+                  "single_word": "one word at a time", "no_self_name": "can't say your name"}
+        lines.append("|m  speech:    |x" + ", ".join(pretty.get(f, f) for f in filters) + "|n")
+    if permanent:
+        lines.append("|x  (in here, this has set. it feels like it won't come back up. "
+                     "that feeling is part of the play.)|n")
+    # The floor — never gated, always shown here so it's never out of reach.
+    lines.append("|g  the way back up is always yours: OOC reset / escape gives you your "
+                 "name, your words, and your grown self back instantly, every time.|n")
+    return lines

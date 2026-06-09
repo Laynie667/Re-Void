@@ -23,6 +23,10 @@ speeds:
       - "The horse keeps its slow, easy rock under {rider} — the seat dragging up deep at the peak of each arc and pulling back on the way down. The wood creaks low and steady."
       - "A lazy, grinding sway. {rider} rides the seat up at the top of every arc, takes it deep, and rocks back down. Slow as you please."
       - "Slow and patient — the horse works the seat into {rider} an inch at a time, in no hurry to finish, content to grind them open nice and gradual."
+      - "The arc tips {rider} up, holds them there full at the peak with the seat buried deep, then lowers them down again — unhurried, certain, like the horse has decided exactly how long this takes and it is not up to them."
+      - "Creak. Fill. Creak. Empty. The slow rhythm folds {rider} into it until the rocking stops feeling like something happening to them and starts feeling like weather — just the way the world is now, deep and patient and endless."
+      - "It rolls {rider} forward onto the shaft and back off it in long lazy swells, each one wringing a small helpless sound out of them, in no rush at all to wring out the next."
+      - "Slow enough that {rider} feels every ridge of the seat on the way up and every inch of the drag on the way down — the horse savouring them, taking its grinding time, going nowhere."
 
     stop:
       - "The horse rocks down to stillness under {rider}, the seat going quiet inside them. Whatever it was building, it leaves right where it is."
@@ -41,6 +45,10 @@ speeds:
       - "Steady rocking under {rider} — the seat driving up deep at the peak of each arc and dragging back down, the frame creaking out a consistent, insistent note."
       - "The horse holds its rhythm, riding {rider} on the seat with every arc — up, deep, back, again. The pace doesn't break and neither does its grip on them."
       - "Each rock carries {rider} through the full motion and takes the seat in to the root. The pace is steady, the grind relentless, and {rider} is along for every inch of it."
+      - "The frame works {rider} like a job it intends to finish — even, tireless, the seat driving home on the beat whether they're ready for it or not, every single time."
+      - "Up and deep and back and down, metronome-certain, the horse rocking {rider} on its cock with the patient regularity of a machine that has all the time in the world and no intention of stopping."
+      - "{rider} can't get ahead of it and can't fall behind it — the steady arc takes them in, holds them stuffed at the top, eases them down, and starts again before they've caught the last breath."
+      - "The creak of the frame and the wet of the seat settle into one sound, one rhythm, and {rider} is the thing being kept in time by it — rocked open on the beat, kept full between beats, given no say in the tempo."
 
     stop:
       - "The horse rocks down to rest, the seat easing back out of {rider} as the arcs shorten and stop. The creak fades to nothing."

@@ -78,7 +78,23 @@ class CmdHorseMount(Command):
             if milk_msg:
                 room.msg_contents(milk_msg.replace("{rider}", caller_name))
 
-        caller.msg(f"|wYou are on the horse. Facing {facing}.|n")
+        # Start the cycle on mount — the horse begins rocking as soon as you're seated,
+        # instead of sitting dead until someone calls horsestart. (Previously the mount
+        # flavour implied motion the session machinery hadn't actually started.)
+        from typeclasses.rocking_horse_script import RockingHorseScript
+        from evennia.utils import create
+        if not RockingHorseScript.is_running(room):
+            script = create.create_script(
+                RockingHorseScript, obj=room, persistent=True, autostart=True)
+            pace = getattr(room.db, "horse_pace", "steady") or "steady"
+            from world.rocking_horse_loader import pick_horse_msg
+            start_msg = pick_horse_msg(pace, "start")
+            if start_msg:
+                room.msg_contents(start_msg.replace("{rider}", caller_name))
+            caller.msg(f"|wYou are on the horse, facing {facing} — and it begins to rock "
+                       f"({pace}). |xhorsepace|w to change speed, |xhorsestop|w to still it.|n")
+        else:
+            caller.msg(f"|wYou are on the horse, facing {facing}. It's already rocking.|n")
 
 
 class CmdHorseDismount(Command):

@@ -1255,6 +1255,39 @@ class CmdQuota(Command):
 ALL_FACILITY_VERBS.append(CmdQuota)
 
 
+class CmdHeadspace(Command):
+    """
+    How little you've gotten — your own private read-out of the regression.
+
+    Usage:
+        headspace      — how far down you've slipped, and the way back up
+
+    For your eyes only. The number nobody narrates to you, shown plainly because
+    it's yours to see: how small you've gotten, what your mouth is doing, and —
+    always — the reminder that the way back up is never locked.
+    """
+    key           = "headspace"
+    aliases       = ["little", "howlittle"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.regression import regression_status
+        except Exception:
+            caller.msg("|xYou feel entirely grown-up. (Regression isn't loaded.)|n")
+            return
+        val = float(getattr(caller.db, "regression", 0.0) or 0.0)
+        if val <= 0 and not getattr(caller.db, "headspace", None):
+            caller.msg("|xYou're all grown up right now — nothing's pulling you small. "
+                       "|x(If something starts to, |wheadspace|x will show you how far.)|n")
+            return
+        caller.msg("\n".join(regression_status(caller)))
+
+ALL_FACILITY_VERBS.append(CmdHeadspace)
+
+
 class CmdBethany(Command):
     """
     Bethany's hand on the file — move a unit's progress around (owner / staff).
