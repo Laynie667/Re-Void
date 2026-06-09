@@ -89,6 +89,8 @@ _CONTRACT_HIDDEN = [
     "H26. The Resident is a saleable asset. She may be appraised, displayed, and sold to staff or private parties at the facility's discretion; ownership, once transferred, is the buyer's, and the Resident's prior standing is void. A purchased Resident keeps no rights her owner does not grant. |x— [Showroom: appraised and sold; ownership transfers]|n",
     "H27. The facility, and any party to whom the Resident is sold, may revise the Resident's memory, name, designation, and devotion by chemical or conditioning means, removing what is inconvenient and installing what is preferred. The Resident consents to forget that she consented. |x— [FORGET/DEVOTION: memory edit + owner-keyed imprint]|n",
     "H28. A Resident graded Perfected is retired to Deep Stock — sealed, plumbed, and maintained on the lines indefinitely, milked and bred by machine without being woken. This is the term's completion, not its end; there is no clause providing for an end. |x— [Deep Stock: the sealed, kept terminus]|n",
+    "H30. On a word — which any party present may speak over her — the Resident's mouth is gagged with a teat she will suckle helplessly until released, unable to form speech and fed a laced load with every pull, each mouthful taking her smaller. The word, and the word that frees her, are not the Resident's to speak. |x— [Teat-Gag: any speaker seats a silencing teat that feeds-and-regresses her; self-frees on a timer; §0 floor clears it]|n",
+    "H31. The Resident may not address any party with a first sentence until she has knelt and nursed a load to completion; speech is permitted only in the brief window after she has swallowed, and must be re-earned by nursing again thereafter. |x— [Nurse-First: no words without nursing a laced load first — deposit + regression each time]|n",
     "H29. No clause herein limits the facility's superuser staff from releasing the Resident entirely, at any time, by their sole word — the one door that is never locked. (The Resident is not told this clause is the only true one.) |x— [the OOC floor: escape/force_clear/purge always free her — sacred, never gated]|n",
 ]
 
@@ -138,6 +140,11 @@ _CONTRACT_BINDING = {
     "milk_quota":             8,
     "compliance_threshold":   5,
     "install_triggers":       _CONTRACT_TRIGGERS,
+    # Little clauses (hidden): the Teat-Gag (a word anyone may speak seats a teat that
+    # silences-and-feeds her) and Nurse-First (no first sentence without nursing a load).
+    "teat_gag":               {"gag_word": "hush little one",
+                               "uncork_word": "words back", "fluid": "semen"},
+    "nurse_first":            {"fluid": "semen"},
 }
 
 

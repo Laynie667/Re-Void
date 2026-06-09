@@ -60,6 +60,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "no_negatives":       _filter_no_negatives,
         "baby_talk":          _filter_baby_talk,
         "little_talk":        _filter_little_talk,
+        "suckling":           _filter_suckling,
         "stutter":            _filter_stutter,
         "third_person_coy":   _filter_third_person_coy,
         "animal_sounds":      _filter_animal_sounds,
@@ -262,6 +263,37 @@ def _filter_little_talk(char, text: str) -> str:
     if text and random.random() < 0.4:
         text = text + random.choice(_LITTLE_FILLERS)
     return text or "...?"
+
+
+_SUCKLE_NOISES = [
+    "*helpless wet suckling*", "*mmf...*", "*soft greedy sucking*", "*gulp*",
+    "*whimpers around the teat*", "*nurses, cheeks hollowing*", "*needy little slurp*",
+    "*suckles harder, eyes unfocusing*", "*muffled, mouth too full to shape a word*",
+]
+
+def _filter_suckling(char, text: str) -> str:
+    """The Teat Gag: while gagged, speech comes out as suckling — and every attempt to talk
+    pulls another laced mouthful into her (real deposit + regression). Self-expires on its own
+    timer (teat_gag_until) so a gagged little is never left with no way to be heard; the uncork
+    word ends it sooner, and the §0 floor clears it. Rides active_speech_filters."""
+    import time as _t
+    until = float(getattr(char.db, "teat_gag_until", 0) or 0)
+    if until and _t.time() >= until:
+        # The teat slips free on its own — clear the gag and let THIS line through ungagged.
+        active = [f for f in (getattr(char.db, "active_speech_filters", None) or []) if f != "suckling"]
+        char.db.active_speech_filters = active
+        char.db.teat_gagged    = False
+        char.db.teat_gag_until = 0
+        char.msg("|xThe teat finally slips from your mouth on its own; your words are yours "
+                 "again — for now.|n")
+        return text
+    # Still gagged: another pull feeds her, and only suckle-sounds come out.
+    try:
+        from world.binding_effects import _nurse_feed
+        _nurse_feed(char, getattr(char.db, "teat_gag_fluid", "semen") or "semen", source="teat_gag")
+    except Exception:
+        pass
+    return random.choice(_SUCKLE_NOISES)
 
 
 def _filter_stutter(char, text: str) -> str:

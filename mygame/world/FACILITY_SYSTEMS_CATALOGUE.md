@@ -256,7 +256,20 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   anti_clothing, broadcast_sensation, speech_filter, install_triggers, conditioning_on_wear,
   suggestibility, lactation_primer, forfeit_name, lock_conditioning, breeding_quota,
   required_honorific, compliance_threshold, milk_quota, cum_receptacle, mark_signed,
-  realm_cycle, body_processing, perpetual_heat, pet_triggers, animal_sleeve.
+  realm_cycle, body_processing, perpetual_heat, pet_triggers, animal_sleeve,
+  **teat_gag**, **nurse_first**.
+- **Little clauses (hidden, in `_CONTRACT_BINDING`):**
+  - **teat_gag** `{gag_word, uncork_word, fluid}` — installs a `gag`/`ungag` trigger pair
+    (any speaker fires them). `gag` → `teat_gagged` + the `suckling` speech filter (speech
+    becomes suckle-noise) + `_nurse_feed` each attempt (fluid-bank deposit + regression +
+    dependence). Self-expires after `_TEAT_GAG_SECONDS` (the filter heals itself) so a gagged
+    little is never left unheard; uncork word ends it early; §0 floor clears it.
+  - **nurse_first** `{fluid}` — `check_say_allowed` gate: a first sentence is blocked until
+    `_do_nurse_first` (kneel-and-nurse a load: deposit + regression), which opens a 90s
+    speaking window; must re-nurse after. Floor clears it.
+  - Shared helper `_nurse_feed(char, fluid, source)`. New `suckling` filter in speech_filters.
+  - Flags (`teat_gagged`/`teat_gag_until`/`teat_gag_fluid`/`nurse_first`/`nursed_until`/
+    `nurse_first_fluid`) all in FACILITY_FLAGS.
 
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/

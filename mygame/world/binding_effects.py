@@ -345,6 +345,27 @@ def apply_effects(character, item):
         pet_type = effects.get("pet_type", "puppy")
         character.db.pet_type = pet_type
 
+    # Teat-Gag clause: a word (anyone's) seats a teat that silences-and-feeds her.
+    if effects.get("teat_gag"):
+        cfg = effects["teat_gag"]
+        gag_word   = "hush little one"
+        uncork     = "words back"
+        fluid      = "semen"
+        if isinstance(cfg, dict):
+            gag_word = cfg.get("gag_word", gag_word)
+            uncork   = cfg.get("uncork_word", uncork)
+            fluid    = cfg.get("fluid", fluid)
+        character.db.teat_gag_fluid = fluid
+        install_trigger(character, gag_word, response="gag", strength=2)
+        install_trigger(character, uncork, response="ungag", strength=2)
+
+    # Nurse-First clause: no first sentence without nursing a load first.
+    if effects.get("nurse_first"):
+        cfg = effects["nurse_first"]
+        character.db.nurse_first = True
+        character.db.nurse_first_fluid = (
+            cfg.get("fluid") if isinstance(cfg, dict) else None) or "semen"
+
 
 def remove_effects(character, item):
     """
@@ -461,6 +482,24 @@ def remove_effects(character, item):
         character.db.pet_trigger_sources = sources
         if not sources:
             character.db.pet_type = None
+
+    # Teat-Gag — clear the gag state, the suckling filter, and the gag/ungag triggers.
+    if effects.get("teat_gag"):
+        character.db.teat_gagged    = False
+        character.db.teat_gag_until = 0
+        character.db.teat_gag_fluid = None
+        active = [f for f in (getattr(character.db, "active_speech_filters", None) or [])
+                  if f != "suckling"]
+        character.db.active_speech_filters = active
+        triggers = [t for t in (getattr(character.db, "installed_triggers", None) or [])
+                    if t.get("response") not in ("gag", "ungag")]
+        character.db.installed_triggers = triggers
+
+    # Nurse-First — lift the speech gate.
+    if effects.get("nurse_first"):
+        character.db.nurse_first       = False
+        character.db.nursed_until      = 0
+        character.db.nurse_first_fluid = None
 
 
 # ---------------------------------------------------------------------------
@@ -777,6 +816,69 @@ def _inst_recite(char, speaker, room, entry):
     char.msg("|xThe words leave your mouth before you can examine whether you mean them.|n")
 
 
+# How long the teat-gag holds before it slips free on its own (the speech filter also
+# self-expires on this, so a gagged little is never left unable to be heard with no one around).
+_TEAT_GAG_SECONDS = 300.0
+
+
+def _nurse_feed(character, fluid="semen", source="nursing"):
+    """Feed her a laced mouthful: real fluid-bank deposit + a regression drip + a little
+    dependence + the craving for the next. Shared by the Teat-Gag and Nurse-First clauses.
+    Returns the ml fed."""
+    import random
+    ml = random.uniform(60.0, 160.0)
+    try:
+        from typeclasses.fluid_bank import GlobalFluidBank
+        GlobalFluidBank.get().deposit(character, ml, fluid, None)
+    except Exception:
+        pass
+    try:
+        from world.regression import regress
+        regress(character, random.uniform(2.0, 4.0), source=source)
+    except Exception:
+        pass
+    try:
+        character.db.drug_dependence = int(getattr(character.db, "drug_dependence", 0) or 0) + 1
+        character.db.cum_craving = True
+    except Exception:
+        pass
+    return ml
+
+
+def _inst_gag(char, speaker, room, entry):
+    """Teat-Gag trigger: the word seats a teat in her mouth — she suckles helplessly, can't
+    speak (the 'suckling' filter), and is fed while she's silenced. Anyone can say the word."""
+    import time as _t
+    char.db.teat_gagged    = True
+    char.db.teat_gag_until = _t.time() + _TEAT_GAG_SECONDS
+    active = list(getattr(char.db, "active_speech_filters", None) or [])
+    if "suckling" not in active:
+        active.append("suckling")
+        char.db.active_speech_filters = active
+    cname = char.db.rp_name or char.name
+    room.msg_contents(
+        f"|yThe word lands and {cname}'s mouth simply opens for it — a fat teat pushed past "
+        f"her lips, and she latches on before she's decided to, cheeks hollowing, suckling "
+        f"helplessly. She won't get a word out around it now; she'll only nurse.|n")
+    char.msg("|xThe word seats the teat in your mouth and your jaw goes soft, your tongue to "
+             "work on its own. Words aren't for you right now. Suckling is. Swallowing is.|n")
+    _nurse_feed(char, getattr(char.db, "teat_gag_fluid", "semen") or "semen", source="teat_gag")
+
+
+def _inst_ungag(char, speaker, room, entry):
+    """Uncork word — pulls the teat, ends the gag early (someone else, since she can't speak)."""
+    if not getattr(char.db, "teat_gagged", False):
+        return
+    char.db.teat_gagged    = False
+    char.db.teat_gag_until = 0
+    active = [f for f in (getattr(char.db, "active_speech_filters", None) or []) if f != "suckling"]
+    char.db.active_speech_filters = active
+    cname = char.db.rp_name or char.name
+    room.msg_contents(f"|yThe teat slips from {cname}'s mouth with a wet pop. She can shape "
+                      f"words again — until the word's said over her once more.|n")
+    char.msg("|xThe teat withdraws. Your mouth is your own again — until next time.|n")
+
+
 _INSTALLED_RESPONSES = {
     "kneel":  _inst_kneel,
     "beg":    _inst_beg,
@@ -786,6 +888,8 @@ _INSTALLED_RESPONSES = {
     "freeze": _inst_freeze,
     "leak":   _inst_leak,
     "recite": _inst_recite,
+    "gag":    _inst_gag,
+    "ungag":  _inst_ungag,
 }
 
 
@@ -1185,7 +1289,32 @@ def check_say_allowed(character) -> tuple:
     if time.time() < until:
         remaining = int(until - time.time())
         return False, f"|xQuiet. ({remaining}s remaining)|n"
+    # Nurse-First clause: she can't get a first sentence out without nursing a load first.
+    # This attempt is spent on nursing (speech blocked, narrated); it opens a short window
+    # in which she may actually speak, then she has to nurse again.
+    if getattr(character.db, "nurse_first", False):
+        win = float(getattr(character.db, "nursed_until", 0) or 0)
+        if time.time() >= win:
+            return False, _do_nurse_first(character)
     return True, ""
+
+
+def _do_nurse_first(character):
+    """Run a nurse-first beat: kneel-and-suckle a load (real deposit + regression), open a
+    short speaking window. Returns the reason string shown for the blocked say-attempt."""
+    import time as _t
+    fluid = getattr(character.db, "nurse_first_fluid", "semen") or "semen"
+    _nurse_feed(character, fluid, source="nurse_first")
+    character.db.nursed_until = _t.time() + 90.0
+    cname = character.db.rp_name or character.name
+    room = character.location
+    if room:
+        room.msg_contents(
+            f"|yBefore a single word, {cname}'s body folds down and her mouth finds the teat — "
+            f"she nurses first, throat working, swallowing a load down before she's permitted to "
+            f"speak. Only then does she come up for air, littler than she went down.|n")
+    return ("|xYou have to nurse before words. You kneel and suckle a load down first — now "
+            "try speaking again.|n")
 
 
 # ---------------------------------------------------------------------------
