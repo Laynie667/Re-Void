@@ -373,6 +373,15 @@ paths already restore rp_name; its `little_talk`/`baby_talk`/`single_word` filte
 `active_speech_filters`), all in `FACILITY_FLAGS` → cleared by every reset path. **When adding ANY
 new persistent state, add it here and to all three reset paths.**
 
+**Little Box stuck-spot / OOC-floor verification:** the box's lid can "lock" in-fiction, but
+it is explicitly NOT a dead-end: a nap timer (`box_release_at`) springs it unconditionally, a
+`boxout` struggle meter pops it solo, a disconnected occupant is auto-released
+(`sessions.count()==0`), leaving the room drops it from `occupants()` (session auto-stops via
+`note_occupancy`, and `at_stop` clears any lingering `in_box`), and `escape`/`force_clear`/
+`facilityreset` clear every box flag (all in `FACILITY_FLAGS`). The lid gates ONLY the `boxout`
+command — never navigation, never teleport, never the floor. Simulated: timer/disconnect/struggle/
+free all release. So the box can keep you a while, but it can never strand you.
+
 **Regression OOC-floor verification:** `world/regression.py` can take a unit all the way to
 "small" (barely-verbal, name gone, permanent flag set) — but every flag it writes is in
 `FACILITY_FLAGS` (or is `facility_name_backup`/`active_speech_filters`/`designation`/

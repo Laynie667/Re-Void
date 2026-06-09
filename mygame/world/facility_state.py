@@ -40,6 +40,8 @@ FACILITY_FLAGS = {
     "conditioning_consent": None, "pending_conditioning": None, "body_parts": None,
     "release_terms": None, "behaviour_log": None, "rules": None, "contract_effects": None,
     "headspace": None,
+    # little box (self-releasing — see typeclasses/little_box.py)
+    "in_box": None, "box_entered_at": 0, "box_release_at": 0,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,
@@ -48,7 +50,7 @@ FACILITY_FLAGS = {
     "milk_baseline_ml": 0, "suggestibility": 0, "intake_suggestibility": 0,
     "docility": 0, "bethany_devotion": 0, "cycle_day": 0,
     "line_pass": 0, "punish_shield": 0, "liberation_runs": 0, "quota_behind": 0,
-    "curse_tally_count": 0, "regression": 0,
+    "curse_tally_count": 0, "regression": 0, "box_struggle": 0,
     "cond_bonus": 0, "milk_bonus": 0, "sale_bonus": 0, "dose_bonus": 0,
     "collections_level": 0,
 
@@ -71,6 +73,7 @@ FACILITY_FLAGS = {
     "ledger_tattooed": False, "bethany_tithe": False, "bethany_heir": False,
     "curse_line_remembers": False, "curse_never_empty": False,
     "curse_tally": False, "curse_echo": False, "curse_hollow": False,
+    "box_lid_locked": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "", "breeding_line": "",

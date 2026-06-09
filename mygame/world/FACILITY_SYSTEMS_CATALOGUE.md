@@ -229,6 +229,21 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 - **OOC floor:** all flags in `FACILITY_FLAGS` → both reset paths + force_clear/escape wipe them.
 - **New speech filter:** `little_talk` (`world/speech_filters.py`) — deeper than baby_talk:
   small words + dropped grammar + first-person→"me" + fillers/whines. Stacks after baby_talk.
+- **Read-out:** `regression_status`/`regression_stage`/`_reg_bar` + the `headspace` command
+  (`commands/facility_commands.py`, aliases `little`/`howlittle`) — the little's own private view.
+
+## 3c. Little Box  (`typeclasses/little_box.py` + `commands/little_box_commands.py`)
+- **Purpose:** "toybox/playpen" furniture that keeps its occupant little — the storage
+  counterpart to the rocking-horse cradle. `LittleBoxScript(FurnitureSessionScript)`,
+  `build_little_box(room, zone, nap_seconds)`; commands `boxin`/`boxout`/`boxstatus`.
+- **fn:** ticks `world.regression` + caretaker `_BOX_BEATS` + a laced-bottle feed; lid LOCKS
+  once regression ≥ 45. **st:** `in_box`/`box_entered_at`/`box_release_at`/`box_lid_locked`/
+  `box_struggle` (all in FACILITY_FLAGS).
+- **NOT a stuck-spot (by design):** ALWAYS self-releases — a nap timer (`room.db.box_nap_seconds`,
+  default 360s) springs the lid; `boxout` fills a struggle meter that pops it solo; leaving the
+  room, disconnecting (`sessions.count()==0`), and the OOC floor all release. The lid only gates
+  the `boxout` verb (like the horse knot gates `horsedismount`) — never navigation, never the floor.
+  `boxout`/`boxstatus` always show remaining time + struggle progress.
 
 ## 4. Binding effects  (`world/binding_effects.py`)
 - **Purpose:** the central effect engine items/contracts/collars fire.

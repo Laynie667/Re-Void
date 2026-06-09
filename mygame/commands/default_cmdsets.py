@@ -415,6 +415,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_HORSE_CMDS:
             self.add(cmd_cls())
 
+        # Little box commands
+        from commands.little_box_commands import ALL_BOX_CMDS
+        for cmd_cls in ALL_BOX_CMDS:
+            self.add(cmd_cls())
+
         # Test uniform command
         from commands.test_uniform_command import CmdTestUniform
         self.add(CmdTestUniform())
