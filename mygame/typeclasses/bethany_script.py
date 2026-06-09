@@ -311,6 +311,145 @@ _CLIMAX = [
 ]
 
 
+# ── THE SEAT: all three shafts, every hole, knotted, long ─────────────────────
+# Her cock splits into three prehensile, self-seeking heads (provision_bethany).
+# The seat set-piece is the one where she uses ALL of them at once — mouth, cunt,
+# and ass — flares and knots in every hole so the subject is locked onto her, and
+# then settles in and STAYS, working all three slow and patient while she babies
+# the subject down into something little and grateful. Long: 4–6 beats.
+_SEAT_ENTER = [
+    "Bethany doesn't bother with the file this time. She just looks {t} over, slow and fond, "
+    "and starts unbuckling. \"I've been saving something for you, sweetheart.\" Her cock comes "
+    "free heavy and already splitting at the root — three thick prehensile shafts unfurling, "
+    "weaving in the air like the heads of something patient, each flared blunt at the tip and "
+    "fat with knot at the base. \"All of you, all at once. Hold still. Or don't — I like the "
+    "squirming.\" Three blunt heads find three holes at the same unhurried moment.",
+    "\"You know what I never get to do, running this place? Take my *time*.\" Bethany frees the "
+    "monstrous triple length and lets all three heads nose at {t} at once — one dragging wet up "
+    "the seam of her cunt, one tapping patient at her lips, one circling her asshole — each "
+    "moving on its own, seeking, weeping. \"There's one for every hole and a knot for every one. "
+    "I'm going to fill you up everywhere and then I'm going to *stay*. We've got all afternoon.\"",
+    "Bethany tips {t}'s chin up, kisses her forehead — genuinely tender, which is so much worse — "
+    "and lines all three shafts up at once. \"Big day, little one. Today you get all of me, and "
+    "you don't have to do anything clever. Just open everywhere and let me in and let me lock.\" "
+    "The three flared heads breach mouth, cunt, and ass in the same slow breath, and her whole "
+    "monstrous cock sinks home in triplicate. \"There. Now you're properly mine, top to bottom.\"",
+    "\"On your hands and knees won't do for this,\" Bethany decides, and arranges {t} herself — "
+    "splayed, hips up, head tipped back over her thigh — so all three holes line up for the three "
+    "shafts at once. \"I want to be able to reach everything.\" She feeds them in together, "
+    "stallion-flares stretching every rim wide, and sighs like she's sitting down to a good meal. "
+    "\"Comfortable? Don't answer, your mouth's busy. Just feel how *full* every part of you is.\"",
+]
+_SEAT_BEAT = [
+    "She works all three at once, and they don't move together — that's the obscene part. One "
+    "shaft fucks slow and deep into {t}'s cunt while another pistons her throat and the third "
+    "grinds in her ass, each head moving to its own rhythm, prehensile and patient, so there's "
+    "no beat of her body that isn't being used. Bethany sips her coffee with her free hand. "
+    "\"God, the *engineering* on me. Three of you couldn't keep up with what one of me does to "
+    "all three of your holes. Feel that? That's craftsmanship, sweetheart.\"",
+    "The three flares swell wide on every outstroke, dragging {t}'s rims out with them, then "
+    "shove back to the knot — three apple-fat knots kissing three stretched holes at once, "
+    "threatening, not yet locking. \"Not yet,\" Bethany hums, reading the panic. \"I'll knot you "
+    "everywhere when I'm good and ready, and then you're not going anywhere for a while. That's "
+    "the nice part. You can stop holding yourself up. You can stop holding *anything* up.\"",
+    "She finds a rhythm where all three shafts seat at once and then withdraw at once, so {t} is "
+    "rammed full in every hole and then left gaping in every hole, over and over, the emptiness "
+    "as loud as the fullness. \"There's my girl. Look at you taking all of me. There isn't a part "
+    "of you right now that's doing anything but being used, is there. Isn't that *restful.* No "
+    "decisions in a hole. No worries in a hole. Just full.\"",
+    "One head pulls from {t}'s mouth with a wet string to let her gulp air, while the other two "
+    "keep working her cunt and ass without pause. Bethany uses the free shaft to pat {t}'s cheek "
+    "with its own slick weight, almost affectionate. \"Breathe, sweetheart. Good. Now —\" it "
+    "slides back down her throat \"— back to work. All three holes earn their keep at once in my "
+    "house. Efficient. I do love efficient.\"",
+    "Bethany leans her weight in and grinds all three deep, hips circling, so every flare drags "
+    "against every inner wall at once and {t}'s whole body lights up overstimulated and helpless. "
+    "\"Shh, shh. I know. It's a lot. It's *supposed* to be a lot.\" She kisses {t}'s temple while "
+    "her cock reams every hole she has. \"I'm not trying to break you, little one. I'm trying to "
+    "fill you so full there's no room left in you for anybody but me. Big difference. You'll see.\"",
+    "The three shafts move like they're thinking — one curling to find the spot in {t}'s cunt "
+    "that makes her clench, one fattening in her throat right as she tries to make a word, one "
+    "screwing deep in her ass on a slow patient pulse. Bethany watches her face come apart with "
+    "the fond, proprietary attention of a woman watching bread rise. \"There it is. There's the "
+    "look. The one where you stop being a person at me and start being *mine*. Hold that.\"",
+    "She doesn't speed up. That's the cruelty of the seat — no frenzy, no finish in sight, just "
+    "all three of her sunk to the knot in all three of {t}'s holes, working slow and endless and "
+    "sure, wearing her down by sheer patient occupancy. \"We're not in a hurry,\" Bethany murmurs, "
+    "fond. \"I'm not going to come and leave. I'm going to stay in you until you forget there was "
+    "ever a version of you that wasn't full of me. Shouldn't take long now. You're nearly there.\"",
+]
+# Woven in: she babies the subject DOWN while she's seated — the regression hypnosis,
+# delivered with her cock locked in every hole. (Applies world.regression.)
+_SEAT_REGRESS = [
+    "\"You're thinking too hard, I can feel it — you go all tight when you think.\" Bethany's "
+    "voice drops into the slow, warm, endless register, mouth at {t}'s ear, all three shafts "
+    "rocking gentle now. \"Let's make you smaller, hm? Littler. Easier. You don't need all those "
+    "big worried grown-up thoughts when you're this full. Count down with me. Every number, a "
+    "year off. You don't have to keep so much. Let me keep it for you.\"",
+    "She murmurs nonsense-sweet against {t}'s hair while her cock stays buried in every hole — "
+    "how small she is, how good, how she doesn't have to know things anymore, how the only job "
+    "she has now is to be little and full and hers — around and around in the blanket-voice until "
+    "the words stop having edges. \"There. Feel that? That's you putting it down. Good little "
+    "one. So much easier to just be filled than to be a person, isn't it.\"",
+    "\"What a big girl, taking all three.\" A beat; Bethany smiles into the crook of {t}'s neck. "
+    "\"No — what a *little* girl. That's better, isn't it. Little girls don't have to manage "
+    "anything. Little girls just get held and filled and told they're good.\" Her cock pulses "
+    "in all three holes at once, like punctuation. \"You're being so good. Go smaller for me. "
+    "There's nothing down there but warm.\"",
+    "She rocks {t} on all three shafts the way you'd rock a cradle, slow and patient, and talks "
+    "her down the whole time. \"Sleepy, aren't you. Full and sleepy and small. You can let the "
+    "grown-up bits switch off — I've got you plugged in everywhere, you can't fall, you can't "
+    "leave, you don't have to do a single thing. Just sink. Good. *Littler.* That's my baby.\"",
+]
+_SEAT_KNOT = [
+    "Bethany decides it's time, and seats all three knots at once — three apple-fat bulbs forced "
+    "past three stretched rims in the same brutal, deliberate moment — and then she's LOCKED into "
+    "{t} everywhere, mouth, cunt, and ass, going nowhere. \"There.\" She settles her full weight "
+    "in with a satisfied sigh, cock tied into every hole. \"Now you're mine until I soften, and I "
+    "am in *no* hurry. Get comfortable, little one. This is the rest of your afternoon.\"",
+    "The three knots swell past the point of pulling out, one after another, until {t} is tied "
+    "onto Bethany at every end — sealed, stuffed, locked, unable to so much as shift without all "
+    "three flares dragging at her insides. Bethany picks her coffee back up, perfectly serene. "
+    "\"Mm. This is my favourite part. You can't talk, can't get up, can't do anything but be "
+    "exactly what I've got you as. A thing I'm sitting inside. Stay.\"",
+]
+_SEAT_DEGRADE = [
+    "|MThere is no part of you, right now, that is not full of her. Mouth, cunt, ass — all of it "
+    "occupied, all of it hers, all of it at once. You couldn't form the thought 'mine' about your "
+    "own body if you tried; there's a knot where the thought would go.|n",
+    "|MThis is what all three holes are for. Not three separate uses for three separate days — "
+    "all of them, all at once, all hers, the way she always meant to have you. The wholeness of "
+    "it is the point. You are being used completely. Nothing of you is left over.|n",
+    "|MShe's babying you and breeding you and locking you in place all at the same time and your "
+    "body can't decide which to drown in, so it drowns in all of it, and goes quiet, and small, "
+    "and grateful. She told you it would. She's always right. That's the cruelty and the comfort "
+    "both.|n",
+    "|MYou will not remember, afterward, where the panic went. Only that it got smaller, and then "
+    "littler, and then it was just warm everywhere she was, which was everywhere. She filled the "
+    "room you used to keep yourself in. There's no you-sized space left that isn't her.|n",
+]
+_SEAT_CLIMAX = [
+    "Bethany grinds to the root in all three holes, all three knots locked, and lets go "
+    "*everywhere at once* — three scalding floods filling {t}'s mouth and cunt and ass in the "
+    "same heartbeat, the laced seed dumped into every hole until her belly swells tight and round "
+    "and the overflow has nowhere to go and starts back up her throat. \"Swallow what you can, "
+    "little one. Keep the rest. All three holes bred at once — front, back, and throat — by the "
+    "same cock, the same line, the same owner. There's no part of you I didn't just fill with me.\"",
+    "She comes with a long, satisfied groan, all three shafts pumping at once, and holds every "
+    "knot locked through it so not a drop escapes — pumping and pumping until {t} is visibly "
+    "bloated with her, cunt and ass and belly all rounded tight, cum bubbling at the corners of "
+    "her stretched mouth around the knot. \"*There.* Top to bottom, end to end. You're more me "
+    "than you right now. Sit with that, sweetheart. Sit with it while I soften. We'll be here a "
+    "while.\" She strokes {t}'s swollen belly, fond and proprietary.",
+    "All three heads spurt deep and stay locked, flooding {t} in triplicate, the devotion in "
+    "every load going straight to work — and Bethany watches her face do the thing she loves, the "
+    "soft stupid grateful slackening, while she's still knotted into every hole. \"That's it. "
+    "That's my good little one. Bred everywhere, full everywhere, mine everywhere.\" She kisses "
+    "her forehead. \"Don't thank me yet. You can't talk anyway. Just feel how much of me is in "
+    "you. We'll do this again. We'll do this until it's the only thing you remember how to be.\"",
+]
+
+
 class BethanyScript(DefaultScript):
     """On the subject: Bethany's chance visits that interrupt and gate processing."""
 
@@ -348,13 +487,28 @@ class BethanyScript(DefaultScript):
             return
         char.db.bethany_busy = True
         self.db.beats = 0
-        self.db.target = random.randint(2, 3)
         self.db.bethany_ref = beth.dbref
-        room.msg_contents("\n|w━━━━ A VISIT FROM INTAKE ━━━━|n")
-        # She catches you wherever you are — and remarks on it.
-        rk = self._room_key(char)
-        pool = _ENTER_ROOM.get(rk) or _ENTER
-        room.msg_contents("|y" + random.choice(pool).format(t=t) + "|n")
+        # Mode: the throat-fuck (quick, contemptuous) OR the SEAT — all three shafts
+        # in all three holes, knotted, long — when she has the holes to do it and feels
+        # like taking her time. The seat is rarer and runs longer.
+        mode = "throat"
+        if (getattr(beth.db, "multicock", False)
+                and len(self._available_holes(char)) >= 3
+                and random.random() < 0.40):
+            mode = "seat"
+        self.db.visit_mode = mode
+        self.db.knotted = False
+        if mode == "seat":
+            self.db.target = random.randint(4, 6)
+            room.msg_contents("\n|w━━━━ INTAKE IS TAKING HER TIME ━━━━|n")
+            room.msg_contents("|y" + random.choice(_SEAT_ENTER).format(t=t) + "|n")
+        else:
+            self.db.target = random.randint(2, 3)
+            room.msg_contents("\n|w━━━━ A VISIT FROM INTAKE ━━━━|n")
+            # She catches you wherever you are — and remarks on it.
+            rk = self._room_key(char)
+            pool = _ENTER_ROOM.get(rk) or _ENTER
+            room.msg_contents("|y" + random.choice(pool).format(t=t) + "|n")
 
     def _room_key(self, char):
         realm = getattr(char.db, "realm", None) or {}
@@ -375,6 +529,12 @@ class BethanyScript(DefaultScript):
             self._end_visit(char, climaxed=False)
             return
         self.db.beats = int(self.db.beats or 0) + 1
+
+        if self.db.visit_mode == "seat":
+            self._seat_beat(char, beth, room, t)
+            if self.db.beats >= int(self.db.target or 4):
+                self._climax(char, beth, room, t)
+            return
 
         # A thrust beat + a state remark + a degrading internal beat, with the
         # occasional golden-shower. The cock consumes a little of her each pass.
@@ -401,11 +561,22 @@ class BethanyScript(DefaultScript):
             self._climax(char, beth, room, t)
 
     def _climax(self, char, beth, room, t):
-        # She may decide to own her, right as she finishes.
-        if random.random() < 0.35 and not getattr(char.db, "bethany_owned", False):
+        seat = (self.db.visit_mode == "seat")
+        # She may decide to own her, right as she finishes (more likely after a seat —
+        # she doesn't take her time with things she isn't keeping).
+        own_chance = 0.6 if seat else 0.35
+        if random.random() < own_chance and not getattr(char.db, "bethany_owned", False):
             room.msg_contents("|m" + random.choice(_BUY).format(t=t) + "|n")
             self._mark_owned(char)
-        room.msg_contents("|r" + random.choice(_CLIMAX).format(t=t) + "|n")
+        pool = _SEAT_CLIMAX if seat else _CLIMAX
+        room.msg_contents("|r" + random.choice(pool).format(t=t) + "|n")
+        # A seat finish drives her further down — a hard regression slug on top of the load.
+        if seat:
+            try:
+                from world.regression import regress
+                regress(char, random.uniform(8.0, 14.0), source="bethany_seat")
+            except Exception:
+                pass
         # Real load: drain her obscene cum item, bank it AND cumflate her belly.
         ml = _drain_shaft(beth, "semen")
         if ml > 0:
@@ -439,9 +610,11 @@ class BethanyScript(DefaultScript):
                         f"pumped into all of her while she sighs and holds them all knotted.|n")
             except Exception:
                 pass
-        # Her seed is laced — it carries the devotion that makes her yours.
+        # Her seed is laced — it carries the devotion that makes her yours. A seat dumps
+        # it in all three holes at once, so the devotion lands triple.
         try:
-            bethany_deposit_effect(char, devotion=random.uniform(3.0, 6.0))
+            dev = random.uniform(9.0, 16.0) if seat else random.uniform(3.0, 6.0)
+            bethany_deposit_effect(char, devotion=dev)
         except Exception:
             pass
         # The cock is CONSUMING — its finish overwrites a piece of her for good:
@@ -474,6 +647,51 @@ class BethanyScript(DefaultScript):
             pass
         self._end_visit(char, climaxed=True)
 
+    def _available_holes(self, char):
+        """The breeding holes Bethany can seat into — reuses gang_breeding.animal_holes."""
+        try:
+            from world.gang_breeding import animal_holes
+            return [z for z in animal_holes(char).values() if z]
+        except Exception:
+            return []
+
+    def _seat_beat(self, char, beth, room, t):
+        """One beat of the SEAT: all three shafts working all three holes. Longer, slower,
+        with the babying/regression woven in and 3× the per-pass effects (it's everywhere
+        at once). Knots locked partway through so she can't pull off."""
+        # Knot lock partway in — after the first beat or two she's tied at every hole.
+        if not self.db.knotted and self.db.beats >= 2:
+            self.db.knotted = True
+            room.msg_contents("|y" + random.choice(_SEAT_KNOT).format(t=t) + "|n")
+            char.db.forced_posture = ("locked onto Bethany at every hole — knotted in mouth, "
+                                      "cunt, and ass, going nowhere")
+        else:
+            room.msg_contents("|y" + random.choice(_SEAT_BEAT).format(t=t) + "|n")
+        # The babying — every other beat she walks her down (the regression hypnosis).
+        if random.random() < 0.6:
+            room.msg_contents("|G" + random.choice(_SEAT_REGRESS).format(t=t) + "|n")
+            try:
+                from world.regression import regress
+                regress(char, random.uniform(3.0, 6.0), source="bethany_seat")
+            except Exception:
+                pass
+        char.msg("  " + random.choice(_SEAT_DEGRADE))
+        # Three holes at once = three times the wear. Arousal, conditioning, devotion.
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(char); add_arousal(char, 14.0)
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, random.uniform(4.0, 7.0), source="bethany_seat")
+        except Exception:
+            pass
+        try:
+            bethany_deposit_effect(char, devotion=random.uniform(2.0, 4.0))
+        except Exception:
+            pass
+
     def _piss(self, char, beth, room, t):
         ml = _drain_shaft(beth, "urine")
         if ml <= 0:
@@ -491,10 +709,29 @@ class BethanyScript(DefaultScript):
     def _end_visit(self, char, climaxed=True):
         char.db.bethany_busy = False
         self.db.beats = 0
+        seat = (self.db.visit_mode == "seat")
+        self.db.visit_mode = None
+        self.db.knotted = False
+        # Release the seat's knot-lock posture (only the one the seat itself set, so we
+        # don't stomp a posture conditioning/regression installed). The floor clears it too.
+        try:
+            fp = getattr(char.db, "forced_posture", None) or ""
+            if "knotted in mouth, cunt, and ass" in fp:
+                char.db.forced_posture = None
+        except Exception:
+            pass
         beth = self._get_bethany()
         if beth:
             room = char.location
-            if room and climaxed:
+            if room and climaxed and seat:
+                room.msg_contents(
+                    "|yIt takes a while for the three knots to soften enough to pull free. When "
+                    "they do, Bethany slides all three shafts out of {t} in a slow obscene rush, "
+                    "leaving every hole gaping and leaking her, makes a fond little note on her "
+                    "clipboard, and tucks the whole monstrous thing away. \"Good little one. We'll "
+                    "do that again soon.\" The line shudders and resumes.|n".format(
+                        t=char.db.rp_name or char.name))
+            elif room and climaxed:
                 room.msg_contents(
                     "|yBethany tucks herself away, makes a neat tick on her clipboard, and "
                     "saunters back out toward the desk. The line shudders and resumes.|n")

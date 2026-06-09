@@ -145,8 +145,14 @@ moves loop back; per-char `ndb.maze_seq` tracks the combo; completing a solution
 teleports to its destination (or prose-only reveal), everything else fires a decoy.
 classic (reset-on-wrong) + forgiving (trailing-match) modes both tested.
 Build in-game: `maze make`, `maze solution deeper = n n e w > #84`, `maze reveal`,
-`maze decoy add`, `maze mode classic|forgiving`, `maze show`.
+`maze gate <name> = conditioning 80`, `maze debt 0.3`, `maze decoy add`,
+`maze mode classic|forgiving`, `maze show`.
 - [x] Per-char sequence, solutions, decoys, two modes, builder command.
+- [x] **Body-gated exits** — a solution can refuse to open until conditioning/regression/
+      devotion/standing ≥ N, or breeding quota met (`quota_met`). Fails OPEN on error so the
+      floor is never trapped. The halls make you earn your way out.
+- [x] **Breeding-debt halls** — opt-in per-move chance a wrong turn breeds you (real
+      `gang_inseminate`) before looping you back; getting lost IS the breeding.
 - [ ] Skin + place actual instances: facility "hallway after intake"; forest in the
       hub / cabin realm. (Needs the realm flesh-out below.)
 

@@ -215,6 +215,21 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `get/_refresh` stage. **st:** `conditioning`, `conditioning_applied`. 9 thresholds
   (floor→speech→trigger→designation→name→permanent→doll→identity→lockself→imprint).
 
+## 3b. Regression  (`world/regression.py`)
+- **Purpose:** an age-regression meter, sibling to Conditioning — hypnosis/drugs/Bethany
+  file the adult down into "little", then "small".
+- **fn:** `regress` (suggestibility-scaled, same lever as conditioning), `_apply_thresholds`,
+  `induce_regression(char, amount, technique, room)` (the hypnosis entrypoint; 4 techniques:
+  countdown/bottle/blanket/number). **st:** `regression`, `regression_applied`,
+  `regression_permanent`, `headspace` (slipping/little/small). 6 thresholds
+  (soft→vocabulary→little→namegone→permanent→small).
+- **Reuses real systems:** speech-filter engine (`baby_talk`, new `little_talk`, `word_swap`,
+  `single_word`, `no_self_name`), `install_trigger`, `designation`, `arousal_floor`,
+  `forced_posture`. Name loss backs up to `facility_name_backup` (so both reset paths restore it).
+- **OOC floor:** all flags in `FACILITY_FLAGS` → both reset paths + force_clear/escape wipe them.
+- **New speech filter:** `little_talk` (`world/speech_filters.py`) — deeper than baby_talk:
+  small words + dropped grammar + first-person→"me" + fillers/whines. Stacks after baby_talk.
+
 ## 4. Binding effects  (`world/binding_effects.py`)
 - **Purpose:** the central effect engine items/contracts/collars fire.
 - **fn:** `apply_effects` / `remove_effects` (~30 effect keys), `install_trigger` +
@@ -285,6 +300,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   + `bethany_deposit_effect` laced devotion), `_spawn`/`_mark_owned`. Office Bethany is a
   static NPC; visit Bethany is spawned/despawned. ⚠ possible to have 2–3 Bethanys in one room
   momentarily (see AUDIT).
+- **Visit modes** (`db.visit_mode`): `throat` (the original quick contemptuous face-fuck) and
+  `seat` — the three-shaft set-piece. Seat fires ~40% when she has ≥3 holes available; runs
+  4–6 beats; all three prehensile shafts work mouth/cunt/ass at once, knot-locks partway
+  (`db.knotted` + a knot-lock `forced_posture` released on end), babies her down with the
+  regression hypnosis (`_SEAT_REGRESS` → `world.regression.regress`), 3× per-beat
+  arousal/conditioning/devotion, triple devotion + hard regression slug at climax, higher
+  ownership chance. Pools: `_SEAT_ENTER/_BEAT/_REGRESS/_KNOT/_DEGRADE/_CLIMAX`. `_seat_beat`
+  + `_available_holes` (reuses `gang_breeding.animal_holes`).
 
 ## 13. Intake  (`typeclasses/intake_script.py`)
 - The lobby driver: the screen subliminal squeeze, dawdle-worsens-contract, suggestibility

@@ -1689,8 +1689,14 @@ class CmdMaze(MuxCommand):
                                                 (dirs space- or comma-separated;
                                                  dest = room dbref/#id, optional)
         maze reveal <name> = <prose>          — set the reveal line for a solution
+        maze gate <name> = <type> [<min>]     — gate an exit on body state; type =
+                                                conditioning|regression|devotion|
+                                                standing|quota (quota needs no min;
+                                                "none" clears the gate)
         maze decoy add = <line>               — add a decoy line (use {dir} token)
         maze decoy clear                      — wipe decoys back to defaults
+        maze debt <0..1> [<species>]          — breeding-debt halls: chance a wrong
+                                                turn breeds you (0 = off)
         maze mode classic|forgiving           — wrong move resets the combo, or not
         maze show                             — show this room's maze config
 
@@ -1733,8 +1739,12 @@ class CmdMaze(MuxCommand):
             self._solution(caller, here, rest)
         elif sub == "reveal":
             self._reveal(caller, here, rest)
+        elif sub == "gate":
+            self._gate(caller, here, rest)
         elif sub == "decoy":
             self._decoy(caller, here, rest)
+        elif sub == "debt":
+            self._debt(caller, here, rest)
         elif sub == "mode":
             self._mode(caller, here, rest)
         elif sub == "show":
@@ -1795,6 +1805,61 @@ class CmdMaze(MuxCommand):
         here.db.maze_solutions = sols
         caller.msg(f"|wReveal line set for '{name}'.|n")
 
+    def _gate(self, caller, here, rest):
+        if "=" not in rest:
+            caller.msg("Usage: maze gate <name> = <type> [<min>]   (type: conditioning|"
+                       "regression|devotion|standing|quota|none)")
+            return
+        name, _, body = rest.partition("=")
+        name = name.strip()
+        toks = body.split()
+        if not toks:
+            caller.msg("Need a gate type.")
+            return
+        gtype = toks[0].lower()
+        valid = ("conditioning", "regression", "devotion", "standing", "quota", "none")
+        if gtype not in valid:
+            caller.msg(f"Gate type must be one of: {', '.join(valid)}.")
+            return
+        if gtype == "none":
+            gate = None
+        elif gtype == "quota":
+            gate = {"type": "quota"}
+        else:
+            try:
+                gate = {"type": gtype, "min": float(toks[1])}
+            except (IndexError, ValueError):
+                caller.msg(f"'{gtype}' needs a minimum number, e.g. 'maze gate {name} = {gtype} 80'.")
+                return
+        if not here.set_gate(name, gate):
+            caller.msg(f"|rNo solution '{name}'. Add it first with 'maze solution'.|n")
+            return
+        if gate is None:
+            caller.msg(f"|wGate cleared on '{name}'.|n")
+        elif gtype == "quota":
+            caller.msg(f"|w'{name}' now opens only once her breeding quota is met.|n")
+        else:
+            caller.msg(f"|w'{name}' now opens only at {gtype} ≥ {gate['min']:.0f}.|n")
+
+    def _debt(self, caller, here, rest):
+        toks = rest.split()
+        if not toks:
+            caller.msg("Usage: maze debt <0..1> [<species>]   (0 = off)")
+            return
+        try:
+            chance = max(0.0, min(1.0, float(toks[0])))
+        except ValueError:
+            caller.msg("Chance must be a number 0..1.")
+            return
+        here.db.maze_breeding_debt = chance
+        if len(toks) > 1:
+            here.db.maze_debt_species = toks[1].lower()
+        if chance <= 0:
+            caller.msg("|wBreeding-debt halls disabled.|n")
+        else:
+            caller.msg(f"|wBreeding-debt halls: {chance:.0%} chance per wrong turn, "
+                       f"species '{here.db.maze_debt_species}'.|n")
+
     def _decoy(self, caller, here, rest):
         action = rest.split(None, 1)
         verb = action[0].lower() if action else ""
@@ -1832,9 +1897,17 @@ class CmdMaze(MuxCommand):
             from world.maze import describe_solution
             dest = sol.get("dest_dbref") or "prose-only"
             lines.append(f"  |w{name}|n: {describe_solution(sol['sequence'])} → {dest}")
+            gate = sol.get("gate")
+            if gate:
+                g = gate.get("type")
+                gtxt = g if g == "quota" else f"{g} ≥ {gate.get('min', 0):.0f}"
+                lines.append(f"      |Ggate: {gtxt}|n")
             if sol.get("reveal"):
                 lines.append(f"      |x\"{sol['reveal']}\"|n")
-        lines.append(f"  |xdecoys: {len(here.db.maze_decoys or [])} lines|n")
+        debt = float(here.db.maze_breeding_debt or 0)
+        lines.append(f"  |xdecoys: {len(here.db.maze_decoys or [])} lines"
+                     + (f" · breeding-debt {debt:.0%} ({here.db.maze_debt_species})" if debt > 0 else "")
+                     + "|n")
         caller.msg("\n".join(lines))
 
 

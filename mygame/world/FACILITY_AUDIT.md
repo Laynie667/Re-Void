@@ -367,8 +367,19 @@ breeding-line sort (`breeding_line`) + the three new curse flags (`curse_tally`/
 `curse_hollow` + `curse_tally_count`; Echo's `echo_self` rides `active_speech_filters`, already
 cleared) + the **Nugget** state (`nugget`/`limb_lock`/`sensory_hood`/`total_dependence`/
 `nugget_rings`/`nugget_appendages`) + word-conditioning (`banned_words`/`word_swaps`, filters ride
+`active_speech_filters`) + **age-regression** (`regression`/`regression_applied`/
+`regression_permanent`/`headspace`; its name loss reuses `facility_name_backup` so both reset
+paths already restore rp_name; its `little_talk`/`baby_talk`/`single_word` filters ride
 `active_speech_filters`), all in `FACILITY_FLAGS` → cleared by every reset path. **When adding ANY
 new persistent state, add it here and to all three reset paths.**
+
+**Regression OOC-floor verification:** `world/regression.py` can take a unit all the way to
+"small" (barely-verbal, name gone, permanent flag set) — but every flag it writes is in
+`FACILITY_FLAGS` (or is `facility_name_backup`/`active_speech_filters`/`designation`/
+`forced_posture`, all already cleared/restored), so `escape`/`force_clear`/`facilityreset` give the
+grown-up name, speech, and self back instantly regardless of `regression_permanent`. The meter is
+never consulted by the floor. The Bethany seat's knot-lock `forced_posture` is released on visit
+end AND by the floor.
 
 **Player-conditioning + TF OOC-floor verification:** the `condition` consent layer can be LOCKED
 (`conditioning_consent.locked`) so a unit can't self-revoke and `uncondition` refuses — but

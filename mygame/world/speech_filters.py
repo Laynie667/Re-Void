@@ -59,6 +59,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "single_word":        _filter_single_word,
         "no_negatives":       _filter_no_negatives,
         "baby_talk":          _filter_baby_talk,
+        "little_talk":        _filter_little_talk,
         "stutter":            _filter_stutter,
         "third_person_coy":   _filter_third_person_coy,
         "animal_sounds":      _filter_animal_sounds,
@@ -223,6 +224,44 @@ def _filter_baby_talk(char, text: str) -> str:
     for pattern, replacement in _BABY_REPLACEMENTS.items():
         text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
     return text
+
+
+_LITTLE_REPLACEMENTS = {
+    r"\bI\b":       "me",
+    r"\bI'm\b":     "me",
+    r"\bme\b":      "me",
+    r"\bmy\b":      "my",
+    r"\byes\b":     "otay",
+    r"\byeah\b":    "otay",
+    r"\bokay\b":    "otay",
+    r"\bno\b":      "nuh-uh",
+    r"\bhello\b":   "hi",
+    r"\bwhat\b":    "wha",
+    r"\bbecause\b": "cuz",
+    r"\bgoing\b":   "goin'",
+    r"\bnothing\b": "nuffin",
+    r"\bsomething\b": "sumfin",
+    r"\bmommy\b":   "mommy",
+    r"\bdaddy\b":   "mommy",
+}
+
+_LITTLE_FILLERS = ["", "", "", " ...", " — m'sleepy.", " hehe.", " ...mommy?"]
+
+def _filter_little_talk(char, text: str) -> str:
+    """Deeper than baby_talk: little-headspace speech — small words, dropped grammar,
+    first-person collapses to 'me', the occasional filler/whine. Stacks on baby_talk
+    (run after it). The §0 floor clears active_speech_filters."""
+    # phoneme softening shared with baby talk first, then little-specific swaps
+    text = _filter_baby_talk(char, text)
+    for pattern, replacement in _LITTLE_REPLACEMENTS.items():
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+    # drop common grammar words so it comes out in toddler fragments
+    text = re.sub(r"\b(am|are|is|was|were|the|a|an|to|of|will|would|that)\b", "",
+                  text, flags=re.IGNORECASE)
+    text = re.sub(r"\s{2,}", " ", text).strip()
+    if text and random.random() < 0.4:
+        text = text + random.choice(_LITTLE_FILLERS)
+    return text or "...?"
 
 
 def _filter_stutter(char, text: str) -> str:

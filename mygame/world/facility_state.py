@@ -20,7 +20,7 @@ FACILITY_FLAGS = {
     "permanent_gape": [], "piercings": [], "pet_trigger_sources": [], "bred_by": [],
     "sensation_broadcast_targets": [], "aphrodisiac_expirations": [],
     "conditioning_applied": [], "facility_items": [], "facility_room_zones": [],
-    "gallery_demands": [], "banned_words": [],
+    "gallery_demands": [], "banned_words": [], "regression_applied": [],
 
     # --- dicts/scalars -> None ---
     "pet_type": None, "designation": None, "facility_name_backup": None,
@@ -39,6 +39,7 @@ FACILITY_FLAGS = {
     "facility_polaroids": None, "get_bounty": None, "word_swaps": None,
     "conditioning_consent": None, "pending_conditioning": None, "body_parts": None,
     "release_terms": None, "behaviour_log": None, "rules": None, "contract_effects": None,
+    "headspace": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,
@@ -47,14 +48,15 @@ FACILITY_FLAGS = {
     "milk_baseline_ml": 0, "suggestibility": 0, "intake_suggestibility": 0,
     "docility": 0, "bethany_devotion": 0, "cycle_day": 0,
     "line_pass": 0, "punish_shield": 0, "liberation_runs": 0, "quota_behind": 0,
-    "curse_tally_count": 0,
+    "curse_tally_count": 0, "regression": 0,
     "cond_bonus": 0, "milk_bonus": 0, "sale_bonus": 0, "dose_bonus": 0,
     "collections_level": 0,
 
     # --- booleans -> False ---
     "orgasm_denial": False, "exhibition_active": False, "self_cmds_locked": False,
     "endcycle_blocked": False, "navigation_locked": False, "anti_clothing_active": False,
-    "conditioning_permanent": False, "freedom_forfeited": False, "facility_signed": False,
+    "conditioning_permanent": False, "regression_permanent": False,
+    "freedom_forfeited": False, "facility_signed": False,
     "facility_active": False, "perpetual_heat": False, "cum_craving": False,
     "lactation_locked": False, "body_processing_locked": False, "aura_dimmed": False,
     "bethany_busy": False, "bethany_owned": False, "latex_sealed": False,
