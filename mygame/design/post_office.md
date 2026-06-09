@@ -94,3 +94,52 @@ with the fact.
 
 To be written. Will follow the same pattern as `world/durgin_spawn.py`.
 Reference file: `commands/ogram_commands.py` for full character details.
+
+---
+
+## BACKLOG — NPC & content layer (the engine is built; these are content on it)
+
+The contract authoring + officiating engine is live (`contract draft/clauses/
+officiate/cosign`, `world/post_office.py`, the `own` effect + multi-owner, the
+§0 revert). What's pending is the *people* and the set-pieces:
+
+### NPCs to spawn
+- [ ] **Seraphine / Calix / Vesper** — in-room NPC versions (descs above; spawn
+      pattern = `durgin_spawn.py`). They are the officiant vectors already wired
+      into `post_office.officiate()`.
+- [ ] **Durgin** — brander / piercer / smith. Functional body-mods routed through
+      the REAL systems (`add_piercing`/`PiercingItem`, `record_mark` freeform
+      marks, brand application). `durgin_spawn.py` already exists — flesh out.
+- [ ] **Bethany** — already provisioned via `bethany_script.provision_bethany`;
+      needs the Seraphine relationship hook (see below).
+- [ ] **Wren / Sable** — Seraphine's other partners (vessel-deposit targets).
+- [ ] **Auria** + the **futa-eevee plush** in her room/playroom
+      (`auria_room.txt`, `aurias_playroom.txt` already drafted).
+
+### Seraphine's contract — FORCED ADOPTION + unbirthing (her signature)
+The thesis of her character: not ownership on paper but *"I'm taking you home."*
+- [ ] `seraphine_offer` contract bundle — visible clauses read like a foster
+      placement; hidden clauses are the womb. Sits on the `own` effect + a new
+      relation role `ward`/`dependent` (add to `relationships._apply` roles).
+- [ ] **Worldbuilding glue:** Seraphine visits facility **auctions**, works deals
+      with **Bethany** for choice **Deep Stock** product — gives her a logistics
+      reason to exist (she's a *buyer*) and ties post-office ↔ facility.
+
+### NEW SUBSYSTEM — "vessel" containment (unbirthing)
+- [ ] A captive can be **carried inside** a holder (womb / balls): teleport the
+      captive into a vessel-room owned by the holder; captive sees room events
+      from inside, muffled (`|x` internal); observers get a `look` status line
+      ("her belly shifts — someone's *in* there").
+- [ ] **Deposit / transfer** a captive between vessels (Seraphine → Bethany /
+      Wren / Sable). Witness the holder being fucked from inside.
+- [ ] **§0 FLOOR (non-negotiable):** every vessel answers to `escape(me)` /
+      `force_clear` — instant teleport out, void any unsigned contract, restore
+      prior location. No phrase, no gestation timer, no convincing anyone. The
+      womb may be a cell with no inside handle *only because* the fire-exit is real.
+
+### Scenario-trap — the futa-eevee plush (trigger-fires-contract)
+- [ ] Player crawls into the plush's orifice (a container room); the only exit is
+      lock-gated on `contract.signed`. Seraphine whispers clauses the eevee
+      "executes" — editing the contract the player must sign to be let out.
+- [ ] Same §0 rule: `escape`/`force_clear` springs the plush and voids the unsigned
+      contract regardless of state.
