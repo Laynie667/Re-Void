@@ -1678,6 +1678,166 @@ class CmdRType(MuxCommand):
         )
 
 
+class CmdMaze(MuxCommand):
+    """
+    Build and configure a combination-lock ("Lost Woods") maze room.
+
+    Usage:
+        maze make [<name>]                    — turn a new room into a MazeRoom
+                                                (or dig one with the given name)
+        maze solution <name> = <dirs> > <dest> — add/replace a solution sequence
+                                                (dirs space- or comma-separated;
+                                                 dest = room dbref/#id, optional)
+        maze reveal <name> = <prose>          — set the reveal line for a solution
+        maze decoy add = <line>               — add a decoy line (use {dir} token)
+        maze decoy clear                      — wipe decoys back to defaults
+        maze mode classic|forgiving           — wrong move resets the combo, or not
+        maze show                             — show this room's maze config
+
+    The maze must be applied to a room with NO normal exits — directional moves
+    ARE the puzzle. Stand in the room you want to configure.
+
+    Example:
+        maze make The Lost Hallway
+        maze solution deeper = n n e w > #84
+        maze reveal deeper = The corridor finally stops doubling back on itself.
+        maze solution back = s s > #2
+        maze mode classic
+    """
+
+    key = "maze"
+    locks = BUILDER_LOCK
+    help_category = "Builder"
+
+    def func(self):
+        caller = self.caller
+        args = (self.args or "").strip()
+        if not args:
+            caller.msg(self.get_help(caller, self.cmdset))
+            return
+
+        parts = args.split(None, 1)
+        sub = parts[0].lower()
+        rest = parts[1].strip() if len(parts) > 1 else ""
+
+        if sub == "make":
+            self._make(caller, rest)
+            return
+
+        here = caller.location
+        if not here or getattr(here.db, "room_type", None) != "maze":
+            caller.msg("|rThis isn't a maze room. Use 'maze make' here first.|n")
+            return
+
+        if sub == "solution":
+            self._solution(caller, here, rest)
+        elif sub == "reveal":
+            self._reveal(caller, here, rest)
+        elif sub == "decoy":
+            self._decoy(caller, here, rest)
+        elif sub == "mode":
+            self._mode(caller, here, rest)
+        elif sub == "show":
+            self._show(caller, here)
+        else:
+            caller.msg("Unknown subcommand. See 'help maze'.")
+
+    def _make(self, caller, name):
+        if name:
+            room = evennia.create_object("typeclasses.maze_room.MazeRoom", key=name)
+            caller.msg(f"|wMaze room created:|n {name} |x(#{room.id})|n  "
+                       f"|x(use rlink to wire an entry exit into it)|n")
+        else:
+            here = caller.location
+            if not here:
+                caller.msg("|rYou are nowhere.|n")
+                return
+            here.swap_typeclass("typeclasses.maze_room.MazeRoom",
+                                clean_attributes=False, run_start_hooks="all")
+            caller.msg(f"|w'{here.key}' is now a maze room.|n |x(remove its normal "
+                       f"exits — directions are the puzzle now.)|n")
+
+    def _solution(self, caller, here, rest):
+        if "=" not in rest:
+            caller.msg("Usage: maze solution <name> = <dirs> [> <dest>]")
+            return
+        name, _, body = rest.partition("=")
+        name = name.strip()
+        dest = None
+        if ">" in body:
+            body, _, dest_part = body.partition(">")
+            dest = caller.search(dest_part.strip(), global_search=True)
+            if not dest:
+                return
+        dirs = [d for d in body.replace(",", " ").split() if d]
+        if not name or not dirs:
+            caller.msg("Need a solution name and at least one direction.")
+            return
+        ok = here.add_solution(name, dirs, dest=dest)
+        if not ok:
+            caller.msg("|rNo valid directions in that sequence.|n")
+            return
+        hint = here.solution_hint(name)
+        dest_txt = f" → {dest.key}" if dest else " (no destination — prose-only)"
+        caller.msg(f"|wSolution '{name}' set:|n {hint}{dest_txt}")
+
+    def _reveal(self, caller, here, rest):
+        if "=" not in rest:
+            caller.msg("Usage: maze reveal <name> = <prose>")
+            return
+        name, _, prose = rest.partition("=")
+        name = name.strip()
+        sols = dict(here.db.maze_solutions or {})
+        if name not in sols:
+            caller.msg(f"|rNo solution '{name}'. Add it first with 'maze solution'.|n")
+            return
+        sols[name] = dict(sols[name]); sols[name]["reveal"] = prose.strip()
+        here.db.maze_solutions = sols
+        caller.msg(f"|wReveal line set for '{name}'.|n")
+
+    def _decoy(self, caller, here, rest):
+        action = rest.split(None, 1)
+        verb = action[0].lower() if action else ""
+        if verb == "clear":
+            from typeclasses.maze_room import _DEFAULT_DECOYS
+            here.db.maze_decoys = list(_DEFAULT_DECOYS)
+            caller.msg("|wDecoys reset to defaults.|n")
+        elif verb == "add" and "=" in rest:
+            line = rest.partition("=")[2].strip()
+            if line:
+                pool = list(here.db.maze_decoys or [])
+                pool.append(line)
+                here.db.maze_decoys = pool
+                caller.msg(f"|wDecoy added.|n |x({len(pool)} total)|n")
+        else:
+            caller.msg("Usage: maze decoy add = <line>  |  maze decoy clear")
+
+    def _mode(self, caller, here, rest):
+        m = rest.strip().lower()
+        if m not in ("classic", "forgiving"):
+            caller.msg("Usage: maze mode classic|forgiving")
+            return
+        here.db.maze_reset_on_wrong = (m == "classic")
+        caller.msg(f"|wMaze mode: {m}.|n |x(" +
+                   ("wrong move resets the combo" if m == "classic"
+                    else "sequence slides; trailing match wins") + ")|n")
+
+    def _show(self, caller, here):
+        lines = [f"|wMaze config for '{here.key}'|n  "
+                 f"|x(mode: {'classic' if here.db.maze_reset_on_wrong else 'forgiving'})|n"]
+        sols = here.db.maze_solutions or {}
+        if not sols:
+            lines.append("  |x(no solutions set)|n")
+        for name, sol in sols.items():
+            from world.maze import describe_solution
+            dest = sol.get("dest_dbref") or "prose-only"
+            lines.append(f"  |w{name}|n: {describe_solution(sol['sequence'])} → {dest}")
+            if sol.get("reveal"):
+                lines.append(f"      |x\"{sol['reveal']}\"|n")
+        lines.append(f"  |xdecoys: {len(here.db.maze_decoys or [])} lines|n")
+        caller.msg("\n".join(lines))
+
+
 # -------------------------------------------------------------------
 # Exports
 # -------------------------------------------------------------------
@@ -1699,4 +1859,5 @@ ALL_BUILDER_CMDS = [
     CmdRExamine,
     CmdRFlags,
     CmdRType,
+    CmdMaze,
 ]

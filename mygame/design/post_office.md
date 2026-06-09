@@ -138,18 +138,19 @@ messages, host `pulse` inward. Seraphine's "carry a captive" is an EXPANSION, fo
 - [ ] **Deposit / transfer** a captive between hosts (Seraphine -> Bethany / Wren /
       Sable). Helper over install/uninstall. Witness the holder fucked from inside.
 
-### NEW room type — combination-lock / "Lost Woods" maze room
-A `MazeRoom` typeclass; directional exits all LOOP back to the same room, but each
-traverse advances a per-character sequence and checks it against solution(s):
-- [ ] Per-char `ndb.maze_seq` (non-persistent -> resets clean, floor-irrelevant).
-- [ ] One+ solutions: e.g. `[N,N,E,W]` -> deeper; a different combo -> back to the
-      preceding room (hub / realm).
-- [ ] Wrong/partial move fires a random **decoy** desc from a pool so it FEELS like you
-      moved & got lost. Tone knob: wrong move resets seq (punishing) vs no-advance (forgiving).
-- [ ] Skins: **forest** (hub / cabin realm, literal Lost Woods) AND facility **"hallway
-      after intake"** (the institution disorienting you on purpose - on-voice).
-- [ ] **Hints = economy:** Vesper sells a `map` item revealing the combo / pointing to a
-      linked "cool spot" (random rooms keyed to the solution). Ties NPCs to traversal.
+### NEW room type — combination-lock / "Lost Woods" maze room  [BUILT — core]
+`world/maze.py` (pure logic, unit-tested) + `typeclasses/maze_room.py` (MazeRoom +
+MazeCmdSet) + `maze` builder command (`commands/builder_commands.py`). Directional
+moves loop back; per-char `ndb.maze_seq` tracks the combo; completing a solution
+teleports to its destination (or prose-only reveal), everything else fires a decoy.
+classic (reset-on-wrong) + forgiving (trailing-match) modes both tested.
+Build in-game: `maze make`, `maze solution deeper = n n e w > #84`, `maze reveal`,
+`maze decoy add`, `maze mode classic|forgiving`, `maze show`.
+- [x] Per-char sequence, solutions, decoys, two modes, builder command.
+- [ ] **Map / hint item** (Vesper sells it) — reads a solution's sequence
+      (`MazeRoom.solution_hint`) or points to a linked "cool spot". NOT built yet.
+- [ ] Skin + place actual instances: facility "hallway after intake"; forest in the
+      hub / cabin realm. (Needs the realm flesh-out below.)
 
 ### Realm flesh-out (broader backlog)
 - [ ] Update / improve the Facility (ongoing per FACILITY_SYSTEMS_CATALOGUE backlog).
