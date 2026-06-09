@@ -7,6 +7,7 @@ board when looked at, so 'look the status board' is always current.
 """
 
 from evennia import DefaultObject
+import random
 
 
 class FacilityFurniture(DefaultObject):
@@ -16,6 +17,61 @@ class FacilityFurniture(DefaultObject):
         super().at_object_creation()
         self.locks.add("get:false()")
         self.db.get_err_msg = "It's bolted to the facility floor. It isn't going anywhere, and neither are you."
+
+
+# Per-species idle flavour, so a stud reads as a live present animal on `look`.
+_ANIMAL_IDLE = {
+    "hound": [
+        "He's pacing the run as you watch, nails clicking, head low — and then he stops, "
+        "and his head comes up, and he scents the air in your direction with frank, patient interest.",
+        "He's sprawled in the straw working at himself with a long pink tongue, unhurried, "
+        "the heavy knot already half-fattened — and one eye tracks you the whole time.",
+        "He lifts his head, ears pricking, and watches you with the flat, certain attention of "
+        "an animal that has learned exactly what a presented hole in this place is for.",
+    ],
+    "bull": [
+        "He shifts his enormous weight from hoof to hoof, the chain at his nose-ring rattling, "
+        "and regards you with slow, indifferent inevitability.",
+        "He drags a snort through flared nostrils and paws the floor once, the sheer mass of him "
+        "promising that whatever he's put to, he finishes.",
+    ],
+    "boar": [
+        "He roots and grunts at the bars of his stall, small eyes glinting, filthy and "
+        "tireless and far too interested in the smell of you.",
+        "He champs and drools, the corkscrew of him already working out of its sheath, blunt "
+        "and questing and entirely without patience.",
+    ],
+    "stallion": [
+        "He tosses his head and stamps, already dropped and obscene beneath him, the flared "
+        "weight of it swinging — a stud you'd have to be held very still for.",
+        "He blows and sidesteps in the stall, all restless muscle, the length of him hanging "
+        "heavy and impossible, scenting the air for the next thing to be steadied under him.",
+    ],
+}
+_ANIMAL_IDLE_DEFAULT = [
+    "It stirs as you look, and settles, and watches you back with an animal's flat patience.",
+]
+
+
+class FacilityAnimal(FacilityFurniture):
+    """One of Bethany's named breeding studs — a real, present, examinable animal in the
+    Pens. Un-gettable (you don't pocket a stud); its look-desc is the stud's description plus
+    a live idle beat. Realm-tagged so teardown removes it. db.species / db.stud_desc set on spawn.
+    """
+
+    def at_object_creation(self):
+        super().at_object_creation()
+        self.db.get_err_msg = ("He's a thousand pounds of facility breeding stock behind a "
+                               "gate. You are not picking him up; the arrangement runs the "
+                               "other way.")
+        self.db.species   = "hound"
+        self.db.stud_desc = "one of Bethany's breeding studs."
+
+    def get_display_desc(self, looker, **kwargs):
+        base  = self.db.stud_desc or "one of Bethany's breeding studs."
+        idle  = random.choice(_ANIMAL_IDLE.get(self.db.species, _ANIMAL_IDLE_DEFAULT))
+        return f"{base}\n\n{idle}"
+
 
 
 class FacilityBoard(FacilityFurniture):

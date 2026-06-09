@@ -342,8 +342,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   momentarily (see AUDIT).
 - **Named studs** (`world/facility_animals.py`): Bethany's personal beasts — `DEFAULT_STUDS`
   (Caesar/Duke hounds, Brutus bull, Goliath boar, Sultan stallion), `ensure_studs`/`pick_stud`/
-  `add_stud`/`stud_line`. Stored on `char.db.facility_studs` (FACILITY_FLAGS). Woven into
-  `_nugget_little_animals` (named-stud pool `_NUGGET_LITTLE_STUD`) and `_scene_knottrain`.
+  `add_stud`/`stud_line`. Stored on `char.db.facility_studs` (FACILITY_FLAGS). They are also
+  spawned as **real present, examinable animals** in the Pens via `spawn_studs` (idempotent,
+  realm-tagged for teardown) — `FacilityAnimal(FacilityFurniture)` (un-gettable; `get_display_desc`
+  = stud desc + a per-species live idle beat). `present_stud(room, species)` lets scenes prefer
+  the actual penned beast over the roster. `spawn_studs` also merges `PEN_AMBIENT` into the room.
+  Wired into `_furnish` (key "pens") on fresh builds AND `facility_upgrade`. Woven into
+  `_nugget_little_animals` (named-stud pool `_NUGGET_LITTLE_STUD`) and `_scene_knottrain`, both
+  preferring a present stud.
 - **Little-nugget animal beat** (`RealmCycleScript._nugget_beat` → `_nugget_little_animals`):
   when the kept nugget is also in little headspace (`headspace` little/small or `regression ≥ 50`),
   ~50% of use-beats run it — Bethany plays nursery-keeper while the kennel breeds the helpless

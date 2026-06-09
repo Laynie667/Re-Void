@@ -4366,8 +4366,10 @@ class FacilityScript(DefaultScript):
         room.msg_contents("|r" + random.choice(_KNOTTRAIN_BEATS).format(t=t) + "|n")
         # Sometimes it's one of Bethany's named studs heading the line — immersion + lineage.
         try:
-            from world.facility_animals import pick_stud
-            stud = pick_stud(target, "hound")
+            from world.facility_animals import pick_stud, present_stud
+            here = present_stud(room, "hound")
+            stud = ({"name": here.key, "desc": getattr(here.db, "stud_desc", "") or "her stud hound"}
+                    if here else pick_stud(target, "hound"))
             if stud and random.random() < 0.5:
                 room.msg_contents(
                     f"|g{stud['name']} takes his turn at the head of the line — {stud['desc']} — "
@@ -4919,11 +4921,17 @@ class RealmCycleScript(FacilityScript):
         the chart's on. The §0 floor still frees her instantly, limbless or not."""
         # Real animal breeding into her propped-open holes — mostly hounds (the kennel).
         species = random.choice(["hound", "hound", "hound", "boar", "stallion"])
-        # If one of Bethany's named personal studs of this species is on the roster, it's him.
+        # Prefer a stud actually PRESENT in the room (the real penned animal); else fall back
+        # to the named roster so the beat still reads with one of Bethany's own.
         stud = None
         try:
-            from world.facility_animals import pick_stud, stud_line
-            stud = pick_stud(char, species)
+            from world.facility_animals import pick_stud, stud_line, present_stud
+            here = present_stud(room, species)
+            if here:
+                stud = {"name": here.key, "species": getattr(here.db, "species", species),
+                        "desc": getattr(here.db, "stud_desc", "") or ""}
+            else:
+                stud = pick_stud(char, species)
         except Exception:
             stud = None
         if stud:

@@ -2090,6 +2090,13 @@ def _furnish(room, key, owner):
                 _tag(_c.create_object(FacilityQuotaBoard, key="the quota board", location=room))
             except Exception:
                 pass
+        # The Breeding Pens are stocked with Bethany's named studs — real present animals.
+        if key == "pens":
+            try:
+                from world.facility_animals import spawn_studs
+                spawn_studs(room, owner, tagger=_tag)
+            except Exception:
+                pass
     except Exception:
         pass
     # NPCs
@@ -2356,13 +2363,18 @@ def facility_upgrade(owner):
     except Exception:
         pass
 
-    # 6. Give Bethany her named personal studs (the kennel/stalls aren't anonymous).
+    # 6. Give Bethany her named personal studs AND pen them in the Pens as real, present,
+    # examinable animals (the kennel/stalls aren't anonymous, and the run comes alive).
     studs_added = False
+    studs_penned = 0
     try:
-        from world.facility_animals import ensure_studs
+        from world.facility_animals import ensure_studs, spawn_studs
         before = list(getattr(owner.db, "facility_studs", None) or [])
         roster = ensure_studs(owner)
         studs_added = (not before) and bool(roster)
+        pens = rooms.get("pens")
+        if pens:
+            studs_penned = spawn_studs(pens, owner, tagger=_tag)
     except Exception:
         pass
 
@@ -2393,7 +2405,8 @@ def facility_upgrade(owner):
         f"  Staff placards added: {added_placards}\n"
         f"  New zones/installs merged: {added_zones}\n"
         f"  Little Box installed in the Nursery: {'yes' if box_added else 'already present'}\n"
-        f"  Bethany's named studs installed: {'yes' if studs_added else 'already present'}\n"
+        f"  Bethany's named studs installed: {'yes' if studs_added else 'already present'}"
+        f" (penned in the Pens: {studs_penned})\n"
         f"  New little-clauses applied (signed resident): {'yes' if clauses_added else 'n/a'}\n"
         f"  Your character state and progress are untouched.|n")
     return realm

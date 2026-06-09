@@ -84,3 +84,70 @@ def stud_line(stud):
     if not stud:
         return ""
     return f"{stud.get('name')}, {stud.get('desc')}"
+
+
+# Ambient lines for the Pens once the studs are penned there — the kennel comes alive.
+PEN_AMBIENT = [
+    "|gDown the run, one of the studs throws himself against his gate and the whole row takes "
+    "it up — baying, snorting, stamping — settling only slowly back to a thick, waiting quiet.|n",
+    "|gThe smell of the studs is everywhere in here: hot animal, rut, straw, the particular "
+    "reek of a place where breeding is the only industry. It gets into the back of the throat.|n",
+    "|gCaesar's chain rattles as he shifts and resettles, never quite taking his eyes off the "
+    "stock; somewhere a younger hound whines, eager and unsubtle.|n",
+    "|gA stud scents the air, finds something on it he likes, and a low eager sound rolls down "
+    "the whole run — every penned beast suddenly, patiently attentive.|n",
+]
+
+
+def present_stud(room, species=None):
+    """Return a FacilityAnimal of `species` actually present in `room`, or None."""
+    if not room:
+        return None
+    try:
+        from typeclasses.facility_furniture import FacilityAnimal
+    except Exception:
+        return None
+    present = [o for o in room.contents if isinstance(o, FacilityAnimal)
+               and (species is None or getattr(o.db, "species", None) == species)]
+    return random.choice(present) if present else None
+
+
+def spawn_studs(room, owner, tagger=None):
+    """Spawn the owner's named studs as real present FacilityAnimal creatures in `room`
+    (the Pens). Idempotent — skips any stud already present by name. `tagger(obj)` (optional)
+    tags each for realm teardown. Returns the count spawned."""
+    if not room or not owner:
+        return 0
+    roster = ensure_studs(owner)
+    try:
+        from evennia.utils import create
+        from typeclasses.facility_furniture import FacilityAnimal
+    except Exception:
+        return 0
+    present_names = {(o.key or "").lower() for o in room.contents}
+    spawned = 0
+    for stud in roster:
+        name = stud.get("name")
+        if not name or name.lower() in present_names:
+            continue
+        try:
+            a = create.create_object(FacilityAnimal, key=name, location=room)
+            a.db.species   = stud.get("species", "hound")
+            a.db.stud_desc = stud.get("desc", f"one of Bethany's {a.db.species}s.")
+            a.db.is_stud   = True
+            if tagger:
+                tagger(a)
+            spawned += 1
+        except Exception:
+            pass
+    # Bring the run to life with kennel ambient (merge, don't duplicate).
+    try:
+        amb = list(getattr(room.db, "ambient_msgs", None) or [])
+        for line in PEN_AMBIENT:
+            if line not in amb:
+                amb.append(line)
+        room.db.ambient_msgs = amb
+    except Exception:
+        pass
+    return spawned
+
