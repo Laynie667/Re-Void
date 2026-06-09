@@ -944,6 +944,49 @@ _NUGGET_KEPT = [
     "nothing of {t} left that could ever do anything but bask in it. \"Mine,\" Bethany says. \"All of you. "
     "What's left.\"|n",
 ]
+# ── The LITTLE nugget: reduced AND regressed, and handed to the animals by Bethany ──
+# Fires in _nugget_beat when the kept nugget is also in little headspace. Bethany plays
+# nursery-keeper over the bestiality — warm baby-talk laid over the kennel — and the
+# breeding is real (gang_inseminate, animal species). |g animals |M Bethany |r breeding.
+_NUGGET_LITTLE_ANIMAL = [
+    "|MBethany carries her little nugget down to the kennel run balanced on one hip like a "
+    "swaddled baby, cooing the whole way. \"Playtime, sweetheart. The doggies missed you.\" She "
+    "sets the limbless, gauged-open trunk of {t} down in the straw amongst the hounds and steps "
+    "back to watch, fond as anything, as the first one mounts the helpless little thing and "
+    "drives its knot home. \"There we go. Good girl. Let the nice doggy in.\"|n",
+    "|MShe clips {t} to the low breeding frame at puppy height and pats her cheek. \"Such a good "
+    "little one, holding still for me — not that you could do otherwise, hm?\" A hound's already "
+    "nosing at her propped-open holes; Bethany guides it in by the scruff, sing-song. \"In you go. "
+    "There. Getting bred by the kennel and you can't even reach to push him off. Isn't being little "
+    "and helpless the *nicest* thing.\"|n",
+    "|gThe hounds take turns on the little nugget while Bethany keeps a hand on {t}'s head, "
+    "stroking, murmuring nursery-soft over the snarling and the wet slap of it — |M\"shh, shh, I "
+    "know, big knot for such a little thing, take it, take it for me\"|g — one after another mounting "
+    "the legless trunk of her and tying off deep, the litter being put in her by the pack while she "
+    "can only rock on the rings and whine.|n",
+    "|MBethany kneels in the straw with her little nugget cuddled in her lap, presenting her holes "
+    "up to the waiting hound like offering a baby to be burped. \"Who's mummy's good breeder? You "
+    "are. Yes you are.\" The dog mounts, knots, and Bethany rocks {t} gently through it, kissing her "
+    "forehead while the animal pumps a litter into the helpless little thing. \"Good girl. Good, "
+    "good girl. We'll do another doggy when this one's done.\"|n",
+    "|gA boar this time — bigger, blunter — and Bethany holds {t} steady for it with both hands, "
+    "talking her through like a fussy toddler at the doctor. |M\"Big pinch, sweetheart, then it's "
+    "all done — there, see? In. Good little one.\"|g The legless trunk of her jolts with each brutal "
+    "thrust, the huge udder swinging, nothing she can do but be bred and be praised for it.|n",
+    "|MShe lines the little nugget up nose-to-knot and feeds her the hound's cock like a bottle. "
+    "\"Suckle, baby. That's your dinner.\" {t} nurses helplessly at one end while another hound mounts "
+    "the other, and Bethany beams down at the spit-roasted little thing between them. \"Look at you. "
+    "Fed and bred at once, and not a thing you have to do but lie there and be good. I'm so proud.\"|n",
+    "|gThe whole run gets a turn before Bethany's done — the little nugget left tied and dripping in "
+    "the straw, knotted full by hound after hound, the litter in her counted up out loud as it goes. "
+    "|M\"That's three. That's four. Such a productive little girl.\"|g She doesn't lift {t} out until "
+    "the pack has finished, and even then it's to clean her face and coo, not to spare her.|n",
+    "|MAfterward Bethany scoops the bred, dripping little nugget up out of the straw and holds her "
+    "close, rocking, while {t}'s head swims with knot and devotion and the small flat happiness of "
+    "having been good. \"There's my best little thing. All full of puppies and all mine.\" She kisses "
+    "her, fond and final. \"We'll come see the doggies again tomorrow. You'd like that, wouldn't you. "
+    "Of course you would. You don't get to like anything else.\"|n",
+]
 # The live-gavel countdown, by stage (0=brisk, 1=climbing, 2=going once, 3=going twice)
 _GAVEL_COUNTDOWN = [
     "|cThe bidding comes fast now, the figure on {t} jumping in the dark.|n",
@@ -4789,6 +4832,22 @@ class RealmCycleScript(FacilityScript):
                 pass
         # Use — what she's for now.
         if room:
+            # If she's a LITTLE nugget — reduced AND regressed — Bethany is liable to take
+            # her down to the animals and play nursery-keeper over the breeding. (Real
+            # animal insemination + a regression deepening; the §0 floor still frees her.)
+            headspace = getattr(char.db, "headspace", None)
+            is_little = headspace in ("little", "small") or \
+                float(getattr(char.db, "regression", 0) or 0) >= 50.0
+            if is_little and random.random() < 0.5:
+                self._nugget_little_animals(room, char, t)
+                # care/curses still apply below
+                try:
+                    from world.conditioning import add_conditioning
+                    add_conditioning(char, 0.5 + cond * 0.004, source="nugget")
+                except Exception:
+                    pass
+                self._tick_curses(char, t, cond, phase="owned")
+                return
             roll = random.random()
             appendages = getattr(char.db, "nugget_appendages", None) or "stumps"
             if roll < 0.18 and appendages in ("paws", "hooves"):
@@ -4819,6 +4878,39 @@ class RealmCycleScript(FacilityScript):
         except Exception:
             pass
         self._tick_curses(char, t, cond, phase="owned")
+
+    def _nugget_little_animals(self, room, char, t):
+        """Bethany takes the little nugget down to the animals — real bestiality breeding
+        (gang_inseminate, animal species) wrapped in her nursery-keeper baby-talk, with the
+        regression deepening for being used this helpless and praised for it. A star where
+        the chart's on. The §0 floor still frees her instantly, limbless or not."""
+        room.msg_contents(random.choice(_NUGGET_LITTLE_ANIMAL).format(t=t))
+        # Real animal breeding into her propped-open holes — mostly hounds (the kennel).
+        species = random.choice(["hound", "hound", "hound", "boar", "stallion"])
+        try:
+            from world.gang_breeding import animal_holes, gang_inseminate, maybe_lineage_offspring
+            holes = [z for z in animal_holes(char).values() if z]
+            if holes:
+                # The pack takes turns — one or two holes bred this beat.
+                for zone in random.sample(holes, k=min(len(holes), random.randint(1, 2))):
+                    gang_inseminate(char, zone, contributors=1, fluid_type="semen", species=species)
+                try:
+                    maybe_lineage_offspring(char, species, 1)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        # Being bred this helpless, and cooed at for it, takes her further down.
+        try:
+            from world.regression import regress
+            regress(char, random.uniform(3.0, 6.0), source="nugget_animals")
+        except Exception:
+            pass
+        try:
+            from world.star_chart import award_star
+            award_star(char, "bred", room=room)
+        except Exception:
+            pass
 
     def _choose_destination(self, char, rooms):
         """The handler reads her board and decides where she's owed next — a real,

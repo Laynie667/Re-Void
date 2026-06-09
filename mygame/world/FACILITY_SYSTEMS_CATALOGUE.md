@@ -338,6 +338,11 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   + `bethany_deposit_effect` laced devotion), `_spawn`/`_mark_owned`. Office Bethany is a
   static NPC; visit Bethany is spawned/despawned. ⚠ possible to have 2–3 Bethanys in one room
   momentarily (see AUDIT).
+- **Little-nugget animal beat** (`RealmCycleScript._nugget_beat` → `_nugget_little_animals`):
+  when the kept nugget is also in little headspace (`headspace` little/small or `regression ≥ 50`),
+  ~50% of use-beats run it — Bethany plays nursery-keeper while the kennel breeds the helpless
+  little trunk of her: real `gang_inseminate` (hound-weighted) + `maybe_lineage_offspring` + a
+  regression deepening + a star. Pool `_NUGGET_LITTLE_ANIMAL` (8). Floor still frees her instantly.
 - **Visit modes** (`db.visit_mode`): `throat` (the original quick contemptuous face-fuck) and
   `seat` — the three-shaft set-piece. Seat fires ~40% when she has ≥3 holes available; runs
   4–6 beats; all three prehensile shafts work mouth/cunt/ass at once, knot-locks partway
