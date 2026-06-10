@@ -378,16 +378,19 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   existing FACILITY_FLAGS (active_speech_filters/forced_posture/arousal_floor/stim_per_tick) —
   floor coverage already holds.
 
-## 4h. CYOA choices  (`world/cyoa.py` + cycle `_pose_cyoa`/`_cyoa_tick` + `choose` cmd)
+## 4h. CYOA choices  (`world/cyoa.py` + cycle `_pose_cyoa`/`_cyoa_tick` + `choose`/`offer` cmds)
 - The facility makes her CHOOSE at branch points; every option routes through a real effect, all
-  options are bad, and indecision is itself a choice — `facility_decides` fires the default on
-  timeout (`_CYOA_TIMEOUT_S`). Never hard-blocks the cycle; `pending_choice` in FACILITY_FLAGS so
-  the floor clears it.
-- `pose_choice`/`resolve_choice` (by number or key)/`facility_decides`/`has_pending`. Effect
-  registry (`@effect`): emphasis (biases `_choose_destination` via `cycle_emphasis`), grant_relief
-  (→ arousal_rules.grant_release), deny_hold, quota_deal, pick_hole (→ record_use), go_little
-  (→ regression), submit_standing. `_pose_cyoa` builds 5 framed choices (beg/deal/which-hole/
-  slip/emphasis), the hole one built from her real orifices. `choose [<n>]` command (Interaction).
+  options are bad, indecision fires the facility's default (`facility_decides` on `_CYOA_TIMEOUT_S`).
+  Never hard-blocks the cycle; `pending_choice` in FACILITY_FLAGS so the floor clears it.
+- **Data-driven choice graph**: `@choice(id, root=)` builder registry (`_BUILDERS`/`_ROOTS`);
+  `pose_named(char, id)` / `pose_random(char)` (cycle auto-poser, skips N/A builders). Options can
+  **chain** via `then=<builder_id>` (resolve_choice poses the next node). Builders: beg / deal /
+  hole (built from her real orifices) / slip / emphasis (root), + `offer` (player entry).
+- **Facility spine**: `@effect("facility")` finds the running cycle script and calls a real method
+  (`_gang`/`_do_milk`/`_procedure`/`_dose`/scene), so the facility's content is reachable AS choices.
+  Other effects: emphasis (biases `_choose_destination`), grant_relief, deny_hold, quota_deal,
+  pick_hole, go_little, submit_standing.
+- Commands: `choose [<n>]` (answer/re-show), `offer` (present yourself → the offer choice graph).
 
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/

@@ -1515,6 +1515,39 @@ class CmdChoose(Command):
 ALL_FACILITY_VERBS.append(CmdChoose)
 
 
+class CmdOffer(Command):
+    """
+    Present yourself to the facility — the one scrap of initiative they leave you.
+
+    Usage:
+        offer
+
+    Opens the choice of what you offer yourself up for (breeding, milking, marking, dosing,
+    being made little). Each branch invokes the real systems on you. Offering is just obeying
+    with extra steps, and they love to watch you reach for it — but the way OUT is never one of
+    the offers and never needs to be (OOC reset / escape is always yours).
+    """
+    key           = "offer"
+    aliases       = ["present-self", "volunteer"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        if not getattr(caller.db, "facility_active", False) and not getattr(caller.db, "facility_signed", False):
+            caller.msg("|xThere's nothing here to offer yourself to.|n")
+            return
+        try:
+            from world.cyoa import pose_named
+        except Exception:
+            caller.msg("|xThe offer dies in your throat.|n")
+            return
+        if not pose_named(caller, "offer", room=caller.location):
+            caller.msg("|xThey're not taking offers from you just now.|n")
+
+ALL_FACILITY_VERBS.append(CmdOffer)
+
+
 class CmdStars(Command):
     """
     Your gold-star chart — earned the only way that counts, and spent on relief.

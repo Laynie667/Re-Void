@@ -103,6 +103,10 @@ file(s) so the work is actionable, not vague.*
 
 - ✅ **CYOA choice layer** (`world/cyoa.py`): branch-point choices with real effects; indecision
   fires the facility's default; `choose` command; floor-safe. Highest-priority "game system".
+- ✅ **CYOA as spine** — data-driven builder registry (`@choice`/`pose_named`/`pose_random`),
+  option **chaining** (`then`), and a `facility` effect that invokes real cycle methods
+  (`_gang`/`_do_milk`/`_procedure`/`_dose`/scenes) so facility content is reachable as choices.
+  `offer` command = player entry into the choice graph.
 - ☐ **Relationship tiers** (requested): extend beyond consent — owner/lovers/family/shared-faction/
   hostile-faction relations that gate or colour interactions. (`world/relationships.py` exists.)
 - ☐ **Post Office** (MEDIUM priority): expand/refine rooms + the three NPCs (Seraphine/Calix/Vesper)

@@ -65,7 +65,8 @@ def pose_choice(character, key, prompt, options, default_key=None, room=None):
 
 def resolve_choice(character, selection):
     """Resolve the pending choice by 1-based number or option key. Applies the real effect and
-    clears the pending choice. Returns (option, result_msg) or (None, '')."""
+    clears the pending choice. If the chosen option has a `then` (a builder id), the next choice
+    in the chain is posed. Returns (option, result_msg) or (None, '')."""
     pending = getattr(character.db, "pending_choice", None)
     if not pending:
         return None, ""
@@ -82,6 +83,13 @@ def resolve_choice(character, selection):
         return None, ""
     character.db.pending_choice = None
     msg = run_effect(character, opt.get("effect"), opt.get("params"))
+    # Chain — an option may pose the next node in the branch.
+    nxt = opt.get("then")
+    if nxt:
+        try:
+            pose_named(character, nxt, room=getattr(character, "location", None))
+        except Exception:
+            pass
     return opt, msg
 
 
@@ -199,3 +207,187 @@ def _eff_submit_standing(character, p):
     except Exception:
         pass
     return "submitted"
+
+
+# ── builder registry: choices as data, posable by id, chainable ──────────────
+# A builder is fn(character) -> {key, prompt, options[], default} (or None if N/A here).
+# Tagged "root" builders are eligible for the cycle's random pose; any builder can be reached
+# by id via an option's `then` (chaining) or by pose_named().
+_BUILDERS = {}
+_ROOTS = []
+
+
+def choice(cid, root=False):
+    def deco(fn):
+        _BUILDERS[cid] = fn
+        if root:
+            _ROOTS.append(cid)
+        return fn
+    return deco
+
+
+def pose_named(character, cid, room=None):
+    """Build choice `cid` for this character and pose it. Returns the pending dict or None."""
+    fn = _BUILDERS.get(cid)
+    if not fn:
+        return None
+    try:
+        spec = fn(character)
+    except Exception:
+        spec = None
+    if not spec or not spec.get("options"):
+        return None
+    return pose_choice(character, spec.get("key", cid), spec["prompt"], spec["options"],
+                       default_key=spec.get("default"), room=room)
+
+
+def pose_random(character, room=None):
+    """Pose a random root choice (the cycle's auto-poser). Skips builders that return None
+    (e.g. the hole menu when she has no orifices)."""
+    if not _ROOTS:
+        return None
+    for cid in random.sample(_ROOTS, k=len(_ROOTS)):
+        if pose_named(character, cid, room=room):
+            return cid
+    return None
+
+
+# ── invoking the real facility systems from a choice ─────────────────────────
+def _cycle_script(character):
+    try:
+        from typeclasses.facility_script import RealmCycleScript, FacilityScript
+        for s in character.scripts.all():
+            if isinstance(s, (RealmCycleScript, FacilityScript)):
+                return s
+    except Exception:
+        return None
+    return None
+
+
+@effect("facility")
+def _eff_facility(character, p):
+    """Run a real facility method on her — the spine that passes facility content to CYOA.
+    params: {method, kind} where kind = proc|dose (room,target,t) / gang (…,cond) /
+    scene (…,cond,orifices). No-ops cleanly if the cycle isn't running."""
+    s = _cycle_script(character)
+    room = getattr(character, "location", None)
+    if not s or not room:
+        return ""
+    t = character.db.rp_name or getattr(character, "name", "she")
+    method = p.get("method"); kind = p.get("kind", "proc")
+    fn = getattr(s, method, None)
+    if not fn:
+        return ""
+    cond = float(getattr(character.db, "conditioning", 0) or 0)
+    try:
+        if kind == "gang":
+            fn(room, character, t, cond)
+        elif kind == "scene":
+            fn(room, character, t, cond, s._orifices(character))
+        else:
+            fn(room, character, t)
+    except Exception:
+        pass
+    return method or ""
+
+
+# ── the choice graph (filthy, real, chainable) ───────────────────────────────
+@choice("beg", root=True)
+def _b_beg(character):
+    return {"key": "beg", "prompt": (
+        "Your arousal's wound to the edge and held there, denied, aching. A handler stands at "
+        "your station with the release key on one finger and all the time in the world. \"Ask "
+        "nicely,\" she says, \"or don't. Up to you.\""),
+        "options": [
+            {"key": "beg", "label": "Beg for it", "effect": "grant_relief",
+             "desc": "out loud, degrading, granted — and the relief is the leash"},
+            {"key": "hold", "label": "Hold out", "effect": "deny_hold",
+             "desc": "keep that scrap of self; stay denied and aching, conditioned deeper for it"}],
+        "default": "hold"}
+
+
+@choice("deal", root=True)
+def _b_deal(character):
+    sp = random.choice(["hound", "bull", "contributor"])
+    return {"key": "deal", "prompt": (
+        f"A handler crouches to your level, friendly as anything. \"Tell you what. Take a rest "
+        f"beat right now — off the line, off your feet — and we just double your {sp} quota to "
+        f"make it up. Deal?\""),
+        "options": [
+            {"key": "take", "label": "Take the rest", "effect": "quota_deal",
+             "params": {"species": sp, "bump": 6}, "desc": f"a beat off now — +6 {sp} quota, forever, after"},
+            {"key": "refuse", "label": "Refuse it", "effect": "submit_standing",
+             "desc": "no rest; she notes your compliance and moves on"}],
+        "default": "take"}
+
+
+@choice("hole", root=True)
+def _b_hole(character):
+    s = _cycle_script(character)
+    holes = []
+    if s:
+        try:
+            holes = (s._holes_only(character) or []) + [z for z in s._orifices(character) if s._is_oral(z)]
+        except Exception:
+            holes = []
+    holes = holes[:3]
+    if not holes:
+        return None
+    opts = [{"key": z, "label": f"Offer your {z.split('/')[-1].replace('_', ' ')}",
+             "effect": "pick_hole", "params": {"zone": z},
+             "desc": "the one you pick gets used — and trained for the choosing"} for z in holes]
+    return {"key": "hole", "prompt": (
+        "\"Dealer's choice,\" the handler says, gesturing down your body with bored magnanimity. "
+        "\"Pick the hole. We're using one regardless — but you get to say which.\""),
+        "options": opts, "default": holes[0]}
+
+
+@choice("slip", root=True)
+def _b_slip(character):
+    return {"key": "slip", "prompt": (
+        "You can feel it happening again — the room going big, the words going round, the warm "
+        "small quiet rising up to take you. You could let it. You could claw back up into yourself "
+        "one more time. It's getting harder to tell which one you want."),
+        "options": [
+            {"key": "let", "label": "Let yourself go small", "effect": "go_little",
+             "params": {"amount": 8.0}, "desc": "sink into little; it's easier down there, and it takes"},
+            {"key": "fight", "label": "Claw back up", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "desc": "stay big a little longer; it costs you, and you'll face this again"}],
+        "default": "let"}
+
+
+@choice("offer", root=False)
+def _b_offer(character):
+    """Player entry (the `offer` command): she presents herself, and the facility obliges with
+    real processing — each branch invokes a real system (or chains deeper)."""
+    return {"key": "offer", "prompt": (
+        "You present yourself — the one scrap of initiative they leave you, because offering is "
+        "just obeying with extra steps, and they love to watch you reach for it. \"Well?\" the "
+        "handler says, pen poised. \"What are you good for today? Tell us. We'll oblige.\""),
+        "options": [
+            {"key": "bred", "label": "Offer to be bred", "effect": "facility",
+             "params": {"method": "_gang", "kind": "gang"}, "desc": "the line takes you, for real"},
+            {"key": "milked", "label": "Offer to be milked", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "desc": "drained on the spot"},
+            {"key": "marked", "label": "Offer to be marked", "effect": "facility",
+             "params": {"method": "_procedure", "kind": "proc"}, "desc": "a real, permanent procedure of their choosing"},
+            {"key": "dosed", "label": "Offer to be dosed", "effect": "facility",
+             "params": {"method": "_dose", "kind": "proc"}, "desc": "something experimental, undocumented"},
+            {"key": "little", "label": "Offer to be made little", "effect": "go_little",
+             "params": {"amount": 6.0}, "then": "slip", "desc": "ask for it small, and keep slipping"}],
+        "default": "bred"}
+
+
+@choice("emphasis", root=True)
+def _b_emphasis(character):
+    return {"key": "emphasis", "prompt": (
+        "Intake wants to know how to spend you today — a courtesy it extends exactly once, and "
+        "only because your answer doesn't change that you'll get all of it eventually."),
+        "options": [
+            {"key": "milk", "label": "Start at the dairy", "effect": "emphasis",
+             "params": {"which": "milk"}, "desc": "weighted toward the cups this stretch"},
+            {"key": "breed", "label": "Start in the pens", "effect": "emphasis",
+             "params": {"which": "breed"}, "desc": "weighted toward breeding this stretch"},
+            {"key": "condition", "label": "Start in the cell", "effect": "emphasis",
+             "params": {"which": "condition"}, "desc": "weighted toward conditioning this stretch"}],
+        "default": "breed"}
