@@ -51,7 +51,7 @@ file(s) so the work is actionable, not vague.*
 - ☐ **Speech-filter order contract.** `little_talk`/`stuffed`/`sissy`/`baby_talk` stack; document
   and enforce a canonical apply-order in `world/speech_filters.apply_speech_filters` (right now
   it's list-order dependent) so combinations read consistently.
-- ☐ **Quota shape drift.** `breeding_quota` is sometimes `{sp:int}`, sometimes
+- ✅ **Quota shape drift.** (gang_breeding.quota_pair / ensure_quota_entry) `breeding_quota` is sometimes `{sp:int}`, sometimes
   `{sp:{current,required,…}}` (noted in code as a `_SaverDict`). Add one `quota_entry(q, sp)`
   normalizer in `gang_breeding` and route all readers through it.
 

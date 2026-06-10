@@ -21,6 +21,32 @@ _ANON_NAMES = [
 ]
 
 
+def quota_pair(entry):
+    """Normalise a single breeding-quota entry — which may be a bare int (required) or a
+    {current, required, ...} mapping (incl. Evennia _SaverDict) — to (current, required)."""
+    if hasattr(entry, "get"):
+        return int(entry.get("current", 0) or 0), int(entry.get("required", 0) or 0)
+    try:
+        return 0, int(entry)
+    except Exception:
+        return 0, 0
+
+
+def ensure_quota_entry(quota, sp):
+    """Return a real, mutable {current, required, ...} dict for species `sp`, tolerating an
+    int-shaped or mapping-shaped stored entry — so the ratchet/brand logic never crashes on shape."""
+    v = quota.get(sp)
+    if hasattr(v, "get"):
+        e = dict(v)
+        e.setdefault("current", 0)
+        e.setdefault("required", 0)
+        return e
+    try:
+        return {"current": 0, "required": int(v or 0)}
+    except Exception:
+        return {"current": 0, "required": 0}
+
+
 def gang_inseminate(target, zone_name, contributors=3,
                     fluid_type="semen", volume_each=DEFAULT_VOLUME_EACH,
                     species="contributor", generation=1, sire=None):
@@ -44,7 +70,7 @@ def gang_inseminate(target, zone_name, contributors=3,
     # Per-species quota: one successful breeding event logged for this species.
     quota = getattr(target.db, "breeding_quota", None)
     if quota and species in quota:
-        entry = dict(quota[species])
+        entry = ensure_quota_entry(quota, species)
         entry["current"] = int(entry.get("current", 0)) + 1
         quota[species] = entry
         target.db.breeding_quota = quota
@@ -218,8 +244,8 @@ def quota_met(target):
     quota = getattr(target.db, "breeding_quota", None)
     if not quota:
         return False
-    return all(int(v.get("current", 0)) >= int(v.get("required", 0))
-               for v in quota.values())
+    pairs = (quota_pair(v) for v in quota.values())
+    return all(cur >= req for cur, req in pairs)
 
 
 _OFFSPRING_TERM = {"hound": "pup", "bull": "calf", "boar": "piglet", "stallion": "foal",
@@ -741,8 +767,7 @@ def summarize_quota(target):
     order = ["hound", "bull", "boar", "stallion", "contributor"]
     keys = [k for k in order if k in quota] + [k for k in quota if k not in order]
     for sp in keys:
-        v = quota[sp]
-        cur = int(v.get("current", 0)); req = int(v.get("required", 0))
+        cur, req = quota_pair(quota[sp])
         done = "|gMET|n" if cur >= req else "|rNOT MET|n"
         bar = f"{cur}/{req}"
         lines.append(f"   {_SPECIES_LABEL.get(sp, sp):<22} {bar:>8}   {done}")
