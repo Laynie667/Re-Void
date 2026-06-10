@@ -48,7 +48,7 @@ file(s) so the work is actionable, not vague.*
   `facility_build`. Make `facility_brands` a pure read-through of freeform marks (or drop it and
   point all readers at `FreeformManager`), so `marks`/`brands`/`look` never disagree. Keep the
   flag in FACILITY_FLAGS until all readers move.
-- ☐ **Speech-filter order contract.** `little_talk`/`stuffed`/`sissy`/`baby_talk` stack; document
+- ✅ **Speech-filter order contract.** (speech_filters._FILTER_ORDER / _ordered_filters) `little_talk`/`stuffed`/`sissy`/`baby_talk` stack; document
   and enforce a canonical apply-order in `world/speech_filters.apply_speech_filters` (right now
   it's list-order dependent) so combinations read consistently.
 - ✅ **Quota shape drift.** (gang_breeding.quota_pair / ensure_quota_entry) `breeding_quota` is sometimes `{sp:int}`, sometimes

@@ -32,6 +32,32 @@ import re
 # Main entry point
 # ---------------------------------------------------------------------------
 
+# Canonical apply-order for stacked transform filters, so the COMBINATION reads the same
+# regardless of the order they happened to be added to active_speech_filters. Pipeline:
+#   1) identity/content rewrites (who/what is said)  ->
+#   2) register softening (vocabulary/phoneme)        ->
+#   3) persona overlay (feminisation)                 ->
+#   4) structural reduction (cut to fragments/words)  ->
+#   5) full-output replacements (discard prior text — gag/animal/coy)
+# Unknown/unlisted filters keep their stored order, appended after the known ones.
+_FILTER_ORDER = [
+    "third_person", "no_names", "no_self_name", "banned_words", "word_swap", "no_negatives",
+    "baby_talk", "little_talk",
+    "sissy",
+    "stutter", "single_word",
+    "third_person_coy", "animal_sounds", "suckling", "stuffed",
+]
+
+
+def _ordered_filters(filters):
+    """Return the active transform filters in canonical pipeline order (unknown ones last,
+    in their original relative order)."""
+    rank = {name: i for i, name in enumerate(_FILTER_ORDER)}
+    known = sorted((f for f in filters if f in rank), key=lambda f: rank[f])
+    unknown = [f for f in filters if f not in rank]
+    return known + unknown
+
+
 def apply_speech_filters(character, text: str) -> tuple:
     """
     Apply all active speech filters to the spoken text.
@@ -70,7 +96,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "word_swap":          _filter_word_swap,
     }
 
-    for fname in filters:
+    for fname in _ordered_filters(filters):
         fn = _FILTER_FUNCS.get(fname)
         if fn:
             text = fn(character, text)
