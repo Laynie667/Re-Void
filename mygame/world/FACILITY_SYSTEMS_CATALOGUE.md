@@ -233,6 +233,10 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   small words + dropped grammar + first-person→"me" + fillers/whines. Stacks after baby_talk.
 - **Read-out:** `regression_status`/`regression_stage`/`_reg_bar` + the `headspace` command
   (`commands/facility_commands.py`, aliases `little`/`howlittle`) — the little's own private view.
+- **Composed `state` read-out** (aliases `status`/`self`): one dashboard tying together mind
+  (conditioning stage/docility), headspace, body (heat/engorgement/gelded/sissy/denial/lactation),
+  line (brood totals + depth), stars, owed quota, biting clauses, and standing — each line points
+  at its detail command, and it always closes on the never-gated floor reminder.
 
 ## 3c. Little Box  (`typeclasses/little_box.py` + `commands/little_box_commands.py`)
 - **Purpose:** "toybox/playpen" furniture that keeps its occupant little — the storage

@@ -1324,6 +1324,125 @@ class CmdHeadspace(Command):
 ALL_FACILITY_VERBS.append(CmdHeadspace)
 
 
+class CmdState(Command):
+    """
+    Everything they've made of you so far — one page, for your own eyes.
+
+    Usage:
+        state          — a composed overview: your head, your body, your line, what you owe
+
+    Pulls together the read-outs that are each their own command (|wlook mind|n, |wheadspace|n,
+    |wstudbook|n, |wstars|n, |wquota|n) into a single dashboard, so you can see, all at once,
+    exactly how far down the line has taken you. The way out is never on this page's terms —
+    it's always yours (OOC reset / escape).
+    """
+    key           = "state"
+    aliases       = ["status", "self"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        d = caller.db
+        name = d.rp_name or caller.name
+        desig = getattr(d, "designation", None)
+        lines = [f"|W══ WHAT THEY'VE MADE OF {('YOU' if not desig else '').upper()} ══|n",
+                 f"|w  {name}|n" + (f"  |x({desig})|n" if desig and desig != name else "")]
+
+        # Mind — conditioning stage + docility.
+        try:
+            from typeclasses.mind_state_item import _stage
+            cond = float(getattr(d, "conditioning", 0) or 0)
+            stg = _stage(cond)
+            doc = int(getattr(d, "docility", 0) or 0)
+            perm = " |r(set)|n" if getattr(d, "conditioning_permanent", False) else ""
+            lines.append(f"|m  mind:|n {stg}{perm}"
+                         + (f", docility {doc}" if doc else "") + " |x(look mind)|n")
+        except Exception:
+            pass
+
+        # Headspace — regression.
+        try:
+            from world.regression import regression_stage
+            reg = float(getattr(d, "regression", 0) or 0)
+            if reg > 0 or getattr(d, "headspace", None):
+                label, _desc = regression_stage(reg)
+                lines.append(f"|m  headspace:|n {label} |x(headspace)|n")
+        except Exception:
+            pass
+
+        # Body — heat, engorgement, gelding/sissy, denial.
+        body = []
+        if getattr(d, "perpetual_heat", False):
+            body.append("in perpetual heat")
+        eb = int(getattr(d, "milk_engorge_beats", 0) or 0)
+        if eb >= 2:
+            body.append(f"|cengorged, aching to be milked ({eb})|n")
+        if getattr(d, "neutered", False):
+            body.append("gelded & caged")
+        if getattr(d, "sissified", False):
+            body.append("sissified")
+        if getattr(d, "orgasm_denial", False):
+            body.append("denied release")
+        if getattr(d, "lactation_locked", False):
+            body.append("lactating")
+        if body:
+            lines.append("|m  body:|n " + ", ".join(body))
+
+        # Line — the brood, one line.
+        try:
+            counts = dict(getattr(d, "offspring_counts", None) or {})
+            tot = sum(int(v) for v in counts.values())
+            if tot:
+                mg = int(getattr(d, "offspring_max_gen", 1) or 1)
+                deep = f", {mg} gens deep" if mg > 1 else ""
+                lines.append(f"|m  line:|n {tot} get on file{deep} |x(studbook)|n")
+        except Exception:
+            pass
+
+        # Stars — if the chart's on her.
+        try:
+            if getattr(d, "star_chart_on", False):
+                from world.star_chart import stars_balance, RELIEF_COST
+                sb = stars_balance(caller)
+                lines.append(f"|m  stars:|n {sb} saved |x(of {RELIEF_COST} for relief — stars)|n")
+        except Exception:
+            pass
+
+        # Quota — what's owed before rest.
+        try:
+            from world.compliance import quota_status
+            qlines, met = quota_status(caller)
+            if qlines:
+                lines.append("|m  owed:|n " + ("|gquota met|n" if met else "|rbehind|n")
+                             + " |x(quota)|n")
+        except Exception:
+            pass
+
+        # Clauses biting right now.
+        clause_map = [("teat_gagged", "teat-gag"), ("nurse_first", "nurse-first"),
+                      ("stuffed_mouth", "stuffed-mouth"), ("beg_small", "beg-small"),
+                      ("star_chart_on", "star-chart")]
+        active = [lbl for flag, lbl in clause_map if getattr(d, flag, False)]
+        if active:
+            lines.append("|m  clauses:|n " + ", ".join(active))
+
+        # Standing/grade, if any.
+        try:
+            from world.factions import get_standing
+            st = get_standing(caller)
+            if st:
+                lines.append(f"|m  standing:|n {st} |x(standing)|n")
+        except Exception:
+            pass
+
+        lines.append("|g  and always, off this page entirely: the way out is yours — OOC reset / "
+                     "escape gives you your name, your head, and your body back instantly.|n")
+        caller.msg("\n".join(lines))
+
+ALL_FACILITY_VERBS.append(CmdState)
+
+
 class CmdStars(Command):
     """
     Your gold-star chart — earned the only way that counts, and spent on relief.

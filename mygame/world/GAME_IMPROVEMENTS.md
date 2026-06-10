@@ -92,5 +92,6 @@ file(s) so the work is actionable, not vague.*
   ambient (3–4 each); the `_PROCESS_VOICE` and per-phase beat pools could grow.
 - ☐ Per-species breeding beats vary well; **per-sire** voice (Caesar vs Sultan having *character*
   in how they breed her) would deepen the now-named studs.
-- ☐ A `mind`/`headspace`/`studbook`/`stars` read-out family exists — a single `state` overview
-  that composes them (for the resident's own eyes) would tie the self-knowledge together.
+- ✅ A single composed `state` read-out (aliases `status`/`self`) now ties the self-knowledge
+  family together — mind/headspace/body/line/stars/quota/clauses/standing in one page, each
+  pointing at its detail command, always ending on the floor reminder.
