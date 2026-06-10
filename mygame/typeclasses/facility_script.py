@@ -4596,6 +4596,16 @@ class FacilityScript(DefaultScript):
             base = float(getattr(target.db, "milk_baseline_ml", 0) or 0)
             produced = max(0.0, lifetime - base)
             e = dict(mq); e["current"] = int(produced // BOTTLE_SIZE_ML)
+            # Star-Chart economy: meeting the milk quota earns a star (once per completion).
+            if e["current"] >= int(e.get("required", 0)) and not e.get("starred"):
+                e["starred"] = True
+                try:
+                    from world.star_chart import award_star
+                    award_star(target, "milk", room=target.location)
+                except Exception:
+                    pass
+            elif e["current"] < int(e.get("required", 0)):
+                e["starred"] = False   # re-arm when the bar is raised past her again
             target.db.milk_quota = e
         except Exception:
             pass

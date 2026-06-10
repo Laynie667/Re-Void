@@ -273,7 +273,10 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
     cock-muffled fragments, ~40% chance the mouth is "found full" (a wet gurgle + `_nurse_feed`).
   - **beg_small** — sets `orgasm_denial`; the `beg` verb (begged small) grants one `_grant_climax`
     + a regression drip. Nothing is hers by default; she begs little for relief.
-  - **star_chart** — sets `orgasm_denial` + `star_chart_on`; relief is bought with stars
+  - **star_chart** — fills from EVERY source now: Bethany (seat 3/throat 1), the rocking horse
+    (breed/knot), the nugget animal beat, the gang scenes (`_gang`, per beat), and the **milk
+    quota** (`_log_milk` awards once per completion, re-armed when the bar is raised). Sets
+    `orgasm_denial` + `star_chart_on`; relief is bought with stars
     (`world/star_chart.py`: `award_star`/`spend_stars`/`star_status`, gated on `star_chart_on`).
     `award_star` hooked into Bethany's climax (seat=3/throat=1), the rocking-horse breeding
     deposit + knot-lock. `stars` command (`commands/facility_commands.py`) views + spends

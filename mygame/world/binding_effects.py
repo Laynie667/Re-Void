@@ -763,7 +763,13 @@ def _check_installed_triggers(char, speaker, room, text):
     triggers = list(getattr(char.db, "installed_triggers", None) or [])
     if not triggers:
         return
-    padded = f" {(text or '').lower()} "
+    # Normalise punctuation to spaces so a trigger still fires at the end of a sentence or
+    # before a comma ("good girl." / "hush little one!" / "...empty,") — otherwise the
+    # space-padded match silently misses, which made end-of-line triggers unreliable.
+    import re
+    norm = re.sub(r"[^\w'\s]", " ", (text or "").lower())
+    collapsed = re.sub(r"\s+", " ", norm).strip()
+    padded = f" {collapsed} "
     # Longest phrase first so a multi-word trigger wins over a substring.
     for entry in sorted(triggers, key=lambda e: len(e.get("phrase", "")), reverse=True):
         phrase = (entry.get("phrase") or "").strip().lower()
