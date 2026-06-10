@@ -385,7 +385,9 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 - **Data-driven choice graph**: `@choice(id, root=)` builder registry (`_BUILDERS`/`_ROOTS`);
   `pose_named(char, id)` / `pose_random(char)` (cycle auto-poser, skips N/A builders). Options can
   **chain** via `then=<builder_id>` (resolve_choice poses the next node). Builders: beg / deal /
-  hole (built from her real orifices) / slip / emphasis (root), + `offer` (player entry).
+  hole (built from her real orifices) / slip / emphasis / **intake** (multi-step → chains to
+  emphasis) / **correction** (root), + `offer` & **bethany** (reachable). `devote` effect routes
+  the Bethany owner-arc bump through the cycle's `_devote`.
 - **Facility spine**: `@effect("facility")` finds the running cycle script and calls a real method
   (`_gang`/`_do_milk`/`_procedure`/`_dose`/scene), so the facility's content is reachable AS choices.
   Other effects: emphasis (biases `_choose_destination`), grant_relief, deny_hold, quota_deal,

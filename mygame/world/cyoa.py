@@ -391,3 +391,67 @@ def _b_emphasis(character):
             {"key": "condition", "label": "Start in the cell", "effect": "emphasis",
              "params": {"which": "condition"}, "desc": "weighted toward conditioning this stretch"}],
         "default": "breed"}
+
+
+@effect("devote")
+def _eff_devote(character, p):
+    """Route a devotion bump through the cycle's _devote (Bethany's owner arc) if running."""
+    s = _cycle_script(character)
+    if s and hasattr(s, "_devote"):
+        try:
+            s._devote(character, float(p.get("amount", 5.0)), room=getattr(character, "location", None))
+        except Exception:
+            pass
+    else:
+        character.db.bethany_devotion = float(getattr(character.db, "bethany_devotion", 0) or 0) + float(p.get("amount", 5.0))
+    return "devoted"
+
+
+@choice("intake", root=True)
+def _b_intake(character):
+    """Multi-step: the intake framing — whatever she picks chains into how she's spent."""
+    return {"key": "intake", "prompt": (
+        "A clerk slides a form across the counter and a pen on a chain. The fine print is too "
+        "small to read and you both know you'll sign anyway. \"Just one question before we begin,\" "
+        "she says, warm as a receptionist. \"Are you here because you want to be?\""),
+        "options": [
+            {"key": "yes", "label": "\"Yes.\" Say you want it", "effect": "devote",
+             "params": {"amount": 4.0}, "then": "emphasis",
+             "desc": "the wanting is logged, and held against you forever — then: how to start"},
+            {"key": "unsure", "label": "\"I'm not sure.\"", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "then": "emphasis",
+             "desc": "unsureness is a yes that takes longer; she ticks the box anyway — then: how to start"}],
+        "default": "unsure"}
+
+
+@choice("bethany")
+def _b_bethany(character):
+    """A Bethany-voiced personal branch — she offers to make you hers, which is worse than the line."""
+    return {"key": "bethany", "prompt": (
+        "Bethany crouches to your level with that bright, fond, terrible smile and tips your chin "
+        "up. \"I could leave you on the line with the other stock,\" she muses, \"or I could take "
+        "you. Properly. Mine — file, line, brand, the lot. The line forgets you. I never would. "
+        "Which sounds worse to you, sweetheart? Be honest. I'll know.\""),
+        "options": [
+            {"key": "hers", "label": "Ask to be hers", "effect": "devote",
+             "params": {"amount": 10.0}, "desc": "warmer, crueller, kept — her favourite, bred to her line, never anonymous again"},
+            {"key": "line", "label": "Stay anonymous stock", "effect": "submit_standing",
+             "desc": "a number on the line; she smiles like she's got time, because she does"}],
+        "default": "hers"}
+
+
+@choice("correction", root=True)
+def _b_correction(character):
+    """She slipped (or didn't) — pick the correction. All of them are the facility, for real."""
+    return {"key": "correction", "prompt": (
+        "\"Little correction's overdue,\" a handler says, consulting nothing. \"Doesn't matter "
+        "what for; there's always a for. Pick your medicine — it's the only part you get a say in, "
+        "and we only offer because choosing it is half the lesson.\""),
+        "options": [
+            {"key": "condition", "label": "The cell", "effect": "facility",
+             "params": {"method": "_dose", "kind": "proc"}, "desc": "dosed and conditioned deeper"},
+            {"key": "breed", "label": "The pens", "effect": "facility",
+             "params": {"method": "_gang", "kind": "gang"}, "desc": "bred until the lesson takes"},
+            {"key": "mark", "label": "The parlour", "effect": "facility",
+             "params": {"method": "_procedure", "kind": "proc"}, "desc": "a permanent mark to remember it by"}],
+        "default": "breed"}
