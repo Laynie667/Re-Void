@@ -43,7 +43,7 @@ import re
 _FILTER_ORDER = [
     "third_person", "no_names", "no_self_name", "banned_words", "word_swap", "no_negatives",
     "baby_talk", "little_talk",
-    "sissy",
+    "sissy", "lisp",
     "stutter", "single_word",
     "third_person_coy", "animal_sounds", "suckling", "stuffed",
 ]
@@ -89,6 +89,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "suckling":           _filter_suckling,
         "stuffed":            _filter_stuffed,
         "sissy":              _filter_sissy,
+        "lisp":               _filter_lisp,
         "stutter":            _filter_stutter,
         "third_person_coy":   _filter_third_person_coy,
         "animal_sounds":      _filter_animal_sounds,
@@ -368,6 +369,19 @@ def _filter_sissy(char, text: str) -> str:
         text = re.sub(pat, rep, text, flags=re.IGNORECASE)
     if text and random.random() < 0.7:
         text = text.rstrip(".!") + random.choice(_SISSY_GIGGLE)
+    return text
+
+
+_LISP_FLICKS = ["", "", "", " *the fork flicks*", "—ssth—", " *forked tongue slurring*"]
+
+def _filter_lisp(char, text: str) -> str:
+    """Forked-tongue lisp (the tongue-split procedure): sibilants slur to 'th', with the
+    occasional fork-flick. Cleared with the floor (rides active_speech_filters)."""
+    text = re.sub(r"s", "th", text)
+    text = re.sub(r"S", "Th", text)
+    text = re.sub(r"z", "th", text)
+    if text and random.random() < 0.35:
+        text = text.rstrip(".!") + random.choice(_LISP_FLICKS)
     return text
 
 

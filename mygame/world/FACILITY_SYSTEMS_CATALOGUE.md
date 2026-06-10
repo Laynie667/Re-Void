@@ -366,6 +366,18 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `fellow_cross_sires` (FACILITY_FLAGS) so your broods and hers are half-siblings. Surfaced in
   `studbook` / the ledger as a "crossed lines" entry.
 
+## 4g. Procedure breadth (`_proc_*` + `process`)
+- **tonguesplit** — forks the tongue: adds the `lisp` speech filter (sibilants slur to 'th' +
+  fork-flicks; ordered after sissy in `_FILTER_ORDER`), arousal floor, real mark. Distinct from
+  `_proc_tongue` (babble).
+- **corset** — permanent waist-training: forced_posture + body_language (cinched hourglass she
+  can't slouch out of) + mark.
+- **clitpump** — permanent clit enlargement into an oversensitive cocklet: arousal_floor +
+  stim_per_tick + mark (distinct from `clit_hood`).
+- All in `_PROCEDURES` (cycle can apply) + `process <unit> tonguesplit|corset|clitpump`. Reuse
+  existing FACILITY_FLAGS (active_speech_filters/forced_posture/arousal_floor/stim_per_tick) —
+  floor coverage already holds.
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),

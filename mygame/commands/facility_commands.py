@@ -750,6 +750,24 @@ class CmdProcess(Command):
                 except Exception: pass
             caller.msg(f"|GYou have {t} made over into a kept sissy.|n")
 
+        elif action in ("tonguesplit", "forktongue", "splittongue"):
+            if fs:
+                try: fs._proc_tonguesplit(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t}'s tongue forked.|n")
+
+        elif action in ("corset", "waisttrain", "cinch"):
+            if fs:
+                try: fs._proc_corset(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t} waist-trained into the corset.|n")
+
+        elif action in ("clitpump", "pump"):
+            if fs:
+                try: fs._proc_clitpump(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t}'s clit pumped permanently large.|n")
+
         elif action in ("brand", "mark"):
             # The marker (or a visiting owner) sets a permanent brand — the handler's
             # initial unless they're claimed, in which case the owner's.

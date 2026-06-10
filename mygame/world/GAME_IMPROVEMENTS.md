@@ -63,8 +63,9 @@ file(s) so the work is actionable, not vague.*
 - ✅ **Named fellow-resident** with continuity (`world/facility_fellow.py`) — a recurring unit (or two) the cycle places in
   rooms, with their own slowly-progressing state, so the world has faces, not only ambient shapes.
   Reuse `FacilityScion`/`NPC`; keep them realm-tagged.
-- ☐ **Procedure breadth**: clit-pump/permanent-gape devices, real branding *iron item* (vs the
-  current mark string), tongue-split as a speech effect, corset/waist-training body-processing.
+- ◐ **Procedure breadth**: ✅ tongue-split (lisp filter), ✅ corset/waist-training, ✅ clit-pump —
+  all `_proc_*` + `process` actions. (Still open: a real branding *iron item* vs the mark-string,
+  though marks now route through real freeform.)
 - ☐ **The other branches**: the hub realm + the cabin realm are still thin (per post_office
   backlog) — give them the same inhabited-world + real-systems treatment.
 - ☐ **Maze instances**: place the built `MazeRoom` for real (facility "hall after intake";

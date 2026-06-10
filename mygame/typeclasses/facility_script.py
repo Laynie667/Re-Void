@@ -2610,7 +2610,8 @@ class FacilityScript(DefaultScript):
               "solvent", "cumslut", "forget", "devotion", "arrears"]
     _PROCEDURES = ["pierce", "brand", "stim_implant", "ring_fit", "milk_port",
                    "tail", "fertility_implant", "tongue", "womb_tattoo", "clit_hood",
-                   "latex", "udder", "rings", "cowset", "oneway"]
+                   "latex", "udder", "rings", "cowset", "oneway",
+                   "tonguesplit", "corset", "clitpump"]
 
     # The heaviest drugs are earned, not handed out day one — they unlock as the descent
     # deepens (gated on the quest-line achievements via meets()).
@@ -3081,6 +3082,50 @@ class FacilityScript(DefaultScript):
             f"glans permanently bare and exposed. Every breath of air, every drip, every brush "
             f"of the cradle now drags across it raw. There's no covering it again. "
             f"(permanent extreme sensitivity)|n")
+
+    def _proc_tonguesplit(self, room, target, t):
+        """Fork the tongue — a real, permanent speech change (the `lisp` filter) and an erogenous
+        retooling of the mouth. Distinct from _proc_tongue (which babbles her down)."""
+        filters = list(getattr(target.db, "active_speech_filters", None) or [])
+        if "lisp" not in filters:
+            filters.append("lisp")
+            target.db.active_speech_filters = filters
+        target.db.arousal_floor = max(float(getattr(target.db, "arousal_floor", 0) or 0), 30.0)
+        self._mark(target, "tongue surgically forked — split down the middle, each half moving on "
+                   "its own; speech slurs around it and the mouth is a tool now, not a voice")
+        room.msg_contents(
+            f"|GThey clamp {t}'s tongue out and split it down the centre with a hot blade — two "
+            f"halves now, each flexing on its own, healed forked before she's off the table. Her "
+            f"speech comes out slurred and sibilant around it ever after, and the mouth is retooled "
+            f"for licking and worse, not words. (permanent: forked tongue, lisp, oral retraining)|n")
+
+    def _proc_corset(self, room, target, t):
+        """Permanent waist-training: she's cinched into a trained hourglass and held there —
+        forced posture she can't slouch out of + a permanent body note."""
+        target.db.forced_posture = ("cinched and presented — waist trained to an hourglass, "
+                                    "spine held straight, unable to slouch out of the shape")
+        target.db.body_language = "corset-straight, chest out, waist nipped cruelly in"
+        self._mark(target, "waist trained permanently down — ribs reshaped, a cinched hourglass "
+                   "that holds even out of the corset, breath shallow and high")
+        room.msg_contents(
+            f"|GA steel training corset is laced onto {t} and tightened past sense over the "
+            f"sitting, day after day on the record, until her waist is reshaped to a cruel "
+            f"hourglass that holds even unlaced — ribs floated, breath shallow and high, the shape "
+            f"of an object built to be gripped. She can't slouch out of it now. (permanent waist-training)|n")
+
+    def _proc_clitpump(self, room, target, t):
+        """Permanent clit enlargement via the pump — grown into an oversensitive little cocklet,
+        distinct from the hood removal. Real arousal floor + stim bump."""
+        target.db.arousal_floor = max(float(getattr(target.db, "arousal_floor", 0) or 0), 45.0)
+        target.db.stim_per_tick = float(getattr(target.db, "stim_per_tick", 0) or 0) + 2.0
+        self._mark(target, "clit pumped permanently large — swollen out into a fat, throbbing "
+                   "little cocklet that never fully goes down again, and aches to be touched", mode="in")
+        room.msg_contents(
+            f"|GA suction cell is sealed over {t}'s clit and run for the session, drawing it out "
+            f"bigger and bigger until it's a fat, flushed, permanently swollen little cocklet that "
+            f"won't retract again — engorged, hypersensitive, jutting and aching at the slightest "
+            f"air. They've given her something that looks like wanting and never switches off. "
+            f"(permanent enlargement + sensitivity)|n")
 
     def _proc_neuter(self, room, target, t):
         """Geld + cage male stock: real loss of breeding capability. Removes any testicle
