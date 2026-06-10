@@ -97,10 +97,18 @@ def add_arousal(char, amount: float):
 
     old_arousal = char.db.arousal or 0.0
 
-    # Orgasm denial — cap at 99.0 unless denial has been lifted
-    denial_active = getattr(char.db, "orgasm_denial", False)
-    denial_lifted = getattr(char.db, "orgasm_denial_lifted", False)
-    cap = 100.0 if (not denial_active or denial_lifted) else 99.0
+    # Orgasm denial — the cap and the climax gate both come from the one resolver, so a
+    # granted release reaches 100 and a denied one stays held at 99 (see world.arousal_rules).
+    try:
+        from world.arousal_rules import cap_for, may_climax, consume_release
+        cap = cap_for(char)
+    except Exception:
+        # Fallback to the inline rule if the resolver can't load.
+        denial_active = getattr(char.db, "orgasm_denial", False)
+        denial_lifted = getattr(char.db, "orgasm_denial_lifted", False)
+        cap = 100.0 if (not denial_active or denial_lifted) else 99.0
+        may_climax = lambda c: (not denial_active or denial_lifted)
+        consume_release = lambda c: setattr(c.db, "orgasm_denial_lifted", False)
 
     new_arousal = min(cap, old_arousal + amount)
     char.db.arousal = new_arousal
@@ -109,10 +117,9 @@ def add_arousal(char, amount: float):
     # Threshold messages (private)
     _check_arousal_thresholds(char, old_arousal, new_arousal)
 
-    # Climax — only if denial is not active or has been lifted
-    if new_arousal >= 100.0 and (not denial_active or denial_lifted):
-        if denial_lifted:
-            char.db.orgasm_denial_lifted = False   # one use only
+    # Climax — only if a release is permitted right now (one-shot lift is consumed here).
+    if new_arousal >= 100.0 and may_climax(char):
+        consume_release(char)
         _trigger_climax(char)
 
     return new_arousal

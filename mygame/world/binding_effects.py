@@ -1265,8 +1265,13 @@ def _trigger_piggy_clean(char, holder, room):
 
 
 def _trigger_orgasm_release(char, holder, room):
-    """Holder says the release word — lifts denial for one climax."""
-    char.db.orgasm_denial_lifted = True
+    """Holder says the release word — permits one climax (lifts the cap AND the rule permit
+    together, so a granted release isn't then punished by ask_to_come)."""
+    try:
+        from world.arousal_rules import grant_release
+        grant_release(char)
+    except Exception:
+        char.db.orgasm_denial_lifted = True
     cname = char.db.rp_name or char.name
     char.msg("|xThe denial lifts — just once.|n")
     room.msg_contents(

@@ -36,7 +36,7 @@ file(s) so the work is actionable, not vague.*
 
 ## 2. Whole-game cleanups (known redundancies / sharp edges)
 
-- ☐ **Unify the orgasm-denial flags.** Three flags interact across files —
+- ✅ **Unify the orgasm-denial flags.** (world/arousal_rules.py) Three flags interact across files —
   `orgasm_denial` / `orgasm_denial_lifted` / `rule_come_permit` (`typeclasses/arousal_script.py`
   caps at 99; `world/compliance._grant_climax`, `world/rules.enforce`, `world/conditioning.
   deepen_on_climax`, `world/star_chart`, `commands/facility_commands` all touch them). Propose a
