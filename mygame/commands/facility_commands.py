@@ -156,8 +156,12 @@ def build_board_text(who):
             brood = ", ".join(f"{v} {k}" for k, v in counts.items())
             lines.append(f"|wBROOD:|n  {brood}")
 
-        # Brands
-        brands = getattr(d, "facility_brands", None) or []
+        # Brands — read the real freeform marks (single source), not the legacy parallel list.
+        try:
+            from world.gang_breeding import facility_mark_texts
+            brands = facility_mark_texts(who)
+        except Exception:
+            brands = list(getattr(d, "facility_brands", None) or [])
         if getattr(d, "facility_brand", None):
             brands = [d.facility_brand] + list(brands)
         if brands:
@@ -783,7 +787,11 @@ class CmdProcess(Command):
         elif action in ("portfolio", "photograph", "polaroid"):
             owner = getattr(target.db, "facility_owner", None) or cn
             grade = getattr(target.db, "facility_grade", None) or "stock"
-            marks = len(getattr(target.db, "facility_brands", None) or [])
+            try:
+                from world.gang_breeding import facility_mark_texts
+                marks = len(facility_mark_texts(target))
+            except Exception:
+                marks = len(getattr(target.db, "facility_brands", None) or [])
             summary = f"{grade}, {marks} mark(s) on record"
             try:
                 from world.gang_breeding import record_mark

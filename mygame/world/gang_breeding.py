@@ -400,19 +400,41 @@ def _markable_zone(target, prefer=None):
 
 
 def record_mark(target, text, zone=None, mode="on", prefer=None):
-    """Log a permanent mark BOTH on the board AND as a real freeform mark so it
-    shows in the game's marks/brands commands and zone descriptions."""
-    marks = list(getattr(target.db, "facility_brands", None) or [])
-    marks.append(text)
-    target.db.facility_brands = marks
+    """Log a permanent mark as a REAL freeform mark (the single source of truth — it shows in
+    the game's marks/brands commands, zone descriptions, and `look`). The legacy
+    `facility_brands` string list is written ONLY as a fallback if freeform placement fails,
+    so the two can no longer drift. Read them back with facility_mark_texts()."""
+    placed = False
     try:
         from world.freeform_manager import FreeformManager
         z = zone or _markable_zone(target, prefer=prefer)
         if z:
-            key = f"facility mark {len(marks)}"
-            FreeformManager.place_item(target, z, key, text, 0, display_mode=mode)
+            existing = [k for k in (getattr(target.db, "freeform_items", None) or {})
+                        if str(k).startswith("facility mark")]
+            key = f"facility mark {len(existing) + 1}"
+            ok, _res = FreeformManager.place_item(target, z, key, text, 0, display_mode=mode)
+            placed = bool(ok)
     except Exception:
-        pass
+        placed = False
+    if not placed:
+        # Fallback only — keep the mark even if freeform couldn't place it.
+        marks = list(getattr(target.db, "facility_brands", None) or [])
+        marks.append(text)
+        target.db.facility_brands = marks
+
+
+def facility_mark_texts(target):
+    """The single read source for facility marks: the real freeform marks (keyed
+    'facility mark N'), unioned with any legacy facility_brands fallback entries. So display
+    (board/appraisal) always reflects the same marks the game's marks/look show."""
+    out = []
+    for k, v in (getattr(target.db, "freeform_items", None) or {}).items():
+        if str(k).startswith("facility mark"):
+            txt = (v or {}).get("desc") or ""
+            if txt:
+                out.append(txt)
+    out += [m for m in (getattr(target.db, "facility_brands", None) or []) if m]
+    return out
 
 
 def record_use(target, zone_name, amount=1.0):

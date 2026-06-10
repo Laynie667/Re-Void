@@ -43,7 +43,7 @@ file(s) so the work is actionable, not vague.*
   single `world/arousal_rules.py` resolver: `may_climax(char) -> (bool, reason)` and
   `consume_permit(char)`, called from one place in arousal_script. Reduces the "permitted but
   still capped / punished a granted release" class of bug. *Needs careful standalone tests.*
-- ☐ **Collapse double-stored marks.** `db.facility_brands` (legacy strings) duplicates real
+- ✅ **Collapse double-stored marks.** (record_mark single-writes freeform; facility_mark_texts reads) `db.facility_brands` (legacy strings) duplicates real
   freeform items (`record_mark`). Readers: `facility_script`, `facility_commands`, `realm_build`,
   `facility_build`. Make `facility_brands` a pure read-through of freeform marks (or drop it and
   point all readers at `FreeformManager`), so `marks`/`brands`/`look` never disagree. Keep the
