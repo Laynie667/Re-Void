@@ -244,3 +244,24 @@ def spawn_studs(room, owner, tagger=None):
         pass
     return spawned
 
+
+
+def fellow_cross_record(character, sire_name):
+    """Record that a named stud bred both the resident and the fellow-resident — so their
+    broods are half-siblings. Stored on char.db.fellow_cross_sires (sire -> count)."""
+    if not character or not sire_name:
+        return
+    cross = dict(getattr(character.db, "fellow_cross_sires", None) or {})
+    cross[sire_name] = int(cross.get(sire_name, 0)) + 1
+    character.db.fellow_cross_sires = cross
+
+
+def fellow_cross_line(character):
+    """A stud-book line about the shared sires with the fellow (half-sibling broods), or ''."""
+    cross = dict(getattr(character.db, "fellow_cross_sires", None) or {})
+    if not cross:
+        return ""
+    fellow = (getattr(character.db, "facility_fellow", None) or {}).get("name") or "the other one"
+    sires = ", ".join(sorted(cross.keys()))
+    return (f"|m  crossed lines:|n {fellow} bred by the same stud(s) — |w{sires}|n — so your "
+            f"broods and hers are half-siblings, the line braided through both of you.")

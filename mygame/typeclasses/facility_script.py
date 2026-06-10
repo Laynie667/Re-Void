@@ -2193,11 +2193,25 @@ class FacilityScript(DefaultScript):
         if kind == "breed":
             try:
                 from world.gang_breeding import gang_inseminate
+                from world.facility_animals import present_stud, fellow_cross_record
+                species = self._pick_species(char)
                 holes = self._holes_only(char) or self._orifices(char)
+                # The same stud runs you and the fellow back to back — if he's a named present
+                # stud, your get and hers are half-siblings, and the cross is recorded.
+                here = present_stud(room, species)
+                sire = here.key if here else None
                 if holes:
-                    self._breed_one(room, char, random.choice(holes),
-                                    self._pick_species(char),
+                    self._breed_one(room, char, random.choice(holes), species,
                                     float(getattr(char.db, "conditioning", 0) or 0))
+                if sire:
+                    f = (getattr(char.db, "facility_fellow", None) or {}).get("name")
+                    fellow_cross_record(char, sire)
+                    if f:
+                        room.msg_contents(
+                            f"|x{sire} takes {f} on the same bench in the same breath — the same "
+                            f"cock, the same load, into both of you. Whatever each of you drops by "
+                            f"him will share his blood: your broods half-siblings, the line braided "
+                            f"through two bodies at once. It's logged that way.|n")
             except Exception:
                 pass
         try:

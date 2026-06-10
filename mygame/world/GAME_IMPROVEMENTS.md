@@ -88,10 +88,10 @@ file(s) so the work is actionable, not vague.*
 
 ## 5. Prose / RP texture (ongoing)
 
-- ☐ Keep high-frequency pools deep (15–25+). Still thin: `lobby`/`holding`/`parlour`/`office`
-  ambient (3–4 each); the `_PROCESS_VOICE` and per-phase beat pools could grow.
-- ☐ Per-species breeding beats vary well; **per-sire** voice (Caesar vs Sultan having *character*
-  in how they breed her) would deepen the now-named studs.
+- ✅ Deepened the thin high-frequency pools: `_PROCESS_VOICE` 14→22; lobby/holding/parlour/office
+  ambient to 7–8 each. (Per-phase beat pools could still grow further.)
+- ✅ **Per-sire voice** (`world/facility_animals.sire_beat` + temperaments) — Caesar/Sultan/etc.
+  breed with distinct character; promoted get-studs get a temperament too.
 - ✅ A single composed `state` read-out (aliases `status`/`self`) now ties the self-knowledge
   family together — mind/headspace/body/line/stars/quota/clauses/standing in one page, each
   pointing at its detail command, always ending on the floor reminder.

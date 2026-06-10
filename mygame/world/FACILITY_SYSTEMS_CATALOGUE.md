@@ -354,6 +354,10 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   bred off the same stud back-to-back (real `_breed_one` on the resident), made to use each other,
   or (deep stages) she's used on you / sold to a buyer while you present beside her, told your turn
   is coming. Banks a little conditioning.
+- **Crossed lines** (`fellow_cross_record`/`fellow_cross_line`): when a shared 'breed' scene runs
+  with a NAMED present stud, that stud takes both you and the fellow — recorded on
+  `fellow_cross_sires` (FACILITY_FLAGS) so your broods and hers are half-siblings. Surfaced in
+  `studbook` / the ledger as a "crossed lines" entry.
 
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/

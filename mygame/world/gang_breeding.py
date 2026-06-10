@@ -813,6 +813,14 @@ def studbook_lines(character, brief=False):
     if max_gen > 1:
         lines.append(f"|m  depth: |nyour own get breed you back |w{max_gen}|n generations deep "
                      "— the line growing through you.")
+    # Crossed lines — sires shared with the fellow-resident (half-sibling broods).
+    try:
+        from world.facility_animals import fellow_cross_line
+        xline = fellow_cross_line(character)
+        if xline:
+            lines.append(xline)
+    except Exception:
+        pass
     if not brief:
         lines.append("|x  every name on this page is something that came out of you, and most of "
                      "them will be put back in. The book only ever gets longer.|n")
