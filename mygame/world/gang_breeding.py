@@ -247,8 +247,10 @@ def offspring_sex(species):
 
 
 def can_sire(obj):
-    """True if this get can breed (sire) — males and futanari. Females are broodstock."""
-    return getattr(obj.db, "sex", None) in ("male", "futa")
+    """True if this can breed (sire) — males and futanari that haven't been neutered.
+    Females are broodstock; a gelded/caged stud is retired from siring."""
+    return (getattr(obj.db, "sex", None) in ("male", "futa")
+            and not getattr(obj.db, "neutered", False))
 
 
 

@@ -62,6 +62,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "little_talk":        _filter_little_talk,
         "suckling":           _filter_suckling,
         "stuffed":            _filter_stuffed,
+        "sissy":              _filter_sissy,
         "stutter":            _filter_stutter,
         "third_person_coy":   _filter_third_person_coy,
         "animal_sounds":      _filter_animal_sounds,
@@ -326,6 +327,22 @@ def _filter_stuffed(char, text: str) -> str:
     if random.random() < 0.6:
         out += random.choice(_STUFFED_FILLERS)
     return out or "*mmf*"
+
+
+_SISSY_SOFTEN = {
+    r"\bcock\b": "clitty", r"\bdick\b": "clitty", r"\bpenis\b": "clitty",
+    r"\bcum\b": "creamies", r"\bno\b": "pwease no", r"\byes\b": "yes pwease",
+}
+_SISSY_GIGGLE = [" tee-hee!", " ♥", " hehe~", " *giggles*", "~", " pwetty pwease?"]
+
+def _filter_sissy(char, text: str) -> str:
+    """Sissified speech — feminized, simpering, soft: a few softening swaps and a girly
+    giggle/heart tacked on. Stacks after baby/little talk. Cleared with the sissy clause/floor."""
+    for pat, rep in _SISSY_SOFTEN.items():
+        text = re.sub(pat, rep, text, flags=re.IGNORECASE)
+    if text and random.random() < 0.7:
+        text = text.rstrip(".!") + random.choice(_SISSY_GIGGLE)
+    return text
 
 
 def _filter_stutter(char, text: str) -> str:

@@ -549,6 +549,8 @@ class CmdProcess(Command):
       process <subject> [action]
 
     Actions: breed (use a hole), milk, dose (experimental drug), pierce, ring,
+             neuter (geld + cage male stock — retires it from siring), sissify
+             (feminize male stock into a kept sissy),
              milkport, oneway (one-way ring), cowset (heavy cow piercings),
              feed (force-feed her ports), latex (seal as a drone), grow (force
              udder growth), brand, tattoo, portfolio (mark/catalogue her in the
@@ -731,6 +733,18 @@ class CmdProcess(Command):
                 try: fs._proc_rings(room, target, t)
                 except Exception: pass
             caller.msg(f"|GYou have {t} ringed.|n")
+
+        elif action in ("neuter", "geld", "cage"):
+            if fs:
+                try: fs._proc_neuter(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t} gelded and caged — retired from siring, kept in chastity.|n")
+
+        elif action in ("sissify", "sissy", "feminize", "feminise"):
+            if fs:
+                try: fs._proc_sissify(room, target, t)
+                except Exception: pass
+            caller.msg(f"|GYou have {t} made over into a kept sissy.|n")
 
         elif action in ("brand", "mark"):
             # The marker (or a visiting owner) sets a permanent brand — the handler's

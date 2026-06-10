@@ -302,6 +302,16 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   (daughters are broodstock). `_find_breeder` and the line-remembers curse both require
   `can_sire` and record the get as the named sire of what it puts in her. Shown in `studbook`.
 
+## 4d. Neuter & sissify (male stock)  (`typeclasses/facility_script.py` + `process`)
+- `_proc_neuter`: gelds + cages male stock — deletes any testicle BodyModItem, shrinks/relabels
+  the penis mod to a caged clitty, sets `db.neutered` + `orgasm_denial`, real mark + conditioning.
+  `can_sire` now returns False for the neutered, so the breeding system retires it from siring.
+- `_proc_sissify`: feminizes into a kept sissy — backs up the name (facility_name_backup), sets a
+  sissy designation/rp_name (Bambi/Candy/…), adds the new `sissy` speech filter (feminized,
+  simpering), `orgasm_denial`, a presentation posture, conditioning, a `good girl`→leak trigger.
+- Both are `process <unit> neuter|sissify` actions (CmdProcess) and `_proc_*` methods. Flags
+  `neutered`/`sissified` in FACILITY_FLAGS; sissy name/filter cleared by the floor.
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),

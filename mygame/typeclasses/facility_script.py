@@ -2753,6 +2753,83 @@ class FacilityScript(DefaultScript):
             f"of the cradle now drags across it raw. There's no covering it again. "
             f"(permanent extreme sensitivity)|n")
 
+    def _proc_neuter(self, room, target, t):
+        """Geld + cage male stock: real loss of breeding capability. Removes any testicle
+        body-mod (gelded), shrinks/relabels the cock to a caged clitty, locks it in chastity,
+        and flags db.neutered so the breeding system stops treating it as a stud."""
+        target.db.neutered = True
+        target.db.orgasm_denial = True
+        gelded = False
+        caged = False
+        try:
+            from typeclasses.body_mod_item import BodyModItem
+            for o in list(getattr(target, "contents", []) or []):
+                if not isinstance(o, BodyModItem):
+                    continue
+                mt = getattr(o.db, "mod_type", None)
+                if mt == "testicle":
+                    try: o.delete(); gelded = True
+                    except Exception: pass
+                elif mt == "penis":
+                    o.db.size = min(float(getattr(o.db, "size", 6.0) or 6.0), 3.0)
+                    o.db.player_desc = ("a small, soft, permanently caged clitty where a cock "
+                                        "used to be — locked down, leaking, and good for nothing "
+                                        "but being denied")
+                    caged = True
+        except Exception:
+            pass
+        self._mark(target, "gelded and locked in a chastity cage — the breeding equipment "
+                   "retired to a useless, leaking caged clitty")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 5.0, source="neuter")
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G{t} is gelded and caged on the table — "
+            + ("the balls taken off clean, " if gelded else "")
+            + ("the cock shrunk and shut into a chastity cage, " if caged else "")
+            + "the whole breeding apparatus retired in one sitting. No more siring, no more "
+            "coming — just a soft, leaking, locked little nub where a stud used to be. It's "
+            "broodstock or hole now, never bull. (neutered: can't sire, kept in chastity)|n")
+
+    def _proc_sissify(self, room, target, t):
+        """Feminize male stock into a kept sissy: real designation/name drift, a girly speech
+        filter, locked chastity, a presentation posture, and conditioning. Pairs with neuter."""
+        target.db.sissified = True
+        target.db.orgasm_denial = True
+        # Name drift — backed up to the slot both reset paths restore, like the other name loss.
+        if not getattr(target.db, "facility_name_backup", None):
+            target.db.facility_name_backup = target.db.rp_name or target.key
+        sissy_name = random.choice(["Bambi", "Bimbi", "Candy", "Lacey", "Princess", "Dolly"])
+        target.db.designation = f"{sissy_name} the facility sissy"
+        target.db.rp_name = target.db.designation
+        # Girly speech + a presented, simpering posture.
+        active = list(getattr(target.db, "active_speech_filters", None) or [])
+        if "sissy" not in active:
+            active.append("sissy")
+            target.db.active_speech_filters = active
+        target.db.forced_posture = "posed pretty — hip cocked, wrists limp, presenting like a good girl"
+        target.db.body_language  = "sissy — mincing, simpering, desperate to be told she's pretty"
+        self._mark(target, "made over into a sissy — face painted, body posed and feminized, "
+                   "the old man scrubbed off and a pretty little thing left in his place")
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(target, 6.0, source="sissify")
+        except Exception:
+            pass
+        try:
+            from world.binding_effects import install_trigger
+            install_trigger(target, "good girl", response="leak", strength=2)
+        except Exception:
+            pass
+        room.msg_contents(
+            f"|G{t} is made over from the skin in — hair set, face painted, the body cinched and "
+            f"posed and trained to mince and simper, every scrap of the man she walked in as "
+            f"scrubbed off and replaced with something pink and pretty and desperate to please. "
+            f"She answers to |w{sissy_name}|G now, kept locked and giggling, a sissy on the books "
+            f"and in the body. (sissified: feminized, renamed, chastity, girly speech)|n")
+
     def _proc_tongue(self, room, target, t):
         filters = list(getattr(target.db, "active_speech_filters", None) or [])
         for f in ("baby_talk", "animal_sounds"):
