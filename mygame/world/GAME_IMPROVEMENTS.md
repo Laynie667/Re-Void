@@ -60,7 +60,7 @@ file(s) so the work is actionable, not vague.*
 - ☐ **Dairy procedures**: engorgement/relief loop tied to the milk clause — left unmilked past a
   threshold, arousal + ache climb until relief is *granted* (the relief becomes the leash).
   Reuse `production_item` + `arousal_script`; pair with the Tithe-of-Milk clause idea.
-- ☐ **Named fellow-resident(s)** with continuity — a recurring unit (or two) the cycle places in
+- ✅ **Named fellow-resident** with continuity (`world/facility_fellow.py`) — a recurring unit (or two) the cycle places in
   rooms, with their own slowly-progressing state, so the world has faces, not only ambient shapes.
   Reuse `FacilityScion`/`NPC`; keep them realm-tagged.
 - ☐ **Procedure breadth**: clit-pump/permanent-gape devices, real branding *iron item* (vs the

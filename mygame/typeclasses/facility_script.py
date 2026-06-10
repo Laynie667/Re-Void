@@ -2093,6 +2093,64 @@ class FacilityScript(DefaultScript):
         except Exception:
             pass
 
+    def _spawn_fellow(self, char):
+        """Ensure the named fellow-resident exists as a real present NPC on the floor."""
+        from evennia import search_object
+        ref = getattr(char.db, "facility_fellow_ref", None)
+        if ref and search_object(ref):
+            return
+        try:
+            from world.facility_fellow import ensure_fellow, fellow_desc
+            ensure_fellow(char)
+            realm = getattr(char.db, "realm", None) or {}
+            floor_ref = (realm.get("rooms") or {}).get("floor")
+            floor = (search_object(floor_ref) or [None])[0] if floor_ref else char.location
+            if not floor:
+                return
+            from evennia.utils import create
+            f = char.db.facility_fellow
+            npc = create.create_object(FacilityAttendant, key=f["name"], location=floor)
+            npc.db.rp_name = f["name"]
+            npc.db.facility_role = "resident"
+            npc.db.physical_desc = fellow_desc(char)
+            try: npc.tags.add("facility_realm", category="realm")
+            except Exception: pass
+            char.db.facility_fellow_ref = npc.dbref
+            items = list(getattr(char.db, "facility_items", None) or [])
+            items.append(npc.dbref); char.db.facility_items = items
+        except Exception:
+            pass
+
+    def _fellow_beat(self, char, t):
+        """Advance the fellow-resident's own slow progress along the line, keep her NPC's
+        description synced to her stage, and now and then narrate her — a recurring face a few
+        rooms ahead of the resident, until she's perfected, sold, and replaced by a fresh intake."""
+        try:
+            from world.facility_fellow import (advance_fellow, fellow_beat_line,
+                                               fellow_churn_line, fellow_desc)
+        except Exception:
+            return
+        room = char.location
+        self._spawn_fellow(char)
+        ev, f = advance_fellow(char)
+        # Sync her present NPC to her current stage (same object, refilled rig on churn).
+        try:
+            from evennia import search_object
+            ref = getattr(char.db, "facility_fellow_ref", None)
+            npc = (search_object(ref) or [None])[0] if ref else None
+            if npc:
+                npc.key = f["name"]; npc.db.rp_name = f["name"]
+                npc.db.physical_desc = fellow_desc(char)
+        except Exception:
+            pass
+        if ev == "churned" and room:
+            room.msg_contents(fellow_churn_line(char, f.get("sold") or "the last one"))
+            return
+        if room and random.random() < 0.3:
+            line = fellow_beat_line(char)
+            if line:
+                room.msg_contents(line)
+
     def _stop_milking(self, target):
         try:
             from typeclasses.milking_session_script import MilkingSessionScript
@@ -5090,6 +5148,8 @@ class RealmCycleScript(FacilityScript):
         self._tick_curses(char, t, cond, phase=phase)
         # Engorgement — uncollected milk aches unless this is a milking beat (relief = leash).
         self._engorgement_tick(char, t, phase=phase)
+        # The fellow-resident lives her own slow progression alongside the resident.
+        self._fellow_beat(char, t)
         # Standing-rule honoring — ambient rules (posture/clothing/curfew) bite each beat.
         try:
             from world.rules import enforce_ambient

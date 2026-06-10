@@ -340,6 +340,16 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   Hooked in the main per-beat path; the nugget is maintained by its cradle so it's exempt.
   Flag `milk_engorge_beats` in FACILITY_FLAGS.
 
+## 4f. Fellow-resident (continuity)  (`world/facility_fellow.py` + `_fellow_beat`)
+- A named co-resident tracked with her own slow progression along the line: 6 stages (fresh
+  intake → softening → milk-heavy → bred-round → conditioned-blank → perfected) with per-stage
+  desc + beat pools. `ensure_fellow`/`advance_fellow` (chance per beat; **churns** at the end —
+  sold off, a fresh intake replaces her)/`fellow_beat_line`/`fellow_churn_line`/`fellow_desc`.
+- `_fellow_beat` (per cycle beat) advances her, syncs her real present NPC (`FacilityAttendant`
+  on the floor, realm-tagged + tracked) to her stage, and ~30% narrates her — a recurring face a
+  few rooms ahead as mirror/foreshadow, until she's sold and the cycle starts over on someone new.
+  State `facility_fellow`/`facility_fellow_ref` in FACILITY_FLAGS; NPC deleted on teardown.
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),

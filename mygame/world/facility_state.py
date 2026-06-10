@@ -27,6 +27,7 @@ FACILITY_FLAGS = {
     "breeding_quota": None, "milk_quota": None, "holes": None, "gape": None,
     "offspring_progress": None, "offspring_counts": None, "offspring_roster": None,
     "offspring_by_sire": None, "offspring_by_sex": None, "offspring_max_gen": 0,
+    "facility_fellow": None, "facility_fellow_ref": None,
     "facility_title_backup": None, "forced_posture": None, "body_language": None,
     "room_bound": None, "facility_zone": None, "facility_furniture": None,
     "intake_provocations": None, "intake_door_opened": None, "found_captive_ring": None,
