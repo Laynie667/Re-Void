@@ -179,13 +179,12 @@ class FacilityLedgerBoard(FacilityFurniture):
                              "all; the door stays free.)|n")
         except Exception:
             pass
-        # A one-line lineage read, if they have a line.
+        # The stud-book, read straight off the wall — her whole brood by sire and by line.
         try:
-            counts = dict(getattr(looker.db, "offspring_counts", None) or {})
-            total  = sum(int(v) for v in counts.values())
-            if total:
-                tail += (f"\n|x  Line on file: |w{total}|x get dropped across "
-                         f"{len(counts)} species — read the wall with |wrecords|x.|n")
+            from world.gang_breeding import studbook_lines
+            book = studbook_lines(looker, brief=True)
+            if book:
+                tail += "\n|x" + "─" * 52 + "|n\n" + "\n".join(book)
         except Exception:
             pass
         return f"{head}\n{body}{tail}"

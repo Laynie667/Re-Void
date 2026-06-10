@@ -307,6 +307,11 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   NAME (the line-remembers curse passes their name as sire). Non-siring/gelded get file to
   broodstock instead. `present_stud` recognises a matured `is_stud` get in the room as a present
   stud (not only Bethany's FacilityAnimal studs), so scenes name the real penned child.
+- **Stud-book renderer** `studbook_lines(char, brief=False)` — one source of truth for the brood
+  read-out (by sex / by line / by sire / depth), reading only stored tallies + `offspring_max_gen`
+  (no roster scan). Used by the `studbook` command (full) AND the Records Hall ledger board
+  (`FacilityLedgerBoard`, brief — capped to the top 4 sires) so the lineage is a real in-world
+  readable, not just a command.
 
 ## 4d. Neuter & sissify (male stock)  (`typeclasses/facility_script.py` + `process`)
 - `_proc_neuter`: gelds + cages male stock — deletes any testicle BodyModItem, shrinks/relabels

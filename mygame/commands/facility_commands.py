@@ -1390,62 +1390,16 @@ class CmdStudbook(Command):
 
     def func(self):
         caller = self.caller
-        counts  = dict(getattr(caller.db, "offspring_counts", None) or {})
-        by_sire = dict(getattr(caller.db, "offspring_by_sire", None) or {})
-        roster  = list(getattr(caller.db, "offspring_roster", None) or [])
-        total   = sum(int(v) for v in counts.values()) or len(roster)
-        if not total and not by_sire:
+        try:
+            from world.gang_breeding import studbook_lines
+        except Exception:
+            caller.msg("|xNo stud-book on you.|n")
+            return
+        lines = studbook_lines(caller)
+        if not lines:
             caller.msg("|xNothing on your stud-book yet. The line starts the first time a stud "
                        "catches in you — and the facility is patient about that.|n")
             return
-        tname = caller.db.rp_name or caller.name
-        lines = [f"|W── {tname}'s STUD-BOOK ──|n",
-                 f"|w  {total}|n get dropped and logged."]
-        # By sex — daughters / sons / futanari.
-        by_sex = dict(getattr(caller.db, "offspring_by_sex", None) or {})
-        if by_sex:
-            label = {"female": "daughters", "male": "sons", "futa": "futanari"}
-            sx = ", ".join(f"|w{int(by_sex[k])}|n {label.get(k, k)}"
-                           for k in ("futa", "male", "female") if by_sex.get(k))
-            lines.append("|m  by sex: |n" + sx
-                         + " |x(futa & sons sire — including back into you)|n")
-        # By species.
-        if counts:
-            from world.gang_breeding import _OFFSPRING_TERM
-            sp = ", ".join(f"|w{n}|n {_OFFSPRING_TERM.get(s, 'get')}{'s' if int(n) != 1 else ''}"
-                           f" ({s})" for s, n in sorted(counts.items()))
-            lines.append("|m  by line: |n" + sp)
-        # By named sire — match to Bethany's roster for the cruel-fond flavour.
-        if by_sire:
-            try:
-                from world.facility_animals import ensure_studs
-                roster_studs = {s["name"]: s for s in (getattr(caller.db, "facility_studs", None) or [])}
-            except Exception:
-                roster_studs = {}
-            lines.append("|m  by sire:|n")
-            for sire, n in sorted(by_sire.items(), key=lambda kv: -int(kv[1])):
-                tag = ""
-                st = roster_studs.get(sire)
-                if sire == "Bethany":
-                    tag = " |x— her own line, bred back into you on purpose|n"
-                elif st:
-                    tag = f" |x— {st.get('species')}, one of Bethany's own|n"
-                lines.append(f"    |w{sire}|n: {int(n)}{tag}")
-        # Generations deep.
-        try:
-            from evennia import search_object
-            gens = []
-            for ref in roster:
-                o = (search_object(ref) or [None])[0]
-                if o:
-                    gens.append(int(getattr(o.db, "generation", 1) or 1))
-            if gens and max(gens) > 1:
-                lines.append(f"|m  depth: |nyour own get now breed you back |w{max(gens)}|n "
-                             "generations deep — the line growing through you.")
-        except Exception:
-            pass
-        lines.append("|x  every name on this page is something that came out of you, and most "
-                     "of them will be put back in. The book only ever gets longer.|n")
         caller.msg("\n".join(lines))
 
 ALL_FACILITY_VERBS.append(CmdStudbook)

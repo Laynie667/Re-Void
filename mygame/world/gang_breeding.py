@@ -316,6 +316,9 @@ def _birth_offspring(target, species, generation=1, sire=None):
     bysex = dict(getattr(target.db, "offspring_by_sex", None) or {})
     bysex[sex] = int(bysex.get(sex, 0)) + 1
     target.db.offspring_by_sex = bysex
+    # Track the deepest generation, so the stud-book can read depth without scanning the roster.
+    target.db.offspring_max_gen = max(int(getattr(target.db, "offspring_max_gen", 1) or 1),
+                                      int(generation))
     # Lineage: born juvenile, it matures into a stud that breeds its own dam.
     o.db.matured       = False
     o.db.maturity      = 0
@@ -742,3 +745,53 @@ def summarize_bred_by(target, recent=None):
     if anon:
         parts.append(f"{anon} anonymous")
     return " + ".join(parts) if parts else "no one yet"
+
+
+def studbook_lines(character, brief=False):
+    """Single source of truth for the stud-book — used by the `studbook` command AND the
+    Records Hall ledger board. Reads only stored tallies (no roster scan). `brief` trims it
+    to a few lines for the board. Returns a list of coloured lines (or [] if no brood)."""
+    counts   = dict(getattr(character.db, "offspring_counts", None) or {})
+    by_sire  = dict(getattr(character.db, "offspring_by_sire", None) or {})
+    by_sex   = dict(getattr(character.db, "offspring_by_sex", None) or {})
+    roster   = list(getattr(character.db, "offspring_roster", None) or [])
+    total    = sum(int(v) for v in counts.values()) or len(roster)
+    max_gen  = int(getattr(character.db, "offspring_max_gen", 1) or 1)
+    if not total and not by_sire:
+        return []
+    tname = character.db.rp_name or character.name
+    lines = [f"|W── {tname}'s STUD-BOOK ──|n", f"|w  {total}|n get dropped and logged."]
+    # By sex.
+    if by_sex:
+        label = {"female": "daughters", "male": "sons", "futa": "futanari"}
+        sx = ", ".join(f"|w{int(by_sex[k])}|n {label.get(k, k)}"
+                       for k in ("futa", "male", "female") if by_sex.get(k))
+        lines.append("|m  by sex: |n" + sx + " |x(futa & sons sire — including back into you)|n")
+    # By line (species).
+    if counts:
+        sp = ", ".join(f"|w{n}|n {_OFFSPRING_TERM.get(s, 'get')}{'s' if int(n) != 1 else ''} ({s})"
+                       for s, n in sorted(counts.items()))
+        lines.append("|m  by line: |n" + sp)
+    # By named sire — match Bethany's/own roster for flavour.
+    if by_sire:
+        roster_studs = {s.get("name"): s for s in (getattr(character.db, "facility_studs", None) or [])}
+        lines.append("|m  by sire:|n")
+        ordered = sorted(by_sire.items(), key=lambda kv: -int(kv[1]))
+        for sire, n in (ordered[:4] if brief else ordered):
+            st = roster_studs.get(sire)
+            if sire == "Bethany":
+                tag = " |x— her own line, bred back into you on purpose|n"
+            elif st:
+                tag = f" |x— {st.get('species')}, of the kept stud line|n"
+            else:
+                tag = ""
+            lines.append(f"    |w{sire}|n: {int(n)}{tag}")
+        if brief and len(ordered) > 4:
+            lines.append(f"    |x…and {len(ordered) - 4} more sire(s)|n")
+    if max_gen > 1:
+        lines.append(f"|m  depth: |nyour own get breed you back |w{max_gen}|n generations deep "
+                     "— the line growing through you.")
+    if not brief:
+        lines.append("|x  every name on this page is something that came out of you, and most of "
+                     "them will be put back in. The book only ever gets longer.|n")
+    return lines
