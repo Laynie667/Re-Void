@@ -2179,13 +2179,90 @@ class FacilityScript(DefaultScript):
             if line:
                 room.msg_contents(line)
 
+    def _fellow_futa_breeding(self, char, t, room):
+        """Set-piece: Bethany has the female fellow converted to a futa, dosed with aphrodisiac,
+        and set loose to breed the resident while her mind fragments between abusing her friend
+        and how good it feels. Worse/hotter if the resident's little. PERMANENT (she keeps the
+        cock); the breeding is REAL (gang_inseminate, sire = the fellow) and crosses the lines."""
+        try:
+            from world.facility_fellow import (mark_fellow_futa, ensure_fellow,
+                _FELLOW_FUTA_CONVERT, _FELLOW_FUTA_DOSE, _FELLOW_FUTA_BREED,
+                _FELLOW_FUTA_FRAGMENT, _FELLOW_FUTA_LITTLE, _FELLOW_FUTA_FINISH)
+            from world.gang_breeding import gang_inseminate
+        except Exception:
+            return
+        fname = ensure_fellow(char).get("name")
+        little = (getattr(char.db, "headspace", None) in ("little", "small")
+                  or float(getattr(char.db, "regression", 0) or 0) >= 50.0)
+
+        def emit(pool):
+            room.msg_contents(random.choice(pool).format(f=fname, t=t))
+
+        room.msg_contents("\n|W━━━━ A GIFT FOR THE TWO OF YOU ━━━━|n")
+        emit(_FELLOW_FUTA_CONVERT)
+        emit(_FELLOW_FUTA_DOSE)
+        mark_fellow_futa(char)                      # permanent — she keeps the cock
+        holes = self._holes_only(char) or self._orifices(char)
+        for _ in range(random.randint(2, 3)):
+            emit(_FELLOW_FUTA_BREED)
+            emit(_FELLOW_FUTA_LITTLE if little else _FELLOW_FUTA_FRAGMENT)
+            if holes:
+                try:
+                    gang_inseminate(char, random.choice(holes), contributors=1,
+                                    fluid_type="semen", species="bethany", sire=fname)
+                except Exception:
+                    pass
+            if little:
+                try:
+                    from world.regression import regress
+                    regress(char, random.uniform(3.0, 6.0), source="fellow_futa")
+                except Exception:
+                    pass
+        emit(_FELLOW_FUTA_FINISH)
+        # Her get and yours by her now cross; bank the conditioning + a star; note her change.
+        try:
+            from world.facility_animals import fellow_cross_record
+            fellow_cross_record(char, fname)
+        except Exception:
+            pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, random.uniform(4.0, 8.0), source="fellow_futa")
+        except Exception:
+            pass
+        try:
+            from world.star_chart import award_star
+            award_star(char, "bred", room=room)
+        except Exception:
+            pass
+        try:
+            from evennia import search_object
+            ref = getattr(char.db, "facility_fellow_ref", None)
+            npc = (search_object(ref) or [None])[0] if ref else None
+            if npc:
+                npc.db.physical_desc = (npc.db.physical_desc or "") + (
+                    " She carries a facility-grown futa cock now — Bethany's idea — and what she "
+                    "did with it under the dose, the first time, sits between the two of you still.")
+        except Exception:
+            pass
+
     def _fellow_scene(self, char, t, room):
         """A shared-processing scene with the co-present fellow. A 'breed' scene fires a REAL
         insemination on the resident (the fellow is narrated); all bank a little conditioning."""
         try:
-            from world.facility_fellow import fellow_shared
+            from world.facility_fellow import fellow_shared, fellow_is_futa, ensure_fellow
         except Exception:
             return
+        # The unique set-piece: Bethany has the (still-female) fellow converted to a futa and
+        # made to breed the resident. Fires once she's a bit broken in; she stays futa after.
+        try:
+            f = ensure_fellow(char)
+            if (not fellow_is_futa(char) and int(f.get("stage", 0)) >= 1
+                    and random.random() < 0.25):
+                self._fellow_futa_breeding(char, t, room)
+                return
+        except Exception:
+            pass
         kind, line = fellow_shared(char)
         if not line:
             return

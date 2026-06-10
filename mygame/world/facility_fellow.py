@@ -215,3 +215,100 @@ def fellow_churn_line(character, sold_name):
             f"{sold_name} started. The line doesn't slow for it. It never has. And {t} watches "
             f"the whole cycle of a person happen beside her, start to sold, and does the maths "
             f"on her own place in it.|n")
+
+
+# ── Set-piece: Bethany has the female fellow converted to futa and made to breed you ──
+# A multi-beat scripted scene. The fellow is PERMANENTLY turned futa (continuity), dosed, and
+# set loose; her mind fragments between abusing her friend and how good breeding feels. The
+# breeding is real (the script fires gang_inseminate, sire = the fellow). Tokens {f}/{t}.
+_FELLOW_FUTA_CONVERT = [
+    "|GBethany walks {f} in on a leash and lays a fond hand on {t}'s head. \"I had an idea about "
+    "your little friend,\" she says, bright as morning. The techs strap {f} to the conversion "
+    "cradle and go to work between her thighs — and what they grow there is not small: a "
+    "facility-bred futa cock forced up out of her in minutes, flaring, knotting, fattening with "
+    "balls that drop heavy and full, until {f} is sobbing at the new weight of what she's been "
+    "given. \"There. Now she can be useful to you. Say thank you, both of you.\"|n",
+    "|G\"Friends should share,\" Bethany tells {t}, signing the order one-handed. They take {f} "
+    "apart and rebuild her on the table — a thick, veined, facility-standard futa cock grafted "
+    "live at the root, knot and flare and a swinging set of balls, the whole apparatus wired hot "
+    "into her before she's stopped shaking. {f} stares down at the new monstrous length of "
+    "herself jutting from her body and makes a sound that isn't quite a word.|n",
+]
+_FELLOW_FUTA_DOSE = [
+    "|GThen the aphrodisiac goes in — a fat syringe emptied into the root of {f}'s new cock and "
+    "another into her neck — and {f}'s pupils blow wide and black. The need hits her like a "
+    "truck: she's instantly, brutally hard, hips already jerking at nothing, every thought "
+    "drowning under a single roaring imperative. \"Off you go, sweetheart,\" Bethany says, and "
+    "points her at {t}.|n",
+    "|GBethany doses {f} until she's shaking with it — the new cock flushed dark and dripping, "
+    "balls drawn up tight and aching, {f}'s whole body a live wire of manufactured rut. Whatever "
+    "{f} is trying to say drowns. She turns and looks at {t} — her friend, on the floor, "
+    "presented — and you watch the want win.|n",
+]
+_FELLOW_FUTA_BREED = [
+    "|r{f} mounts {t} with a desperate, graceless lunge and sinks the whole new length of herself "
+    "in to the knot in one go, too far gone on the dose to be gentle, and then she's RUTTING — "
+    "frantic, deep, helpless, fucking her friend with the single-minded fury of a body that has "
+    "been given a cock and a drug and one instruction.|n",
+    "|r{f} grabs {t}'s hips and hammers in, the new balls slapping heavy, her flare dragging {t} "
+    "open on every brutal stroke. She can't stop. She doesn't try anymore. She just breeds, hard "
+    "and deep and sobbing, chasing the knot like it's the only thing left in the world.|n",
+    "|r{f} ruts into {t} like an animal that used to be a person, the dose burning every gentle "
+    "thing out of her, knotting deep and grinding and starting again before she's even softened, "
+    "breeding her friend in a frenzy she has no say in and {t} has no defence against.|n",
+]
+_FELLOW_FUTA_FRAGMENT = [
+    "|x\"I'm sorry,\" {f} sobs into {t}'s shoulder even as her hips snap forward, \"I'm sorry, "
+    "I'm sorry, I can't — oh god you feel — I'm SORRY—\" The two halves of her can't both be "
+    "true and both are, and the rut is winning, sentence by sentence.|n",
+    "|x{f}'s face is a war — horror at what she's doing to her friend, and under it, rising, a "
+    "drugged ecstatic helplessness at how unbelievably GOOD it feels to be buried in {t}. "
+    "\"I don't — I never wanted — fuck, fuck, why does it feel like THIS—\" The wanting eats the "
+    "words.|n",
+    "|x\"This isn't me,\" {f} whimpers, balls-deep, grinding, \"this isn't — I'd never — \" and "
+    "then the dose crests and her eyes roll and the apology dissolves into a moan, and for a few "
+    "seconds there's no friend left in her at all, just the cock and the heat and {t}, and then "
+    "the horror floods back in and she's begging forgiveness again without breaking rhythm.|n",
+    "|x{f} keeps looking at {t}'s face like she's searching for the line she's crossing, can't "
+    "find it through the dose, and breeds her harder for the not-finding. \"Tell me to stop,\" "
+    "she gasps — and doesn't wait for an answer, couldn't obey it, and you both know it.|n",
+]
+_FELLOW_FUTA_LITTLE = [
+    "|M{f} is little too now — Bethany made sure — and that's the worst of it: two small, "
+    "frightened things, and one of them grown a big scary cock she doesn't understand and can't "
+    "stop using on her friend. {f} cries the whole time, little hiccuping sobs, \"m'sorry, "
+    "m'sorry,\" rutting {t} in clumsy desperate baby-thrusts she has no grown-up part left to "
+    "rein in.|n",
+    "|MTwo littles in the straw, and one put inside the other. {f} doesn't have the words for "
+    "what she's doing — just \"feels good, feels good, m'sorry, feels good\" — and {t} doesn't "
+    "have the words to make her stop, and neither of them was left enough self to choose any of "
+    "it. Bethany watches her two babies breed like it's the sweetest thing she's ever arranged.|n",
+    "|M{f} clings to {t} as she humps her, both of them little and lost, the cock too big and "
+    "the dose too strong and the friendship still there underneath it all, ruined and clinging. "
+    "\"Still f-fwiends?\" {f} hiccups, balls-deep, breeding her. It's the most broken thing in "
+    "the room, and Bethany coos at it.|n",
+]
+_FELLOW_FUTA_FINISH = [
+    "|r{f} slams to the knot and locks and EMPTIES — those heavy new balls pumping load after "
+    "load into {t}, far more than a body should hold, {f} wailing through it half in ecstasy and "
+    "half in grief, tied to her friend and unable to pull out if she wanted to. When the dose "
+    "finally ebbs she's left collapsed over {t}, knotted in, weeping, whispering apologies into "
+    "her hair — bred into her, changed forever, hers and {t}'s ruin both.|n",
+    "|r{f} comes with a broken scream, flooding {t} to the knot, and stays locked there shaking "
+    "as the aphrodisiac slowly lets her go. The cock is hers to keep now — Bethany doesn't "
+    "reverse her work. {f} will carry it, and what she did with it, from here on. \"Good girl,\" "
+    "Bethany murmurs to them both, fond and final. \"You're going to be such good use to each "
+    "other.\"|n",
+]
+
+
+def mark_fellow_futa(character):
+    """Permanently convert the fellow to a futa (continuity — she keeps the cock). Returns her name."""
+    f = ensure_fellow(character)
+    f["futa"] = True
+    character.db.facility_fellow = f
+    return f.get("name")
+
+
+def fellow_is_futa(character):
+    return bool((getattr(character.db, "facility_fellow", None) or {}).get("futa"))

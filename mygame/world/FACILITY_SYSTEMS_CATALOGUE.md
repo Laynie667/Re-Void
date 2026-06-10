@@ -354,6 +354,13 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   bred off the same stud back-to-back (real `_breed_one` on the resident), made to use each other,
   or (deep stages) she's used on you / sold to a buyer while you present beside her, told your turn
   is coming. Banks a little conditioning.
+- **Futa-conversion set-piece** (`_fellow_futa_breeding` + `_FELLOW_FUTA_*` pools): once the
+  fellow's a bit broken in and co-present, ~25% of shared scenes fire the unique event — Bethany
+  has her surgically converted to a futa (PERMANENT: `mark_fellow_futa`, she keeps the cock),
+  dosed with aphrodisiac, and set loose to aggressively breed the resident over several beats
+  while her mind fragments (guilt vs rut). REAL insemination (sire = the fellow) + records the
+  cross. If the resident's little, the both-littles amplifier pool fires + extra regression.
+  Her NPC desc is updated to note the change.
 - **Crossed lines** (`fellow_cross_record`/`fellow_cross_line`): when a shared 'breed' scene runs
   with a NAMED present stud, that stud takes both you and the fellow — recorded on
   `fellow_cross_sires` (FACILITY_FLAGS) so your broods and hers are half-siblings. Surfaced in
