@@ -5206,6 +5206,19 @@ class RealmCycleScript(FacilityScript):
         return random.choices(keys, weights=[weights[k] for k in keys], k=1)[0]
 
     _GET_MATURE_AT = 6   # cycle beats before a juvenile joins the stud line
+    # Names a maturing get earns when it's put to stud (so her own sons/futa daughters
+    # breed her back BY NAME and join the roster, just like Bethany's own studs).
+    _GET_STUD_NAMES = [
+        "Rex", "Titus", "Atlas", "Nero", "Bishop", "Cobalt", "Onyx", "Magnus", "Diesel",
+        "Asher", "Cricket", "Juno", "Vesna", "Echo", "Marigold", "Saffron", "Pippin", "Wren",
+    ]
+
+    def _name_get_stud(self, char):
+        """Pick a stud-name for a maturing get that isn't already taken on the roster."""
+        taken = {(s.get("name") or "").lower()
+                 for s in (getattr(char.db, "facility_studs", None) or [])}
+        free = [n for n in self._GET_STUD_NAMES if n.lower() not in taken]
+        return random.choice(free or self._GET_STUD_NAMES)
 
     def _mature_get(self, char):
         """Age her get; when one matures it's walked to the pens to join the stud
@@ -5229,17 +5242,45 @@ class RealmCycleScript(FacilityScript):
                 o.db.matured = True
                 sp = getattr(o.db, "species", "get")
                 gen = int(getattr(o.db, "generation", 1))
+                sex = getattr(o.db, "sex", None)
                 if pens and o.location != pens:
                     try: o.move_to(pens, quiet=True)
                     except Exception: pass
                 where = char.location
+                tname = char.db.rp_name or char.name
+                # If it can sire (a son or a futa daughter, not gelded), it's NAMED and put to
+                # the stud line — joins the roster + reads as a present stud, breeding her by name.
+                named = None
+                try:
+                    from world.gang_breeding import can_sire
+                    from world.facility_animals import add_stud
+                    if can_sire(o):
+                        named = self._name_get_stud(char)
+                        sexword = "futa " if sex == "futa" else ""
+                        desc = (f"{tname}'s own gen-{gen} {sexword}{sp}, grown up and proven and "
+                                f"put to stud — bred back into the dam that bore it, the line "
+                                f"folding shut through her own body")
+                        o.key = named
+                        o.db.rp_name = named
+                        o.db.is_stud = True
+                        o.db.stud_desc = desc
+                        add_stud(char, named, sp, desc)
+                except Exception:
+                    named = None
                 if where:
-                    tname = char.db.rp_name or char.name
-                    where.msg_contents(
-                        f"|RWord comes up from the pens: one of {tname}'s own {sp} get has "
-                        f"finished growing and been put to the stud line — gen {gen}, proven and "
-                        f"ready. It will be bred back to its dam like all the rest. The line "
-                        f"closes on her a little tighter.|n")
+                    if named:
+                        sexword = "futa daughter" if sex == "futa" else ("son" if sex == "male" else sp)
+                        where.msg_contents(
+                            f"|RWord comes up from the pens: {tname}'s own gen-{gen} {sexword} has "
+                            f"finished growing and been put to the stud line as |w{named}|R — named, "
+                            f"proven, and from now on breeding the dam that bore {('her' if sex=='futa' else 'him')} "
+                            f"by name. The line closes on her a little tighter, and it has her own "
+                            f"child's face.|n")
+                    else:
+                        where.msg_contents(
+                            f"|RWord comes up from the pens: one of {tname}'s own {sp} get has "
+                            f"finished growing. No good for stud — it's filed to the broodstock to "
+                            f"be bred in her place instead. The line keeps her either way.|n")
                 # A standing bounty on her get pays out of the treasury on each maturation.
                 self._pay_get_bounty(char, sp, gen)
                 # Bethany's 'heir' clause: she pulls one from the litter and keeps it as hers.

@@ -100,16 +100,27 @@ PEN_AMBIENT = [
 
 
 def present_stud(room, species=None):
-    """Return a FacilityAnimal of `species` actually present in `room`, or None."""
+    """Return a named stud actually present in `room`, or None. Matches both Bethany's
+    penned FacilityAnimal studs AND the resident's own matured get that have been put to
+    stud (named, is_stud) — so her grown sons/futa daughters read as present studs too."""
     if not room:
         return None
     try:
         from typeclasses.facility_furniture import FacilityAnimal
     except Exception:
-        return None
-    present = [o for o in room.contents if isinstance(o, FacilityAnimal)
-               and (species is None or getattr(o.db, "species", None) == species)]
-    return random.choice(present) if present else None
+        FacilityAnimal = ()
+    cands = []
+    for o in room.contents:
+        is_anim = isinstance(o, FacilityAnimal)
+        is_get_stud = (getattr(o.db, "is_offspring", False)
+                       and getattr(o.db, "matured", False)
+                       and getattr(o.db, "is_stud", False))
+        if not (is_anim or is_get_stud):
+            continue
+        if species is not None and getattr(o.db, "species", None) != species:
+            continue
+        cands.append(o)
+    return random.choice(cands) if cands else None
 
 
 def spawn_studs(room, owner, tagger=None):

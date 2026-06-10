@@ -301,6 +301,12 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   they'll breed the dam with. `can_sire(obj)` = male or futa — only those breed her back
   (daughters are broodstock). `_find_breeder` and the line-remembers curse both require
   `can_sire` and record the get as the named sire of what it puts in her. Shown in `studbook`.
+- **Matured get become NAMED studs** (`_mature_get` + `_name_get_stud`/`_GET_STUD_NAMES`): a
+  siring get, on maturing, is named (Rex/Titus/Juno/…), flagged `is_stud`, given a stud desc, and
+  added to `facility_studs` — so her own sons/futa daughters join the roster and breed her back BY
+  NAME (the line-remembers curse passes their name as sire). Non-siring/gelded get file to
+  broodstock instead. `present_stud` recognises a matured `is_stud` get in the room as a present
+  stud (not only Bethany's FacilityAnimal studs), so scenes name the real penned child.
 
 ## 4d. Neuter & sissify (male stock)  (`typeclasses/facility_script.py` + `process`)
 - `_proc_neuter`: gelds + cages male stock — deletes any testicle BodyModItem, shrinks/relabels
