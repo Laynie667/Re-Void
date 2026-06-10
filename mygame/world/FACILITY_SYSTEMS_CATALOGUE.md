@@ -294,6 +294,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `present_stud`, else the breeder NPC), `_nugget_little_animals` (the named stud), and Bethany's
   multicock climax (sire="Bethany"). So when the stud you can see breeds you, that pup is his.
 
+## 4c. Offspring gender (incl. futanari)  (`world/gang_breeding.py`)
+- Every get rolls a sex — `offspring_sex(species)`: female / male / **futa** (the bethany line
+  is always futanari). Stored `o.db.sex`; tallied `target.db.offspring_by_sex` (FACILITY_FLAGS).
+  Futa get are named ("Caesar's … futa pup") and described as growing the flared/knotted cock
+  they'll breed the dam with. `can_sire(obj)` = male or futa — only those breed her back
+  (daughters are broodstock). `_find_breeder` and the line-remembers curse both require
+  `can_sire` and record the get as the named sire of what it puts in her. Shown in `studbook`.
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),

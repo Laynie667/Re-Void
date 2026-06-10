@@ -1387,6 +1387,14 @@ class CmdStudbook(Command):
         tname = caller.db.rp_name or caller.name
         lines = [f"|W── {tname}'s STUD-BOOK ──|n",
                  f"|w  {total}|n get dropped and logged."]
+        # By sex — daughters / sons / futanari.
+        by_sex = dict(getattr(caller.db, "offspring_by_sex", None) or {})
+        if by_sex:
+            label = {"female": "daughters", "male": "sons", "futa": "futanari"}
+            sx = ", ".join(f"|w{int(by_sex[k])}|n {label.get(k, k)}"
+                           for k in ("futa", "male", "female") if by_sex.get(k))
+            lines.append("|m  by sex: |n" + sx
+                         + " |x(futa & sons sire — including back into you)|n")
         # By species.
         if counts:
             from world.gang_breeding import _OFFSPRING_TERM

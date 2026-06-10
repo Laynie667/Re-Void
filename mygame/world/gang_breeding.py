@@ -231,6 +231,26 @@ _OFFSPRING_VARIANT = [
 ]
 OFFSPRING_THRESHOLD = 8   # successful breedings of a stud line before she drops its get
 
+# Offspring gender — futanari is a first-class outcome. Females become broodstock (bred back),
+# males and futa become studs (they sire, including back onto their own dam). The bethany line
+# is futanari by design (FacilityScion / "futa daughter").
+_OFFSPRING_SEXES = (["futa"] * 3) + (["male"] * 3) + (["female"] * 4)
+# Per-sex flavour woven into the get's name/term.
+_SEX_TAG = {"futa": "futa", "male": "", "female": ""}
+
+
+def offspring_sex(species):
+    """Roll a sex for a newborn get. The bethany line is always futanari."""
+    if species == "bethany":
+        return "futa"
+    return random.choice(_OFFSPRING_SEXES)
+
+
+def can_sire(obj):
+    """True if this get can breed (sire) — males and futanari. Females are broodstock."""
+    return getattr(obj.db, "sex", None) in ("male", "futa")
+
+
 
 def _maybe_offspring(target, species, generation=1, sire=None):
     """Accumulate breedings of a line toward dropping its (next-gen) get.
@@ -268,17 +288,20 @@ def _birth_offspring(target, species, generation=1, sire=None):
 
     variant = random.choice(_OFFSPRING_VARIANT)
     term    = _OFFSPRING_TERM.get(species, "get")
-    tname   = target.db.rp_name or target.name
+    sex     = offspring_sex(species)
+    # Futanari get a gendered tag in the name; the bethany line's term already carries it.
+    sex_word = "futa " if (sex == "futa" and species != "bethany") else ""
     gen_tag = "" if generation <= 1 else f" (gen {generation})"
-    # Named sire stamps the get: "Caesar's brindle pup" reads as real lineage.
-    poss    = f"{sire}'s " if sire else f"a {variant} "
-    key     = (f"{sire}'s {variant} {term}{gen_tag}" if sire
-               else f"a {variant} {species} {term}{gen_tag}")
+    tname   = target.db.rp_name or target.name
+    # Named sire stamps the get: "Caesar's brindle futa pup" reads as real lineage.
+    key     = (f"{sire}'s {variant} {sex_word}{term}{gen_tag}" if sire
+               else f"a {variant} {sex_word}{species} {term}{gen_tag}")
 
     o = create.create_object(cls, key=key, location=room)
     o.db.rp_name       = key
     o.db.facility_role = "beast"
     o.db.species       = species
+    o.db.sex           = sex
     o.db.is_offspring  = True
     o.db.generation    = generation
     o.db.sire          = sire
@@ -287,6 +310,10 @@ def _birth_offspring(target, species, generation=1, sire=None):
         bysire = dict(getattr(target.db, "offspring_by_sire", None) or {})
         bysire[sire] = int(bysire.get(sire, 0)) + 1
         target.db.offspring_by_sire = bysire
+    # Per-sex tally too (daughters / sons / futa), for the stud-book breakdown.
+    bysex = dict(getattr(target.db, "offspring_by_sex", None) or {})
+    bysex[sex] = int(bysex.get(sex, 0)) + 1
+    target.db.offspring_by_sex = bysex
     # Lineage: born juvenile, it matures into a stud that breeds its own dam.
     o.db.matured       = False
     o.db.maturity      = 0
@@ -316,10 +343,18 @@ def _birth_offspring(target, species, generation=1, sire=None):
         lineage = f"{tname}'s own get by the facility's stud line"
     else:
         lineage = f"{tname}'s own get out of her own {species} line, {generation} generations deep"
+    # What it will grow into, by sex — futa and male get become studs that breed the dam.
+    if sex == "futa":
+        fate = ("a futanari — already growing the flared, knotted cock it will one day sink "
+                "into the dam that bore it, the line folding back on itself through her")
+    elif sex == "male":
+        fate = "male — a stud in the making, raised to breed back into its own dam"
+    else:
+        fate = "female — broodstock, raised to be bred in her mother's place when she's spent"
     o.db.physical_desc = (
-        f"A {variant} {term}{gen_tag} — {lineage}, inheriting nothing of the dam but the "
-        f"womb it grew in. Already restless, already learning the schedule it will keep, "
-        f"and the use it will be put to."
+        f"A {variant} {sex_word}{term}{gen_tag} — {lineage}, inheriting nothing of the dam but "
+        f"the womb it grew in. It's {fate}. Already restless, already learning the schedule it "
+        f"will keep, and the use it will be put to."
     )
     # Track for cleanup so the reset removes the whole brood.
     items = list(getattr(target.db, "facility_items", None) or [])

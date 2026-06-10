@@ -2849,8 +2849,14 @@ class FacilityScript(DefaultScript):
         cands = [o for o in room.contents if self._is_breeder(o)]
         match = [o for o in cands if getattr(o.db, "species", None) == species]
         pool = match or cands
-        # Prefer her own matured get when present — the line breeds itself through her.
-        get = [o for o in (match or pool) if getattr(o.db, "is_offspring", False)]
+        # Prefer her own matured get when present — the line breeds itself through her. Only
+        # get that can sire (males and futanari) breed her; daughters are broodstock, not studs.
+        try:
+            from world.gang_breeding import can_sire
+            get = [o for o in (match or pool)
+                   if getattr(o.db, "is_offspring", False) and can_sire(o)]
+        except Exception:
+            get = [o for o in (match or pool) if getattr(o.db, "is_offspring", False)]
         if get and random.random() < 0.5:
             return random.choice(get)
         return random.choice(pool) if pool else None
@@ -3205,19 +3211,28 @@ class FacilityScript(DefaultScript):
                     pass
                 if random.random() < 0.5:
                     char.msg("|m  " + random.choice(_CURSE_HOLLOW_BEAT).format(t=t) + "|n")
-            # 'the line remembers' — a matured get in the room breeds its dam unprompted.
+            # 'the line remembers' — a matured, siring get (son or futa daughter) in the room
+            # breeds its dam unprompted, and is recorded as the sire of what it puts in her.
             if getattr(char.db, "curse_line_remembers", False) and room:
                 roster = set(getattr(char.db, "offspring_roster", None) or [])
+                try:
+                    from world.gang_breeding import can_sire as _cs
+                except Exception:
+                    _cs = lambda o: True
                 get_here = [o for o in room.contents
                             if getattr(o, "dbref", None) in roster
-                            and getattr(o.db, "matured", False)]
+                            and getattr(o.db, "matured", False) and _cs(o)]
                 if get_here and random.random() < 0.5:
                     try:
                         from world.gang_breeding import animal_holes, gang_inseminate
+                        breeder = random.choice(get_here)
                         holes = [z for z in animal_holes(char).values() if z]
                         if holes:
                             gang_inseminate(char, random.choice(holes), contributors=1,
-                                            fluid_type="semen", species="bethany")
+                                            fluid_type="semen",
+                                            species=getattr(breeder.db, "species", None) or "bethany",
+                                            generation=int(getattr(breeder.db, "generation", 1) or 1) + 1,
+                                            sire=breeder.db.rp_name or breeder.key)
                     except Exception:
                         pass
                     room.msg_contents("|r" + random.choice(_CURSE_LINE_BEAT).format(t=t) + "|n")
