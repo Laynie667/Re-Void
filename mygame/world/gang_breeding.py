@@ -23,12 +23,13 @@ _ANON_NAMES = [
 
 def gang_inseminate(target, zone_name, contributors=3,
                     fluid_type="semen", volume_each=DEFAULT_VOLUME_EACH,
-                    species="contributor", generation=1):
+                    species="contributor", generation=1, sire=None):
     """Inseminate `target`'s `zone_name` from multiple contributors at once.
 
     `species` attributes this successful breeding to a kind (hound/bull/boar/
-    stallion/contributor) for the per-species quota ledger. Returns the list of
-    (donor_id_or_None, donor_name) for this round, or [] on failure.
+    stallion/contributor) for the per-species quota ledger. `sire` (optional) names the
+    individual stud responsible (e.g. "Caesar") so any resulting get records its sire.
+    Returns the list of (donor_id_or_None, donor_name) for this round, or [] on failure.
     """
     if not target or not zone_name or contributors <= 0:
         return []
@@ -82,9 +83,9 @@ def gang_inseminate(target, zone_name, contributors=3,
     if species in ("hound", "bull", "boar", "stallion", "bethany"):
         try:
             from world.pregnancy import on_bred
-            on_bred(target, species, generation=generation)
+            on_bred(target, species, generation=generation, sire=sire)
         except Exception:
-            _maybe_offspring(target, species, generation=generation)
+            _maybe_offspring(target, species, generation=generation, sire=sire)
 
     # Route the combined volume into the zone as cumflation (belly swell).
     total = volume_each * len(donors)
@@ -231,7 +232,7 @@ _OFFSPRING_VARIANT = [
 OFFSPRING_THRESHOLD = 8   # successful breedings of a stud line before she drops its get
 
 
-def _maybe_offspring(target, species, generation=1):
+def _maybe_offspring(target, species, generation=1, sire=None):
     """Accumulate breedings of a line toward dropping its (next-gen) get.
 
     Each generation matures faster than the last — the brood accelerates.
@@ -242,7 +243,7 @@ def _maybe_offspring(target, species, generation=1):
     threshold = max(3, OFFSPRING_THRESHOLD - (generation - 1) * 2)
     if prog[key] >= threshold:
         prog[key] = 0
-        _birth_offspring(target, species, generation=generation)
+        _birth_offspring(target, species, generation=generation, sire=sire)
     target.db.offspring_progress = prog
 
 
@@ -251,7 +252,7 @@ def maybe_lineage_offspring(target, species, parent_generation):
     _maybe_offspring(target, species, generation=int(parent_generation) + 1)
 
 
-def _birth_offspring(target, species, generation=1):
+def _birth_offspring(target, species, generation=1, sire=None):
     room = target.location
     if not room:
         return
@@ -269,7 +270,10 @@ def _birth_offspring(target, species, generation=1):
     term    = _OFFSPRING_TERM.get(species, "get")
     tname   = target.db.rp_name or target.name
     gen_tag = "" if generation <= 1 else f" (gen {generation})"
-    key     = f"a {variant} {species} {term}{gen_tag}"
+    # Named sire stamps the get: "Caesar's brindle pup" reads as real lineage.
+    poss    = f"{sire}'s " if sire else f"a {variant} "
+    key     = (f"{sire}'s {variant} {term}{gen_tag}" if sire
+               else f"a {variant} {species} {term}{gen_tag}")
 
     o = create.create_object(cls, key=key, location=room)
     o.db.rp_name       = key
@@ -277,6 +281,12 @@ def _birth_offspring(target, species, generation=1):
     o.db.species       = species
     o.db.is_offspring  = True
     o.db.generation    = generation
+    o.db.sire          = sire
+    # Per-sire tally on the dam, so a stud-book can group the brood by father.
+    if sire:
+        bysire = dict(getattr(target.db, "offspring_by_sire", None) or {})
+        bysire[sire] = int(bysire.get(sire, 0)) + 1
+        target.db.offspring_by_sire = bysire
     # Lineage: born juvenile, it matures into a stud that breeds its own dam.
     o.db.matured       = False
     o.db.maturity      = 0
@@ -300,25 +310,32 @@ def _birth_offspring(target, species, generation=1):
                 o.move_to(nrm, quiet=True)
     except Exception:
         pass
-    lineage = ("by the facility's stud line" if generation <= 1
-               else f"out of her own {species} get, {generation} generations deep")
+    if sire:
+        lineage = f"sired by {sire} on {tname}"
+    elif generation <= 1:
+        lineage = f"{tname}'s own get by the facility's stud line"
+    else:
+        lineage = f"{tname}'s own get out of her own {species} line, {generation} generations deep"
     o.db.physical_desc = (
-        f"A {variant} {term}{gen_tag} — {tname}'s own get {lineage}, inheriting nothing "
-        f"of her but the womb it grew in. Already restless, already learning the "
-        f"schedule it will keep, and the use it will be put to."
+        f"A {variant} {term}{gen_tag} — {lineage}, inheriting nothing of the dam but the "
+        f"womb it grew in. Already restless, already learning the schedule it will keep, "
+        f"and the use it will be put to."
     )
     # Track for cleanup so the reset removes the whole brood.
     items = list(getattr(target.db, "facility_items", None) or [])
     items.append(o.dbref)
     target.db.facility_items = items
 
-    born = (f"After enough of the {species} line, {tname} drops a {variant} {term}"
-            if generation <= 1 else
-            f"Her own {species} get breeds true, and {tname} drops a {variant} {term}{gen_tag}")
+    if sire:
+        born = f"{tname} drops {sire}'s {variant} {term}{gen_tag}"
+    elif generation <= 1:
+        born = f"After enough of the {species} line, {tname} drops a {variant} {term}"
+    else:
+        born = f"Her own {species} get breeds true, and {tname} drops a {variant} {term}{gen_tag}"
     room.msg_contents(
-        f"|R{born} — its get, not hers. It's logged, tagged, and added to the roster. "
-        f"In time it will breed her too, and the line will breed itself through her, "
-        f"deeper every generation.|n"
+        f"|R{born} — its get, not hers. It's logged, tagged{f', sired by {sire}' if sire else ''}, "
+        f"and added to the roster. In time it will breed her too, and the line will breed itself "
+        f"through her, deeper every generation.|n"
     )
 
 

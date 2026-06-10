@@ -72,26 +72,33 @@ def is_fertile(target):
     return FERTILE_WINDOW[0] <= day <= FERTILE_WINDOW[1]
 
 
-def on_bred(target, species, generation=1):
+def on_bred(target, species, generation=1, sire=None):
     """A stud has bred her. While gravid, a deposit may swell the litter; while
-    fertile and empty, it may catch."""
+    fertile and empty, it may catch. `sire` names the individual stud (e.g. "Caesar")."""
     if not target:
         return
     if is_pregnant(target):
         if species in _LITTER and random.random() < SUPERFETATION:
             p = dict(target.db.pregnancy)
             p["litter"] = int(p.get("litter", 1)) + 1
+            # A different stud topping her up gets recorded as a co-sire of the litter.
+            if sire:
+                sires = list(p.get("sires") or ([p["sire"]] if p.get("sire") else []))
+                if sire not in sires:
+                    sires.append(sire)
+                p["sires"] = sires
             target.db.pregnancy = p
         return
     if is_fertile(target) and species in _LITTER and random.random() < CONCEIVE_CHANCE:
-        conceive(target, species, generation)
+        conceive(target, species, generation, sire=sire)
 
 
-def conceive(target, species, generation=1):
+def conceive(target, species, generation=1, sire=None):
     lo, hi = _LITTER.get(species, (1, 1))
     target.db.pregnancy = {
         "species": species, "generation": int(generation),
         "progress": 0.0, "term": BASE_TERM, "litter": random.randint(lo, hi),
+        "sire": sire, "sires": ([sire] if sire else []),
     }
     _set_belly(target, 0.0)
     if target.location:
@@ -144,6 +151,7 @@ def deliver(target):
     species = p.get("species", "contributor")
     gen     = int(p.get("generation", 1))
     litter  = int(p.get("litter", 1))
+    sires   = list(p.get("sires") or ([p["sire"]] if p.get("sire") else []))
     tname   = target.db.rp_name or target.name
     if target.location:
         target.location.msg_contents(
@@ -152,8 +160,11 @@ def deliver(target):
             f"already counted.|n")
     try:
         from world.gang_breeding import _birth_offspring
+        import random as _r
         for _ in range(max(1, litter)):
-            _birth_offspring(target, species, generation=gen)
+            # Each of the litter takes one of the recorded sires (or none, if unknown).
+            sire = _r.choice(sires) if sires else None
+            _birth_offspring(target, species, generation=gen, sire=sire)
     except Exception:
         pass
     # The offspring spiral: dropping a litter RAISES that species' quota.

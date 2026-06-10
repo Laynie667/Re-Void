@@ -2938,10 +2938,24 @@ class FacilityScript(DefaultScript):
             t = target.db.rp_name or target.name
             room.msg_contents("|R" + random.choice(_LINEAGE_BREED).format(t=t) + "|n")
         n = random.randint(2, 3 + int(cond // 30))
+        # Attribute the breeding to an individual sire when we can — a named stud actually
+        # present in the room (Bethany's own), else the breeder NPC itself — so the get
+        # records a real father, not an anonymous line.
+        sire = None
+        try:
+            from world.facility_animals import present_stud
+            here = present_stud(room, species)
+            if here:
+                sire = here.key
+            elif npc and (getattr(npc.db, "is_offspring", False)
+                          or getattr(npc.db, "facility_role", None) == "beast"):
+                sire = npc.db.rp_name or npc.key
+        except Exception:
+            sire = None
         try:
             from world.gang_breeding import gang_inseminate
             gang_inseminate(target, zone, contributors=n, fluid_type="semen",
-                            species=species, generation=gen)
+                            species=species, generation=gen, sire=sire)
         except Exception:
             pass
         if npc and not oral:
@@ -4943,9 +4957,12 @@ class RealmCycleScript(FacilityScript):
             from world.gang_breeding import animal_holes, gang_inseminate, maybe_lineage_offspring
             holes = [z for z in animal_holes(char).values() if z]
             if holes:
-                # The pack takes turns — one or two holes bred this beat.
+                # The pack takes turns — one or two holes bred this beat. If it's one of
+                # Bethany's named studs, the get is recorded as his.
+                sire_name = stud["name"] if stud else None
                 for zone in random.sample(holes, k=min(len(holes), random.randint(1, 2))):
-                    gang_inseminate(char, zone, contributors=1, fluid_type="semen", species=species)
+                    gang_inseminate(char, zone, contributors=1, fluid_type="semen",
+                                    species=species, sire=sire_name)
                 try:
                     maybe_lineage_offspring(char, species, 1)
                 except Exception:

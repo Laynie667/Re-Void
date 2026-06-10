@@ -602,7 +602,8 @@ class BethanyScript(DefaultScript):
                 from world.gang_breeding import animal_holes, gang_inseminate
                 bred = [z for z in animal_holes(char).values() if z]
                 for z in bred:
-                    gang_inseminate(char, z, contributors=1, fluid_type="semen", species="bethany")
+                    gang_inseminate(char, z, contributors=1, fluid_type="semen",
+                                    species="bethany", sire="Bethany")
                 if bred:
                     room.msg_contents(
                         f"|rAll three heads spurt at once — mouth, cunt, and ass flooded in the "

@@ -283,6 +283,17 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
     `nursed_until`/`nurse_first_fluid`/`stuffed_mouth`/`stuffed_fluid`/`beg_small`/
     `star_chart_on`/`star_chart`) all in FACILITY_FLAGS.
 
+## 4b. Named-sire lineage  (`world/gang_breeding.py` + `world/pregnancy.py`)
+- **Purpose:** get traces to the *individual* stud, not just a species — real consequence.
+- `gang_inseminate(..., sire=None)` → `on_bred(..., sire)` → `conceive` stores `sire`/`sires`
+  in the pregnancy record (superfetation by a different stud records a co-sire) → `deliver`
+  gives each of the litter one of the recorded sires → `_birth_offspring(..., sire)` stamps
+  `o.db.sire`, names the get (`"Caesar's silver-marked pup"`), writes it into the desc + birth
+  line, and tallies `target.db.offspring_by_sire` (FACILITY_FLAGS). Anonymous breeding still works.
+- **Sire is supplied by:** `_breed_one` (prefers a stud actually PRESENT in the room via
+  `present_stud`, else the breeder NPC), `_nugget_little_animals` (the named stud), and Bethany's
+  multicock climax (sire="Bethany"). So when the stud you can see breeds you, that pup is his.
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),
