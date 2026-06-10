@@ -2146,10 +2146,49 @@ class FacilityScript(DefaultScript):
         if ev == "churned" and room:
             room.msg_contents(fellow_churn_line(char, f.get("sold") or "the last one"))
             return
+        # When she's actually in the room with the resident, a shared-processing scene may run.
+        if room and ev != "churned":
+            try:
+                from evennia import search_object
+                ref = getattr(char.db, "facility_fellow_ref", None)
+                npc = (search_object(ref) or [None])[0] if ref else None
+                co_present = npc and npc.location == room
+            except Exception:
+                co_present = False
+            if co_present and random.random() < 0.35:
+                self._fellow_scene(char, t, room)
+                return
         if room and random.random() < 0.3:
             line = fellow_beat_line(char)
             if line:
                 room.msg_contents(line)
+
+    def _fellow_scene(self, char, t, room):
+        """A shared-processing scene with the co-present fellow. A 'breed' scene fires a REAL
+        insemination on the resident (the fellow is narrated); all bank a little conditioning."""
+        try:
+            from world.facility_fellow import fellow_shared
+        except Exception:
+            return
+        kind, line = fellow_shared(char)
+        if not line:
+            return
+        room.msg_contents(line)
+        if kind == "breed":
+            try:
+                from world.gang_breeding import gang_inseminate
+                holes = self._holes_only(char) or self._orifices(char)
+                if holes:
+                    self._breed_one(room, char, random.choice(holes),
+                                    self._pick_species(char),
+                                    float(getattr(char.db, "conditioning", 0) or 0))
+            except Exception:
+                pass
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(char, 1.5, source="fellow")
+        except Exception:
+            pass
 
     def _stop_milking(self, target):
         try:

@@ -349,6 +349,11 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   on the floor, realm-tagged + tracked) to her stage, and ~30% narrates her — a recurring face a
   few rooms ahead as mirror/foreshadow, until she's sold and the cycle starts over on someone new.
   State `facility_fellow`/`facility_fellow_ref` in FACILITY_FLAGS; NPC deleted on teardown.
+- **Shared scenes** (`fellow_shared` + `_fellow_scene`): when the fellow NPC is co-present in the
+  resident's room, ~35% of beats run a stage-banded shared-processing scene — milked side by side,
+  bred off the same stud back-to-back (real `_breed_one` on the resident), made to use each other,
+  or (deep stages) she's used on you / sold to a buyer while you present beside her, told your turn
+  is coming. Banks a little conditioning.
 
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/

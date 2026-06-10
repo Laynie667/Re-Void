@@ -152,6 +152,58 @@ def fellow_beat_line(character):
     return random.choice(pool).format(f=f.get("name"), t=t)
 
 
+# Shared-processing scenes when you and the fellow are in the same room, keyed by her stage
+# band. Each entry is (kind, line); kind in {"milk","breed","use","sold"} lets the script apply
+# the REAL effect (a breed scene actually inseminates the resident). Tokens {f}/{t}.
+_FELLOW_SHARED = {
+    "early": [   # stages 0-1: racked together, watching each other learn it
+        ("milk", "|cThey rack {t} and {f} side by side and start the cups on both at once. {f} "
+         "still gasps at the first pull; {t} doesn't anymore. The two of them are milked in "
+         "tandem, gauges climbing together, and {f} keeps stealing looks at {t} like she's "
+         "reading how much worse it gets.|n"),
+        ("use", "|y{t} and {f} are made to kneel facing each other and clean one another with "
+         "their tongues on the handlers' count — a humiliation drill, eyes locked because they're "
+         "not allowed to look away, both learning that modesty was never on the table here.|n"),
+    ],
+    "mid": [     # stages 2-3: milk-heavy / bred-round — worked hard, together
+        ("breed", "|rThe same stud is run down the line and put to {t} and {f} one after the "
+         "other without a wipe between — bred back to back off the same cock, made to watch each "
+         "other take it, the only dignity left being whether you can keep quiet, and neither of "
+         "you can.|n"),
+        ("milk", "|c{t} and {f} are clamped facing, tits cupped and drawn, and made to nurse the "
+         "drawn milk from each other's leaking nipples to 'keep it in the supply' — a closed loop "
+         "of two producers feeding one another, logged as yield either way.|n"),
+        ("breed", "|r{t} and {f} are bent over the same bench hip to hip and bred along the row "
+         "together, the handlers working down the line, and {f}'s hand finds {t}'s and grips it "
+         "through it — the only comfort on offer, and they take it, because there's nothing else.|n"),
+    ],
+    "deep": [    # stages 4-5: blank / perfected — she's ahead, and shown to you as the end
+        ("use", "|M{f} — gone blank and biddable — is handed to {t} as a thing to use, and {t} is "
+         "made to use her, the handlers watching to see if {t} will hesitate. {t} doesn't, much. "
+         "That's the lesson: you become the hands that do it, a few rooms before it's done to you.|n"),
+        ("sold", "|W{f}, graded Perfected, is posed on the block beside {t} for a private buyer, "
+         "and {t} is made to present alongside her — the finished product next to the one still "
+         "being finished. The buyer takes {f}. {t} is told, fondly, that her turn on the block is "
+         "coming, and to watch how it's done.|n"),
+    ],
+}
+
+_STAGE_BAND = {0: "early", 1: "early", 2: "mid", 3: "mid", 4: "deep", 5: "deep"}
+
+
+def fellow_shared(character):
+    """A shared-processing scene with the fellow, keyed to her stage band. Returns (kind, line)
+    with tokens filled, or (None, '')."""
+    f = ensure_fellow(character)
+    band = _STAGE_BAND.get(int(f.get("stage", 0)), "early")
+    pool = _FELLOW_SHARED.get(band) or []
+    if not pool:
+        return None, ""
+    kind, line = random.choice(pool)
+    t = character.db.rp_name or character.name
+    return kind, line.format(f=f.get("name"), t=t)
+
+
 def fellow_churn_line(character, sold_name):
     """The line when the old fellow is sold and a new intake replaces her."""
     f = getattr(character.db, "facility_fellow", None) or {}
