@@ -3166,6 +3166,15 @@ class FacilityScript(DefaultScript):
                             species=species, generation=gen, sire=sire)
         except Exception:
             pass
+        # If a NAMED stud did it, colour the breeding with his own temperament/voice.
+        if sire:
+            try:
+                from world.facility_animals import sire_beat
+                line = sire_beat(target, sire, target.db.rp_name or target.name)
+                if line:
+                    room.msg_contents("|r" + line + "|n")
+            except Exception:
+                pass
         if npc and not oral:
             self._real_penetrate(room, npc, target, zone, species)
         if gape_mult != 1.0:
