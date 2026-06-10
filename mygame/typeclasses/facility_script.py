@@ -4276,7 +4276,16 @@ class FacilityScript(DefaultScript):
                 scenes.append("prolapse")
         except Exception:
             pass
-        getattr(self, f"_scene_{random.choice(scenes)}")(room, target, t, cond, orifices)
+        chosen = random.choice(scenes)
+        getattr(self, f"_scene_{chosen}")(room, target, t, cond, orifices)
+        # Star-Chart economy: the work earns a star (3 for an all-holes scene). No-ops unless
+        # the chart clause is on; verbal/bukkake-only beats don't count as breeding.
+        if chosen not in ("verbal", "bukkake", "golden"):
+            try:
+                from world.star_chart import award_star
+                award_star(target, "allholes" if chosen == "allholes" else "bred", room=room)
+            except Exception:
+                pass
 
     def _scene_single(self, room, target, t, cond, orifices):
         zone = random.choice(self._holes_only(target) or orifices)

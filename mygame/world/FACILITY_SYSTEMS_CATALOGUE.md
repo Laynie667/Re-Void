@@ -353,7 +353,9 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   momentarily (see AUDIT).
 - **Named studs** (`world/facility_animals.py`): Bethany's personal beasts — `DEFAULT_STUDS`
   (Caesar/Duke hounds, Brutus bull, Goliath boar, Sultan stallion), `ensure_studs`/`pick_stud`/
-  `add_stud`/`stud_line`. Stored on `char.db.facility_studs` (FACILITY_FLAGS). They are also
+  `add_stud`/`stud_line`. Stored on `char.db.facility_studs` (FACILITY_FLAGS). The brood is
+  read back by the `studbook` command (aliases `brood`/`getbook`) — totals by species, by
+  named sire (from `offspring_by_sire`), and generations deep. They are also
   spawned as **real present, examinable animals** in the Pens via `spawn_studs` (idempotent,
   realm-tagged for teardown) — `FacilityAnimal(FacilityFurniture)` (un-gettable; `get_display_desc`
   = stud desc + a per-species live idle beat). `present_stud(room, species)` lets scenes prefer
