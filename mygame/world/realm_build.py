@@ -1416,6 +1416,14 @@ _ROOM_AMBIENT = {
         "|xA collection bottle fills a measure higher and a gauge logs the yield without comment.|n",
         "|xSomewhere a strap is cinched a notch tighter and a small, bitten-off sound follows.|n",
         "|xThe board updates a figure upward. It only ever moves the one way.|n",
+        "|xTwo stalls over another resident sags in her cups, glazed and milked-soft, her board "
+        "blinking a yield she'll never be told the target of. Nobody looks at her. Nobody looks at you either.|n",
+        "|xA handler walks the line with a clipboard, thumbing each unit's gauge, murmuring 'good, "
+        "good, behind, good' down the row — a verdict per body, none of them a name.|n",
+        "|xThe resident on the next rig has been here longer; you can tell by how completely she's "
+        "stopped fighting the rhythm, how her hips lift to meet the machine before it asks. You watch yourself in her.|n",
+        "|xSomewhere down the endless line a new one is being strapped in for the first time, and the "
+        "sound she makes is one you remember making. It doesn't carry far. The conveyor takes it.|n",
     ],
     "pens": [
         "|xThe bull stamps and the sound carries through the floor.|n",
@@ -1427,16 +1435,34 @@ _ROOM_AMBIENT = {
         "|xThe dark presses a little closer between one breath and the next.|n",
         "|xThe speaker clicks, considers, and stays silent — for now.|n",
         "|xThe single band of light hums. There is nowhere to look but up into it.|n",
+        "|xFrom the next cell, muffled by the wall, another voice recites something in the flat, "
+        "automatic sing-song of conditioning gone deep — the same phrase, over and over, until it stops being words.|n",
+        "|xSomewhere along the row a resident surfaces enough to weep, briefly, and the warm voice "
+        "in her cell shushes her back down. The crying stops. It always stops.|n",
+        "|xThe cells run in a row and they are not all empty. Now and then a body thumps softly "
+        "against a restraint two doors down, and settles, and the drone resumes for both of you.|n",
     ],
     "dairy": [
         "|xA figure on the board climbs itself upward. It only goes one way.|n",
         "|xThe bottling head caps and labels another, hands-free, and racks it by number.|n",
         "|xThe cold cases hum. A whole shelf is given to one number.|n",
+        "|xThe row of producers stretches off down the hall, udders cupped and drawing in unison, "
+        "a dozen bodies kept on the same patient pull — and you in among them now, just another supply.|n",
+        "|xA full case rolls past on the trolley, every bottle labelled with a different unit's "
+        "number, all of it the same warm white. Somewhere on a shelf there is a row that is only you.|n",
+        "|xThe producer racked beside you has been switched permanently on; she leaks without the "
+        "cups now, steady and unconscious of it, and the floor drinks it, and no one minds. You're watching your future.|n",
     ],
     "pigsty": [
         "|xSomething shifts under the muck and settles. A bubble surfaces and pops.|n",
         "|xThe trough is slopped, twice a cycle, whether anything's ready for it or not.|n",
         "|xThe hose drips against the wall. The reek is kept warm on purpose.|n",
+        "|xAnother of the slipped stock roots at the trough nearby, filthy to the elbow and past "
+        "caring, and grunts a greeting at you through a mouthful — one demoted thing to another.|n",
+        "|xThe wallow is occupied: shapes you'd have to look hard to call people, half-sunk, "
+        "wholly content in the warm reek, and the looking-hard is exactly what nobody here does anymore.|n",
+        "|xA handler hoses down a wallower two pens over — bored, thorough, the way you'd clean a "
+        "fixture — and the clean one immediately lies back down in the muck, because where else.|n",
     ],
     "restroom": [
         "|xA cock pushes through one of the wall-holes, waits, and withdraws. The queue shuffles forward.|n",
@@ -2276,6 +2302,20 @@ def facility_upgrade(owner):
                 _install_mechanic(rm, zname, spec, owner)
             added_zones += 1
 
+    # 1b. Merge the (possibly deepened) ambient pools into existing rooms — union, so a
+    # running realm picks up new ambient texture without losing any custom lines.
+    added_ambient = 0
+    for key, rm in rooms.items():
+        pool = _ROOM_AMBIENT.get(key)
+        if not pool:
+            continue
+        have = list(getattr(rm.db, "ambient_msgs", None) or [])
+        for line in pool:
+            if line not in have:
+                have.append(line)
+                added_ambient += 1
+        rm.db.ambient_msgs = have
+
     # 2. Ensure every adjacency in _EXITS exists (idempotent — skip if present).
     for src, dests in _EXITS.items():
         if src not in rooms:
@@ -2404,6 +2444,7 @@ def facility_upgrade(owner):
         f"  New exits wired: {added_exits}\n"
         f"  Staff placards added: {added_placards}\n"
         f"  New zones/installs merged: {added_zones}\n"
+        f"  New ambient lines merged: {added_ambient}\n"
         f"  Little Box installed in the Nursery: {'yes' if box_added else 'already present'}\n"
         f"  Bethany's named studs installed: {'yes' if studs_added else 'already present'}"
         f" (penned in the Pens: {studs_penned})\n"
