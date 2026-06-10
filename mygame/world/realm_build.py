@@ -1475,12 +1475,24 @@ _ROOM_AMBIENT = {
         "|xThe host glides past with a tray, murmurs a particular about the lot, and moves on.|n",
         "|xThrough the glass the lot turns under the lights, performing for its own reflection.|n",
         "|xIce settles in a glass somewhere in the dark. Nobody here is in any hurry at all.|n",
+        "|xTwo buyers in the next booth compare notes in low, pleased voices — yields, temperaments, "
+        "how a particular line breeds true — the way you'd discuss livestock, because you are.|n",
+        "|xA private client requests the lot be made to present a particular way, and through the "
+        "glass a handler steps in and arranges the body to order. The client nods, satisfied, and bids.|n",
     ],
     "showroom": [
         "|xThe display block turns its slow half-revolution, and the spotlight follows.|n",
         "|xA bid-light winks red behind the glass; somewhere a number that is you goes up.|n",
         "|xThe auctioneer's patter drifts over — warm, practiced, talking up the lot to the dark.|n",
         "|xA buyer leans close to the one-way glass, studies the lot a long moment, and sits back.|n",
+        "|xThe lot before yours is walked off the block to a side door and a waiting handler — sold, "
+        "led away by the ring in her nose, not looking back because there's no longer a back to look to.|n",
+        "|xAnother unit is posed on the second block under matched lights, turned and spread for the "
+        "room on the same slow turntable; you catch her eye across the gap and you both look away.|n",
+        "|xThe staff prep the next lot in the wings — oiled, plugged, tagged, rehearsed in how to "
+        "present — an assembly line of bodies waiting their turn under the lights, you among them.|n",
+        "|xA gavel falls somewhere in the dark and a number is read out as SOLD. A handler ticks it "
+        "off a long list. The list does not get shorter; they bring more stock than it loses.|n",
     ],
     "parlour": [
         "|xThe heated bar ticks. A brand comes up to colour, dull orange, and is set back to wait.|n",
@@ -1499,12 +1511,30 @@ _ROOM_AMBIENT = {
         "|xA half-grown one scents the air and presses to the bars, watching the door she came in by.|n",
         "|xThe matron updates the lineage ledger — another branch, curving back to one number.|n",
         "|xThe warm straw-and-milk smell of the room is, horribly, almost comforting.|n",
+        "|xAnother dam is set down at a nursing rail, latched front and back by a squirming litter "
+        "of her own, eyes glassy, leaking faster than they can drink. You'll be racked beside her soon.|n",
+        "|xThe matron moves down the row checking tags and teats, brisk and unbothered, a woman who "
+        "has raised a thousand broods on a thousand bodies and learned every one of their numbers, none of their names.|n",
+        "|xA maturing get is led out by the matron toward the pens — grown enough to be put to "
+        "stud, walked past the very dam that bore it without either being told which is which.|n",
+        "|xTwo litters over, a futa daughter barely grown is already mounting a penned brood-sister "
+        "in clumsy practice, and the matron lets it — that's the whole point of raising them here.|n",
     ],
     "deepstock": [
         "|xThe vault hums, even and bottomless. A milk-line pulses somewhere and stills.|n",
         "|xA pod's readout ticks over another year of uptime. Nothing in the row stirs.|n",
         "|xThe warden walks the rows, tops up a line, and moves on without a sound.|n",
         "|xThe quiet down here is total, and it has started, horribly, to feel like rest.|n",
+        "|xThe row stretches off into the dark, pod after sealed pod, each with a shape in it — "
+        "plumbed, sealed, bred and milked in its sleep, kept on the lines for years. Some of the "
+        "readouts show uptime longer than you've been alive. None of them will ever read zero.|n",
+        "|xThe pod beside yours holds something that was a person a very long time ago: latexed "
+        "smooth, faceless behind the seal, belly gently rounded by a pregnancy it will never wake "
+        "for. A line tops it up. A line drains it. That is the entire remainder of its life, and it is content.|n",
+        "|xSomewhere far down the vault a delivery happens in total silence — a sealed dam drops a "
+        "litter she'll never see, the get whisked off to the nursery, the line already breeding her again. The hum doesn't change.|n",
+        "|xThe warden checks a readout, makes a tiny adjustment, and a sealed shape two pods down "
+        "shudders once in its sleep and stills. Maintained. Maintained. Maintained, forever, and you can feel the row pulling you toward an empty pod.|n",
     ],
 }
 
