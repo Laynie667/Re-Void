@@ -82,9 +82,10 @@ file(s) so the work is actionable, not vague.*
   facility scrip (`facility_credits`/`economy`) and the general `wallet` don't silently diverge.
 - ☐ **Weather/gametime/wisps** (`weather`, `gametime`, `wisp_visibility`) — ambient world systems;
   verify the realm (disconnected grid) degrades gracefully when these don't apply.
-- ☐ **Test coverage**: `world/test_build.py` / `test_reset.py` are the de-facto integration tests.
-  Add cases for the new systems (regression, clauses, lineage gender/sire, neuter/sissify) so the
-  OOC-floor guarantee is regression-tested, not just hand-verified.
+- ✅ **Test coverage**: `world/test_facility_flags.py` — standalone (no Evennia) regression suite:
+  asserts the §0 floor covers all 30 new flags, plus pure-logic tests (regression thresholds,
+  star chart, quota normalizer, maze, sire temperaments, fellow progression, speech-filter order).
+  Live integration paths remain in `world/test_build.py` / `test_reset.py`.
 
 ## 5. Prose / RP texture (ongoing)
 
