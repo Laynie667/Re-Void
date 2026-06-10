@@ -884,6 +884,38 @@ _CURSE_HOLLOW_BEAT = [
     "fully banking, so satisfaction slides off her and leaves only the wanting, louder for having "
     "been almost answered. Full means nothing now. They made sure of it.",
 ]
+# ── Engorgement: the unmilked ache (relief is the leash) ──
+_ENGORGE_ACHE = [
+    "|i{t}'s tits sit heavy and tight, the glands swollen and warm, a low full ache "
+    "building behind the nipples that the cups aren't here to answer.",
+    "Her breasts are getting full — that tender, straining heaviness — and every shift "
+    "drags at them, the let-down reflex twitching with nowhere to go.",
+    "The fullness in {t}'s chest has stopped being comfortable; her nipples have gone "
+    "hard and leaking-ready, begging for the cups that are running late on purpose.",
+    "{t} catches herself arching to ease the pressure in her swollen tits and finds it "
+    "doesn't ease — only the cups do that, and the cups come when the schedule says, not her.",
+]
+_ENGORGE_PAIN = [
+    "|i{t}'s tits are agony — engorged hard and hot and round, the skin tight and shiny, "
+    "the ache so loud now it's most of what's in her head. She'd beg for the cups if begging worked.",
+    "Her breasts are painfully overfull, throbbing with every heartbeat, leaking thin "
+    "threads that aren't nearly enough, the pressure a constant grinding demand to be drained.",
+    "The engorgement has {t} whimpering — swollen to bursting, every brush of air a "
+    "torment, her whole body reduced to one straining plea to be milked, and made to wait anyway.",
+    "{t}'s udder is rock-hard and furious with milk, the ache radiating up into her arms, "
+    "and she has learned that this — this exact unbearable fullness — is what relief is measured against.",
+]
+_ENGORGE_RELIEF = [
+    "The cups finally seal over {t}'s screaming-full tits and PULL, and the let-down hits "
+    "like a drug — the agony of fullness draining out in long pulses, relief so total it's "
+    "indistinguishable from pleasure. She sags into it, grateful, and the gratitude is the point.",
+    "Relief, at last — the machine drags the unbearable fullness out of {t} in steady "
+    "pulls, the ache emptying with every draw, and the flood of it through her is so good "
+    "she'd do anything to be milked on time. Which is exactly what they're teaching her.",
+    "The cups take {t} and empty the agony out of her swollen tits, and the relief is "
+    "so enormous, so chemical, that some part of her files the lesson clean: the cups are "
+    "mercy, and mercy comes from the machine, on the machine's schedule, never hers.",
+]
 # ── The Nugget: the reduction terminus (dollification taken all the way down) ──
 _NUGGET_APPLY = [
     "|WThey take {t} all the way down. The limbs go first — arms and legs drawn off to neat, "
@@ -1967,6 +1999,99 @@ class FacilityScript(DefaultScript):
                 f"|cThe cups work {t}'s tits and find her milked dry — so they keep pulling "
                 f"anyway, dragging the empty ache out of her, because empty was never a reason "
                 f"to stop.|n")
+
+    # Engorgement loop — the unmilked ache that makes relief the leash. ml thresholds.
+    _ENGORGE_ML      = 300.0    # full enough to start aching
+    _ENGORGE_PAIN_ML = 600.0    # genuinely painful, leaking at the edges
+    _ENGORGE_LEAK_ML = 850.0    # lets down on its own
+
+    def _milk_volume(self, target):
+        """Total uncollected milk (ml) across her real milk ProductionItems, or 0.0."""
+        total = 0.0
+        try:
+            from evennia import search_object
+            from typeclasses.production_item import ProductionItem
+            for zd in (getattr(target.db, "zones", None) or {}).values():
+                entry = ((zd or {}).get("mechanics", {}) or {}).get("production")
+                if not entry:
+                    continue
+                res = search_object(entry.get("item_dbref", ""), exact=True)
+                if res and isinstance(res[0], ProductionItem) and (res[0].db.fluid_type or "milk") == "milk":
+                    total += float(res[0].db.current_volume_ml or 0)
+        except Exception:
+            pass
+        return total
+
+    def _engorgement_tick(self, char, t, phase=None):
+        """Each beat she ISN'T milked, her uncollected milk aches — arousal + a floor that
+        climb with fullness and with how long she's gone unmilked, until she leaks on her own.
+        Being milked (the 'milk' phase) is the relief, and the relief is the leash: it banks a
+        little conditioning so she learns to crave the cups. All real — reads her milk items."""
+        room = char.location
+        vol = self._milk_volume(char)
+        beats = int(getattr(char.db, "milk_engorge_beats", 0) or 0)
+
+        if phase == "milk":
+            # Relief beat — if she'd been aching, narrate the let-down and bank the leash.
+            if beats >= 2 and room:
+                room.msg_contents("|c" + random.choice(_ENGORGE_RELIEF).format(t=t) + "|n")
+                try:
+                    from world.conditioning import add_conditioning
+                    add_conditioning(char, 1.5, source="milk_relief")
+                except Exception:
+                    pass
+            char.db.milk_engorge_beats = 0
+            return
+
+        if vol < self._ENGORGE_ML:
+            if beats:
+                char.db.milk_engorge_beats = max(0, beats - 1)
+            return
+
+        beats += 1
+        char.db.milk_engorge_beats = beats
+        # Ache: arousal + a floor, scaled by how full and how long she's gone unmilked.
+        try:
+            from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+            ensure_arousal_script(char)
+            gain = 4.0 + min(vol / 100.0, 8.0) + min(beats, 10) * 0.7
+            add_arousal(char, gain)
+            char.db.arousal_floor = max(float(getattr(char.db, "arousal_floor", 0) or 0),
+                                        30.0 + min(vol / 40.0, 25.0))
+        except Exception:
+            pass
+        if room and random.random() < 0.7:
+            pool = _ENGORGE_PAIN if vol >= self._ENGORGE_PAIN_ML else _ENGORGE_ACHE
+            room.msg_contents("|c" + random.choice(pool).format(t=t) + "|n")
+        # Past the leak threshold she lets down on her own — a real little drain + wet floor.
+        if vol >= self._ENGORGE_LEAK_ML and random.random() < 0.6:
+            self._engorge_leak(char, t, room)
+
+    def _engorge_leak(self, char, t, room):
+        """She lets down untouched — drain a little real milk to the floor (not banked; it's
+        spilled), and leave her wet and humiliated. Keeps her from climbing forever."""
+        try:
+            from evennia import search_object
+            from typeclasses.production_item import ProductionItem
+            spilled = 0.0
+            for zd in (getattr(char.db, "zones", None) or {}).values():
+                entry = ((zd or {}).get("mechanics", {}) or {}).get("production")
+                if not entry:
+                    continue
+                res = search_object(entry.get("item_dbref", ""), exact=True)
+                if res and isinstance(res[0], ProductionItem) and (res[0].db.fluid_type or "milk") == "milk":
+                    p = res[0]
+                    drop = min(float(p.db.current_volume_ml or 0), random.uniform(40, 90))
+                    p.db.current_volume_ml = max(0.0, float(p.db.current_volume_ml or 0) - drop)
+                    spilled += drop
+            if spilled > 0 and room:
+                room.msg_contents(
+                    f"|c{t} lets down untouched — {spilled:.0f}ml of her own milk spraying and "
+                    f"running down her belly and thighs with nothing to catch it, her tits too "
+                    f"full to hold it and no one minded to relieve her. Wasted, and she's left "
+                    f"wet with it, aching only a little less.|n")
+        except Exception:
+            pass
 
     def _stop_milking(self, target):
         try:
@@ -4954,6 +5079,8 @@ class RealmCycleScript(FacilityScript):
         # Curse honoring — the standing curses bite every beat they apply (phase lets the
         # use-driven ones, like the tally, read whether she was worked this beat).
         self._tick_curses(char, t, cond, phase=phase)
+        # Engorgement — uncollected milk aches unless this is a milking beat (relief = leash).
+        self._engorgement_tick(char, t, phase=phase)
         # Standing-rule honoring — ambient rules (posture/clothing/curfew) bite each beat.
         try:
             from world.rules import enforce_ambient

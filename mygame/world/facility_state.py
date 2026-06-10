@@ -55,7 +55,7 @@ FACILITY_FLAGS = {
     "docility": 0, "bethany_devotion": 0, "cycle_day": 0,
     "line_pass": 0, "punish_shield": 0, "liberation_runs": 0, "quota_behind": 0,
     "curse_tally_count": 0, "regression": 0, "box_struggle": 0,
-    "teat_gag_until": 0, "nursed_until": 0,
+    "teat_gag_until": 0, "nursed_until": 0, "milk_engorge_beats": 0,
     "cond_bonus": 0, "milk_bonus": 0, "sale_bonus": 0, "dose_bonus": 0,
     "collections_level": 0,
 

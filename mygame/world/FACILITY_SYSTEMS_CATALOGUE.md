@@ -326,6 +326,16 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 - Both are `process <unit> neuter|sissify` actions (CmdProcess) and `_proc_*` methods. Flags
   `neutered`/`sissified` in FACILITY_FLAGS; sissy name/filter cleared by the floor.
 
+## 4e. Engorgement loop (the dairy leash)  (`typeclasses/facility_script.py`)
+- Each cycle beat she ISN'T milked, `_engorgement_tick` reads her real milk ProductionItem
+  volume (`_milk_volume`) and, past `_ENGORGE_ML` (300/600/850 ache→pain→leak), climbs arousal +
+  an arousal-floor scaled by fullness and by `milk_engorge_beats` (how long unmilked), narrating
+  from `_ENGORGE_ACHE`/`_ENGORGE_PAIN`. Past the leak threshold she lets down untouched
+  (`_engorge_leak` spills real ml — wasted, not banked). The `milk` phase is RELIEF: it banks a
+  little conditioning (`_ENGORGE_RELIEF`) and zeroes the counter — relief becomes the leash.
+  Hooked in the main per-beat path; the nugget is maintained by its cradle so it's exempt.
+  Flag `milk_engorge_beats` in FACILITY_FLAGS.
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),
