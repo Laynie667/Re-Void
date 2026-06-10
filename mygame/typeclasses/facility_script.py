@@ -1770,6 +1770,22 @@ _PROCESS_VOICE = [
     "to present. Priorities, pet.\"",
     "\"Every hole, every drop, every number on that board — mine. The only thing left to "
     "decide is how grateful you are about it, and I'm deciding that too.\"",
+    "\"There she is. I can always tell the exact beat you stop performing it and start meaning "
+    "it. You just had one. Don't worry — I wrote it down.\"",
+    "\"You think the worst part is what I do to you. The worst part is how you've started "
+    "helping. Tipping your hips. Opening early. I never even asked for that one.\"",
+    "\"I don't break you, sweetheart. Breaking implies you'd be worth less after. I *finish* "
+    "you. You're worth so much more to me empty.\"",
+    "\"Count your own contractions if you want something to do. That's your clock now. Not the "
+    "one on the wall — the one in your belly. It only runs one direction too.\"",
+    "\"Every cow on this floor walked in sure she was the exception. The board doesn't have a "
+    "column for exceptions. It has a column for yield. Fill yours.\"",
+    "\"Listen to that — you didn't argue. You used to argue. I miss it a little, the way you "
+    "miss a noise after it stops. But quiet's the product, and I'm in the product business.\"",
+    "\"You'll dream about the schedule tonight. Not the cock, not the cups — the *schedule*. "
+    "The relief of being told. That's when I know it's really taking.\"",
+    "\"Good girl. No — don't look for what you did. You did nothing. That's the point. You get "
+    "the good-girl for *being handled well*, not for being good. Let go of earning it.\"",
 ]
 
 # Experimental dosing / procedures — permanent growth and yield, undocumented.
