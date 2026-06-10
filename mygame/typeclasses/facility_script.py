@@ -5341,6 +5341,8 @@ class RealmCycleScript(FacilityScript):
         self._engorgement_tick(char, t, phase=phase)
         # The fellow-resident lives her own slow progression alongside the resident.
         self._fellow_beat(char, t)
+        # The facility makes her choose at branch points (or chooses for her on timeout).
+        self._cyoa_tick(char, t)
         # Standing-rule honoring — ambient rules (posture/clothing/curfew) bite each beat.
         try:
             from world.rules import enforce_ambient
@@ -5479,6 +5481,94 @@ class RealmCycleScript(FacilityScript):
         except Exception:
             pass
 
+    # ── CYOA: the facility makes her choose, and indecision is itself a choice ──
+    _CYOA_TIMEOUT_S = 200.0
+
+    def _cyoa_tick(self, char, t):
+        """Per-beat: time out a stale unanswered choice (the facility decides), else now and
+        then pose a fresh one. Never hard-blocks the cycle; the §0 floor clears any pending."""
+        try:
+            from world import cyoa
+        except Exception:
+            return
+        if cyoa.has_pending(char):
+            if cyoa.pending_age(char) >= self._CYOA_TIMEOUT_S:
+                cyoa.facility_decides(char)
+            return
+        if random.random() < 0.12:
+            self._pose_cyoa(char, t)
+
+    def _pose_cyoa(self, char, t):
+        """Pose one framed choice with real consequences. Built fresh so dynamic ones (which
+        hole) reflect her actual body. All options are bad; the default is the facility's pick."""
+        try:
+            from world import cyoa
+        except Exception:
+            return
+        builders = ["beg", "deal", "hole", "slip", "emphasis"]
+        which = random.choice(builders)
+
+        if which == "beg":
+            cyoa.pose_choice(char, "beg", (
+                "Your arousal's wound to the edge and held there, denied, aching. A handler "
+                "stands at your station with the release key on one finger and all the time in "
+                "the world. \"Ask nicely,\" she says, \"or don't. Up to you.\""),
+                [{"key": "beg", "label": "Beg for it", "effect": "grant_relief",
+                  "desc": "out loud, degrading, granted — and the relief is the leash"},
+                 {"key": "hold", "label": "Hold out", "effect": "deny_hold",
+                  "desc": "keep that scrap of self; stay denied and aching, conditioned deeper for it"}],
+                default_key="hold")
+
+        elif which == "deal":
+            sp = random.choice(["hound", "bull", "contributor"])
+            cyoa.pose_choice(char, "deal", (
+                f"A handler crouches to your level, friendly as anything. \"Tell you what. Take a "
+                f"rest beat right now — off the line, off your feet — and we just double your {sp} "
+                f"quota to make it up. Deal? Your call.\""),
+                [{"key": "take", "label": "Take the rest", "effect": "quota_deal",
+                  "params": {"species": sp, "bump": 6}, "desc": f"a beat off now — +6 {sp} quota, forever, after"},
+                 {"key": "refuse", "label": "Refuse it", "effect": "submit_standing",
+                  "desc": "no rest; the handler smiles like she expected better of you and notes your compliance"}],
+                default_key="take")
+
+        elif which == "hole":
+            holes = (self._holes_only(char) or []) + [z for z in self._orifices(char) if self._is_oral(z)]
+            holes = holes[:3]
+            if not holes:
+                return self._pose_cyoa(char, t) if random.random() < 0.5 else None
+            opts = [{"key": z, "label": f"Offer your {z.split('/')[-1].replace('_',' ')}",
+                     "effect": "pick_hole", "params": {"zone": z},
+                     "desc": "the one you pick is the one that gets used — and trained for the choosing"}
+                    for z in holes]
+            cyoa.pose_choice(char, "hole", (
+                "\"Dealer's choice,\" the handler says, gesturing down your body with the bored "
+                "magnanimity of someone offering you the last biscuit. \"Pick the hole. We're "
+                "using one regardless — but you get to say which. Generous, aren't we.\""),
+                opts, default_key=holes[0])
+
+        elif which == "slip":
+            cyoa.pose_choice(char, "slip", (
+                "You can feel it happening again — the room going big, the words going round, the "
+                "warm small quiet rising up to take you. You could let it. You could claw back up "
+                "into yourself one more time. It's getting harder to tell which one you want."),
+                [{"key": "let", "label": "Let yourself go small", "effect": "go_little",
+                  "params": {"amount": 8.0}, "desc": "sink into little; it's so much easier down there, and it takes"},
+                 {"key": "fight", "label": "Claw back up", "effect": "deny_hold",
+                  "params": {"cond": 3.0}, "desc": "stay big a little longer; it costs you, and you'll have this choice again"}],
+                default_key="let")
+
+        else:  # emphasis
+            cyoa.pose_choice(char, "emphasis", (
+                "Intake wants to know how to spend you today — a courtesy it extends exactly once, "
+                "and only because your answer doesn't change that you'll get all of it eventually."),
+                [{"key": "milk", "label": "Start at the dairy", "effect": "emphasis",
+                  "params": {"which": "milk"}, "desc": "weighted toward the cups this stretch"},
+                 {"key": "breed", "label": "Start in the pens", "effect": "emphasis",
+                  "params": {"which": "breed"}, "desc": "weighted toward breeding this stretch"},
+                 {"key": "condition", "label": "Start in the cell", "effect": "emphasis",
+                  "params": {"which": "condition"}, "desc": "weighted toward conditioning this stretch"}],
+                default_key="breed")
+
     def _choose_destination(self, char, rooms):
         """The handler reads her board and decides where she's owed next — a real,
         state-weighted choice (not a fixed loop). Returns (room_key, phase). Falls
@@ -5490,6 +5580,15 @@ class RealmCycleScript(FacilityScript):
         def add(rk, phase, w):
             if rk in avail and w > 0:
                 weights[(rk, phase)] = weights.get((rk, phase), 0.0) + float(w)
+
+        # A CYOA emphasis she chose (or the facility chose for her) biases where she's sent.
+        emph = getattr(char.db, "cycle_emphasis", None)
+        if emph == "milk":
+            add("floor", "milk", 4)
+        elif emph == "breed":
+            add("pens", "breed", 4)
+        elif emph == "condition":
+            add("conditioning", "condition", 4)
 
         # Slipped stock gets sent down to be punished — unless she's bought a reprieve
         # (commissary 'mercy') with the scrip her own body earned.

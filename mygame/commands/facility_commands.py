@@ -1469,6 +1469,52 @@ class CmdState(Command):
 ALL_FACILITY_VERBS.append(CmdState)
 
 
+class CmdChoose(Command):
+    """
+    Answer a choice the facility has put in front of you.
+
+    Usage:
+        choose            — re-show the choice you're being made to make
+        choose <number>   — make it
+
+    The facility makes you choose at branch points. Every option has a real consequence,
+    they're all bad, and if you don't choose, the facility chooses for you. (The way OUT is
+    never one of these options and never needs to be — it's always yours: OOC reset / escape.)
+    """
+    key           = "choose"
+    aliases       = ["pick", "decide"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.cyoa import has_pending, resolve_choice
+        except Exception:
+            caller.msg("|xNothing to choose.|n")
+            return
+        if not has_pending(caller):
+            caller.msg("|xThere's no choice in front of you right now.|n")
+            return
+        arg = (self.args or "").strip()
+        if not arg:
+            p = caller.db.pending_choice or {}
+            lines = ["|W" + p.get("prompt", "A choice.") + "|n"]
+            for i, o in enumerate(p.get("options", []), 1):
+                lines.append(f"  |w{i}.|n |c{o.get('label','')}|n"
+                             + (f" |x— {o['desc']}|n" if o.get("desc") else ""))
+            lines.append("|x  (|wchoose <number>|x — or the facility decides for you.)|n")
+            caller.msg("\n".join(lines))
+            return
+        opt, msg = resolve_choice(caller, arg)
+        if not opt:
+            caller.msg("|xThat isn't one of the choices in front of you.|n")
+            return
+        caller.msg(f"|wYou choose: |c{opt.get('label')}|w.|n")
+
+ALL_FACILITY_VERBS.append(CmdChoose)
+
+
 class CmdStars(Command):
     """
     Your gold-star chart — earned the only way that counts, and spent on relief.

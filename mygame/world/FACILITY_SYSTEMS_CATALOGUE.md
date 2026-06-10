@@ -378,6 +378,17 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   existing FACILITY_FLAGS (active_speech_filters/forced_posture/arousal_floor/stim_per_tick) —
   floor coverage already holds.
 
+## 4h. CYOA choices  (`world/cyoa.py` + cycle `_pose_cyoa`/`_cyoa_tick` + `choose` cmd)
+- The facility makes her CHOOSE at branch points; every option routes through a real effect, all
+  options are bad, and indecision is itself a choice — `facility_decides` fires the default on
+  timeout (`_CYOA_TIMEOUT_S`). Never hard-blocks the cycle; `pending_choice` in FACILITY_FLAGS so
+  the floor clears it.
+- `pose_choice`/`resolve_choice` (by number or key)/`facility_decides`/`has_pending`. Effect
+  registry (`@effect`): emphasis (biases `_choose_destination` via `cycle_emphasis`), grant_relief
+  (→ arousal_rules.grant_release), deny_hold, quota_deal, pick_hole (→ record_use), go_little
+  (→ regression), submit_standing. `_pose_cyoa` builds 5 framed choices (beg/deal/which-hole/
+  slip/emphasis), the hole one built from her real orifices. `choose [<n>]` command (Interaction).
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),

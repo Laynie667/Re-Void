@@ -97,3 +97,16 @@ file(s) so the work is actionable, not vague.*
 - ✅ A single composed `state` read-out (aliases `status`/`self`) now ties the self-knowledge
   family together — mind/headspace/body/line/stars/quota/clauses/standing in one page, each
   pointing at its detail command, always ending on the floor reminder.
+
+
+## 6. CYOA & priorities (per the user's latest direction)
+
+- ✅ **CYOA choice layer** (`world/cyoa.py`): branch-point choices with real effects; indecision
+  fires the facility's default; `choose` command; floor-safe. Highest-priority "game system".
+- ☐ **Relationship tiers** (requested): extend beyond consent — owner/lovers/family/shared-faction/
+  hostile-faction relations that gate or colour interactions. (`world/relationships.py` exists.)
+- ☐ **Post Office** (MEDIUM priority): expand/refine rooms + the three NPCs (Seraphine/Calix/Vesper)
+  with expansive dialogue, connecting rooms, naughty easter eggs (`design/post_office.md`).
+- Priorities: facility/underlying systems/CYOA = HIGH; post office = MEDIUM; hub/other = LOW.
+- Note: the consent system (`consent <thing> block/allow <who/all>`) is fine as-is per the user;
+  add to / hook into it rather than replacing.

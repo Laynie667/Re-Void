@@ -41,7 +41,7 @@ FACILITY_FLAGS = {
     "facility_polaroids": None, "get_bounty": None, "word_swaps": None,
     "conditioning_consent": None, "pending_conditioning": None, "body_parts": None,
     "release_terms": None, "behaviour_log": None, "rules": None, "contract_effects": None,
-    "headspace": None,
+    "headspace": None, "pending_choice": None, "cycle_emphasis": None,
     # little box (self-releasing — see typeclasses/little_box.py)
     "in_box": None, "box_entered_at": 0, "box_release_at": 0,
     # little clauses: teat-gag + nurse-first + stuffed-mouth + star-chart

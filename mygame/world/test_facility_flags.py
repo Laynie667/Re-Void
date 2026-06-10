@@ -48,6 +48,8 @@ _NEW_FLAGS = [
     "offspring_by_sire", "offspring_by_sex", "offspring_max_gen",
     # dairy engorgement
     "milk_engorge_beats",
+    # CYOA choices
+    "pending_choice", "cycle_emphasis",
 ]
 
 
