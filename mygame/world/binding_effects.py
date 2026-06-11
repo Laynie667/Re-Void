@@ -386,6 +386,15 @@ def apply_effects(character, item):
         character.db.star_chart_on  = True
         character.db.orgasm_denial  = True
 
+    # Heat-Tell clause (the Honest Body): every line she speaks drags an involuntary
+    # arousal-tell out with it, drawn from her REAL arousal. A speech filter enforces it.
+    if effects.get("heat_tell"):
+        character.db.heat_tell = True
+        active = list(getattr(character.db, "active_speech_filters", None) or [])
+        if "heat_tell" not in active:
+            active.append("heat_tell")
+            character.db.active_speech_filters = active
+
 
 def remove_effects(character, item):
     """
@@ -535,6 +544,13 @@ def remove_effects(character, item):
         character.db.beg_small = False
     if effects.get("star_chart"):
         character.db.star_chart_on = False
+
+    # Heat-Tell — strip the filter and the flag.
+    if effects.get("heat_tell"):
+        character.db.heat_tell = False
+        active = [f for f in (getattr(character.db, "active_speech_filters", None) or [])
+                  if f != "heat_tell"]
+        character.db.active_speech_filters = active
 
 
 # ---------------------------------------------------------------------------

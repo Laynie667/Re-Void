@@ -647,6 +647,7 @@ _CLAUSE_PAYLOADS = {
     "stuffed_mouth": {"fluid": "semen"},
     "beg_small":     True,
     "star_chart":    True,
+    "heat_tell":     True,
 }
 
 
@@ -692,13 +693,16 @@ def _eff_deepen(character, p):
 @choice("clause")
 def _b_clause(character):
     """An addendum is produced — a real hidden clause, installed whichever way she answers."""
-    key = random.choice(["teat_gag", "nurse_first", "stuffed_mouth", "beg_small", "star_chart"])
+    key = random.choice(["teat_gag", "nurse_first", "stuffed_mouth", "beg_small", "star_chart",
+                         "heat_tell"])
     blurb = {
         "teat_gag":      "a gag-word any mouth in the building can say to plug yours with a teat you'll suckle helpless on",
         "nurse_first":   "a clause that won't let you speak a first word to anyone until you've nursed a load down",
         "stuffed_mouth": "a clause filing your speech down to cock-muffled fragments, your mouth retooled off words",
         "beg_small":     "a clause that denies you release as of right — you'll beg small for every drop of it now",
         "star_chart":    "a chart where relief is bought with stars earned the only way the work earns them",
+        "heat_tell":     "a clause that makes your body honest — every word you speak from now drags your "
+                         "real arousal out with it, a tell you can't hide, louder the wetter you are",
     }[key]
     return {"key": "clause", "prompt": (
         "Bethany sets a single fresh page on the desk between you, already signed at the bottom — "

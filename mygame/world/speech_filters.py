@@ -46,6 +46,7 @@ _FILTER_ORDER = [
     "sissy", "lisp",
     "stutter", "single_word",
     "third_person_coy", "animal_sounds", "suckling", "stuffed",
+    "heat_tell",
 ]
 
 
@@ -95,6 +96,7 @@ def apply_speech_filters(character, text: str) -> tuple:
         "animal_sounds":      _filter_animal_sounds,
         "banned_words":       _filter_banned_words,
         "word_swap":          _filter_word_swap,
+        "heat_tell":          _filter_heat_tell,
     }
 
     for fname in _ordered_filters(filters):
@@ -428,6 +430,84 @@ def _filter_animal_sounds(char, text: str) -> str:
     pet_type = getattr(char.db, "pet_type", "puppy") or "puppy"
     sounds   = _PET_VOCALIZATIONS.get(pet_type, _PET_VOCALIZATIONS["puppy"])
     return random.choice(sounds)
+
+
+# ── Heat-Tell clause: the Honest Body ─────────────────────────────────────────
+# A clause that makes her arousal involuntarily audible. Every line she speaks drags a
+# betraying tell out with it, drawn from her REAL arousal (char.db.arousal, 0–100). Low and
+# it's a small catch she could almost hide; high and the words come out around a leak, a
+# clench, a whimper she didn't choose; at the edge she can barely finish a sentence at all.
+# It reads live state, so it's always true to the moment — specificity is the cruelty. The
+# §0 floor clears it (the "heat_tell" filter name + the db flag are in FACILITY_FLAGS).
+_HEAT_TELL_LOW = [
+    " |r*...*|n |x(a small catch in it she swallows down)|n",
+    " |r—|n |x(her breath hitches once on the last word, barely)|n",
+    " |r*mn*|n |x(a faint warmth under the words she doesn't acknowledge)|n",
+    " |x(she shifts her weight as she says it, not quite still)|n",
+    " |x(her tongue wets her lip mid-sentence, automatic)|n",
+    " |r*ahem*|n |x(she clears a softness out of her throat that keeps coming back)|n",
+    " |x(something low and patient stirs behind the words; she ignores it)|n",
+    " |x(a slow swallow before the last word, like the sentence cost her a little)|n",
+    " |r*hh*|n |x(the faintest exhale she'd deny if you named it)|n",
+]
+_HEAT_TELL_MID = [
+    " |r*nn—*|n |x(her thighs press together on the vowel and stay there)|n",
+    " |r*hahh*|n |x(the breath comes warmer than the words need)|n",
+    " |x(she squirms where she stands, the sentence riding a roll of her hips she can't help)|n",
+    " |r*mmh*|n |x(a flush climbs her throat as she talks; she keeps talking through it)|n",
+    " |x(her voice drops half a register, gone husky on its own, and she hears it too)|n",
+    " |r*...nh*|n |x(she has to stop, breathe, and finish — the want crowding the words)|n",
+    " |x(she rubs her thighs once, slow, like she thinks no one clocks it)|n",
+    " |r*ah—*|n |x(the start of a moan she bites back into a normal-sounding word)|n",
+    " |x(slick enough now that the shift of her stance is faintly, wetly audible)|n",
+    " |r*hnn*|n |x(her hips chase nothing as she speaks; she pretends they don't)|n",
+    " |x(the sentence comes out breathy, embarrassed, betrayed by her own pulse)|n",
+]
+_HEAT_TELL_HIGH = [
+    " |r*ahh—nnh—*|n |x(she has to fight the words past a whimper that keeps winning)|n",
+    " |r*hah... hah...*|n |x(panting now, the sentence broken across two desperate breaths)|n",
+    " |x(she's grinding slow against nothing, mortified, unable to make it stop)|n",
+    " |r*mmh—nn—*|n |x(slick audibly, thighs slippery, the words wet at the edges)|n",
+    " |r*p-please—*|n |x(the beg slips in unbidden and she flinches at having said it)|n",
+    " |x(her voice cracks open in the middle, raw and wanting, and won't reset)|n",
+    " |r*ah! —ahn—*|n |x(a hip-jerk mid-word she rides out red-faced)|n",
+    " |x(she's leaking down her thighs as she talks and you can hear that she knows)|n",
+    " |r*hahh—nh—*|n |x(every consonant comes out around a clench she can't release)|n",
+    " |x(the last few words dissolve into needy little sounds before she drags them back)|n",
+    " |r*nnh—* |n|x(she squeezes her eyes shut to finish the sentence at all)|n",
+]
+_HEAT_TELL_EDGE = [
+    " |r*—ah! ah! pl-please—*|n |x(she can barely speak; the edge has her, words coming apart)|n",
+    " |r*hahh—nnh—c-can't—*|n |x(she loses the sentence to a full-body shudder she can't stop)|n",
+    " |x(she's openly humping the air now, sobbing little gasps between the words she manages)|n",
+    " |r*mmh!—nh!—* |n|x(slick running down both thighs, every syllable a wrecked little cry)|n",
+    " |r*please-please—*|n |x(the begging's all that's left under the words; she's past hiding it)|n",
+    " |x(her voice is a desperate ruin; whatever she meant arrives drowned in need)|n",
+    " |r*—ahn!—I-I—nnh—*|n |x(she shakes apart trying to hold a coherent thought)|n",
+    " |x(she gives up halfway and just whimpers the rest, hips stuttering, undone)|n",
+]
+
+
+def _filter_heat_tell(char, text: str) -> str:
+    """Append an involuntary arousal-tell to her speech, graded off her REAL arousal level.
+    Non-destructive: it adds to whatever the pipeline produced (so it stacks under stuffed/
+    animal filters too). High frequency, so the pools are deep. Floor-cleared."""
+    try:
+        arousal = float(getattr(char.db, "arousal", 0.0) or 0.0)
+    except Exception:
+        arousal = 0.0
+    if arousal >= 90.0:
+        pool = _HEAT_TELL_EDGE
+    elif arousal >= 60.0:
+        pool = _HEAT_TELL_HIGH
+    elif arousal >= 30.0:
+        pool = _HEAT_TELL_MID
+    else:
+        # Low: mostly a quiet tell, but ~1 in 4 she nearly hides it entirely.
+        if random.random() < 0.25:
+            return text
+        pool = _HEAT_TELL_LOW
+    return (text or "") + random.choice(pool)
 
 
 def _check_honorific(char, text: str) -> tuple:

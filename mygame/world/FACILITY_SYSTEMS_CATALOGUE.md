@@ -285,10 +285,18 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
     `award_star` hooked into Bethany's climax (seat=3/throat=1), the rocking-horse breeding
     deposit + knot-lock. `stars` command (`commands/facility_commands.py`) views + spends
     (RELIEF_COST=4 → a granted climax).
-  - Shared helper `_nurse_feed(char, fluid, source)`. New `suckling`/`stuffed` filters in
-    speech_filters. Flags (`teat_gagged`/`teat_gag_until`/`teat_gag_fluid`/`nurse_first`/
-    `nursed_until`/`nurse_first_fluid`/`stuffed_mouth`/`stuffed_fluid`/`beg_small`/
-    `star_chart_on`/`star_chart`) all in FACILITY_FLAGS.
+  - **heat_tell** (the Honest Body) — sets `heat_tell` + adds the `heat_tell` speech filter
+    (sorts last in the pipeline, so it APPENDS to whatever the other filters produced). Every
+    line she speaks drags an involuntary arousal-tell out with it, graded off her REAL
+    `char.db.arousal`: four deep pools (low/mid/high/edge) from a swallowed catch → grinding,
+    leaking, voice-cracking → words coming apart at the edge. Low tier (~1 in 4) nearly hides
+    it; ≥90 always tells. Non-destructive (preserves the words as a prefix); reads live state so
+    it's always true to the moment. `heat_tell` flag in FACILITY_FLAGS (floor strips flag +
+    filter). Acquirable via the CYOA `clause` node.
+  - Shared helper `_nurse_feed(char, fluid, source)`. New `suckling`/`stuffed`/`heat_tell`
+    filters in speech_filters. Flags (`teat_gagged`/`teat_gag_until`/`teat_gag_fluid`/
+    `nurse_first`/`nursed_until`/`nurse_first_fluid`/`stuffed_mouth`/`stuffed_fluid`/`beg_small`/
+    `star_chart_on`/`star_chart`/`heat_tell`) all in FACILITY_FLAGS.
 
 ## 4b. Named-sire lineage  (`world/gang_breeding.py` + `world/pregnancy.py`)
 - **Purpose:** get traces to the *individual* stud, not just a species — real consequence.
@@ -395,8 +403,8 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   real (devote/submit/deny_hold/pick_hole) with outcome beats.
 - **`clause` node + effect**: produces a real hidden-clause addendum — `clause` effect installs it
   through the SAME `apply_effects` path the contract uses (teat_gag/nurse_first/stuffed_mouth/
-  beg_small/star_chart), so it genuinely takes hold; refusing routes through auto-consent (binds
-  anyway) and chains into `correction`. The clause taking hold is narrated.
+  beg_small/star_chart/**heat_tell**), so it genuinely takes hold; refusing routes through auto-
+  consent (binds anyway) and chains into `correction`. The clause taking hold is narrated.
 - **Inspection-day chain** (`inspection → inspection_gauge → inspection_grade`): gated to the
   signed (builder returns None otherwise). The stand (walk up = compliance vs balk = real `punish`)
   → the gauge (relax vs clench — both `pick_hole`/record_use on her REAL first hole; clench reads

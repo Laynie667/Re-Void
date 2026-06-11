@@ -84,7 +84,7 @@ FACILITY_FLAGS = {
     "curse_tally": False, "curse_echo": False, "curse_hollow": False,
     "box_lid_locked": False, "teat_gagged": False, "nurse_first": False,
     "stuffed_mouth": False, "beg_small": False, "star_chart_on": False,
-    "neutered": False, "sissified": False,
+    "neutered": False, "sissified": False, "heat_tell": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "", "breeding_line": "",

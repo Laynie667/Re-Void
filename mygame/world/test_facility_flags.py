@@ -41,6 +41,7 @@ _NEW_FLAGS = [
     "teat_gagged", "teat_gag_until", "teat_gag_fluid",
     "nurse_first", "nursed_until", "nurse_first_fluid",
     "stuffed_mouth", "stuffed_fluid", "beg_small", "star_chart", "star_chart_on",
+    "heat_tell",
     # neuter / sissify
     "neutered", "sissified",
     # studs / lineage / fellow
@@ -172,10 +173,43 @@ def test_speech_filter_order():
     return "speech-filter order is add-order independent; unknowns last"
 
 
+def test_heat_tell():
+    """The Honest Body clause: the filter appends an arousal-tell graded off REAL arousal,
+    never destroys the words, and at the edge is unmistakably more wrecked than when calm."""
+    sf = _load("speech_test_ht", "speech_filters.py")
+
+    class _Char:
+        def __init__(self, arousal):
+            self.db = type("_d", (), {})()
+            self.db.arousal = arousal
+
+    # heat_tell is in the canonical pipeline order (so it appends after other transforms).
+    assert "heat_tell" in sf._FILTER_ORDER, "heat_tell must be registered in pipeline order"
+    assert sf._ordered_filters(["heat_tell", "sissy"])[-1] == "heat_tell", \
+        "heat_tell should sort to the end (it appends to whatever the pipeline produced)"
+
+    # Original text is always preserved as a prefix (non-destructive).
+    for arousal in (10.0, 45.0, 70.0, 95.0):
+        out = sf._filter_heat_tell(_Char(arousal), "open the door")
+        assert out.startswith("open the door"), f"heat_tell ate the words at {arousal}: {out!r}"
+
+    # Edge tier (>=90) always tells (no silent pass) and is drawn from the edge pool.
+    edge_outs = {sf._filter_heat_tell(_Char(96.0), "yes")[3:] for _ in range(40)}
+    assert all(o for o in edge_outs), "edge arousal must always produce a tell"
+    assert edge_outs <= set(_t for _t in sf._HEAT_TELL_EDGE), \
+        "edge tells must come from the edge pool"
+
+    # Low tier (<30) sometimes nearly hides it (returns bare text) — exercise both paths.
+    low_outs = [sf._filter_heat_tell(_Char(5.0), "hello") for _ in range(80)]
+    assert any(o == "hello" for o in low_outs), "low arousal should sometimes nearly hide it"
+    assert any(o != "hello" for o in low_outs), "low arousal should usually still tell"
+    return "heat_tell: graded by real arousal, non-destructive, edge always tells, low can hide"
+
+
 _TESTS = [
     test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
     test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
-    test_speech_filter_order,
+    test_speech_filter_order, test_heat_tell,
 ]
 
 
