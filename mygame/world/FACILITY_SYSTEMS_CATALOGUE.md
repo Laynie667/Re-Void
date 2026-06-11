@@ -397,6 +397,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   through the SAME `apply_effects` path the contract uses (teat_gag/nurse_first/stuffed_mouth/
   beg_small/star_chart), so it genuinely takes hold; refusing routes through auto-consent (binds
   anyway) and chains into `correction`. The clause taking hold is narrated.
+- **Punishment chain** (`punished → punish_sentence → punish_after`): a CONSEQUENCE-GATED root —
+  the builder returns None (pose_random skips) unless she's earned it (defiance > 0 / quota_behind /
+  freedom_forfeited). Confess (banks compliance) vs deny (real `punish`, +1 infraction) → choose the
+  sentence: the sty (REAL `apply_filth` + punish), the floor (public `_gang`), or the line (`punish`
+  severity 2) → the aftermath: thank her and mean it (`gratitude` effect — register_compliance
+  reward + conditioning; "a thank-you that you mean, that one we keep") vs silence (punished again,
+  the review resets — "they're not building toward your breaking, they're building toward your
+  thanking"). New effects: `punish` (compliance.punish), `filth` (apply_filth), `gratitude`.
 - **Descent chain** (`descent → descent_mark → descent_break → descent_terminus`): the deeper arc —
   ask to go down → permanent parlour mark (`_procedure`) → the cell hollows her (`deepen` effect:
   real conditioning + regression) → the threshold of Deep Stock (heavy prose, real conditioning).

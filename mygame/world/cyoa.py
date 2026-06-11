@@ -901,3 +901,160 @@ def _b_mantra(character):
                         "it. I note everything, sweetheart — including how much longer each hold "
                         "takes you. Would you like to know the trend? No. You wouldn't.\"|n"}],
         "default": "repeat"}
+
+
+# ── the punishment chain: discipline with real teeth, posed only when earned ──
+@effect("punish")
+def _eff_punish(character, p):
+    """Real discipline through world.compliance.punish — defiance ledger, streak break,
+    the works. params: {reason, severity}."""
+    try:
+        from world.compliance import punish
+        punish(character, reason=p.get("reason", "correction"), severity=int(p.get("severity", 1)))
+    except Exception:
+        pass
+    return "punished"
+
+
+@effect("filth")
+def _eff_filth(character, p):
+    """The pigsty sentence — REAL filth applied (gang_breeding.apply_filth) + the punishment."""
+    try:
+        from world.gang_breeding import apply_filth
+        apply_filth(character)
+    except Exception:
+        pass
+    try:
+        from world.compliance import punish
+        punish(character, reason="sentenced to the sty", severity=int(p.get("severity", 1)))
+    except Exception:
+        pass
+    return "filthed"
+
+
+@effect("gratitude")
+def _eff_gratitude(character, p):
+    """She thanked them for it — compliance registered (with its reward loop) + the gratitude
+    conditioning that's the deepest part of the training."""
+    try:
+        from world.compliance import register_compliance
+        register_compliance(character, reward=True)
+    except Exception:
+        pass
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, float(p.get("cond", 5.0)), source="gratitude")
+    except Exception:
+        pass
+    return "grateful"
+
+
+@choice("punished", root=True)
+def _b_punished(character):
+    """Conditional root — only poses when she's EARNED it (defiance / quota behind /
+    freedom forfeited). pose_random skips it otherwise, so discipline is consequence."""
+    d = character.db
+    earned = (int(getattr(d, "defiance", 0) or 0) > 0
+              or int(getattr(d, "quota_behind", 0) or 0) > 0
+              or getattr(d, "freedom_forfeited", False))
+    if not earned:
+        return None
+    return {"key": "punished", "prompt": (
+        "The handler doesn't grab you. She just stops in front of your station with the tablet "
+        "turned so you can see your own row on it — the defiance column, the arrears, the little "
+        "red marks that have been quietly accruing while you told yourself nobody noticed. "
+        "Everybody noticed. Noticing is the whole building. \"Right then,\" she says, pleasant as "
+        "a dentist. \"Discipline review. Do you want to tell me what you did, or shall I read it "
+        "to you? One of these goes much better for you, and I genuinely cannot remember which.\""),
+        "options": [
+            {"key": "confess", "label": "Confess it yourself", "effect": "submit_standing",
+             "then": "punish_sentence",
+             "desc": "say it out loud, all of it — owning your file is obedience, and they bank it",
+             "outcome": "You confess — and it's worse than being read to, because your own mouth "
+                        "makes the list, every slip and shortfall recited in your own voice while "
+                        "she nods along like a teacher hearing times-tables. By the end you're "
+                        "apologising for things she hadn't even flagged. \"Lovely,\" she says, and "
+                        "ticks COOPERATIVE, and you feel the tick land somewhere it shouldn't feel "
+                        "good, and it feels good. Now: the sentence."},
+            {"key": "deny", "label": "\"I didn't do anything.\"", "effect": "punish",
+             "params": {"reason": "denial on review", "severity": 1}, "then": "punish_sentence",
+             "desc": "deny it — the file disagrees, and the file is the one they believe",
+             "outcome": "\"I didn't—\" you start, and she just turns the tablet a little further "
+                        "toward you, patient, while the timestamps and the yields and the logged "
+                        "little refusals sit there being true. Denial goes in as its own infraction "
+                        "— OBSTRUCTIVE, tick — and the room gets that much colder around your "
+                        "station. The file doesn't argue. The file never has to. Now: the sentence, "
+                        "plus interest."}],
+        "default": "confess"}
+
+
+@choice("punish_sentence")
+def _b_punish_sentence(character):
+    """Step 2: choose your sentence — every option a different real system biting."""
+    return {"key": "punish_sentence", "prompt": (
+        "\"Sentencing,\" the handler says, scrolling. \"You get a say. Not because it matters — "
+        "because choosing your own punishment does something to a person that we find very "
+        "useful downstream.\" She turns the tablet: three lines, three doors. \"The sty, the "
+        "floor, or the line. Pick, or I pick, and I always pick the sty, because the smell "
+        "amuses the clerk.\""),
+        "options": [
+            {"key": "sty", "label": "The sty", "effect": "filth",
+             "params": {"severity": 1}, "then": "punish_after",
+             "desc": "rutted face-down in the wallow and left caked in it — real filth, it doesn't wash",
+             "outcome": "They walk you down to the sty and put you in it — properly in it, face-down "
+                        "in the warm reek while the stock take their amusement, and when they haul "
+                        "you out you're caked to the elbows and stinking of musk and dried piss, "
+                        "and the filth is LOGGED, a state of you now, part of how you read. The "
+                        "other residents look at you and look away. That was most of the sentence, "
+                        "and everyone involved knows it."},
+            {"key": "floor", "label": "The floor", "effect": "facility",
+             "params": {"method": "_gang", "kind": "gang"}, "then": "punish_after",
+             "desc": "public correction — used on the open floor where the whole shift can watch",
+             "outcome": "The floor, then — the open one, mid-shift, where every rack and rig has a "
+                        "sightline. They bend you over your own station and the correction is "
+                        "administered the way the facility administers everything: thoroughly, "
+                        "rhythmically, and in front of an audience that doesn't even slow its work "
+                        "to watch, because this is just Tuesday, and you being used as the example "
+                        "is just the curriculum."},
+            {"key": "line", "label": "The line", "effect": "punish",
+             "params": {"reason": "sentenced to the line", "severity": 2}, "then": "punish_after",
+             "desc": "the formal discipline — strokes counted aloud, severity 2, entered in the ledger",
+             "outcome": "The line is the honest one — the frame, the strap, the count. They make "
+                        "you keep the count yourself, out loud, and start it over when your voice "
+                        "breaks, which it does, twice. By the end the numbers are the only words "
+                        "you have left and the ledger has a tidy new entry and your whole backside "
+                        "is a lesson you'll be sitting on for days. Severity two. They were kind. "
+                        "They wanted you to know they could have been kinder."}],
+        "default": "sty"}
+
+
+@choice("punish_after")
+def _b_punish_after(character):
+    """Step 3: the aftermath — and the only question that ever mattered to them."""
+    return {"key": "punish_after", "prompt": (
+        "After, the handler crouches to your level — they all learned that from Bethany — and "
+        "waits for your breathing to come back. \"One more thing, and then we're square,\" she "
+        "says, kind as anything. \"Say thank you. That's all. It's the only part of this that was "
+        "ever the point — the sty washes off eventually, the strokes fade, but a thank-you that "
+        "you *mean*... that one we keep.\""),
+        "options": [
+            {"key": "thank", "label": "Thank her — and mean it", "effect": "gratitude",
+             "params": {"cond": 6.0},
+             "desc": "the gratitude is the deepest conditioning there is, and they bank every word",
+             "outcome": "\"Thank you,\" you say, and the horrible thing — the thing you'll be awake "
+                        "with later — is that you do mean it, a little, somewhere; the punishment "
+                        "drew a line under something and the line felt like being held. She smiles "
+                        "like the sun coming out and notes it, and the gratitude goes down into you "
+                        "where the conditioning lives, and settles in like it owns the place. It's "
+                        "starting to. That was always the design."},
+            {"key": "silent", "label": "Say nothing", "effect": "punish",
+             "params": {"reason": "withheld gratitude", "severity": 1},
+             "desc": "hold the words — it's logged as its own infraction, and the review resets",
+             "outcome": "You hold the thank-you behind your teeth and give her nothing, and she "
+                        "nods, unbothered, almost approving — \"there's still some of you in there; "
+                        "good, more to work with\" — and logs WITHHELD with a tap. The defiance "
+                        "column gets its little red mark back, which means the review comes round "
+                        "again, which means the sentence comes round again, which means this exact "
+                        "moment comes round again, as many times as it takes. They're not building "
+                        "toward your breaking. They're building toward your *thanking*. Worse."}],
+        "default": "thank"}
