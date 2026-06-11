@@ -638,3 +638,204 @@ def _b_correction(character):
                         "long after you've forgotten what earned it. They like the permanent ones. "
                         "A body that reads like a rap sheet saves everyone the trouble of asking."}],
         "default": "breed"}
+
+
+# ── deeper effects: real clause installation + the descent ───────────────────
+_CLAUSE_PAYLOADS = {
+    "teat_gag":      {"gag_word": "hush little one", "uncork_word": "words back", "fluid": "semen"},
+    "nurse_first":   {"fluid": "semen"},
+    "stuffed_mouth": {"fluid": "semen"},
+    "beg_small":     True,
+    "star_chart":    True,
+}
+
+
+@effect("clause")
+def _eff_clause(character, p):
+    """Install a real hidden clause on her through the binding-effects engine — the SAME path the
+    contract uses, so it actually takes hold (triggers seated, filters/gates set), not narrated.
+    params: {key}. The §0 floor clears whatever it installs (all in FACILITY_FLAGS)."""
+    key = p.get("key")
+    if not key:
+        return ""
+    eff = {key: p.get("payload", _CLAUSE_PAYLOADS.get(key, True))}
+    try:
+        from world.binding_effects import apply_effects
+
+        class _Carrier:
+            def __init__(self, e):
+                self.db = type("_d", (), {"binding_effects": e})()
+                self.dbref = "#0"
+        apply_effects(character, _Carrier(eff))
+    except Exception:
+        pass
+    return key
+
+
+@effect("deepen")
+def _eff_deepen(character, p):
+    """A hard slug of conditioning + (optionally) regression — the descent biting in for real."""
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, float(p.get("cond", 10.0)), source="descent")
+    except Exception:
+        pass
+    if p.get("regress"):
+        try:
+            from world.regression import regress
+            regress(character, float(p.get("regress", 8.0)), source="descent")
+        except Exception:
+            pass
+    return "deepened"
+
+
+@choice("clause")
+def _b_clause(character):
+    """An addendum is produced — a real hidden clause, installed whichever way she answers."""
+    key = random.choice(["teat_gag", "nurse_first", "stuffed_mouth", "beg_small", "star_chart"])
+    blurb = {
+        "teat_gag":      "a gag-word any mouth in the building can say to plug yours with a teat you'll suckle helpless on",
+        "nurse_first":   "a clause that won't let you speak a first word to anyone until you've nursed a load down",
+        "stuffed_mouth": "a clause filing your speech down to cock-muffled fragments, your mouth retooled off words",
+        "beg_small":     "a clause that denies you release as of right — you'll beg small for every drop of it now",
+        "star_chart":    "a chart where relief is bought with stars earned the only way the work earns them",
+    }[key]
+    return {"key": "clause", "prompt": (
+        "Bethany sets a single fresh page on the desk between you, already signed at the bottom — "
+        "by you, in your hand, on a day you don't remember signing it (Clause 23: she may amend, "
+        "and you accepted all of it, read and unread). \"Just initialling the addendum, sweetheart,\" "
+        "she says warmly. \"It's already in force; the initial's only so you feel like you were "
+        f"asked.\" The addendum installs {blurb}."),
+        "options": [
+            {"key": "initial", "label": "Initial it", "effect": "clause", "params": {"key": key},
+             "desc": "put your mark to the thing that's already binding you — and feel it take hold",
+             "outcome": "You initial it. The pen's barely lifted before the clause closes over you "
+                        "like a circuit completing — you feel the exact moment it takes, something "
+                        "rerouted under your skin that won't reroute back, and Bethany files the page "
+                        "with a little satisfied pat. \"There. Now it's yours too. Doesn't that feel "
+                        "tidier?\" It does, is the horror of it. It does."},
+            {"key": "refuse", "label": "Refuse to sign", "effect": "clause",
+             "params": {"key": key}, "then": "correction",
+             "desc": "auto-consent means it binds anyway; refusing just earns you a correction on top",
+             "outcome": "You refuse. Bethany doesn't even stop smiling — she just taps Clause 1, the "
+                        "auto-consent, and the addendum takes hold exactly as hard as if you'd begged "
+                        "for it, your refusal noted only as something to correct. The clause closes "
+                        "over you regardless; the only thing your 'no' bought was the punishment "
+                        "queued up behind it. You'll learn. They have a clause for the learning, too."}],
+        "default": "initial"}
+
+
+@choice("descent", root=True)
+def _b_descent(character):
+    """The signature deeper arc — she's been here long enough that the bottom looks like rest."""
+    return {"key": "descent", "prompt": (
+        "You've been on the cycle long enough now that something's shifted. The bottom of this "
+        "place — the sealed pods, the kept things, the quiet — stopped reading as a threat a while "
+        "ago and started, traitorously, reading as rest. Bethany watches you notice it. \"You feel "
+        "it, don't you,\" she murmurs, fond. \"The pull. You could fight the current a while longer. "
+        "Or you could ask me to take you down where the fighting stops. I'd be so proud.\""),
+        "options": [
+            {"key": "deeper", "label": "Ask to go deeper", "effect": "devote", "params": {"amount": 8.0},
+             "then": "descent_mark",
+             "desc": "say it out loud — that you want the bottom — and start the long way down",
+             "outcome": "You ask. The words come out smaller and surer than you expected, and that "
+                        "scares the last bit of you that's still scared of anything. Bethany glows. "
+                        "\"Good girl. Down we go, then — properly, all the way. I'll be with you for "
+                        "every floor of it.\" And the descent takes you, one earned ruin at a time."},
+            {"key": "hold", "label": "Cling to the surface", "effect": "deny_hold", "params": {"cond": 4.0},
+             "desc": "not yet — hold at the cycle a while longer; the current doesn't care",
+             "outcome": "You cling on — not yet, not yet — and the cycle keeps you where you are, "
+                        "milked and bred and conditioned in the same rotation, the current tugging "
+                        "patient at your ankles. The surface isn't safety. It's just the last place "
+                        "you can still see it from. Bethany pats your head and lets you have it, "
+                        "because she knows exactly how long that lasts."}],
+        "default": "deeper"}
+
+
+@choice("descent_mark")
+def _b_descent_mark(character):
+    """Step 2: marked permanently for the descent in the parlour."""
+    return {"key": "descent_mark", "prompt": (
+        "First floor down is the parlour. \"Going deeper means going marked,\" Bethany explains, "
+        "warming an iron. \"So the next handler, and the one after, knows at a glance what you've "
+        "agreed to become. Hold still — or don't, it sets either way.\" Choose how you're labelled "
+        "for the rest of it."),
+        "options": [
+            {"key": "brand", "label": "Take her brand", "effect": "facility",
+             "params": {"method": "_procedure", "kind": "proc"}, "then": "descent_break",
+             "desc": "a permanent mark seared in — real, on your skin, under everything forever",
+             "outcome": "The iron comes off the bar dull-orange and goes into you, and the sound you "
+                        "make is one you'll hear in the cell later — but when the pain clears there's "
+                        "a mark on you that wasn't there this morning and never won't be again, and "
+                        "some newly-quiet part of you is glad to finally match the outside to the in."},
+            {"key": "ink", "label": "Take the ink", "effect": "facility",
+             "params": {"method": "_procedure", "kind": "proc"}, "then": "descent_break",
+             "desc": "needled in permanent — a label you'll read off yourself the rest of the term",
+             "outcome": "The gun buzzes against you for a long, patient while, and what it leaves "
+                        "behind you'll read upside-down off your own skin for the rest of the term — "
+                        "a permanent caption for a thing that used to argue about what it was. The "
+                        "argument's getting quieter. The ink doesn't argue at all."}],
+        "default": "brand"}
+
+
+@choice("descent_break")
+def _b_descent_break(character):
+    """Step 3: the cell breaks her deeper — real conditioning + regression."""
+    return {"key": "descent_break", "prompt": (
+        "Second floor down is the cell, and the dark, and the drone that doesn't stop. \"This is "
+        "the part where we make room,\" Bethany says, settling you into the cradle, almost tender. "
+        "\"For the descent to take, the parts of you that climb have to go quiet. You can fight the "
+        "hollowing or sink into it — both end the same place, but one's so much kinder to you.\""),
+        "options": [
+            {"key": "sink", "label": "Sink into the hollowing", "effect": "deepen",
+             "params": {"cond": 8.0, "regress": 10.0}, "then": "descent_terminus",
+             "desc": "let the drone empty you; it's kinder, and it takes so much faster",
+             "outcome": "You stop holding the shape of yourself and let the drone do its slow work, "
+                        "and it IS kinder — the climbing parts go quiet one by one, the worry drains "
+                        "out the bottom, and what's left is warm and small and wonderfully, finally "
+                        "unbothered. You went down so easily. That's the last thing you think with "
+                        "the old voice, and you don't even mind that it's the last."},
+            {"key": "endure", "label": "Endure it", "effect": "deepen",
+             "params": {"cond": 14.0}, "then": "descent_terminus",
+             "desc": "grit through with your edges intact — it just runs the cell longer and harder",
+             "outcome": "You grit through it, holding what's left of your edges — so they run the "
+                        "cell longer, and harder, and the drone wins anyway by sheer hours, just "
+                        "with more of you scraped raw in the losing. Enduring didn't save the parts "
+                        "that climb. It only made you feel each one go. Bethany thought you might "
+                        "pick this. She has notes on you."}],
+        "default": "sink"}
+
+
+@choice("descent_terminus")
+def _b_descent_terminus(character):
+    """The threshold of Deep Stock — the door, narrated heavy. Floor stays sacred; this is in-fiction."""
+    return {"key": "descent_terminus", "prompt": (
+        "And then you're at the bottom, or its threshold — the long humming vault of Deep Stock, "
+        "row on row of sealed, plumbed, kept things that were residents once and are maintenance "
+        "schedules now, bred and milked in their sleep, years deep, content in the only way a thing "
+        "with no say left can be. A pod stands open. Your number's already on it. Bethany's hand is "
+        "warm at the small of your back, not pushing — she never has to push, by now. \"There it is, "
+        "sweetheart. Everything you've been walking toward. Step in, and it stops being hard forever. "
+        "Or step back onto the cycle and we'll do all of this again until you don't want to.\""),
+        "options": [
+            {"key": "step", "label": "Step toward the pod", "effect": "deepen",
+             "params": {"cond": 16.0, "regress": 8.0},
+             "desc": "reach for the terminus — the kept quiet you've stopped being able to fear",
+             "outcome": "You step toward it. Not all the way in — they savour this part too much to "
+                        "let it be quick — but toward, reaching, wanting the sealed quiet with a "
+                        "want they spent every cycle building into you. Bethany makes a small, "
+                        "genuinely moved sound. \"Look at you. Reaching for it. We made something "
+                        "beautiful.\" The pod waits. It's patient, like her. It can be — you're not "
+                        "going anywhere now but down, and you'd thank her for it if she asked. "
+                        "(The fire-exit is still lit and always will be: the floor is yours, this "
+                        "instant, the second any of this stops being a thing you want.)"},
+            {"key": "back", "label": "Step back onto the cycle", "effect": "deny_hold",
+             "params": {"cond": 6.0},
+             "desc": "not the pod — not yet; back to the rotation, the current still rising",
+             "outcome": "You step back — not the pod, not yet — and Bethany doesn't mind at all, "
+                        "walks you back up to the cycle with an arm around you like a friend after "
+                        "a long night. \"Of course. There's no rush; you're not going anywhere I "
+                        "can't reach.\" And the rotation closes over you again, milked and bred and "
+                        "hollowed, the vault humming patient below, your number still on that pod, "
+                        "waiting for the cycle to wear the 'not yet' down to a yes. It always does."}],
+        "default": "back"}

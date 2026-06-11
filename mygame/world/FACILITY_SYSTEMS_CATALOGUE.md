@@ -393,6 +393,15 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   multi-step opening (sign the contract → stripped/weighed/holes-inventoried inspection → first
   use before you've finished being a person → how you're spent), expansive and crude, every step
   real (devote/submit/deny_hold/pick_hole) with outcome beats.
+- **`clause` node + effect**: produces a real hidden-clause addendum — `clause` effect installs it
+  through the SAME `apply_effects` path the contract uses (teat_gag/nurse_first/stuffed_mouth/
+  beg_small/star_chart), so it genuinely takes hold; refusing routes through auto-consent (binds
+  anyway) and chains into `correction`. The clause taking hold is narrated.
+- **Descent chain** (`descent → descent_mark → descent_break → descent_terminus`): the deeper arc —
+  ask to go down → permanent parlour mark (`_procedure`) → the cell hollows her (`deepen` effect:
+  real conditioning + regression) → the threshold of Deep Stock (heavy prose, real conditioning).
+  Each floor a real effect with expansive crude outcome prose; the terminus keeps the §0 fire-exit
+  explicitly lit in-fiction.
 - **Facility spine**: `@effect("facility")` finds the running cycle script and calls a real method
   (`_gang`/`_do_milk`/`_procedure`/`_dose`/scene), so the facility's content is reachable AS choices.
   Other effects: emphasis (biases `_choose_destination`), grant_relief, deny_hold, quota_deal,
