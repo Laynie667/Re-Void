@@ -12,9 +12,9 @@
 | rtime layers | ✅ Done |
 | rweather layers | ✅ Done |
 | Ambient pool + AmbientScript | ✅ Done |
-| Seraphine NPC | ⏳ Pending |
-| Calix NPC | ⏳ Pending |
-| Vesper NPC | ⏳ Pending |
+| Seraphine NPC | ✅ Spawned (post_office_build) |
+| Calix NPC | ✅ Spawned (post_office_build) |
+| Vesper NPC | ✅ Spawned (post_office_build) |
 
 ---
 
@@ -90,9 +90,12 @@ with the fact.
 
 ---
 
-## Spawn Command (when ready)
+## Spawn Command
 
-To be written. Will follow the same pattern as `world/durgin_spawn.py`.
+✅ BUILT — `@py from world.post_office_build import build_post_office; build_post_office(me)`
+Idempotent: spawns the three clerks (canonical descs), digs + connects the Sorting Hall (Dead
+Letter Cage easter egg) and the Quiet Room (amendments drawer / wax kit / PENDING tray easter
+eggs), merges deepened ambient into all three rooms. Tagged post_office/area for teardown.
 Reference file: `commands/ogram_commands.py` for full character details.
 
 ---
