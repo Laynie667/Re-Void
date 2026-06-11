@@ -418,6 +418,13 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `file_read` effect reads HER file on you aloud — real devotion/conditioning/chair-sessions/her
   line's get/title, *including what the evening itself just earned* — or burrow in (devote; "the
   file's all mine"). Ownership has consequences; the consequences have paperwork.
+- **Kept company** (`kept` 3rd option → `kept_company`): the "Ask her to send for {fellow}" door
+  only appears when a fellow-resident exists (dynamic builder). Bethany conducts: `company_use`
+  effect — if the fellow's been CONVERTED (futa), she breeds you under orders (REAL insemination,
+  sire = her name, `fellow_cross_record` filed) while Bethany takes your mouth (sire Bethany);
+  otherwise Bethany takes you both (two real holes, sire Bethany). Laced devotion either way;
+  yield vs cling-to-her-hand routes ("comfort permitted, attachment noted"); chains to
+  `kept_morning` so her file includes the night.
 - **Chair → descent door**: at the Spiral Chair's *below* stage, ~40% of its CYOA poses are the
   `descent` node instead of the mantra — the door it hints at on sitting, offered from inside the
   trance ("live now, not recorded: 'come see what's downstairs'").

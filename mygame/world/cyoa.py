@@ -1375,6 +1375,7 @@ def _b_kept(character):
     """Only for what's hers — the private evening that ownership buys."""
     if not getattr(character.db, "bethany_owned", False):
         return None
+    fname = (getattr(character.db, "facility_fellow", None) or {}).get("name")
     return {"key": "kept", "prompt": (
         "After last shift, a handler unhooks you — not toward the pens, not toward the cell, "
         "but up the quiet stair to the office, where the lamps are low and the files are closed "
@@ -1403,7 +1404,19 @@ def _b_kept(character):
                         "fond, turning a page. \"I'm putting that in the file under *progress*.\" "
                         "She does. You hear the pen do it. Being a footnote in her evening is "
                         "somehow the most seen you've felt in weeks, and she engineered that "
-                        "famine personally, and you know it, and you stay."}],
+                        "famine personally, and you know it, and you stay."}]
+            + ([{"key": "company", "label": f"Ask her to send for {fname}",
+                 "effect": "devote", "params": {"amount": 3.0}, "then": "kept_company",
+                 "desc": "two of hers, one evening, her direction — and the asking goes in the file",
+                 "outcome": f"You ask for {fname} — and Bethany's smile goes positively luminous, "
+                            f"because asking to share your owner's evening with another of her "
+                            f"belongings is the most *kept* thing you've ever done, and you both "
+                            f"hear it land. \"Oh, sweetheart. Look at you, building me a little "
+                            f"household.\" She lifts the desk phone, says two words, and somewhere "
+                            f"below a handler goes to fetch what you asked for. \"She'll be "
+                            f"scrubbed and up in ten. You'll wait on the cushion. Wanting things "
+                            f"is *lovely* on you — I'm writing it down.\""}]
+               if fname else []),
         "default": "lap"}
 
 
@@ -1474,3 +1487,91 @@ def _b_kept_morning(character):
                         "that you'll never know she knows. The not-knowing purrs in you like a "
                         "kept secret. It's hers. So are you. The morning is warm."}],
         "default": "read"}
+
+
+@effect("company_use")
+def _eff_company_use(character, p):
+    """Bethany directs the two of you — REAL: if the fellow's been converted (futa), SHE breeds
+    you under orders (sire = her name, crossed lines recorded) while Bethany takes your mouth;
+    otherwise Bethany takes you both in turn (two of your holes, sire Bethany). Laced either way."""
+    fname = (getattr(character.db, "facility_fellow", None) or {}).get("name") or "her"
+    futa = False
+    try:
+        from world.facility_fellow import fellow_is_futa
+        futa = fellow_is_futa(character)
+    except Exception:
+        pass
+    try:
+        from world.gang_breeding import animal_holes, gang_inseminate
+        hs = [z for z in animal_holes(character).values() if z]
+        random.shuffle(hs)
+        if futa and hs:
+            mouth = next((z for z in hs if "mouth" in z or "throat" in z), None)
+            body  = next((z for z in hs if z != mouth), hs[0])
+            gang_inseminate(character, body, contributors=1, fluid_type="semen",
+                            species="bethany", sire=fname)
+            if mouth:
+                gang_inseminate(character, mouth, contributors=1, fluid_type="semen",
+                                species="bethany", sire="Bethany")
+            try:
+                from world.facility_animals import fellow_cross_record
+                fellow_cross_record(character, fname)
+            except Exception:
+                pass
+        else:
+            for z in hs[:2]:
+                gang_inseminate(character, z, contributors=1, fluid_type="semen",
+                                species="bethany", sire="Bethany")
+    except Exception:
+        pass
+    try:
+        from typeclasses.bethany_script import bethany_deposit_effect
+        bethany_deposit_effect(character, devotion=float(p.get("devotion", 8.0)))
+    except Exception:
+        pass
+    return "company:" + ("futa" if futa else "shared")
+
+
+@choice("kept_company")
+def _b_kept_company(character):
+    """Two of hers in the lamplight — and Bethany conducts."""
+    f = (getattr(character.db, "facility_fellow", None) or {})
+    fname = f.get("name") or "her"
+    futa = bool(f.get("futa"))
+    if futa:
+        middle = (f"And {fname} arrives scrubbed and wide-eyed, and Bethany looks between the "
+                  f"two of you — her bought favourite, and the friend she rebuilt with her own "
+                  f"signature between the thighs — like a hostess seating a dinner party. \"Now "
+                  f"then. You asked for her, so you'll have her — *my* way. {fname}, sweetheart, "
+                  f"you remember what I gave you and what it's for. And you—\" her thumb finds "
+                  f"your jaw \"—will be wanting something to do with your mouth.\"")
+    else:
+        middle = (f"And {fname} arrives scrubbed and wide-eyed, and Bethany pats the rug in "
+                  f"front of her chair — both of you, side by side, two sets of hands and one "
+                  f"unhurried owner. \"You asked for company. Company you'll be — for each "
+                  f"other, while I have you both. Hips up, my loves. The evening's young and "
+                  f"I am *thorough* with my own.\"")
+    return {"key": "kept_company", "prompt": middle,
+        "options": [
+            {"key": "yield", "label": "Yield to her direction", "effect": "company_use",
+             "params": {"devotion": 8.0}, "then": "kept_morning",
+             "desc": "let her conduct the two of you — every deposit real, every line crossed on the books",
+             "outcome": f"You yield, and she conducts — truly conducts, a hand on a hip here, a "
+                        f"murmured *slower, sweetheart* there, arranging the two of you like "
+                        f"flowers she grew herself. What follows is thorough and laced and "
+                        f"recorded: {fname} trembling through her orders, you full at both ends "
+                        f"of the evening, and Bethany above it all with her coffee, immensely "
+                        f"content, watching her property love each other on her instruction. "
+                        f"\"There,\" she says at last, to both of you, fondly. \"A household.\""},
+            {"key": "cling", "label": f"Cling to {fname} through it", "effect": "company_use",
+             "params": {"devotion": 5.0}, "then": "kept_morning",
+             "desc": "hold your friend's hand through what she directs — the comfort is permitted, and noted",
+             "outcome": f"You find {fname}'s hand and lace your fingers through it, and you hold "
+                        f"on through everything Bethany directs — and Bethany *allows* it, which "
+                        f"is its own entry in the file: comfort permitted, attachment noted, two "
+                        f"of her assets bonding under load. \"Look at them,\" she murmurs to her "
+                        f"coffee, genuinely soft for a moment. \"My girls.\" The hand-holding "
+                        f"doesn't make what's happening to you both gentler. It makes it *shared*. "
+                        f"That was the kindest thing on offer tonight, and she's the one who put "
+                        f"it on the menu."}],
+        "default": "yield"}
