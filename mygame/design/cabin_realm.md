@@ -128,6 +128,71 @@ with `@open` lines whose targets are `[#dbref placeholders]` to fill at build ti
    twisting tunnels, with `maze gate` body-gated inner chambers (earned-only deep dens) and
    optional `maze debt`. Big explorable den for tiny authoring — exactly the user's goal.
 
+## 2d. THE DEN MAZE — plan + canon (user brief, 2026-06-11)
+
+The den maze is entered through two new fixed rooms (both WRITTEN this pass, high-detail,
+in the copy-paste script format — fill the `@open` dbrefs at build):
+- **`world/den_forest_mouth.txt`** — *The Forest Mouth.* Winter exterior; the cave opens in
+  a hillside, warm air breathing out against the cold (snow stops at a clean line). Holds the
+  **canon warded breeding-sign** (the one the Birthing Den lore references), converging wolf
+  tracks + upright prints that don't return, a kneeling/presenting print, offerings. Doubles
+  as the forest-maze location **"the den's outside opening."** `is_outdoor=True`.
+- **`world/cave_mouth.txt`** — *Mouth of the Cave.* Interior threshold; winter→blood-warm
+  den-light by the step, walls polished at both walking and crawling heights, a provisioned
+  **shelf station** (unlit candle / ready lead / milk bowl / stone tally), the **first pressed
+  paw-print** (the lineage record's "first page"), and the **throat** that fans into the
+  branching maze. Seeds the valley: a "green, sweet" smell rises from far below.
+
+**The maze fans out from the Mouth.** `maze make` in the Den Maze room; the Mouth is its fixed
+anchor. Connections to wire as `maze solution`s (and a few the user will specify):
+- **The Birthing Den** (existing).
+- **Other wolf-den rooms** that make sense (TBD with user).
+- **A couple the user will explain** (placeholder).
+- **The hidden subterranean valley** — deep, earned-only (`maze gate`), see §2e.
+`maze debt` (a wrong turn breeds you) is **canon-supported** by the warded sign; intensity is
+the user's call. `maze gate` fails OPEN so the floor is never trapped; confirm escape/
+force_clear yanks a player out of the maze AND the valley.
+
+## 2e. THE SUBTERRANEAN VALLEY + KAKIA (user brief — deep den set-piece, RP canon)
+
+Deep within the den the passages open into a **hidden subterranean valley** — and it is NOT a
+cave: it reads as open country, impossibly, underground.
+- **A river** runs through it; **numerous trees** lead up to a single tree at the far end on
+  the scale of **Yggdrasil** — a world-tree terminus.
+- **A day/night cycle despite being underground** — light that rises and falls on its own
+  schedule; **glowing foliage and fairy-light**; warm and green, **not winter** like the
+  forest above. (Build note: a room/zone toggle script or the existing weather/time hooks
+  driving a self-contained cycle; the green-sweet smell at the Mouth is its first hint.)
+- **A small grove at the base of the great tree** holds a **ritual space**: a **stone
+  slab/altar dedicated to Kakia**.
+- **Kakia** — established here as a **goddess associated with wolves and with futanari-at-
+  will** (becoming/granting a futa form by her favor). Proposed real hooks (for the user to
+  confirm/shape):
+  - A **statue that changes** (state-driven description — phase/devotion/offering count).
+  - **Offerings** → **blessings**: route through REAL systems, not flavor — e.g. a body/
+    transform grant (futanari-at-will via the existing body/transform system), a fertility/
+    breeding boon, a wolf-bred standing bump. An `offer`-style verb at the altar + an
+    offerings tally on the statue.
+  - §0: any blessing that alters the body must be reversible by the floor; any new flag
+    (Kakia's favor / granted-futa / pack standing) registered in the realm reset spec.
+- OPEN for the user: Kakia's exact blessings + their costs; whether the valley is purely a
+  reward space or also has its own dangers/scenes; who/what tends the grove.
+
+## 2f. THE FOREST MAZE — winter location list (user brief)
+
+Winter-themed forest rooms to exist as **forest-maze locations** (skinned `MazeRoom`(s) off
+the cabin-front **treeline**; solutions → places, reveals → secrets):
+- **The trail up to the cabin** (→ links to the cabin area; the cabin-side end will be added
+  directly to the cabin as the user plots the cabin out more).
+- **The den's outside opening** — = `den_forest_mouth.txt` (written; see §2d).
+- **Ruins** of some kind that feel **magical and perverse**.
+- **A stream.**
+- **A path up a cliff's edge** *(later planning — placeholder).*
+- **A clearing with a small encampment near the waystone** = the **realm entrance** (where
+  the realm relinks in; see §3 Q1).
+- *(The path to the barn will be added directly to the cabin's area, not the forest maze.)*
+- NPCs of the area: deferred ("when we can").
+
 ---
 
 ## 3. Open questions (the user answers one by one — no building ahead of these)

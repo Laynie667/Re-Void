@@ -1,0 +1,121 @@
+== Shadow's Den - Mouth of the Cave (interior threshold → the den maze) ==
+== Paste these commands in order while standing in the room ==
+== Exits: out/up → The Forest Mouth | down/in → [Den Maze — the rocky passages] ==
+== This is the last fixed room before the maze; the maze fans out from here. ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yMouth of the Cave|n/Inside the opening the world changes by the step. Behind you the winter daylight still reaches in a thinning grey wedge; ahead, within three paces, it gives out entirely and the |yunseen warm light|n of the deep den takes over — dim, sourceless, the same magic that lights the rooms far below, here only beginning, a faint amber suggestion in the dark. |xThe cold dies between one stride and the next. The air thickens to blood-warmth and fills with the den's true smell — wet stone, heavy musk, milk and salt — the breath you felt at the threshold now all around you, no longer a current but the medium itself.|n The |wwalls|n press closer here than the mouth promised, the passage narrowing toward a |wthroat|n at the back where the floor tips downward and the rocky way fans out into branching dark — the |xden's passages|n, which do not run straight and do not stay the same. A |wlow shelf|n of worn stone runs along the left wall. Above it, the first faint |wpigment|n marks the rock — the beginning of a story the deeper rooms finish.//{zone:threshold}//{zone:walls}//{zone:throat}//{zone:shelf}//{zone:pigment}
+
+
+-- STEP 2: Create zones --
+
+roomzone add threshold
+roomzone add walls
+roomzone add throat
+roomzone add shelf
+roomzone add pigment
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc threshold = The |wthreshold|n is the few feet of floor where two worlds overlap and neither wins for long. The stone underfoot is dry and warm ahead, frost-touched and cold behind, the boundary a soft gradient rather than a line now that you are inside it. Turning back, the |xcave mouth|n frames the winter clearing in a shrinking grey arch; turning forward, the dark deepens to amber and the floor begins its slow tilt down. This is the last place where leaving is only a matter of walking. A few steps more and leaving becomes a matter of finding the way.
+
+roomzone desc walls = The |wwalls|n of the passage are close enough here to touch both at once with arms half-spread, the stone worn smooth at shoulder and hip height down both sides — the polish of bodies passing through a space a little too narrow for them, brushing the rock with every entrance. |xThe smoothing is not even: it is concentrated at the heights of a person walking and, lower, at the heights of a person on hands and knees.|n Both pass through here. The rock remembers both.
+
+roomzone desc throat = At the back of the chamber the passage closes to a |wthroat|n — a place where the ceiling drops and the walls pinch and the floor tilts down into true dark, and beyond it the way |xbranches|n. From the throat you can see that there is no single tunnel: the rock opens into more than one mouth, and the warm dark between them gives no clue which leads where. |x(The den's passages do not run straight, and they are not the same twice. People who go down without a guide, or without having earned the way, find the dark folds them back on itself — and getting lost in it is rarely only getting lost.)|n The warm air moves through the throat with a faint, slow draw, as if the den below is breathing through it.
+
+roomzone desc shelf = The |wlow shelf|n of stone along the left wall is waist-height and worn flat on top, and it is not empty. There are |xthings left on it|n: a stub of tallow candle never lit, a folded length of soft leather lead, a shallow bowl with a dark residue dried in the bottom, and a row of small smooth stones lined up along the back edge with the deliberateness of a tally. The shelf has the feel of a station — a place where something is done to those who pass, or where those who pass leave something of themselves before they go down.
+
+roomzone desc pigment = On the rock above the shelf, where the amber light first gathers, the |wpigment|n begins — the faintest start of the painted record that covers the walls of the rooms far below. Here it is only a few marks: a single |mpaw print|x in rust-red at the height of a standing person's chest, and beneath it, smaller, the beginning of a line of figures too faded and too sparse to read as a story yet. It is the first page. The deeper you go, the painters had more to say.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail threshold/boundary = Standing astride the boundary, one can feel it on the skin: the back cold, the front warm, the body caught in the den's first and gentlest argument. The warmth wins by patience, not force — stand still long enough and the cold side of you gives up and turns toward the amber dark with the rest. The gradient is wider than the clean line outside; in here the warmth has more room to work, and it uses it.
+
+roomzone detail walls/lower_polish = The lower band of smoothing on the walls — at the height of hips and shoulders for someone on hands and knees — is brighter and more thoroughly worn than the upright band above it. More has passed through this throat on four limbs than on two, or the same has passed through it both ways and returned lower than it left. The polish at the narrowest pinch of the throat is brightest of all, where a crawling body has no choice but to drag against the stone.
+
+roomzone detail throat/branches = Looking into the throat, the branching is genuine — at least three dark mouths open beyond the pinch, and the warm air comes from all of them equally, offering no tell. The floor of each tips down at a slightly different angle. There is no marking, no worn central path that says this one; the wear is spread across all of them, as if which way is correct changes, or as if being wrong is part of the design. The dark past the first bend of each is complete.
+
+roomzone detail shelf/things = The objects on the shelf, examined: the unlit tallow candle is for those who want light and are being taught they will not have it. The soft leather lead is coiled and ready, its clip worn — left for use, not storage. The bowl's dried residue is milk, gone to a thin brown skin. The row of smooth stones is a tally, and counting them gives a number that means nothing on its own but was clearly worth keeping. Someone manages this threshold. Someone decides what each passer is given and what each passer leaves.
+
+roomzone detail pigment/first_mark = The single rust-red paw print above the shelf is pressed, not painted — the pigment thick, the pad and toes splayed, made by a real paw loaded with color and set against the stone with weight. It is the same mark, smaller and alone, that the deeper rooms carry in full registers of lineage. Here it stands by itself: a signature at the door, claiming everything past it. Beneath it the few faded figures are barely there — a tall shape, a four-legged shape, the suggestion of a third between them — the opening strokes of a story the den tells completely only to those who reach its heart.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study threshold + Tracking the grey daylight from the mouth: it dies at a consistent point, three paces in, the same point at which the amber den-light becomes the only light. The two never overlap into ordinary brightness. There is always a step in the middle lit by neither, and the eye crossing it loses the world behind before it gains the world ahead.
+roomzone study threshold + The warm air does not simply sit; it draws, slowly, toward the throat and down. A loose hair released at the threshold drifts inward and down, not out. The den is inhaling, gently, all the time. Everything light enough goes the way the den wants.
+
+roomzone study walls + The smoothing on the walls carries faint marks within it where the rock did not polish evenly — and some of those marks are fingernail scores, short and shallow, at the height of a hand pressed flat for balance or pressed flat against being moved. They are old and worn soft. They are also, unmistakably, made by someone bracing.
+roomzone study walls + At shoulder height on the right wall, worn into the polish, are two parallel grooves the width and spacing of a lead's twin clips dragged along the stone — something on a lead taken through here often enough to wear the rock with the hardware. The grooves run inward, toward the throat. They do not run back out.
+
+roomzone study throat + The slow draw of air through the throat carries the den's smell up from below in layers, and the layers change: a breath of milk, then a breath of musk, then something floral and warm and sweet that belongs to none of the den rooms described above — a smell from deeper down, greener, that does not match a cave at all. It comes and goes with the den's slow breathing, a hint of somewhere the passages must eventually reach.
+roomzone study throat + Watching the three dark mouths past the pinch for any length of time, the certainty of which is which erodes rather than builds. The angles seem to shift between glances, subtly, the way a word repeated too many times stops looking like a word. The throat is the last place the way is simple. Past it, the rock stops cooperating with memory.
+
+roomzone study shelf + The tally of smooth stones, recounted, does not match a count of anything visible — not the objects on the shelf, not the branches of the throat. It is a private count, kept by whoever tends this place, of something that happens here often enough to be worth tracking and private enough not to label. The newest stone at the end of the row is cleaner than the rest. The tally is ongoing.
+roomzone study shelf + The leather lead's clip, examined closely, has the same polished-from-use wear as the leads on the barn's tack wall far above — the same hand's habits, or the same supply. Whoever provisions the cabin's barn provisions this shelf. The two ends of the realm keep the same kind of hardware.
+
+roomzone study pigment + The pressed paw print above the shelf is at exactly the height a very large wolf, standing on its hind legs with a forepaw raised, would set its pad against the wall. The same height as the claw-scores on the hillside outside. The animal that marks the threshold from within and the one that marks the rock from without are the same size. They are, the wall implies, the same animal.
+roomzone study pigment + The three faint opening figures beneath the paw print were begun and then left — the pigment of the central, smallest figure barely laid down, as if the painter started the story here and decided it belonged deeper in, where there was more wall and more time. The door gets the signature. The heart of the den gets the tale.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable shelf
+roomzone inscribe/enable pigment
+
+
+-- STEP 7: Mechanic items --
+
+-- The low shelf — a kneeling station at the threshold (kneeling, capacity 1) --
+@create Threshold Shelf:typeclasses.seat_mechanic.SeatMechanic
+@set Threshold Shelf/capacity = 1
+@set Threshold Shelf/label = the low stone shelf
+@set Threshold Shelf/position = kneeling
+use Threshold Shelf on shelf
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle threshold/boundary = You stand astride the line where the cave keeps two seasons at once — winter at your back, the den's blood-warm dark ahead — and you feel the argument the place makes on your own skin. It is not a hard sell. The warmth simply outlasts you: the cold side of you, given a few breaths, stops bracing and turns toward the amber with the rest, and the wanting-to-go-down arrives quietly, as your own idea, which is how the den prefers to plant it. You could still turn and walk out into the grey. You notice that you are not, yet.
+
+roomzone handle throat/branches = You come to the pinch of the throat and look down into the branching dark, and the den breathes warm in your face — milk and musk and, beneath them for just a moment, that green sweet smell from somewhere much deeper than a cave has any business going. There is no right tunnel that you can see. The wear is everywhere and nowhere; the angles will not hold still in your memory. To go down past here is to put yourself into the den's hands and let it decide how lost you get, and the worn-bright stone at the pinch — polished by bodies that had to drag through on hands and knees — tells you the den is not gentle about the lesson. The warm draw of the air pulls at you, patient, downward. The way is open. The way is just not simple.
+
+roomzone handle shelf/things = You stop at the low shelf and take in what's left there — the unlit candle, the ready lead, the milk-skinned bowl, the tally of stones. You add nothing and take nothing, but the shelf changes how the threshold reads: this is not a wild cave mouth. It is a station, kept and provisioned, a place where someone decides what each body passing down is given and made to leave. You set your hand on the worn-flat top where countless hands have steadied, and the cool smoothness of it is the last ordinary thing before the warm dark and the branching way.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe amber den-light gathers and thins in the dark ahead without any source, the warm dim breathing brighter and lower in a slow rhythm that matches nothing.|n
+rambient/add |xThe grey wedge of winter daylight at your back shrinks and steadies as your eyes give it up for the warm dark ahead.|n
+rambient/add |xWarm air draws slowly through the throat toward the depths, carrying milk and musk — and, for a breath, something green and sweet from much farther down.|n
+rambient/add |xA smooth stone on the shelf's tally catches the amber light. The newest one, cleanest, sits a little apart at the end of the row.|n
+rambient/add |xThe pressed paw print above the shelf holds the dim light in its rust-red pad, the claim at the door patient and plain.|n
+rambient/add |xSomewhere past the throat, in one of the branching dark mouths, the stone settles — or something moves through it — and the warm air shifts and resumes its slow inward draw.|n
+rambient/add |xThe lower band of polish along the walls catches the light where crawling bodies have brushed it bright, a waist-high gleam running inward and not back out.|n
+rambient/add |xThe den breathes through the throat, warm and unhurried, and the pull of it on the loose air is gentle, constant, and always downward.|n
+
+
+-- STEP 10: Exits --
+
+-- OUT/UP to the winter exterior --
+@open out;up;u;mouth;forest = [#dbref of The Forest Mouth]
+
+-- DOWN/IN to the den maze (the branching rocky passages). Build the maze with `maze make`
+--    in the room this points to; this Mouth is the maze's fixed entrance/anchor. --
+@open down;d;in;enter;passages = [#dbref of Den Maze — the rocky passages]
+
+-- TODO (maze wiring, when ready):
+--   * `maze make` in the Den Maze room; mode forgiving (atmospheric) or classic (punishing).
+--   * Solutions (combos) → real destinations: the Birthing Den; the hidden subterranean
+--     valley (Kakia's grove); other wolf-den rooms; the couple the user will specify.
+--   * `maze reveal` entries → forest/den secrets shown in prose.
+--   * `maze debt <p>` (a wrong turn can breed you) — canon-supported by the warded sign;
+--     intensity is the user's call.
+--   * `maze gate <name> = <stat> <N>` for earned-only deep chambers (e.g. the valley) —
+--     fails OPEN on error so the floor is never trapped.
+-- TODO (§0): confirm escape/force_clear always yanks a player out of the Den Maze and the
+--     valley; register any new realm flag (pack membership / wolf-bred / debt) in the reset
+--     spec. The green-sweet smell here is the first hint of the valley far below.

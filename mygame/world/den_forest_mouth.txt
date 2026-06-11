@@ -1,0 +1,115 @@
+== Shadow's Den - The Forest Mouth (winter exterior / forest maze location) ==
+== Paste these commands in order while standing in the room ==
+== Exits: in/down → Mouth of the Cave | out/north → [Forest maze — winter woods] ==
+== This is the den's OUTSIDE opening; also a registered forest-maze location. ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yThe Forest Mouth|n/The forest breaks here against a rise of old grey stone, and where it breaks, the hillside opens — a |wcave mouth|n set low in the rock, wide as a barn door and twice as tall, its edges softened by centuries of weather into something that looks less cut than grown. |xThe snow stops at the threshold. It does not melt in a ring the way snow melts near heat; it simply ends, a clean line across the stone, because warm air breathes steadily out of the dark and the cold cannot hold its ground against it.|n The breath of the cave fogs as it meets the winter and rises in a slow column that the wind takes apart. |xWolf tracks converge on this place from three directions across the clearing and go in. None come out.|n A |wweathered post|n stands to one side of the opening, carved and warded, half-swallowed by frost. Behind you the |wtreeline|n closes the clearing in old-growth fir, the way back into the woods a single worn track between two of them.//{zone:cave_mouth}//{zone:hillside}//{zone:ward}//{zone:tracks}//{zone:treeline}
+
+
+-- STEP 2: Create zones --
+
+roomzone add cave_mouth
+roomzone add hillside
+roomzone add ward
+roomzone add tracks
+roomzone add treeline
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc cave_mouth = The |wcave mouth|n is wide and low and dark in a way that the winter daylight cannot reach more than a few feet into — the dark begins as a suggestion and becomes complete within a body-length. The |xwarm air|n that breathes out of it is the first wrong thing: it is not the dead still cold of an empty cave but a living warmth, blood-temperature, carrying wet stone and animal musk and something beneath both that the cold air outside does not have a name for. The threshold stone is worn into a shallow trough down its center, polished, the path of everything that has gone in. A |xbroad flat rock|n sits just inside the lip on the left, its top surface smoothed and at a height for sitting or kneeling — a waiting place, or a presenting one.
+
+roomzone desc hillside = The |whillside|n the cave opens into is old grey stone furred with frost and the dark green of cold-weather moss in the seams the wind doesn't scour. Above the opening the rock rises another thirty feet to a crown of bare trees rooted somehow in the stone, their exposed roots gripping the rock like fingers. The face of the hillside around the mouth is not blank: there are |xmarks|n in it, some natural, some not — claw-scores at a height no animal standing on four legs could reach, and lower down, worn smooth, places where hands have steadied against the rock going in.
+
+roomzone desc ward = The |wweathered post|n beside the opening is a single piece of hardwood as thick as a thigh, sunk deep and standing the height of a person, its top carved into a shape the frost has blurred — a wolf's head, or a moon, or both. Down its face runs a line of |xcarved text and warding marks|n, painted once and repainted since, the pigment a rusted red worked into the cuts. |x(It is the sign the den's deeper rooms speak of — the one at the forest's edge that warns about breeding. Those who can read it are warned. Those who ignore it have left pieces of themselves in the dark below.)|n A few small objects have been left at its base, half-buried in snow: offerings, or apologies.
+
+roomzone desc tracks = The |wtracks|n cross the clearing from three directions and converge on the cave mouth with the straight-line certainty of animals that know exactly where they are going. They are large — the central trail's stride is wide, the pad impressions deep and splayed, made by weight. Among the wolf tracks, in places, are others: |xbare human footprints|n in the snow walking in alongside the paws, and here and there a set that goes in walking upright and is not recorded coming back out the same way. Near the threshold the snow is disturbed in a wider patch — a place where something knelt, or was knelt, before going in.
+
+roomzone desc treeline = The |wtreeline|n closes the clearing on the side away from the hill, old-growth fir and pine with their canopy locked overhead, the same forest that holds the trail to the cabin somewhere beyond it. The way back in is a single worn track between two of the largest trunks, the dark inside it immediate. The forest does not feel empty in the direction of the cabin; it feels patrolled. Standing with the warm breath of the cave at your back and the cold woods in front of you, the choice the place offers is not subtle: the winter and the long way out, or the warmth and the dark and the down.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail cave_mouth/warm_air = The air coming out of the cave holds steady at blood temperature regardless of the wind — it does not gust or fade, which means it is not weather. It is the breath of something large and warm and deep, vented up through the rock, and it carries the den's signature: wet mineral stone, the heavy musk of a wolf pack's living space, milk and salt, and under all of it the faint sweetness of the magic that lights the rooms below. Standing in the column of it, the winter at your back stops mattering within a few breaths. The body wants to go toward warmth. The place knows this about bodies.
+
+roomzone detail cave_mouth/flat_rock = The broad flat rock inside the lip has been used as a seat and as more than a seat — the top is worn to a polish, and the front edge, at shin height, has two shallow paired hollows worn into it where knees have rested, weight forward, many times. From it, one faces the dark of the descending passage rather than the daylight of the clearing. Whoever waits here waits looking in.
+
+roomzone detail hillside/clawscores = The claw-scores high on the rock face are deep — gouged into stone, not bark, by something with the mass to do it and the reach of a creature standing upright on its hind legs to do it at that height. The scoring is not frantic; the lines are roughly parallel, drawn with control. A marking, not a struggle. The lowest set is at a height a tall person could touch with a raised hand, the highest well above that.
+
+roomzone detail ward/text = The warding marks on the post are in two registers. The upper is symbolic — a repeating motif of a circle bisected and a paw, worked over and over down the wood, the kind of mark made to be understood without reading. The lower is text, small and carved, in a language that may not be one you read; for those who do, it is not a prohibition so much as a description of consequence: an account, in plain terms, of what the dark below does to those who come into it, written not to forbid but to make sure no one can later say they were not told. The rust-red pigment in the cuts has been refreshed recently in the lower lines.
+
+roomzone detail tracks/upright_prints = The prints that go in walking upright and do not come back out the same way are worth a second look. Some are booted, some bare. They walk in steadily — no drag, no struggle, the stride of someone going willingly. A few have a companion paw-track pacing close alongside, shoulder-height to a person if the animal stood. Whatever happens to those who go in, it does not begin at the threshold. The threshold they cross on their own feet.
+
+roomzone detail tracks/kneeling_patch = The disturbed patch of snow near the threshold is a kneeling print, deep and deliberate, both knees and the tops of both feet, with handprints set forward of it. The position is one of presentation — weight forward, hips raised, head toward the dark of the cave. It is old enough that fresh snow has begun to soften its edges, and new enough that the shape is unmistakable. Someone knelt here, facing in, before they were allowed down. Or before they went.
+
+
+-- STEP 5: Zone study details --
+
+roomzone study cave_mouth + The line where the snow stops at the threshold is perfectly clean — not the ragged edge of melt but a sharp boundary, as if the warmth and the cold have negotiated an exact treaty and both honor it. The stone on the warm side is dry. The stone on the cold side holds frost. The line does not move.
+roomzone study cave_mouth + The musk in the cave's breath is not uniform — there are threads in it. The dominant note is wolf, heavy and male. Beneath it, distinctly, is the warm-skin smell of people who live in close contact with that, and beneath that, the milk-and-salt of nursing. The air is a roster of who lives below, read by the nose before the eyes adjust.
+
+roomzone study hillside + The handholds worn smooth in the lower rock are spaced for a human reach, and they are polished to the specific sheen of skin-on-stone repeated over years. People steady themselves here going in. The wear says they do it often, and that their hands shake, or their footing does, at this exact point — the point where the warm dark first takes the daylight from them.
+roomzone study hillside + The trees crowning the hilltop are rooted in stone that should not hold them, their roots cracking down the rock face toward the cave mouth. Followed with the eye, the largest root runs down past the opening and into the dark, and does not stop at the threshold. Something down there is fed by what grows up here, or feeds it.
+
+roomzone study ward + The offerings half-buried at the post's base, uncovered carefully: a twist of hair bound in red thread, a milk tooth, a folded square of cloth gone stiff, a carved wooden ring. They are not random debris. Each is a small piece of a person, left deliberately at the threshold — a toll, a plea, or a thing surrendered before going in so that there would be less to take below.
+roomzone study ward + The recent re-painting of the lower text is fresh enough that the rust-red pigment is still slightly proud of the wood in the deepest cuts. Someone tends this warning. Someone wants it legible. The care taken to keep it readable is, in its way, the most unsettling thing about it: the warning is maintained by the same hands the warning is about.
+
+roomzone study tracks + Counting the directions the wolf trails come from — three — against the single track leading back to the forest, the math of the clearing is plain. More comes here than leaves, and what leaves, leaves by the woods on two feet or four, never back up the trails it came down. This is a destination, not a crossing.
+roomzone study tracks + One set of the upright prints is smaller than the others, the stride shorter, the feet bare. They walk in beside a paw-track and a second set of larger bare feet, the three of them abreast, close. A group went in together here, recently, unhurried. The smallest one's prints show the toes spread — walking on the balls of the feet, the gait of someone eager, or someone being led by the hand and keeping up.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable ward
+roomzone inscribe/enable hillside
+
+
+-- STEP 7: Mechanic items --
+
+-- The flat rock at the cave mouth — a waiting/presenting place (kneeling, capacity 1) --
+@create Threshold Rock:typeclasses.seat_mechanic.SeatMechanic
+@set Threshold Rock/capacity = 1
+@set Threshold Rock/label = the flat rock at the cave mouth
+@set Threshold Rock/position = kneeling
+use Threshold Rock on cave_mouth
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle cave_mouth/warm_air = You step into the column of warm air breathing out of the dark and the winter releases you all at once — the cold that had set into your shoulders and hands simply lifts, replaced by a living warmth that smells of stone and animal and milk and something sweet beneath. It is the temperature of being held. Your body leans toward it before you decide to, and you understand, standing in the threshold with the snow ending in a clean line at your heels, exactly how the place works: it does not need to drag anyone anywhere. It only has to be warmer than the world, and patient, and the warmer-than-the-world does the rest.
+
+roomzone handle ward/text = You stop at the post and read what you can of it — or trace the cuts, if the words are not yours to read. The symbolic register needs no translation: a circle split, a paw, again and again, the plainest possible statement of what claims this ground. The text below it, for those who can take it in, is worse for being so calm: it does not threaten. It informs. It tells you, in the even voice of someone who has watched it happen many times and feels no need to exaggerate, what the dark below does to those who go down into it, and how completely, and how little of what walks in walks back out unchanged. You have been told. That was the post's only job, and it has done it.
+
+roomzone handle tracks/kneeling_patch = You crouch over the kneeling print near the threshold and fit the shape of it with your eyes: both knees, both insteps, hands set forward, hips raised, the whole of it oriented toward the dark of the cave and away from the daylight. It is a posture of offering, pressed into the snow and held there long enough to freeze. Looking from it to the warm breathing mouth of the cave, the sequence assembles itself without help: they came to the threshold, they knelt facing in, and then they were allowed down — or they crawled. The print does not say which. The print only says they faced the right way.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xThe cave breathes — a slow column of warm fog rising out of the dark mouth into the winter air, where the wind unmakes it.|n
+rambient/add |xSnow shifts off a fir at the treeline and falls with a soft collapse. The clearing settles back into its waiting quiet.|n
+rambient/add |xThe warm air from the cave reaches you on a slow current, carrying stone and musk and milk, and then the wind turns and takes it and there is only winter again.|n
+rambient/add |xThe warded post creaks once in the cold, the rust-red marks down its face catching the grey daylight and holding it.|n
+rambient/add |xSomething shifts in the dark of the cave mouth — not a sound so much as a change in the quality of the warm air, as if the dark turned over in its sleep.|n
+rambient/add |xThe wolf tracks across the clearing hold their shape. No new ones have appeared. Nothing has come back out.|n
+rambient/add |xThe offerings at the base of the post sit under their dusting of snow, the twist of red-threaded hair just showing, patient as everything else here.|n
+rambient/add |xThe line where the snow stops at the threshold does not move. The warm and the cold keep their treaty, exact to the inch.|n
+
+
+-- STEP 10: Exits --
+
+@set here/is_outdoor = True
+
+-- IN to the interior threshold --
+@open in;down;enter;cave = [#dbref of Mouth of the Cave]
+
+-- OUT to the winter forest / forest maze. Point this at the forest MazeRoom (or the trail
+--    room that leads to it) once it's placed; this room is also a registered forest-maze
+--    location ("the den's outside opening"), so the maze can teleport arrivals HERE. --
+@open out;north;n;forest;woods = [#dbref of Forest / Forest Maze]
+
+-- TODO: when the forest maze is built (maze make), register this room as one of its
+--    solution destinations, and add a 'maze reveal' for the warded post's full text.
+-- TODO: §0 — this is a normal room (no locks); the maze it feeds fails OPEN on error,
+--    and escape/force_clear must always pull a player out of the den maze. Confirm at build.
