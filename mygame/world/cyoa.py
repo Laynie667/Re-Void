@@ -1601,6 +1601,10 @@ def _b_clerk(character):
              "desc": "she has been waiting all day for someone to ask",
              "outcome": "\"*Finally*,\" she breathes, delighted, and leans in like the counter "
                         "just got smaller."},
+            {"key": "services", "label": "Ask what they can do for you", "then": "post_services",
+             "desc": "the actual menu — officiating, delivery, body-work, poste restante",
+             "outcome": "\"Business, then. Properly.\" She produces a little laminated card, "
+                        "soft-cornered from handling, and turns it to face you."},
             {"key": "officiate", "label": "Ask how officiating works", "then": "clerk",
              "desc": "the actual trade — contracts, clauses, the three of them",
              "outcome": (
@@ -1634,6 +1638,125 @@ def _b_clerk(character):
                 "*kept track of*.")},
         ],
         "default": "stamp"}
+
+
+# ── the services menu (a REAL directory: officiating actually fires) ──────────
+def _find_office_contract(character):
+    """The nearest drafted contract — inventory first, then the room (often set in front of
+    the signee). Mirrors MilkingContract._find_contract. Returns the object or None."""
+    try:
+        from typeclasses.milking_contract import MilkingContract
+    except Exception:
+        return None
+    pool = list(getattr(character, "contents", None) or [])
+    loc = getattr(character, "location", None)
+    if loc:
+        pool += list(getattr(loc, "contents", None) or [])
+    for o in pool:
+        try:
+            if isinstance(o, MilkingContract) and not getattr(o.db, "signed", False):
+                return o
+        except Exception:
+            continue
+    return None
+
+
+@effect("office_officiate")
+def _eff_office_officiate(character, p):
+    """Actually officiate the carried contract through the REAL engine (world.post_office.
+    officiate) with the chosen clerk — Calix flat / Vesper rider / Seraphine hidden-clause.
+    No-ops cleanly if no unsigned contract is to hand. The returned flavour is shown."""
+    who = (p or {}).get("who")
+    contract = _find_office_contract(character)
+    if not contract or not who:
+        return ""
+    try:
+        from world.post_office import officiate
+        ok, msg = officiate(contract, character, who=who, allow_seraphine=(who == "seraphine"))
+    except Exception:
+        return ""
+    if getattr(character, "msg", None) and msg:
+        character.msg(("|g" if ok else "|x") + msg + "|n")
+    return f"officiated:{who}" if ok else "officiate_failed"
+
+
+@choice("post_services", root=False)
+def _b_post_services(character):
+    """The office's real service directory. Officiating is the one that DOES something here and
+    now (on a carried contract); the rest route you to the real station/command for the job."""
+    return {"key": "post_services", "prompt": (
+        "The card reads, in three different hands:\n"
+        "  |wOFFICIATING|n — make a drafted contract binding (Calix / Vesper / me)\n"
+        "  |wDELIVERY|n — send word by ogram, anywhere it'll reach\n"
+        "  |wBODY-WORK|n — brands, piercings, the permanent sort (see Durgin)\n"
+        "  |wPOSTE RESTANTE|n — leave something here we'll hold until you can say it\n"
+        "\"We don't do refunds,\" Seraphine adds, \"and we don't do forgetting. What'll it be?\""),
+        "options": [
+            {"key": "officiate", "label": "Officiate a contract I'm carrying", "then": "post_officiant",
+             "desc": "make it binding — at the counter, for real",
+             "outcome": "\"Set it on the counter, then. Let's see who you trust with it.\""},
+            {"key": "deliver", "label": "Send word (an ogram)", "then": "post_services",
+             "desc": "the delivery system — a message carried and made real",
+             "outcome": (
+                "\"Ogram service. You tell us what to carry and to whom — |wogram|n at the counter "
+                "spells out the forms. We deliver anything that can be written, and a few things "
+                "that can't.\" A wink. \"Calix has carried stranger parcels than your feelings.\"")},
+            {"key": "bodywork", "label": "Ask about body-work", "then": "post_services",
+             "desc": "brands, piercings — Durgin's trade",
+             "outcome": (
+                "\"That's Durgin's bench, not ours — the brander, the piercer, the smith. Permanent "
+                "things, done properly, that *show* on your marks afterward.\" Her smile turns "
+                "knowing. \"Tell him I sent you. He'll know what that means about you, and he'll be "
+                "gentler for it, or rougher. I never can tell which he decides.\"")},
+            {"key": "poste", "label": "Leave something poste restante", "then": "post_services",
+             "desc": "a thing you can't say yet; they hold it",
+             "outcome": (
+                "\"The Dead Letter Cage, in the Sorting Hall. People think it's where mail goes to "
+                "die.\" She shakes her head, fond. \"It's where the things you can't send *yet* get "
+                "to keep existing. Write it. Don't address it. We'll know when it's ripe, and so "
+                "will you. We've never once been wrong about a letter.\"")},
+            {"key": "back", "label": "Back to the counter", "then": "clerk",
+             "desc": "the chin-on-hand, the dangerous attention",
+             "outcome": "\"Mm. Take your time. I'm not going anywhere, and neither, it seems, are you.\""},
+        ],
+        "default": "back"}
+
+
+@choice("post_officiant", root=False)
+def _b_post_officiant(character):
+    """Pick the clerk to officiate the carried contract — each routes the REAL officiate().
+    If nothing's drafted to hand, Seraphine says so (and how to fix it) and bounces back."""
+    contract = _find_office_contract(character)
+    if not contract:
+        return {"key": "post_officiant", "prompt": (
+            "Seraphine looks at your empty hands, then at the bare counter, then back at you, "
+            "with enormous fondness. \"Sweet thing, there's nothing here to officiate. Draft it "
+            "first — |wcontract draft|n, |wcontract clauses|n to read it — and bring it back. "
+            "I'll be *thrilled*.\""),
+            "options": [
+                {"key": "back", "label": "Right — I'll draft one", "then": "post_services",
+                 "desc": "back to the service card",
+                 "outcome": "\"That's the spirit. Off you go. The pen's always warm here.\""}],
+            "default": "back"}
+    cname = getattr(contract.db, "title", None) or getattr(contract, "key", "the contract")
+    return {"key": "post_officiant", "prompt": (
+        f"You set {cname} on the counter. Seraphine smooths it flat with one finger. \"And who "
+        "do you want to make it real, hm? We each do it differently — and the difference is the "
+        "whole point.\""),
+        "options": [
+            {"key": "calix", "label": "Calix — read flat, no surprises", "effect": "office_officiate",
+             "params": {"who": "calix"}, "then": "post_services",
+             "desc": "every word as written, a fee, and nothing added",
+             "outcome": "You slide it toward the center of the counter, toward Calix."},
+            {"key": "vesper", "label": "Vesper — a rider, free, ambiguous", "effect": "office_officiate",
+             "params": {"who": "vesper"}, "then": "post_services",
+             "desc": "no charge; one line you'll read three times and never be sure of",
+             "outcome": "Vesper's hand drifts toward the page before you've finished deciding."},
+            {"key": "seraphine", "label": "Seraphine — free, and she writes where you won't look",
+             "effect": "office_officiate", "params": {"who": "seraphine"}, "then": "post_services",
+             "desc": "the warm seal, a hidden clause, 'you'll see what it cost you eventually'",
+             "outcome": "\"Oh, *me*? Brave.\" Her tail curls once, delighted. \"No charge, love.\""}],
+        "default": "calix"}
 
 
 @choice("clerk_gossip", root=False)

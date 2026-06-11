@@ -21,6 +21,8 @@
 | Calix's Keeping-Room (+ toybox, confiscated note) | ✅ Built (post_office_build) |
 | Vesper's Nest (+ toybox, the half-erased Declaration) | ✅ Built (post_office_build) |
 | `clerk` counter menu (CYOA: tutorial + gossip) | ✅ Built (cyoa `clerk`/`clerk_gossip`, `CmdClerk`) |
+| `services` menu (CYOA: real officiating + delivery/body-work/poste routing) | ✅ Built (cyoa `post_services`/`post_officiant`, `office_officiate` effect) |
+| Gossip pool (sibling secrets, the "tried-on holes" beat, 3 a.m. drawer) | ✅ 10 entries (`post_office_build._GOSSIP`) |
 
 ---
 
@@ -152,6 +154,19 @@ are always open exits — nothing here locks, gates, conditions, or traps.
   toybox` (the wardrobe of *parts* — the thing Seraphine gossips about — that they try on
   alone and always put back, with the two cards in the lid); `the declaration form` (the
   real DECLARATION OF NATURE, filled and erased to cloth; "the open is the answer").
+
+## The services menu — `clerk` → "Ask what they can do for you" (CYOA, real)
+
+`post_services` is the office's actual service directory (reached from the `clerk` menu, or
+deep-linked). Unlike a tutorial, **officiating actually fires here**: pick "Officiate a
+contract I'm carrying" → `post_officiant` finds the nearest unsigned `MilkingContract`
+(inventory then room, mirroring `MilkingContract._find_contract`) and offers the three clerks,
+each routing the REAL `world.post_office.officiate()` via the `office_officiate` effect — Calix
+flat (a fee, nothing added), Vesper a free ambiguous rider, Seraphine free + a hidden clause
+("you'll see what it cost you eventually"). No contract to hand → Seraphine says so and points
+at `contract draft`, bouncing back. The other services route honestly to their real station:
+DELIVERY → the `ogram` system, BODY-WORK → Durgin, POSTE RESTANTE → the Dead Letter Cage. No
+faked outcomes; the one that claims to do something does it.
 
 ## The counter menu — `clerk` / `counter` (CYOA, no say-triggers)
 

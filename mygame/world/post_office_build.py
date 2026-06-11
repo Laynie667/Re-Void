@@ -474,6 +474,45 @@ _GOSSIP = [
      "and buys a stamp they never use.\" A delighted little exhale. \"We are not, strictly, a "
      "post office. We are a place where the things people can't say get to *keep existing* "
      "until they can. The mail is mostly a pretext. You'll see.\""),
+    ("Vesper and the holes",
+     "She glances toward the fold in the corner, voice dropping to honey. \"You got the part "
+     "about Vesper trying on *parts*. Here's the one I've never told a soul.\" A slow, fond "
+     "smile. \"It's not only cocks they fit, sweet thing. I came back for a forgotten ledger "
+     "and there they were at the mirror, having tried on a *hole* — soft-bodied, the kind from "
+     "the bottom of the toybox — fitted it careful as anything and then just... *stood* there, "
+     "one hand pressed to it, eyes shut, learning the shape of being a thing that could be "
+     "*filled*. Not even touching it for the want of it. For the *knowing*.\" Her tail goes "
+     "still. \"They breathed out like they'd set something heavy down. Tried on being takeable "
+     "for an hour, then put it back in its velvet and squared the box. I have never wanted so "
+     "badly to knock and never been so sure I shouldn't. Left them a card. You've read the "
+     "card.\""),
+    ("Calix's one indulgence",
+     "\"Everyone thinks Calix wants nothing,\" she says, delighted to correct it. \"Wrong. "
+     "Our Calix has exactly *one* indulgence and he is mortified by it. He likes to be told "
+     "he did it *right*. That's all. You stamp a thing for him, fold a parcel to his "
+     "standard, and tell him — plainly, no teasing — 'that's perfect, Calix,' and the man "
+     "goes the most beautiful charcoal-darker you've ever seen and cannot speak for a full "
+     "three seconds.\" She mimes his careful little throat-clear. \"I discovered it by "
+     "accident and I ration it like spun sugar, because the day he realises I know, he'll "
+     "build a filing system to hide it in. Don't tell him. *Do* tell him he did it right.\""),
+    ("the three a.m. drawer",
+     "\"There's a drawer in my parlour,\" she says, suddenly quieter, the warmth turning "
+     "true, \"labelled *things said at 3 a.m.* It's the realest one. Vesper confessing they "
+     "don't actually want to be unreadable, they just don't know how to be read *gently*. "
+     "Calix admitting the empty pigeonhole marked STAYED is about someone who didn't. Me —\" "
+     "she stops, and for once the performance drops clean off her face \"— me, in my own "
+     "looping hand, that I collect people because a full house is the only thing that's ever "
+     "quieted the part of me that's sure I'll end up an unclaimed letter myself.\" Then the "
+     "bright smile snaps back, seamless. \"Anyway! You didn't hear that. It was 3 a.m. "
+     "somewhere. Stamp?\""),
+    ("how the three of them happened",
+     "\"We're not blood, before you ask — everyone asks.\" She arranges three letters into a "
+     "neat fan, fond. \"Calix came first, carrying parcels nobody else would touch. Then me, "
+     "talking my way behind the counter and never leaving. Vesper just... *appeared* one "
+     "winter, sorting mail like they'd always been here, and none of us could remember hiring "
+     "them and none of us asked.\" A wink. \"We chose each other the way you choose to keep a "
+     "stray that's already decided it lives with you. Family's just a long enough habit of not "
+     "leaving. We're very good at not leaving. It's rather the whole business.\""),
 ]
 
 
