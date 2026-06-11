@@ -100,6 +100,29 @@ Reference file: `commands/ogram_commands.py` for full character details.
 
 ---
 
+## Lore (canon): the Vesper favour
+
+Three winters ago a facility contract crossed Vesper's counter alone and came back with one
+of their ambiguous riders — readable two ways, and the second way was a DOOR: an out from one
+of Bethany's bindings, mercy dressed as imprecision, from the clerk who sides with nothing.
+Bethany caught it on audit. Rather than raise it (Vesper's first irregularity on record would
+have meant Vesper being *examined* — made to declare an intention, to be READ — and Bethany
+doesn't break load-bearing things), she quietly had the resident re-sign a fair copy and filed
+the original, soft spot intact, in her own drawer. Unread, officially. Unraised, permanently.
+
+Both know. Neither has ever said a word. Bethany's parcels go to the top of the sort; Vesper
+can't meet her eyes, which from Vesper is a confession and a thank-you in one gesture.
+
+**The standing favour:** Bethany keeps Vesper's one act of taking-a-side sealed, the way Vesper
+keeps everyone else's letters. Spent so far: one unsupervised afternoon in the Sorting Hall
+(the post_office_build survey). **Earmarked remainder:** when the maze is placed, Vesper's
+counter carries the maze MAPS (see Maps backlog item) — no questions, no riders.
+Build hooks: the filed original could be a readable in Bethany's office; the map-vending wires
+Vesper into the maze economy; the rider's "door" is a ready-made plot if a resident ever finds
+the fair-copy discrepancy.
+
+---
+
 ## BACKLOG — NPC & content layer (the engine is built; these are content on it)
 
 The contract authoring + officiating engine is live (`contract draft/clauses/
