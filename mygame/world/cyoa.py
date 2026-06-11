@@ -839,3 +839,65 @@ def _b_descent_terminus(character):
                         "hollowed, the vault humming patient below, your number still on that pod, "
                         "waiting for the cycle to wear the 'not yet' down to a yes. It always does."}],
         "default": "back"}
+
+
+@effect("mantra_set")
+def _eff_mantra_set(character, p):
+    """She repeated it — the mantra seats as a REAL installed trigger + conditioning, and the
+    repetition leaves her more suggestible for the next thing the chair wants to put in."""
+    phrase = p.get("phrase", "good girl")
+    resp   = p.get("response", "recite")
+    try:
+        from world.binding_effects import install_trigger
+        install_trigger(character, phrase, response=resp, strength=2,
+                        mantra=p.get("mantra"))
+    except Exception:
+        pass
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, 5.0, source="mantra")
+    except Exception:
+        pass
+    try:
+        character.db.suggestibility = float(getattr(character.db, "suggestibility", 0) or 0) + 1.0
+    except Exception:
+        pass
+    return f"mantra:{phrase}"
+
+
+@choice("mantra")
+def _b_mantra(character):
+    """Posed by the spiral chair mid-trance: say it with me, or hold your tongue."""
+    phrase, mantra = random.choice([
+        ("spiral down", "down is where i live, down is where it's warm"),
+        ("good girl",   "good girls don't decide, good girls feel wonderful"),
+        ("empty",       "empty is quiet, quiet is good, i am so quiet now"),
+        ("hers",        "i'm hers, i was always going to be hers, it's tidier this way"),
+    ])
+    return {"key": "mantra", "prompt": (
+        f"Down in the warm turn of it, Bethany's recorded voice goes patient and bright — the "
+        f"voice of a woman dictating to a typist she owns. |M\"Say it with me now, sweetheart. "
+        f"'{mantra}.' Out loud. Your mouth's right there and I've already done the hard part. "
+        f"Or hold your little tongue, if you must — the spiral doesn't mind. It just keeps "
+        f"turning either way, and you're in it either way, and we both know which of us is "
+        f"better at waiting.\"|n"),
+        "options": [
+            {"key": "repeat", "label": "Say it with her", "effect": "mantra_set",
+             "params": {"phrase": phrase, "response": "recite", "mantra": mantra},
+             "desc": "repeat it out loud — and it seats, a real trigger, yours to carry out of the chair",
+             "outcome": f"You say it. Out loud, in the dark, in your own voice — '{mantra}' — and "
+                        f"saying it is the seating of it: the words go down warm and find a groove "
+                        f"that was sanded ready for them, and click in, and become true the way "
+                        f"furniture is true. From now on, '{phrase}' will reach in and pull. You "
+                        f"taught yourself the trick of it. She just held the spiral steady while "
+                        f"you did. |M\"Perfect,\"|n the recording purrs. |M\"Again tomorrow.\"|n"},
+            {"key": "silent", "label": "Hold your tongue", "effect": "deny_hold",
+             "params": {"cond": 4.0},
+             "desc": "refuse the words; the spiral just keeps turning, and the turning costs too",
+             "outcome": "You press your lips shut and hold the words off, and it costs you the way "
+                        "holding anything off in here costs — the spiral simply keeps turning, "
+                        "patient as payroll, wearing the refusal thin against your own pulse. "
+                        "|M\"Mm,\"|n says the recording, warmly unbothered. |M\"You held. I'll note "
+                        "it. I note everything, sweetheart — including how much longer each hold "
+                        "takes you. Would you like to know the trend? No. You wouldn't.\"|n"}],
+        "default": "repeat"}

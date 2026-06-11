@@ -420,6 +420,11 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         for cmd_cls in ALL_BOX_CMDS:
             self.add(cmd_cls())
 
+        # Spiral chair (hypno) commands
+        from commands.hypno_chair_commands import ALL_HYPNO_CMDS
+        for cmd_cls in ALL_HYPNO_CMDS:
+            self.add(cmd_cls())
+
         # Test uniform command
         from commands.test_uniform_command import CmdTestUniform
         self.add(CmdTestUniform())

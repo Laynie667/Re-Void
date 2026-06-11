@@ -50,6 +50,8 @@ _NEW_FLAGS = [
     "milk_engorge_beats",
     # CYOA choices
     "pending_choice", "cycle_emphasis",
+    # spiral chair
+    "in_hypno_chair", "chair_stage", "chair_beats", "chair_release_at", "chair_struggle",
 ]
 
 

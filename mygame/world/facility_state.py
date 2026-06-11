@@ -44,6 +44,9 @@ FACILITY_FLAGS = {
     "headspace": None, "pending_choice": None, "cycle_emphasis": None,
     # little box (self-releasing — see typeclasses/little_box.py)
     "in_box": None, "box_entered_at": 0, "box_release_at": 0,
+    # spiral chair (self-releasing — see typeclasses/hypno_chair.py)
+    "in_hypno_chair": None, "chair_stage": 0, "chair_beats": 0,
+    "chair_release_at": 0, "chair_struggle": 0,
     # little clauses: teat-gag + nurse-first + stuffed-mouth + star-chart
     "teat_gag_fluid": None, "nurse_first_fluid": None, "stuffed_fluid": None,
     "star_chart": None, "facility_studs": None,

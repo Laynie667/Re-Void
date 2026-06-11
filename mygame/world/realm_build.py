@@ -2168,6 +2168,13 @@ def _furnish(room, key, owner):
                 spawn_studs(room, owner, tagger=_tag)
             except Exception:
                 pass
+        # The Conditioning Cell gets Bethany's Spiral Chair (real staged hypno rig).
+        if key == "conditioning":
+            try:
+                from typeclasses.hypno_chair import build_hypno_chair
+                build_hypno_chair(room, "spiral_chair")
+            except Exception:
+                pass
     except Exception:
         pass
     # NPCs
@@ -2448,6 +2455,17 @@ def facility_upgrade(owner):
     except Exception:
         pass
 
+    # 5b. Install the Spiral Chair in the Conditioning Cell (staged hypno rig, self-releasing).
+    chair_added = False
+    try:
+        from typeclasses.hypno_chair import build_hypno_chair
+        cond_room = rooms.get("conditioning")
+        if cond_room and not getattr(cond_room.db, "hypno_chair_zone", None):
+            build_hypno_chair(cond_room, "spiral_chair")
+            chair_added = True
+    except Exception:
+        pass
+
     # 6. Give Bethany her named personal studs AND pen them in the Pens as real, present,
     # examinable animals (the kennel/stalls aren't anonymous, and the run comes alive).
     studs_added = False
@@ -2491,6 +2509,7 @@ def facility_upgrade(owner):
         f"  New zones/installs merged: {added_zones}\n"
         f"  New ambient lines merged: {added_ambient}\n"
         f"  Little Box installed in the Nursery: {'yes' if box_added else 'already present'}\n"
+        f"  Spiral Chair installed in the Cell: {'yes' if chair_added else 'already present'}\n"
         f"  Bethany's named studs installed: {'yes' if studs_added else 'already present'}"
         f" (penned in the Pens: {studs_penned})\n"
         f"  New little-clauses applied (signed resident): {'yes' if clauses_added else 'n/a'}\n"

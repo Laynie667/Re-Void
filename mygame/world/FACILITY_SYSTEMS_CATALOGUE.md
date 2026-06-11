@@ -408,6 +408,20 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   pick_hole, go_little, submit_standing.
 - Commands: `choose [<n>]` (answer/re-show), `offer` (present yourself → the offer choice graph).
 
+## 4i. The Spiral Chair  (`typeclasses/hypno_chair.py` + `commands/hypno_chair_commands.py`)
+- Bethany's hypno rig for the Conditioning Cell: `hypnosit` starts a staged induction
+  (settle → spiral → drone → deep → set; her recorded voice, deep per-stage prose pools, room
+  sees third-person glaze lines). Every stage REAL: `add_conditioning` scaled by depth,
+  suggestibility climbs, deep stages seat actual `install_trigger`s + regression if she's drifting.
+- **Mid-trance CYOA**: at stage ≥2 the chair poses the `mantra` node — "say it with her" seats the
+  mantra as a REAL recite-trigger (`mantra_set` effect: install_trigger + conditioning +
+  suggestibility) vs hold your tongue (deny_hold; the recording notes the trend). Crude outcome
+  prose on both.
+- **NOT a stuck-spot**: session timer (420s) always releases; `hypnorise` surfaces (deep trance
+  resists twice via `chair_struggle`, then yields); disconnect auto-releases; all five flags
+  (`in_hypno_chair`/`chair_stage`/`chair_beats`/`chair_release_at`/`chair_struggle`) in
+  FACILITY_FLAGS. Installed in the Cell by `_furnish` + `facility_upgrade` (`build_hypno_chair`).
+
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/
   `hole_capabilities`/`gape_word` (hole training), `record_mark` (freeform + board),
