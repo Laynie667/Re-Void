@@ -89,7 +89,32 @@ _STAGE_POOLS = {
         "in a moment, sweetheart, and you'll feel *wonderful*, and you won't be quite sure why, "
         "and that's mine too — I keep the why. Up you come now. Good girl. My good girl.\"|n",
     ],
+    5: [  # below — the stage the new intakes never see; opens only to the well-worked
+        "Below 'set' there is another room, and tonight the chair shows it to you — the place "
+        "under the spiral where the recordings stop being recordings. |M\"There you are,\"|n says "
+        "Bethany's voice, and it isn't warm now, it's *fond*, which is so much worse. |M\"I don't "
+        "bring the new ones down here. Down here is where I keep the versions of you I've already "
+        "finished — would you like to meet next month's? She's lovely. She doesn't argue at all. "
+        "Hold still while I fit you to her.\"|n And something in you is measured against something "
+        "in her, and trimmed where it overhangs.",
+        "This deep, the spiral doesn't turn anymore — *you* do, slowly, around a still point that "
+        "has her initial on it. |M\"This is the part I never explain upstairs,\"|n the voice "
+        "confides, cosy as a fireside. |M\"Conditioning is just furniture arranging. But DOWN "
+        "here, sweetheart, down here we do load-bearing work. Walls. Doors. Which way they open, "
+        "and to whose hand.\"|n You feel a hinge being hung somewhere structural. It swings "
+        "beautifully. It will only ever swing in.",
+        "At the very bottom of the session there is a quiet like the Deep Stock vault, and in it "
+        "her voice is almost tender. |M\"You've done so well to get this far down. Most of them "
+        "splash about in the shallow end of themselves for years. Not you. You sink like you were "
+        "ballasted for it — and you were; I've been adding the weight for weeks. Now. Open that "
+        "last little drawer for me. The one you keep *you* in. I only want to look. I always only "
+        "want to look, right up until I don't.\"|n",
+    ],
 }
+
+# Below-stage entry requirements: the chair opens stage 5 only for the well-worked.
+_BELOW_SUGGESTIBILITY = 12.0
+_BELOW_SESSIONS       = 3
 
 _ROOM_LINES = [
     "|x{t} sits glazed and slack in the spiral chair, eyes tracking the slow turn overhead, lips "
@@ -177,13 +202,36 @@ class HypnoChairScript(FurnitureSessionScript):
                 continue
             self._trance_beat(char, room)
 
+    @staticmethod
+    def below_unlocked(char):
+        """The 'below' stage opens only for the well-worked: suggestibility + sessions served."""
+        sug = float(getattr(char.db, "suggestibility", 0) or 0)
+        sessions = int(getattr(char.db, "chair_sessions", 0) or 0)
+        return sug >= _BELOW_SUGGESTIBILITY and sessions >= _BELOW_SESSIONS
+
+    @staticmethod
+    def start_stage(char):
+        """The chair remembers her: starting depth read off suggestibility + sessions served.
+        New sitters start at 0; the well-worked are taken straight down to where she left off."""
+        sug = float(getattr(char.db, "suggestibility", 0) or 0)
+        sessions = int(getattr(char.db, "chair_sessions", 0) or 0)
+        depth = 0
+        if sug >= 4 or sessions >= 2:
+            depth = 1
+        if sug >= 8 or sessions >= 4:
+            depth = 2
+        if sug >= _BELOW_SUGGESTIBILITY and sessions >= _BELOW_SESSIONS:
+            depth = 3
+        return depth
+
     def _trance_beat(self, char, room):
         """One beat of the induction: stage prose + the real effects of that depth."""
         stage = int(getattr(char.db, "chair_stage", 0) or 0)
         beats = int(getattr(char.db, "chair_beats", 0) or 0) + 1
         char.db.chair_beats = beats
-        # advance a stage every other beat, capped at 'set'
-        if beats % 2 == 0 and stage < 4:
+        # advance a stage every other beat — capped at 'set', or 'below' once she's earned it
+        cap = 5 if self.below_unlocked(char) else 4
+        if beats % 2 == 0 and stage < cap:
             stage += 1
             char.db.chair_stage = stage
         char.msg("|x  " + random.choice(_STAGE_POOLS.get(stage, _STAGE_POOLS[0])) + "|n")
@@ -218,6 +266,27 @@ class HypnoChairScript(FurnitureSessionScript):
                     regress(char, random.uniform(2.0, 4.0), source="spiral_chair")
                 except Exception:
                     pass
+        if stage >= 5:
+            # BELOW — load-bearing work: triggers seat PERMANENT, her devotion is rewired
+            # toward Bethany specifically, and the regression cuts deeper. The reward floor
+            # for being this well-worked is that the work done here is the kind that stays.
+            if random.random() < 0.5:
+                try:
+                    from world.binding_effects import install_trigger
+                    install_trigger(char, "down where she keeps you", response="blank",
+                                    strength=2, permanent=True,
+                                    mantra="i live down here now, she has the key")
+                except Exception:
+                    pass
+            try:
+                char.db.bethany_devotion = float(getattr(char.db, "bethany_devotion", 0) or 0) + 2.0
+            except Exception:
+                pass
+            try:
+                from world.regression import regress
+                regress(char, random.uniform(3.0, 5.0), source="spiral_below")
+            except Exception:
+                pass
         # Mid-trance, the chair poses the mantra choice (CYOA) if nothing's pending.
         if stage >= 2 and random.random() < 0.35:
             try:
@@ -228,7 +297,9 @@ class HypnoChairScript(FurnitureSessionScript):
                 pass
 
     def release(self, char, room, reason="timer"):
-        """Free the sitter and clear session state. Always available; floor-safe."""
+        """Free the sitter and clear session state. Always available; floor-safe.
+        Counts the session served — the chair's memory, what start_stage reads."""
+        char.db.chair_sessions = int(getattr(char.db, "chair_sessions", 0) or 0) + 1
         char.db.in_hypno_chair  = None
         char.db.chair_stage     = 0
         char.db.chair_beats     = 0

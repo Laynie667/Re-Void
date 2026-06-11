@@ -425,10 +425,17 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   mantra as a REAL recite-trigger (`mantra_set` effect: install_trigger + conditioning +
   suggestibility) vs hold your tongue (deny_hold; the recording notes the trend). Crude outcome
   prose on both.
+- **The chair REMEMBERS** (`start_stage`/`below_unlocked` + `chair_sessions` counted per release):
+  starting depth read off suggestibility + sessions served (veterans skip the shallow start —
+  "Welcome back, sweetheart. Pick up where we were?"). At suggestibility ≥12 + 3 sessions the
+  **below** stage (5) opens — its own pool (the room under 'set' where she does load-bearing work),
+  and its effects STAY: permanent installed trigger ("down where she keeps you"), bethany_devotion
+  +2/beat, deeper regression. Fresh sitters cap at 'set' (4).
 - **NOT a stuck-spot**: session timer (420s) always releases; `hypnorise` surfaces (deep trance
-  resists twice via `chair_struggle`, then yields); disconnect auto-releases; all five flags
-  (`in_hypno_chair`/`chair_stage`/`chair_beats`/`chair_release_at`/`chair_struggle`) in
-  FACILITY_FLAGS. Installed in the Cell by `_furnish` + `facility_upgrade` (`build_hypno_chair`).
+  resists twice via `chair_struggle`, then yields); disconnect auto-releases; all six flags
+  (`in_hypno_chair`/`chair_stage`/`chair_beats`/`chair_sessions`/`chair_release_at`/
+  `chair_struggle`) in FACILITY_FLAGS. Installed in the Cell by `_furnish` + `facility_upgrade`
+  (`build_hypno_chair`).
 
 ## 5. Breeding, holes, marks  (`world/gang_breeding.py`)
 - **fn:** `gang_inseminate` (deposit + quota + lineage), `record_use`/`add_gape`/

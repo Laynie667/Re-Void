@@ -45,8 +45,10 @@ class CmdHypnoSit(Command):
         if getattr(caller.db, "in_hypno_chair", None):
             caller.msg("|xYou're already in the chair. Watch the spiral.|n")
             return
+        from typeclasses.hypno_chair import HypnoChairScript as _HCS
+        start = _HCS.start_stage(caller)
         caller.db.in_hypno_chair  = zone
-        caller.db.chair_stage     = 0
+        caller.db.chair_stage     = start
         caller.db.chair_beats     = 0
         caller.db.chair_release_at = time.time() + 420.0
         caller.db.chair_struggle  = 0.0
@@ -54,8 +56,20 @@ class CmdHypnoSit(Command):
         room.msg_contents(f"|x{name} settles into the spiral chair. The headrest tips, the "
                           f"spiral overhead begins its slow turn, and a warm recorded voice "
                           f"starts up too low for anyone else to follow.|n", exclude=[caller])
-        caller.msg("|wYou sit. The chair takes you like it was measured for you — it was. "
-                   "The session ends on its own; |xhypnorise|w surfaces you sooner.|n")
+        if start <= 0:
+            caller.msg("|wYou sit. The chair takes you like it was measured for you — it was. "
+                       "The session ends on its own; |xhypnorise|w surfaces you sooner.|n")
+        else:
+            sessions = int(getattr(caller.db, "chair_sessions", 0) or 0)
+            caller.msg(f"|wYou sit — and the chair |Mremembers|w you. No settling-in this time, "
+                       f"no slow shallow start: it reads your file off your pulse ({sessions} "
+                       f"sessions served, and how soft they've left you) and takes you straight "
+                       f"down to where it left off. Bethany's voice doesn't bother with hello. "
+                       f"|M\"Welcome back, sweetheart. Pick up where we were?\"|w It isn't a "
+                       f"question. Down you go.|n")
+            if _HCS.below_unlocked(caller):
+                caller.msg("|x  ...and tonight, somewhere under the usual bottom of it, you can "
+                           "feel a door you've never been shown standing open.|n")
         from typeclasses.hypno_chair import HypnoChairScript
         from evennia.utils import create
         if not HypnoChairScript.is_running(room):
