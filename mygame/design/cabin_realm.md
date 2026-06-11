@@ -59,48 +59,110 @@ in-fiction, `escape`/`force_clear`/the superuser purge always work and are never
 
 ---
 
-## 2. The pieces, as we understand them so far
+## 2. INVENTORY — the build scripts that already exist (reviewed 2026-06-11)
 
-### 2a. The cabin  *(exists — relink)*
-- TODO (user): where in the realm should it sit? What's the approach to it — a forest path
-  (maze), a waystone word, a plain exit?
-- Build cost: low. Mostly re-pointing exits / setting a waystone address.
+These are **copy-paste, in-game build scripts** (`@desc`, `roomzone`, mechanic `@create`,
+`@open`) the user runs while standing in each room — not Python modules. They are detailed,
+polished, and consistent (zones + details + study + handle + ambient + real mechanics +
+inscriptions). All live in `world/*.txt`. Each opens with an `== Exits: ==` header and ends
+with `@open` lines whose targets are `[#dbref placeholders]` to fill at build time.
 
-### 2b. The barn  *(exists — expand)*
-- TODO (user): what's the barn *for* in this realm? (livestock/breeding annex to the
-  facility's themes? storage-of-people? a stage?) What rooms/stalls/lofts does it grow?
-- Likely reuses: stalls as zones, breeding/milking mechanics already built, restraint
-  furniture.
+### Helena's Log Cabin (the cabin cluster)
+| Room | Script | Real mechanics / notable | Deferred ideas in-script |
+|---|---|---|---|
+| Front Porch & Yard | `cabin_front.txt` | porch swing / rockers / fire-pit SeatMechanics; `is_outdoor=True` (weather); **treeline zone = the forest hook** | **forest-trail exits (north/nw/west) — "wire when ready"** |
+| Barn | `barn.txt` | 4 stalls (MilkingMachine + kneeling SeatMechanic each); breeding stocks (DildoSeat + RestrainMechanic yoke); **hayloft** (hay SeatMechanic cap 4 + CreakingStair ladder + dimmable lamp); tack wall w/ branding iron `R`-in-circle | **Herd State System** (HerdStateScript + `herd` cmd + roster) — explicitly deferred |
+| Momo's Room | `momos_room.txt` | — | → Gargoyle's Chamber (script not found) |
+| Helena's Room | `helena_room.txt` | the cabin hub: → Momo / Nursery / Passageway(out) / Kennel(in, "under the bed") / iron-ring trapdoor down → Hidden Lab | — |
+| Nursery | `nursery.txt` | changing-table foam referenced by barn pads | — |
+| Play Pen | `play_pen.txt` | — | — |
+| Auria's Room | `auria_room.txt` | bookcase passage → Playroom | — |
+| Auria's Playroom | `aurias_playroom.txt` | — | — |
+| Hidden Laboratory | `hidden_lab.txt` | → Garden / Disciplination / S.I.D.M.A.U. / up→Helena | — |
+| Disciplination Room | `disciplination_room.txt` | — | — |
+| Garden of Knowledge | `garden_knowledge.txt` | — | — |
+| S.I.D.M.A.U. | `sidmau.txt` | — | — |
+| Kennel (under the bed) | `kennel.txt` | the cabin↔den seam: out→Helena's Room, **down→Shadow's Den** | — |
 
-### 2c. The shadow's den  *(exists — expand, maze-assisted)*
-- TODO (user): the den's nature/tone, and what lives in it. The maze can make it sprawl
-  (twisting dark passages, rooms that loop) for little authoring — `forgiving` or `classic`
-  mode TBD per how punishing we want getting-lost to be.
-- Open: does the den use **breeding-debt halls** (`maze debt`) or stay non-breeding and
-  atmospheric? Body-gated depths (`maze gate`) for earned-only inner rooms?
+### Shadow's Den (beneath the cabin, via the Kennel)
+| Room | Script | Real mechanics / notable | Notes |
+|---|---|---|---|
+| Birthing Den | `birthing_den.txt` | nest SeatMechanic (cap 4); warm-pool SeatMechanic (cap 4); pictographic lineage wall (Shadow/Whisper + WolfBred handprints + 7 named pups); column iron-rings | desc names **"rocky passages beyond"** — the natural maze-expansion seam; nest lore references **a sign at the forest's edge warning about breeding** |
+| Princess' Private Space | `princess_space.txt` | bed (SeatMechanic + RestrainMechanic cuffs); cherry pillory (RestrainMechanic, height-adjustable); wardrobe MilkingMachine; little-space chest; captioned mural | south↔north with Birthing Den |
 
-### 2d. The forest  *(new — maze)*
-- The connective tissue: a MazeRoom (or a few) skinned as woods. Registered **solutions**
-  lead to real locations (the cabin, the barn, the den, secret spots); **reveals** are
-  forest secrets shown in prose; **decoys** are the getting-lost beats.
-- Open: tone (fairytale-menace? predatory? liminal?), and which locations are solutions vs.
-  hidden reveals.
+**Referenced but no script found (build or confirm in-game):** Common Area / Main Hall
+(cabin_front's `in` target — possibly `common_room_commands.txt`), the Passageway
+(helena_room's `out`), Gargoyle's Chamber (momos_room's `east`).
+
+## 2b. Connectivity map (from the scripts' exit headers)
+
+```
+                          [FOREST — maze, TODO]
+                                  | (treeline: n / nw / w — "wire when ready")
+   Gargoyle's? — Momo's Room — Helena's Room ——(out)—— Passageway/Common Area? —(in/s)— Front Porch & Yard
+        (barn: e)  |                | \                                              (is_outdoor; fire pit, woodpile)
+                 Barn ——(s)————————/  |  \(trapdoor down)
+              (hayloft)               |   Hidden Lab — Garden / Disciplination / S.I.D.M.A.U.
+                                  (in)|
+                        Nursery — Helena's Room
+                       /   |   \
+                Auria's  PlayPen  (s)
+                  |
+              Playroom
+                                  Kennel (under Helena's bed) ——(down)——> SHADOW'S DEN
+                                                                            Birthing Den —(s)— Princess' Space
+                                                                            ("rocky passages beyond" = den maze seam)
+```
+
+## 2c. Where the maze plugs in (the user's two asks)
+
+1. **The forest** — `cabin_front.txt` already leaves the hook: the **treeline zone** + a
+   "wire forest-trail exits when ready" TODO (suggested n→Deep Forest, nw→Forest Path,
+   w→Barn Trail). Skin a `MazeRoom` (or a few) as the woods off the treeline; register
+   **solutions** that arrive at the real rooms (cabin front, barn, the den's outer mouth,
+   secret spots), **reveals** for forest secrets, **decoys** for getting-lost. The den's
+   own lore hands us the theme for free: a **sign at the forest's edge warns about
+   breeding** — i.e. `maze debt` (a wrong turn can breed you) is *canon-supported* here.
+2. **Expanding the den with less effort** — the Birthing Den desc explicitly names **"rocky
+   passages beyond."** Skin a `MazeRoom` as those passages: one room becomes a sprawl of
+   twisting tunnels, with `maze gate` body-gated inner chambers (earned-only deep dens) and
+   optional `maze debt`. Big explorable den for tiny authoring — exactly the user's goal.
 
 ---
 
-## 3. Open questions (the user will answer one by one — no building ahead of these)
+## 3. Open questions (the user answers one by one — no building ahead of these)
 
-1. **Geography:** rough map — what connects to what? (forest ↔ cabin ↔ barn ↔ den, and how
-   you get between them: maze paths, waystone words, plain exits?)
-2. **Tone of the realm** vs. the facility — is this softer/wilder/predatory/fairytale, its
-   own register, or an annex of the facility's themes?
-3. **The barn's purpose** and what it grows into.
-4. **The den's nature** and how hard "lost" should bite (atmospheric vs. breeding-debt vs.
-   body-gated depths).
-5. **The forest's secrets** — what's worth finding out there, and what's solution
-   (walk-to-a-place) vs. reveal (prose secret)?
-6. **Entry/exit & the floor:** how you *get into* the realm (and the always-open OOC exit —
-   confirm the §0 floor covers any new persistent flags this realm introduces).
+Geography and most room content are now KNOWN (see §2). What's genuinely open:
+
+1. **Relink point:** where does this realm attach — a hub waystone word, an existing exit,
+   a standalone realm reached how? (The cabin cluster is internally complete; it just needs
+   a way *in*.)
+2. **Forest shape:** how many maze rooms, which **solutions** map to which real rooms
+   (cabin front / barn trail / the den's mouth / secrets), and which secrets are **reveals**
+   (prose) vs. walk-to-a-place. Mode `classic` (punishing) or `forgiving`?
+3. **`maze debt` (breeding-on-lost):** on for the forest and/or den? (Canon-supported by the
+   "sign warns about breeding" lore — but the user's call on intensity.)
+4. **Den expansion:** how deep do the "rocky passages" go, and which inner chambers are
+   `maze gate` body-gated (earned-only) — and gated on *what* (conditioning / a wolf-bred
+   standing / a pack-membership flag)?
+5. **Barn Herd State System:** build the deferred `herd` roster/command now, or leave it
+   until the barn has active occupants (as the script itself suggests)?
+6. **The §0 floor:** confirm any NEW persistent flag this realm introduces (pack membership?
+   wolf-bred status? maze debt counters?) gets registered in a realm reset spec so
+   `escape`/`force_clear` always clears it. The cabin↔den seam (Kennel "down") and the maze
+   must never be a stuck-spot.
+
+## 3b. Build order, once a section goes READY (suggested)
+
+1. Run the existing room scripts in dependency order, filling the `@open` dbrefs as rooms
+   are created (the cabin cluster first — Helena's Room is the hub — then the den via the
+   Kennel). *These are the user's to paste in-game, or I can convert any to a Python
+   `build_cabin()` entrypoint with real dbref-resolution + tagging if wanted.*
+2. Confirm/locate the referenced-but-unscripted rooms (Common Area, Passageway, Gargoyle's).
+3. Place the forest maze off the treeline; wire its solutions to the now-real dbrefs.
+4. Place the den's "rocky passages" maze; set any body-gates.
+5. (Optional) the Barn Herd State System.
+6. Relink the whole realm at its chosen entry; verify the OOC floor across the new flags.
 
 ---
 
