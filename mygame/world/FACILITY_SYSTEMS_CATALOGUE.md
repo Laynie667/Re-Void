@@ -404,6 +404,16 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `processing_tier` (recorded to `facility_grade`), real `_appraise` valuation, real
   conditioning/suggestibility/hole-use/brood figures — + conditioning for knowing her number; or
   look away (graded anyway, carried unread — deny_hold). Specificity-is-hotter, mechanised.
+- **Auction chain** (`auction → auction_gavel`): gated on `facility_grade` (inspection day feeds
+  the showroom). The block — perform for the glass vs freeze (stillness reads as 'placid' and
+  raises the price anyway); both `bid_up` (REAL ledger: `high_bid` climbs from her appraised
+  `sale_price`, `high_bidder` recorded, exhibition arousal). The gavel: look at Bethany →
+  `bethany_buys` (REAL ownership: `bethany_owned`, title `— Bethany's` with `facility_title_backup`
+  filed first, `sale_price` = winning bid, conditioning) — or look to the dark (bid record climbs,
+  her paddle stays up "plus one", the gavel hangs; there's always next inspection day).
+- **Chair → descent door**: at the Spiral Chair's *below* stage, ~40% of its CYOA poses are the
+  `descent` node instead of the mantra — the door it hints at on sitting, offered from inside the
+  trance ("live now, not recorded: 'come see what's downstairs'").
 - **Punishment chain** (`punished → punish_sentence → punish_after`): a CONSEQUENCE-GATED root —
   the builder returns None (pose_random skips) unless she's earned it (defiance > 0 / quota_behind /
   freedom_forfeited). Confess (banks compliance) vs deny (real `punish`, +1 infraction) → choose the

@@ -1202,3 +1202,118 @@ def _b_inspection_grade(character):
                         "the drawer, and now there's a number on you that everyone in the building "
                         "can read except you. You'll feel them reading it for days."}],
         "default": "hear"}
+
+
+# ── the block: her inspection grade goes to auction, and the bids are REAL ────
+@effect("bid_up")
+def _eff_bid_up(character, p):
+    """The room bids on her — real ledger movement: high_bid climbs from her appraised
+    sale_price, the high bidder is recorded, exhibition arousal banked."""
+    base = int(getattr(character.db, "sale_price", 0) or 0)
+    cur  = int(getattr(character.db, "high_bid", 0) or 0) or base or 1000
+    bump = max(100, int(cur * random.uniform(0.15, 0.4)))
+    character.db.high_bid = cur + bump
+    character.db.high_bidder = random.choice([
+        "the gentleman in booth two", "a buyer who never shows her face",
+        "the dairy concern's agent", "a private collector, paddle 9",
+    ])
+    try:
+        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+        ensure_arousal_script(character); add_arousal(character, float(p.get("arousal", 10.0)))
+    except Exception:
+        pass
+    return f"bid:{character.db.high_bid}"
+
+
+@effect("bethany_buys")
+def _eff_bethany_buys(character, p):
+    """The gavel falls to HER paddle: real ownership state — bethany_owned, the title claimed
+    (backed up first, the same way bethany_script._mark_owned does), devotion banked."""
+    d = character.db
+    d.bethany_owned = True
+    if not getattr(d, "facility_title_backup", None):
+        d.facility_title_backup = {"faction": getattr(d, "title_faction", "") or "",
+                                   "suffix":  getattr(d, "title_suffix", "") or ""}
+    d.title_suffix = "— Bethany's"
+    d.sale_price = int(getattr(d, "high_bid", 0) or 0) or int(getattr(d, "sale_price", 0) or 0)
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, 5.0, source="sold")
+    except Exception:
+        pass
+    return "bethany_owned"
+
+
+@choice("auction", root=True)
+def _b_auction(character):
+    """The block — only poses once she's been graded (inspection day feeds the showroom)."""
+    if not getattr(character.db, "facility_grade", None):
+        return None
+    grade = character.db.facility_grade
+    return {"key": "auction", "prompt": (
+        f"They don't ask. A handler simply unhooks you from the line mid-shift, wipes you down "
+        f"like produce, and walks you up the back stair to the showroom — because your file got "
+        f"its grade, and graded stock gets SHOWN. The block is centre-floor under a single warm "
+        f"light, turntable-slow, and beyond the glass the booths are dark except for the little "
+        f"bid-lamps, patient as owls. The auctioneer reads your row off the card without looking "
+        f"at you: \"Lot. Graded {grade}. Documentation available on request — and it is *thorough*. "
+        f"\" A pause. \"Present the lot.\" That's you, sweetheart. How do you go up?"),
+        "options": [
+            {"key": "perform", "label": "Perform for the glass", "effect": "bid_up",
+             "params": {"arousal": 14.0}, "then": "auction_gavel",
+             "desc": "turn, arch, present — work the booths like the trained thing the card says you are",
+             "outcome": "You perform. God help you, you *perform* — hit the turntable's rhythm, "
+                        "arch where the light wants you, present on the quarter-turns like "
+                        "choreography you don't remember learning but your body has by heart. The "
+                        "bid-lamps start blinking before the first rotation finishes, and each "
+                        "little wink of light is a number climbing on YOUR number, and the climbing "
+                        "feels — no. You'll examine what it feels like later. The lamps keep "
+                        "winking. You keep turning."},
+            {"key": "freeze", "label": "Just stand there", "effect": "bid_up",
+             "params": {"arousal": 8.0}, "then": "auction_gavel",
+             "desc": "give them nothing — the turntable turns you anyway, and stillness reads as 'placid'",
+             "outcome": "You give them nothing — stock-still, eyes on the middle distance, the one "
+                        "protest left to you. The turntable doesn't care; it presents you anyway, "
+                        "all sides, unhurried. And the auctioneer, without missing a beat, reads "
+                        "your stillness onto the card as a FEATURE: \"note the temperament — placid "
+                        "under observation, suitable for display work.\" Your defiance just raised "
+                        "your price. The bid-lamps blink approvingly. There was never a way to "
+                        "stand on that block that wasn't selling."}],
+        "default": "perform"}
+
+
+@choice("auction_gavel")
+def _b_auction_gavel(character):
+    """The gavel — and the paddle at the back of the dark that always wins."""
+    bid = int(getattr(character.db, "high_bid", 0) or 0)
+    bidder = getattr(character.db, "high_bidder", None) or "the dark"
+    return {"key": "auction_gavel", "prompt": (
+        f"The bidding climbs — {bid:,} now, to {bidder} — and the auctioneer's patter goes "
+        f"singsong toward the gavel: going once... and then a new paddle lifts at the very back, "
+        f"unhurried, and the booths go quiet, because everyone who works here knows that paddle. "
+        f"Bethany doesn't even look up from her coffee. \"Plus one,\" she says, mild as milk, "
+        f"which isn't a number, which is the point — hers is always plus one. The auctioneer "
+        f"looks at you, which auctioneers never do, and you realise you're being offered the "
+        f"only vote you'll ever get on this: whose gavel."),
+        "options": [
+            {"key": "hers", "label": "Look at Bethany", "effect": "bethany_buys",
+             "desc": "meet her eyes over the coffee — and the gavel falls to her paddle, and you're HERS, titled",
+             "outcome": "You look at her. That's all — you look — and her smile arrives like "
+                        "payroll, certain and on schedule, and the gavel falls before you've "
+                        "finished the looking. \"Sold,\" she agrees, fondly, finishing her coffee. "
+                        "The title updates while you're still on the turntable: |w— Bethany's|n, "
+                        "right there on your name where everyone reads it. She collects you off "
+                        "the block herself, hand warm at your nape. \"My own lot. I always was "
+                        "going to be the one, sweetheart. I just do love watching you find that "
+                        "out in public.\""},
+            {"key": "dark", "label": "Look at the booths", "effect": "bid_up",
+             "params": {"arousal": 6.0},
+             "desc": "appeal to the dark — the bids climb higher, but her paddle is still plus one",
+             "outcome": "You look to the booths — to the dark, to anyone-but-her — and the dark "
+                        "obliges: the lamps blink, the number climbs, your value setting a house "
+                        "record while you stand there being looked at by people you'll never see. "
+                        "And at the back, Bethany simply holds her paddle up and leaves it up. "
+                        "Plus one. Plus one to anything. The lot isn't really for sale, sweetheart; "
+                        "the auction is just how she likes to watch your price be proven before "
+                        "she pays it. The gavel hangs. There's always next inspection day."}],
+        "default": "hers"}

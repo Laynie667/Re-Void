@@ -287,12 +287,21 @@ class HypnoChairScript(FurnitureSessionScript):
                 regress(char, random.uniform(3.0, 5.0), source="spiral_below")
             except Exception:
                 pass
-        # Mid-trance, the chair poses the mantra choice (CYOA) if nothing's pending.
+        # Mid-trance, the chair poses CYOA if nothing's pending: usually the mantra — but
+        # down at 'below', sometimes the door it's been hinting at: the DESCENT, offered
+        # from inside the trance, where the wanting is easiest to mistake for her own.
         if stage >= 2 and random.random() < 0.35:
             try:
                 from world import cyoa
                 if not cyoa.has_pending(char):
-                    cyoa.pose_named(char, "mantra", room=room)
+                    node = "mantra"
+                    if stage >= 5 and random.random() < 0.4:
+                        node = "descent"
+                        char.msg("|x  ...and the door under the bottom of the session swings "
+                                 "wide, and Bethany's voice is right there at the threshold, "
+                                 "live now, not recorded: |M\"there's my girl. come see what's "
+                                 "downstairs.\"|n")
+                    cyoa.pose_named(char, node, room=room)
             except Exception:
                 pass
 
