@@ -305,9 +305,20 @@ def _b_beg(character):
         "nicely,\" she says, \"or don't. Up to you.\""),
         "options": [
             {"key": "beg", "label": "Beg for it", "effect": "grant_relief",
-             "desc": "out loud, degrading, granted — and the relief is the leash"},
+             "desc": "out loud, degrading, granted — and the relief is the leash",
+             "outcome": "You beg — and you hear how easily it comes, how practised it's getting, "
+                        "the please-please-please spilling out before pride can catch it. She lets "
+                        "you have it, finally, and the orgasm rips through you so hard and so "
+                        "grateful that the lesson writes itself: relief is something they hand you "
+                        "for grovelling, never something you own. You'll beg faster next time. You "
+                        "already know you will."},
             {"key": "hold", "label": "Hold out", "effect": "deny_hold",
-             "desc": "keep that scrap of self; stay denied and aching, conditioned deeper for it"}],
+             "desc": "keep that scrap of self; stay denied and aching, conditioned deeper for it",
+             "outcome": "You don't beg. You hold the line, jaw tight, and she just... shrugs, and "
+                        "pockets the key, and leaves you strung out at the edge with nothing — the "
+                        "ache redoubling, the denial sinking another hook in. It's the last scrap "
+                        "of yourself, this refusing, and it costs you more every cycle to keep it. "
+                        "One day the math won't be worth it. They're patient. They can wait for that day."}],
         "default": "hold"}
 
 
@@ -320,9 +331,20 @@ def _b_deal(character):
         f"make it up. Deal?\""),
         "options": [
             {"key": "take", "label": "Take the rest", "effect": "quota_deal",
-             "params": {"species": sp, "bump": 6}, "desc": f"a beat off now — +6 {sp} quota, forever, after"},
+             "params": {"species": sp, "bump": 6}, "desc": f"a beat off now — +6 {sp} quota, forever, after",
+             "outcome": f"You take it — God, you take it, a whole beat off your feet with nothing "
+                        f"inside you — and it's heaven for exactly as long as it lasts, which is "
+                        f"not long, and then the {sp} number on your board ticks up six and stays "
+                        f"there. You bought minutes with months. You'll do it again anyway, when "
+                        f"you're tired enough, and that's the whole trick of it: they sell rest to "
+                        f"the exhausted at any interest, and the exhausted always pay."},
             {"key": "refuse", "label": "Refuse it", "effect": "submit_standing",
-             "desc": "no rest; she notes your compliance and moves on"}],
+             "desc": "no rest; she notes your compliance and moves on",
+             "outcome": "You refuse — no deals, not today. She smiles like that's the cutest thing, "
+                        "writes 'cooperative — declined incentive' (because refusing the bribe still "
+                        "reads as good behaviour on her sheet, there's no winning column), and the "
+                        "line takes you straight back without the rest you could've had. Principle "
+                        "is expensive in here. They make very sure of that."}],
         "default": "take"}
 
 
@@ -340,7 +362,13 @@ def _b_hole(character):
         return None
     opts = [{"key": z, "label": f"Offer your {z.split('/')[-1].replace('_', ' ')}",
              "effect": "pick_hole", "params": {"zone": z},
-             "desc": "the one you pick gets used — and trained for the choosing"} for z in holes]
+             "desc": "the one you pick gets used — and trained for the choosing",
+             "outcome": f"You point them at your {z.split('/')[-1].replace('_', ' ')} — pick your own "
+                        f"poison — and they take you at your word, working it open and using it while "
+                        f"the others wait their turn another day. You chose, and choosing is the only "
+                        f"power they let you keep precisely because spending it is just obedience "
+                        f"wearing a bow. That hole gets a little looser, a little more 'yours to offer,' "
+                        f"for the asking."} for z in holes]
     return {"key": "hole", "prompt": (
         "\"Dealer's choice,\" the handler says, gesturing down your body with bored magnanimity. "
         "\"Pick the hole. We're using one regardless — but you get to say which.\""),
@@ -355,9 +383,19 @@ def _b_slip(character):
         "one more time. It's getting harder to tell which one you want."),
         "options": [
             {"key": "let", "label": "Let yourself go small", "effect": "go_little",
-             "params": {"amount": 8.0}, "desc": "sink into little; it's easier down there, and it takes"},
+             "params": {"amount": 8.0}, "desc": "sink into little; it's easier down there, and it takes",
+             "outcome": "You stop holding on. The big heavy grown-up weight of being a person who "
+                        "knows things just... slides off, and the warm comes up over your head, and "
+                        "it's so much easier down here where the words are round and the choices "
+                        "aren't yours. You go little, and a little more of the way back up goes with "
+                        "it. Each time you let it, there's less of a you left to claw with later."},
             {"key": "fight", "label": "Claw back up", "effect": "deny_hold",
-             "params": {"cond": 3.0}, "desc": "stay big a little longer; it costs you, and you'll face this again"}],
+             "params": {"cond": 3.0}, "desc": "stay big a little longer; it costs you, and you'll face this again",
+             "outcome": "You drag yourself back up into the big, sharp, exhausting clarity of being "
+                        "someone — and it hurts, and it's lonely up here, and the place leans on you "
+                        "harder for the effort. You hold. For now. But the slipping's a current and "
+                        "you're swimming against it, and they have nothing but time, and you have to "
+                        "sleep eventually. You both know how this ends. You just chose 'not yet' again."}],
         "default": "let"}
 
 
@@ -371,15 +409,35 @@ def _b_offer(character):
         "handler says, pen poised. \"What are you good for today? Tell us. We'll oblige.\""),
         "options": [
             {"key": "bred", "label": "Offer to be bred", "effect": "facility",
-             "params": {"method": "_gang", "kind": "gang"}, "desc": "the line takes you, for real"},
+             "params": {"method": "_gang", "kind": "gang"}, "desc": "the line takes you, for real",
+             "outcome": "\"Bred, please,\" you hear yourself say, and the handler ticks it like an "
+                        "order at a counter. The stock obliges immediately — you asked, so they don't "
+                        "even pretend to make you. Offering it was just obeying with the extra step "
+                        "of wanting on the record. They love that step most."},
             {"key": "milked", "label": "Offer to be milked", "effect": "facility",
-             "params": {"method": "_do_milk", "kind": "proc"}, "desc": "drained on the spot"},
+             "params": {"method": "_do_milk", "kind": "proc"}, "desc": "drained on the spot",
+             "outcome": "You offer your tits up and the cups are on you before the sentence finishes, "
+                        "pulling you down to slack and aching while a gauge logs what your asking-for-it "
+                        "produces. Same draw either way — but you reached for the machine this time, "
+                        "and it noticed."},
             {"key": "marked", "label": "Offer to be marked", "effect": "facility",
-             "params": {"method": "_procedure", "kind": "proc"}, "desc": "a real, permanent procedure of their choosing"},
+             "params": {"method": "_procedure", "kind": "proc"}, "desc": "a real, permanent procedure of their choosing",
+             "outcome": "You offer yourself to the parlour's discretion — a blank cheque written on "
+                        "your own skin. They take you up on it, of course, with something permanent of "
+                        "their choosing, and you don't get to know what until it's healing. Trusting "
+                        "them to pick was the real offering. They'll spend that trust like everything else."},
             {"key": "dosed", "label": "Offer to be dosed", "effect": "facility",
-             "params": {"method": "_dose", "kind": "proc"}, "desc": "something experimental, undocumented"},
+             "params": {"method": "_dose", "kind": "proc"}, "desc": "something experimental, undocumented",
+             "outcome": "You ask for the cart. The attendant doesn't even tell you what's in the "
+                        "syringe — undocumented, the label says, effects pending — and you held your "
+                        "arm out for it anyway. Whatever it does to you over the next while, you "
+                        "volunteered for. They wrote 'compliant' and something in a column you can't read."},
             {"key": "little", "label": "Offer to be made little", "effect": "go_little",
-             "params": {"amount": 6.0}, "then": "slip", "desc": "ask for it small, and keep slipping"}],
+             "params": {"amount": 6.0}, "then": "slip", "desc": "ask for it small, and keep slipping",
+             "outcome": "You ask to be made little — in a small voice, which is already most of the "
+                        "way there. The warm comes up to meet you the second you give it permission, "
+                        "because asking IS permission, and down you go, soft and easy and already "
+                        "reaching for the next step down."}],
         "default": "bred"}
 
 
@@ -390,11 +448,25 @@ def _b_emphasis(character):
         "only because your answer doesn't change that you'll get all of it eventually."),
         "options": [
             {"key": "milk", "label": "Start at the dairy", "effect": "emphasis",
-             "params": {"which": "milk"}, "desc": "weighted toward the cups this stretch"},
+             "params": {"which": "milk"}, "desc": "weighted toward the cups this stretch",
+             "outcome": "You say the dairy, and the clerk hums approval — they do like a girl who "
+                        "knows her best use. The schedule re-weights toward the cups: more hours "
+                        "racked and drawn, more of your day spent leaking on the clock. You picked "
+                        "your own leash colour. They'd have put you there anyway, but this way you "
+                        "asked, and asking is the part they keep."},
             {"key": "breed", "label": "Start in the pens", "effect": "emphasis",
-             "params": {"which": "breed"}, "desc": "weighted toward breeding this stretch"},
+             "params": {"which": "breed"}, "desc": "weighted toward breeding this stretch",
+             "outcome": "The pens, you say. The schedule tilts toward the stalls — more mountings, "
+                        "more knots, more of your cycle spent presented and filled. You chose the "
+                        "harder use because some part of you has stopped fighting where this goes, "
+                        "and they wrote that part down the day you let it show."},
             {"key": "condition", "label": "Start in the cell", "effect": "emphasis",
-             "params": {"which": "condition"}, "desc": "weighted toward conditioning this stretch"}],
+             "params": {"which": "condition"}, "desc": "weighted toward conditioning this stretch",
+             "outcome": "You ask for the cell. The clerk's eyebrow lifts — that's the one nobody "
+                        "asks for, the dark and the drone and the slow quiet hollowing-out of "
+                        "whatever's still arguing in you. The schedule obliges. You requested your "
+                        "own unmaking, and on some level you knew exactly what you were asking for, "
+                        "and asked anyway. That's further along than you think."}],
         "default": "breed"}
 
 
@@ -516,9 +588,22 @@ def _b_bethany(character):
         "Which sounds worse to you, sweetheart? Be honest. I'll know.\""),
         "options": [
             {"key": "hers", "label": "Ask to be hers", "effect": "devote",
-             "params": {"amount": 10.0}, "desc": "warmer, crueller, kept — her favourite, bred to her line, never anonymous again"},
+             "params": {"amount": 10.0}, "desc": "warmer, crueller, kept — her favourite, bred to her line, never anonymous again",
+             "outcome": "You ask. Quietly, hating it, you ask to be hers — and her whole face lights "
+                        "up warm and genuine and terrible, and she kisses your forehead like you've "
+                        "made her day, because you have. \"Good girl. Mine, then.\" And that's so much "
+                        "worse than the line, because the line is indifferent and Bethany is not — "
+                        "she'll brand you with her own little B, breed her own line into you, keep "
+                        "a file thick with fond cruelty, and want you to be grateful, and you will be. "
+                        "That's the part she was after. You handed it to her yourself."},
             {"key": "line", "label": "Stay anonymous stock", "effect": "submit_standing",
-             "desc": "a number on the line; she smiles like she's got time, because she does"}],
+             "desc": "a number on the line; she smiles like she's got time, because she does",
+             "outcome": "You choose the line. Anonymous. A number among numbers, used and forgotten "
+                        "in rotation. Bethany just smiles, unbothered, and pats your cheek. \"Of "
+                        "course. We'll see.\" Because she has all the time in the world to let the "
+                        "line wear you down to where being *kept* by someone — anyone, even her — "
+                        "starts to look like mercy. She's not in a hurry. She's never in a hurry. "
+                        "She'll ask again when you're softer, and one day you'll say yes."}],
         "default": "hers"}
 
 
@@ -531,9 +616,25 @@ def _b_correction(character):
         "and we only offer because choosing it is half the lesson.\""),
         "options": [
             {"key": "condition", "label": "The cell", "effect": "facility",
-             "params": {"method": "_dose", "kind": "proc"}, "desc": "dosed and conditioned deeper"},
+             "params": {"method": "_dose", "kind": "proc"}, "desc": "dosed and conditioned deeper",
+             "outcome": "You pick the cell — quieter, you think, easier than the pens or the iron. "
+                        "You think wrong. They strap you into the dark, run something cold into your "
+                        "arm, and let the drone do the rest, and you come out the far side with a "
+                        "little more of your edges sanded off and no clear memory of choosing it. "
+                        "The cell is the one that takes the most and shows the least. That's why "
+                        "the frightened ones pick it."},
             {"key": "breed", "label": "The pens", "effect": "facility",
-             "params": {"method": "_gang", "kind": "gang"}, "desc": "bred until the lesson takes"},
+             "params": {"method": "_gang", "kind": "gang"}, "desc": "bred until the lesson takes",
+             "outcome": "The pens, you decide — get it over with, the honest punishment, the one you "
+                        "can see coming. They bend you over and the stock takes its turns until "
+                        "whatever you did wrong has been thoroughly fucked out of you and replaced "
+                        "with the dull, bred-stupid quiet they were after. Lesson delivered. You "
+                        "won't even remember the infraction. You'll remember the correction."},
             {"key": "mark", "label": "The parlour", "effect": "facility",
-             "params": {"method": "_procedure", "kind": "proc"}, "desc": "a permanent mark to remember it by"}],
+             "params": {"method": "_procedure", "kind": "proc"}, "desc": "a permanent mark to remember it by",
+             "outcome": "The parlour, then — let it be quick, let it be over. It is not quick, and "
+                        "it is never over: the iron or the needle or the rings go in to stay, and "
+                        "you'll carry this correction on your skin under everything you ever wear, "
+                        "long after you've forgotten what earned it. They like the permanent ones. "
+                        "A body that reads like a rap sheet saves everyone the trouble of asking."}],
         "default": "breed"}
