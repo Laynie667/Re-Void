@@ -49,7 +49,7 @@ FACILITY_FLAGS = {
     "chair_release_at": 0, "chair_struggle": 0,
     # little clauses: teat-gag + nurse-first + stuffed-mouth + star-chart
     "teat_gag_fluid": None, "nurse_first_fluid": None, "stuffed_fluid": None,
-    "star_chart": None, "facility_studs": None,
+    "star_chart": None, "facility_studs": None, "honorifics_required": None,
 
     # --- numbers -> 0 ---
     "conditioning": 0, "arousal_floor": 0, "stim_per_tick": 0, "bladder_ml": 0,

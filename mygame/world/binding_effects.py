@@ -43,6 +43,18 @@ ALL_CONSENT_FLAGS = [
     "undress", "blindfold", "gag", "tieup", "strip", "examclose",
 ]
 
+# Default address map for the honorifics clause: who present holds a claim over her, and
+# what she must call them. 'family' maps the holder's role toward her -> the token she uses.
+_DEFAULT_HONORIFICS = {
+    "owner": "Owner",
+    "lover": "love",
+    "family": {"mother": "Mommy", "dam": "Mommy", "father": "Daddy", "sire": "Daddy",
+               "parent": "Parent", "sister": "big sister", "brother": "big brother",
+               "sibling": "sib", "*": "family"},
+    "faction": "ma'am",
+}
+
+
 # ---------------------------------------------------------------------------
 # Apply / remove effects
 # ---------------------------------------------------------------------------
@@ -236,10 +248,27 @@ def apply_effects(character, item):
                 "contributor": {"current": 0, "required": int(q)}
             }
 
-    # required_honorific — she must address staff with the given honorific
+    # required_honorific — she must address staff with the given honorific. (Now actually
+    # enforced: the static path adds the gate filter, which it never did before.)
     hon = effects.get("required_honorific")
     if hon:
         character.db.required_honorific = hon
+        active = list(getattr(character.db, "active_speech_filters", None) or [])
+        if "honorific_required" not in active:
+            active.append("honorific_required")
+            character.db.active_speech_filters = active
+
+    # honorifics clause (relationship-aware address) — when someone who owns/loves/sired you
+    # (or shares your faction) is in the room, you cannot speak without addressing them right.
+    # The map is tier -> token; 'family' maps role -> token. Reads the live relationship graph.
+    hcfg = effects.get("honorifics")
+    if hcfg:
+        character.db.honorifics_required = (hcfg if isinstance(hcfg, dict)
+                                            else dict(_DEFAULT_HONORIFICS))
+        active = list(getattr(character.db, "active_speech_filters", None) or [])
+        if "honorific_required" not in active:
+            active.append("honorific_required")
+            character.db.active_speech_filters = active
 
     # compliance_threshold — defiance allowed before freedom is forfeited
     ct = effects.get("compliance_threshold")
@@ -551,6 +580,19 @@ def remove_effects(character, item):
         active = [f for f in (getattr(character.db, "active_speech_filters", None) or [])
                   if f != "heat_tell"]
         character.db.active_speech_filters = active
+
+    # Honorifics / required_honorific — clear the requirement, and drop the gate filter only
+    # if neither requirement remains (the two paths share the one filter).
+    if effects.get("honorifics"):
+        character.db.honorifics_required = None
+    if effects.get("required_honorific"):
+        character.db.required_honorific = ""
+    if effects.get("honorifics") or effects.get("required_honorific"):
+        if not (getattr(character.db, "honorifics_required", None)
+                or getattr(character.db, "required_honorific", "")):
+            active = [f for f in (getattr(character.db, "active_speech_filters", None) or [])
+                      if f != "honorific_required"]
+            character.db.active_speech_filters = active
 
 
 # ---------------------------------------------------------------------------

@@ -41,7 +41,7 @@ _NEW_FLAGS = [
     "teat_gagged", "teat_gag_until", "teat_gag_fluid",
     "nurse_first", "nursed_until", "nurse_first_fluid",
     "stuffed_mouth", "stuffed_fluid", "beg_small", "star_chart", "star_chart_on",
-    "heat_tell",
+    "heat_tell", "honorifics_required",
     # neuter / sissify
     "neutered", "sissified",
     # studs / lineage / fellow
@@ -206,10 +206,64 @@ def test_heat_tell():
     return "heat_tell: graded by real arousal, non-destructive, edge always tells, low can hide"
 
 
+def test_honorifics_address():
+    """The honorifics clause: required_address returns the right token for the strongest-claim
+    holder PRESENT, picks family role tokens, and requires nobody when the room is empty of
+    superiors (you can't fail to honour someone who isn't here)."""
+    rel = _load("rel_test", "relationships.py")
+
+    class _DB:
+        def __init__(self, **kw): self.__dict__.update(kw)
+    class _Char:
+        _n = 0
+        def __init__(self, name, **dbkw):
+            _Char._n += 1
+            self.id = _Char._n
+            self.key = name
+            self.db = _DB(rp_name=name, **dbkw)
+
+    honorifics = {"owner": "Owner", "lover": "love",
+                  "family": {"mother": "Mommy", "*": "family"}, "faction": "ma'am"}
+
+    target = _Char("Pet", relationships={})
+    room = type("_R", (), {})()
+    room.contents = [target]
+    target.db.location = room
+    # _Char has no .location attr; relationships reads getattr(target,'location'). Set it.
+    target.location = room
+
+    # No superiors present -> no requirement.
+    assert rel.required_address(target, honorifics) is None, "empty room must not require address"
+
+    # An explicit OWNER present -> must call them Owner.
+    owner = _Char("Bethany", relationships={target.id: {"owner": True}})
+    owner.location = room
+    room.contents = [target, owner]
+    req = rel.required_address(target, honorifics)
+    assert req and req[0] == "Owner" and req[1] == "Bethany", f"owner address wrong: {req}"
+
+    # Add a LOVER too — owner still wins (stronger claim).
+    lover = _Char("Vee", relationships={target.id: {"lover": True}})
+    lover.location = room
+    room.contents = [target, lover, owner]
+    assert rel.required_address(target, honorifics)[0] == "Owner", "owner must outrank lover"
+
+    # Owner leaves; lover remains -> 'love'.
+    room.contents = [target, lover]
+    assert rel.required_address(target, honorifics)[0] == "love", "lover address wrong"
+
+    # Family role token (a 'mother' present) -> 'Mommy'.
+    mom = _Char("Dam", relationships={target.id: {"family": "mother"}})
+    mom.location = room
+    room.contents = [target, mom]
+    assert rel.required_address(target, honorifics)[0] == "Mommy", "family role token wrong"
+    return "honorifics: strongest-claim present holder picks the token; empty room requires none"
+
+
 _TESTS = [
     test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
     test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
-    test_speech_filter_order, test_heat_tell,
+    test_speech_filter_order, test_heat_tell, test_honorifics_address,
 ]
 
 

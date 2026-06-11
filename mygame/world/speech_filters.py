@@ -510,16 +510,44 @@ def _filter_heat_tell(char, text: str) -> str:
     return (text or "") + random.choice(pool)
 
 
+_HONORIFIC_DENIALS = [
+    "|xThe word dies in your throat. You don't get to speak in front of {who} without the "
+    "right word in your mouth first. ({token})|n",
+    "|xYou open your mouth and nothing comes — not while {who} is in the room and you haven't "
+    "said it. Try again, properly. ({token})|n",
+    "|xYour own conditioning stops the sentence cold. Address {who} the way you've been taught, "
+    "then you may speak. ({token})|n",
+    "|x{who} is right there, and the clause won't let a single word past your lips until you've "
+    "used the correct form. ({token})|n",
+]
+
+
 def _check_honorific(char, text: str) -> tuple:
-    """Return (blocked, reason) if honorific is required but absent."""
+    """Return (blocked, reason) if a required form of address is absent.
+
+    Two layers, either can require it:
+      * relationship-derived (char.db.honorifics_required: a tier->token map) — you must
+        address whoever present holds the strongest claim over you (owner > lover > family >
+        faction). No such person in the room means no requirement.
+      * static char.db.required_honorific (explicit/legacy), always required when set.
+    Block wins; the reason names the correct form. Floor-cleared (flag + filter)."""
+    honorifics = getattr(char.db, "honorifics_required", None)
+    if honorifics:
+        try:
+            from world.relationships import required_address
+            req = required_address(char, honorifics)
+        except Exception:
+            req = None
+        if req:
+            token, who, _tier = req
+            if token.lower() not in (text or "").lower():
+                frame = random.choice(_HONORIFIC_DENIALS)
+                return True, frame.format(who=who, token=token)
+
     required = getattr(char.db, "required_honorific", "") or ""
-    if not required:
-        return False, ""
-    if required.lower() in text.lower():
-        return False, ""
-    return True, (
-        f"|xYou remember the correct form of address. ({required})|n"
-    )
+    if required and required.lower() not in (text or "").lower():
+        return True, f"|xYou remember the correct form of address. ({required})|n"
+    return False, ""
 
 
 _ECHO_SELF_FRAMES = [

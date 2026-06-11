@@ -137,6 +137,62 @@ def is_lover(viewer, target):
     return bool(_rels(viewer).get(_id(target), {}).get("lover"))
 
 
+# ── honorifics: who present holds a claim over you, and what you must call them ──
+# Strongest claim first. Hostiles are intentionally absent — you owe an enemy no honour.
+_ADDRESS_PRIORITY = ("owner", "lover", "family", "faction")
+
+
+def present_superiors(target):
+    """Characters in `target`'s room who hold a relationship tier OVER target, each paired
+    with the address-relevant tiers they hold, ordered strongest-claim first. Read-only;
+    used by the honorifics clause. Never raises — returns [] on any trouble."""
+    room = getattr(target, "location", None)
+    if not room:
+        return []
+    try:
+        from typeclasses.characters import Character
+    except Exception:
+        Character = None
+    out = []
+    for obj in (getattr(room, "contents", None) or []):
+        if obj is target:
+            continue
+        if Character is not None and not isinstance(obj, Character):
+            continue
+        try:
+            tiers = tiers_of(obj, target) & set(_ADDRESS_PRIORITY)
+        except Exception:
+            tiers = set()
+        if tiers:
+            out.append((obj, tiers))
+    out.sort(key=lambda item: min(_ADDRESS_PRIORITY.index(t) for t in item[1]))
+    return out
+
+
+def required_address(target, honorifics):
+    """Given the clause's `honorifics` map (tier -> token; 'family' may map role -> token, or a
+    plain token, with '*' as the fallback), return (token, holder_name, tier) for the
+    highest-priority relationship-holder present over `target`, else None. No superior in the
+    room = no requirement: you can't fail to honour someone who isn't here to hear it."""
+    if not honorifics:
+        return None
+    for holder, tiers in present_superiors(target):
+        for tier in _ADDRESS_PRIORITY:
+            if tier not in tiers:
+                continue
+            if tier == "family":
+                fam = honorifics.get("family")
+                if isinstance(fam, dict):
+                    token = fam.get(role_toward(holder, target)) or fam.get("*")
+                else:
+                    token = fam
+            else:
+                token = honorifics.get(tier)
+            if token:
+                return token, _name(holder), tier
+    return None
+
+
 # Relationship-tier keywords that can stand in for a person in consent overrides.
 # ('all' is intentionally NOT here — the global consent flag already means "everyone".)
 TIER_KEYWORDS = ("owner", "lover", "family", "faction", "hostile")

@@ -285,6 +285,17 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
     `award_star` hooked into Bethany's climax (seat=3/throat=1), the rocking-horse breeding
     deposit + knot-lock. `stars` command (`commands/facility_commands.py`) views + spends
     (RELIEF_COST=4 → a granted climax).
+  - **honorifics** (relationship-aware address) — sets `honorifics_required` (a tier->token
+    map; `family` maps the holder's role -> token) + adds the `honorific_required` gate filter.
+    When someone who **owns / loves / sired / shares a faction with** her is PRESENT in the
+    room, `_check_honorific` (in speech_filters) blocks every utterance that omits the correct
+    form of address for the strongest-claim holder there (owner > lover > family > faction);
+    empty room = no requirement. Reads the LIVE relationship graph via `relationships.
+    required_address` / `present_superiors` — so it hooks the relationship tiers + the consent
+    spine into speech for real. (Also REVIVED the long-dead static `required_honorific` effect,
+    which set the attr but never added the filter, so it never actually gated anything.)
+    `honorifics_required` flag in FACILITY_FLAGS (floor clears flag + filter). Default map
+    `_DEFAULT_HONORIFICS` (Owner / love / Mommy·Daddy·… / ma'am). Acquirable via CYOA `clause`.
   - **heat_tell** (the Honest Body) — sets `heat_tell` + adds the `heat_tell` speech filter
     (sorts last in the pipeline, so it APPENDS to whatever the other filters produced). Every
     line she speaks drags an involuntary arousal-tell out with it, graded off her REAL
@@ -403,8 +414,8 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   real (devote/submit/deny_hold/pick_hole) with outcome beats.
 - **`clause` node + effect**: produces a real hidden-clause addendum — `clause` effect installs it
   through the SAME `apply_effects` path the contract uses (teat_gag/nurse_first/stuffed_mouth/
-  beg_small/star_chart/**heat_tell**), so it genuinely takes hold; refusing routes through auto-
-  consent (binds anyway) and chains into `correction`. The clause taking hold is narrated.
+  beg_small/star_chart/**heat_tell**/**honorifics**), so it genuinely takes hold; refusing routes
+  through auto-consent (binds anyway) and chains into `correction`. The clause taking hold is narrated.
 - **Inspection-day chain** (`inspection → inspection_gauge → inspection_grade`): gated to the
   signed (builder returns None otherwise). The stand (walk up = compliance vs balk = real `punish`)
   → the gauge (relax vs clench — both `pick_hole`/record_use on her REAL first hole; clench reads
