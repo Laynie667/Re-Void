@@ -262,6 +262,266 @@ def build_post_office(caller):
              "You put it back exactly as you found it. Some pending things are doing fine "
              "as they are.")
 
+    # 5. The siblings' private pocket rooms (off the hall / the quiet room).
+    try:
+        _build_pockets(office, hall, quiet, report)
+    except Exception as e:
+        caller.msg(f"|rPocket-room build issue: {e}|n")
+
     caller.msg("|gPost office staffed and expanded:|n " + (", ".join(report) or "nothing new "
                "(already complete)") + "|n\n|x  (look seraphine/calix/vesper · behind the "
-               "counter · the heavy curtain · read the cage/drawer/kit/tray)|n")
+               "counter · the heavy curtain · the mirror / strong door / fold in the corner · "
+               "read the cage/drawer/kit/tray/toyboxes · |wclerk|x at the counter to talk)|n")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PART TWO — the siblings' pocket rooms, their toyboxes, and the counter menu
+# (CYOA-driven: no say-triggers; `counter` opens the menu, choose <n> drives it)
+# ═══════════════════════════════════════════════════════════════════════════
+
+_SERA_ROOM_DESC = (
+    "Behind the Quiet Room's standing mirror — which swings like a door if you know to push "
+    "the left edge, and Seraphine always somehow already knows you know — is her parlour-"
+    "within-the-parlour. It is exactly what you'd expect and worse: deep cushions in sin "
+    "colours, a daybed with restraint points disguised as upholstery buttons, shelves of "
+    "keepsakes each tagged in her looping hand with a name and a date and, occasionally, a "
+    "small heart. The air smells of her — warm wax, clove, something underneath that makes "
+    "you want to confess. A teapot steams perpetually for guests who stopped being able to "
+    "leave promptly and then stopped wanting to. The mirror, from this side, is a window."
+)
+_SERA_ROOM_AMBIENT = [
+    "|xThe teapot refreshes itself with a contented little gurgle. It has opinions about "
+    "guests who don't stay for a second cup, and the cushions agree.|n",
+    "|xOne of the tagged keepsakes on the shelf — a collar? a garter? it's dark in that "
+    "corner, deliberately — turns very slightly toward you, like a sunflower.|n",
+    "|xThrough the one-way mirror, the Quiet Room sits empty and patient. Seraphine likes "
+    "to watch people decide things in there. She says the deciding is the best part.|n",
+]
+_SERA_TOYBOX_DESC = (
+    "Seraphine's toybox — a steamer trunk in oxblood leather to match the chaise, brass-"
+    "cornered, unlocked (her confidence again). The tray on top is the public layer: silk "
+    "rope coiled in perfect figure-eights, a feather she calls 'the negotiator', wax in "
+    "votive rows by melting point, each labelled with a name of someone who 'sat for' that "
+    "shade. Beneath the tray, the second layer: the harness with the post-office stamp on "
+    "the saddle (|x'official business'|n, the tag insists), a blindfold of letter-paper "
+    "('so they can feel themselves being read'), and a worn deck of delivery slips repurposed "
+    "as a punishment lottery — REDIRECTED, POSTAGE DUE, HANDLE WITH CARE, OPENED BY MISTAKE, "
+    "each with a forfeit on the back in red ink that gets steadily less postal. At the very "
+    "bottom, wrapped in tissue: a tiny knitted tail. A note pinned to it: |xVesper's first "
+    "try. They threw it at me. I keep everything. — S.|n"
+)
+_SERA_SECRET_DESC = (
+    "A hatbox of letters the siblings wrote each other and never sent — Seraphine keeps "
+    "them, of course she does. Calix's, draftsman-neat: |x'You laugh too loudly at my "
+    "expense at the counter. (Do not stop.)'|n Vesper's, in careful anonymous print: "
+    "|x'S — if I ever do fill in the form, you are not allowed to throw a party. A small "
+    "dinner. Maybe. — V.'|n And one of her own, addressed to both, sealed with the HERS "
+    "die, marked: |xfor when one of us finally falls in love with a customer and has to be "
+    "laughed at properly. (I assume it will be Calix.) (It will be Calix.)|n"
+)
+
+_CALIX_ROOM_DESC = (
+    "The strong door off the Sorting Hall opens on Calix's keeping-room, and it is the "
+    "tidiest erotic space in the known world. Everything racked, everything squared: "
+    "restraints graded by width on brass pegs, gags arranged by *silence achieved* (the "
+    "labels are measured in decibels), a single immaculate bench with its wear patterns "
+    "sanded and re-oiled until they read as design. One wall is a postal sorting-grid "
+    "repurposed: each pigeonhole holds one item and one card in his capitals — 3RD BELL "
+    "TUESDAY. THE QUIET ONE. ASKED TWICE, ANSWERED ONCE. He files his memories the way he "
+    "files everything: precisely, privately, and with no system anyone else can read, which "
+    "is the entire point. It smells of saddle soap and patience."
+)
+_CALIX_ROOM_AMBIENT = [
+    "|xA strap on the third peg is fractionally crooked. You could swear it wasn't a moment "
+    "ago. Somewhere, Calix's shoulders itch.|n",
+    "|xThe bench creaks once, settling — a precise, load-bearing creak, like a man clearing "
+    "his throat before saying something important and then not saying it.|n",
+    "|xOne pigeonhole card reads, simply, |wSTAYED.|x No item in that slot. The emptiness is "
+    "the keepsake.|n",
+]
+_CALIX_TOYBOX_DESC = (
+    "Calix's toybox is a footlocker that opens in total silence — he oils the hinges weekly, "
+    "which tells you everything about how it gets used. Contents racked in fitted felt: a "
+    "wax kit twin to the one in the Quiet Room but with one extra die, un-labelled, its face "
+    "worn too smooth to read by eye (touch suggests a name; touching it feels like being "
+    "caught at something); cord in postal twine-weights from 'parcel' to 'confession'; and a "
+    "small brass counting-frame, beads worn bright, with a card: |xfor counting. she knows "
+    "what.|n Under the felt, flat and face-down, one framed delivery receipt — signature "
+    "line signed twice, the second time steadier. He keeps the proof that someone, once, "
+    "needed two tries to consent and made the second one *certain*. It is the most Calix "
+    "object that has ever existed."
+)
+_CALIX_SECRET_DESC = (
+    "Wedged behind the rack, a single page in Seraphine's hand that Calix has confiscated "
+    "but — note — not destroyed: |x'TO THE STAFF NOTICEBOARD: be advised that our Calix "
+    "re-sands the consultation bench after certain appointments and re-oils it after one (1) "
+    "appointment in particular, recurring, and has done for two years, and thinks none of us "
+    "have noticed the pattern in the calendar. We have noticed the pattern in the calendar. "
+    "— with love, the management (S.)'|n On the back, in Calix's capitals, one word, pressed "
+    "so hard it's nearly through the paper: |wDON'T.|n He kept her note. He kept his answer "
+    "to it. He filed both. That's the whole man, right there."
+)
+
+# ── Vesper's nest ─────────────────────────────────────────────────────────────
+_VESPER_ROOM_DESC = (
+    "There is no door to Vesper's room. There is a fold in the Sorting Hall's far corner — a "
+    "place the pigeonholes don't quite meet the wall — and if you've been let in, you've "
+    "always been able to find it, and if you haven't, there was never a corner there at all. "
+    "Inside: a burrow. Soft past reason — nested blankets, lamplight the colour of held "
+    "breath, no hard edges anywhere, the safest-feeling room in the building. The walls are "
+    "hung with mirrors, every one of them draped — except the tall one by the nest, which is "
+    "undraped only in here, only when they're alone, because this is the one place Vesper "
+    "tries things on and lets themself look. The toybox sits at the foot of the nest like a "
+    "patient pet. The air doesn't smell of anything. That's deliberate too. They like to be "
+    "the one thing in a room with no declared nature, and here, finally, nobody's asking."
+)
+_VESPER_ROOM_AMBIENT = [
+    "|xThe undraped mirror shows you, then — for the length of a blink, with no malice in it — "
+    "shows you slightly *more* you than you are, the way Vesper must practise seeing.|n",
+    "|xA blanket rearranges itself into a slightly more enclosing shape around wherever you've "
+    "settled. The nest takes care of its guests. It doesn't ask first.|n",
+    "|xSomething in the toybox shifts with a soft articulate clack, like a thing turning over "
+    "in its sleep, trying on a dream of being held.|n",
+]
+_VESPER_TOYBOX_DESC = (
+    "Vesper's toybox: a lacquered chest, the black of it shot through with shifting "
+    "opal like their skin, and it does not lock because what's inside doesn't believe in "
+    "staying put. The top tray is a wardrobe of *parts* — this is the secret Seraphine tells "
+    "and Vesper would die before confirming. Cocks in a graded rack from modest to "
+    "architectural, each one warm. Cunts and holes of every described and a few undescribed "
+    "kinds, soft-bodied, nested in velvet. A pair of horns that aren't theirs and a tail "
+    "that is. Things labelled only |x'a change'|n, |x'another change'|n, |x'this one was a "
+    "mistake (keep)'|n. Vesper tries them on — alone, in front of the one undraped mirror — "
+    "tries on being a thing with a fixed shape, wears it an hour, and puts it carefully back, "
+    "every time. Tucked in the lid, two cards. Seraphine's: |xtried-on is still you, sweet "
+    "thing. so is put-away. — S.|n Under it, Vesper's reply, never delivered, just kept where "
+    "she'd find it if she went looking, which she has: |xi know. thank you. stop reading my "
+    "toybox. — V.|n"
+)
+_VESPER_SECRET_DESC = (
+    "Pinned inside the nest where only a guest curled in it would see: the DECLARATION OF "
+    "NATURE form, the real one, not the office copy — and this one isn't blank. It's been "
+    "filled in and erased so many times the paper's gone soft as cloth. You can make out the "
+    "ghosts of every answer they tried and took back: a word, scrubbed out. A different word, "
+    "scrubbed out. Once, just |xyes|n, to a question that isn't printed on the form, scrubbed "
+    "out hardest of all. At the bottom, not erased, in fresh grey ink: |xleaving it open is "
+    "an answer. the open is the answer. (S. keeps trying to throw me a party about this. there "
+    "will be no party.)|n"
+)
+
+# ── Seraphine gossips (the half-tutorial, half-anecdote pool) ─────────────────
+# Each is a fond, filthy, load-bearing little story she tells across the counter. They
+# double as worldbuilding and as the warm bait of her character. Prose-only; no effect.
+_GOSSIP = [
+    ("Vesper and the toybox",
+     "Seraphine leans on the counter, delighted to have been asked. \"Oh, you want the "
+     "*good* stories.\" She lowers her voice to the register of a woman doing you a great "
+     "and slightly cruel favour. \"I once caught Vesper trying on different parts. In the "
+     "nest, thought they'd folded the corner shut behind them — they hadn't, quite. Standing "
+     "in front of that mirror they keep draped everywhere else, wearing a cock that wasn't "
+     "the one they'd worn the morning before, turning, *checking*, the way you'd check a hem. "
+     "Then a different hole, fitted soft and careful, and they made this little sound — not "
+     "arousal, sweet thing, *relief*, like setting down something heavy. It was the most "
+     "honest I've ever seen them. I backed out before they caught me. Left a card in the lid. "
+     "We've never spoken of it.\" She straightens, fond as anything. \"They put everything "
+     "back, after. They always put everything back. That's the part that gets me.\""),
+    ("Calix and the bench",
+     "\"Calix,\" she says, like the name is a sweet she's been saving. \"Our Calix re-sands "
+     "that consultation bench of his after a hard appointment — fine, sensible. But there's "
+     "*one* name in his calendar he re-oils it for. Two years running. Same little gap left in "
+     "the schedule on either side, so nobody's booked in too close. He thinks the precision "
+     "hides it. The precision is how I *found* it.\" She taps the counter. \"I wrote it up for "
+     "the noticeboard once, as a joke. He confiscated the note and kept it. Wrote DON'T on the "
+     "back and kept *that*. Filed them together.\" A slow, warm smile. \"He's going to fall in "
+     "love so hard one day it'll reorganise his entire filing system, and I am going to be "
+     "*unbearable* about it.\""),
+    ("the letters they never sent",
+     "\"We write each other letters,\" Seraphine admits, \"the three of us. And never send "
+     "them — that's the whole game. You write the true thing, you seal it, you don't deliver "
+     "it, and somehow we all end up reading each other's anyway. Postal family.\" She turns a "
+     "sealed envelope over in her clever fingers. \"Calix's are one line and devastating. "
+     "Vesper's apologise for things they haven't done yet. Mine —\" the smile turns inward, "
+     "private \"— mine tend to be instructions for after I'm gone. Who gets the red ink. Who "
+     "gets *you*, if it comes to that.\" She sets the letter down. \"Don't look so alarmed, "
+     "sweet thing. I said if.\""),
+    ("how officiating actually works",
+     "\"Since you're here to learn the trade and not just to be charmed — though do both — "
+     "here's how a contract gets *officiated*.\" She counts it on her fingers, warm and brisk. "
+     "\"You draft it: |wcontract draft|n, then |wcontract clauses|n to read what's on it. "
+     "Then you bring it to one of us at the counter. Calix reads it flat — every word, no "
+     "weather in his voice, so you hear exactly what you're signing. Vesper riddles it — "
+     "finds the second meaning, the door you didn't know you left open. And me —\" she "
+     "produces the red inkwell as if from nowhere \"— I officiate by *kissing it through*. "
+     "|wofficiate|n, |wcosign|n, and it's done. My margins have a way of acquiring clauses "
+     "between the reading and the signing. Everyone's warned. Almost everyone signs anyway. "
+     "That's not me being wicked, that's just what people *want*, dressed up enough to say "
+     "yes to.\""),
+    ("why the doors don't lock",
+     "Her warmth doesn't dim, but it changes weight. \"You'll notice the Quiet Room's got no "
+     "lock. None of the rooms that *matter* do. People assume it's an oversight, or charm.\" "
+     "She holds your eye, and for once there's no performance in it. \"It's the floor, sweet "
+     "thing. I will write you into the most binding, breathless, can't-look-away arrangement "
+     "this office has ever sealed — and the door will be unlocked the whole time, and you "
+     "could walk, and we both know you won't, and *that's* the thing I actually collect. Not "
+     "people who can't leave. People who can and stay.\" Then the brightness floods back in. "
+     "\"Anyway! Stamps are two coppers. Do you want to hear about Vesper's toybox?\""),
+    ("the bakery watcher",
+     "\"Down in the Dead Letter Cage,\" she says, conspiratorial, \"there's a letter — open "
+     "curtains, on purpose, *yes you, from the bakery*. Came in unsigned years ago. Properly "
+     "filthy. We could've binned it.\" She shrugs, pleased. \"Instead Calix re-files it every "
+     "season so it stays ripe, and twice a year the baker comes in 'about a parcel' and "
+     "stands very close to that cage and reads through the bars and leaves pink to the ears "
+     "and buys a stamp they never use.\" A delighted little exhale. \"We are not, strictly, a "
+     "post office. We are a place where the things people can't say get to *keep existing* "
+     "until they can. The mail is mostly a pretext. You'll see.\""),
+]
+
+
+def _build_pockets(office, hall, quiet, report):
+    """Dig the three siblings' pocket rooms off the public spaces + place their fixtures.
+    Idempotent: re-running won't duplicate rooms, exits, or fixtures. No gating (§0):
+    these are private, but the way in and the way out are always open."""
+
+    def _dig(anchor, key, desc, ambient, in_key, in_aliases, out_key, out_aliases):
+        room = next((e.destination for e in anchor.exits
+                     if e.destination and key.lower() in (e.destination.key or "").lower()), None)
+        if not room:
+            room = _tag(create.create_object("typeclasses.rooms.Room", key=key))
+            room.db.desc = desc
+            room.db.ambient_msgs = list(ambient)
+            create.create_object("typeclasses.exits.Exit", key=in_key, aliases=in_aliases,
+                                 location=anchor, destination=room)
+            create.create_object("typeclasses.exits.Exit", key=out_key, aliases=out_aliases,
+                                 location=room, destination=anchor)
+            report.append(f"{key} (+exits)")
+        return room
+
+    # Seraphine's parlour — through the standing mirror in the Quiet Room.
+    sera = _dig(quiet, "Seraphine's Parlour", _SERA_ROOM_DESC, _SERA_ROOM_AMBIENT,
+                "the standing mirror", ["mirror", "parlour", "parlor"],
+                "back through the mirror", ["mirror", "out", "quiet"])
+    _fixture("seraphine's toybox", _SERA_TOYBOX_DESC, sera,
+             "It's hers. You may look. Looking is most of what she wanted from you anyway.")
+    _fixture("the hatbox of unsent letters", _SERA_SECRET_DESC, sera,
+             "The hatbox stays. The letters were never going anywhere — that's the point of them.")
+
+    # Calix's keeping-room — through the strong door off the Sorting Hall.
+    calix = _dig(hall, "Calix's Keeping-Room", _CALIX_ROOM_DESC, _CALIX_ROOM_AMBIENT,
+                 "the strong door", ["door", "keeping-room", "keeping room", "calix"],
+                 "the strong door", ["door", "out", "hall", "sorting"])
+    _fixture("calix's toybox", _CALIX_TOYBOX_DESC, calix,
+             "He oiled the hinges so it would open in silence, not so it would leave with you.")
+    _fixture("the confiscated note", _CALIX_SECRET_DESC, calix,
+             "He confiscated it once already. He's not letting it walk now.")
+
+    # Vesper's nest — through the fold in the Sorting Hall's corner.
+    vesper = _dig(hall, "Vesper's Nest", _VESPER_ROOM_DESC, _VESPER_ROOM_AMBIENT,
+                  "the fold in the corner", ["fold", "corner", "nest", "vesper"],
+                  "out of the fold", ["fold", "out", "hall", "sorting"])
+    _fixture("vesper's toybox", _VESPER_TOYBOX_DESC, vesper,
+             "Tried-on is still you. So is put-away. So is leaving it where it lives.")
+    _fixture("the declaration form", _VESPER_SECRET_DESC, vesper,
+             "Leaving it open is an answer. You leave it open.")
+
+    return sera, calix, vesper
+

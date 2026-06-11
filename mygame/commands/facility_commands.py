@@ -1548,6 +1548,53 @@ class CmdOffer(Command):
 ALL_FACILITY_VERBS.append(CmdOffer)
 
 
+class CmdClerk(Command):
+    """
+    Talk to whoever's working the Postal Office counter.
+
+    Usage:
+        clerk
+        counter
+
+    Opens the counter menu — half service desk (how contracts get drafted, clauses read,
+    officiated and cosigned), half Seraphine's gossip (she has been waiting all day for
+    someone to ask). Drive it with `choose <number>`. It's a conversation: nothing here
+    locks, conditions, or gates you — the door's the one with no lock.
+    """
+    key           = "clerk"
+    aliases       = ["counter", "services"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        room = getattr(caller, "location", None)
+        if not room:
+            caller.msg("|xThere's no counter here.|n")
+            return
+        # Only where the office actually is — by area tag, else by a clerk being present.
+        here = False
+        try:
+            here = bool(room.tags.get("post_office", category="area"))
+        except Exception:
+            here = False
+        if not here:
+            present = {(o.key or "").lower() for o in getattr(room, "contents", [])}
+            here = bool(present & {"seraphine", "calix", "vesper"})
+        if not here:
+            caller.msg("|xThere's no counter here, and no one to work it.|n")
+            return
+        try:
+            from world.cyoa import pose_named
+        except Exception:
+            caller.msg("|xThe clerk is suddenly very busy.|n")
+            return
+        if not pose_named(caller, "clerk", room=room):
+            caller.msg("|xThe counter's unattended just now. Try again in a moment.|n")
+
+ALL_FACILITY_VERBS.append(CmdClerk)
+
+
 class CmdStars(Command):
     """
     Your gold-star chart — earned the only way that counts, and spent on relief.

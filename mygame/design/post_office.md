@@ -15,6 +15,12 @@
 | Seraphine NPC | ✅ Spawned (post_office_build) |
 | Calix NPC | ✅ Spawned (post_office_build) |
 | Vesper NPC | ✅ Spawned (post_office_build) |
+| Sorting Hall + Dead Letter Cage | ✅ Built (post_office_build) |
+| Quiet Room + drawer/wax-kit/PENDING tray | ✅ Built (post_office_build) |
+| Seraphine's Parlour (+ toybox, hatbox of unsent letters) | ✅ Built (post_office_build) |
+| Calix's Keeping-Room (+ toybox, confiscated note) | ✅ Built (post_office_build) |
+| Vesper's Nest (+ toybox, the half-erased Declaration) | ✅ Built (post_office_build) |
+| `clerk` counter menu (CYOA: tutorial + gossip) | ✅ Built (cyoa `clerk`/`clerk_gossip`, `CmdClerk`) |
 
 ---
 
@@ -122,6 +128,43 @@ Vesper into the maze economy; the rider's "door" is a ready-made plot if a resid
 the fair-copy discrepancy.
 
 ---
+
+## The siblings' pocket rooms (built — `post_office_build._build_pockets`)
+
+Three private spaces, one per clerk, dug off the public ones. Each holds a toybox
+(un-gettable readable fixture) and one "secret" fixture — the embarrassing/tender lore.
+Idempotent; tagged `post_office`/`area` for teardown. **§0:** the way in and the way out
+are always open exits — nothing here locks, gates, conditions, or traps.
+
+- **Seraphine's Parlour** — through `the standing mirror` in the Quiet Room (a one-way
+  window back onto where people decide things). Fixtures: `seraphine's toybox` (silk
+  rope, "the negotiator", name-labelled wax, a stamped harness, a punishment lottery of
+  delivery slips, and Vesper's first knitted tail at the bottom); `the hatbox of unsent
+  letters` (the three of them writing each other true things and never sending them).
+- **Calix's Keeping-Room** — through `the strong door` off the Sorting Hall. The tidiest
+  erotic space in the world; restraints graded by width, gags by decibel, a sorting-grid
+  of one-card memories (`STAYED.` with an empty slot). Fixtures: `calix's toybox` (silent
+  hinges, an un-labelled worn-smooth wax die, a counting-frame "for counting. she knows
+  what.", a twice-signed receipt); `the confiscated note` (Seraphine's noticeboard tease
+  about the re-oiled bench + his one-word answer, both filed).
+- **Vesper's Nest** — through `the fold in the corner` of the Sorting Hall (only a corner
+  if they've let you in). The one undraped mirror in the building. Fixtures: `vesper's
+  toybox` (the wardrobe of *parts* — the thing Seraphine gossips about — that they try on
+  alone and always put back, with the two cards in the lid); `the declaration form` (the
+  real DECLARATION OF NATURE, filled and erased to cloth; "the open is the answer").
+
+## The counter menu — `clerk` / `counter` (CYOA, no say-triggers)
+
+`CmdClerk` (in `ALL_FACILITY_VERBS`, available game-wide; self-gates to rooms tagged
+`post_office` or where a clerk is present) poses the `clerk` CYOA node. Drive with
+`choose <n>`. Half service-desk **tutorial** (drafting → clauses → officiate/cosign, who
+reads flat / who riddles / who kisses-it-through), half **gossip**: the `clerk_gossip`
+node picks one of six fond, filthy little stories fresh each time and loops ("tell me
+another") or returns to the menu. Pure prose — no effect, no gate (§0-safe by
+construction). The gossip pool (`post_office_build._GOSSIP`) is the requested "I once
+caught Vesper trying on different parts/holes" beat plus Calix's re-oiled bench, the
+unsent letters, how officiating works, why the doors don't lock (an in-fiction statement
+of the floor), and the bakery watcher in the Dead Letter Cage.
 
 ## BACKLOG — NPC & content layer (the engine is built; these are content on it)
 

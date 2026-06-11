@@ -1575,3 +1575,78 @@ def _b_kept_company(character):
                         f"That was the kindest thing on offer tonight, and she's the one who put "
                         f"it on the menu."}],
         "default": "yield"}
+
+
+# ── the Postal Office counter menu (no say-triggers; `clerk` opens it) ─────────
+# Half service-desk tutorial, half Seraphine's gossip. Prose-only options loop back
+# to the menu via `then`; the only non-chaining option walks you out. Floor-safe by
+# construction — nothing here locks, conditions, or gates; it's a conversation.
+@choice("clerk", root=False)
+def _b_clerk(character):
+    return {"key": "clerk", "prompt": (
+        "Seraphine props her chin on one hand and gives you her whole, dangerous attention. "
+        "\"The counter's open, sweet thing. Stamps, secrets, or paperwork — and I do mean "
+        "secrets; I have so many and I am *terrible* at keeping the ones that aren't yours. "
+        "What'll it be?\""),
+        "options": [
+            {"key": "gossip", "label": "Ask her for gossip", "then": "clerk_gossip",
+             "desc": "she has been waiting all day for someone to ask",
+             "outcome": "\"*Finally*,\" she breathes, delighted, and leans in like the counter "
+                        "just got smaller."},
+            {"key": "officiate", "label": "Ask how officiating works", "then": "clerk",
+             "desc": "the actual trade — contracts, clauses, the three of them",
+             "outcome": (
+                "\"Right — the trade.\" She counts it off, warm and brisk. \"You draft a "
+                "contract: |wcontract draft|n, then |wcontract clauses|n to see what's on it. "
+                "Bring it to the counter and one of us officiates. Calix reads it *flat* — every "
+                "word, no weather in his voice, so you hear exactly what you're agreeing to. "
+                "Vesper *riddles* it — finds the second meaning, the door you didn't know you "
+                "left ajar. And I —\" the red inkwell appears as if conjured \"— officiate by "
+                "kissing it through: |wofficiate|n, then |wcosign|n, and it's sealed. My margins "
+                "have a habit of acquiring a clause or two between the reading and the signing. "
+                "Everyone's warned. Almost everyone signs anyway.\" A wink. \"That's not wicked. "
+                "That's just want, dressed up enough to say yes to.\"")},
+            {"key": "rooms", "label": "Ask about the back rooms", "then": "clerk",
+             "desc": "where the three of them keep their private things",
+             "outcome": (
+                "Her smile sharpens, fond and proprietary. \"We each keep a place. Mine's "
+                "through the |wstanding mirror|n in the Quiet Room — push the left edge; I'll "
+                "already know you're coming. Calix has a |wstrong door|n off the Sorting Hall, "
+                "tidy enough to make you nervous. And Vesper —\" her voice goes soft \"— Vesper "
+                "has a |wfold in the corner|n back there that's only a corner if they've let "
+                "you in. Go gently in that one. And do read the toyboxes; we leave them unlocked "
+                "on purpose. The looking's half the gift.\"")},
+            {"key": "stamp", "label": "Just buy a stamp and go",
+             "desc": "two coppers; no, she won't make it weird (she will, a little)",
+             "outcome": (
+                "\"Two coppers.\" She slides a stamp across with the warmth of a woman filing "
+                "you under *will be back*. \"For when you've something to say you can't quite "
+                "say yet. We hold those, you know. Until you can.\" The smile follows you out "
+                "the whole way to the door — the one with no lock — and you feel, distinctly, "
+                "*kept track of*.")},
+        ],
+        "default": "stamp"}
+
+
+@choice("clerk_gossip", root=False)
+def _b_clerk_gossip(character):
+    """One of Seraphine's fond, filthy little stories, picked fresh each time. Loops back to
+    itself ('another') or out to the counter menu. Pure prose; no effect, no gate."""
+    try:
+        from world.post_office_build import _GOSSIP
+    except Exception:
+        _GOSSIP = []
+    if not _GOSSIP:
+        return None
+    title, story = random.choice(_GOSSIP)
+    return {"key": "clerk_gossip", "prompt": story,
+        "options": [
+            {"key": "more", "label": "Mm — tell me another", "then": "clerk_gossip",
+             "desc": "she will, gladly, until you stop her",
+             "outcome": "\"Oh, you're *fun*. Come closer, then.\""},
+            {"key": "back", "label": "Back to business", "then": "clerk",
+             "desc": "the counter, the trade, the pretext",
+             "outcome": "\"Mm. Business.\" She says the word like it's the funny one. \"Go on, "
+                        "then.\""},
+        ],
+        "default": "back"}
