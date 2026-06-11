@@ -397,6 +397,13 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   through the SAME `apply_effects` path the contract uses (teat_gag/nurse_first/stuffed_mouth/
   beg_small/star_chart), so it genuinely takes hold; refusing routes through auto-consent (binds
   anyway) and chains into `correction`. The clause taking hold is narrated.
+- **Inspection-day chain** (`inspection → inspection_gauge → inspection_grade`): gated to the
+  signed (builder returns None otherwise). The stand (walk up = compliance vs balk = real `punish`)
+  → the gauge (relax vs clench — both `pick_hole`/record_use on her REAL first hole; clench reads
+  as resistance-data) → the verdict: `grade_reveal` effect reads her ACTUAL file aloud — real
+  `processing_tier` (recorded to `facility_grade`), real `_appraise` valuation, real
+  conditioning/suggestibility/hole-use/brood figures — + conditioning for knowing her number; or
+  look away (graded anyway, carried unread — deny_hold). Specificity-is-hotter, mechanised.
 - **Punishment chain** (`punished → punish_sentence → punish_after`): a CONSEQUENCE-GATED root —
   the builder returns None (pose_random skips) unless she's earned it (defiance > 0 / quota_behind /
   freedom_forfeited). Confess (banks compliance) vs deny (real `punish`, +1 infraction) → choose the

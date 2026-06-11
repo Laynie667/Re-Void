@@ -1058,3 +1058,147 @@ def _b_punish_after(character):
                         "moment comes round again, as many times as it takes. They're not building "
                         "toward your breaking. They're building toward your *thanking*. Worse."}],
         "default": "thank"}
+
+
+# ── inspection day: called up, gauged, and graded off her REAL numbers ────────
+@effect("grade_reveal")
+def _eff_grade_reveal(character, p):
+    """The verdict, read aloud from her actual file: real processing tier, real appraisal
+    price (recorded to db.facility_grade / db.sale_price), real body stats. Nothing invented."""
+    lines = []
+    try:
+        from world.processing import processing_tier
+        lvl, name, state = processing_tier(character)
+        character.db.facility_grade = name
+        lines.append(f"|c  ▸ GRADE: |w{name}|c (tier {lvl}) — {state}|n")
+    except Exception:
+        pass
+    s = _cycle_script(character)
+    if s and hasattr(s, "_appraise"):
+        try:
+            price = s._appraise(character)
+            lines.append(f"|c  ▸ VALUATION: |w{price:,}|c — posted to the showroom ledger|n")
+        except Exception:
+            pass
+    try:
+        cond = float(getattr(character.db, "conditioning", 0) or 0)
+        sug  = float(getattr(character.db, "suggestibility", 0) or 0)
+        holes = dict(getattr(character.db, "holes", None) or {})
+        used = sum(int((v or {}).get("use", 0)) for v in holes.values())
+        counts = dict(getattr(character.db, "offspring_counts", None) or {})
+        brood = sum(int(v) for v in counts.values())
+        lines.append(f"|c  ▸ ON FILE: conditioning {cond:.0f} · suggestibility {sug:.0f} · "
+                     f"holes logged {used} use(s) · {brood} get dropped|n")
+    except Exception:
+        pass
+    if lines and getattr(character, "msg", None):
+        character.msg("\n".join(lines))
+    # Knowing her number, exactly, settles deeper than any speech.
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, 3.0, source="inspection")
+    except Exception:
+        pass
+    return "graded"
+
+
+@choice("inspection", root=True)
+def _b_inspection(character):
+    """Inspection day — only for the signed; the stand, the gauge, the grade."""
+    if not (getattr(character.db, "facility_signed", False)
+            or getattr(character.db, "facility_active", False)):
+        return None
+    return {"key": "inspection", "prompt": (
+        "The tannoy says your number twice, flat and bored, and the floor traffic parts around "
+        "you the way it parts around anything that's about to be processed. Inspection day. The "
+        "stand is waiting under the strip lights — raised, ringed with rails for holding onto or "
+        "being held onto, a drain in the floor beneath it that says everything about how thorough "
+        "these get. The inspector snaps a fresh glove. \"Number called is number examined,\" she "
+        "says. \"Walk up, or be walked up. The form has a box for either.\""),
+        "options": [
+            {"key": "walk", "label": "Walk yourself up", "effect": "submit_standing",
+             "then": "inspection_gauge",
+             "desc": "mount the stand on your own feet — composure is a grade criterion, and they grade it",
+             "outcome": "You walk yourself up — feet on the painted marks, hands on the rails, "
+                        "naked under strip light in front of a floor that doesn't pause its work "
+                        "to watch you climb. The inspector ticks PRESENTED UNASSISTED, and the tick "
+                        "is approving, and the approval lands in the place they've been hollowing "
+                        "out for it. You're learning to mount your own examination stand gracefully. "
+                        "That's a sentence about you now."},
+            {"key": "balk", "label": "Make them fetch you", "effect": "punish",
+             "params": {"reason": "balked at inspection", "severity": 1}, "then": "inspection_gauge",
+             "desc": "they fetch; it's logged; the inspection happens regardless, minus the dignity",
+             "outcome": "You stand where you are, and two attendants collect you with the practised "
+                        "boredom of baggage handlers — one elbow each, feet barely touching, set on "
+                        "the stand like luggage on a scale. FETCHED, the form notes, and the "
+                        "infraction beside it. The examination proceeds identically. The only thing "
+                        "your balking bought was being carried to it, and everyone on the floor "
+                        "saw both versions of you in the same minute."}],
+        "default": "walk"}
+
+
+@choice("inspection_gauge")
+def _b_inspection_gauge(character):
+    """Step 2: the gauge — every hole measured, give and depth logged for real."""
+    s = _cycle_script(character)
+    zone = None
+    if s:
+        try:
+            hs = s._holes_only(character)
+            zone = hs[0] if hs else None
+        except Exception:
+            zone = None
+    znice = (zone or "cunt").split("/")[-1].replace("_", " ")
+    return {"key": "inspection_gauge", "prompt": (
+        f"The gauging. Cold steel, calibrated, unhurried — the inspector works the instrument "
+        f"into your {znice} to the first stop and reads the dial like a tyre pressure, narrating "
+        f"give and depth and training-take to a recorder that doesn't care how you sound around "
+        f"it. \"Relax onto it,\" she advises, professionally kind. \"It measures either way. "
+        f"Clenching just means it measures *more*.\""),
+        "options": [
+            {"key": "relax", "label": "Relax onto the gauge", "effect": "pick_hole",
+             "params": {"zone": zone or "cunt"}, "then": "inspection_grade",
+             "desc": "breathe out and take the instrument; the reading is clean and so is the form",
+             "outcome": "You breathe out and let the steel have its answer, and your body — traitor, "
+                        "trained — accommodates it with an ease that goes on the form in red: TAKES "
+                        "INSTRUMENT WITHOUT RESISTANCE. The dial settles, the numbers are read aloud "
+                        "to the recorder in the same tone you'd read a gas meter, and the worst part "
+                        "is the little flush of pride when the inspector murmurs 'good' at a reading "
+                        "you can't even see."},
+            {"key": "clench", "label": "Clench against it", "effect": "pick_hole",
+             "params": {"zone": zone or "cunt"}, "then": "inspection_grade",
+             "desc": "fight the steel — it measures more, works deeper, and notes the resistance as data",
+             "outcome": "You clench, and the instrument simply... continues, geared for exactly "
+                        "this, opening you against your own grip while the dial logs the fight as "
+                        "another datum: RESISTANCE — TRAINING INDICATED. It takes longer. It goes "
+                        "deeper, because thoroughness is the penalty. By the end your defiance is "
+                        "a number too, and the number is small, and they make sure you hear it.\""}],
+        "default": "relax"}
+
+
+@choice("inspection_grade")
+def _b_inspection_grade(character):
+    """Step 3: the verdict — REAL grade, REAL valuation, read from her actual file."""
+    return {"key": "inspection_grade", "prompt": (
+        "Done. The glove comes off with a snap and the inspector consolidates your file — yield, "
+        "give, take, temperament, brood — into the box at the bottom of the form where the grade "
+        "goes. Her pen hovers. \"Some of them want it read out,\" she says, not looking up. "
+        "\"Some of them would rather not know what they're worth. We accommodate both. The grade "
+        "goes on you regardless — it's only the *knowing* that's optional.\""),
+        "options": [
+            {"key": "hear", "label": "\"Read it to me.\"", "effect": "grade_reveal",
+             "desc": "hear your grade, your valuation, your file — the real numbers, all of them",
+             "outcome": "She reads it to you — all of it, flat and exact, your whole self "
+                        "consolidated into a tier and a price and a row of figures — and the "
+                        "numbers go into you the way the gauge did: cold, calibrated, and "
+                        "irreversibly *known*. You asked. You'll think about why you asked, later, "
+                        "in the cell, where thinking goes to be reorganised."},
+            {"key": "refuse", "label": "Look away", "effect": "deny_hold",
+             "params": {"cond": 3.0},
+             "desc": "graded anyway, filed anyway — you just carry it unread, which they also like",
+             "outcome": "You look away while she writes it, and she almost smiles — they like this "
+                        "version too, maybe better: a thing that knows it's been priced and can't "
+                        "bring itself to look. The grade goes on your file and your file goes in "
+                        "the drawer, and now there's a number on you that everyone in the building "
+                        "can read except you. You'll feel them reading it for days."}],
+        "default": "hear"}
