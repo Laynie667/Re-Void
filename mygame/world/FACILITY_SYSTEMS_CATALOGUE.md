@@ -294,8 +294,12 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
     required_address` / `present_superiors` — so it hooks the relationship tiers + the consent
     spine into speech for real. (Also REVIVED the long-dead static `required_honorific` effect,
     which set the attr but never added the filter, so it never actually gated anything.)
-    `honorifics_required` flag in FACILITY_FLAGS (floor clears flag + filter). Default map
-    `_DEFAULT_HONORIFICS` (Owner / love / Mommy·Daddy·… / ma'am). Acquirable via CYOA `clause`.
+    **Escalation (conditioning loop):** the first missed address in a 90s window is forgiven
+    (just the block); a SECOND miss reads as defiance — logged + punished for real via
+    `compliance.register_defiance` (docility may swallow it; counts toward forfeiture). Tally in
+    `honorific_miss_count`/`honorific_miss_at`. `honorifics_required` + the tally flags all in
+    FACILITY_FLAGS (floor clears flag + filter + tally). Default map `_DEFAULT_HONORIFICS`
+    (Owner / love / Mommy·Daddy·… / ma'am). Acquirable via CYOA `clause`.
   - **heat_tell** (the Honest Body) — sets `heat_tell` + adds the `heat_tell` speech filter
     (sorts last in the pipeline, so it APPENDS to whatever the other filters produced). Every
     line she speaks drags an involuntary arousal-tell out with it, graded off her REAL

@@ -522,6 +522,37 @@ _HONORIFIC_DENIALS = [
 ]
 
 
+# A second missed address inside this window stops being a fumble and starts being defiance.
+_HONORIFIC_WINDOW_S = 90.0
+
+
+def _honorific_escalate(char, who):
+    """Track repeated silence in front of a superior. The first fumble in a window is forgiven
+    (just the block); a SECOND miss reads as defiance and is logged + punished for real via
+    compliance.register_defiance (docility may swallow it; the §0 floor clears the tally and
+    the punishment flags). Returns an extra line to append to the block reason, or ''."""
+    import time as _t
+    now = _t.time()
+    last = float(getattr(char.db, "honorific_miss_at", 0) or 0)
+    count = int(getattr(char.db, "honorific_miss_count", 0) or 0)
+    if now - last > _HONORIFIC_WINDOW_S:
+        count = 0
+    count += 1
+    char.db.honorific_miss_at = now
+    if count >= 2:
+        char.db.honorific_miss_count = 0
+        try:
+            from world.compliance import register_defiance
+            register_defiance(char, amount=1,
+                              reason=(f"silence in front of {who}" if who else "wrong form of address"))
+        except Exception:
+            pass
+        return ("\n|R  Twice now. The clause stops treating that as a fumble and starts treating "
+                "it as defiance — and defiance gets logged, and answered.|n")
+    char.db.honorific_miss_count = count
+    return ""
+
+
 def _check_honorific(char, text: str) -> tuple:
     """Return (blocked, reason) if a required form of address is absent.
 
@@ -530,7 +561,10 @@ def _check_honorific(char, text: str) -> tuple:
         address whoever present holds the strongest claim over you (owner > lover > family >
         faction). No such person in the room means no requirement.
       * static char.db.required_honorific (explicit/legacy), always required when set.
-    Block wins; the reason names the correct form. Floor-cleared (flag + filter)."""
+    Block wins; the reason names the correct form. A repeated miss escalates to logged defiance
+    (see _honorific_escalate). Floor-cleared (flag + filter + the miss tally)."""
+    lower = (text or "").lower()
+
     honorifics = getattr(char.db, "honorifics_required", None)
     if honorifics:
         try:
@@ -540,13 +574,15 @@ def _check_honorific(char, text: str) -> tuple:
             req = None
         if req:
             token, who, _tier = req
-            if token.lower() not in (text or "").lower():
-                frame = random.choice(_HONORIFIC_DENIALS)
-                return True, frame.format(who=who, token=token)
+            if token.lower() not in lower:
+                frame = random.choice(_HONORIFIC_DENIALS).format(who=who, token=token)
+                return True, frame + _honorific_escalate(char, who)
 
     required = getattr(char.db, "required_honorific", "") or ""
-    if required and required.lower() not in (text or "").lower():
-        return True, f"|xYou remember the correct form of address. ({required})|n"
+    if required and required.lower() not in lower:
+        reason = f"|xYou remember the correct form of address. ({required})|n"
+        return True, reason + _honorific_escalate(char, "")
+
     return False, ""
 
 

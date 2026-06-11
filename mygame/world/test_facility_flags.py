@@ -41,7 +41,7 @@ _NEW_FLAGS = [
     "teat_gagged", "teat_gag_until", "teat_gag_fluid",
     "nurse_first", "nursed_until", "nurse_first_fluid",
     "stuffed_mouth", "stuffed_fluid", "beg_small", "star_chart", "star_chart_on",
-    "heat_tell", "honorifics_required",
+    "heat_tell", "honorifics_required", "honorific_miss_count", "honorific_miss_at",
     # neuter / sissify
     "neutered", "sissified",
     # studs / lineage / fellow
@@ -260,10 +260,48 @@ def test_honorifics_address():
     return "honorifics: strongest-claim present holder picks the token; empty room requires none"
 
 
+def test_honorific_escalation():
+    """Missed address: first fumble in the window is forgiven (no defiance), the second reads
+    as defiance and calls compliance.register_defiance; the window resets a stale tally."""
+    import sys, types, time
+    # Stub world.compliance so register_defiance is observable without the Evennia runtime.
+    calls = []
+    fake_pkg = types.ModuleType("world")
+    fake_comp = types.ModuleType("world.compliance")
+    fake_comp.register_defiance = lambda c, amount=1, reason="": calls.append((amount, reason))
+    sys.modules.setdefault("world", fake_pkg)
+    sys.modules["world.compliance"] = fake_comp
+
+    sf = _load("speech_test_esc", "speech_filters.py")
+
+    class _DB:
+        def __init__(self, **kw): self.__dict__.update(kw)
+    class _Char:
+        def __init__(self): self.db = _DB(honorific_miss_count=0, honorific_miss_at=0)
+
+    c = _Char()
+    # First miss: forgiven — no defiance, tally now 1.
+    note1 = sf._honorific_escalate(c, "Bethany")
+    assert note1 == "" and not calls, "first miss should be forgiven"
+    assert c.db.honorific_miss_count == 1, "first miss should leave tally at 1"
+    # Second miss in-window: defiance logged, tally reset.
+    note2 = sf._honorific_escalate(c, "Bethany")
+    assert note2 and len(calls) == 1, "second miss should log defiance"
+    assert "Bethany" in calls[0][1], "defiance reason should name the superior"
+    assert c.db.honorific_miss_count == 0, "tally should reset after escalation"
+    # A stale miss (outside the window) resets rather than escalating.
+    sf._honorific_escalate(c, "Bethany")            # tally -> 1
+    c.db.honorific_miss_at = time.time() - (sf._HONORIFIC_WINDOW_S + 10)
+    note3 = sf._honorific_escalate(c, "Bethany")    # stale -> treated as a fresh first miss
+    assert note3 == "" and len(calls) == 1, "stale tally must reset, not escalate"
+    return "honorific escalation: 1st forgiven, 2nd-in-window logs defiance, stale tally resets"
+
+
 _TESTS = [
     test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
     test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
     test_speech_filter_order, test_heat_tell, test_honorifics_address,
+    test_honorific_escalation,
 ]
 
 
