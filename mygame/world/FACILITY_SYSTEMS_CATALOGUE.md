@@ -385,9 +385,14 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
 - **Data-driven choice graph**: `@choice(id, root=)` builder registry (`_BUILDERS`/`_ROOTS`);
   `pose_named(char, id)` / `pose_random(char)` (cycle auto-poser, skips N/A builders). Options can
   **chain** via `then=<builder_id>` (resolve_choice poses the next node). Builders: beg / deal /
-  hole (built from her real orifices) / slip / emphasis / **intake** (multi-step → chains to
-  emphasis) / **correction** (root), + `offer` & **bethany** (reachable). `devote` effect routes
-  the Bethany owner-arc bump through the cycle's `_devote`.
+  hole (built from her real orifices) / slip / emphasis / **correction** (root), + `offer` &
+  **bethany** (reachable). `devote` effect routes the Bethany owner-arc bump through `_devote`.
+- **Option `outcome` prose**: each option can carry an `outcome` — a crude, in-voice beat shown
+  privately on resolution (what the choice just did to you), separate from the mechanical effect.
+- **Signature intake chain**: `intake → intake_strip → intake_first → emphasis` — a full
+  multi-step opening (sign the contract → stripped/weighed/holes-inventoried inspection → first
+  use before you've finished being a person → how you're spent), expansive and crude, every step
+  real (devote/submit/deny_hold/pick_hole) with outcome beats.
 - **Facility spine**: `@effect("facility")` finds the running cycle script and calls a real method
   (`_gang`/`_do_milk`/`_procedure`/`_dose`/scene), so the facility's content is reachable AS choices.
   Other effects: emphasis (biases `_choose_destination`), grant_relief, deny_hold, quota_deal,

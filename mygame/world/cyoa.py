@@ -83,6 +83,11 @@ def resolve_choice(character, selection):
         return None, ""
     character.db.pending_choice = None
     msg = run_effect(character, opt.get("effect"), opt.get("params"))
+    # Outcome prose — the crude, in-voice beat of what your choice just did to you, shown
+    # privately (it's yours to live with). Effects may also broadcast their own room messages.
+    outcome = opt.get("outcome")
+    if outcome and getattr(character, "msg", None):
+        character.msg("|y" + outcome + "|n")
     # Chain — an option may pose the next node in the branch.
     nxt = opt.get("then")
     if nxt:
@@ -409,19 +414,96 @@ def _eff_devote(character, p):
 
 @choice("intake", root=True)
 def _b_intake(character):
-    """Multi-step: the intake framing — whatever she picks chains into how she's spent."""
+    """The signature multi-step opening: contract → strip/inspection → first use → emphasis.
+    Crude, expansive, and entirely real — each step chains into the next."""
     return {"key": "intake", "prompt": (
-        "A clerk slides a form across the counter and a pen on a chain. The fine print is too "
-        "small to read and you both know you'll sign anyway. \"Just one question before we begin,\" "
-        "she says, warm as a receptionist. \"Are you here because you want to be?\""),
+        "The clerk slides a form across the counter and a pen on a chain worn shiny by a hundred "
+        "shaking hands. The fine print runs to pages you'll never read; the visible line just says "
+        "RESIDENT, and a blank for your name that won't be yours much longer. She doesn't rush you. "
+        "They never rush you — the not-rushing is how they get you to do it yourself. \"One question "
+        "before we begin, sweetheart,\" she says, bright as a receptionist booking a dental clean. "
+        "\"Are you here because you want to be? It changes nothing. I just like to write it down.\""),
         "options": [
             {"key": "yes", "label": "\"Yes.\" Say you want it", "effect": "devote",
-             "params": {"amount": 4.0}, "then": "emphasis",
-             "desc": "the wanting is logged, and held against you forever — then: how to start"},
-            {"key": "unsure", "label": "\"I'm not sure.\"", "effect": "deny_hold",
-             "params": {"cond": 2.0}, "then": "emphasis",
-             "desc": "unsureness is a yes that takes longer; she ticks the box anyway — then: how to start"}],
+             "params": {"amount": 4.0}, "then": "intake_strip",
+             "desc": "the wanting goes in the file, in ink, to be read back to you on your worst days",
+             "outcome": "You say it. Out loud. \"Yes.\" She writes it down without looking up, and "
+                        "the word sits in you heavier than the signature does — because the signature "
+                        "they made you give, but the wanting you brought in yourself, and you both know it."},
+            {"key": "unsure", "label": "\"I'm not sure...\"", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "then": "intake_strip",
+             "desc": "unsureness is just a yes that takes longer; she ticks the box anyway",
+             "outcome": "\"Mm. They never are, at first.\" She ticks a box that was always going to "
+                        "be ticked, slides the signed page into a folder with your number on it, and "
+                        "the not-sure curdles quietly into here-anyway while she's still smiling at you."}],
         "default": "unsure"}
+
+
+@choice("intake_strip")
+def _b_intake_strip(character):
+    """Step 2: stripped, weighed, holes inventoried — processed from person to stock."""
+    return {"key": "intake_strip", "prompt": (
+        "\"Clothes in the bin, please. You won't be needing them — Residents are kept as they'll be "
+        "kept, and that's bare.\" Two attendants don't wait for you to finish; they strip you down, "
+        "weigh you like produce, and walk you to the inspection table. Cold hands, a clipboard, a "
+        "gloved finger checking every hole you've got — measuring, noting depth and give, thumbing "
+        "your tits for yield, all of it read aloud to the room in flat clinical numbers like you're "
+        "not standing right there listening to yourself be itemised. \"Right then. How do you want to "
+        "do the inspection — easy, or do we hold you?\""),
+        "options": [
+            {"key": "present", "label": "Present yourself for it", "effect": "submit_standing",
+             "then": "intake_first",
+             "desc": "spread for the gloved hands on your own; learn early how much easier obeying is",
+             "outcome": "You do it yourself — feet apart, hands behind your head, holes offered up to "
+                        "the cold glove without being forced. The attendant nods, bored, and notes "
+                        "'cooperative' on the sheet, and the small sick relief you feel at the praise "
+                        "is the first thing they've successfully taught you. It won't be the last."},
+            {"key": "cover", "label": "Cover yourself", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "then": "intake_first",
+             "desc": "futile — they pin you and check you anyway, slower, and note the resistance",
+             "outcome": "You cover up on instinct. They sigh like you've inconvenienced a queue, pin "
+                        "your wrists, and do the whole inspection slower for it — every hole spread "
+                        "and gauged while you're held, the glove unhurried and thorough and entirely "
+                        "indifferent to the noise you make. 'Resistant,' goes the sheet. They do love a project."}],
+        "default": "present"}
+
+
+@choice("intake_first")
+def _b_intake_first(character):
+    """Step 3: the first use, before you've even been processed — to set the tone."""
+    holes = ["mouth", "cunt"]
+    s = _cycle_script(character)
+    if s:
+        try:
+            real = (s._holes_only(character) or []) + [z for z in s._orifices(character) if s._is_oral(z)]
+            if real:
+                holes = real[:2]
+        except Exception:
+            pass
+    def _zlabel(z):
+        return z.split("/")[-1].replace("_", " ")
+    return {"key": "intake_first", "prompt": (
+        "\"Last thing, then we'll get you on the line.\" A handler's already freeing himself, half-"
+        "hard and patient, because intake always ends the same way — they put something in you before "
+        "you've signed off being a person, so your very first memory of the place is being used in it. "
+        "\"Pick where it goes. First and last courtesy you'll get for a while — after this nobody asks.\""),
+        "options": [
+            {"key": holes[0], "label": f"Offer your {_zlabel(holes[0])}", "effect": "pick_hole",
+             "params": {"zone": holes[0]}, "then": "emphasis",
+             "desc": "the one you name is the one he takes — and it's logged as yours to have offered",
+             "outcome": f"You name it, and that's permission enough; he feeds himself into your "
+                        f"{_zlabel(holes[0])} slow and deep while the clerk times it on her watch, "
+                        f"and you learn the place's first real lesson — that choosing which hole is the "
+                        f"only choice they'll ever let you keep, and they only let you keep it because "
+                        f"picking is its own little surrender."},
+            {"key": "wait", "label": "\"Please — not yet.\"", "effect": "deny_hold",
+             "params": {"cond": 4.0}, "then": "emphasis",
+             "desc": "denied; he picks for you and takes it anyway, and 'not yet' goes on the file too",
+             "outcome": "\"Not yet,\" you manage. \"There's no yet, sweetheart. There's now, and there's "
+                        "later, and they're the same.\" He picks for you — the hole you'd least have "
+                        "offered — and takes it anyway, unhurried, while you're held and your own 'please' "
+                        "is read back into the record in a flat little voice. You will hear it quoted again."}],
+        "default": "wait"}
 
 
 @choice("bethany")
