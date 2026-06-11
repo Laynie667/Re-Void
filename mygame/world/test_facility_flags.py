@@ -261,14 +261,16 @@ def test_honorifics_address():
 
 
 def test_honorific_escalation():
-    """Missed address: first fumble in the window is forgiven (no defiance), the second reads
-    as defiance and calls compliance.register_defiance; the window resets a stale tally."""
+    """Missed-address ladder: 1st fumble forgiven, 2nd logs defiance (register_defiance),
+    3rd is the public lesson (make_example) and resets the ladder; a stale tally resets."""
     import sys, types, time
-    # Stub world.compliance so register_defiance is observable without the Evennia runtime.
-    calls = []
+    # Stub world.compliance so the escalation primitives are observable without Evennia.
+    defiance, examples = [], []
     fake_pkg = types.ModuleType("world")
     fake_comp = types.ModuleType("world.compliance")
-    fake_comp.register_defiance = lambda c, amount=1, reason="": calls.append((amount, reason))
+    fake_comp.register_defiance = lambda c, amount=1, reason="": defiance.append((amount, reason))
+    fake_comp.make_example = lambda c, severity=2, reason="", broadcast=True: \
+        examples.append((severity, reason, broadcast))
     sys.modules.setdefault("world", fake_pkg)
     sys.modules["world.compliance"] = fake_comp
 
@@ -280,21 +282,24 @@ def test_honorific_escalation():
         def __init__(self): self.db = _DB(honorific_miss_count=0, honorific_miss_at=0)
 
     c = _Char()
-    # First miss: forgiven — no defiance, tally now 1.
-    note1 = sf._honorific_escalate(c, "Bethany")
-    assert note1 == "" and not calls, "first miss should be forgiven"
+    # 1st miss: forgiven — nothing logged, tally now 1.
+    assert sf._honorific_escalate(c, "Bethany") == "" and not defiance and not examples
     assert c.db.honorific_miss_count == 1, "first miss should leave tally at 1"
-    # Second miss in-window: defiance logged, tally reset.
+    # 2nd miss in-window: defiance logged, tally stays at 2 (does NOT reset — the ladder climbs).
     note2 = sf._honorific_escalate(c, "Bethany")
-    assert note2 and len(calls) == 1, "second miss should log defiance"
-    assert "Bethany" in calls[0][1], "defiance reason should name the superior"
-    assert c.db.honorific_miss_count == 0, "tally should reset after escalation"
-    # A stale miss (outside the window) resets rather than escalating.
-    sf._honorific_escalate(c, "Bethany")            # tally -> 1
+    assert note2 and len(defiance) == 1 and not examples, "second miss should log defiance only"
+    assert "Bethany" in defiance[0][1] and c.db.honorific_miss_count == 2
+    # 3rd miss in-window: the public example (severity 2, broadcast), and the ladder resets.
+    note3 = sf._honorific_escalate(c, "Bethany")
+    assert note3 and len(examples) == 1, "third miss should make an example"
+    assert examples[0][0] == 2 and examples[0][2] is True and "Bethany" in examples[0][1]
+    assert c.db.honorific_miss_count == 0, "ladder should reset after the public example"
+    # A stale miss (outside the window) resets to a fresh first miss rather than escalating.
+    sf._honorific_escalate(c, "Bethany")                 # tally -> 1
     c.db.honorific_miss_at = time.time() - (sf._HONORIFIC_WINDOW_S + 10)
-    note3 = sf._honorific_escalate(c, "Bethany")    # stale -> treated as a fresh first miss
-    assert note3 == "" and len(calls) == 1, "stale tally must reset, not escalate"
-    return "honorific escalation: 1st forgiven, 2nd-in-window logs defiance, stale tally resets"
+    note4 = sf._honorific_escalate(c, "Bethany")         # stale -> fresh first miss
+    assert note4 == "" and len(defiance) == 1 and len(examples) == 1, "stale tally must reset"
+    return "honorific ladder: 1st forgiven, 2nd defiance, 3rd public example, stale resets"
 
 
 _TESTS = [

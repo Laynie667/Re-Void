@@ -521,16 +521,34 @@ _HONORIFIC_DENIALS = [
     "used the correct form. ({token})|n",
 ]
 
+# Used when more than one person who holds a claim over her is in the room — the failure has
+# witnesses, and the clause makes sure she knows it. ({who} = the strongest claim; {others} = #
+# of the rest watching.)
+_HONORIFIC_DENIALS_MULTI = [
+    "|xThe word dies in your throat — and {who} isn't the only one who heard you try to skip it. "
+    "{others} more pairs of eyes turn your way, waiting. Say it right. ({token})|n",
+    "|xNothing comes out. {who} is right there and {others} others besides, and the clause won't "
+    "let you speak in front of any of them until you've used the proper form. ({token})|n",
+    "|xYou feel the whole room notice at once. {who} and {others} more, all of them clocking the "
+    "word you left out of your mouth. Begin again, correctly. ({token})|n",
+    "|xThe sentence locks behind your teeth. With {others} watching besides {who}, the clause is "
+    "in no hurry — it'll wait as long as it takes for you to address them right. ({token})|n",
+]
+
 
 # A second missed address inside this window stops being a fumble and starts being defiance.
 _HONORIFIC_WINDOW_S = 90.0
 
 
 def _honorific_escalate(char, who):
-    """Track repeated silence in front of a superior. The first fumble in a window is forgiven
-    (just the block); a SECOND miss reads as defiance and is logged + punished for real via
-    compliance.register_defiance (docility may swallow it; the §0 floor clears the tally and
-    the punishment flags). Returns an extra line to append to the block reason, or ''."""
+    """Track repeated silence in front of a superior — a real conditioning ladder:
+      * 1st miss in the window: forgiven (just the block; she's learning).
+      * 2nd miss: reads as defiance — logged + punished via compliance.register_defiance
+        (docility may swallow it; counts toward forfeiture).
+      * 3rd+ miss: the PUBLIC lesson — compliance.make_example (severity 2, broadcast), and the
+        ladder resets so it isn't fired every line.
+    docility/floor interplay is handled by the compliance primitives. The §0 floor clears the
+    tally + punishment flags. Returns an extra line to append to the block reason, or ''."""
     import time as _t
     now = _t.time()
     last = float(getattr(char.db, "honorific_miss_at", 0) or 0)
@@ -539,12 +557,23 @@ def _honorific_escalate(char, who):
         count = 0
     count += 1
     char.db.honorific_miss_at = now
-    if count >= 2:
+    reason = (f"silence in front of {who}" if who else "wrong form of address")
+
+    if count >= 3:
+        # Terminal rung: she's made to be an example, in front of everyone present.
         char.db.honorific_miss_count = 0
         try:
+            from world.compliance import make_example
+            make_example(char, severity=2, reason=reason, broadcast=True)
+        except Exception:
+            pass
+        return ("\n|R  Three times. This stops being between you and the clause — now the whole "
+                "room learns it with you. You're made an example of.|n")
+    if count >= 2:
+        char.db.honorific_miss_count = count
+        try:
             from world.compliance import register_defiance
-            register_defiance(char, amount=1,
-                              reason=(f"silence in front of {who}" if who else "wrong form of address"))
+            register_defiance(char, amount=1, reason=reason)
         except Exception:
             pass
         return ("\n|R  Twice now. The clause stops treating that as a fumble and starts treating "
@@ -568,14 +597,17 @@ def _check_honorific(char, text: str) -> tuple:
     honorifics = getattr(char.db, "honorifics_required", None)
     if honorifics:
         try:
-            from world.relationships import required_address
+            from world.relationships import required_address, present_superiors
             req = required_address(char, honorifics)
+            others = max(0, len(present_superiors(char)) - 1)
         except Exception:
             req = None
+            others = 0
         if req:
             token, who, _tier = req
             if token.lower() not in lower:
-                frame = random.choice(_HONORIFIC_DENIALS).format(who=who, token=token)
+                pool = _HONORIFIC_DENIALS_MULTI if others >= 1 else _HONORIFIC_DENIALS
+                frame = random.choice(pool).format(who=who, token=token, others=others)
                 return True, frame + _honorific_escalate(char, who)
 
     required = getattr(char.db, "required_honorific", "") or ""
