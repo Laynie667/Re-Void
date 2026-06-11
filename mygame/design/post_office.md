@@ -23,6 +23,8 @@
 | `clerk` counter menu (CYOA: tutorial + gossip) | ✅ Built (cyoa `clerk`/`clerk_gossip`, `CmdClerk`) |
 | `services` menu (CYOA: real officiating + delivery/body-work/poste routing) | ✅ Built (cyoa `post_services`/`post_officiant`, `office_officiate` effect) |
 | Gossip pool (sibling secrets, the "tried-on holes" beat, 3 a.m. drawer) | ✅ 10 entries (`post_office_build._GOSSIP`) |
+| The Break Room (shared space: rota / keepsake shelf / under-couch basket) | ✅ Built (up the back stairs off the Sorting Hall) |
+| Poste restante — real persistent letter drop (`poste leave`/`poste read`) | ✅ Built (`CmdPoste`, `leave_poste`/`draw_poste` on the office room) |
 
 ---
 
@@ -154,6 +156,27 @@ are always open exits — nothing here locks, gates, conditions, or traps.
   toybox` (the wardrobe of *parts* — the thing Seraphine gossips about — that they try on
   alone and always put back, with the two cards in the lid); `the declaration form` (the
   real DECLARATION OF NATURE, filled and erased to cloth; "the open is the answer").
+
+## The Break Room (shared space — the heart of the place)
+
+Up the back stairs off the Sorting Hall (`back stairs` / `up`). The room the public counter
+is a performance *for*: the three off-duty, faces unheld. Fixtures (un-gettable readables):
+`the chore rota` (Calix's grid hijacked by two other pens — Vesper's quiet washing-up
+confession, Seraphine outranking the rota for Calix's birthday, the biscuit thief left to
+live with it), `the keepsake shelf` (three candid photos incl. the only surviving one of
+Vesper, "proof of life"), and `the basket under the couch` (communal, unbothered — house
+rules: ask first, tease always, Vesper owes four stories). Tagged post_office/area.
+
+## Poste restante — the Dead Letter Cage (a real, persistent drop)
+
+`CmdPoste` (`poste` / `sift`, in ALL_FACILITY_VERBS, self-gating to the office complex):
+  * `poste` — status (how many letters held) + how-to
+  * `poste leave <words>` — seal a letter into the cage (anonymous, persistent)
+  * `poste read` — draw one held letter and read it, *preferring someone else's over your own*
+Letters persist on the office room's `db.poste_letters` (one shared store across the complex),
+capped at `_POSTE_MAX` (60; oldest ripen out on overflow). Helpers `leave_poste`/`draw_poste`/
+`poste_count` in `post_office_build`. Real cross-player content: what you leave stays and
+others can find it. No gating — purely additive; the cage's third lock is decorative.
 
 ## The services menu — `clerk` → "Ask what they can do for you" (CYOA, real)
 

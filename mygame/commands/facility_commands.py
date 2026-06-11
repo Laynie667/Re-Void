@@ -1595,6 +1595,100 @@ class CmdClerk(Command):
 ALL_FACILITY_VERBS.append(CmdClerk)
 
 
+def _in_post_office(room):
+    """True if `room` is part of the Postal Office complex (by area tag, else a clerk present)."""
+    if not room:
+        return False
+    try:
+        if room.tags.get("post_office", category="area"):
+            return True
+    except Exception:
+        pass
+    present = {(o.key or "").lower() for o in getattr(room, "contents", [])}
+    return bool(present & {"seraphine", "calix", "vesper"})
+
+
+class CmdPoste(Command):
+    """
+    Poste restante — the Dead Letter Cage. Leave a thing you can't send yet; the office holds
+    it until it ripens, and lets others read the things they couldn't send either.
+
+    Usage:
+        poste                 — how many letters the cage is holding, and how this works
+        poste read            — draw one held letter and read it (someone's, ideally not yours)
+        poste leave <words>   — seal a letter into the cage (anonymous; held, real, persistent)
+
+    Nothing here locks or gates you. It's a place where the unsendable gets to keep existing.
+    """
+    key           = "poste"
+    aliases       = ["poste restante", "deadletter", "sift"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        room = getattr(caller, "location", None)
+        if not _in_post_office(room):
+            caller.msg("|xThere's no Dead Letter Cage here. You'd have to be at the Postal "
+                       "Office.|n")
+            return
+        try:
+            from world.post_office_build import _find_office, leave_poste, draw_poste, poste_count
+        except Exception:
+            caller.msg("|xThe cage is locked tonight; nobody can find the key, which is the "
+                       "usual state of the third lock.|n")
+            return
+        office = _find_office() or room
+        arg = (self.args or "").strip()
+        low = arg.lower()
+
+        if low in ("read", "sift", "draw") or self.cmdstring == "sift":
+            entry = draw_poste(office, exclude_id=getattr(caller, "id", None))
+            if not entry:
+                caller.msg("|xThe cage is empty for once — nothing ripe, nothing waiting. Leave "
+                           "the first one? (|wposte leave <words>|x)|n")
+                return
+            import time as _t
+            age = max(0, int((_t.time() - float(entry.get('at', 0) or 0)) // 86400))
+            aged = ("today" if age <= 0 else f"{age} day{'s' if age != 1 else ''} ripening")
+            caller.msg(
+                "|WYou reach through the bars and draw one out at random. It's warm — they all "
+                f"are, in here. ({aged})|n\n"
+                f"|y  \"{entry.get('text','')}\"|n\n"
+                "|xUnsigned, of course. You slide it back through the bars exactly as you found "
+                "it. It'll be there for the next person who needs to know they aren't the only "
+                "one.|n")
+            return
+
+        if low.startswith("leave"):
+            text = arg[len("leave"):].strip()
+            if not text:
+                caller.msg("|xLeave *what*, sweet thing? (|wposte leave <words>|x)|n")
+                return
+            leave_poste(office, text, author_id=getattr(caller, "id", None),
+                        author_name="Anonymous")
+            caller.msg(
+                "|WYou write it out, fold it, and feed it through the bars without an address. "
+                "It settles into the nest of the others with a small, papery, satisfied sound — "
+                "and the not-having-to-carry-it anymore is its own quiet relief.|n\n"
+                "|xSeraphine, somewhere, doesn't look up. \"We'll know when it's ready, love. So "
+                "will you.\"|n")
+            return
+
+        # No/empty arg, or anything else — the status + how-to.
+        n = poste_count(office)
+        held = ("holding nothing yet" if n == 0 else
+                f"holding |w{n}|x letter{'s' if n != 1 else ''}, all unsendable, all warm")
+        caller.msg(
+            f"|WThe Dead Letter Cage: black iron, triple-locked (the third lock's decorative), "
+            f"{held}.|n\n"
+            "|x  |wposte leave <words>|x — seal a thing you can't send yet into the cage\n"
+            "  |wposte read|x — draw one out and read what someone else couldn't send\n"
+            "  They stay. That's the promise. The mail is mostly a pretext here.|n")
+
+ALL_FACILITY_VERBS.append(CmdPoste)
+
+
 class CmdStars(Command):
     """
     Your gold-star chart — earned the only way that counts, and spent on relief.

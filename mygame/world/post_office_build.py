@@ -271,7 +271,8 @@ def build_post_office(caller):
     caller.msg("|gPost office staffed and expanded:|n " + (", ".join(report) or "nothing new "
                "(already complete)") + "|n\n|x  (look seraphine/calix/vesper · behind the "
                "counter · the heavy curtain · the mirror / strong door / fold in the corner · "
-               "read the cage/drawer/kit/tray/toyboxes · |wclerk|x at the counter to talk)|n")
+               "the back stairs to the Break Room · read the cage/drawer/kit/tray/toyboxes/rota/"
+               "shelf · |wclerk|x to talk · |wposte|x at the cage)|n")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -516,6 +517,100 @@ _GOSSIP = [
 ]
 
 
+# ── the Break Room — where the three stop being clerks ────────────────────────
+_BREAK_DESC = (
+    "Up a half-flight of back stairs behind the Sorting Hall, past a door with three coats on "
+    "it, is the Break Room — and this is the room the public counter is a performance *for*. "
+    "It's small and warm and gloriously untidy in a way no customer ever sees: a sagging couch "
+    "that has clearly hosted naps and worse, a kettle that is always thirty seconds from "
+    "boiling, three mismatched mugs (|cS|n in looping gold, |cC|n in stern block, and one with "
+    "no letter that everyone knows is Vesper's), a chore rota gone feral with marginalia. The "
+    "air is tea and candle-wax and the specific ease of people who have stopped holding their "
+    "faces a certain way. Here Seraphine's smile goes lopsided and real, Calix talks in whole "
+    "sentences, and Vesper takes up space like they're allowed to. This is the heart of the "
+    "place. They let almost no one up here. That you're standing in it means something — to "
+    "them, and now, whether you like it, to you."
+)
+_BREAK_AMBIENT = [
+    "|xThe kettle clicks toward a boil it never quite reaches, a small domestic heartbeat under "
+    "everything. Someone, ages ago, wrote |wI AM ALWAYS ALMOST READY|x on it in nail varnish.|n",
+    "|xVesper's unlettered mug sits in the exact center of its coaster. Someone keeps nudging it "
+    "off-center as they pass; it is always, somehow, centered again by the next time you look.|n",
+    "|xThe couch exhales a faint cloud of clove and old comfort when the draught from the stairs "
+    "stirs it. It has opinions about everyone who's ever fallen asleep on it. It liked them.|n",
+    "|xA burst of laughter would fit here and doesn't quite come — but the *room* remembers the "
+    "shape of it, the three of them folded together off-duty, and the memory warms the walls.|n",
+]
+_BREAK_KETTLE_DESC = (
+    "The kettle and the chore rota above it — and the rota is the real document. A grid of weeks "
+    "in Calix's draftsman hand, hijacked by two other pens. |xSERAPHINE: 'kettle duty'|n crossed "
+    "out and re-assigned to her four times, each time in her own writing, each time ignored. "
+    "Vesper's grey print in the margin: |x'i did seraphine's washing-up again. i don't mind. "
+    "don't tell her i don't mind.'|n A whole week blocked out in red with a heart and the words "
+    "|x'NOBODY WORKS. C.'s birthday. this is an order and I outrank the rota. — S.'|n And at the "
+    "bottom, in block capitals pressed hard: |xI SAW WHO ATE THE LAST OF THE GOOD BISCUITS. I AM "
+    "NOT GOING TO SAY ANYTHING. I AM GOING TO LET YOU LIVE WITH IT. — C.|n"
+)
+_BREAK_SHELF_DESC = (
+    "A shelf of shared things, the kind a family accretes without deciding to. A chipped saucer "
+    "of spare buttons and one opal cufflink nobody will claim. A tin of the good biscuits, "
+    "guarded. Three photographs propped in a row, all candid, none posed: Calix mid-laugh and "
+    "horrified about it; Seraphine asleep on the couch with a letter over her face and Vesper's "
+    "coat tucked over her; and one of all three crammed into the frame too close, taken at "
+    "arm's length, Vesper's eyes shut on the only photo of themselves they've ever allowed to "
+    "survive. A scrap tucked into the frame's edge, Seraphine's hand: |xproof of life. in case "
+    "any of us ever forgets we got to have this.|n"
+)
+_BREAK_TOYS_DESC = (
+    "Even here — *especially* here — there's a basket under the couch, because off-duty doesn't "
+    "mean chaste with these three. It's communal and unbothered: a worn paddle that's clearly "
+    "settled more than one argument, a blindfold made (of course) from a mail sack, cuffs lined "
+    "in the same felt the warm letters get, and a jar of the clove-scented oil the whole room "
+    "smells of, three-quarters gone. A label in Seraphine's hand: |xhouse rules: ask first, "
+    "tease always, and whoever finishes the oil buys the next jar AND owes a story. (Vesper "
+    "owes four stories. Vesper knows what they did.)|n"
+)
+
+
+# ── poste restante: a real, persistent letter drop in the Dead Letter Cage ────
+# Letters you can't send yet, held until they ripen. Stored on the office room so the drop is
+# one shared store no matter which post-office room you're standing in. Real and persistent:
+# what you leave stays; others can draw and read it. No gating — purely additive content.
+_POSTE_MAX = 60  # the cage is full but not infinite; the oldest ripen out when it overflows
+
+
+def _poste_store(office):
+    return list(getattr(office.db, "poste_letters", None) or [])
+
+
+def poste_count(office):
+    return len(_poste_store(office))
+
+
+def leave_poste(office, text, author_id=None, author_name=None):
+    """Drop a sealed letter into the cage. Anonymous by default. Returns the stored entry."""
+    import time as _t
+    letters = _poste_store(office)
+    entry = {"text": (text or "").strip(), "at": _t.time(),
+             "from_id": author_id, "from": (author_name or "Anonymous")}
+    letters.append(entry)
+    if len(letters) > _POSTE_MAX:
+        letters = letters[-_POSTE_MAX:]   # the oldest ripen out, quietly delivered elsewhere
+    office.db.poste_letters = letters
+    return entry
+
+
+def draw_poste(office, exclude_id=None):
+    """Draw one held letter to read — preferring someone else's over your own (you came to read
+    the things you *couldn't* send, not your own). Returns the entry or None."""
+    import random as _r
+    letters = _poste_store(office)
+    if not letters:
+        return None
+    others = [e for e in letters if e.get("from_id") != exclude_id] if exclude_id else letters
+    return _r.choice(others or letters)
+
+
 def _build_pockets(office, hall, quiet, report):
     """Dig the three siblings' pocket rooms off the public spaces + place their fixtures.
     Idempotent: re-running won't duplicate rooms, exits, or fixtures. No gating (§0):
@@ -562,5 +657,16 @@ def _build_pockets(office, hall, quiet, report):
     _fixture("the declaration form", _VESPER_SECRET_DESC, vesper,
              "Leaving it open is an answer. You leave it open.")
 
-    return sera, calix, vesper
+    # The Break Room — up the back stairs off the Sorting Hall; the shared heart of the place.
+    brk = _dig(hall, "The Break Room", _BREAK_DESC, _BREAK_AMBIENT,
+               "the back stairs", ["stairs", "up", "break", "break room", "breakroom"],
+               "down the stairs", ["stairs", "down", "out", "hall", "sorting"])
+    _fixture("the chore rota", _BREAK_KETTLE_DESC, brk,
+             "The rota stays on the wall where it can be ignored properly. Taking it would be cheating.")
+    _fixture("the keepsake shelf", _BREAK_SHELF_DESC, brk,
+             "Proof of life stays put. That's the whole point of keeping it where they can see it.")
+    _fixture("the basket under the couch", _BREAK_TOYS_DESC, brk,
+             "House rules: ask first. The basket isn't going anywhere, and neither, ideally, are you.")
+
+    return sera, calix, vesper, brk
 
