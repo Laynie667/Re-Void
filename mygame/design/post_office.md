@@ -28,6 +28,7 @@
 | Poste wired into the services menu (real drop/read from inside CYOA) | ✅ Built (cyoa `post_poste` + `office_poste` effect) |
 | Per-sibling gossip voices (Calix spare, Vesper oblique) | ✅ Built (`_CALIX_GOSSIP`/`_VESPER_GOSSIP`, `clerk_gossip` reads present clerk) |
 | Break Room off-duty couch scene (consensual, warm, real arousal) | ✅ Built (cyoa `break_couch`/`break_couch_after`, `CmdUnwind`) |
+| Poste "ripening" beat — old letters deliver themselves (live cage) | ✅ Built (`ripen_poste` + `PosteRipenScript` on the Sorting Hall) |
 
 ---
 
@@ -180,6 +181,13 @@ Letters persist on the office room's `db.poste_letters` (one shared store across
 capped at `_POSTE_MAX` (60; oldest ripen out on overflow). Helpers `leave_poste`/`draw_poste`/
 `poste_count` in `post_office_build`. Real cross-player content: what you leave stays and
 others can find it. No gating — purely additive; the cage's third lock is decorative.
+
+**Ripening beat (live cage).** `PosteRipenScript` (in `typeclasses/scripts.py`) attaches to
+the Sorting Hall at build time (idempotent) and, on a slow jittered timer (10–20 min) when
+someone's present, calls the pure `ripen_poste(office)`: the OLDEST letter past `_RIPEN_AGE_S`
+(3 days) quietly "delivers itself" (popped) and a single atmospheric line broadcasts. Reveals
+NO content — the office never reads them (canon). Keeps the cage feeling alive and bounded.
+Unit-tested (`test_poste_ripen`): age-gated, oldest-first, content never leaked.
 
 ## Per-sibling gossip voices + the couch scene (CYOA)
 

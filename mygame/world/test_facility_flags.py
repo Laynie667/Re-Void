@@ -302,11 +302,44 @@ def test_honorific_escalation():
     return "honorific ladder: 1st forgiven, 2nd defiance, 3rd public example, stale resets"
 
 
+def test_poste_ripen():
+    """poste-restante ripening: age-gated (nothing fresh ripens), pops the OLDEST ripe letter,
+    and the broadcast line never leaks any letter's content (the office never reads them)."""
+    import sys, types, time
+    ev = types.ModuleType("evennia"); ev.search_object = lambda *a, **k: []
+    uu = types.ModuleType("evennia.utils")
+    uu.create = types.SimpleNamespace(create_object=lambda *a, **k: None)
+    ev.utils = uu
+    sys.modules.setdefault("evennia", ev)
+    sys.modules.setdefault("evennia.utils", uu)
+    pob = _load("pob_ripen", "post_office_build.py")
+
+    class _DB:
+        def __init__(self): self.poste_letters = None
+    class _Office:
+        def __init__(self): self.db = _DB()
+
+    o = _Office()
+    now = time.time()
+    pob.leave_poste(o, "fresh secret", author_id=1)
+    o.db.poste_letters[-1]["at"] = now - 100
+    assert pob.ripen_poste(o, now=now) is None and pob.poste_count(o) == 1, "fresh must not ripen"
+    pob.leave_poste(o, "old secret", author_id=2);    o.db.poste_letters[-1]["at"] = now - 4 * 86400
+    pob.leave_poste(o, "ancient secret", author_id=3); o.db.poste_letters[-1]["at"] = now - 9 * 86400
+    line = pob.ripen_poste(o, now=now)
+    assert line, "an over-age letter should ripen"
+    assert pob.poste_count(o) == 2, "exactly one should have ripened out"
+    texts = [e["text"] for e in o.db.poste_letters]
+    assert "ancient secret" not in texts, "the OLDEST ripe letter should be the one delivered"
+    assert "secret" not in line.lower(), "ripening must never leak letter content"
+    return "poste ripen: age-gated, oldest-first, content never leaked"
+
+
 _TESTS = [
     test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
     test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
     test_speech_filter_order, test_heat_tell, test_honorifics_address,
-    test_honorific_escalation,
+    test_honorific_escalation, test_poste_ripen,
 ]
 
 

@@ -239,6 +239,14 @@ def build_post_office(caller):
     _fixture("the dead letter cage", _CAGE_DESC, hall,
              "The cage is bolted down, triple-locked, and frankly it's the letters that "
              "would object — they're not done ripening.")
+    # The cage's heartbeat: old letters ripen and deliver themselves (idempotent attach).
+    try:
+        from typeclasses.scripts import PosteRipenScript
+        if not hall.scripts.get("poste_ripen_script"):
+            hall.scripts.add(PosteRipenScript)
+            report.append("the cage's ripening heartbeat")
+    except Exception as e:
+        caller.msg(f"|rRipen-script attach issue: {e}|n")
 
     # 4. The Quiet Room (off the hall).
     quiet = next((e.destination for e in hall.exits
@@ -680,6 +688,47 @@ def draw_poste(office, exclude_id=None):
         return None
     others = [e for e in letters if e.get("from_id") != exclude_id] if exclude_id else letters
     return _r.choice(others or letters)
+
+
+# A letter "ripens" — is quietly delivered, as they always are — after it's sat this long.
+_RIPEN_AGE_S = 3 * 86400  # three days
+# The cage delivering one. Mysterious by design: the office NEVER reads them aloud (canon —
+# "I'll not read it. None of us will."), so ripening reveals nothing, only that it's gone.
+_RIPEN_LINES = [
+    "Something in the Dead Letter Cage settles, sighs paper against paper, and is — gone. One "
+    "of them finished ripening. Delivered, the way they always are, to wherever it was always "
+    "going. The nest rearranges around the space it left.",
+    "A letter near the bottom of the cage gives the smallest rustle, like an exhale, and then "
+    "isn't there anymore. No one took it. It was simply *ready*, and the office keeps its one "
+    "promise: they always get delivered eventually.",
+    "You'd swear the cage is one letter lighter than it was a moment ago. Whatever it held has "
+    "ripened and gone — sent at last, unread to the end, to the only address that ever fit it.",
+    "The hooded lamp over the Dead Letter Cage flickers once. When it steadies, a long-held "
+    "letter has quietly delivered itself, and the cage looks, for a breath, almost relieved on "
+    "its behalf.",
+    "One of the older letters is done. It doesn't burn or vanish so much as *arrive* somewhere "
+    "you can't see — the cage's whole reason for being, kept faithfully, one ripe secret at a "
+    "time.",
+]
+
+
+def ripen_poste(office, now=None):
+    """Quietly deliver the OLDEST letter past _RIPEN_AGE_S (pop it) and return a flavour line to
+    broadcast, or None if nothing's ripe. Reveals no content — the office never reads them. Pure
+    + testable; the PosteRipenScript calls this on its timer when the hall is occupied."""
+    import time as _t
+    import random as _r
+    now = now if now is not None else _t.time()
+    letters = _poste_store(office)
+    if not letters:
+        return None
+    ripe = [e for e in letters if (now - float(e.get("at", 0) or 0)) >= _RIPEN_AGE_S]
+    if not ripe:
+        return None
+    oldest = min(ripe, key=lambda e: e.get("at", 0) or 0)
+    letters.remove(oldest)
+    office.db.poste_letters = letters
+    return _r.choice(_RIPEN_LINES)
 
 
 def _build_pockets(office, hall, quiet, report):

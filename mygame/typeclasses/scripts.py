@@ -31,6 +31,44 @@ class Script(DefaultScript):
     pass
 
 
+class PosteRipenScript(DefaultScript):
+    """Attaches to the Sorting Hall. On its own slow, jittered timer, when someone's present, it
+    lets the oldest long-held poste-restante letter 'ripen' — quietly deliver itself — and
+    broadcasts a single atmospheric line, so the Dead Letter Cage feels alive (and doesn't grow
+    without bound).
+
+    Reveals nothing of any letter's content: the office's one rule is that no one reads them.
+    Pure logic lives in world.post_office_build.ripen_poste; this is just the heartbeat.
+    """
+
+    def at_script_creation(self):
+        self.key = "poste_ripen_script"
+        self.desc = "Dead Letter Cage — letters ripen and deliver themselves"
+        self.interval = random.randint(600, 1200)  # 10-20 min, jittered
+        self.persistent = True
+        self.repeats = 0
+        self.start_delay = True
+
+    def at_repeat(self):
+        room = self.obj
+        if not room:
+            return
+        # Only when someone's present to witness it — re-jitter the next beat either way.
+        occupants = [o for o in room.contents
+                     if hasattr(o, "has_account") and o.has_account]
+        self.interval = random.randint(600, 1200)
+        if not occupants:
+            return
+        try:
+            from world.post_office_build import _find_office, ripen_poste
+            office = _find_office() or room
+            line = ripen_poste(office)
+        except Exception:
+            line = None
+        if line:
+            room.msg_contents(f"|x{line}|n")
+
+
 class AmbientScript(DefaultScript):
     """
     Attaches to a room and periodically fires atmospheric
