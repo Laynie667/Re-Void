@@ -25,6 +25,9 @@
 | Gossip pool (sibling secrets, the "tried-on holes" beat, 3 a.m. drawer) | ✅ 10 entries (`post_office_build._GOSSIP`) |
 | The Break Room (shared space: rota / keepsake shelf / under-couch basket) | ✅ Built (up the back stairs off the Sorting Hall) |
 | Poste restante — real persistent letter drop (`poste leave`/`poste read`) | ✅ Built (`CmdPoste`, `leave_poste`/`draw_poste` on the office room) |
+| Poste wired into the services menu (real drop/read from inside CYOA) | ✅ Built (cyoa `post_poste` + `office_poste` effect) |
+| Per-sibling gossip voices (Calix spare, Vesper oblique) | ✅ Built (`_CALIX_GOSSIP`/`_VESPER_GOSSIP`, `clerk_gossip` reads present clerk) |
+| Break Room off-duty couch scene (consensual, warm, real arousal) | ✅ Built (cyoa `break_couch`/`break_couch_after`, `CmdUnwind`) |
 
 ---
 
@@ -177,6 +180,24 @@ Letters persist on the office room's `db.poste_letters` (one shared store across
 capped at `_POSTE_MAX` (60; oldest ripen out on overflow). Helpers `leave_poste`/`draw_poste`/
 `poste_count` in `post_office_build`. Real cross-player content: what you leave stays and
 others can find it. No gating — purely additive; the cage's third lock is decorative.
+
+## Per-sibling gossip voices + the couch scene (CYOA)
+
+- **Gossip in the present clerk's register.** `clerk_gossip` now reads `_present_clerk()` (who's
+  actually in the room) and pulls from that clerk's pool with matching 'another'/'back' beats:
+  Seraphine (`_GOSSIP`, 10, warm), Calix (`_CALIX_GOSSIP`, 5, spare/devastating — sets one true
+  thing on the counter), Vesper (`_VESPER_GOSSIP`, 5, oblique/blushing — tells you more by what
+  they won't finish). Random among present; default Seraphine.
+- **Poste from inside the menu.** The services "poste" option now chains to `post_poste`, which
+  REALLY drops one of a few pinned unsendables into the cage (the `office_poste` effect calls
+  `leave_poste`), draws one to read (`mode:read`), or points at `poste leave` for free text.
+- **The Break Room couch scene** — `CmdUnwind` (`unwind`/`couch`, gated to the Break Room with a
+  clerk present) poses `break_couch`: an off-duty, **consent-forward** scene with whoever's up
+  there, each sibling in their own register (Seraphine possessive-warm, Calix quiet-solid, Vesper
+  shy-fervent). House rule in-fiction AND as the §0 floor: they ask first; "Not today" is a clean,
+  unwounded out. Yes moves real arousal (`couch_warm` → arousal_script); rest gives comfort; both
+  chain to `break_couch_after` (the afterglow). Warm-domestic register, no gate, no conditioning —
+  the one room that was never a transaction.
 
 ## The services menu — `clerk` → "Ask what they can do for you" (CYOA, real)
 

@@ -516,6 +516,77 @@ _GOSSIP = [
      "leaving. We're very good at not leaving. It's rather the whole business.\""),
 ]
 
+# Calix gossips in his own register — spare, dry, devastating; the glance that holds a beat.
+# He doesn't tell stories so much as set one true thing on the counter and slide it to you.
+_CALIX_GOSSIP = [
+    ("on Seraphine",
+     "Calix doesn't look up from the seal he's pressing. A long pause; you think that's the "
+     "whole answer. Then: \"She tells everyone she collects people.\" Press. \"She's never once "
+     "said it's because she's afraid of the quiet after.\" He sets the stamp down, squares it. "
+     "\"Don't tell her I know. She'd have to do something about being known.\" The glance holds "
+     "a beat longer than necessary. Returns to work."),
+    ("on Vesper's mug",
+     "\"You'll have noticed the unlettered mug. Center of its coaster, always.\" He stamps a "
+     "letter. \"That's me. They put it down anywhere; I straighten it when I pass.\" A second "
+     "stamp, perfectly aligned. \"They've never mentioned noticing. I've never mentioned doing "
+     "it. It's the most either of us has said on the subject.\" Beat. \"It's enough.\""),
+    ("the empty slot",
+     "You ask about the pigeonhole marked STAYED with nothing in it. Calix is quiet long enough "
+     "that the kettle upstairs would have boiled. \"Some keepsakes are the shape of the thing "
+     "not there.\" He doesn't elaborate. He doesn't have to; the glance does it, and then looks "
+     "away first, which from him is the whole confession."),
+    ("the biscuits",
+     "\"I know who ate the last of the good biscuits.\" Stamp. \"I've known for a week.\" Stamp. "
+     "\"I'm not going to say.\" He aligns the edges with one broad thumb. \"Knowing is the "
+     "punishment. Saying would only end it.\" The faintest thing happens at the corner of his "
+     "mouth and is gone. \"Patience is a craft.\""),
+    ("the bench",
+     "You ask why he re-oils the consultation bench for one name in the calendar. Calix meets "
+     "your eyes, level, and for a moment the unhurried solidity has a fault-line in it. \"A "
+     "thing worth doing,\" he says, \"is worth doing properly.\" That's all. But he doesn't "
+     "look away this time, and he lets you see that he didn't, and that — from Calix — is a man "
+     "handing you something with both hands."),
+]
+
+# Vesper gossips obliquely, in retreats and parentheses — they blush, trail off, and tell you
+# more by what they won't finish than by what they say. Eyes changing colour the whole time.
+_VESPER_GOSSIP = [
+    ("(about the toybox)",
+     "Vesper's eyes go silver, then a colour without a name, fixed very hard on the letter "
+     "they're sorting. \"...you've seen Seraphine's card. In the lid.\" A long pause. \"She "
+     "wasn't supposed to — the corner was meant to be — \" They stop. Start over, smaller. "
+     "\"Tried-on is still you. She wrote that. About me. Before I'd told her anything.\" The "
+     "letter gets sorted into entirely the wrong pigeonhole. They don't fix it. \"...she knew "
+     "anyway. She always — \" And that's where it ends, in a blush you could read by."),
+    ("(about the red ink)",
+     "\"Her inkwell fills itself,\" Vesper murmurs, almost too quiet to catch. \"Everyone "
+     "thinks it's a trick.\" Their horns catch the lamplight, sharp then soft. \"It isn't. It's "
+     "just that she means every red word so *much* there's always more of it than there was.\" "
+     "They glance at you, quick, and away. \"...I've never told her I worked that out. It would "
+     "feel like reading her mail.\" The smallest, fiercest loyalty in the whole building, said "
+     "to the floor."),
+    ("(about Calix)",
+     "\"People think Calix is hard to read.\" Vesper almost smiles; it's mostly in the eyes. "
+     "\"He's the easiest. He just answers in — \" a gesture, searching \" — in *weights*. Three "
+     "stamps means he's giving someone time. Re-sanding the bench means it mattered. The "
+     "straightened mug means — \" They catch themselves, colour rising. \"...means he loves us "
+     "and would rather move a building than say so. I find it very — \" The sentence does not "
+     "survive. They sort a letter with enormous focus."),
+    ("(about the form)",
+     "You mention the Declaration of Nature. Vesper goes very still, eyes pure silver. \"...the "
+     "office has never once asked me to fill it in.\" A breath. \"Do you know what that does. To "
+     "be — kept, with the blank just *allowed* to stay blank.\" They look at you directly for "
+     "the first time, and it costs them. \"Leaving it open is the answer. Seraphine keeps trying "
+     "to throw me a party about it.\" The ghost of a real smile. \"There will be no party.\""),
+    ("(about being found)",
+     "\"I don't remember being hired,\" Vesper says, and it's not unsettling the way they say "
+     "it — it's soft. \"One winter I was just... here. Sorting. And no one asked what I was, or "
+     "where from, or — \" They smooth a crease that isn't there. \"They set out a third mug. "
+     "That's all. A mug, no letter on it. And I understood I could stay as whatever I was, for "
+     "as long as I — \" The eyes change colour twice. \"...I'm still here. That's the end of the "
+     "story. I'm still here.\""),
+]
+
 
 # ── the Break Room — where the three stop being clerks ────────────────────────
 _BREAK_DESC = (

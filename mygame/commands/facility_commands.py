@@ -1689,6 +1689,48 @@ class CmdPoste(Command):
 ALL_FACILITY_VERBS.append(CmdPoste)
 
 
+class CmdUnwind(Command):
+    """
+    Off the clock, in the Break Room — sink onto the couch with whoever's up there.
+
+    Usage:
+        unwind
+        couch
+
+    Opens the warm, off-duty scene with whichever sibling is in the Break Room (Seraphine,
+    Calix, or Vesper, each in their own register). House rule, in-fiction and out: they ask
+    first, and "Not today" is always a whole answer. Drive it with `choose <number>`. Nothing
+    here locks, conditions, or gates you — it's the one room that was never a transaction.
+    """
+    key           = "unwind"
+    aliases       = ["couch", "relax"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        room = getattr(caller, "location", None)
+        in_break = bool(room) and "break room" in ((getattr(room, "key", "") or "").lower())
+        if not in_break:
+            caller.msg("|xThere's no couch to sink into here. The Break Room's up the back "
+                       "stairs off the Sorting Hall — if they've let you up there.|n")
+            return
+        present = {(o.key or "").lower() for o in getattr(room, "contents", [])}
+        if not (present & {"seraphine", "calix", "vesper"}):
+            caller.msg("|xThe Break Room's empty just now — only the kettle, ticking toward a "
+                       "boil it never reaches. Come back when one of them's up here.|n")
+            return
+        try:
+            from world.cyoa import pose_named
+        except Exception:
+            caller.msg("|xThe moment doesn't quite arrive.|n")
+            return
+        if not pose_named(caller, "break_couch", room=room):
+            caller.msg("|xThe moment doesn't quite arrive. Maybe later.|n")
+
+ALL_FACILITY_VERBS.append(CmdUnwind)
+
+
 class CmdStars(Command):
     """
     Your gold-star chart — earned the only way that counts, and spent on relief.

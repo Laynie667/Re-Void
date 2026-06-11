@@ -1680,6 +1680,92 @@ def _eff_office_officiate(character, p):
     return f"officiated:{who}" if ok else "officiate_failed"
 
 
+_CLERK_NAMES = ("seraphine", "calix", "vesper")
+
+
+def _present_clerk(character):
+    """Which clerk is working right now — the one in the room with you. If more than one,
+    pick one at random so the office feels staffed-by-people, not by a rota. Default Seraphine
+    (she's the face of the counter). Returns a lowercase name."""
+    loc = getattr(character, "location", None)
+    present = []
+    for o in (getattr(loc, "contents", None) or []):
+        nm = (getattr(o, "key", "") or "").lower()
+        if nm in _CLERK_NAMES:
+            present.append(nm)
+    return random.choice(present) if present else "seraphine"
+
+
+@effect("office_poste")
+def _eff_office_poste(character, p):
+    """Real poste-restante from inside the menu: leave a chosen letter into the Dead Letter Cage,
+    or draw one to read. Persists on the office room (one shared store). No-ops cleanly off-site."""
+    try:
+        from world.post_office_build import _find_office, leave_poste, draw_poste
+    except Exception:
+        return ""
+    office = _find_office() or getattr(character, "location", None)
+    if not office:
+        return ""
+    mode = (p or {}).get("mode", "leave")
+    if mode == "read":
+        entry = draw_poste(office, exclude_id=getattr(character, "id", None))
+        if entry and getattr(character, "msg", None):
+            character.msg("|WYou reach through the bars and draw one at random — warm, like they "
+                          f"all are.|n\n|y  \"{entry.get('text','')}\"|n\n|xUnsigned. You slide "
+                          "it back exactly as you found it.|n")
+        elif getattr(character, "msg", None):
+            character.msg("|xThe cage is empty for once. Be the first.|n")
+        return "poste_read"
+    text = (p or {}).get("text")
+    if not text:
+        return ""
+    leave_poste(office, text, author_id=getattr(character, "id", None), author_name="Anonymous")
+    return "poste_left"
+
+
+@choice("post_poste", root=False)
+def _b_post_poste(character):
+    """The poste-restante flow from inside the menu. You can seal one of a few unsayable things
+    (each really dropped into the cage via office_poste), draw one to read, or be told how to
+    leave your own words (the command path, for free text the menu can't capture)."""
+    return {"key": "post_poste", "prompt": (
+        "\"Here's how it works,\" Seraphine says, gentling. \"You don't address it. You just let "
+        "it exist somewhere that isn't only inside you. Pick one off the wall if it fits — or "
+        "write your own — and I'll feed it through the bars myself.\" She nods at a little board "
+        "of the ones too many people needed: the unsendables, pinned for the taking."),
+        "options": [
+            {"key": "want", "label": "Seal: \"I think about being owned and it scares me how much\"",
+             "effect": "office_poste", "params": {"text": "I think about being owned and it scares me how much."},
+             "then": "post_poste", "desc": "really dropped into the cage, held, anonymous",
+             "outcome": "She feeds it through without reading it. \"There. It's not only yours to "
+                        "carry now. The cage has it too.\""},
+            {"key": "stay", "label": "Seal: \"I don't want to leave and I'm afraid to say so\"",
+             "effect": "office_poste", "params": {"text": "I don't want to leave, and I'm afraid that if I say it out loud it stops being allowed."},
+             "then": "post_poste", "desc": "sealed and held — the thing the whole office is *for*",
+             "outcome": "Her smile goes soft and real, just for a beat. \"Oh, sweet thing. That one "
+                        "we keep very safe.\""},
+            {"key": "name", "label": "Seal: \"I want to be someone's, completely, on paper\"",
+             "effect": "office_poste", "params": {"text": "I want to belong to someone completely, on paper, where it's real and can't be taken back."},
+             "then": "post_poste", "desc": "the confession most people draft and never bring in",
+             "outcome": "\"Mm.\" She presses her seal to it warm. \"You'd be amazed how many of "
+                        "those are in there. You're in good, wanting company.\""},
+            {"key": "read", "label": "Draw one instead — read what someone couldn't send",
+             "effect": "office_poste", "params": {"mode": "read"}, "then": "post_poste",
+             "desc": "someone else's unsendable, drawn at random",
+             "outcome": ""},
+            {"key": "own", "label": "Ask how to leave my own words", "then": "post_poste",
+             "desc": "free text — the command path",
+             "outcome": "\"Your own's better, always. |wposte leave|n then whatever you can't say "
+                        "— at the cage in the Sorting Hall. I'll not read it. None of us will. "
+                        "That's the one rule we never break.\""},
+            {"key": "back", "label": "Back to the services card", "then": "post_services",
+             "desc": "the laminated menu",
+             "outcome": "\"Take your time. The cage isn't going anywhere. Famously.\""},
+        ],
+        "default": "back"}
+
+
 @choice("post_services", root=False)
 def _b_post_services(character):
     """The office's real service directory. Officiating is the one that DOES something here and
@@ -1708,13 +1794,12 @@ def _b_post_services(character):
                 "things, done properly, that *show* on your marks afterward.\" Her smile turns "
                 "knowing. \"Tell him I sent you. He'll know what that means about you, and he'll be "
                 "gentler for it, or rougher. I never can tell which he decides.\"")},
-            {"key": "poste", "label": "Leave something poste restante", "then": "post_services",
-             "desc": "a thing you can't say yet; they hold it",
+            {"key": "poste", "label": "Leave something poste restante", "then": "post_poste",
+             "desc": "a thing you can't say yet; they hold it — really",
              "outcome": (
-                "\"The Dead Letter Cage, in the Sorting Hall. People think it's where mail goes to "
-                "die.\" She shakes her head, fond. \"It's where the things you can't send *yet* get "
-                "to keep existing. Write it. Don't address it. We'll know when it's ripe, and so "
-                "will you. We've never once been wrong about a letter.\"")},
+                "\"The Dead Letter Cage. People think it's where mail goes to die.\" She shakes "
+                "her head, fond. \"It's where the things you can't send *yet* get to keep "
+                "existing. Come on, then. Let's find yours.\"")},
             {"key": "back", "label": "Back to the counter", "then": "clerk",
              "desc": "the chin-on-hand, the dangerous attention",
              "outcome": "\"Mm. Take your time. I'm not going anywhere, and neither, it seems, are you.\""},
@@ -1759,25 +1844,189 @@ def _b_post_officiant(character):
         "default": "calix"}
 
 
+# Each clerk gossips in their own register, and the 'another'/'back' beats match the voice.
+_GOSSIP_VOICE = {
+    "seraphine": {
+        "pool": "_GOSSIP",
+        "more": "\"Oh, you're *fun*. Come closer, then.\"",
+        "back": "\"Mm. Business.\" She says the word like it's the funny one. \"Go on, then.\"",
+        "more_lbl": "Mm — tell me another", "more_desc": "she will, gladly, until you stop her",
+    },
+    "calix": {
+        "pool": "_CALIX_GOSSIP",
+        "more": "He doesn't say yes. He sets down the stamp, which is a yes.",
+        "back": "He nods, once, and the counter is a counter again. \"Mm.\"",
+        "more_lbl": "Wait for another", "more_desc": "he'll give you one more, if you don't rush him",
+    },
+    "vesper": {
+        "pool": "_VESPER_GOSSIP",
+        "more": "\"...if you want.\" They don't look up. They want to. \"One more.\"",
+        "back": "They nod, relieved and a little sorry both, and return to the sorting.",
+        "more_lbl": "Gently — another?", "more_desc": "they'll trust you with one more",
+    },
+}
+
+
 @choice("clerk_gossip", root=False)
 def _b_clerk_gossip(character):
-    """One of Seraphine's fond, filthy little stories, picked fresh each time. Loops back to
-    itself ('another') or out to the counter menu. Pure prose; no effect, no gate."""
+    """A fond little story from whoever's actually working the counter — Seraphine warm,
+    Calix spare, Vesper oblique — each from their own pool, picked fresh. Loops ('another') or
+    out to the counter menu. Pure prose; no effect, no gate."""
+    who = _present_clerk(character)
+    voice = _GOSSIP_VOICE.get(who, _GOSSIP_VOICE["seraphine"])
     try:
-        from world.post_office_build import _GOSSIP
+        import world.post_office_build as _pob
+        pool = list(getattr(_pob, voice["pool"], None) or [])
     except Exception:
-        _GOSSIP = []
-    if not _GOSSIP:
+        pool = []
+    if not pool:
         return None
-    title, story = random.choice(_GOSSIP)
+    title, story = random.choice(pool)
     return {"key": "clerk_gossip", "prompt": story,
         "options": [
-            {"key": "more", "label": "Mm — tell me another", "then": "clerk_gossip",
-             "desc": "she will, gladly, until you stop her",
-             "outcome": "\"Oh, you're *fun*. Come closer, then.\""},
+            {"key": "more", "label": voice["more_lbl"], "then": "clerk_gossip",
+             "desc": voice["more_desc"], "outcome": voice["more"]},
             {"key": "back", "label": "Back to business", "then": "clerk",
-             "desc": "the counter, the trade, the pretext",
-             "outcome": "\"Mm. Business.\" She says the word like it's the funny one. \"Go on, "
-                        "then.\""},
+             "desc": "the counter, the trade, the pretext", "outcome": voice["back"]},
         ],
         "default": "back"}
+
+
+# ── the Break Room: off-duty, on the couch (warm, consensual, real) ───────────
+# Reached via `unwind`/`couch` in the Break Room (CmdUnwind). House rule, in-fiction AND as
+# the §0 floor: ask first. They do; "Not today" is always a clean, graceful out. The 'yes'
+# path moves real arousal; the register is warm-domestic, not the institution's dread.
+@effect("couch_warm")
+def _eff_couch_warm(character, p):
+    """A real beat on the couch — arousal moves for true (arousal_script). Floor-safe; this is
+    a post-office scene, not a facility lock — nothing here gates or conditions."""
+    try:
+        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+        ensure_arousal_script(character)
+        add_arousal(character, float((p or {}).get("amount", 35.0)))
+    except Exception:
+        pass
+    return "couch"
+
+
+_COUCH = {
+    "seraphine": {
+        "intro": (
+            "Seraphine is already on the couch when you come up, one leg folded under her, and "
+            "she doesn't so much invite you as *make room* — patting the cushion beside her with "
+            "the certainty of a woman who has never once been told no up here and wouldn't quite "
+            "believe it. Her tail finds your ankle before her hand finds your wrist. \"Off the "
+            "clock,\" she murmurs, warm as the kettle. \"No paperwork, no clauses — just me being "
+            "greedy about someone I like. *May* I, sweet thing? House rule is I ask. So I'm "
+            "asking.\""),
+        "yes": (
+            "\"*Good.*\" She pulls you down across her lap like she's been planning the angle for "
+            "an hour, and maybe she has. There's nothing clinical in it and nothing cruel — just "
+            "her clever hands and her crooked-real smile and the clove-warm weight of her "
+            "attention, taking her time with you on a couch that's seen this a hundred fond times. "
+            "She narrates none of it and means all of it, and when your breath goes ragged she "
+            "presses her lips to your temple and says \"there she is\" like you're the best letter "
+            "she's opened all week."),
+        "rest": (
+            "You don't take her up on the greed; you just tuck in against her side, and she lets "
+            "you, instantly recalibrating from predator to pillow without a flicker of complaint. "
+            "Her arm comes around you, her tail over your knees like a second blanket. \"This is "
+            "allowed too,\" she says softly, and you feel her mean it. \"Most people forget it's "
+            "allowed too.\""),
+    },
+    "calix": {
+        "intro": (
+            "Calix is on the couch with a mug of something and the first unguarded face you've "
+            "seen on him — the broad shoulders down off their station, the careful stillness gone "
+            "soft. He looks at you a beat longer than necessary, the way he does, except up here "
+            "it isn't a tell he's hiding; it's an invitation he's letting you read. He lifts the "
+            "arm not holding the mug, a wordless space made against his side, and waits. When he "
+            "does speak it's low and plain: \"You can. If you want to. Only if you want to.\""),
+        "yes": (
+            "You fit yourself against him and he exhales — a whole man setting a weight down. He's "
+            "unhurried in everything and this is no exception: big careful hands that ask with "
+            "every motion, a mouth that says almost nothing and answers everything in *weight*, "
+            "the way Vesper swears he does. He tells you you're doing well — plainly, no teasing, "
+            "the one indulgence he'd die before naming — and the saying of it undoes you both a "
+            "little. He holds you through it like cargo he'd cross bad weather for."),
+        "rest": (
+            "You just lean on him, and Calix goes still and certain as a load-bearing wall, the "
+            "mug migrating to your hands without comment because you looked cold. \"Stay as long "
+            "as you like,\" he says to the middle distance. It is, for Calix, a sonnet."),
+    },
+    "vesper": {
+        "intro": (
+            "Vesper is curled into the corner of the couch with their knees up, and the look they "
+            "give you when you come up the stairs is startled-pleased, eyes going silver then "
+            "something warmer. Off-duty they take up space they'd never claim at the counter — but "
+            "shyness still moves through them in little weather-fronts. They pat the cushion, "
+            "snatch their hand half-back, leave it. \"...you could sit. With me. If — \" a breath, "
+            "braver \" — if you wanted. I'd like it. I'm allowed to say I'd like it, up here.\""),
+        "yes": (
+            "They come to you in pieces and then all at once — tentative, then startled by their "
+            "own want, then *fervent*, like someone who's only ever tried this on alone in front "
+            "of a mirror and can't believe it's allowed with the lights on. Their eyes change "
+            "colour with every gasp. They keep checking your face, and keep finding permission "
+            "there, and each time they find it they get a little braver, a little less careful, "
+            "until careful is the last thing either of you is. \"...oh,\" they breathe, wrecked "
+            "and delighted, \"*oh*, that's — \" and don't finish, and don't need to."),
+        "rest": (
+            "You only mean to sit close, and Vesper goes boneless with a relief that tells you "
+            "*close* was the whole wish. They tuck under your arm like they've practised wanting "
+            "to and never dared. \"This is good,\" they whisper, surprised by it. \"This is — yes. "
+            "Thank you. Don't tell Seraphine I let someone. She'll throw a party.\""),
+    },
+}
+
+_COUCH_NO = (
+    "\"Not today\" — and that's the end of it, no weather, no wound. The house rule is *ask*, "
+    "and the other half of asking is that no is a whole answer up here. They make easy room for "
+    "you on the couch anyway, the unfraught kind, and the kettle clicks on, and you're simply "
+    "welcome. That's the thing about this room: being wanted here was never the price of "
+    "anything.")
+
+
+@choice("break_couch", root=False)
+def _b_break_couch(character):
+    """Off-duty on the Break Room couch with whoever's up there. Consent-forward (they ask);
+    'Not today' is a clean out. The yes/rest paths move real arousal / give comfort, in the
+    warm-domestic register the room is built for. No gate, no condition — this isn't the rig."""
+    who = _present_clerk(character)
+    c = _COUCH.get(who, _COUCH["seraphine"])
+    return {"key": "break_couch", "prompt": c["intro"],
+        "options": [
+            {"key": "yes", "label": "Yes — gladly", "effect": "couch_warm",
+             "params": {"amount": 40.0}, "then": "break_couch_after",
+             "desc": "let them be greedy; warm, unhurried, real",
+             "outcome": c["yes"]},
+            {"key": "rest", "label": "Just rest against them", "then": "break_couch_after",
+             "desc": "the other thing the couch is for — allowed too",
+             "outcome": c["rest"]},
+            {"key": "no", "label": "Not today", "desc": "a whole answer; no weather, no wound",
+             "outcome": _COUCH_NO},
+        ],
+        "default": "rest"}
+
+
+@choice("break_couch_after", root=False)
+def _b_break_couch_after(character):
+    """The afterglow — the realest minutes the office has. Linger or head back down; either way
+    you leave having been, for a little while, just people on a couch."""
+    return {"key": "break_couch_after", "prompt": (
+        "After, the Break Room does the thing it's best at: nothing. The kettle ticks. Someone's "
+        "mug steams. The photographs on the keepsake shelf watch with the fondness of objects "
+        "that have seen this a hundred times and approve. Whoever's got you keeps you a while, "
+        "off the clock, unbothered, and the quiet is the warmest thing in the building."),
+        "options": [
+            {"key": "stay", "label": "Stay a while longer", "then": "break_couch_after",
+             "desc": "no clock up here; let the quiet hold",
+             "outcome": "You stay. Nobody hurries you. The proof-of-life photo on the shelf has "
+                        "room in the frame, you think, for one more. The thought doesn't scare "
+                        "you the way it should."},
+            {"key": "down", "label": "Head back down the stairs",
+             "desc": "back to the counter and the world",
+             "outcome": "You go down eventually, carrying the warmth of it like a stamp pressed "
+                        "somewhere private. The counter's just a counter again. But you know the "
+                        "stairs are there now. You'll know it the whole rest of the day."},
+        ],
+        "default": "down"}
