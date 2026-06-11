@@ -411,6 +411,13 @@ Legend: **fn** = function/method · **st** = db state it owns · ⚠ = redundanc
   `bethany_buys` (REAL ownership: `bethany_owned`, title `— Bethany's` with `facility_title_backup`
   filed first, `sale_price` = winning bid, conditioning) — or look to the dark (bid record climbs,
   her paddle stays up "plus one", the gavel hangs; there's always next inspection day).
+- **Kept chain** (`kept → kept_use → kept_morning`): gated on `bethany_owned` — what the auction's
+  gavel buys. Her evening (lap = devote, the false-tenderness line; floor = compliance) → all three
+  of her (`bethany_breeds` effect: REAL `gang_inseminate` into 1 or all 3 of her actual holes,
+  species/sire "Bethany", + `bethany_deposit_effect` laced devotion ×1 or ×3) → morning in her bed:
+  `file_read` effect reads HER file on you aloud — real devotion/conditioning/chair-sessions/her
+  line's get/title, *including what the evening itself just earned* — or burrow in (devote; "the
+  file's all mine"). Ownership has consequences; the consequences have paperwork.
 - **Chair → descent door**: at the Spiral Chair's *below* stage, ~40% of its CYOA poses are the
   `descent` node instead of the mantra — the door it hints at on sitting, offered from inside the
   trance ("live now, not recorded: 'come see what's downstairs'").

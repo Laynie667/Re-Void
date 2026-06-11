@@ -1317,3 +1317,160 @@ def _b_auction_gavel(character):
                         "the auction is just how she likes to watch your price be proven before "
                         "she pays it. The gavel hangs. There's always next inspection day."}],
         "default": "hers"}
+
+
+# ── the kept chain: what being "— Bethany's" actually gets you ────────────────
+@effect("bethany_breeds")
+def _eff_bethany_breeds(character, p):
+    """Bethany takes what's hers — REAL insemination (species 'bethany', sire 'Bethany') into
+    one or all of her actual holes, plus the laced-seed devotion payload her loads carry.
+    params: {holes: 1|3, devotion}."""
+    n = int(p.get("holes", 1))
+    try:
+        from world.gang_breeding import animal_holes, gang_inseminate
+        hs = [z for z in animal_holes(character).values() if z]
+        random.shuffle(hs)
+        for z in hs[:max(1, n)]:
+            gang_inseminate(character, z, contributors=1, fluid_type="semen",
+                            species="bethany", sire="Bethany")
+    except Exception:
+        pass
+    try:
+        from typeclasses.bethany_script import bethany_deposit_effect
+        bethany_deposit_effect(character, devotion=float(p.get("devotion", 5.0)))
+    except Exception:
+        pass
+    return f"bred_by_her:{n}"
+
+
+@effect("file_read")
+def _eff_file_read(character, p):
+    """Her file on you, read aloud in bed — the REAL numbers, fondly: devotion, conditioning,
+    chair sessions, her line's get out of you, the title. Specificity as a love language."""
+    d = character.db
+    lines = []
+    dev   = float(getattr(d, "bethany_devotion", 0) or 0)
+    cond  = float(getattr(d, "conditioning", 0) or 0)
+    sess  = int(getattr(d, "chair_sessions", 0) or 0)
+    hers  = int(dict(getattr(d, "offspring_by_sire", None) or {}).get("Bethany", 0) or 0)
+    title = getattr(d, "title_suffix", "") or ""
+    lines.append(f"|M  ▸ her file: devotion {dev:.0f} · conditioning {cond:.0f} · "
+                 f"{sess} chair session(s) served|n")
+    if hers:
+        lines.append(f"|M  ▸ her line: {hers} get of her own body out of yours — and counting|n")
+    if title:
+        lines.append(f"|M  ▸ on your name, where everyone reads it: {title}|n")
+    if getattr(character, "msg", None):
+        character.msg("\n".join(lines))
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, 4.0, source="her_file")
+    except Exception:
+        pass
+    return "file_read"
+
+
+@choice("kept", root=True)
+def _b_kept(character):
+    """Only for what's hers — the private evening that ownership buys."""
+    if not getattr(character.db, "bethany_owned", False):
+        return None
+    return {"key": "kept", "prompt": (
+        "After last shift, a handler unhooks you — not toward the pens, not toward the cell, "
+        "but up the quiet stair to the office, where the lamps are low and the files are closed "
+        "and Bethany is working with her shoes off, which nobody on the floor would believe. "
+        "\"There she is,\" she says, not looking up, patting the desk's edge — or the cushion "
+        "beside her chair; the gesture covers both, deliberately. \"Mine gets evenings. It's in "
+        "the paperwork. Where do you want to spend yours?\" She asks like it's a kindness. It is "
+        "one. That's the trap of her, and you're inside it, and it's warm in here."),
+        "options": [
+            {"key": "lap", "label": "Her lap", "effect": "devote", "params": {"amount": 6.0},
+             "then": "kept_use",
+             "desc": "held against her while she works — the false-tenderness, full strength",
+             "outcome": "You choose the lap, and she gathers you in one-armed without breaking "
+                        "her pen-stroke, your cheek against her blouse, her heartbeat slow and "
+                        "absolutely unhurried under it. She works for an hour and strokes your "
+                        "hair on the page-turns, and once — once — she presses her lips to the "
+                        "top of your head and murmurs, \"I think I do love you, you know. The "
+                        "way you love a chair.\" And the worst, warmest, most ruinous part is "
+                        "how completely the words land as affection. They were built to."},
+            {"key": "floor", "label": "The floor at her feet", "effect": "submit_standing",
+             "then": "kept_use",
+             "desc": "kneel under the desk where the favourite kneels — known your place, and kept in it",
+             "outcome": "You fold down at her feet, cheek to her knee, and her hand arrives in "
+                        "your hair like it was always going to — absent, proprietary, perfect. "
+                        "\"Good girl. You skipped three whole arguments tonight,\" she notes, "
+                        "fond, turning a page. \"I'm putting that in the file under *progress*.\" "
+                        "She does. You hear the pen do it. Being a footnote in her evening is "
+                        "somehow the most seen you've felt in weeks, and she engineered that "
+                        "famine personally, and you know it, and you stay."}],
+        "default": "lap"}
+
+
+@choice("kept_use")
+def _b_kept_use(character):
+    """Step 2: she puts the paperwork down. All three of her, and the only question is how."""
+    return {"key": "kept_use", "prompt": (
+        "Eventually the pen caps itself and she looks down at you properly, and her slacks are "
+        "already losing the argument — the root of her thickening, the three of them unfurling "
+        "patient and prehensile, each flared head finding the air like they've been listening "
+        "this whole time. \"Now then,\" she says, warm as the lamplight. \"The evening's mine "
+        "too. One of me, or all of me? Think carefully, sweetheart — there's no wrong answer, "
+        "there's just the answer I write down.\""),
+        "options": [
+            {"key": "one", "label": "One of her", "effect": "bethany_breeds",
+             "params": {"holes": 1, "devotion": 5.0}, "then": "kept_morning",
+             "desc": "she picks the hole herself — slow, deep, knotted, one load of the laced seed",
+             "outcome": "One, then — and she chooses which, because of course she does, tipping "
+                        "you across the desk and feeding one flared head home with the unhurried "
+                        "thoroughness of a woman signing her own property. The knot seats, the "
+                        "load comes scalding and laced and impossibly much, and the devotion in "
+                        "it goes to work on you while she holds you down and finishes her cold "
+                        "coffee with the free hand. \"There. One is plenty,\" she allows, fondly. "
+                        "\"Tonight.\""},
+            {"key": "all", "label": "All of her", "effect": "bethany_breeds",
+             "params": {"holes": 3, "devotion": 12.0}, "then": "kept_morning",
+             "desc": "mouth, cunt, ass — flared, seated, knotted in every hole at once, triple-laced",
+             "outcome": "\"All,\" you say — or start to, because the third syllable is already "
+                        "muffled: she takes the word as the permission it was and seats herself "
+                        "in every hole you own in one coordinated, practised motion, three flares, "
+                        "three knots, your whole body locked onto her like furniture being "
+                        "assembled. She works all three on separate rhythms until you can't tell "
+                        "which moan belongs to which occupation, and when she empties — everywhere, "
+                        "at once, triple-laced — the devotion hits you from three directions and "
+                        "meets in the middle, where you used to keep your objections. \"Greedy "
+                        "thing,\" she says afterward, stroking your hair, knotted into all of you, "
+                        "going nowhere for an hour. \"I'm so proud.\""}],
+        "default": "all"}
+
+
+@choice("kept_morning")
+def _b_kept_morning(character):
+    """Step 3: morning. Her bed, her file, and the question of whether you want to know."""
+    return {"key": "kept_morning", "prompt": (
+        "Morning arrives lamp-soft. You wake in her actual bed — a privilege with a paper trail — "
+        "to the small librarian sound of her reading. It's your file. Of course it's your file; "
+        "she reads it the way other people read the news, propped on one elbow, coffee on the "
+        "nightstand, your whole becoming in her lap in manila. She notices you waking and smiles "
+        "her morning smile, which is the real one. \"Good morning, mine. I'm just up to the "
+        "recent entries. Shall I read you to you? You've been *such* a good chapter lately.\""),
+        "options": [
+            {"key": "read", "label": "\"Read it to me.\"", "effect": "file_read",
+             "desc": "your devotion, your conditioning, her line's get out of you — the real figures, in her voice",
+             "outcome": "She reads you to you — every figure exact, every entry dated, her voice "
+                        "doing the numbers the way other voices do poetry — and hearing yourself "
+                        "rendered in her bookkeeping is more intimate than anything the night did. "
+                        "When she finishes she taps the folder square and kisses your forehead. "
+                        "\"My favourite document,\" she says. \"I have a drawer for the finished "
+                        "ones, you know. Yours is never going in it. Yours I keep *open*.\""},
+            {"key": "burrow", "label": "Burrow into her instead", "effect": "devote",
+             "params": {"amount": 6.0},
+             "desc": "don't ask — press into her warmth and let the file stay hers to know",
+             "outcome": "You burrow into her side instead, nose to her ribs, and she laughs low "
+                        "and lets the folder tip closed, her arm coming around you proprietary "
+                        "and warm. \"Don't want to know? Sweet thing. That's my favourite answer "
+                        "— it means the file's *all mine*.\" She holds you, and reads on silently "
+                        "over your head, and now and then she huffs, pleased, at something you did "
+                        "that you'll never know she knows. The not-knowing purrs in you like a "
+                        "kept secret. It's hers. So are you. The morning is warm."}],
+        "default": "read"}
