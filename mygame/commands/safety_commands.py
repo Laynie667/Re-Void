@@ -310,6 +310,85 @@ ALL_SAFETY_CMDS = [
 ]
 
 
+class CmdEscape(MuxCommand):
+    """
+    The §0 floor — the one door that is never locked.
+
+    Usage:
+      escape            -- leave the facility/realm entirely: home, and cleared.
+      forceclear        -- the heavier hammer, if 'escape' ever misbehaves.
+
+    This is the OOC safety exit. It ALWAYS works, from anywhere, in any state —
+    no phrase, no tier, no compliance, no convincing anyone. It takes you home and
+    purges every facility/realm binding on you: consent flags, navigation and
+    self-command locks, conditioning, posture, speech filters, the cycle, ownership
+    — all of it. Nothing in the game can gate, suppress, or delay this command.
+
+    (The in-scene 'safe' safeword clears restraints and position for a pause; this
+    is the full exit that ends the facility's hold on you completely.)
+
+    See also: safe, yellow
+    """
+
+    key = "escape"
+    aliases = ["facilityescape", "escapeme", "getmeout", "letmeout"]
+    locks = "cmd:all()"
+    help_category = "Safety"
+
+    def func(self):
+        char = self.caller
+        try:
+            from world.realm_build import escape as _escape
+            _escape(char)
+        except Exception:
+            # Belt-and-suspenders: if the realm helper fails for any reason, still
+            # run the bulletproof step-by-step clear. The floor never just fails.
+            try:
+                from world.realm_build import force_clear
+                force_clear(char)
+                char.msg("|gYou're clear. The realm lets go of you completely.|n")
+            except Exception:
+                try:
+                    from world.facility_build import run_facility_reset
+                    run_facility_reset(char, purge=True)
+                    char.msg("|gYou're clear.|n")
+                except Exception as e:
+                    char.msg(f"|rEscape hit an error but kept trying. Tell a dev: {e}|n")
+
+
+class CmdForceClear(MuxCommand):
+    """
+    The bulletproof §0 reset — clears ALL facility/realm state on you, step by step
+    so nothing can half-fail. Use if 'escape' ever misbehaves.
+
+    Usage:
+      forceclear
+
+    Always available, never gated. Does not move you home (use 'escape' for that);
+    it simply strips every binding, flag, lock, filter, and install off you.
+
+    See also: escape, safe
+    """
+
+    key = "forceclear"
+    aliases = ["force_clear", "clearme"]
+    locks = "cmd:all()"
+    help_category = "Safety"
+
+    def func(self):
+        char = self.caller
+        try:
+            from world.realm_build import force_clear
+            force_clear(char)
+            char.msg("|gForce-clear complete. Every binding on you is gone.|n")
+        except Exception as e:
+            char.msg(f"|rForce-clear hit an error: {e}|n")
+
+
+ALL_SAFETY_CMDS.append(CmdEscape)
+ALL_SAFETY_CMDS.append(CmdForceClear)
+
+
 # ===================================================================
 # ADMIN MONITORING COMMANDS
 # ===================================================================
