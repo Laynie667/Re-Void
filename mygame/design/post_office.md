@@ -95,6 +95,32 @@ with the fact.
 
 ---
 
+## QUALITY REWORK — bringing the office to cabin-grade (in progress)
+
+The first office build used flat `@desc` + un-gettable fixture Objects + a paragraph
+`physical_desc` on each clerk. Next to the cabin/den rooms (full `roomzone` zone builds —
+layered `detail`/`study`/`handle`/`inscribe` + real mechanics + deep ambient), that reads
+~1/10. The fix: re-author the office on the same **zone system**, to the same density.
+
+- **Rooms → `roomzone` paste scripts** (run standing in the existing room; overwrites the flat
+  desc with a zone build, leaves exits alone). FLAGSHIP DONE: `world/post_office_sorting_hall.txt`
+  (zones: tubes / pigeonholes / ladder / counter / cage; detail+study+handle+inscribe; real
+  SeatMechanic stool + ladder-step + CreakingStair; 8-line ambient). This is the bar.
+- **TODO rooms (same treatment):** Front Office, Quiet Room, Seraphine's Parlour, Calix's
+  Keeping-Room, Vesper's Nest, The Break Room.
+- **Clerks → character `zone`s.** Each clerk gets body/prop zones (hands, tail/horns, lanyard,
+  smile, the letter they're holding, etc.) with detail/study/handle, and a `physical_desc` that
+  embeds `{zone:...}` tokens — same depth a room gets. NOTE: the `zone` command edits the
+  CALLER's body, so clerk zones are installed by puppeting the NPC or by an `@py` zone-dict
+  injection matching `roomzone_commands._blank_zone`. TODO for Seraphine / Calix / Vesper.
+
+## KNOWN ISSUE — misrouted return exits (investigating)
+
+After the wrong-office mis-build + repair, some exits don't return to the room they should.
+Diagnose with the exit-graph `@py` (dumps each post_office room's exits + destinations); fix
+in the builder/repair once the graph identifies the offenders. Do NOT re-dig to "fix" an
+exit (that risks duplicate rooms) — repoint the existing exit instead.
+
 ## Notes for Implementation
 
 - All three share the same physical space. Only one or two may be "present" at a time depending on future scheduling logic, or all three can be present simultaneously.

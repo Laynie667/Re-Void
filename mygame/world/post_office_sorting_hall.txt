@@ -1,0 +1,122 @@
+== The Postal Office - The Sorting Hall (FULL zone build, cabin-grade) ==
+== Paste these commands in order while standing IN the Sorting Hall ==
+== This REPLACES the flat builder desc with a layered zone build (detail/study/
+==   handle/inscribe + real mechanics + deep ambient), matching the cabin rooms. ==
+== Exits are NOT touched here — keep the ones the builder/repair already made. ==
+
+-- STEP 1: Room Description --
+
+@desc here = |yThe Sorting Hall|n/Behind the counter the office stops pretending to be quaint. The Sorting Hall is a long warm chamber ribbed floor-to-ceiling with brass |wpneumatic tubes|n that hiss and shudder like a sleeping animal, and walls of |wpigeonhole racks|n rising past easy reach on a |wrolling ladder|n that runs the length of the room on an iron rail. Every slot is labelled in three different hands — one looping and warm, one drawn in stern capitals, one careful and anonymous — and half the labels are the office's real trade rather than any honest postal category. A long |wsorting counter|n runs down the room's spine, its surface worn to a shine and stained with decades of wax and ink. At the far end, under a hooded lamp that someone keeps deliberately low, stands the |wDead Letter Cage|n — black iron, triple-locked, and fuller than any honest town should make it.//{zone:tubes}//{zone:pigeonholes}//{zone:ladder}//{zone:counter}//{zone:cage}
+
+
+-- STEP 2: Create zones --
+
+roomzone add tubes
+roomzone add pigeonholes
+roomzone add ladder
+roomzone add counter
+roomzone add cage
+
+
+-- STEP 3: Zone descriptions --
+
+roomzone desc tubes = The |wpneumatic tubes|n run the walls in ribbed brass arteries, branching and rejoining overhead, each one fitted at intervals with a felt-lined catch-basket and a small brass flap that opens with a sigh when something arrives. The system is old and immaculately kept — the joints polished, the seals supple, the whole apparatus breathing with a faint warm draught that smells of brass and beeswax. Some baskets are lined with ordinary canvas. A few, set apart and lower, are lined with felt, and the letters that drop into those arrive warm to the touch and stay that way longer than paper has any right to.
+
+roomzone desc pigeonholes = The |wpigeonhole racks|n cover three walls to the ceiling, hundreds of slots in dark-stained oak, each one labelled in ink that ranges from fresh black to a faded brown the color of an old bruise. The labels nearest the floor are ordinary — districts, routes, surnames. The higher you read, the less ordinary they get: |xLONGING — UNSIGNED|n, |xPROPOSITIONS (EXPLICIT) — AWAITING COURAGE|n, |xTO BE READ ALOUD, BLINDFOLDED|n, |xRETURNED: TOO MUCH, APPARENTLY|n. The system by which they are ordered is not alphabetical and not chronological and is understood, completely, by exactly three people.
+
+roomzone desc ladder = The |wrolling ladder|n hangs from an iron rail bolted along the top of the racks and runs the room's full length on wheels worn quiet. It is the only way to reach the upper slots — the interesting ones — and it moves with a light push, gliding and then coasting to a slow stop. The rungs are worn to a pale polish in their centers. There is a small hook at the ladder's top for a lamp, and a wider step at the bottom, broad enough to stand two feet square on while reaching, or to be made to stand on while someone below decides you've reached far enough.
+
+roomzone desc counter = The |wsorting counter|n runs down the spine of the hall, a single slab of dark wood worn to a shine in a continuous band down its center where forearms and parcels and other things have slid along it for decades. Its surface is a geography of the trade: rings from a wax-pot, the ghost of spilled ink worked so deep it will never lift, a few initials carved low on the front edge where someone bent over it could reach with a pin. A tall stool stands at the near end, its seat worn to the shape of long shifts. Drawers run the counter's length, most unlocked, none labelled.
+
+roomzone desc cage = The |wDead Letter Cage|n: black iron, waist-high, triple-locked, and stuffed. This is where the undeliverable ends up — and in a town like this, |xundeliverable|n is rarely about the address. Through the bars you can read fragments of the unclaimed, the letters nested against each other like something sleeping. The cage's third lock, on inspection, is decorative. The letters stay because they are not done ripening — and the office's standing promise is that, given long enough, every one of them is delivered.
+
+
+-- STEP 4: Zone details --
+
+roomzone detail tubes/baskets = The felt-lined baskets — the warm ones — are set lower than the others and apart, three of them in a row near the counter's working end. The felt is the same dense, pale stuff the milking stalls use for their kneeling pads, and it has been replaced more than once; the oldest layer shows at the worn corners. A letter dropped into one of these arrives at blood temperature and holds it, and the felt holds it longer. No one has explained why some correspondence comes through warm. No one who works here seems to find it strange.
+
+roomzone detail tubes/flap = Each tube terminates in a small hinged brass flap, and each flap is sprung to close itself with a soft definite click. The flaps over the warm baskets have had their springs eased — they open wider and close slower, so that what arrives in them is not snapped at. Someone went down the line of them with a screwdriver and a careful idea of which letters deserved a gentler landing.
+
+roomzone detail pigeonholes/labels = Read closely, the labels are a census of everything the town cannot say to itself. |xTHINGS SAID AT 3AM (HOLD)|n. |xTO THE ONE FROM THE BAKERY — SEE CAGE|n. |xCONFESSIONS, FILED BY WEIGHT|n. |xWILL COLLECT IN PERSON OR NOT AT ALL|n. The three hands trade off even within a single label sometimes — a category begun in stern capitals and finished in the looping warm hand, an argument about filing conducted entirely in marginal corrections.
+
+roomzone detail pigeonholes/adjacent = Two slots, high on the north wall and side by side, are labelled in two different hands with two different names — and the names are addressed to each other. The letters in them have been left there, facing, neither delivered. Whoever maintains the racks has chosen to keep them in adjacent slots rather than route them across the room, and no one will admit to having made the choice, and the choice is re-made every time the racks are reorganized.
+
+roomzone detail ladder/step = The broad bottom step of the ladder is worn in two distinct ways: the flat, even wear of feet stepping up to climb, and, overlaid on it, a different polish — two patches at the front edge, knee-width apart, where someone kneeling on the step would rest. The ladder is used to reach the high slots. It is also, the wear says, used to put someone at a convenient height and leave them there.
+
+roomzone detail counter/drawers = The drawers under the counter run its full length and are, almost all of them, unlocked. Their contents are the working clutter of the trade — string, sealing wax in a dozen colors, blank cards, spare flaps, a coil of the felt — and, in the third drawer from the near end, under a false bottom that isn't hidden so much as simply not mentioned, a smaller collection of items whose function has nothing to do with the post and everything to do with the people who run it.
+
+roomzone detail cage/fragments = The fragments legible through the bars: a confession to a neighbour's wife that runs to nine pages and grows considerably less repentant as it goes; a parcel tag reading |xCONTENTS: WORN, AS REQUESTED — COLLECT IN PERSON OR NOT AT ALL|n; an envelope addressed only |xto the one who watches me from the bakery, yes, you, I leave the curtains open ON PURPOSE|n; and a single very old, very handled letter, marked in the looping hand: |xdelivered eventually. they always are.|n
+
+
+-- STEP 5: Zone study details --
+
+roomzone study tubes + One of the tubes carries a draught noticeably warmer than the others — trace it with a hand and it runs down into the floor at the counter's end, toward wherever the warm letters come from. The brass over that one tube is polished brighter than the rest, as though it is touched often, by someone checking.
+roomzone study tubes + A tube high on the east wall delivers something while you watch: a soft wet thunk into a felt basket, a letter arriving faintly steaming. None of the clerks, if any are present, will react. Regulars learn not to ask. Eventually.
+
+roomzone study pigeonholes + The faded brown ink in the oldest labels is, on close inspection, not ink in all cases — a few of the very oldest are written in something that browned with age the way ink does not. The labels they mark are the ones highest up, hardest to reach, least often refiled.
+roomzone study pigeonholes + Counting the hands on the labels, a fourth appears very rarely — older than the other three, in a slot here and there near the ceiling, the letters formed differently, as if the system had a founder the current three inherited and do not mention.
+
+roomzone study ladder + The ladder's rail has a section, about two-thirds along, where the wheels have worn the iron bright on the underside — a spot the ladder is parked at far more than anywhere else. It sits below the slots labelled with the least postal categories. The ladder lives where the interesting filing is.
+roomzone study ladder + The lamp-hook at the ladder's top has scratches around it from a lamp hung and taken down many times, and a second set of marks lower on the ladder's side rail at about wrist height — narrower, paired, the kind a cord or a cuff leaves, not a lamp.
+
+roomzone study counter + The continuous worn band down the counter's center is interrupted at one point by a smoother, deeper patch, hip-width, at the near working end — a place where something has been bent over the counter often enough to polish the wood past where forearms alone would reach.
+roomzone study counter + The initials carved low on the counter's front edge, read left to right, are not all the same depth or age. The newest is barely a scratch. Someone adds to them. The practice of being marked into the counter is ongoing.
+
+roomzone study cage + The third lock, the decorative one, has never been engaged — the mechanism behind it is a dummy, the keyhole drilled but blind. The two working locks are oiled and used. The cage could be opened. The letters are kept in not by the iron but by the rule that they are not yet ripe.
+roomzone study cage + The letters lowest in the cage have compressed under the weight of those above into a single soft mass, the oldest of them fused at the folds. Near the bottom, a corner of paper shows a date eleven years gone. Delivered eventually, the office promises. Eleven years is within the office's definition of eventually.
+
+
+-- STEP 6: Zone inscriptions --
+
+roomzone inscribe/enable counter
+roomzone inscribe/enable cage
+
+
+-- STEP 7: Mechanic items --
+
+-- The sorting stool at the counter (seated, capacity 1) --
+@create Sorting Stool:typeclasses.seat_mechanic.SeatMechanic
+@set Sorting Stool/capacity = 1
+@set Sorting Stool/label = the tall sorting stool
+@set Sorting Stool/position = seated
+use Sorting Stool on counter
+
+-- The ladder's bottom step (kneeling, capacity 1) — reach, or be put at a height --
+@create Ladder Step:typeclasses.seat_mechanic.SeatMechanic
+@set Ladder Step/capacity = 1
+@set Ladder Step/label = the broad bottom step
+@set Ladder Step/position = kneeling
+use Ladder Step on ladder
+
+-- The rolling ladder itself, as a climbable --
+@create Sorting Ladder:typeclasses.stair_mechanic.CreakingStair
+@set Sorting Ladder/label = the rolling ladder
+use Sorting Ladder on ladder
+
+
+-- STEP 8: Handle interactions --
+
+roomzone handle tubes/baskets = You set your hand in one of the felt-lined baskets and find it warm — not warmed-by-the-room warm, but the specific blood-heat of something just handled, though no hand has been near it. A letter rests in the felt, and it is warm too, and it holds the warmth against your palm the way a living thing briefly would. You leave it where it lies. Whatever routes the warm correspondence here, it is not finished with this one, and the felt will keep it ready.
+
+roomzone handle ladder/step = You step up onto the broad bottom rung and the ladder takes your weight without complaint, coasting an inch along its rail before it stills. From here the upper slots come into reach — the interesting ones, the ones the labels turn frank about. You become aware, standing here at this deliberate height with the room below you, of how exactly the step has been worn: feet to climb, and knees to kneel, and that someone choosing the second use would have you at precisely the right level and entirely dependent on the ladder not rolling. It does not roll. It was placed here, below these particular slots, on purpose.
+
+roomzone handle counter/surface = You run a hand down the worn center band of the counter, over the wax-rings and the ink-ghost and the deep smooth patch at the working end, and the wood is warm and faintly waxed under your palm. Bent over it, forearms on the shine, you understand the smoother hip-width patch without being told — the counter has been used as more than a counter, often, by people who found it exactly the right height. The initials carved into the front edge are under your fingers from here, a small worn alphabet of everyone who has been marked into the place.
+
+roomzone handle cage/fragments = You crouch at the Dead Letter Cage and read what the bars allow. The letters nested inside are warm, faintly, all of them, the way the felt baskets are warm. The decorative third lock sits cold and false above the two that work. You could not open it without keys you do not have — but you understand, reading the old fused mass at the bottom and the line in the looping hand promising delivery, that the iron was never really the point. The letters stay because they are not ready. When they are, the office keeps its promise. You straighten up feeling, obscurely, that you have been read rather than the other way around.
+
+
+-- STEP 9: Ambient lines --
+
+rambient/add |xA pneumatic tube somewhere in the brass receives something with a wet, satisfied thunk, and a felt basket takes the weight of a letter that arrives faintly steaming.|n
+rambient/add |xThe rolling ladder shifts an inch along its rail on its own — settling, or a draught, or it was somewhere else a moment ago and has quietly relocated to the interesting slots.|n
+rambient/add |xSomething in the Dead Letter Cage settles, papery and patient, like a nest rearranging itself around its own secrets.|n
+rambient/add |xTwo letters in adjacent pigeonholes are addressed to each other. They have been left side by side, facing, and nobody will say which hand did it.|n
+rambient/add |xThe warm draught off the tubes carries brass and beeswax through the hall, and under it, just once, the blood-warm smell of correspondence that was never anyone else's business.|n
+rambient/add |xThe hooded lamp over the cage gutters and steadies. For a moment the line in the looping hand is legible through the bars — delivered eventually, they always are — and then the shadow takes it back.|n
+rambient/add |xA brass flap over one of the felt baskets eases open, slow on its eased spring, closes just as slowly, and the letter it delivered lies warm in the felt, in no hurry.|n
+rambient/add |xThe initials carved low on the counter's edge catch the lamplight. There is a fresh one, barely a scratch yet, at the end of the row.|n
+
+
+-- STEP 10: Exits --
+-- LEAVE the builder's exits alone; do not re-open here. If an exit is wrong, fix it
+--    with the exit-repair, not by re-digging. --
