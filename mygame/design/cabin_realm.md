@@ -161,22 +161,38 @@ cave: it reads as open country, impossibly, underground.
   the scale of **Yggdrasil** — a world-tree terminus.
 - **A day/night cycle despite being underground** — light that rises and falls on its own
   schedule; **glowing foliage and fairy-light**; warm and green, **not winter** like the
-  forest above. (Build note: a room/zone toggle script or the existing weather/time hooks
-  driving a self-contained cycle; the green-sweet smell at the Mouth is its first hint.)
+  forest above. **DECIDED (user): a dedicated cycle script** — a self-contained
+  `ValleyCycleScript` (DefaultScript on the valley room(s)) driving its own time-of-day +
+  light + ambient, independent of the realm weather so winter never bleeds in. (The
+  green-sweet smell at the Mouth is its first hint.) Build note: model on `AmbientScript` /
+  `PosteRipenScript` — interval tick advances a `valley_phase` (dawn/day/dusk/night), each
+  phase swapping the room's `desc`-light wording + its ambient pool; flag in the realm reset
+  spec.
 - **A small grove at the base of the great tree** holds a **ritual space**: a **stone
   slab/altar dedicated to Kakia**.
 - **Kakia** — established here as a **goddess associated with wolves and with futanari-at-
-  will** (becoming/granting a futa form by her favor). Proposed real hooks (for the user to
-  confirm/shape):
-  - A **statue that changes** (state-driven description — phase/devotion/offering count).
-  - **Offerings** → **blessings**: route through REAL systems, not flavor — e.g. a body/
-    transform grant (futanari-at-will via the existing body/transform system), a fertility/
-    breeding boon, a wolf-bred standing bump. An `offer`-style verb at the altar + an
-    offerings tally on the statue.
-  - §0: any blessing that alters the body must be reversible by the floor; any new flag
-    (Kakia's favor / granted-futa / pack standing) registered in the realm reset spec.
-- OPEN for the user: Kakia's exact blessings + their costs; whether the valley is purely a
-  reward space or also has its own dangers/scenes; who/what tends the grove.
+  will** (becoming/granting a futa form by her favor). **DECIDED (user): blessings route
+  through REAL systems** (option 1), open to additions. Confirmed direction:
+  - A **statue that changes** — state-driven description keyed to **Kakia's favor**
+    (devotion-style meter) and/or offering count; it visibly answers what you've given.
+  - An **`offer`-style altar verb** + an offerings tally on the statue.
+  - **Blessings (real hooks):**
+    - **Futanari-at-will** via the existing body/transform system (a granted, toggleable
+      futa form — Kakia's signature gift).
+    - **Fertility / breeding boon** (a real quota/lineage or pregnancy-rate effect).
+    - **Wolf-bred standing** bump (a pack/standing track — ties to the den's lineage wall).
+  - *Suggestions on the table (user open to these):*
+    - **A wolf-shape blessing / pack-gait** — a temporary or at-will lupine transform (pairs
+      with the den's transformation-mural lore; reuses transform).
+    - **The Alpha's mark** — an earned freeform brand/mark (Shadow's paw + your handprint,
+      mirroring the Birthing Den wall) granted at a favor threshold; real `record_mark`.
+    - **A heat/rut boon** — a consensual perpetual-heat or rut window (reuses the heat hooks),
+      tunable, floor-clearable.
+    - **Tiered favor:** small offerings → small boons; the body-altering gifts gated behind
+      real devotion so the valley itself is the `maze gate` payoff.
+  - **§0:** any blessing that alters the body is reversible by the floor; every new flag
+    (Kakia's favor / granted-futa / wolf-form / pack standing / heat) registered in the realm
+    reset spec. Cost-per-blessing + thresholds: still the user's to set.
 
 ## 2f. THE FOREST MAZE — winter location list (user brief)
 
