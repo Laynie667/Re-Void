@@ -1595,6 +1595,42 @@ class CmdClerk(Command):
 ALL_FACILITY_VERBS.append(CmdClerk)
 
 
+class CmdScene(Command):
+    """
+    Begin a choice-driven scene — a real, stateful set-piece you drive with `choose`.
+
+    Usage:
+        scene                 — start the available scene (Bethany's Intake)
+        scene bethany         — start Bethany's Intake explicitly
+
+    Unlike the old auto-cycle (which shuffled context-free beats at you on a timer), a scene
+    is paced by YOU: a present actor sets the situation and then waits for your choice, responds
+    to exactly what you chose, remembers it, and builds from there. Drive it with `choose <n>`.
+    The §0 floor still applies — `escape` / `forceclear` end it instantly, always.
+    """
+    key           = "scene"
+    aliases       = ["intakescene"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.cyoa import start_scene, has_pending
+        except Exception:
+            caller.msg("|xThe scene won't start.|n")
+            return
+        if has_pending(caller):
+            caller.msg("|xYou're mid-choice already — answer it first (|wchoose <n>|x), or "
+                       "|wescape|x to bail out entirely.|n")
+            return
+        # One scene for now; this is the proof-of-concept entry point.
+        if not start_scene(caller, "bx_arrival", room=caller.location):
+            caller.msg("|xNo scene is available to you here right now.|n")
+
+ALL_FACILITY_VERBS.append(CmdScene)
+
+
 def _in_post_office(room):
     """True if `room` is part of the Postal Office complex (by area tag, else a clerk present)."""
     if not room:

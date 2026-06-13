@@ -49,8 +49,8 @@ _NEW_FLAGS = [
     "offspring_by_sire", "offspring_by_sex", "offspring_max_gen",
     # dairy engorgement
     "milk_engorge_beats",
-    # CYOA choices
-    "pending_choice", "cycle_emphasis",
+    # CYOA choices + scenes
+    "pending_choice", "cycle_emphasis", "scene_flags",
     # spiral chair
     "in_hypno_chair", "chair_stage", "chair_beats", "chair_release_at", "chair_struggle",
     "chair_sessions",
@@ -335,11 +335,60 @@ def test_poste_ripen():
     return "poste ripen: age-gated, oldest-first, content never leaked"
 
 
+def test_bethany_scene():
+    """The choice-driven scene engine: Bethany's Intake chains through all six beats on the
+    player's choices, remembers earlier choices (scene memory), references them in later beats,
+    and ends clean (clears the pending choice + scene memory)."""
+    import sys, types
+    ev = types.ModuleType("evennia"); ev.search_object = lambda *a, **k: []
+    uu = types.ModuleType("evennia.utils")
+    uu.create = types.SimpleNamespace(create_object=lambda *a, **k: None)
+    ev.utils = uu
+    sys.modules.setdefault("evennia", ev)
+    sys.modules.setdefault("evennia.utils", uu)
+    cyoa = _load("cyoa_scene", "cyoa.py")
+
+    class _DB:
+        def __init__(self): self._d = {}
+        def __getattr__(self, k):
+            if k == "_d": raise AttributeError
+            return self._d.get(k)
+        def __setattr__(self, k, v):
+            if k == "_d": object.__setattr__(self, k, v)
+            else: self._d[k] = v
+    class _Char:
+        def __init__(self): self.db = _DB(); self.name = "Laynie"; self.location = None
+        def msg(self, m): pass
+
+    c = _Char()
+    assert cyoa.start_scene(c, "bx_arrival"), "scene failed to start"
+    beats = []
+    for choice in ("bold", "honest", "present", "sign", "submit", "thank"):
+        pend = c.db.pending_choice
+        assert pend, f"no pending choice before '{choice}'"
+        beats.append(pend["key"])
+        opt, _ = cyoa.resolve_choice(c, choice)
+        assert opt is not None, f"'{choice}' did not resolve"
+    assert beats == ["bx_arrival", "bx_file", "bx_strip", "bx_contract", "bx_first", "bx_close"], beats
+    assert c.db.pending_choice is None, "scene should be over"
+    assert c.db.scene_flags is None, "end should clear scene memory"
+
+    # Memory: a different path is retained and referenced by a later beat.
+    c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
+    cyoa.resolve_choice(c2, "meek")
+    cyoa.resolve_choice(c2, "silent")
+    sf = c2.db.scene_flags or {}
+    assert sf.get("posture") == "meek" and sf.get("candor") == "silent", sf
+    assert "nothing" in cyoa._BUILDERS["bx_strip"](c2)["prompt"].lower(), \
+        "later beat did not reference the earlier silent choice"
+    return "Bethany scene: 6 beats chain on choices, memory retained + referenced, ends clean"
+
+
 _TESTS = [
     test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
     test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
     test_speech_filter_order, test_heat_tell, test_honorifics_address,
-    test_honorific_escalation, test_poste_ripen,
+    test_honorific_escalation, test_poste_ripen, test_bethany_scene,
 ]
 
 
