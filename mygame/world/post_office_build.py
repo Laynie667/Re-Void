@@ -166,14 +166,42 @@ def _tag(obj):
     return obj
 
 
+def _is_room(obj):
+    """True if obj is a Room (not an exit, NPC, etc.). Defensive: if the Room typeclass can't
+    be imported, fall back to 'has .exits and isn't an exit'."""
+    if obj is None:
+        return False
+    try:
+        from typeclasses.rooms import Room
+        return obj.is_typeclass(Room, exact=False)
+    except Exception:
+        return hasattr(obj, "exits") and not hasattr(obj, "destination")
+
+
 def _find_office():
-    """The Postal Office — by name, else the design doc's #32."""
+    """The Postal Office ROOM. IMPORTANT: the 'west' exit from the Wayfarer's Hall carries the
+    alias 'post office' (per the design doc), so a plain name search can return that EXIT, not
+    the room — which once caused the whole office to be built *inside* the exit. So: match
+    rooms only, via the Room typeclass manager first (most reliable), then a rooms-only name
+    search, then the design doc's #32."""
+    # 1) Room typeclass manager — never matches exits/NPCs.
+    try:
+        from typeclasses.rooms import Room
+        hit = Room.objects.filter(db_key__icontains="postal office").first()
+        if hit:
+            return hit
+    except Exception:
+        pass
+    # 2) name search, rooms only.
     for term in ("The Postal Office", "Postal Office"):
-        res = search_object(term)
-        if res:
-            return res[0]
+        for r in (search_object(term) or []):
+            if _is_room(r):
+                return r
+    # 3) dbref fallback (#32), rooms only.
     res = search_object("#32")
-    return res[0] if res else None
+    if res and _is_room(res[0]):
+        return res[0]
+    return None
 
 
 def _fixture(key, desc, room, err):
@@ -281,6 +309,91 @@ def build_post_office(caller):
                "counter · the heavy curtain · the mirror / strong door / fold in the corner · "
                "the back stairs to the Break Room · read the cage/drawer/kit/tray/toyboxes/rota/"
                "shelf · |wclerk|x to talk · |wposte|x at the cage)|n")
+
+
+def repair_post_office(caller):
+    """One-shot repair for a build that mis-targeted the 'west' exit (its 'post office' alias
+    shadowed the room): re-home the clerks + office ambient onto the real office ROOM, bridge
+    that room to the existing Sorting Hall, repoint the hall's misrouted back-exit, and delete
+    the stray exits/ambient left on the wrong object. Idempotent and defensive — each step is
+    guarded so a partial failure can't corrupt. Run while standing in the office is fine; it
+    resolves the office by Room manager regardless."""
+    office = _find_office()
+    if not _is_room(office):
+        caller.msg("|rRepair: can't find the Postal Office ROOM.|n")
+        return
+    report = []
+
+    # The Sorting Hall (room).
+    hall = next((r for r in (search_object("The Sorting Hall") or []) if _is_room(r)), None)
+
+    # 1) Re-home the clerks onto the office room (they were spawned inside the 'west' exit).
+    try:
+        from typeclasses.npc import NPC
+    except Exception:
+        NPC = None
+    for name in ("Seraphine", "Calix", "Vesper"):
+        for c in (search_object(name) or []):
+            try:
+                if NPC is not None and not c.is_typeclass(NPC, exact=False):
+                    continue
+                if c.location is not office:
+                    c.move_to(office, quiet=True)
+                    report.append(f"moved {name}")
+            except Exception:
+                pass
+
+    # 2) Office ambient onto the room (merge, never replace).
+    try:
+        amb = list(getattr(office.db, "ambient_msgs", None) or [])
+        added = 0
+        for line in _OFFICE_AMBIENT:
+            if line not in amb:
+                amb.append(line); added += 1
+        if added:
+            office.db.ambient_msgs = amb
+            report.append(f"{added} ambient lines")
+        if hasattr(office, "ensure_ambient_script"):
+            office.ensure_ambient_script()
+    except Exception:
+        pass
+
+    # 3) Bridge office <-> hall; repoint the hall's misrouted back-exit; drop strays.
+    if hall:
+        try:
+            if not any(getattr(e, "destination", None) is hall for e in office.exits):
+                create.create_object("typeclasses.exits.Exit", key="behind the counter",
+                                     aliases=["counter", "sorting", "back"],
+                                     location=office, destination=hall)
+                report.append("office->hall exit")
+            # the hall's 'front office' exit points at the wrong object (the 'west' exit) —
+            # repoint any hall exit whose destination is not a room back to the office.
+            for e in list(hall.exits):
+                k = (e.key or "").lower()
+                if ("front" in k or "office" in k or "out" in k) and not _is_room(getattr(e, "destination", None)):
+                    e.destination = office
+                    report.append("hall->office repointed")
+            # delete office->hall exits that live on a NON-room (i.e. inside the 'west' exit).
+            for ex in (search_object("behind the counter") or []):
+                loc = getattr(ex, "location", None)
+                if loc is not None and not _is_room(loc):
+                    ex.delete(); report.append("removed stray office exit")
+        except Exception as e:
+            caller.msg(f"|rRepair bridge issue: {e}|n")
+    else:
+        caller.msg("|rRepair: couldn't find The Sorting Hall room to bridge to.|n")
+
+    # 4) Clear ambient stranded on the mis-targeted 'west' exit object.
+    try:
+        for ex in (search_object("west") or []):
+            if not _is_room(ex) and getattr(ex.db, "ambient_msgs", None):
+                ex.db.ambient_msgs = None
+                report.append("cleared stray ambient")
+    except Exception:
+        pass
+
+    caller.msg("|gPost office repair:|n " + (", ".join(report) or "nothing needed") +
+               "\n|x  (now go |wbehind the counter|x from the office → the Sorting Hall.)|n")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
