@@ -4303,3 +4303,236 @@ def _sb_after(character):
                 "shifting at the first hole, because the queue never empties and the wall never "
                 "closes and you are, now, one of the things it's for.")}],
         "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Showroom — appraised, blocked, bid on, sold. The ownership turn.
+# Cinematic, state-aware. Actor: Bethany presiding (auctioneer AND the buyer who
+# means to win) + the gallery of bidders behind one-way glass. REAL payload:
+# _appraise sets your sale price, bid_up climbs the ledger, bethany_buys transfers
+# ownership for real (bethany_owned, title, sale_price). §0 always frees you.
+# Flow: arrival→display→bidding→gavel→bought. Entry: `scene showroom`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("sw_arrival", root=False)
+def _sw_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("A nugget doesn't walk the block — you're set on a velvet plinth at its centre, "
+                "limbless and turned slowly by hand so every angle of you faces the glass, a "
+                "centrepiece lot. ")
+    if st["preg"]:
+        note += ("The swell of the facility's get is lit deliberately, turned to the glass; a "
+                 "proven bred lot draws the serious money and Bethany knows it. ")
+    if st["little"]:
+        note += ("Down in your headspace you don't understand the lights or the glass, only that "
+                 "you're being looked at, and the gallery finds the confusion appealing, which "
+                 "raises you a tier on its own. ")
+    return {"key": "sw_arrival", "prompt": (
+        "The Showroom is all light and glass and money. They prep you behind the scenes — oiled, "
+        "posed, your marks buffed to read clean — and walk you out onto the |wblock|n: a raised "
+        "circle under hard white display lamps, mirrored so you can watch yourself be watched, and "
+        "all around it the |wone-way glass|n of the Buyers' Gallery, behind which you cannot see "
+        "the bidders but can *feel* them, a roomful of eyes and chequebooks gone quiet at the sight "
+        "of fresh stock. " + note +
+        "\n\nAnd presiding over it, at a small lectern with a gavel and your file open in front of "
+        "her, is |wBethany|n — auctioneer today, bright and warm and businesslike, working the room "
+        "she owns. She catches your eye in the mirror and her smile is private, and there is "
+        "something underneath it that has already decided. \"|wThere|n she is,\" she says, to the "
+        "glass, to the money. \"Our next lot. Look at the lines on this one. Let's find out what "
+        "you're worth — and then let's find out who's taking you home.\" The smile, in the mirror, "
+        "is just for you. \"Show them, sweetheart.\""),
+        "options": [
+            {"key": "perform", "label": "Perform for the glass", "set": {"block": "perform"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "give the gallery a show; drive your own price up",
+             "outcome": (
+                "You perform — turn, arch, show yourself off to the eyes you can't see — and you "
+                "feel the room *lean in*, the hush sharpening, and Bethany's approval glints in the "
+                "mirror. \"Oh, a *natural*. The gallery does love one that performs.\" You are, in "
+                "this moment, complicit in your own sale, and the worst part is the flush of pride "
+                "when the first murmur of interest ripples behind the glass.")},
+            {"key": "freeze", "label": "Freeze under the lights", "set": {"block": "freeze"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "go still and stricken; the stillness sells too",
+             "outcome": (
+                "You freeze — go still and stricken under the hard lights, unable to make yourself "
+                "perform — and it doesn't help you at all. \"Placid,\" Bethany purrs to the glass, "
+                "spinning it. \"Bidders, note the temperament — takes handling beautifully, no "
+                "fuss.\" Your stillness reads as docility, and docility *sells*, and the murmur "
+                "behind the glass picks up regardless. There is no way to stand on the block that "
+                "isn't an advertisement.")},
+            {"key": "look", "label": "Look for Bethany in the glass", "set": {"block": "look"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "ignore the buyers; find the one face you know",
+             "outcome": (
+                "You ignore the glass and the lights and find *her* — the one face in the room you "
+                "know, steady at her lectern — and something flickers across Bethany's "
+                "auctioneer-brightness, there and gone. \"Eyes on me. Of course they are.\" Quieter, "
+                "almost to herself, almost fond: \"That makes this easier. For me. We'll see about "
+                "you.\" She raps the gavel once to open. \"Let's begin.\"")}],
+        "default": "perform",
+        "then": "sw_display"}
+
+
+@choice("sw_display", root=False)
+def _sw_display(character):
+    return {"key": "sw_display", "prompt": (
+        "\"First, the particulars.\" Bethany reads your |wappraisal|n aloud to the glass — and it "
+        "is your whole self rendered as a lot: your measurements and your capacities, your "
+        "conditioning depth and your suggestibility scored like a wine, your hole-training and "
+        "your brood-count and your milk-yield, every mark on you catalogued by the parlour and "
+        "read off like provenance. Handlers step onto the block to *demonstrate* — turning you, "
+        "opening you, parting you to the glass, working a reaction out of you on cue so the "
+        "bidders can see you respond — and the numbers settle into a starting price that is, "
+        "horribly, *you*, summed and rounded and printed on a card. \"A clean, documented, "
+        "well-broken lot,\" Bethany tells the room, with a saleswoman's pride. \"We'll open the "
+        "bidding there. Show them what they'd be buying, sweetheart.\""),
+        "options": [
+            {"key": "show", "label": "Let them demonstrate you — respond on cue", "effect": "facility",
+             "params": {"method": "_appraise", "kind": "proc"}, "set": {"shown": "willing"},
+             "desc": "the real appraisal lands; your price is set off your actual file",
+             "outcome": (
+                "You let the handlers work you and you respond on cue, and your real appraisal is "
+                "read and recorded — your actual stats, summed into an actual sale price printed on "
+                "the lot card. Hearing yourself totalled, hearing the number that *is* you, lands "
+                "somewhere it'll stay. The gallery murmurs at the demonstration. You sold yourself "
+                "the moment your body answered the handler's hand in front of the glass.")},
+            {"key": "endure_show", "label": "Endure the demonstration, give nothing", "effect": "facility",
+             "params": {"method": "_appraise", "kind": "proc"}, "set": {"shown": "endured"},
+             "desc": "the appraisal happens regardless; the price is set the same",
+             "outcome": (
+                "You endure the handling and refuse to perform the responses — and they work them "
+                "out of you anyway, your body answering the practised hands whether you allow it or "
+                "not, the appraisal read and the price set exactly the same. \"Even resists "
+                "prettily,\" Bethany notes to the glass, turning it into a selling point. \"Some "
+                "buyers pay a premium for a little fight left in.\"")}],
+        "default": "show",
+        "then": "sw_bidding"}
+
+
+@choice("sw_bidding", root=False)
+def _sw_bidding(character):
+    return {"key": "sw_bidding", "prompt": (
+        "And the |wbidding|n opens. You can't see them, but you hear it in Bethany's rhythm — the "
+        "auctioneer's patter picking up, calling numbers off the glass, \"I have — thank you — and "
+        "again — do I hear—\" — and the price climbing, climbing, each rising bid a fresh statement "
+        "of exactly how much someone behind that glass wants to own you. It is the most naked you "
+        "have ever been, more than the nudity, more than the demonstration: being *wanted with "
+        "money*, in a rising tide of it, while you stand lit and mirrored and unable to see a "
+        "single face that's deciding to buy you. Your own body, traitor to the last, responds to "
+        "the exhibition of it — the heat of all those unseen eyes, the climbing number — and "
+        "Bethany sees, and folds it into the patter. \"Lot's *enjoying* this, bidders. Look at "
+        "that. Worth every coin.\""),
+        "options": [
+            {"key": "drive", "label": "Play to the bids — drive the number up", "effect": "bid_up",
+             "set": {"bid": "drove"}, "desc": "make them want you more; climb your own price",
+             "outcome": (
+                "You play to it — give the climbing room more to want — and the bids answer, the "
+                "number ratcheting higher off your real appraised price, the ledger climbing with "
+                "every show you make, your worth a figure you're actively inflating with your own "
+                "body. Bethany rides it gleefully. \"And *again* — thank you — the lot knows its "
+                "business.\" You will never be able to unknow what you went for, or that you helped "
+                "it climb.")},
+            {"key": "still_bid", "label": "Stand still and let it climb without you", "effect": "bid_up",
+             "set": {"bid": "still"}, "desc": "the number rises anyway; the ledger doesn't need your help",
+             "outcome": (
+                "You stand still and refuse to feed it — and the number climbs anyway, the bidders "
+                "wanting what they want, the ledger ratcheting up off your appraised price without "
+                "the first scrap of help from you. \"Even standing there breathing, look what "
+                "they'll pay,\" Bethany marvels to the glass. Your worth is set by their wanting, "
+                "not your performing. You were always going to sell. The only question left is to "
+                "whom.")}],
+        "default": "drive",
+        "then": "sw_gavel"}
+
+
+@choice("sw_gavel", root=False)
+def _sw_gavel(character):
+    return {"key": "sw_gavel", "prompt": (
+        "The bidding thins to two, then to a held breath. \"Going once,\" Bethany says, gavel "
+        "raised — and here, in the last second before it falls, she does something the gallery "
+        "can't see: she catches your eye in the mirror and *waits*, the auctioneer's brightness "
+        "gone still, the question plain on her face though she'd never say it aloud in this room. "
+        "She has a paddle of her own resting at her lectern. She has had it resting there the whole "
+        "time. \"Going twice,\" she says, slow, eyes on you, giving you the one beat of say you'll "
+        "get in the whole transaction — not over *whether*, that was never yours, but over *who* "
+        "you reach for as the gavel falls.\""),
+        "options": [
+            {"key": "her", "label": "Look to Bethany — reach for her", "effect": "bethany_buys",
+             "set": {"sold": "bethany"}, "desc": "let her be the one; the gavel falls to her paddle",
+             "outcome": (
+                "You look to her — reach, with your eyes, for the one face you know — and something "
+                "wins behind Bethany's expression. Her own paddle lifts. \"|wSold,|n\" she says, "
+                "and brings the gavel down on herself, \"to the house.\" The ownership transfers "
+                "for real — you are hers now, on paper, your title rewritten to read as Bethany's, "
+                "your sale price the winning number — and she comes down off the lectern to claim "
+                "you off the block personally, warm and certain and *pleased*. \"There. I wasn't "
+                "going to let anyone else have you. I just wanted to see you choose me first.\"")},
+            {"key": "dark", "label": "Look away — to the dark behind the glass", "effect": "bid_up",
+             "set": {"sold": "pending"}, "desc": "refuse to reach for her; the bid climbs, the gavel hangs",
+             "outcome": (
+                "You look away — out to the dark behind the glass, to the strangers, to anywhere "
+                "but her — and Bethany's face does something complicated and then settles, and her "
+                "paddle lifts anyway, higher, *plus one*, and the gavel hangs unfallen. \"...Going "
+                "twice,\" she repeats, softer, the sale deliberately stalled. \"No. Not like this. "
+                "I'll have you reaching for me when it falls, sweetheart, or I'll buy you again and "
+                "again until you do. The block keeps. So do I.\" The number climbs. There is always "
+                "another inspection day.")}],
+        "default": "her",
+        "then": "sw_bought"}
+
+
+@choice("sw_bought", root=False)
+def _sw_bought(character):
+    sold = scene_flag(character, "sold", "bethany")
+    if sold == "pending":
+        body = ("She has you walked back off the block unsold — which is its own verdict, and not "
+                "a reprieve. \"Back to processing. We'll run you through the showroom again when "
+                "you're a little readier to look at me when it counts.\" The not-being-bought is "
+                "somehow worse than the sale would have been: you've been found wanting at the one "
+                "thing she actually wanted, and you'll be back on the block until you give it.")
+        opts = [
+            {"key": "relief", "label": "Feel the relief of not being sold", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "a reprieve that isn't one",
+             "outcome": (
+                "You feel relief — and it curdles immediately, because she's right, this isn't an "
+                "escape, it's a *do-over*, and you'll stand on that block again and again until you "
+                "reach for her when the gavel hangs. The relief was the bait. Wanting the sale to "
+                "be over is the first step toward wanting her to be the one who ends it.")},
+            {"key": "ache", "label": "Feel the ache of not being chosen", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "the hook she meant to set",
+             "outcome": (
+                "And there it is — the ache. Not relief: *disappointment*. Some hooked part of you "
+                "wanted her paddle to fall, wanted to be the thing she took home, and didn't get "
+                "it, and the wanting is exactly the thing she stalled the sale to grow. You'll "
+                "reach for her next time. You're already most of the way there, and you both know "
+                "it.")}]
+    else:
+        body = ("She claims you off the block herself — a hand at your nape, proprietary and warm, "
+                "steering you out of the lights and the glass and into being, simply and on paper, "
+                "*hers*. \"Mine now,\" she says, like a fact, like a relief. \"Bought and paid and "
+                "written down. No more block for you — I don't resell what I decide to keep, and I "
+                "decided about you a while ago.\" Your title reads as hers. Your sale price is "
+                "logged. You belong to a specific person now, by name, and the specificity of it "
+                "is a different weight than the facility's general ownership ever was.")
+        opts = [
+            {"key": "hers", "label": "Sink into being hers", "effect": "devote", "params": {"amount": 4.0},
+             "end": True, "desc": "let the specific belonging settle",
+             "outcome": (
+                "You sink into it — into being *hers*, specifically, named, chosen and bought and "
+                "kept — and the belonging settles over you warm and total and almost unbearably a "
+                "relief. \"Good,\" she murmurs against your hair, leading you off toward her side "
+                "of the facility. \"That's the part I bought. Not the holes — those come standard. "
+                "*That.* The settling. I'll have you doing it on command by spring.\"")},
+            {"key": "dread", "label": "Feel what you've just become", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "owned by a name now, not a system",
+             "outcome": (
+                "You feel the weight of the specific: not facility stock in general but *Bethany's*, "
+                "by name, bought with a number you heard called, owned by a person who keeps "
+                "obsessive files and decided about you a while ago. It is more frightening than the "
+                "anonymous machine ever was, because it *wants* something from you, and it has all "
+                "the time and paperwork in the world to get it. She leads you off smiling. You go "
+                "where the hand at your nape steers.")}]
+    return {"key": "sw_bought", "prompt": body, "options": opts, "default": opts[0]["key"]}

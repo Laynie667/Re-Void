@@ -446,6 +446,23 @@ def test_bethany_scene():
     assert qbeats == ["sb_arrival", "sb_use", "sb_after"], qbeats
     assert c8.db.pending_choice is None and c8.db.scene_flags is None, "sanitation should end clean"
 
+    # The Showroom scene chains end-to-end on both gavel outcomes.
+    c9 = _Char(); cyoa.start_scene(c9, "sw_arrival")
+    wbeats = []
+    for ch in ("perform", "show", "drive", "her", "hers"):
+        p = c9.db.pending_choice
+        assert p, f"showroom: no pending before '{ch}'"
+        wbeats.append(p["key"])
+        assert cyoa.resolve_choice(c9, ch)[0] is not None, f"showroom '{ch}' did not resolve"
+    assert wbeats == ["sw_arrival", "sw_display", "sw_bidding", "sw_gavel", "sw_bought"], wbeats
+    assert c9.db.pending_choice is None and c9.db.scene_flags is None, "showroom should end clean"
+    # The "look away" gavel branch (unsold/do-over) also ends clean.
+    c10 = _Char(); cyoa.start_scene(c10, "sw_arrival")
+    for ch in ("freeze", "endure_show", "still_bid", "dark", "ache"):
+        assert c10.db.pending_choice, f"showroom-dark: stall before '{ch}'"
+        assert cyoa.resolve_choice(c10, ch)[0] is not None, f"showroom-dark '{ch}' failed"
+    assert c10.db.pending_choice is None and c10.db.scene_flags is None, "showroom-dark should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

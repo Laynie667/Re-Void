@@ -38,7 +38,7 @@ built reference). This doc is the master list of everything to convert.
 | **Dairy** | the dairy hand | ✅ **BUILT** (`dy_*`, 5 beats; the scene→cycle SEAM) | real `_do_milk` at quota; then hands off to the retained milking cycle; state-aware (little/pregnant/nugget hook) |
 | **The Pigsty** | the custodian + the boar/pigs | ✅ **BUILT** (`ps_*`, 6 beats; bestiality, STATE-AWARE nugget/preg/little) | real `_gang` sty-cover, degradation |
 | **Sanitation Block** | the custodian + the queue | ✅ **BUILT** (`sb_*`, 4 beats; wall/frame, state-aware) | real `_scene_bukkake` anonymous use |
-| **The Showroom / Buyers' Gallery** | Bethany + bidders | the appraisal, the block, the bidding, the sale/gavel | `_appraise`, `bid_up`, `bethany_buys`, ownership transfer |
+| **The Showroom / Buyers' Gallery** | Bethany + bidders | ✅ **BUILT** (`sw_*`, 5 beats; state-aware; reach-for-her vs look-away gavel) | real `_appraise`, `bid_up`, `bethany_buys` ownership transfer |
 | **The Nursery** | Bethany / nurse | regression, nursing, the Little Box; your get raised here | regression, little-clauses, lineage loop |
 | **The Marking Parlour** | the **marker** | ✅ **BUILT** (`mp_*`, 5 beats; brand/rings/ink branches) | real `_proc_brand`/`_proc_cowset`/`_proc_womb_tattoo` |
 | **Bethany's Office** | Bethany | the kept/owned arc — her evening, her bed, her file on you | `bethany_breeds`, devotion, ownership, `file_read` |
@@ -82,5 +82,5 @@ built reference). This doc is the master list of everything to convert.
 2. ✅ **Conditioning Cell** — DONE.
 3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
 4. ✅ **Marking Parlour** + ✅ **Sanitation/Pigsty** — DONE. Next:
-5. **Showroom → Office/Kept arc** (the ownership through-line).
+5. ✅ **Showroom** — DONE. Next: **Office/Kept** (her evening, her bed, her file).
 6. **Nursery/lineage**, **Deep Stock**, **Records/inspection**, **Events**, then the flow controller.
