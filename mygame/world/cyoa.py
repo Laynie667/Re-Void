@@ -7346,10 +7346,17 @@ def _fl_bred(character):
 @choice("fl_after", root=False)
 def _fl_after(character):
     nm = _fellow_name(character)
+    st = _state_tags(character)
     dose = scene_flag(character, "dose", "comfort")
     recap = ("the way you comforted her into it" if dose == "comfort"
              else "the way you watched her go under")
+    lil = (f"Two littles come down together in the after — both small, both wrung out, neither with "
+           f"the grown words for what was done, only the simple small certainty that you went "
+           f"through something enormous and you went through it *together*, and that {nm} is yours "
+           f"and you're hers in the wordless way little things belong to each other. The bond sets "
+           f"all the deeper for being made down where the small things live. " if st["little"] else "")
     return {"key": "fl_after", "prompt": (
+        lil +
         f"After, {nm} comes down slow — the aphrodisiac ebbing, leaving the fractured remains of "
         "her blinking at what she's done, at you, at the load she's left in you, with an "
         "expression that can't quite assemble into guilt anymore because Bethany scrubbed the part "
