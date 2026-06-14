@@ -3436,3 +3436,238 @@ def _cc_set(character):
                 "You'll be back. Partly to enjoy the calm. Partly to try to catch what moved. The "
                 "chair counts on both.")}],
         "default": "grateful"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Dairy — first time on the machine, then HANDS OFF to the milk cycle.
+# Cinematic scene model, with the key structural seam: a scene that ends by
+# handing you to a RETAINED cycle (the milking fluid-bank loop stays a loop). The
+# real extraction fires once at quota (_do_milk); after the handoff the ongoing
+# milking is the machine's job, not a scene. Actor: the dairy hand — clinical,
+# dairy-farmer register ("producer", "yield", "the line"). State-AWARE: reads
+# little/pregnant/nugget for flavour (the hook for later state variations).
+# Flow: arrival→hook→pull→quota→handoff. Entry: `scene dairy`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _dairy_state_note(character):
+    """A light state-aware line for the dairy hand's assessment — the hook the rest of the
+    facility's scenes will use to branch on little/pregnant/nugget/etc. Safe defaults."""
+    db = getattr(character, "db", None)
+    little = float(getattr(db, "regression", 0) or 0) > 0 or bool(getattr(db, "headspace", None))
+    nugget = bool(getattr(db, "nugget", False))
+    preg = bool(getattr(db, "pregnant", False) or getattr(db, "brood_count", 0)
+                or getattr(db, "gestating", False))
+    if nugget:
+        return ("He has to bend right down to reach you — a nugget on the dairy line, tiny and "
+                "limbless and absurdly productive for your size — and he fits the smallest cups "
+                "the rack carries. \"Little thing, big yield. The board loves a nugget.\" ")
+    if preg and little:
+        return ("He notes you're both heavy with the facility's get AND down in your headspace — "
+                "\"bred little, are we\" — and his hands gentle a fraction, the way you'd handle a "
+                "pregnant heifer that startles. The fondness is for the cargo, not you. ")
+    if preg:
+        return ("He weighs the swell of you with one flat professional hand — gravid, the get "
+                "raising your yield the way carrying always does. \"Producing for two. Quota goes "
+                "up to match; it always does.\" ")
+    if little:
+        return ("He clocks how far down you are — soft, thumb-near-the-mouth little — and doesn't "
+                "adjust his tone an inch. \"Doesn't matter how small your head's gone, the udder "
+                "works the same. Up you get.\" ")
+    return ""
+
+
+@choice("dy_arrival", root=False)
+def _dy_arrival(character):
+    nm = subject_name(character)
+    note = _dairy_state_note(character)
+    return {"key": "dy_arrival", "prompt": (
+        "The Dairy is the loudest warm room in the facility — rows of milking stalls down both "
+        "walls, each fitted with the low-vibration machines and their loose hanging hoses and "
+        "sealed collection vessels, and over all of it the steady wet rhythmic |wchunk-hiss|n of "
+        "the pumps already working other producers down the line, and the thick sweet animal smell "
+        "of warm milk and skin. Vessels in a cold-rack glow softly, each labelled from the inside: "
+        "name, type, date, yield.\n\n"
+        "The |wdairy hand|n meets you with a clipboard and the brisk incurious manner of a man who "
+        "milks a great many bodies a day and thinks of them by their numbers and their averages. "
+        + note + "He sets two fingers under the heavy ache of your chest and lifts, testing the "
+        "fullness, reading the engorgement off you like a gauge. \"Mm. Good and tight. Overdue, "
+        "even.\" He makes a note — your yield potential, not your comfort. \"You'll feel a lot "
+        "better in about ten minutes, and the board'll feel better about you. Win-win, eh.\" He "
+        "nods you at the nearest open stall, the kneeling-pad worn to a specific density, the cups "
+        "waiting. \"In you get, producer.\""),
+        "options": [
+            {"key": "present", "label": "Kneel to the pad and offer your chest",
+             "set": {"dairy": "present"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "the ache wants this; let him hook you up",
+             "outcome": (
+                "You kneel into the pad — the foam takes your knees in a shape worn by every "
+                "producer before you — and present your aching chest to the cups without being made "
+                "to. The dairy hand grunts approval. \"Knows what it's for. Good.\" The ache in you "
+                "is genuinely, traitorously glad. You need this, and needing it is the leash, and "
+                "the leash is the point.")},
+            {"key": "cover", "label": "Cover your chest", "set": {"dairy": "cover"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "shield the ache; he'll position you anyway",
+             "outcome": (
+                "You bring an arm across yourself — and the dairy hand simply moves it, the way "
+                "you'd move a cow's tail, no heat in it, and positions you at the cups regardless. "
+                "\"Modesty's a phase. The fullness wins. You'll be lifting them *to* the cups by "
+                "next week, begging me to hurry.\" The worst part is the ache already agreeing with "
+                "him.")},
+            {"key": "ask", "label": "Ask what the quota is", "set": {"dairy": "ask"},
+             "desc": "make him name the number",
+             "outcome": (
+                "\"Quota?\" He almost laughs. \"You don't get the number, producer — number's the "
+                "facility's, not yours. You get *full*, you get *milked*, you get full again. "
+                "That's the whole of your side of it.\" He fits the first cup. \"Knowing the number "
+                "wouldn't help you hit it. Being kept aching helps you hit it. So we keep you "
+                "aching. Simple dairy science.\"")}],
+        "default": "present",
+        "then": "dy_hook"}
+
+
+@choice("dy_hook", root=False)
+def _dy_hook(character):
+    return {"key": "dy_hook", "prompt": (
+        "He fits the cups. They're a soft flexing rubber, cool against your hot tight skin, and "
+        "they kiss over your nipples with a little wet seal — and then the machine takes its first "
+        "breath and the |wsuction|n catches, and your whole chest lurches with the pull of it, a "
+        "deep insistent tug that goes straight past your nipples into the aching glands behind and "
+        "*draws*. It is not gentle and it is not unkind; it is mechanical, exact, a steady rhythmic "
+        "pulling that has no interest in you beyond what you'll give down, and the first answer your "
+        "body gives is a bright shock of sensation halfway between pain and a relief so acute it's "
+        "obscene.\n\n\"There's the seal,\" the dairy hand says, watching the empty line, not you. "
+        "\"Now it just pulls till you let down. Could be a few seconds. Could be a minute or two if "
+        "you fight it — and you can't help fighting it, first time, everyone does. The machine "
+        "doesn't mind. It's got all day and so have I.\""),
+        "options": [
+            {"key": "hold", "label": "Hold still and let it pull", "effect": "devote",
+             "params": {"amount": 2.0}, "desc": "ride the suction; don't tense against it",
+             "outcome": (
+                "You hold still and let the machine pull, and the steady obscene rhythm of it starts "
+                "to feel less like an assault and more like an answer to a question your body's been "
+                "asking all day. The hand nods at the gauge. \"Relaxes into it. That one milks "
+                "easy.\" He says it to the clipboard. You are, to this room, a quality of yield.")},
+            {"key": "flinch", "label": "Flinch from the cold cups and the pull", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "desc": "your body's first refusal; the machine doesn't care",
+             "outcome": (
+                "You flinch — the cold, the pull, the wrongness of a machine latched onto you and "
+                "*taking* — and the cups hold their seal regardless, the suction unbroken, and all "
+                "your flinching does is make the let-down take longer and the ache last longer. "
+                "\"Fighting it,\" the hand observes, unbothered. \"Costs you, not me. It pulls the "
+                "same whether you like it. Most learn to like it. Cheaper that way, on the nerves.\"")},
+            {"key": "beg_gentle", "label": "Beg him to set it gentler", "effect": "deny_hold",
+             "params": {"cond": 1.0}, "desc": "ask the only human at the gauge",
+             "outcome": (
+                "\"Please — can you turn it down—\" The dairy hand glances at the speed selector, "
+                "then at your full chest, then back at his board. \"It's already on the setting "
+                "your fullness calls for. Turning it down just means longer on the cups.\" He "
+                "doesn't move the dial. \"You don't want gentle, producer. You want *empty*. "
+                "Gentle's the enemy of empty. Trust the dairy.\"")}],
+        "default": "hold",
+        "then": "dy_pull"}
+
+
+@choice("dy_pull", root=False)
+def _dy_pull(character):
+    return {"key": "dy_pull", "prompt": (
+        "And then your body betrays you completely: the |wlet-down|n hits, a hot prickling rush "
+        "from deep in the glands surging forward to meet the pull, and the milk *comes* — you can "
+        "feel it leave you, drawn in time with the machine's rhythm, spilling down the lines toward "
+        "the vessel in steady pulses you have no say over — and with it comes a flood of relief so "
+        "total it buckles something in you. The unbearable tightness easing, draining, the ache you "
+        "didn't fully register the size of until it starts to lift. It feels *incredible*. That is "
+        "the trap and you feel the trap close even as you sag gratefully into it: they keep you "
+        "full so that being emptied feels like this, so that you'll come to the cups *wanting*.\n\n"
+        "The dairy hand watches the vessel fill, finally interested — in the milk, in the yield, in "
+        "the number climbing. \"There it is. Good producer. Let it all down.\""),
+        "options": [
+            {"key": "letdown", "label": "Let it all down — sag into the relief", "effect": "devote",
+             "params": {"amount": 3.0}, "desc": "give the machine everything; let it feel this good",
+             "outcome": (
+                "You let it all down, give the machine everything, and let the relief be as good as "
+                "it wants to be — and your body files the lesson in indelible ink: *the cups mean "
+                "this*. You will ache toward them now. You will, eventually, walk yourself to a "
+                "stall on a full chest without being told, chasing exactly this. The hand watches "
+                "the yield and is pleased with the number, which is the only part of you he sees.")},
+            {"key": "fight_letdown", "label": "Fight the let-down — refuse to give it freely",
+             "effect": "deny_hold", "params": {"cond": 3.0}, "desc": "deny your body the relief it wants",
+             "outcome": (
+                "You fight your own let-down, clamp down on the relief, refuse to *enjoy* being "
+                "milked — and your body wins anyway, the milk coming whether you allow the pleasure "
+                "or not, so that all you've managed is to be emptied AND kept tense, relief denied "
+                "on top of dignity denied. The hand doesn't notice; the vessel fills the same. "
+                "\"Stubborn yield. Comes down fine regardless. They always do.\"")}],
+        "default": "letdown",
+        "then": "dy_quota"}
+
+
+@choice("dy_quota", root=False)
+def _dy_quota(character):
+    return {"key": "dy_quota", "prompt": (
+        "The vessel fills, and fills, the machine drawing you steadily down toward empty — and the "
+        "dairy hand watches the gauge climb to a mark you're not shown and grunts, satisfied. "
+        "\"That's your pull for now.\" He taps the vessel, which seals itself and labels from the "
+        "inside — your designation, the type, the date, the |wyield|n — and racks it cold with the "
+        "others, a unit of you logged and stored and owed to the facility. \"Output's facility "
+        "property. Goes on the board against your producer-quota. You'll not see where it goes and "
+        "you'll not be asked.\" He starts unseating the cups, and your chest, lighter now, already "
+        "registers the first faint promise of filling back up — the cycle the room runs on. \"And "
+        "you'll fill again, and we'll do this again, on the schedule, full as a drum every time. "
+        "That's the dairy. That's you, now.\""),
+        "options": [
+            {"key": "make", "label": "Make the pull willingly — give them the yield", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "set": {"dairy_done": "willing"},
+             "desc": "the real extraction — logged to the fluid bank against your quota",
+             "outcome": (
+                "You give it freely, and the extraction is real and recorded — milk to the bank, "
+                "yield to the board, your producer-quota a measure closer to a number kept from "
+                "you. The hand racks your vessel without ceremony. You're a yield that came in on "
+                "the high side today. It is, obscurely, the proudest thing your body's been allowed "
+                "to be in here, and that's the cruelest part of the whole transaction.")},
+            {"key": "withhold", "label": "Try to hold milk back from the quota", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "set": {"dairy_done": "held"},
+             "desc": "the machine takes it anyway; the gauge doesn't negotiate",
+             "outcome": (
+                "You try to hold some back — clench the glands, deny the last of it — and the "
+                "machine simply pulls longer and harder until the gauge is satisfied, taking what "
+                "you tried to keep and charging you the extra minutes on the cups for the trouble. "
+                "The yield's logged the same. \"Can't withhold from a pump, producer,\" the hand "
+                "says, not even unkind. \"It's stronger than you and it doesn't get bored.\"")}],
+        "default": "make",
+        "then": "dy_handoff"}
+
+
+@choice("dy_handoff", root=False)
+def _dy_handoff(character):
+    return {"key": "dy_handoff", "prompt": (
+        "The dairy hand makes one last note and steps back, and the scene of you — the first time, "
+        "the introduction, the part where anyone explains anything — is over. From here it isn't a "
+        "scene at all. \"You're on the line now,\" he says, already turning to the next stall. "
+        "\"Logged. The machine'll have you on the schedule — full, milked, full, milked — and it "
+        "doesn't need me here and it doesn't need *you* here, not really, not the part of you that "
+        "thinks. It just needs the udder and the clock.\"\n\nAnd you understand the shape of your "
+        "days now: the |wcycle|n. The fullness building on its own timer, the cups, the let-down, "
+        "the vessel racked, the fullness building again — a loop that runs whether you're present "
+        "for it or off in your head somewhere, a machine that will milk you on its rhythm for as "
+        "long as you produce. No more first-times. No more explanations. Just the chunk-hiss of the "
+        "pumps, and your name on a cold vessel, on the schedule, indefinitely."),
+        "options": [
+            {"key": "thank", "label": "Thank him for the relief, at least", "effect": "gratitude",
+             "end": True, "desc": "the emptying was real; thank it and mean it",
+             "outcome": (
+                "\"Thank you.\" The relief was real — your chest is light, the ache gone — and the "
+                "gratitude comes easy and lands deep, filed with everything else the facility's "
+                "lifted off you. The hand huffs, almost amused. \"Producers that thank me hit quota "
+                "more reliable. Something in it relaxes 'em.\" He's right. You'll be back on the "
+                "schedule, and a part of you, the leashed aching part, will look forward to it.")},
+            {"key": "leak", "label": "Say nothing — just leak and ache toward the next",
+             "effect": "deny_hold", "params": {"cond": 2.0}, "end": True,
+             "desc": "no thanks given; the cycle has you regardless",
+             "outcome": (
+                "You say nothing. You leave the stall on the schedule whether you thanked him or "
+                "not, your chest already beginning its slow tightening toward the next pull — "
+                "because the cycle doesn't need your gratitude or your consent, only your fullness, "
+                "and your fullness is no longer a thing you get a vote on. The pumps chunk-hiss "
+                "behind you. One of them will be yours again soon. It always will be, now.")}],
+        "default": "thank"}

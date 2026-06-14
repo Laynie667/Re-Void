@@ -35,7 +35,7 @@ built reference). This doc is the master list of everything to convert.
 | **Processing Floor** | floor handler / Bethany | put to use on the open floor, on display; routed onward | display/exhibition, use, routing |
 | **Breeding Pens** | the **stockman** + named studs + animals | ✅ **BUILT** (`bp_*`, 8 beats; stud/pack/machine branches) | `_gang`/`_scene_knottrain`, lineage, quota |
 | **Conditioning Cell** | Bethany (recorded voice) + Spiral Chair | ✅ **BUILT** (`cc_*`, 8 beats; sink/resist, mantra, the descent door) | real `mantra_set` trigger, `deepen` (conditioning+regression), suggestibility |
-| **Dairy** | dairy handler | put on the machine the FIRST time; engorgement relief begging | milk quota, growth — *then hands off to the milking cycle* |
+| **Dairy** | the dairy hand | ✅ **BUILT** (`dy_*`, 5 beats; the scene→cycle SEAM) | real `_do_milk` at quota; then hands off to the retained milking cycle; state-aware (little/pregnant/nugget hook) |
 | **The Pigsty** | the custodian | slopped, rutted face-down, kept filthy between uses | `apply_filth`, degradation, punishment |
 | **Sanitation Block** | the custodian + the queue | made the anonymous relief-hole at the wall; the toilet frame | use, holes, golden, degradation |
 | **The Showroom / Buyers' Gallery** | Bethany + bidders | the appraisal, the block, the bidding, the sale/gavel | `_appraise`, `bid_up`, `bethany_buys`, ownership transfer |
@@ -80,7 +80,7 @@ built reference). This doc is the master list of everything to convert.
 ## Build order (suggested, after Intake)
 1. ✅ **Breeding Pens** (stockman + studs) — DONE. Next:
 2. ✅ **Conditioning Cell** — DONE.
-3. **Dairy** (scene → milking cycle handoff) — proves the scene/cycle seam.
+3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
 4. **Marking Parlour** (procedures) + **Sanitation/Pigsty** (degradation).
 5. **Showroom → Office/Kept arc** (the ownership through-line).
 6. **Nursery/lineage**, **Deep Stock**, **Records/inspection**, **Events**, then the flow controller.

@@ -1619,6 +1619,7 @@ class CmdScene(Command):
         "pens": "bp_arrival", "breeding": "bp_arrival", "stud": "bp_arrival",
         "cell": "cc_arrival", "chair": "cc_arrival", "conditioning": "cc_arrival",
         "hypno": "cc_arrival",
+        "dairy": "dy_arrival", "milk": "dy_arrival", "milking": "dy_arrival",
     }
 
     def func(self):

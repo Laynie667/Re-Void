@@ -399,6 +399,17 @@ def test_bethany_scene():
                       "cc_descent", "cc_set"], kbeats
     assert c4.db.pending_choice is None and c4.db.scene_flags is None, "cell should end clean"
 
+    # The Dairy scene chains end-to-end and hands off (ends) at the cycle seam.
+    c5 = _Char(); cyoa.start_scene(c5, "dy_arrival")
+    dbeats = []
+    for ch in ("present", "hold", "letdown", "make", "thank"):
+        p = c5.db.pending_choice
+        assert p, f"dairy: no pending before '{ch}'"
+        dbeats.append(p["key"])
+        assert cyoa.resolve_choice(c5, ch)[0] is not None, f"dairy '{ch}' did not resolve"
+    assert dbeats == ["dy_arrival", "dy_hook", "dy_pull", "dy_quota", "dy_handoff"], dbeats
+    assert c5.db.pending_choice is None and c5.db.scene_flags is None, "dairy should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
