@@ -2973,7 +2973,7 @@ def _bp_mount(character):
                     "exactly that way for as long as the board says you're owed."),
     }.get(beast, "")
     return {"key": "bp_mount", "prompt": (
-        body + " You feel the size of it map itself out inside you — the stretch, the wrong-deep "
+        _kit_use_note(character) + body + " You feel the size of it map itself out inside you — the stretch, the wrong-deep "
         "ache, the blunt animal heat of it, the way it gives you no rhythm to brace against because "
         "it isn't *for* you, you are simply the hole it's using. The stockman watches your face "
         "with professional detachment, checking — not for your sake — that the stock has seated "
@@ -3539,6 +3539,25 @@ def _kit_inventory(k):
     if len(parts) == 1:
         return parts[0] + ". "
     return ", ".join(parts[:-1]) + ", and " + parts[-1] + ". "
+
+
+def _kit_use_note(character):
+    """A combination-aware lead clause for any USE-beat: the installed hardware getting USED as
+    you're worked — threads kit-awareness through the older rooms. Empty for a bare body."""
+    k = _kit(character)
+    bits = []
+    if k["pierced"]:   bits.append("your piercings drag and catch with every thrust, tugged taut against the rings")
+    if k["gaped"]:     bits.append("your gauged hole takes it without resistance, ringed permanently open as it was built to be")
+    if k["milk_port"]: bits.append("your milk-port leaks in time with the working, its line-fitting cold against hot skin")
+    if k["pet"]:       bits.append(f"your tail jostles with it, your {k['pet']}-set on open display")
+    if k["latex"]:     bits.append("you sweat and squeak inside your sealed latex, the heat of the work trapped against you")
+    if k["heat_tell"]: bits.append("the honest-body clause drags your arousal out of you in helpless little tells")
+    if k["honorific"]: bits.append("and the address clause won't let a sound past your lips that isn't shaped the way you're owed to shape it")
+    if not bits:
+        return ""
+    s = bits[0] if len(bits) == 1 else ", ".join(bits[:-1]) + ", and " + bits[-1]
+    return "All the hardware hung on you gets used as you're worked — " + s + ". "
+
 
 def _dairy_state_note(character):
     """A light state-aware line for the dairy hand's assessment — the hook the rest of the
@@ -4322,7 +4341,7 @@ def _sb_use(character):
             "and holes, used and emptied into you and replaced, the queue treating you as the "
             "fixture you've been made into, the open seat framing your face for whoever steps up. ")
     return {"key": "sb_use", "prompt": (
-        body + "There is no pacing, no person, no end you can see — just use, hole after hole, "
+        _kit_use_note(character) + body + "There is no pacing, no person, no end you can see — just use, hole after hole, "
         "load after anonymous load, the facility's banked heat keeping your own body obscenely "
         "interested in its own degradation. Time smears. You stop counting. The custodian leans "
         "on his hose, bored, occasionally telling the queue to mind the stock. \"Steady,\" he says, "
@@ -5539,6 +5558,7 @@ def _pf_arrival(character):
 @choice("pf_use", root=False)
 def _pf_use(character):
     return {"key": "pf_use", "prompt": (
+        _kit_use_note(character) +
         "And then you're |wused|n — at the station, in the open, on the schedule the board sets — "
         "and it happens the way everything on the floor happens: routinely, publicly, one entry in "
         "a hall full of the same. A handler works you, or sends someone to, and the room doesn't "
