@@ -87,6 +87,7 @@ FACILITY_FLAGS = {
     "box_lid_locked": False, "teat_gagged": False, "nurse_first": False,
     "stuffed_mouth": False, "beg_small": False, "star_chart_on": False,
     "neutered": False, "sissified": False, "heat_tell": False,
+    "seraphine_owned": False,
 
     # --- strings -> "" ---
     "orgasm_release_word": "", "required_honorific": "", "breeding_line": "",

@@ -44,6 +44,8 @@ _NEW_FLAGS = [
     "heat_tell", "honorifics_required", "honorific_miss_count", "honorific_miss_at",
     # neuter / sissify
     "neutered", "sissified",
+    # cross-NPC ownership (Seraphine)
+    "seraphine_owned",
     # studs / lineage / fellow
     "facility_studs", "facility_fellow", "facility_fellow_ref", "fellow_cross_sires",
     "offspring_by_sire", "offspring_by_sex", "offspring_max_gen",
@@ -533,6 +535,18 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c17, ch)[0] is not None, f"records '{ch}' did not resolve"
     assert rbeats == ["rh_arrival", "rh_gauge", "rh_grade", "rh_close"], rbeats
     assert c17.db.pending_choice is None and c17.db.scene_flags is None, "records should end clean"
+
+    # Seraphine's visit chains end-to-end and transfers ownership for real.
+    c18 = _Char(); cyoa.start_scene(c18, "se_arrival")
+    sebeats = []
+    for ch in ("still", "watch", "between", "yield", "settle"):
+        p = c18.db.pending_choice
+        assert p, f"seraphine: no pending before '{ch}'"
+        sebeats.append(p["key"])
+        assert cyoa.resolve_choice(c18, ch)[0] is not None, f"seraphine '{ch}' did not resolve"
+    assert sebeats == ["se_arrival", "se_peerage", "se_opened", "se_unbirth", "se_close"], sebeats
+    assert c18.db.seraphine_owned is True, "Seraphine should now own the player"
+    assert c18.db.pending_choice is None and c18.db.scene_flags is None, "seraphine should end clean"
 
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")

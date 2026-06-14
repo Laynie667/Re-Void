@@ -1635,6 +1635,8 @@ class CmdScene(Command):
         "floor": "pf_arrival", "processing": "pf_arrival",
         "records": "rh_arrival", "inspection": "rh_arrival", "grade": "rh_arrival",
         "inspect": "rh_arrival",
+        "seraphine": "se_arrival", "sera": "se_arrival", "unbirth": "se_arrival",
+        "buyer": "se_arrival",
     }
 
     def func(self):

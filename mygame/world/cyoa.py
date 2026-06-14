@@ -5701,3 +5701,254 @@ def _rh_close(character):
                 "route you by it. But hold onto the rejecting — it's a true thing too, and it's "
                 "yours, and the door's still open behind it. That part I'll never grade away.\"")}],
         "default": "accept"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Seraphine's Visit — the facility ↔ post-office peerage; the unbirthing.
+# Cinematic, state-aware. Actors: Bethany + Seraphine (the post-office clerk here
+# as a BUYER and Bethany's one equal). The peerage on display: Seraphine is the
+# only person Bethany lets fuck her, and the only one her laced cum can't OWN
+# (body-only, never her will — see design/seraphine_bethany.md). The player is the
+# purchase, handed over and carried home INSIDE Seraphine (unbirthing). REAL
+# payload: seraphine_takes (ownership -> seraphine_owned, floor-clearable) + devote.
+# The deep passenger-transfer subsystem is gestured at and queued. §0 always frees.
+# Flow: arrival→peerage→deal→opened→unbirth→close. Entry: `scene seraphine`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@effect("seraphine_takes")
+def _eff_seraphine_takes(character, p):
+    """Seraphine collects her purchase — a real ownership transfer to her (seraphine_owned,
+    floor-clearable), plus a devotion bump toward her new owner. Bethany's prior ownership
+    yields; the §0 floor still frees regardless of who holds the paper."""
+    character.db.seraphine_owned = True
+    try:
+        character.db.bethany_owned = False
+    except Exception:
+        pass
+    try:
+        from typeclasses.bethany_script import bethany_deposit_effect  # reuse the devotion plumbing
+        bethany_deposit_effect(character, devotion=float(p.get("devotion", 4.0)))
+    except Exception:
+        pass
+    return "seraphine_owned"
+
+
+@choice("se_arrival", root=False)
+def _se_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = "You're presented in a carrying-case lined like a jewel box — a limbless lot is the easiest thing in the world to take home inside someone, and Seraphine collects nuggets especially. "
+    if st["preg"]:
+        note += "Seraphine's eyes go straight to your swell — \"and carrying already, Beth, you *shouldn't* have\" — a bred purchase is exactly her taste. "
+    if st["little"]:
+        note += "Down in your headspace you only register two warm towering presences deciding about you, and the deciding feels almost safe, which is the trap of both of them. "
+    return {"key": "se_arrival", "prompt": (
+        "You're brought to a receiving room you haven't seen — warmer than the floor, a buyer's "
+        "room — and the woman waiting there with Bethany is one you half-recognise out of context: "
+        "crimson-skinned, small swept-back horns, an expressive tail, the warm knowing poise of "
+        "someone who has heard every kind of secret and found most of them charming. The post "
+        "office's |wSeraphine|n, here as something the facility clearly takes seriously: a "
+        "|wbuyer|n, and more than that. " + note +
+        "\n\nBecause the thing that strikes you, immediately, is how Bethany *is* with her. Not the "
+        "owner. Not the clerk. An |wequal* — easy, fond, unguarded in a way you have never once "
+        "seen her, two proprietors of people greeting each other across a lifetime of dealing. "
+        "\"Sera,\" Bethany says, and means it. \"Come to collect. I set the best one aside, like I "
+        "said.\" She gestures at you — the purchase. Seraphine looks you over with a collector's "
+        "frank delight and a warmth that is somehow worse than Bethany's because it isn't "
+        "performing anything. \"Oh, she *is* nice. You always did pick well, Beth. Let's have a "
+        "proper look at what I'm taking home.\""),
+        "options": [
+            {"key": "still", "label": "Hold still to be inspected by the two of them",
+             "set": {"se": "still"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "be the product two owners are appraising together",
+             "outcome": (
+                "You hold still and let them both look — two collectors appraising a piece between "
+                "them — and the doubled ownership lands strange and total: not stock-among-many but "
+                "a *specific thing two specific people both want*. Seraphine hums approval, turning "
+                "you with one warm hand. \"Mm. Yes. I'll take her.\" Bethany watches Seraphine "
+                "enjoy you and looks, for once, simply *pleased to be sharing*.")},
+            {"key": "look", "label": "Watch how Bethany is with her", "set": {"se": "look"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "study the one relationship Bethany doesn't perform",
+             "outcome": (
+                "You watch them instead of presenting — and you learn more about Bethany in ten "
+                "seconds than in all your processing: the way she goes *unguarded*, the way "
+                "Seraphine is the one person she doesn't run an angle on, the warmth that's real "
+                "because it isn't a tool. \"She's reading us,\" Seraphine notes, amused, catching "
+                "you at it. \"Clever purchase.\" \"Mm,\" says Bethany, fond. \"Don't let her. We're "
+                "nobody's lesson.\"")},
+            {"key": "shrink", "label": "Shrink from being passed between owners",
+             "set": {"se": "shrink"}, "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the dread of being a thing two people are trading",
+             "outcome": (
+                "You shrink from it — the horror of being a *thing being traded between friends*, "
+                "discussed over your head like furniture changing houses — and neither of them "
+                "minds, because your feelings about the transaction were never part of the "
+                "transaction. \"New ones always do that bit,\" Seraphine says kindly, to Bethany, "
+                "not you. \"Being *given* unsettles them more than being taken. Don't worry, "
+                "sweetheart. I'm a lovely home. Ask anyone I've kept.\"")}],
+        "default": "still",
+        "then": "se_peerage"}
+
+
+@choice("se_peerage", root=False)
+def _se_peerage(character):
+    return {"key": "se_peerage", "prompt": (
+        "While the paperwork settles, the two of them are simply *together* in a way that "
+        "rearranges your understanding of the whole facility — because Bethany, who tops "
+        "everything that breathes in this building, who opens for no one, leans into Seraphine "
+        "with the easy intimacy of the singular exception. \"You staying the night?\" Bethany "
+        "asks, and there's something under it. Seraphine's tail curls. \"If you're offering what "
+        "I think you're offering.\" \"I am.\" And you understand, watching the look pass between "
+        "them, that you are about to witness the one thing this place keeps secret: that the "
+        "owner of everyone has exactly one person she lets *have* her. \"She's the only one,\" "
+        "Bethany says — to you, suddenly, fond and frank, because it costs her nothing to tell a "
+        "thing she owns. \"In the whole world. Sera's the only one I open for. Watch, if you "
+        "like. You're hers now anyway; you should know what your new owner is to your old one.\""),
+        "options": [
+            {"key": "watch", "label": "Watch them be equals", "set": {"peer": "watch"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "witness the peerage; learn what neither of them will call love",
+             "outcome": (
+                "You watch them, and it's nothing like anything else in the facility — no owning, "
+                "no processing, just two terrifying women being *gentle* with each other in the "
+                "specific way of people who've earned each other's softness over decades. Neither "
+                "calls it love. It's plainly the closest either of them gets, and being allowed to "
+                "see it feels less like a kindness than like being shown the one true thing in a "
+                "building made of lies, by people who know you'll never get to have anything like "
+                "it.")},
+            {"key": "envy", "label": "Feel the ache of seeing it", "set": {"peer": "envy"},
+             "effect": "devote", "params": {"amount": 4.0},
+             "desc": "want what they have; the wanting is its own hook",
+             "outcome": (
+                "It aches — sharp and immediate — to see two people *have* each other like that "
+                "while you're the furniture being signed over between them, and the ache is the "
+                "want for something you'll never be given, only owned instead. Seraphine catches "
+                "the look. \"Aw. She wants it.\" Not cruel — almost tender. \"They always want it, "
+                "watching us. I'll be good to you, sweetheart. Owned-good. It's not this — \" a "
+                "glance at Bethany \" — nothing's this. But it's warm, and it's certain, and "
+                "that's more than most things get.\"")}],
+        "default": "watch",
+        "then": "se_opened"}
+
+
+@choice("se_opened", root=False)
+def _se_opened(character):
+    return {"key": "se_opened", "prompt": (
+        "And then Bethany does the unthinkable thing: she *opens*. Lies back for Seraphine, the "
+        "topmost predator in the facility making herself soft and taken, and Seraphine frees her "
+        "own length — she is built much as Bethany is, you realise, the two of them a matched "
+        "pair — and takes what no one else is permitted, slow and knowing and home. And you watch "
+        "Bethany be *fucked*, fond and unhurried and entirely Seraphine's, and watch Seraphine "
+        "flood her with that same laced seed Bethany pumps into everyone — and watch it do "
+        "*nothing* to Bethany's will, because they are immune to each other, two seasoned things "
+        "no devotion can touch. They use you between them as they go — a hole each finds when "
+        "convenient, the purchase being enjoyed by both owners at once — and Bethany's laced load "
+        "lands in *you* in full even as Seraphine's does nothing to her, the difference between a "
+        "peer and a possession written in your body and hers."),
+        "options": [
+            {"key": "between", "label": "Be the hole they use between them", "effect": "bethany_breeds",
+             "params": {"holes": 2, "devotion": 6.0}, "set": {"used": "between"},
+             "desc": "real use by both; Bethany's laced load lands on you in full",
+             "outcome": (
+                "You're used between them — found and filled by whichever wants a hole in the "
+                "moment, two enormous laced cocks treating you as the convenient warm thing you "
+                "now are to *both* of them — and Bethany's load floods you with the full DEVOTION "
+                "while it does nothing at all to Seraphine, and the lesson writes itself in the "
+                "contrast: this is what you are, and that is what a peer is, and you will never be "
+                "the second thing. The seed takes. You're more theirs by the minute.")},
+            {"key": "witness", "label": "Just witness the immunity between them", "effect": "devote",
+             "params": {"amount": 3.0}, "set": {"used": "witness"},
+             "desc": "watch the laced cum do nothing to Seraphine; understand what you're not",
+             "outcome": (
+                "You watch the thing that explains everything: Bethany's seed — the same DEVOTION "
+                "that's been rewriting *you* with every load — floods Seraphine and does *nothing*, "
+                "rolls off her will like water, because she's the one being it can't own. And you "
+                "understand, with a cold clarity the littleness and the conditioning haven't "
+                "reached yet, the exact shape of the gap between a peer and a possession, and which "
+                "one you are, and that the gap doesn't close. It only ever gets wider.")}],
+        "default": "between",
+        "then": "se_unbirth"}
+
+
+@choice("se_unbirth", root=False)
+def _se_unbirth(character):
+    st = _state_tags(character)
+    fit = ("A nugget slides in easiest of all — nothing to fold, nothing to brace, just a warm "
+           "limbless weight her body takes whole. " if st["nugget"] else
+           "She works you in folded and patient, her body opening to take you the way the "
+           "facility's taught yours to open for everything. ")
+    return {"key": "se_unbirth", "prompt": (
+        "\"Now,\" Seraphine says, sated and fond, \"the fun part. I don't *carry* my purchases "
+        "out, sweetheart. I carry them home the way I keep them — *in*.\" And she means it "
+        "literally: she gathers you up, and her body opens — her womb a warm waiting room, an "
+        "interior built to hold a person — and she begins to take you |winside her|n, unbirthing "
+        "you into herself to carry home. " + fit + "The warm dark closes over you by degrees, the "
+        "world reducing to the wet heat of her interior and the muffled boom of her heartbeat and "
+        "Bethany's voice somewhere outside saying something fond, until you are *in* her, held, "
+        "carried, a passenger in the body of your new owner. \"There,\" comes Seraphine's voice, "
+        "warm through the walls of her. \"Snug. That's how you travel now. That's how you *live* "
+        "now, mostly — kept where I can feel you. Say goodbye to Beth.\"\n\n"
+        "|x(And under the warm dark, the floor stays lit: the door is never locked, even from in "
+        "here. A word, and you're out, home, free — escape works through any wall, any host. She "
+        "can make the inside of her as inescapable as she likes. The one exit is always yours.)|n"),
+        "options": [
+            {"key": "yield", "label": "Yield — let her carry you home inside her",
+             "effect": "seraphine_takes", "params": {"devotion": 5.0}, "set": {"home": "yield"},
+             "desc": "real ownership transfers to Seraphine; carried home a passenger",
+             "outcome": (
+                "You yield, and let the warm dark have you, and let her carry you home inside her "
+                "own body — and ownership transfers for real, her paper now, her *passenger* now, "
+                "a kept thing she'll feel shift inside her all the way back to the post office. The "
+                "surrender of being carried, of having nowhere to be but inside someone, of being "
+                "that thoroughly *kept*, is enormous and warm and total. \"Good girl,\" she hums, "
+                "and you feel it in your bones because you're inside the bones. \"Welcome home.\"")},
+            {"key": "cling", "label": "Cling to the door in the warm dark", "effect": "seraphine_takes",
+             "params": {"devotion": 3.0}, "set": {"home": "cling"},
+             "desc": "carried home regardless; keep one hand on the never-locked exit",
+             "outcome": (
+                "You let her take you in — the ownership transfers regardless, you're hers and "
+                "carried — but you keep one hand, all the way down in the warm dark, on the door: "
+                "the word, the never-locked exit that works through any wall. Just knowing it's "
+                "there steadies you inside her. \"Holding onto your little exit,\" Seraphine "
+                "observes, fond, feeling you not-quite-settle. \"That's fine. They all do, the "
+                "first carry. You'll stop reaching for it once you work out I'm not the kind of "
+                "owner you need to escape. I'm the kind you get to stop running from. Eventually.\"")}],
+        "default": "yield",
+        "then": "se_close"}
+
+
+@choice("se_close", root=False)
+def _se_close(character):
+    return {"key": "se_close", "prompt": (
+        "Bethany rests a hand on the warm swell of Seraphine's belly — on *you*, through her — "
+        "with a fondness that's for both of you at once, the friend and the purchase. \"Take good "
+        "care of my pick, Sera.\" \"Always do.\" \"And bring her round. I'll want to see how she "
+        "settles. And —\" a beat, the peerage \"— stay longer next time.\" \"Next time,\" "
+        "Seraphine agrees, warm, and turns to carry you out — out of the facility, through the "
+        "ways, toward the post office and whatever being *hers* means: kept inside her, carried, "
+        "owned by the one person Bethany opens for, tied now into a relationship between two "
+        "powers that you are the warm shared currency of. The facility recedes. Seraphine's "
+        "heartbeat is the loudest thing in the world. You are carried home."),
+        "options": [
+            {"key": "settle", "label": "Settle into being carried home", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the new keeping take",
+             "outcome": (
+                "You settle into the warm dark and the swaying carry and the great slow heartbeat, "
+                "and let being *hers* take — a new owner, a new home, carried there inside her like "
+                "the most kept thing in the world. Whatever the post office holds, you'll arrive "
+                "already most of the way Seraphine's, and she'll feel you settle, and she'll be "
+                "pleased, and somewhere behind you Bethany will be filing the sale with a fondness "
+                "that was, in its cold way, real. You were a good pick. You'll be a good keep.")},
+            {"key": "ache", "label": "Carry the ache of what you witnessed", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "hold the gap between peer and possession",
+             "outcome": (
+                "You carry it out with you — the thing you saw, the laced cum doing nothing to "
+                "Seraphine, the gap between what they are to each other and what you are to either "
+                "— and you hold that clarity like the ember it is, all the way into the warm dark "
+                "and the carrying. It doesn't save you. You're still hers, still carried, still "
+                "owned. But you *know*, exactly, what you're not, and the knowing is yours, and "
+                "the door behind it is still open, and those two things are what you have. They "
+                "might, in the end, be enough. They might not. You're carried home either way.")}],
+        "default": "settle"}

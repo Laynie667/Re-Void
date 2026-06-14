@@ -63,6 +63,9 @@ built reference). This doc is the master list of everything to convert.
   aftermath (thank her vs silence). Real `punish`/`make_example`/`register_defiance`.
 - **The fellow-resident arc** — the futa-conversion set-piece + shared scenes; she breeds you under
   Bethany's direction. Real cross-sire lineage, conversion persists.
+- ✅ **Seraphine's visit (`se_*`, `scene seraphine`)** — the facility↔post-office peerage; Seraphine
+  as buyer; the only one Bethany opens to; the laced cum that can't own her; unbirthing carry-home.
+  Real `seraphine_takes` ownership transfer. See design/seraphine_bethany.md.
 - **Auction → Kept arc** — appraisal/block/gavel → Bethany buys → her evening/bed/morning →
   company (she sends for the fellow). Real ownership, laced devotion, the file.
 - **Lineage loop** — your get mature into stock and are bred back to you; each delivery raises quota.
