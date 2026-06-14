@@ -55,12 +55,13 @@ built reference). This doc is the master list of everything to convert.
 - **Procedures (≈21)** — the Parlour/surgery scenes, each `_proc_*`: pierce, brand, stim-implant,
   ring-fit, milk-port, one-way, cow-set, tail, fertility-implant, womb-tattoo, clit-hood,
   tongue-split, corset, clit-pump, neuter, sissify, tongue, latex, udder, rings, nugget. Real mods.
-- **Dosing (≈14 drugs)** — a dosing scene: the dose administered, the come-up, the effect taking;
-  the choice of how you ride it. Real drug effects.
+- ✅ **Dosing (`dz_*`, `scene dosing`)** — BUILT. The dose administered, the come-up, riding
+  the effect; real `_dose` fires an actual drug from your pool. State-aware. In the hub.
 - **Conditioning / hypno** — the Spiral Chair induction as full cinematic (settle→spiral→drone→
   deep→set→below); mantra-seating and the descent door as choices. Real triggers/regression.
-- **Punishment / correction** — confession vs defiance → the sentence (sty / floor / line) → the
-  aftermath (thank her vs silence). Real `punish`/`make_example`/`register_defiance`.
+- ✅ **Punishment / correction (`pn_*`, `scene correction`)** — BUILT. Confess/deny/silent →
+  sentence (sty `filth` / floor `make_example` / line `punish`) → aftermath (thank=earn-back
+  `gratitude` / refuse=review resets). Real punishment + earn-back. Bethany's disappointed register.
 - **The fellow-resident arc** — the futa-conversion set-piece + shared scenes; she breeds you under
   Bethany's direction. Real cross-sire lineage, conversion persists.
 - ✅ **Seraphine's visit (`se_*`, `scene seraphine`)** — the facility↔post-office peerage; Seraphine
@@ -89,8 +90,9 @@ built reference). This doc is the master list of everything to convert.
   dragging you room to room; you drive via `scene`/`whereto`; machines, milking sessions, arousal
   and engorgement keep ticking on their own scripts. Default OFF (safe) — flip live to test.
   §0 floor untouched either way.
-- TODO (polish): auto-pose `facility_hub` at a scene's close (so handoff is automatic, not a
-  manual `whereto`); verify under `scenemode on` that milking still INITIATES via the Dairy scene
+- ✅ **Auto-hub on close**: with `scenemode on` (sets `scene_autohub`), a scene's `end` auto-poses
+  the facility hub — handoff is seamless, no manual `whereto`.
+- TODO (polish): verify under `scenemode on` that milking still INITIATES via the Dairy scene
   (the old cycle was one initiator) — hand-test in-game.
 
 ## Build order (suggested, after Intake)

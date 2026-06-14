@@ -569,6 +569,36 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c20, ch)[0] is not None, f"fitting(kitted) '{ch}' failed"
     assert c20.db.pending_choice is None and c20.db.scene_flags is None, "fitting(kitted) should end clean"
 
+    # The Correction scene chains end-to-end (real punish/example/gratitude effects).
+    c21 = _Char(); cyoa.start_scene(c21, "pn_arrival")
+    pnbeats = []
+    for ch in ("confess", "line", "thank"):
+        p = c21.db.pending_choice
+        assert p, f"correction: no pending before '{ch}'"
+        pnbeats.append(p["key"])
+        assert cyoa.resolve_choice(c21, ch)[0] is not None, f"correction '{ch}' did not resolve"
+    assert pnbeats == ["pn_arrival", "pn_sentence", "pn_after"], pnbeats
+    assert c21.db.pending_choice is None and c21.db.scene_flags is None, "correction should end clean"
+
+    # The Dosing scene chains end-to-end (real _dose facility effect).
+    c22 = _Char(); cyoa.start_scene(c22, "dz_arrival")
+    dzbeats = []
+    for ch in ("offer", "ride", "surf"):
+        p = c22.db.pending_choice
+        assert p, f"dosing: no pending before '{ch}'"
+        dzbeats.append(p["key"])
+        assert cyoa.resolve_choice(c22, ch)[0] is not None, f"dosing '{ch}' did not resolve"
+    assert dzbeats == ["dz_arrival", "dz_comeup", "dz_ride"], dzbeats
+    assert c22.db.pending_choice is None and c22.db.scene_flags is None, "dosing should end clean"
+
+    # Auto-hub: with scene_autohub set, a scene's `end` auto-poses the facility hub.
+    c23 = _Char(); c23.db.scene_autohub = True
+    cyoa.start_scene(c23, "dz_arrival")
+    for ch in ("offer", "ride", "surf"):
+        cyoa.resolve_choice(c23, ch)
+    assert c23.db.pending_choice is not None and c23.db.pending_choice["key"] == "facility_hub", \
+        "scene_autohub should auto-pose the hub on scene end"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

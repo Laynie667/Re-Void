@@ -1639,6 +1639,8 @@ class CmdScene(Command):
         "buyer": "se_arrival",
         "fitting": "ft_arrival", "fit": "ft_arrival", "hardware": "ft_arrival",
         "service": "ft_arrival",
+        "correction": "pn_arrival", "punish": "pn_arrival", "discipline": "pn_arrival",
+        "dosing": "dz_arrival", "dose": "dz_arrival", "drug": "dz_arrival", "dispensary": "dz_arrival",
     }
 
     def func(self):
@@ -1733,7 +1735,8 @@ class CmdSceneMode(MuxCommand):
             val = (arg == "on")
             for s in cycles:
                 s.db.scene_mode = val
-            caller.msg(f"|gScene mode {'ON — scenes drive; the timer-cycle is retired' if val else 'OFF — the timer-cycle resumes'}.|n "
+            caller.db.scene_autohub = val
+            caller.msg(f"|gScene mode {'ON — scenes drive; the timer-cycle is retired; scenes auto-route to the board on close' if val else 'OFF — the timer-cycle resumes'}.|n "
                        f"({len(cycles)} cycle script(s) updated.)")
         else:
             states = ", ".join(("on" if getattr(s.db, "scene_mode", False) else "off") for s in cycles)

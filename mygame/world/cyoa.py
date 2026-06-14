@@ -106,10 +106,30 @@ def resolve_choice(character, selection):
             pose_named(character, nxt, room=getattr(character, "location", None))
         except Exception:
             pass
-    # End of a scene — clear its memory so the next scene starts fresh.
+    # End of a scene — clear its memory so the next scene starts fresh. And if the player is in
+    # auto-hub mode (set by `scenemode on`), the facility routes them onward automatically: the
+    # scene-flow hub is posed, so handoff is seamless rather than a manual `whereto`. (Guarded so
+    # the hub itself, which never uses `end`, can't recurse.)
     if opt.get("end"):
         character.db.scene_flags = None
+        if getattr(getattr(character, "db", None), "scene_autohub", False):
+            try:
+                pose_named(character, "facility_hub", room=getattr(character, "location", None))
+            except Exception:
+                pass
     return opt, msg
+
+
+@effect("make_example")
+def _eff_make_example(character, p):
+    """A public lesson — real compliance.make_example (overstim + standing hit + broadcast)."""
+    try:
+        from world.compliance import make_example
+        make_example(character, severity=int(p.get("severity", 2) or 2),
+                     reason=p.get("reason", "made an example"))
+    except Exception:
+        pass
+    return "example"
 
 
 def facility_decides(character):
@@ -6040,6 +6060,7 @@ def _b_facility_hub(character):
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
     add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
+    add("dosing", "→ the Dispensary", "dz_arrival", "your dose; the come-up")
     # The lineage room reads as available when you're little/bred or just on the rota.
     add("nursery", "→ the Nursery", "nu_arrival", "regression; the get; the Little Box")
     # The showroom — once you're graded, you can be sold.
@@ -6276,3 +6297,282 @@ def _ft_close(character):
                 "the next rig. You'll be back the moment the rooms add a part. They always add a "
                 "part.\"")}],
         "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Correction — a rule-break answered. Confession/defiance → sentence →
+# aftermath. Cinematic, state-aware. Actor: Bethany (the disciplinarian register —
+# disappointed-warm, not cruel-for-fun). REAL payload: register_defiance / punish /
+# apply_filth / make_example / gratitude — actual punishment + the earn-back hook.
+# §0 always frees you. Flow: arrival→plea→sentence→aftermath. Entry: `scene correction`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("pn_arrival", root=False)
+def _pn_arrival(character):
+    k = _kit(character)
+    note = ""
+    if k["denied"]:
+        note = "Your denial's already running, so there's no relief to take away — the correction has to find another lever, and it will. "
+    if k["little"]:
+        note += "Down in your headspace you barely grasp the charge, only the disappointed weight of her voice, and the not-understanding makes the dread worse. "
+    return {"key": "pn_arrival", "prompt": (
+        "You're brought up short — pulled off whatever you were doing and stood in front of a "
+        "review, because the facility *logs* everything and somewhere a line in your file went "
+        "red. " + note + "Bethany meets you not with the bright cruelty of the floors or the warm "
+        "ownership of her bed but with a third thing, worse than both: |wdisappointment|n, the "
+        "patient managerial sorrow of a woman who's read your infraction and finds it more tedious "
+        "than offensive. \"Sit down, sweetheart. No — stand. We need to talk about a choice you "
+        "made.\" She taps the file. \"You know the rule you broke. I'm not going to tell you which "
+        "— I want to hear *you* tell *me*, because the telling matters more than the rule. So.\" "
+        "She laces her hands. \"Are you going to confess it, or are you going to make me read it "
+        "to you off the page?\""),
+        "options": [
+            {"key": "confess", "label": "Confess it", "set": {"plea": "confess"},
+             "effect": "gratitude", "params": {"amount": 2.0},
+             "desc": "name the break yourself; banks a little compliance",
+             "outcome": (
+                "You confess — name the break yourself, out loud, before she has to — and something "
+                "in her face eases into approval that's worse than anger. \"*There* it is. Thank "
+                "you. Confessing is the first thing we teach and the last thing they learn, and "
+                "you've done it without being made to.\" She notes it — *self-reports* — and the "
+                "noting banks a sliver of compliance against you. \"The correction still happens, "
+                "sweetheart. But it happens to a girl who owned it. That counts. I keep track of "
+                "what counts.\"")},
+            {"key": "deny", "label": "Deny it", "set": {"plea": "deny"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "refuse the charge; she reads it off the page and logs the lie",
+             "outcome": (
+                "You deny it. Bethany doesn't argue — she simply turns the file and reads it to "
+                "you, the timestamped truth of exactly what you did, in her even disappointed "
+                "voice, while you stand there with the lie still warm in your mouth. \"Mm. So now "
+                "it's the break *and* the denial, two lines red instead of one.\" She makes the "
+                "second note. \"Lying to me is its own infraction, you understand — clause twelve, "
+                "resistance is logged. You've just doubled your own sentence to avoid a "
+                "confession that would have halved it. We'll work on your arithmetic.\"")},
+            {"key": "silent_pn", "label": "Say nothing", "set": {"plea": "silent"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "neither confess nor deny; she reads it anyway",
+             "outcome": (
+                "You give her nothing — neither confession nor denial, just silence. Bethany sighs, "
+                "almost fond, and reads the charge off the page regardless. \"Stonewalling. That's "
+                "a phase too. It reads as defiance, sweetheart — silence in a review always does — "
+                "so it sentences the same as a denial, just with less for me to hold against you "
+                "later. Suit yourself. The outcome's identical and you've kept your dignity, for "
+                "all the good it'll do you in about ninety seconds.\"")}],
+        "default": "confess",
+        "then": "pn_sentence"}
+
+
+@choice("pn_sentence", root=False)
+def _pn_sentence(character):
+    plea = scene_flag(character, "plea", "confess")
+    lead = ("\"Since you owned it, I'll let you pick the form. Small mercy. Take it.\" "
+            if plea == "confess" else
+            "\"You don't get to pick, after that. But I'll tell you what's coming, so the waiting "
+            "does some of the work.\" ")
+    return {"key": "pn_sentence", "prompt": (
+        lead + "\"Correction has three usual forms, and they all end the same — you, more "
+        "compliant, and the record noting that resistance costs. There's |wthe sty|n: slopped and "
+        "rutted face-down in the muck till you've reconsidered your priorities. There's |wthe "
+        "floor|n: made an example of, publicly, where all the other stock can watch what a red "
+        "line earns. Or there's |wthe line|n: nothing dramatic, just the schedule turned heavier "
+        "and the denial turned deeper and the clock you can't see turned longer, the quiet "
+        "correction that costs the most over time.\" She waits. \"Which lesson would you like to "
+        "have learned?\""),
+        "options": [
+            {"key": "sty", "label": "The sty — filth and the muck", "effect": "filth",
+             "set": {"sentence": "sty"}, "desc": "real apply_filth + punishment",
+             "outcome": (
+                "The sty, then. You're walked down and slopped — real filth, rutted face-down, "
+                "kept in the muck till the lesson takes — and hauled back up reeking and corrected, "
+                "the degradation logged as your sentence served. \"Better,\" Bethany says, not "
+                "wrinkling her nose because she's far past that with her own stock. \"You'll think "
+                "of the muck next time a red line tempts you. That's the whole point of the "
+                "muck.\"")},
+            {"key": "floor", "label": "The floor — made an example", "effect": "make_example",
+             "params": {"severity": 2}, "set": {"sentence": "floor"},
+             "desc": "real public make_example (overstim + standing hit + broadcast)",
+             "outcome": (
+                "The floor. You're taken out under the lights and *made an example of* — publicly, "
+                "thoroughly, the other stock made to watch what a red line earns — and the shame of "
+                "being the lesson lands deeper than the correction itself. Your standing takes the "
+                "hit; the broadcast does its work. \"There,\" Bethany tells the watching room as "
+                "much as you. \"That's what it costs. Learn from her so I don't have to teach "
+                "you.\"")},
+            {"key": "line", "label": "The line — heavier schedule, deeper denial", "effect": "punish",
+             "params": {"severity": 2}, "set": {"sentence": "line"},
+             "desc": "real punish — overstim, deeper denial, raised quota, longer clock",
+             "outcome": (
+                "The line. Nothing dramatic — just the stimulation slammed up, the release dragged "
+                "further out of reach, the schedule turned heavier and a quota raised and the clock "
+                "you can't see turned longer — the quiet correction that follows you for days "
+                "instead of minutes. \"The cruelest one, really,\" Bethany says, almost kindly. "
+                "\"No spectacle to brace against. Just everything turned harder, indefinitely, "
+                "because you made a choice. You'll feel this one long after the muck would've "
+                "washed off.\"")}],
+        "default": "line",
+        "then": "pn_after"}
+
+
+@choice("pn_after", root=False)
+def _pn_after(character):
+    sentence = scene_flag(character, "sentence", "line")
+    return {"key": "pn_after", "prompt": (
+        "When the sentence is served Bethany comes back to you, the disappointment set aside, the "
+        "warmth returning — because correction in here was never about anger, it was about "
+        "*shaping*, and the shaping's done for now. \"There. That's behind us.\" She tips your "
+        "chin up. \"And now the part that actually matters, the part the whole correction was "
+        "built to reach: I want you to thank me for it. Not because I'll punish you again if you "
+        "don't — though the review does reset if you won't — but because some part of you is "
+        "starting to understand that the correction *is* the care, that being shaped is being "
+        "*kept*, and I want to hear you say it and mean it. They're not building toward your "
+        "breaking, sweetheart. They're building toward your *thanking*.\""),
+        "options": [
+            {"key": "thank", "label": "Thank her — and mean it", "effect": "gratitude", "end": True,
+             "desc": "the earn-back; a thank-you that's kept",
+             "outcome": (
+                "\"Thank you for correcting me.\" It comes out shaped and meant both, and the "
+                "meaning is the thing she was fishing for the whole time, the hook setting clean. "
+                "Bethany glows. \"*That's* the one we keep. That's the lesson learned — not the sty "
+                "or the floor or the line, those were just the long way round to this.\" She files "
+                "the gratitude with everything else, your earn-back banked, the red line in your "
+                "file marked *resolved, with thanks*. You meant it. That's the part that should "
+                "frighten you and is starting not to.")},
+            {"key": "refuse_thank", "label": "Refuse to thank her", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "end": True,
+             "desc": "withhold the thanks; the review resets, patient",
+             "outcome": (
+                "You won't thank her for it. Bethany accepts that with the patience of someone who "
+                "has all the time there is. \"No? That's all right. The review resets — we'll come "
+                "back to this, and back to it, correction after correction, until the thank-you "
+                "comes on its own, because it always does, in the end.\" She closes the file, "
+                "unbothered. \"I'm not building toward your obedience, sweetheart. I have that "
+                "already. I'm building toward the day you're *grateful* for it. I can wait. "
+                "Gratitude keeps better than fear anyway.\"")}],
+        "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Dosing — a drug administered, the come-up, riding the effect. Cinematic,
+# state-aware. Actor: the dispensary tech. REAL payload: the facility `_dose` method
+# fires an actual drug from the resident's pool. §0 always frees you.
+# Flow: arrival→dose→comeup→ride. Entry: `scene dosing`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("dz_arrival", root=False)
+def _dz_arrival(character):
+    k = _kit(character)
+    note = ""
+    if k["preg"]:
+        note = "They check the chart twice — \"bred, so we hold the heavy ones and run the gentle drips\" — gravid stock gets dosed careful, for the cargo's sake not yours. "
+    if k["stim"]:
+        note += "Your stim-implant's already running, so whatever they add stacks on a baseline you can't switch off. "
+    if k["nugget"]:
+        note += "A nugget gets the line run straight into a port — no veins to find on limbs you don't have, just the maintenance plumbing already in you. "
+    return {"key": "dz_arrival", "prompt": (
+        "The dispensary is clean and cold and softly humming — racked vials in facility grey, a "
+        "tray of pre-loaded syringes, an IV stand, a chart of your tolerances and your schedule. "
+        "This is where the facility reaches past your body and into your *chemistry*, because some "
+        "of the work — the heat, the haze, the want, the pliancy — is faster done with a dose than "
+        "a room. " + note + "The |wdispensary tech|n reads your chart with the brisk neutrality of "
+        "a pharmacist filling a routine script. \"Due for your dose,\" they say, not looking up, "
+        "selecting a vial. \"Standard schedule. You'll feel it in a minute or two, and you'll feel "
+        "it the way the chart says you should, because we've had a lot of practice reading you.\" "
+        "They tap a syringe. \"Arm, or the port. Your preference; the dose doesn't care.\""),
+        "options": [
+            {"key": "offer", "label": "Offer your arm", "set": {"dz": "offer"},
+             "effect": "devote", "params": {"amount": 1.0}, "desc": "take the dose without fuss",
+             "outcome": (
+                "You offer your arm and let them find the vein, and the not-fighting is logged as "
+                "compliance the same as anything else. \"Easy stick. Good.\" The tech swabs, "
+                "presses, and the cold push of it goes in. \"Now we wait for the come-up. Couple "
+                "minutes. Sit. It's easier sitting.\"")},
+            {"key": "pull_dz", "label": "Pull your arm back", "set": {"dz": "pull"},
+             "effect": "deny_hold", "params": {"cond": 2.0}, "desc": "resist; they dose you anyway",
+             "outcome": (
+                "You pull back — and the tech sighs, signals, and a handler simply holds you still "
+                "while the needle finds its mark regardless. \"Fighting the stick just bruises "
+                "you,\" the tech says, depressing the plunger. \"Dose goes in the same. It always "
+                "goes in the same. The only thing your struggling changes is whether you've got a "
+                "bruise to go with the high.\"")},
+            {"key": "ask_dz", "label": "Ask what it is", "set": {"dz": "ask"},
+             "desc": "make them name the dose",
+             "outcome": (
+                "\"What it is?\" The tech almost smiles. \"Chart says it's what you're due. You "
+                "don't get the name — knowing the name wouldn't change what it does, and not "
+                "knowing makes the come-up more *interesting* for you, which the chart also "
+                "accounts for.\" The needle's already in. \"You'll find out what it is by what it "
+                "does. That's how we prefer you learn your own pharmacology.\"")}],
+        "default": "offer",
+        "then": "dz_comeup"}
+
+
+@choice("dz_comeup", root=False)
+def _dz_comeup(character):
+    return {"key": "dz_comeup", "prompt": (
+        "And then the |wcome-up|n. It starts at the edges — a warmth in the fingertips, a thickness "
+        "behind the eyes — and then it *arrives*, whatever it is, and the dispensary's careful "
+        "reading of you proves out: the dose does exactly what your chart promised, blooming "
+        "through you on its own schedule, hijacking some system you'd thought was yours. Maybe the "
+        "heat slams up past anything a room could build; maybe the haze rolls in and takes your "
+        "edges; maybe everything goes soft and suggestible and *agreeable* in a way that "
+        "frightens the last sober sliver of you. The tech watches your pupils, your colour, your "
+        "breathing, ticking the chart as the markers hit. \"There's the come-up. Right on the "
+        "curve. Ride it — fighting the come-up just makes it longer and meaner. Let it take "
+        "you.\""),
+        "options": [
+            {"key": "ride", "label": "Let the come-up take you", "effect": "facility",
+             "params": {"method": "_dose", "kind": "proc"}, "set": {"dz_taken": "rode"},
+             "desc": "the real dose fires — an actual drug from your pool",
+             "outcome": (
+                "You stop fighting and let it take you, and the real chemistry does its real work — "
+                "an actual dose off your pool, blooming through you exactly as logged, doing to "
+                "your heat or your haze or your will whatever the vial was for. Letting it in is "
+                "easier and the easier is the lesson: your own chemistry isn't yours to refuse "
+                "anymore, it's another thing the facility administers on a schedule, and reaching "
+                "for the high it hands you is just one more reflex they're installing.")},
+            {"key": "fight_dz", "label": "Fight the come-up", "effect": "facility",
+             "params": {"method": "_dose", "kind": "proc"}, "set": {"dz_taken": "fought"},
+             "desc": "the dose hits regardless; resisting only drags it out",
+             "outcome": (
+                "You fight it — clench against the bloom, try to hold your edges as the dose "
+                "arrives — and the chemistry doesn't negotiate, the real dose hitting regardless, "
+                "your resistance only stretching the come-up longer and rougher exactly as the "
+                "tech warned. \"Fighter,\" they note, unbothered, watching the markers climb anyway. "
+                "\"It wins. It always wins. It's in your blood, not your willpower. The willpower's "
+                "just along for the ride.\"")}],
+        "default": "ride",
+        "then": "dz_ride"}
+
+
+@choice("dz_ride", root=False)
+def _dz_ride(character):
+    return {"key": "dz_ride", "prompt": (
+        "And then you're *on* it — riding the full effect, whatever it turned out to be, the world "
+        "remade through the dose's lens for as long as it runs. The tech logs your reaction, dials "
+        "in a note for next time (\"responds well — we can step the dose\"), and leaves you to it, "
+        "because the dose does the supervising now. This is the quiet horror of the dispensary: "
+        "not the needle, but the *afterward* — hours of your own chemistry turned against you, a "
+        "high or a haze or a heat you didn't choose and can't end, teaching your body to expect "
+        "the next dose the way it's learned to expect everything else the facility hands it on a "
+        "schedule."),
+        "options": [
+            {"key": "surf", "label": "Surf the high — let it be good", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "enjoy what they gave you; the enjoying is the leash",
+             "outcome": (
+                "You surf it — let the dose be as good as it wants to be — and the enjoying is the "
+                "leash, your body filing another association: *the facility's chemistry feels "
+                "good*, the dispensary is where the nice things come from, the next dose is "
+                "something to look forward to. You'll hold your arm out faster next time. The chart "
+                "already predicted you would. It's very good at predicting you.")},
+            {"key": "endure_dz", "label": "Endure the ride", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "end": True, "desc": "wait it out; it runs its course regardless",
+             "outcome": (
+                "You endure it — wait out the hours of hijacked chemistry, refusing to enjoy what "
+                "you didn't choose — and it runs its full course regardless, your body dosed and "
+                "altered on schedule whether you ride it pleasantly or grit through it. Either way "
+                "the chart gets its data and your tolerance gets stepped and the next dose is "
+                "already scheduled. \"You'll come down eventually,\" the tech says on their way "
+                "out. \"And you'll be due again before you've forgotten this one. That's the "
+                "schedule. Welcome to it.\"")}],
+        "default": "surf"}
