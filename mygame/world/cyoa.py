@@ -2836,8 +2836,10 @@ def _bp_pick(character):
         lead + "He walks the row once, reading his stock the way you read a menu. \"Board wants "
         "another cover on your line. Got options.\" He nods at each as he passes. \"Goliath — \" "
         "the boar, rank and tusked and enormous in his low pen, already up and interested \" — "
-        "boar's keen, boar's quick, boar knots like a bastard. Bull's proven, slow, hung like "
-        "you'd not believe. Stallion'll wreck you and he's not gentle about depth.\" He stops at "
+        "boar's keen and quick to mount, but he's a screw: thin and pointed, bores in deep and "
+        "*seals* you, half an hour locked on once he's in. Bull's proven, hung like you'd not "
+        "believe, and facility-bred to *knot* — only knotting bull you'll ever meet, and you'll "
+        "feel why. Stallion'll wreck you and he's not gentle about depth.\" He stops at "
         "the kennel run, where a dozen heavy rangy hounds have their noses jammed to the bars, "
         "working your scent, whining. \"Or the kennel takes the lot of you and we get your whole "
         "quota done in one ugly afternoon.\" He clicks his pen. \"I'll pick if you won't. But "
@@ -2847,11 +2849,12 @@ def _bp_pick(character):
              "effect": "devote", "params": {"amount": 2.0},
              "desc": "one animal, his choice; let the machinery decide",
              "outcome": (
-                "\"Goliath, then. Board's short on his cross anyway.\" He unlatches the boar's pen "
-                "with the bored competence of a man fetching a tool, and the thing comes out "
-                "snorting, three hundred pounds of single-minded rut, and the stockman steers it "
-                "toward your strapped-open body with a hand on its shoulder like he's parking a "
-                "cart. \"Hold still. He's faster if you don't fight the first mount.\"")},
+                "\"The bull, then. Board's short on his cross, and he's the one most stock can "
+                "actually take.\" He unlatches the great beast's stall with the bored competence of "
+                "a man fetching a tool — a ton of proven, hung, facility-bred bull, the only "
+                "knotting one of his kind — and steers it toward your strapped-open body with a "
+                "hand on its flank like he's parking a cart. \"Hold still. He's faster if you don't "
+                "fight the first mount, and you do not want him slow.\"")},
             {"key": "pack", "label": "Offer yourself to the whole kennel", "set": {"beast": "pack"},
              "effect": "devote", "params": {"amount": 3.0},
              "desc": "the hounds, all of them; clears quota in one ugly afternoon",
@@ -2880,11 +2883,12 @@ def _bp_pick(character):
 def _bp_scent(character):
     beast = scene_flag(character, "beast", "stud")
     body = {
-        "stud": ("The boar shoulders up behind you, and the stockman guides its blunt seeking snout "
-                 "to the greasy marking-post first and then to *you* — letting it scent the frame, "
-                 "scent your strapped-open holes, work itself into a deeper rut on the smell of you. "
-                 "Its breath is hot and wet down the backs of your thighs. Something blunt and "
-                 "already-dripping drags across your skin, hunting the right hole by feel."),
+        "stud": ("The bull shoulders up behind you, vast and heavy as a wall, and the stockman "
+                 "guides its broad muzzle to the greasy marking-post first and then to *you* — "
+                 "letting it scent the frame, scent your strapped-open holes, work into a deeper "
+                 "rut on the smell of you. Its breath gusts hot and wet down the backs of your "
+                 "thighs. Something blunt and broad and already-dripping drags across your skin, "
+                 "the flared head hunting the right hole by feel."),
         "pack": ("The pack swarms the frame and *marks* you — a dozen reeking sheaths dragged up "
                  "your cheeks and across your mouth, noses jammed into every fold of you, the whole "
                  "writhing mass slathering you in musk and slick, claiming the new hole for the herd "
@@ -2928,13 +2932,13 @@ def _bp_scent(character):
 def _bp_mount(character):
     beast = scene_flag(character, "beast", "stud")
     body = {
-        "stud": ("The boar mounts. There's no ceremony to it and no patience — it heaves its bulk "
-                 "up over your back, claws scrabbling, far too heavy, and its blunt slick cock "
-                 "stabs and misses and stabs again, hunting, until it jams against a hole — any "
-                 "hole, it doesn't choose, it just finds wet and *drives* — and the flared length "
-                 "of it spears into you in one brutal uncaring shove that punches a scream out of "
-                 "you. It is already rutting before it's fully seated, fast and shallow and "
-                 "frantic, an animal with one idea."),
+        "stud": ("The bull mounts. There's no ceremony to it and no patience — it heaves its "
+                 "enormous bulk up over your back, hooves scrabbling, a ton of beast settling onto "
+                 "you, far too heavy — and its cock, blunt and broad and flared at the head, stabs "
+                 "and misses and stabs again until it jams against a hole and *drives*, the flared "
+                 "head spearing into you in one brutal uncaring shove that punches a scream out of "
+                 "you. It's rutting before it's fully seated, deep and frantic, an animal with one "
+                 "idea."),
         "pack": ("The first hound takes you, and it is fast and total — it mounts, clamps its "
                  "forelegs around your hips with a strength that bruises, and jackhammers into you "
                  "with the frantic uncaring speed of a dog that smelled a bitch in heat, its slick "
@@ -3030,12 +3034,13 @@ def _bp_ride(character):
 def _bp_knot(character):
     beast = scene_flag(character, "beast", "stud")
     body = {
-        "stud": ("The boar's rhythm stutters, jams deep, and the knot at its base swells — and it "
-                 "doesn't ask, it just *forces*, hauling you back onto it as the gorged knot bullies "
-                 "at your stretched rim, too big, far too big, until it gives with a blunt sick "
-                 "internal |w*pop*|n and seats, and your rim clamps shut behind it. Tied. Locked to "
-                 "three hundred pounds of spent rutting animal that immediately tries to step off "
-                 "and can't, and drags you with it, the knot wrenching inside you."),
+        "stud": ("The bull's rhythm stutters, jams deep, and the |wfacility-bred knot|n at the base "
+                 "of him — monstrous, the thing they engineered into this one stud — begins to "
+                 "swell, and it doesn't ask, it just *forces*, hauling you back onto it as the "
+                 "gorged knot bullies at your stretched rim, too big, far too big, until it gives "
+                 "with a blunt sick internal |w*pop*|n and seats, and your rim clamps shut behind "
+                 "it. Tied. Locked to a ton of spent rutting bull that shifts and cannot pull free "
+                 "and drags you with it, the knot wrenching inside you."),
         "pack": ("The hound currently in you jams deep and ties — the knot forcing through your "
                  "worn rim with a wet |w*pop*|n and locking, sealing you onto it, and unlike the "
                  "ones before it this one *stays*, turned and tied and dripping, while the rest of "
@@ -3901,24 +3906,30 @@ def _mp_set(character):
 @choice("ps_arrival", root=False)
 def _ps_arrival(character):
     st = _state_tags(character)
-    note = ""
+    # Compositional state note — stacks for every combo (nugget+little, nugget+preg, all three).
     if st["nugget"]:
         note = ("You don't walk into the sty — a nugget can't, no arms, no legs — so the custodian "
-                "carries you in under one arm like a sack and drops you in the muck, and you land "
-                "where you land, because moving yourself out of it was never going to be on the "
-                "table. ")
-    elif st["preg"] and st["little"]:
-        note = ("Gravid and small-headed both, you're herded in barely understanding why, one hand "
-                "cradling the swell of you out of instinct the custodian finds funny. \"Bred little "
-                "thing in the muck. They do love a soft one.\" ")
-    elif st["preg"]:
-        note = ("Heavy-bellied with the facility's get, you're walked in carefully — not for your "
-                "sake; gravid stock is valuable and the sty is where they like to rut a pregnant "
-                "one, belly and all. ")
-    elif st["little"]:
-        note = ("Down in your headspace, you don't fully grasp where you're being taken until the "
-                "smell hits and the warm muck is already underfoot, and the not-understanding makes "
-                "it worse and softer at once. ")
+                "hauls you in under one arm like a sack and drops you in the muck, where you land "
+                "and stay, because moving yourself out of it was never on the table")
+    elif st["preg"] or st["little"]:
+        note = "You're herded down toward the pit"
+    else:
+        note = ""
+    if note:
+        clauses = []
+        if st["preg"]:
+            clauses.append("belly-heavy with the facility's get — and the sty likes a bred one "
+                           "best, they rut a pregnant sow with extra appetite and no care at all "
+                           "for the cargo")
+        if st["little"]:
+            clauses.append("down in your headspace and barely grasping where you've been brought, "
+                           "which makes the smell and the warmth and the snouts land stranger and "
+                           "softer and so much worse")
+        if clauses:
+            note += " — " + ", and ".join(clauses)
+        note += ". "
+        if st["nugget"] and (st["preg"] or st["little"]):
+            note += "\"Look at the state of this one,\" the custodian remarks, unimpressed. "
     return {"key": "ps_arrival", "prompt": (
         "The Pigsty is the low end of the facility in every sense — a churned pit of warm wet "
         "muck and slop kept deliberately filthy, ringed by low pens where the sty-pigs grunt and "
@@ -3998,21 +4009,19 @@ def _ps_down(character):
 @choice("ps_root", root=False)
 def _ps_root(character):
     st = _state_tags(character)
+    # Additive flavour — every applicable state layers in (combos all covered).
     flav = ""
     if st["nugget"]:
-        flav = ("They root you over thoroughly — a limbless thing in the muck is all holes and no "
-                "defence, and the pigs snuffle and nose and shove your helpless weight around the "
-                "slop, working out which end is which, before the boar decides. ")
-    elif st["preg"]:
-        flav = ("A snout shoves up under the swell of your belly, lifting it, scenting the gravid "
-                "heat of you — and the boar grunts with sharper interest, because a bred sow in the "
-                "muck is exactly what the sty is for, and he'll rut you pregnant without a care for "
-                "the cargo. ")
-    elif st["little"]:
-        flav = ("You don't understand the snouts at first — soft and snuffling and almost ticklish "
-                "in your headspace — and the not-understanding lets them root you over while some "
-                "small far part of you keeps waiting for it to turn into something other than what "
-                "it is. It doesn't. ")
+        flav += ("A limbless thing in the muck is all holes and no defence — they shove your "
+                 "helpless weight around the slop, nosing you over, working out which end is which. ")
+    if st["preg"]:
+        flav += ("A snout shoves up under the swell of your belly, lifting it, scenting the gravid "
+                 "heat of you, and the boar grunts sharper interest — a bred sow is exactly what the "
+                 "sty is for. ")
+    if st["little"]:
+        flav += ("In your headspace the snouts are soft and snuffling and almost ticklish at first, "
+                 "and the not-understanding lets them root you while some small far part of you "
+                 "keeps waiting for it to become something kinder. It doesn't. ")
     return {"key": "ps_root", "prompt": (
         "The pigs reach you and |wroot|n — blunt wet snouts shoving under you, over you, into the "
         "folds and seams of you, snuffling along every part with a single-minded animal thoroughness "
@@ -4047,14 +4056,18 @@ def _ps_mount(character):
              "warm muck beneath you with every brutal drive, bred sow getting bred again" if st["preg"] else "")
     return {"key": "ps_mount", "prompt": (
         "The boar mounts. There's no ceremony and no mercy — he heaves his enormous filthy bulk up "
-        "over you, trotters scrabbling and gouging in the slop, far too heavy, and his blunt slick "
-        "cock stabs and misses and stabs and then *finds* you and drives in, corkscrewing deep in "
-        "one brutal uncaring shove that punches the air and a scream out of you both" + belly + ". "
-        "He ruts like the animal he is — fast, frantic, jackhammer-deep, his weight grinding you "
-        "down into the muck, his reek total, the wet obscene slap of him filling the sty — and the "
-        "banked heat in you flares up traitorously to meet even this, even here, even him. The "
-        "custodian watches to be sure the boar's seated and won't injure stock. \"There. Seated. "
-        "Now it works till it ties.\""),
+        "over you, trotters scrabbling and gouging in the slop, far too heavy — and his cock is "
+        "nothing like the blunt stud-things you've taken: it's long, and thin, and wickedly "
+        "pointed, a living |wcorkscrew|n that stabs and seeks and then catches a hole and begins to "
+        "*screw* itself in, the spiral of it boring and twisting deeper with every frantic thrust, "
+        "winding further into you than anything has any right to reach, hunting inward, always "
+        "inward, for the neck of your womb" + belly + ". It does not bottom out and settle the way "
+        "a stud does; it just keeps *screwing*, deeper, the pointed tip corkscrewing toward your "
+        "cervix while his bulk grinds you down into the muck and his reek swallows the world. The "
+        "custodian watches to be sure the tip's found its mark and the boar won't tear stock. "
+        "\"There — feel it screwing up to the neck of you? Now it locks its tip in your womb and "
+        "*empties*, and a boar empties for the better part of half an hour. Settle in. You're not "
+        "going anywhere for a while.\""),
         "options": [
             {"key": "take", "label": "Take it — open to the boar in the muck", "effect": "facility",
              "params": {"method": "_gang", "kind": "gang"}, "set": {"sty_bred": "took"},
@@ -4081,14 +4094,24 @@ def _ps_mount(character):
 @choice("ps_wallow", root=False)
 def _ps_wallow(character):
     st = _state_tags(character)
-    extra = (" The lesser pigs take their turns between the boar's, an unbroken filthy relay, and "
-             "you lose count and then lose the thread." if not st["nugget"] else
-             " You can't crawl off between mounts and aren't meant to — a nugget just stays sunk in "
-             "the wallow where the stock can find you again, and again.")
+    extra = (" The lesser sty-pigs take their turns when the boar's spent — each screwing in the "
+             "same relentless way, locking its tip and emptying its own long flood and sealing you "
+             "deeper, plug set over plug, an ordeal measured in hours and not in minutes, and you "
+             "lose count and then lose the thread." if not st["nugget"] else
+             " You can't crawl off between them and aren't meant to — a nugget just stays sunk in "
+             "the wallow where the next one screws into the same sealed mess, hour on hour.")
     return {"key": "ps_wallow", "prompt": (
-        "The boar ties — the knot forcing through with a blunt wet pop, locking him into you — and "
-        "then dumps, and then, eventually, drags free with an obscene wrench that leaves you gaping "
-        "and corked and filthy, and the sty is not done with you." + extra + " You are kept down in "
+        "The corkscrew tip seats hard against the neck of your womb and *locks* there — and then "
+        "the boar empties, and a boar does not empty in pulses and finish: he empties for the "
+        "better part of half an hour, a relentless hot flood with nowhere to go but to pack you "
+        "fuller and force deeper, the screwed-in length twitching and pumping and pumping while his "
+        "filthy bulk pins you motionless in the muck and the minutes drag and drag. And when at "
+        "last the flood slows he pumps one thing more — a thick gelatinous gush that sets even as "
+        "it spills into a rubbery |wplug|n, sealing the neck of your womb, corking the whole "
+        "half-hour's breeding inside you behind a mucus seal that won't dissolve for hours, maybe a "
+        "day. Only then does he unscrew himself out of you with a slow obscene twist and heave off "
+        "— leaving you sealed and sloshing-full and filthy, the plug holding all of it in. And the "
+        "sty is not done with you." + extra + " You are kept down in "
         "the warm muck, rutted and marked and slopped, used by whatever roots up next, the "
         "degradation so total and so prolonged that somewhere in it the shame burns out entirely "
         "and leaves only the flat warm animal fact of being the thing the sty uses. The world goes "
