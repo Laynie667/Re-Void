@@ -7195,7 +7195,15 @@ def _fl_arrival(character):
 @choice("fl_convert", root=False)
 def _fl_convert(character):
     nm = _fellow_name(character)
+    st = _state_tags(character)
+    lil = (f"You're both little for it — Bethany took you down small on purpose, \"softer subjects, "
+           f"sweeter results\" — so you watch {nm}'s remaking with a child's wide uncomprehending "
+           f"horror, too far down in the small headspace to follow what the chemicals and the knives "
+           f"are *for*, only that they're changing her into something with a frightening new weight, "
+           f"and that you can't stop it, and that you're not big enough to even understand why. "
+           if st["little"] else "")
     return {"key": "fl_convert", "prompt": (
+        lil +
         f"They take {nm} to be converted — and Bethany makes you *watch*, because watching is half "
         "the procedure's purpose. Strapped to the parlour chair, your fellow is given the work at "
         "Bethany's direction: the surgical, chemical, permanent making-over of a body into "
@@ -7233,7 +7241,16 @@ def _fl_convert(character):
 @choice("fl_dose", root=False)
 def _fl_dose(character):
     nm = _fellow_name(character)
+    st = _state_tags(character)
+    lil = (f"The aphrodisiac hits a head that's already gone soft and small, and there's so much "
+           f"less of {nm} for it to have to push aside — a little doesn't *deliberate* to begin "
+           f"with, so the drug doesn't fight a grown mind, it just floods a simple one and fills it "
+           f"with the single hot animal want, fast and total. You watch your playmate's small "
+           f"frightened face go slack and then *hungry*, and somewhere in your own little headspace "
+           f"you don't have the words for what's wrong, only that she's looking at you like that "
+           f"now. " if st["little"] else "")
     return {"key": "fl_dose", "prompt": (
+        lil +
         f"And then Bethany doses her. A heavy aphrodisiac drip, run straight and fast, and you "
         f"watch {nm}'s eyes change — the terror drowning under something hot and animal and "
         "rising, the new cock between her thighs filling hard and urgent as the drug takes the "
@@ -7275,7 +7292,16 @@ def _fl_dose(character):
 @choice("fl_bred", root=False)
 def _fl_bred(character):
     nm = _fellow_name(character)
+    st = _state_tags(character)
+    lil = (f"Two littles, and one of them driven to breed the other — that's the obscene shape of "
+           f"it. The imprint lands on a mind already regressed soft and open, so it sets *deeper* "
+           f"than it ever could in a grown head, no adult sense left to wall it off: the small part "
+           f"of you simply learns, all the way down where the little things live, that this is what "
+           f"{nm} is *for* now and what you're for under her. You take her with a child's helpless "
+           f"totality and she breeds you with a child's-mind scrubbed down to rut, and Bethany "
+           f"watches her two littles ruin each other and could not be more pleased. " if st["little"] else "")
     return {"key": "fl_bred", "prompt": (
+        lil +
         f"And then Bethany lets her off the table, and points her at you. \"Breed, sweetheart,\" "
         f"she tells {nm} — though there's barely a sweetheart left to tell, just rut wearing your "
         "friend's face — and what was your fellow *takes* you, aggressive and uncaring and "
