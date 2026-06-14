@@ -6061,6 +6061,7 @@ def _b_facility_hub(character):
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
     add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
     add("dosing", "→ the Dispensary", "dz_arrival", "your dose; the come-up")
+    add("events", "→ whatever the klaxon calls", "ev_arrival", "a scheduled spectacle (random)")
     # The lineage room reads as available when you're little/bred or just on the rota.
     add("nursery", "→ the Nursery", "nu_arrival", "regression; the get; the Little Box")
     # The showroom — once you're graded, you can be sold.
@@ -6576,3 +6577,306 @@ def _dz_ride(character):
                 "out. \"And you'll be due again before you've forgotten this one. That's the "
                 "schedule. Welcome to it.\"")}],
         "default": "surf"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Facility Events — scheduled set-piece spectacles, picked at random so the
+# place stays fresh. `ev_arrival` is a DISPATCHER: it returns a random event's
+# opening (the Buyer's Tour / Quota Day / the Breeding Festival / the Anniversary),
+# each a short cinematic chain with real effects. Cinematic, state/kit-aware.
+# §0 always frees you. Entry: `scene events` (also `event`). More events drop in
+# here over time — that's the freshness valve.
+# ═══════════════════════════════════════════════════════════════════════════
+
+_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv"]
+
+
+@choice("ev_arrival", root=False)
+def _ev_arrival(character):
+    """Dispatcher: a klaxon sounds, an event is called — and which one is the facility's to pick,
+    not yours. Returns a random event's opening spec directly (so it poses as that event)."""
+    key = random.choice(_EVENT_OPENINGS)
+    fn = _BUILDERS.get(key)
+    spec = fn(character) if fn else None
+    return spec or {"key": "ev_arrival", "prompt": "The klaxon dies. False alarm. The routine "
+                    "resumes around you.", "options": [
+                        {"key": "ok", "label": "Back to the routine", "end": True,
+                         "outcome": "The day folds back into its ordinary shape."}], "default": "ok"}
+
+
+# --- Event: the Buyer's Tour ------------------------------------------------
+@choice("ev_tour", root=False)
+def _ev_tour(character):
+    return {"key": "ev_tour", "prompt": (
+        "|WA klaxon, two soft tones — and the announcement: a |wBuyer's Tour|n on the floor "
+        "today.|n The facility tidies its stock for company: you're posed at your station, oiled "
+        "and squared, as a clutch of well-dressed |wbuyers|n is walked through behind a "
+        "guide, pausing at the lots that catch an eye. You feel the moment one of them stops at "
+        "*you* — the guide reciting your particulars, the buyer's gloved hand lifting your chin, "
+        "turning you to the light, appraising what you'd cost and what you'd take. \"This one "
+        "shows nicely,\" the guide says, of you, over you. \"Demonstrate for the gentleman.\""),
+        "options": [
+            {"key": "perform", "label": "Demonstrate willingly", "effect": "facility",
+             "params": {"method": "_scene_single", "kind": "scene"}, "set": {"tour": "perform"},
+             "desc": "show the buyer what you are; real use, on display",
+             "outcome": (
+                "You demonstrate — let the buyer see you used, your responses put through their "
+                "paces for the tour's benefit — and the appraising murmur of strangers deciding "
+                "your worth lands warm and shameful. \"Mm. Yes,\" the buyer notes. \"I'll watch "
+                "this one's price.\" You're a lot that showed well today. It goes in the file.")},
+            {"key": "freeze", "label": "Freeze under the buyers' eyes", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "set": {"tour": "freeze"},
+             "desc": "go still; the guide demonstrates you anyway",
+             "outcome": (
+                "You freeze — and the guide, smooth, works the demonstration out of you regardless, "
+                "narrating your stillness to the buyer as 'placid, low-maintenance.' The tour moves "
+                "on, the buyer glancing back once. Being unable to *not* be shown, even still, is "
+                "its own lesson the floor keeps teaching.")}],
+        "default": "perform",
+        "then": "ev_tour_b"}
+
+
+@choice("ev_tour_b", root=False)
+def _ev_tour_b(character):
+    return {"key": "ev_tour_b", "prompt": (
+        "The tour winds on, but the buyer who stopped at you lingers a beat at the door, having a "
+        "quiet word with the guide — and you catch, across the floor, the specific weight of being "
+        "*remembered*. A note made. An interest registered. Whether anything comes of it isn't "
+        "yours to know; that's the dread the tour leaves behind like a scent: that somewhere out "
+        "there, now, a stranger is thinking about owning you, and the next time the block lights "
+        "up your number, they might be the paddle that wins."),
+        "options": [
+            {"key": "dread", "label": "Sit with being wanted by a stranger", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the tour's parting gift",
+             "outcome": (
+                "You carry it the rest of the day — the knowledge that you've been *noticed*, "
+                "priced, filed as a thing someone out there might buy — and the not-knowing-who "
+                "works on you better than any room could. The tour did its job. You showed. You "
+                "were wanted. The market has you in its eye now.")},
+            {"key": "shrug", "label": "Tell yourself it's nothing", "effect": "devote",
+             "params": {"amount": 1.0}, "end": True, "desc": "the comfort that isn't one",
+             "outcome": (
+                "You tell yourself it's nothing — buyers look, that's all — and almost believe it, "
+                "and the almost is the hook: you've started measuring your days by whether you "
+                "showed *well*, started wanting the appraising eyes to approve, and that wanting is "
+                "the floor's whole curriculum. It was never nothing. You'll dress for the next "
+                "tour without being told.")}],
+        "default": "dread"}
+
+
+# --- Event: Quota Day -------------------------------------------------------
+@choice("ev_quota", root=False)
+def _ev_quota(character):
+    db = getattr(character, "db", None)
+    behind = bool(getattr(db, "quota_behind", 0))
+    lead = ("Your line's flagged red — *behind* — and you know it before the board says it. "
+            if behind else "Your line reads green, near enough, which is its own kind of trap. ")
+    return {"key": "ev_quota", "prompt": (
+        "|WThe klaxon's long single tone: |wQuota Day|n.|n The whole floor is mustered before the "
+        "big board, every resident's numbers thrown up live — milk yield, breeding count, "
+        "conditioning depth — for all the stock to see, because the facility runs on quotas and "
+        "Quota Day is where falling short stops being private. " + lead + "A processor works down "
+        "the line calling figures, and the room watches each lot learn, in public, whether "
+        "they've produced enough.\" You're next."),
+        "options": [
+            {"key": "stand", "label": "Stand for your numbers", "set": {"quota": "stand"},
+             "effect": "devote", "params": {"amount": 1.0},
+             "desc": "let the floor read what you've produced",
+             "outcome": (
+                "You stand and let your figures be read aloud to the mustered floor — your yield, "
+                "your count, your depth, the public accounting of your productivity — and being "
+                "reduced to a column of output in front of all the other columns lands flat and "
+                "total. The processor reads on. You are your numbers today, and only your "
+                "numbers.")},
+            {"key": "dread", "label": "Brace for the shortfall", "set": {"quota": "dread"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the public dread of falling short",
+             "outcome": (
+                "You brace — the dread of being the one whose red line is read to the room — and "
+                "the waiting for your figure is its own punishment, the floor's eyes already "
+                "turning, the processor's pen already moving down toward your name.")}],
+        "default": "stand",
+        "then": "ev_quota_b"}
+
+
+@choice("ev_quota_b", root=False)
+def _ev_quota_b(character):
+    behind = bool(getattr(getattr(character, "db", None), "quota_behind", 0))
+    verdict = ("And your line is *short*. The board flashes it red for the room to see, and the "
+               "processor doesn't even look up: \"Behind on quota. Correction scheduled, "
+               "requirement raised.\""
+               if behind else
+               "And your line clears — barely — and the processor's 'adequate' is colder than any "
+               "punishment, because 'adequate' just means the bar goes *up*: \"Met, this cycle. "
+               "Quota raised for next. Keep up.\"")
+    return {"key": "ev_quota_b", "prompt": (
+        verdict + " Either way the lesson of Quota Day is the same, delivered in front of "
+        "everyone: you exist to produce, your production is measured and public and never "
+        "*enough*, and the bar only ever climbs. Green or red, you leave the muster owing more "
+        "than you did walking in."),
+        "options": [
+            {"key": "take_quota", "label": "Take the verdict", "effect": ("punish" if behind else "devote"),
+             "params": ({"severity": 1} if behind else {"amount": 2.0}), "end": True,
+             "desc": "real shortfall penalty if behind; the raised bar regardless",
+             "outcome": (
+                "You take it — the real penalty if you fell short, the raised requirement if you "
+                "didn't — and file back into the floor with a heavier number to hit and the whole "
+                "room having watched you get it. Quota Day works because it's *public*. You'll "
+                "produce harder next cycle. Everyone does, after the muster.")},
+            {"key": "resolve_quota", "label": "Swear to make the next bar", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "internalize the climbing bar",
+             "outcome": (
+                "Something in you resolves to *make it* next cycle — to produce enough, to not be "
+                "the red line, to satisfy the climbing bar — and that resolve is the most owned "
+                "you've been all day, because you've stopped fighting the quota and started "
+                "*serving* it, made it your own goal instead of their demand. The facility didn't "
+                "even have to punish you. You took the leash and pulled it tighter yourself.")}],
+        "default": "take_quota"}
+
+
+# --- Event: the Breeding Festival -------------------------------------------
+@choice("ev_fest", root=False)
+def _ev_fest(character):
+    k = _kit(character)
+    note = ("Gravid, you're put in the watched-and-protected pen — a bred one at a breeding "
+            "festival is the guest of honour, displayed proof the place works. " if k["preg"]
+            else "")
+    return {"key": "ev_fest", "prompt": (
+        "|WThe klaxon's triple pulse, and the lights drop warm and red: |wa Breeding Festival|n.|n "
+        "The facility throws these to clear quota in bulk and to *celebrate* what it is — the "
+        "floor cleared and strewn, stock and stud and staff turned loose together in a long warm "
+        "orgiastic churn, the air thick with rut and the board tallying covers as fast as they "
+        "happen. " + note + "You're swept into it — there's no standing at the edge of a festival, "
+        "the churn finds everyone — hands and cocks and the heat the facility keeps banked in you "
+        "all rising to meet the occasion. \"Festival rules,\" a handler calls over the din. "
+        "\"Everyone breeds, everyone's bred, and the board doesn't stop till the quota's clear.\""),
+        "options": [
+            {"key": "dive", "label": "Throw yourself into the churn", "effect": "facility",
+             "params": {"method": "_scene_bukkake", "kind": "scene"}, "set": {"fest": "dive"},
+             "desc": "give yourself to the festival; real mass use, covers logged",
+             "outcome": (
+                "You throw yourself in — stop being a person at a party and become *one of the "
+                "churning bodies*, used and using, bred and breeding, the real covers logging fast "
+                "as the festival eats the hours — and the losing-yourself-in-the-mass is a relief "
+                "so total it frightens what's left. There's no shame in a crowd this size. There's "
+                "no *you* in a crowd this size. The festival files you as enthusiastic. So does "
+                "your body.")},
+            {"key": "swept", "label": "Be swept along by it", "effect": "facility",
+             "params": {"method": "_scene_bukkake", "kind": "scene"}, "set": {"fest": "swept"},
+             "desc": "carried in regardless; the churn uses you the same",
+             "outcome": (
+                "You don't dive, but the churn doesn't need you to — it sweeps you up, passes you "
+                "hand to hand and hole to hole through the warm red press, breeds you in the mass "
+                "whether you chose it or not, the real covers logged the same. By the time the "
+                "board clears its quota you've lost count of what's been done and stopped being "
+                "able to tell your own use from the festival's. That's what a festival is for: "
+                "drowning the individual in the herd.")}],
+        "default": "dive",
+        "then": "ev_fest_b"}
+
+
+@choice("ev_fest_b", root=False)
+def _ev_fest_b(character):
+    return {"key": "ev_fest_b", "prompt": (
+        "The festival burns down slowly, the way they do — the churn thinning, bodies dropping out "
+        "spent and dripping and marked, the board's quota-bar finally satisfied and the warm red "
+        "lights ticking back toward ordinary. You're left in the wreckage of it, used past "
+        "counting, bred by stock and staff and strangers you'll never identify, the festival's "
+        "particular afterglow settling over you: not shame, not even quite exhaustion, but the "
+        "flat warm emptied calm of a thing that's been thoroughly *used in company* and found it "
+        "easier than being used alone."),
+        "options": [
+            {"key": "glow", "label": "Lie in the festival's afterglow", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the emptied calm take you",
+             "outcome": (
+                "You lie in it and let the emptied calm have you, and the lesson of the festival "
+                "sets while you're too spent to resist it: being used in a crowd is *easier*, the "
+                "herd dissolves the self that minds, and you'll look forward to the next festival "
+                "the way you've learned to look forward to the cups and the chair. Bred in bulk and "
+                "grateful for the company. The facility throws good parties. That's the trap of "
+                "them.")},
+            {"key": "ache", "label": "Feel the count you lost", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the dread under the afterglow",
+             "outcome": (
+                "Under the afterglow, the dread: you lost *count* — of who, of how many, of how "
+                "long — whole stretches of yourself spent in the churn with no record but the "
+                "board's tally and the load in your belly, and the not-knowing is the festival's "
+                "real keepsake. You were used by the facility as a *quantity*, and you'll never "
+                "get the number back. It has it. You don't.")}],
+        "default": "glow"}
+
+
+# --- Event: the Anniversary (only lands harder once she owns you) -----------
+@choice("ev_anniv", root=False)
+def _ev_anniv(character):
+    bowned = bool(getattr(getattr(character, "db", None), "bethany_owned", False))
+    frame = ("She marks the day she *bought* you — another cycle of you on her file, hers and "
+             "kept. " if bowned else
+             "She marks the day she first processed you — another cycle of you in her care, "
+             "whether she owns you on paper yet or not; she counts from the intake, she says. ")
+    return {"key": "ev_anniv", "prompt": (
+        "There's no klaxon for this one. Bethany simply *appears* at your station, off her usual "
+        "schedule, with a small fond smile and your file under her arm, and you realize it's an "
+        "|wanniversary|n — a date she keeps that you didn't know existed. " + frame + "\"I keep "
+        "all my dates, sweetheart,\" she says, warm, leafing your file open to a page she's clearly "
+        "visited before. \"The day you arrived. The day you signed. The day you first called me "
+        "Owner and meant it. I celebrate them quietly — you're usually too far under to notice — "
+        "but this year I wanted you *here* for it. Come. Let me show you how far you've come. I'm "
+        "so proud of the work.\""),
+        "options": [
+            {"key": "moved", "label": "Be moved that she remembers", "set": {"anniv": "moved"},
+             "effect": "devote", "params": {"amount": 4.0},
+             "desc": "the false-tenderness lands; being remembered is the hook",
+             "outcome": (
+                "It lands — the awful warmth of being *remembered*, of mattering enough to mark on "
+                "a calendar, even as furniture, even as product — and you're moved despite "
+                "yourself, despite knowing exactly what it is. Bethany sees it and glows. \"There. "
+                "That's the look I keep these dates for. You're glad I remember. That gladness is "
+                "the most owned thing about you, sweetheart, and it grows every year.\"")},
+            {"key": "chilled", "label": "Be chilled that she's been counting", "set": {"anniv": "chilled"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the horror of being a date she keeps",
+             "outcome": (
+                "It chills you — that she's been *counting*, keeping anniversaries of your "
+                "reduction like a gardener marking a tree's rings, that there's a page in her file "
+                "she returns to and feels fond over — and the horror of being someone's *cherished "
+                "long project* is colder than any cruelty. Bethany reads it and is unbothered, "
+                "fond. \"Chilled? That fades. The dates don't. I'll keep marking them long after "
+                "you've stopped flinching, and one year soon you'll mark them *with* me.\"")}],
+        "default": "moved",
+        "then": "ev_anniv_b"}
+
+
+@choice("ev_anniv_b", root=False)
+def _ev_anniv_b(character):
+    return {"key": "ev_anniv_b", "prompt": (
+        "\"And I never come to an anniversary empty-handed,\" Bethany says, setting the file aside "
+        "and freeing the triple length, because of course the gift is *her*. She takes you right "
+        "there at your station, unhurried and fond, all three of her and the laced devotion, "
+        "marking the date in your body the way she's marked it in her file — \"a little deeper "
+        "every year, sweetheart, that's the tradition\" — and reads you, between strokes, the line "
+        "she's added to your page for today: another cycle served, another measure of how "
+        "thoroughly you've become hers. It is the warmest and the most owning thing the calendar "
+        "holds, and she does it like it's a kindness, and it is, and that's the worst of it."),
+        "options": [
+            {"key": "give", "label": "Give her the anniversary she wants", "effect": "bethany_breeds",
+             "params": {"holes": 3, "devotion": 7.0}, "end": True,
+             "desc": "the full gift; real cover + the deepening claim, logged",
+             "outcome": (
+                "You give her the day she wanted — open everywhere, take all three and the laced "
+                "flood, let the anniversary deepen its claim — and it's real, logged, another line "
+                "in the file and another measure of devotion seated for good. \"*There's* my "
+                "anniversary,\" she breathes, fully seated, fully home. \"Same time next year. And "
+                "the year after. I intend to keep you a very long time, and to celebrate every "
+                "single one.\" You are, a little more than last year, hers.")},
+            {"key": "endure_anniv", "label": "Endure her tradition", "effect": "bethany_breeds",
+             "params": {"holes": 1, "devotion": 4.0}, "end": True,
+             "desc": "she takes the anniversary regardless; the claim deepens anyway",
+             "outcome": (
+                "You hold yourself apart from it — but she takes her anniversary regardless, fond "
+                "and unhurried, the cover real and the claim deepening whether you celebrate with "
+                "her or not. \"Sulking through your own anniversary,\" she tuts, breeding you "
+                "gently. \"That's all right. There'll be others, and one of them you'll spend "
+                "*reaching* for me, and that'll be the best date in the file. I can wait. I've "
+                "clearly got you for years.\"")}],
+        "default": "give"}

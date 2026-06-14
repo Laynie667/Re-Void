@@ -599,6 +599,22 @@ def test_bethany_scene():
     assert c23.db.pending_choice is not None and c23.db.pending_choice["key"] == "facility_hub", \
         "scene_autohub should auto-pose the hub on scene end"
 
+    # Events: the dispatcher returns a real event opening, and each event chains to an end.
+    disp = cyoa._BUILDERS["ev_arrival"](_Char())
+    assert disp and disp.get("options"), "ev_arrival dispatcher produced nothing"
+    event_paths = {
+        "ev_tour":  ("perform", "dread"),
+        "ev_quota": ("stand", "take_quota"),
+        "ev_fest":  ("dive", "glow"),
+        "ev_anniv": ("moved", "give"),
+    }
+    for opening, path in event_paths.items():
+        ce = _Char(); cyoa.start_scene(ce, opening)
+        for ch in path:
+            assert ce.db.pending_choice, f"{opening}: stall before '{ch}'"
+            assert cyoa.resolve_choice(ce, ch)[0] is not None, f"{opening} '{ch}' failed"
+        assert ce.db.pending_choice is None and ce.db.scene_flags is None, f"{opening} should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

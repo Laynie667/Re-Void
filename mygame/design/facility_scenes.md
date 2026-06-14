@@ -76,7 +76,11 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
-- **Events (≈10)** — facility set-piece events as cinematic interrupts with choices.
+- ✅ **Events (`ev_*`, `scene events`)** — BUILT (4 to start, random dispatcher for freshness):
+  the Buyer's Tour (real `_scene_single` + market interest), Quota Day (public tally; real
+  `punish` on shortfall / climbing-bar), the Breeding Festival (real `_scene_bukkake` mass
+  use), the Anniversary (Bethany's kept-dates; real `bethany_breeds` deepening claim). The
+  freshness valve — more events drop into `_EVENT_OPENINGS` over time. In the hub.
 - **Manumission / earn-back** — the in-fiction earned exit; the long compliance record paying off.
 
 ---
