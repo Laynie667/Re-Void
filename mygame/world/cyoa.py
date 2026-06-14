@@ -8132,3 +8132,198 @@ def _ck_after(character):
                 "the number you gave him, once, quietly, to himself, like a man checking his work "
                 "came out true.")}],
         "default": "stayed"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Seraphine's Parlour — the collector clerk, in her register: bright,
+# fond, performative warmth that occasionally drops clean off (the 3 a.m. drawer
+# is the realest one). WARM post-office key, but Seraphine carries the most edge
+# of the three (the daybed's disguised restraint-points, the punishment lottery),
+# while staying warm. Pays off her lore: reading sealed letters through paper,
+# the letter-paper blindfold ("so they can feel themselves being read"), the
+# named wax votives, the keepsake shelf she tags by name + date + a small heart,
+# and the truth under all of it — she collects people because a full house is the
+# only thing that quiets the fear she'll end an unclaimed letter herself. She is
+# Bethany's PEER (immune to the DEVOTION), so she is never afraid here, only fond.
+# Real `devote` + `couch_warm`. §0-safe. Flow: arrival→read→keep→drawer.
+# Entry: `scene seraphine` already routes the facility-visit; this is `parlour`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("sp_arrival", root=False)
+def _sp_arrival(character):
+    return {"key": "sp_arrival", "prompt": (
+        "You push the left edge of the Quiet Room's standing mirror, and it swings like the door it "
+        "secretly is, and |wSeraphine|n is already turned toward it, already smiling, because she "
+        "always somehow knows you know. Her parlour-within-the-parlour: deep cushions in sin "
+        "colours, a daybed whose upholstery buttons are restraint points if you know where to look "
+        "(she'll let you notice in your own time), shelves of keepsakes each tagged in her looping "
+        "hand — a name, a date, sometimes a small heart. Warm wax and clove and something "
+        "underneath that makes you want to confess. The teapot steams for guests who stopped being "
+        "able to leave promptly and then stopped wanting to.\n\n"
+        "\"There you are, sweet thing,\" she says, delighted, patting the cushion beside her like "
+        "you've been expected for years — and the warmth is real and it is also bait, and she'd be "
+        "the first to tell you both halves are true. \"Sit. Second cup's the one that keeps you. "
+        "I've a shelf with your name half-written already; I do that — I write the tag before "
+        "people decide, so they can watch themselves arriving at it. Tea? Or shall we get straight "
+        "to the part where I read you?\""),
+        "options": [
+            {"key": "sit", "label": "Sit, take the tea, let her keep you a while",
+             "set": {"sp": "sit"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "the second cup; let the parlour close around you warm",
+             "outcome": (
+                "You sit, and take the cup she pours without asking how you take it (she knows; she "
+                "keeps everything), and the parlour folds around you warm as a held secret. \"Mm. "
+                "Good,\" Seraphine purrs, tucking her feet up, fond and feline. \"Stayers are my "
+                "favourites. I collect them, you know — that's not a metaphor, the shelf is right "
+                "there — and the ones who take the second cup always end up tagged. You're already "
+                "halfway to a small heart. Don't fight it; nobody enjoys fighting it, and everybody "
+                "loses.\"")},
+            {"key": "read_me", "label": "Tell her to read you", "set": {"sp": "read"},
+             "desc": "skip the tea; offer yourself to be read like a sealed letter",
+             "outcome": (
+                "\"Read me, then,\" you say, and Seraphine's smile sharpens with pleasure — you've "
+                "offered her the thing she likes best. \"Oh, *bold*. I do love a customer who hands "
+                "me the envelope already.\" She sets her cup down, clove-warm and unhurried. \"You "
+                "understand I'm good at this. I read sealed letters through the paper for a living; "
+                "I'll read you down to the things you haven't admitted to yourself. Last chance to "
+                "be shy about it.\" She is already reaching for the letter-paper blindfold. You did "
+                "not say last chance back.")},
+            {"key": "real", "label": "Reach past the performance for the real her",
+             "set": {"sp": "real"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "look at the collector and see the one afraid of the empty shelf",
+             "outcome": (
+                "You don't take the bait or the tea; you look at her — past the bright performance, "
+                "at the woman who keeps everything — and you let her see that you see it. For half a "
+                "second the smile *slips*, clean off, the way the gossip says it does at 3 a.m. "
+                "\"...well,\" Seraphine says, and the warmth that comes back is a different, truer "
+                "temperature. \"That's unsporting. People aren't supposed to read the reader.\" She "
+                "studies you, recalculating, fond and a little undone. \"All right. You've earned a "
+                "look behind it. Most don't. Sit closer; the real version's quieter.\"")}],
+        "default": "sit",
+        "then": "sp_read"}
+
+
+@choice("sp_read", root=False)
+def _sp_read(character):
+    k = _kit(character)
+    seen = ("|xShe takes in what you already wear — the rings, the ports, the marks of where you've "
+            "been — and reads those too, fond and unsurprised, working them into the reading like "
+            "annotations in a margin she's clearly enjoyed before.|n\n\n"
+            if (k.get("pierced") or k.get("milk_port") or k.get("collared") or k.get("pet")) else "")
+    return {"key": "sp_read", "prompt": (
+        seen +
+        "She ties the blindfold of letter-paper over your eyes — crisp, cool, smelling faintly of "
+        "the sorting hall — and the world goes to her voice and her clove-warm hands. \"This is so "
+        "you can *feel* yourself being read,\" she murmurs, close. \"Held up to the lamp. Every "
+        "fold. Every thing you tucked inside hoping it wouldn't show through the paper.\" And then "
+        "she reads — out loud, unhurried, devastatingly accurate, naming the wants you'd half-buried "
+        "while her hands move slow and certain over you, each touch placed like she's tracing the "
+        "lines of a letter she already knows by heart. \"There,\" she breathes, finding something "
+        "you didn't mean to send. \"*That's* the postscript. The part people write smallest. It's "
+        "always the part I keep.\""),
+        "options": [
+            {"key": "let_read", "label": "Let her read you all the way down",
+             "effect": "couch_warm", "params": {"amount": 35.0}, "set": {"read": "open"},
+             "desc": "every fold opened; nothing held back from the lamp",
+             "outcome": (
+                "You let her — let the letter-paper hold the dark, let her clever fingers and "
+                "clever voice open every fold of you to the lamp until there's nothing tucked inside "
+                "still hidden. Seraphine reads you all the way down, naming each want as she finds "
+                "it and answering it with her hands, and by the end you're laid open and trembling "
+                "and *seen* in a way that's worse and better than being touched. \"Beautiful,\" she "
+                "says, wrecked-fond. \"Read cover to cover. Now I know everything that's in you. "
+                "That's the most intimate thing there is, sweet thing — being read by someone who "
+                "*keeps* what she reads.\"")},
+            {"key": "send_back", "label": "Read her back — name what you found behind the performance",
+             "effect": "devote", "params": {"amount": 3.0}, "set": {"read": "mutual"},
+             "desc": "answer the reading with a reading; meet the peer",
+             "outcome": (
+                "Blindfolded, you read *her* back — name the thing the gossip names, the full house "
+                "that quiets the fear of the empty shelf, the collector terrified of being the "
+                "unclaimed letter — and you feel her hands go still against you. Silence. The "
+                "teapot gurgles into it. \"...you really are unsporting,\" Seraphine says at last, "
+                "and her voice has lost its lacquer entirely. \"Nobody reads me back. I make very "
+                "sure of it.\" She lifts the paper from your eyes, and lets you see her seeing you, "
+                "two readers caught in the same lamp. \"Don't tell the others I let you. I'll "
+                "deny it. ...but I'll keep this. Tagged. With a heart.\"")}],
+        "default": "let_read",
+        "then": "sp_keep"}
+
+
+@choice("sp_keep", root=False)
+def _sp_keep(character):
+    return {"key": "sp_keep", "prompt": (
+        "She rises and goes to the keepsake shelf — the one tagged in her looping hand, name and "
+        "date and sometimes a small heart — and takes down a blank tag and a pen. \"Here's where I "
+        "ask,\" Seraphine says, and for all the warmth there's a real question under it, the only "
+        "genuinely uncertain thing she's said. \"I collect, sweet thing. It's what I do, it's what "
+        "the parlour is for. But I don't tag anyone who hasn't *said yes to the shelf*. That's the "
+        "one rule I keep clean.\" She holds the tag, pen poised, fond and waiting. \"So. Do you "
+        "want to be one of mine — kept, tagged, on the shelf, a thing I'd notice was gone? Or do "
+        "you want to be a guest who leaves the parlour a guest? Both are allowed. Only one gets a "
+        "heart.\""),
+        "options": [
+            {"key": "tag_me", "label": "Say yes to the shelf — be kept", "set": {"keep": "tagged"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "let her write your name with the small heart",
+             "outcome": (
+                "\"Tag me,\" you say. \"Keep me. Put me on the shelf.\" And Seraphine's whole face "
+                "*lights* — the genuine one, not the performance — as she writes your name in her "
+                "looping hand, the date, and, after a pause she lets you watch, the small heart. "
+                "\"There.\" She sets your tag among the others, where it belongs now, where she'll "
+                "see it every day and know you're hers to notice. \"You're collected, sweet thing. "
+                "Kept. I keep everything, but I keep the ones who *asked* the closest.\" The shelf "
+                "has a place for you now, and the teapot, smug, pours you a third cup.")},
+            {"key": "guest", "label": "Stay a guest — warm, free, unkept",
+             "set": {"keep": "guest"}, "effect": "devote", "params": {"amount": 1.0},
+             "desc": "take the warmth without the shelf; she respects it",
+             "outcome": (
+                "\"I'll be a guest,\" you say — warm, here, but unkept — and Seraphine sets the "
+                "blank tag down without a flicker of grievance, because the clean rule cuts both "
+                "ways and she's proud of it. \"Good,\" she says, and means it. \"A guest who knows "
+                "they're a guest is a rare honest thing. The mirror swings both ways for you; come "
+                "back as often as you like and leave as freely.\" She tucks the blank tag in the "
+                "drawer anyway. \"I'll keep this empty one, though. In case you change your mind. I "
+                "keep everything, even the maybes. *Especially* the maybes.\"")}],
+        "default": "guest",
+        "then": "sp_drawer"}
+
+
+@choice("sp_drawer", root=False)
+def _sp_drawer(character):
+    return {"key": "sp_drawer", "prompt": (
+        "Before you go, she shows you the drawer — the one labelled |xthings said at 3 a.m.|n, the "
+        "realest one. The performance is all the way off now; this is the version almost no one "
+        "earns. Inside, in three hands: Vesper confessing they don't want to be unreadable, only to "
+        "be read *gently*. Calix admitting the empty STAYED slot is about someone who didn't. And, "
+        "in her own looping hand, a card she reads to you herself, quiet: |xi collect people because "
+        "a full house is the only thing that's ever quieted the part of me that's sure i'll end up "
+        "an unclaimed letter myself. — S.|n She folds it back in, gentle. \"You didn't hear that,\" "
+        "she says, the old reflex, but soft. \"It was 3 a.m. somewhere. ...thank you for not "
+        "laughing.\""),
+        "options": [
+            {"key": "claimed", "label": "Tell her she's not unclaimed — not anymore",
+             "effect": "devote", "params": {"amount": 3.0}, "end": True,
+             "desc": "give the collector the thing she keeps for everyone else",
+             "outcome": (
+                "\"You're not an unclaimed letter, Seraphine,\" you tell her, plain and warm. "
+                "\"You've got a full house that chose you, and a drawer of people who never sent the "
+                "things they wrote about you, and now you've got me, too. You're kept. Somebody "
+                "keeps the collector.\" And the bright, seamless woman who reads everyone goes "
+                "*still*, eyes wet, caught flat-footed by being read the kindest way there is. "
+                "\"...oh,\" she manages, very small, the smallest you've ever heard her. \"That's — "
+                "I'm going to file that under 3 a.m. and read it on the bad nights.\" She kisses "
+                "your forehead, fierce and fond. \"Go on, before I keep you by force. The mirror "
+                "opens for you. Always.\"")},
+            {"key": "secret", "label": "Promise to keep her 3 a.m. secret", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "be a safe place for the realest drawer",
+             "outcome": (
+                "\"It's safe with me,\" you tell her. \"The 3 a.m. drawer stays shut to everyone "
+                "else. I'll carry it and I won't spend it.\" Seraphine searches your face for the "
+                "lie, the way she searches every sealed letter, and finds none — and the relief "
+                "that crosses her is the relief of a woman who keeps everyone's secrets and is "
+                "rarely trusted with the keeping of her own. \"Then you're more dangerous than "
+                "Bethany,\" she says, fond and only half joking, \"because Bethany can't get into "
+                "me at all, and you just did, and were *gentle*. Go on, sweet thing. Second cup's "
+                "always poured for you here.\" The mirror swings open, warm at your back.")}],
+        "default": "claimed"}

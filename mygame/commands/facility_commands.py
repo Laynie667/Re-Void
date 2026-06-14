@@ -1650,6 +1650,7 @@ class CmdScene(Command):
         "adoption": "fa_arrival", "adopt": "fa_arrival", "foster": "fa_arrival",
         "vesper": "vn_arrival", "nest": "vn_arrival", "fold": "vn_arrival",
         "calix": "ck_arrival", "keeping": "ck_arrival", "keepingroom": "ck_arrival",
+        "parlour": "sp_arrival", "parlor": "sp_arrival", "shelf": "sp_arrival",
     }
 
     def func(self):

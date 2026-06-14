@@ -754,6 +754,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c34, ch)[0] is not None, f"calix(b) '{ch}' failed"
     assert c34.db.pending_choice is None and c34.db.scene_flags is None, "calix(b) should end clean"
 
+    # Seraphine's Parlour (post-office warm scene) chains end-to-end, both branches.
+    c35 = _Char(); cyoa.start_scene(c35, "sp_arrival")
+    spbeats = []
+    for ch in ("sit", "let_read", "tag_me", "claimed"):
+        p = c35.db.pending_choice
+        assert p, f"seraphine-parlour: no pending before '{ch}'"
+        spbeats.append(p["key"])
+        assert cyoa.resolve_choice(c35, ch)[0] is not None, f"sp '{ch}' did not resolve"
+    assert spbeats == ["sp_arrival", "sp_read", "sp_keep", "sp_drawer"], spbeats
+    assert c35.db.pending_choice is None and c35.db.scene_flags is None, "sp should end clean"
+    c36 = _Char(); cyoa.start_scene(c36, "sp_arrival")
+    for ch in ("real", "send_back", "guest", "secret"):
+        assert c36.db.pending_choice, f"sp(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c36, ch)[0] is not None, f"sp(b) '{ch}' failed"
+    assert c36.db.pending_choice is None and c36.db.scene_flags is None, "sp(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
