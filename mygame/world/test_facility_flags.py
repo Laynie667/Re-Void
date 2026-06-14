@@ -463,6 +463,17 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c10, ch)[0] is not None, f"showroom-dark '{ch}' failed"
     assert c10.db.pending_choice is None and c10.db.scene_flags is None, "showroom-dark should end clean"
 
+    # The Office/Kept scene chains end-to-end (real bethany_breeds + file_read beats).
+    c11 = _Char(); cyoa.start_scene(c11, "ko_arrival")
+    obeats = []
+    for ch in ("lap", "melt", "open", "listen", "thank"):
+        p = c11.db.pending_choice
+        assert p, f"office: no pending before '{ch}'"
+        obeats.append(p["key"])
+        assert cyoa.resolve_choice(c11, ch)[0] is not None, f"office '{ch}' did not resolve"
+    assert obeats == ["ko_arrival", "ko_evening", "ko_breed", "ko_file", "ko_close"], obeats
+    assert c11.db.pending_choice is None and c11.db.scene_flags is None, "office should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

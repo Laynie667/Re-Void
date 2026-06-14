@@ -4536,3 +4536,254 @@ def _sw_bought(character):
                 "the time and paperwork in the world to get it. She leads you off smiling. You go "
                 "where the hand at your nape steers.")}]
     return {"key": "sw_bought", "prompt": body, "options": opts, "default": opts[0]["key"]}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Bethany's Office — the Kept arc. The ownership through-line's payoff.
+# Cinematic, state-aware. Actor: Bethany as OWNER, off the clock, in her own
+# warm-cruel quarters — the false-tenderness register ("I think I do love you,
+# the way you love a chair"). REAL payload: bethany_breeds (her triple length,
+# laced devotion, sire 'Bethany'), file_read (your real file aloud), devote.
+# §0 always frees you. Flow: arrival→evening→breed→file→close. Entry: `scene office`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ko_arrival", root=False)
+def _ko_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("She has you carried in and set on the chaise beside her like a treasure she's "
+                "decided where to keep — a limbless thing she can arrange exactly so, and does, "
+                "tilting your face to the lamp to look at what she bought. ")
+    if st["preg"]:
+        note += ("Her hand goes to the swell of you before anything else, proprietary and "
+                 "genuinely pleased — her get, in her property, on her own furniture. \"Look at "
+                 "you. Carrying for me already. I do pick well.\" ")
+    if st["little"]:
+        note += ("Down in your headspace, the warm room and the soft voice read as safe, which is "
+                 "the trap and the truth at once; she watches you settle and her smile sharpens "
+                 "with fondness. ")
+    return {"key": "ko_arrival", "prompt": (
+        "Bethany's quarters are nothing like the rest of the facility — warm lamplight, deep "
+        "furniture, a wall of obsessively kept files (yours among them now, thick, tabbed in her "
+        "hand), and a wide soft bed that is plainly where the *keeping* happens. This is where she "
+        "brings what she's bought and decided to keep close, and the cruelty of the room is how "
+        "genuinely, comfortably *nice* it is. " + note +
+        "\n\nShe's off the clock — blouse loosened a button further than the counter ever allows, "
+        "a glass of something at her elbow, your file open in her lap — and she looks up at you "
+        "with the warm proprietary contentment of a woman regarding a thing she owns and likes. "
+        "\"There's my purchase. Come here, sweetheart. You're not stock in here — you're *mine*, "
+        "specifically, which is a different and much closer kind of owned, and I intend to enjoy "
+        "the difference all evening.\" She pats the cushion beside her. \"Come learn what being "
+        "kept is like. It's nicer than the floor. That's rather the point of it.\""),
+        "options": [
+            {"key": "lap", "label": "Go to her — settle in against her", "set": {"kept": "lap"},
+             "effect": "devote", "params": {"amount": 4.0},
+             "desc": "take the warmth she's offering; let yourself be kept",
+             "outcome": (
+                "You go to her, and settle in against her warmth, and her arm comes around you like "
+                "ownership and comfort are the same gesture — which, in her hands, they are. "
+                "\"*There.* Good. See how easy that was?\" She strokes your hair, reading her file "
+                "one-handed over your shoulder. \"You've spent so long being processed. Let me just "
+                "*have* you for a while. It's what I bought you for — not the holes, those come "
+                "standard. This.\"")},
+            {"key": "kneel", "label": "Kneel at her feet instead", "set": {"kept": "kneel"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "take the floor; she'll allow it, fondly",
+             "outcome": (
+                "You sink to the floor at her feet instead — and she allows it, delighted, one "
+                "soft pretty foot sliding into your lap, her hand coming to rest in your hair like "
+                "you're a dog she's pleased with. \"Oh, you've learned where you sit. Even better. "
+                "I do like one that finds the floor on its own.\" Being kept at her feet is its own "
+                "warmth, and you hate how much it isn't a punishment.")},
+            {"key": "stiff", "label": "Hold back from the warmth", "set": {"kept": "stiff"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "refuse the comfort; she's patient about it",
+             "outcome": (
+                "You hold yourself stiff and apart, refusing the comfort she's offering — and "
+                "Bethany only smiles, entirely unbothered, and pats the cushion again. \"Still "
+                "standing on ceremony. That's all right. I've got you for good now — there's no "
+                "rush, and the holding-back always melts. I rather enjoy the melting. Come sit when "
+                "you're ready. You'll be ready.\" She goes back to your file, content to wait you "
+                "out, because she can.")}],
+        "default": "lap",
+        "then": "ko_evening"}
+
+
+@choice("ko_evening", root=False)
+def _ko_evening(character):
+    kept = scene_flag(character, "kept", "lap")
+    lead = ("She keeps you settled against her, unhurried. " if kept == "lap"
+            else "She keeps her foot in your lap and her hand in your hair. " if kept == "kneel"
+            else "She waits, and the warmth of the room does her arguing for her, and you do, "
+                 "eventually, drift closer. ")
+    return {"key": "ko_evening", "prompt": (
+        lead + "And this is the part that's worse than anything the floor did to you: she's "
+        "*tender*. She reads you bits of your own file like bedtime stories — your conditioning "
+        "depth, your best yield, the cover that took — and praises you for them, genuinely, the "
+        "way you'd praise a good investment. She tucks a strand of hair behind your ear. She tells "
+        "you she's glad she bought you. And then, fingers idle at the back of your neck, she says "
+        "the thing that lodges deepest of all:\n\n\"I think I do love you, you know. The way you "
+        "love a good chair you've had for years — fond, and certain, and entirely without "
+        "wondering whether the chair loves you back.\" She says it like the kindest thing in the "
+        "world, and means it exactly as much as that. \"You don't have to love me back. That's the "
+        "lovely thing about owning instead of asking. But you're going to anyway, a little, by "
+        "spring. They always do. It's the warm that does it, not the cruelty. Everyone expects the "
+        "cruelty.\""),
+        "options": [
+            {"key": "melt", "label": "Let it land — let yourself be loved like a chair",
+             "set": {"eve": "melt"}, "effect": "devote", "params": {"amount": 5.0},
+             "desc": "the false-tenderness gets in; let it",
+             "outcome": (
+                "You let it land — let the awful warmth of being loved like an object get all the "
+                "way in — and something in you unclenches that the floor never reached, and the "
+                "relief of being *kept*, of being a thing she's fond of and certain about, is "
+                "enormous and shameful and real. Bethany feels you give and makes a soft pleased "
+                "sound. \"*There* it is. The melting. Right on schedule. Oh, I'm going to enjoy "
+                "you.\"")},
+            {"key": "ache", "label": "Feel how badly you want it to be real", "set": {"eve": "ache"},
+             "effect": "devote", "params": {"amount": 4.0},
+             "desc": "the wanting is the hook; feel it set",
+             "outcome": (
+                "You feel the want — not for her hands, for the *thing she's describing*, to be "
+                "loved truly instead of like furniture — and the wanting is the hook and you feel "
+                "it set, barbed, because she'll never give you the real thing and you'll keep "
+                "reaching for it forever. Bethany reads it on your face and her eyes go soft and "
+                "merciless. \"Oh, sweetheart. You want it to be real. That's the sweetest thing "
+                "you've done yet. Keep wanting. It's a lovely leash.\"")},
+            {"key": "refuse", "label": "Refuse to be moved by it", "set": {"eve": "refuse"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "name it as the cruelty it is; pay for the clarity",
+             "outcome": (
+                "\"That's not love,\" you manage. \"That's owning.\" Bethany beams, genuinely "
+                "delighted you said it. \"*Exactly.* Clever thing. That's precisely what it is, and "
+                "I'll never once pretend otherwise — that's my whole charm.\" She tips your chin up. "
+                "\"And you'll warm to me anyway, knowing exactly what it is, which is so much worse "
+                "for you than if I'd lied. Clarity won't save you in here. It just means you'll "
+                "watch it happen.\"")}],
+        "default": "melt",
+        "then": "ko_breed"}
+
+
+@choice("ko_breed", root=False)
+def _ko_breed(character):
+    return {"key": "ko_breed", "prompt": (
+        "\"Now,\" she murmurs, setting your file aside, and moves you onto the wide soft bed with "
+        "the easy authority of handling something she owns, \"let me take what's mine. Properly. In "
+        "my own bed, in my own time, the way I like.\" The skirt comes away and the triple length "
+        "lifts free — the monstrous facility-bred root splitting into three prehensile shafts, each "
+        "stallion-flared, each hound-knotted at the base, all three already weeping the laced seed "
+        "that carries her |wDEVOTION|n — and she fits them to you unhurried: one nosing at your "
+        "lips, one at your cunt, one circling your ass, filling every door of you at once because "
+        "she can, because you're hers and she wants all of you occupied while she has you. \"There's "
+        "my girl. All my holes at home. Let me put my evening in you.\""),
+        "options": [
+            {"key": "open", "label": "Open for all three — give her everything", "effect": "bethany_breeds",
+             "params": {"holes": 3, "devotion": 8.0}, "set": {"bred": "all"},
+             "desc": "every hole, the full laced load — sire Bethany, on the books",
+             "outcome": (
+                "You open everywhere and give her everything, and she seats all three and knots all "
+                "three and *empties* into every hole at once — a real cover, sire Bethany, logged "
+                "to your line as hers — and the laced devotion floods in triple, closing over your "
+                "head in one enormous warm wave until the wanting and the having and the belonging "
+                "are one bright note that is her name. \"*Mine,*\" she breathes into your hair, "
+                "fully seated, fully home. \"Every part of you, full of me, on paper and in the "
+                "body. That's a good evening's work.\"")},
+            {"key": "beg", "label": "Beg her to breed you", "effect": "bethany_breeds",
+             "params": {"holes": 3, "devotion": 9.0}, "set": {"bred": "begged"},
+             "desc": "ask for it with her title in your mouth; the clause shapes it",
+             "outcome": (
+                "\"Please breed me, Owner—\" the words come shaped by the clause and meant beneath "
+                "it, and Bethany makes a sound like she's been handed the world. \"*Listen* to "
+                "you.\" She gives it to you for the asking, all three, knotting and flooding you "
+                "with her laced load while you beg through it — a real cover, hers, recorded — and "
+                "the begging seats deeper than the seed does. You asked to be bred by your owner. "
+                "You'll remember asking.")},
+            {"key": "endure_her", "label": "Endure it — let her take, give nothing back",
+             "effect": "bethany_breeds", "params": {"holes": 1, "devotion": 4.0}, "set": {"bred": "endured"},
+             "desc": "she takes what's hers regardless; withhold the wanting",
+             "outcome": (
+                "You hold yourself apart and let her simply *take* — and she does, unbothered, "
+                "seating and knotting and flooding you with her laced seed whether you participate "
+                "or not, because taking what's hers was never contingent on your wanting it. The "
+                "real cover lands the same, sire Bethany, on the books. \"Sulk if you like,\" she "
+                "hums, breeding you through it. \"You're still full of me, and the devotion doesn't "
+                "care whether you fought it in. It's already working. Feel it?\"")}],
+        "default": "open",
+        "then": "ko_file"}
+
+
+@choice("ko_file", root=False)
+def _ko_file(character):
+    return {"key": "ko_file", "prompt": (
+        "After, she keeps you in her bed — knots easing slow, the laced load held in you, your "
+        "head fogged and quiet and hers — and she takes your file back up, because of course she "
+        "does, and reads it to you. Out loud. Your whole self as she's catalogued it: your "
+        "devotion climbing, your conditioning deepening, her get growing in your line, your title "
+        "now reading as |whers|n — and tonight's entries, fresh, the cover she just took and the "
+        "devotion it seated, added in her own hand while it's still wet. It is the most intimate "
+        "and the most violating thing she does, and she does it as a *lullaby*, her voice fond and "
+        "low, reading you your own reduction like a bedtime story while you drift, full and kept "
+        "and unable to tell the difference anymore between the dread and the comfort."),
+        "options": [
+            {"key": "listen", "label": "Listen to your own file as a lullaby", "effect": "file_read",
+             "set": {"file": "listened"}, "desc": "hear what you've become, in her voice — real numbers",
+             "outcome": (
+                "You listen — to your real numbers, your real reduction, read in her fond low voice "
+                "— and somewhere in the fog the horror and the comfort finish blurring entirely, "
+                "and being *known* this completely, owned down to the documented detail, stops "
+                "feeling like a violation and starts feeling like being held. Which is the deepest "
+                "thing the room does to you. \"Mm,\" she murmurs, turning a page. \"You're a lovely "
+                "file, you know. I'm going to keep adding to you for years.\"")},
+            {"key": "burrow", "label": "Burrow into her and stop listening", "effect": "devote",
+             "params": {"amount": 4.0}, "set": {"file": "burrowed"},
+             "desc": "hide in her warmth from the file that is you",
+             "outcome": (
+                "You burrow into her warmth and stop listening — hide from the recitation of your "
+                "own reduction in the body of the woman doing the reducing — and she lets you, "
+                "fond, reading on softly over your head. \"Don't want to hear your numbers? That's "
+                "all right, sweetheart. *I'll* keep them. That's the lovely thing about being kept "
+                "— you don't have to hold any of it anymore. I hold all of you now. Even the parts "
+                "you're hiding from.\"")}],
+        "default": "listen",
+        "then": "ko_close"}
+
+
+@choice("ko_close", root=False)
+def _ko_close(character):
+    eve = scene_flag(character, "eve", "melt")
+    recap = ("the way you melted for me" if eve == "melt"
+             else "the way you wanted it to be real" if eve == "ache"
+             else "the way you named it and warmed to me anyway")
+    return {"key": "ko_close", "prompt": (
+        "She files the last of tonight's entries, sets you and your record both aside with the same "
+        "fond care, and settles you against her to keep — not to sleep, exactly; she doesn't seem "
+        "to need much; just to *have*, through the small hours, a thing she owns held warm in her "
+        f"bed. \"There. {recap.capitalize()} — that's in the file now too, where I'll find it again "
+        "whenever I want to feel fond of you.\" Her hand moves slow and proprietary over whatever "
+        "of you it can reach. \"This is the keeping, sweetheart. Not the floor, not the pens, not "
+        "the block — *this*. A warm bed and an owner who's pleased with you and a file getting "
+        "thicker by the night. Most of what passes through here never gets kept. You did. Try to "
+        "understand what that means about how thoroughly you're mine.\" She's already half "
+        "somewhere else, content, certain. \"Sleep if you can. I'll have you again before "
+        "breakfast. I do so look forward to my mornings now.\""),
+        "options": [
+            {"key": "thank", "label": "Thank her — for keeping you", "effect": "gratitude",
+             "end": True, "desc": "and hear how much you mean it",
+             "outcome": (
+                "\"Thank you, Owner. For keeping me.\" It comes shaped by the clause and meant so "
+                "far beneath it that the meaning frightens only the last small watching sliver of "
+                "you, and that sliver is getting harder to hear. Bethany glows in the lamplight. "
+                "\"And *that* one I keep forever.\" She holds you through the small hours, her "
+                "purchase, her file, her chair she's fond of — and you are, all the way down now, "
+                "and a little gratefully, hers.")},
+            {"key": "quiet", "label": "Say nothing — let her hold you", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "no words; just be kept",
+             "outcome": (
+                "You say nothing — just let her hold you, warm and owned, through the dark — and "
+                "the not-needing-to-say-anything is its own surrender, the comfortable silence of a "
+                "thing that has stopped expecting to be asked. Bethany hums, content, her hand "
+                "idle and proprietary on you. \"Quiet. Good. We don't need words, you and I. I've "
+                "got it all written down anyway.\" And she keeps you, all night, like the chair she "
+                "loves. And you let her. And that's the whole of what you've become.")}],
+        "default": "thank"}
