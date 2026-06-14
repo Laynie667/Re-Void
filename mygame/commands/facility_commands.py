@@ -1642,6 +1642,8 @@ class CmdScene(Command):
         "correction": "pn_arrival", "punish": "pn_arrival", "discipline": "pn_arrival",
         "dosing": "dz_arrival", "dose": "dz_arrival", "drug": "dz_arrival", "dispensary": "dz_arrival",
         "events": "ev_arrival", "event": "ev_arrival",
+        "manumission": "mn_arrival", "manumit": "mn_arrival", "release": "mn_arrival",
+        "freedom": "mn_arrival",
     }
 
     def func(self):

@@ -615,6 +615,31 @@ def test_bethany_scene():
             assert cyoa.resolve_choice(ce, ch)[0] is not None, f"{opening} '{ch}' failed"
         assert ce.db.pending_choice is None and ce.db.scene_flags is None, f"{opening} should end clean"
 
+    # Manumission: the NOT-ready path (default, no release terms) chains to the honest refusal.
+    c24 = _Char(); cyoa.start_scene(c24, "mn_arrival")
+    mnbeats = []
+    for ch in ("petition", "accept_terms", "keep_earning"):
+        p = c24.db.pending_choice
+        assert p, f"manumission: no pending before '{ch}'"
+        mnbeats.append(p["key"])
+        assert cyoa.resolve_choice(c24, ch)[0] is not None, f"manumission '{ch}' did not resolve"
+    assert mnbeats == ["mn_arrival", "mn_terms", "mn_verdict"], mnbeats
+    assert c24.db.pending_choice is None and c24.db.scene_flags is None, "manumission should end clean"
+    # The EARNED path: stub release so _manumit_ready returns True, then press -> the grant verdict.
+    import types as _t
+    rel = _t.ModuleType("world.release")
+    rel.terms = lambda s: {"offered": True, "paid": True, "scrip": 0}
+    rel._unmet = lambda s, t: []
+    rel.petition = lambda s: None
+    rel.grant = lambda s, **k: None
+    sys.modules["world.release"] = rel
+    c25 = _Char(); cyoa.start_scene(c25, "mn_arrival")
+    for ch in ("petition", "press", "stay_choose"):
+        assert c25.db.pending_choice, f"manumission(earned): stall before '{ch}'"
+        assert cyoa.resolve_choice(c25, ch)[0] is not None, f"manumission(earned) '{ch}' failed"
+    assert c25.db.pending_choice is None, "manumission(earned) should end clean"
+    sys.modules.pop("world.release", None)
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

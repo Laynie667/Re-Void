@@ -99,8 +99,9 @@ def resolve_choice(character, selection):
     if outcome and getattr(character, "msg", None):
         character.msg("|y" + outcome + "|n")
     # Chain — an option's own `then` wins; else fall back to the node-level default `then`
-    # (so linear beats can declare one next-node for all their options).
-    nxt = opt.get("then") or pending.get("then")
+    # (so linear beats can declare one next-node for all their options). An `end` option
+    # terminates the scene and does NOT inherit the node default.
+    nxt = opt.get("then") or (None if opt.get("end") else pending.get("then"))
     if nxt:
         try:
             pose_named(character, nxt, room=getattr(character, "location", None))
@@ -6880,3 +6881,211 @@ def _ev_anniv_b(character):
                 "*reaching* for me, and that'll be the best date in the file. I can wait. I've "
                 "clearly got you for years.\"")}],
         "default": "give"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Manumission — the IN-FICTION earned door (NOT the §0 floor).
+# Cinematic. Actor: Bethany. This is the diegetic exit: gated, priced, gougeable,
+# and she'd rather you didn't — the LONG way out, paid in scrip + LOW devotion +
+# standing. CRUCIAL CONTRAST kept explicit throughout: this hard door is hers to
+# price; the OTHER door (escape/the §0 floor) is always open, free, ungated, never
+# hers to touch. Reads + drives the REAL release.py system. Flow: arrival→terms→
+# verdict. Entry: `scene manumission`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _manumit_ready(character):
+    try:
+        from world.release import terms, _unmet
+        t = terms(character)
+        return (not _unmet(character, t)) and bool(t.get("paid")) and bool(t.get("offered"))
+    except Exception:
+        return False
+
+
+def _manumit_unmet_text(character):
+    try:
+        from world.release import terms, _unmet
+        t = terms(character)
+        un = _unmet(character, t)
+        bits = [d for _lbl, d in un]
+        if not t.get("offered"):
+            bits.insert(0, "there's no release on the table yet — she has to offer you a price first")
+        if t.get("offered") and not t.get("paid"):
+            bits.append(f"the scrip's unpaid ({int(t.get('scrip', 0))} owed)")
+        return "; ".join(bits) if bits else ""
+    except Exception:
+        return ""
+
+
+@effect("manumit_petition")
+def _eff_manumit_petition(character, p):
+    try:
+        from world.release import petition
+        petition(character)
+    except Exception:
+        pass
+    return "petitioned"
+
+
+@effect("manumit_grant")
+def _eff_manumit_grant(character, p):
+    try:
+        from world.release import grant
+        grant(character)
+    except Exception:
+        pass
+    return "granted"
+
+
+@choice("mn_arrival", root=False)
+def _mn_arrival(character):
+    return {"key": "mn_arrival", "prompt": (
+        "You come to Bethany to ask about |wmanumission|n — the in-fiction door, the *earned* one, "
+        "the long legitimate way out where she signs you over free and proper, mine no more. She "
+        "sets down her pen and gives you her whole warm attention, not unkind, because this "
+        "conversation is one she takes seriously even as she makes it hard.\n\n"
+        "\"The release. Yes. Let's be clear about the two doors, sweetheart, because I never "
+        "muddle them and I won't have you muddle them either.\" She holds up one finger. \"There's "
+        "*my* door — manumission. It has a price: scrip, and standing, and — \" a fond, cruel "
+        "little smile \" — your devotion has to be *low* enough that I'll believe you mean it, "
+        "which is its own joke, because I spend every day raising it. That door I gouge, and "
+        "gate, and would honestly rather keep shut. It's the hard way, and I make it hard on "
+        "purpose.\" A second finger, and her voice changes — not warm now, but *level*, the truest "
+        "she gets. \"And there's the *other* door. The word that takes you home, free, this "
+        "second, no price, no permission, no convincing me of anything. That one I never touch. "
+        "Not ever. It's not mine to touch. You could speak it right now and I'd let go completely "
+        "and mean it.\" The smile returns. \"But you're asking about *mine*. So. What do you "
+        "want to do about the hard one?\""),
+        "options": [
+            {"key": "petition", "label": "Petition for the earned door", "effect": "manumit_petition",
+             "set": {"mn": "petition"}, "desc": "formally ask; she weighs your real record",
+             "outcome": (
+                "You petition — formally ask for the earned door — and Bethany pulls your release "
+                "file with a small approving nod, because petitioning *properly* is its own mark "
+                "of the discipline the door requires. \"All right. Let's see where you actually "
+                "stand against the price. I won't soften it; the whole point of this door is that "
+                "it's honest.\"")},
+            {"key": "ask_price", "label": "Ask what the price is", "set": {"mn": "ask"},
+             "desc": "make her name the terms before you commit",
+             "outcome": (
+                "\"The price.\" She reads it off, frank. \"Scrip you earn the hard way, standing "
+                "you build slow, and a devotion low enough that I'll sign in good conscience — and "
+                "that last one's the wall most never get over, because everything else in here is "
+                "built to make you want to *stay*. That's not a trick, sweetheart. That's just the "
+                "shape of it. The door's real. It's only hard.\"")},
+            {"key": "turnback", "label": "Turn back — not today", "set": {"mn": "back"}, "end": True,
+             "desc": "leave the hard door for now (the floor's still always open)",
+             "outcome": (
+                "You let it lie for now. Bethany nods, unbothered, almost gentle. \"Not today. "
+                "That's fine — my door keeps, and so do I. And remember the *other* one's open the "
+                "whole time, sweetheart; you're never trapped here, whatever it feels like. You "
+                "stay because you haven't spoken the word, and you haven't spoken the word "
+                "because — well. We both know why. Come back when you want to talk terms.\"")}],
+        "default": "petition",
+        "then": "mn_terms"}
+
+
+@choice("mn_terms", root=False)
+def _mn_terms(character):
+    ready = _manumit_ready(character)
+    unmet = _manumit_unmet_text(character)
+    if ready:
+        body = ("She reads your record, and her brows lift — genuinely, a little ruefully. "
+                "\"Well. Look at that. You've actually *met* it — scrip paid, standing made, and "
+                "your devotion's low enough that I can sign you out and believe you want it. "
+                "That's rare, sweetheart. Most never clear the devotion wall.\" She doesn't reach "
+                "for the pen yet. \"You understand what saying yes means. You walk. Properly. "
+                "Mine no more.\"")
+    else:
+        body = ("She reads your record against the price, and shakes her head slowly, not "
+                "unkindly. \"Not yet. " + (unmet or "you've a way to go on every count") + ".\" "
+                "She taps the file. \"That's the honest accounting. No softening it — the door's "
+                "real, you're just not through it. And the devotion line, sweetheart — that one "
+                "I'll keep working *against* every day you're mine, so the closer the rest of you "
+                "gets, the harder I'll pull on that. That's not cheating. That's the game, and I "
+                "told you the rules.\"")
+    return {"key": "mn_terms", "prompt": (
+        body + "\n\n\"And before you decide anything — the *other* door is still right there, "
+        "unlatched, free. I'm not negotiating that one. I never would. This is only ever about my "
+        "hard door, the one you have to earn off me. So.\""),
+        "options": [
+            {"key": "press", "label": "Press for the door now", "set": {"mn2": "press"},
+             "desc": "ask her to honor it (only opens if truly earned)",
+             "outcome": (
+                "You press — ask her to honor it, now — and whether the pen moves is up to your "
+                "real record, not your wanting. \"We'll see if it's earned,\" she says, evenly. "
+                "\"My door doesn't open on wanting. That's what makes it different from the free "
+                "one.\"")},
+            {"key": "accept_terms", "label": "Accept where you stand", "set": {"mn2": "accept"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "take the honest accounting; keep earning (or not)",
+             "outcome": (
+                "You take the honest accounting — where you actually stand against the price — and "
+                "the soberness of it settles in: the earned door is real and far, and the thing "
+                "barring it most is your own climbing devotion, the wall she builds higher the "
+                "longer she keeps you. \"Good,\" she says, of your accepting it. \"Clear-eyed. That "
+                "serves the door better than hope does.\"")}],
+        "default": "press",
+        "then": "mn_verdict"}
+
+
+@choice("mn_verdict", root=False)
+def _mn_verdict(character):
+    ready = _manumit_ready(character)
+    pressed = scene_flag(character, "mn2", "") == "press"
+    if ready and pressed:
+        return {"key": "mn_verdict", "prompt": (
+            "And — because you've truly earned it, against the real price, devotion wall and all — "
+            "she picks up the pen. \"All right, sweetheart. You did it. The hard way, properly.\""),
+            "options": [
+                {"key": "take_door", "label": "Take the earned door — walk free", "effect": "manumit_grant",
+                 "end": True, "desc": "she signs you out for real (release.grant)",
+                 "outcome": (
+                    "She signs it — both copies — and the in-fiction door opens for real: you're "
+                    "manumitted, free on paper, hers no more, the way home-word working now where "
+                    "it didn't before. \"There,\" she says, folding her hands, and the warmth is "
+                    "real and so is the loss in it. \"Free. Earned. ...You can always stay, of "
+                    "course. Most do, once it's actually a choice — and that's the part I'm proudest "
+                    "of, sweetheart: that the ones who *could* go mostly choose me anyway. No price "
+                    "on that. Just yours to decide.\"")},
+                {"key": "stay_choose", "label": "...choose to stay, freely", "effect": "devote",
+                 "params": {"amount": 3.0}, "end": True,
+                 "desc": "earn the door, then decline it — the cruelest sweetness",
+                 "outcome": (
+                    "You earn the door — and then, holding it open, you *don't* walk through it. "
+                    "You choose to stay, freely, which is the one thing the whole facility could "
+                    "never make you do and the one thing it most wanted. Bethany goes very still, "
+                    "and then her smile reaches her eyes completely. \"...Oh. *Oh*, sweetheart. You "
+                    "earned the right to leave and you're using it to stay.\" She sets the pen down "
+                    "unsigned, reverent. \"That's the best thing anyone's ever done in this room. "
+                    "I'll keep the door earned and open behind you, always. You'll never need it. "
+                    "But you'll always have it. Both of them, now.\"")}],
+            "default": "take_door"}
+    else:
+        return {"key": "mn_verdict", "prompt": (
+            "The pen stays down. \"Not today,\" Bethany says, and there's no triumph in it, just "
+            "the level honesty the hard door demands. \"You haven't earned my door yet, and I "
+            "won't fake it open — a manumission that wasn't earned isn't worth the paper, and I "
+            "respect the door too much for that.\" She files your petition, noted, ongoing. \"Keep "
+            "at it, if you mean it. Or don't. And the *other* door stays open the whole while, "
+            "free, mine-never — that's the one that makes all of this fair. My door you earn. The "
+            "floor you already have. Don't ever let me blur them for you.\""),
+            "options": [
+                {"key": "keep_earning", "label": "Resolve to keep earning it", "effect": "devote",
+                 "params": {"amount": 1.0}, "end": True, "desc": "the long road; (the floor's still free)",
+                 "outcome": (
+                    "You resolve to keep earning it — the long honest road toward her hard door — "
+                    "and Bethany notes the resolve with something like respect. \"Then I'll keep "
+                    "the price honest and keep pulling on your devotion, and we'll both find out "
+                    "which of us wins. Fair fight, sweetheart. The only one in the building. And "
+                    "the free door's right there if you ever decide the fight's not worth it.\"")},
+                {"key": "sit", "label": "Sit with the two doors", "effect": "deny_hold",
+                 "params": {"cond": 1.0}, "end": True, "desc": "hold the distinction close",
+                 "outcome": (
+                    "You sit with it — the two doors, the hard earned one and the free open one — "
+                    "and holding the distinction clear is its own small strength: you are here "
+                    "because you haven't yet spoken the free word, and that means, however it "
+                    "feels, that some part of this is still a choice. Bethany watches you hold it "
+                    "and doesn't take it from you. \"Good. Keep that. It's true, and it's yours, "
+                    "and it's the realest thing I'll never gouge.\"")}],
+            "default": "sit"}

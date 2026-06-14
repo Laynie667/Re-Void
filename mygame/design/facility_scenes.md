@@ -81,7 +81,11 @@ built reference). This doc is the master list of everything to convert.
   `punish` on shortfall / climbing-bar), the Breeding Festival (real `_scene_bukkake` mass
   use), the Anniversary (Bethany's kept-dates; real `bethany_breeds` deepening claim). The
   freshness valve — more events drop into `_EVENT_OPENINGS` over time. In the hub.
-- **Manumission / earn-back** — the in-fiction earned exit; the long compliance record paying off.
+- ✅ **Manumission (`mn_*`, `scene manumission`)** — BUILT. The IN-FICTION earned door (NOT the
+  §0 floor): reads/drives the real release.py (terms / _unmet / petition / grant). Gated on
+  scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
+  Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
+  door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
 
 ---
 
