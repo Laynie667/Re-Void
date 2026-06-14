@@ -1662,6 +1662,84 @@ class CmdScene(Command):
 ALL_FACILITY_VERBS.append(CmdScene)
 
 
+class CmdWhereto(Command):
+    """
+    Between scenes: where you go next. The scene-flow hub.
+
+    Usage:
+        whereto
+        route
+
+    Instead of being dragged room to room on a timer, the facility routes you by CHOICE —
+    this poses the board of where you're owed/offered next, state-aware (only what fits your
+    standing shows), each option launching that room's scene. Pick, or let the board decide.
+    Drive with `choose <n>`. `escape` ends everything, always.
+    """
+    key           = "whereto"
+    aliases       = ["route", "board", "next"]
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        try:
+            from world.cyoa import start_scene, has_pending
+        except Exception:
+            caller.msg("|xThe board's dark.|n")
+            return
+        if has_pending(caller):
+            caller.msg("|xAnswer the choice in front of you first (|wchoose <n>|x), or |wescape|x.|n")
+            return
+        if not start_scene(caller, "facility_hub", room=caller.location):
+            caller.msg("|xNothing on the board for you here.|n")
+
+ALL_FACILITY_VERBS.append(CmdWhereto)
+
+
+class CmdSceneMode(MuxCommand):
+    """
+    Toggle the facility's scene-driven mode (retires the blind timer-cycle).
+
+    Usage:
+        scenemode            — show current state
+        scenemode on         — scenes drive (the narrative cycle stops auto-advancing)
+        scenemode off        — restore the old timer-cycle
+
+    When ON, the facility no longer drags you room to room on a clock or fires context-free
+    random beats — you drive it by choice via `scene`/`whereto`, and machines, milking sessions,
+    arousal and engorgement keep running on their own scripts. The §0 floor is untouched either
+    way. Affects your own facility/realm cycle scripts.
+    """
+    key           = "scenemode"
+    locks         = "cmd:all()"
+    help_category = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        arg = (self.args or "").strip().lower()
+        try:
+            from typeclasses.facility_script import FacilityScript, RealmCycleScript
+        except Exception as e:
+            caller.msg(f"|rCan't load the cycle scripts: {e}|n")
+            return
+        cycles = [s for s in caller.scripts.all()
+                  if isinstance(s, (FacilityScript, RealmCycleScript))]
+        if not cycles:
+            caller.msg("|xYou've no facility/realm cycle running to toggle.|n")
+            return
+        if arg in ("on", "off"):
+            val = (arg == "on")
+            for s in cycles:
+                s.db.scene_mode = val
+            caller.msg(f"|gScene mode {'ON — scenes drive; the timer-cycle is retired' if val else 'OFF — the timer-cycle resumes'}.|n "
+                       f"({len(cycles)} cycle script(s) updated.)")
+        else:
+            states = ", ".join(("on" if getattr(s.db, "scene_mode", False) else "off") for s in cycles)
+            caller.msg(f"|xScene mode: {states}. Usage: |wscenemode on|x / |wscenemode off|x.|n")
+
+ALL_FACILITY_VERBS.append(CmdSceneMode)
+
+
 def _in_post_office(room):
     """True if `room` is part of the Postal Office complex (by area tag, else a clerk present)."""
     if not room:

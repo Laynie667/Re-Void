@@ -74,11 +74,18 @@ built reference). This doc is the master list of everything to convert.
 
 ---
 
-## C. THE CONNECTIVE LAYER (replaces the blind room-cycle)
-- A **scene-flow controller**: a scene resolves and offers the next step as choices (be moved,
-  submit to be taken, the board says you're owed elsewhere) — the dread stays, the *clock* goes.
-- The old `RealmCycleScript` auto-advance is retired in favour of scene handoff (machines/milking
-  still tick on their own; the narrative no longer does).
+## C. THE CONNECTIVE LAYER (replaces the blind room-cycle) — ✅ BUILT (core)
+- ✅ **Scene-flow hub** (`facility_hub`, `whereto`/`route`): between scenes you're routed by
+  CHOICE, not a clock. State-aware menu (only what fits your standing shows; office/seraphine
+  gate on ownership), each option launches a real scene; "let the board decide" routes at random.
+- ✅ **`scenemode on/off`** toggle: an opt-in early-return guard on BOTH cycle `at_repeat`s
+  (FacilityScript + RealmCycleScript). ON = the narrative timer-cycle stops auto-advancing /
+  dragging you room to room; you drive via `scene`/`whereto`; machines, milking sessions, arousal
+  and engorgement keep ticking on their own scripts. Default OFF (safe) — flip live to test.
+  §0 floor untouched either way.
+- TODO (polish): auto-pose `facility_hub` at a scene's close (so handoff is automatic, not a
+  manual `whereto`); verify under `scenemode on` that milking still INITIATES via the Dairy scene
+  (the old cycle was one initiator) — hand-test in-game.
 
 ## Build order (suggested, after Intake)
 1. ✅ **Breeding Pens** (stockman + studs) — DONE. Next:

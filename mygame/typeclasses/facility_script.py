@@ -1873,6 +1873,13 @@ class FacilityScript(DefaultScript):
         target = self._target()
         if not room or not target:
             return   # subject absent — idle, do not escalate
+        # SCENE MODE: when on, the narrative cycle no longer auto-advances on a timer — the
+        # facility is driven by choice-driven scenes (`scene`/`whereto`) instead. Machines,
+        # milking sessions, arousal and engorgement run on their OWN scripts regardless. Opt-in
+        # (default off) and toggleable in-game (`scenemode on`) so it can be tested live. §0 floor
+        # is untouched either way.
+        if getattr(self.db, "scene_mode", False):
+            return
 
         self.db.ticks = (self.db.ticks or 0) + 1
         t = target.db.rp_name or target.name
@@ -5114,6 +5121,10 @@ class RealmCycleScript(FacilityScript):
         char = self.obj
         if not char or not hasattr(char, "db"):
             self.stop(); return
+        # SCENE MODE (see FacilityScript.at_repeat): when on, stop dragging her room to room on
+        # a clock — scenes (`scene`/`whereto`) drive the realm instead. Opt-in, default off.
+        if getattr(self.db, "scene_mode", False):
+            return
         realm = getattr(char.db, "realm", None) or {}
         rooms = realm.get("rooms") or {}
         if not rooms:

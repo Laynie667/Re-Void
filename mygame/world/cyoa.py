@@ -5952,3 +5952,82 @@ def _se_close(character):
                 "the door behind it is still open, and those two things are what you have. They "
                 "might, in the end, be enough. They might not. You're carried home either way.")}],
         "default": "settle"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# THE SCENE-FLOW HUB — the connective layer that replaces the blind timer-cycle.
+# Posed by `whereto` (and offerable at a scene's close): the facility no longer
+# DRAGS you room to room on a clock — instead, between scenes, you're routed/offered
+# where you go next as CHOICES. State-aware: only shows scenes that fit your state
+# (signed/owned/grade/nugget). Each option chains to a real scene's first beat.
+# §0: escape/forceclear always end everything. (Pair with `scenemode on`.)
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("facility_hub", root=False)
+def _b_facility_hub(character):
+    db = getattr(character, "db", None)
+    signed   = bool(getattr(db, "facility_signed", False) or getattr(db, "facility_active", False))
+    bowned   = bool(getattr(db, "bethany_owned", False))
+    sowned   = bool(getattr(db, "seraphine_owned", False))
+    grade    = (getattr(db, "facility_grade", None) or "").lower()
+    st = _state_tags(character)
+
+    opts = []
+    def add(key, label, node, desc):
+        opts.append({"key": key, "label": label, "then": node, "desc": desc,
+                     "outcome": "|xThe board updates. You're routed.|n"})
+
+    # The everyday work rooms — always on the rota.
+    add("floor", "→ the Processing Floor", "pf_arrival", "open-floor use, on display")
+    add("pens",  "→ the Breeding Pens", "bp_arrival", "the stockman; covered by the stock")
+    add("dairy", "→ the Dairy", "dy_arrival", "put on the machine; milked")
+    add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
+    add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
+    add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
+    add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
+    add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
+    # The lineage room reads as available when you're little/bred or just on the rota.
+    add("nursery", "→ the Nursery", "nu_arrival", "regression; the get; the Little Box")
+    # The showroom — once you're graded, you can be sold.
+    if grade or signed:
+        add("showroom", "→ the Showroom", "sw_arrival", "the block; appraised and sold")
+    # The kept arc — only once Bethany owns you.
+    if bowned:
+        add("office", "→ Bethany's quarters", "ko_arrival", "the keeping; her bed, her file")
+    # Seraphine visits to buy — surfaces once you're Bethany's (her to sell).
+    if bowned or sowned:
+        add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
+    # Deep Stock — the terminus is always down there to be contemplated.
+    add("deep", "→ Deep Stock", "ds_arrival", "the sealed terminus; the pods")
+
+    prompt = (
+        "Between one thing and the next, the facility does the thing it now does instead of "
+        "dragging you on a clock: a handler reads the board, and you're |wrouted|n — given the "
+        "thin sliver of say the Process allows, which is not *whether* but *which*. The board "
+        "shows what you're owed and where you're due.")
+    if sowned:
+        prompt += " (You're Seraphine's now — much of this happens at her leave, when she lends you back to the line.)"
+    elif bowned:
+        prompt += " (You're Bethany's; the rota bends around her wants.)"
+    prompt += " Where do you go?"
+
+    opts.append({"key": "wait", "label": "Wait to be told (let the board decide)",
+                 "effect": "hub_random", "desc": "no choice; routed at random", "outcome": (
+                    "You don't choose. A handler picks for you off the board, the way the facility "
+                    "always will when you won't, and you're walked to whatever came up.")})
+    return {"key": "facility_hub", "prompt": prompt, "options": opts, "default": "wait"}
+
+
+_HUB_SCENES = ["pf_arrival", "bp_arrival", "dy_arrival", "cc_arrival", "mp_arrival",
+               "sb_arrival", "ps_arrival", "rh_arrival", "nu_arrival", "ds_arrival"]
+
+
+@effect("hub_random")
+def _eff_hub_random(character, p):
+    """The board decides: pose a random work-room scene (what the facility does when you won't
+    choose). Poses the new beat directly; the option carries no `then`, so this becomes pending."""
+    try:
+        pose_named(character, random.choice(_HUB_SCENES), room=getattr(character, "location", None))
+    except Exception:
+        pass
+    return "routed"
