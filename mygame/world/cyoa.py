@@ -7767,3 +7767,175 @@ def _eff_sera_carry_home(character, p):
     except Exception:
         pass
     return "carried_home"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Vesper's Nest — the post office's shyest clerk lets you in. Cinematic,
+# WARM register (the post-office's gentle key, not the facility's dread). Actor:
+# Vesper — opalescent, oblique, blushing, eyes changing colour, trailing off.
+# Pays off the gossip lore: the trying-on of PARTS and HOLES, alone before the one
+# undraped mirror, now shared. Consent-forward (the fold only opens if they trust
+# you; "Not today" is whole). Real `couch_warm` (arousal) + devote. §0 free always.
+# Flow: arrival→toybox→tryon→after. Entry: `scene vesper`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("vn_arrival", root=False)
+def _vn_arrival(character):
+    return {"key": "vn_arrival", "prompt": (
+        "There's no door to Vesper's room — there's a fold in the Sorting Hall's corner that's only "
+        "a corner if they haven't let you in, and tonight, somehow, you've always been able to find "
+        "it. Inside: a burrow. Soft past reason, lamplight the colour of held breath, nested "
+        "blankets, no hard edges anywhere — the safest-feeling room in the building. Every mirror "
+        "draped except the tall one by the nest, undraped only in here, only when they're alone — "
+        "and you're not supposed to be here for that, except they let you in, which means something "
+        "neither of you will say out loud.\n\n"
+        "|wVesper|n is curled in the nest, opalescent skin catching the low light, swept-back horns "
+        "going sharp then soft, eyes silver then violet then a colour without a name — and "
+        "startled-pleased to see you, and immediately trying to look like they aren't. \"...you "
+        "found the fold.\" Barely above the hush of the room. \"I — left it findable. For you. "
+        "Which is — \" the sentence doesn't survive; they start over, smaller, braver. \"I don't "
+        "let people in here. You should know that's what this is. You being here.\""),
+        "options": [
+            {"key": "still", "label": "Be still — let them trust you at their pace",
+             "set": {"vn": "still"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "no sudden moves; let the shy thing settle",
+             "outcome": (
+                "You go still and soft, make no sudden move, let them come to the trust at their "
+                "own speed — and Vesper's shoulders ease by a fraction, the eyes going warmer. "
+                "\"...thank you. For not — \" a small gesture at all of themselves \" — rushing it. "
+                "Everyone rushes me. You waited.\" The blanket-nest seems, somehow, to make a little "
+                "room for you, the way the burrow takes its rare guests.")},
+            {"key": "ask_box", "label": "Ask about the toybox at the foot of the nest",
+             "set": {"vn": "box"}, "desc": "the lacquered chest you've heard the gossip about",
+             "outcome": (
+                "Your eyes go to the lacquered chest, opal-black, at the foot of the nest, and "
+                "Vesper *flushes* — the whole oblique composure cracking. \"You've — heard. About "
+                "the box.\" Their eyes flick silver-fast. \"Seraphine tells everyone. She wasn't "
+                "supposed to — the corner was meant to be shut — \" They stop, and breathe, and "
+                "make themselves brave. \"...do you want to see? I've never shown anyone. I just — "
+                "put things away after. But I could show you. If you'd be — gentle about it.\"")},
+            {"key": "reach", "label": "Reach for them, slow", "set": {"vn": "reach"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "offer the touch; let them decide to take it",
+             "outcome": (
+                "You reach — slow, telegraphed, an offer not a grab — and Vesper looks at your hand "
+                "like it's a question they're afraid to answer yes to, and then answers it, their "
+                "fingers coming to rest in yours light as a held breath. \"...oh.\" Very quiet. "
+                "\"I'm not — used to being reached *for*. Usually I'm the thing people grope at "
+                "anonymously through the mail.\" The eyes go soft and uncertain. \"This is "
+                "different. You're — looking right at me. I don't know what to do with looked-at.\"")}],
+        "default": "still",
+        "then": "vn_toybox"}
+
+
+@choice("vn_toybox", root=False)
+def _vn_toybox(character):
+    return {"key": "vn_toybox", "prompt": (
+        "They open the toybox for you — and it's the secret Seraphine gossips about and Vesper "
+        "would die before confirming: a wardrobe of |wparts|n. Cocks in a graded rack, each one "
+        "warm; cunts and holes of every described and a few undescribed kinds, soft-bodied in "
+        "velvet; horns that aren't theirs and a tail that is; things labelled only |x'a change'|n, "
+        "|x'another change'|n, |x'this one was a mistake (keep)'|n. \"This is what I do,\" Vesper "
+        "says, very low, not meeting your eyes, the bravest confession they've ever made. \"Alone. "
+        "In front of the one mirror I don't drape. I try on — being a thing with a fixed shape. A "
+        "cock, or a hole, or — and I wear it an hour, and I look, and I learn what it is to be "
+        "*that*, takeable or taking, decided — and then I put it carefully back. Every time.\" "
+        "Their eyes change colour twice. \"I've never tried one on with someone in the room. I "
+        "don't know if I can. I think I want to. With you.\""),
+        "options": [
+            {"key": "choose_for", "label": "Gently offer to choose one for them", "set": {"try": "chosen"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "take the deciding off them — the kindest thing you could do",
+             "outcome": (
+                "\"Would it be easier,\" you offer, \"if I chose?\" — and the relief that floods "
+                "Vesper's face is enormous, the whole weight of *deciding what to be* lifted off "
+                "them for once. \"...yes. Oh — yes. You pick. I'll wear what you — \" the breath "
+                "catches \" — what you want me to be, tonight. That's so much easier than wanting "
+                "it myself.\" You choose one from the rack, and they take it from your hands like a "
+                "gift, eyes wet and silver. \"Nobody's ever — chosen for me kindly before.\"")},
+            {"key": "watch_try", "label": "Ask them to try one on for you to see", "set": {"try": "watch"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "let them choose; be the witness they've never had",
+             "outcome": (
+                "\"Show me,\" you say, soft. \"Try one on. I'll just — watch. I want to see you see "
+                "yourself.\" And Vesper, trembling, *does* — picks a part, fits it on with the "
+                "careful private ritual they've only ever done alone, and turns to the undraped "
+                "mirror with you watching, and the being-witnessed-and-not-flinching is the "
+                "biggest thing they've ever risked. \"...you're still looking,\" they whisper, half "
+                "terror, half wonder. \"You saw, and you didn't — leave. Or laugh. You just — "
+                "saw.\"")}],
+        "default": "choose_for",
+        "then": "vn_tryon"}
+
+
+@choice("vn_tryon", root=False)
+def _vn_tryon(character):
+    return {"key": "vn_tryon", "prompt": (
+        "And then — fitted into the shape you chose or they chose, opalescent and shy and "
+        "*fervent* once they start — Vesper comes to you. It's nothing like the facility; there's "
+        "no dread in this room, only the trembling courage of someone trying on being wanted with "
+        "the lights on. They're tentative, then startled by their own want, then — finding you "
+        "still there, still looking, still *yes* — braver, and braver, until careful is the last "
+        "thing either of you is. Their eyes change colour with every gasp. They keep checking your "
+        "face and keep finding permission, and each time they find it they unclench a little more "
+        "of the armor a lifetime of being anonymous taught them. \"...oh,\" they breathe, somewhere "
+        "in it, wrecked and amazed. \"*Oh*, this is — I didn't know it could — with someone "
+        "*there* — \" and the sentence doesn't survive, and doesn't need to."),
+        "options": [
+            {"key": "give", "label": "Give them this fully — wanted, witnessed, met",
+             "effect": "couch_warm", "params": {"amount": 35.0}, "set": {"tryon": "give"},
+             "desc": "let it be as good as it's terrifying for them",
+             "outcome": (
+                "You give them all of it — let yourself want the shape they're wearing, want "
+                "*them*, meet their fervor with your own — and Vesper comes apart in the best way, "
+                "shy-fervent and finally un-anonymous, *seen* all the way through and not fleeing "
+                "it. It's warm and real and theirs, the arousal moving for true between you, and "
+                "when it crests they cling to you like the fold itself, shaking. \"I've never — "
+                "with the mirror undraped and someone *in* it with me — thank you, thank you, "
+                "don't tell Seraphine, she'll throw a party — \"")},
+            {"key": "hold", "label": "Hold them through it — gentle, anchoring", "effect": "devote",
+             "params": {"amount": 3.0}, "set": {"tryon": "hold"},
+             "desc": "less fervor, more safety; be the steady thing",
+             "outcome": (
+                "You go gentle instead — hold them, anchor them, make the whole trembling thing "
+                "*safe* rather than urgent — and Vesper melts into the holding with a relief that "
+                "tells you it's what they needed more than the fervor. \"This is — I can do this, "
+                "held,\" they manage, tucked against you in the shape they chose, the want and the "
+                "safety braided together. \"You make the looked-at not frightening. I didn't think "
+                "anyone could.\"")}],
+        "default": "give",
+        "then": "vn_after"}
+
+
+@choice("vn_after", root=False)
+def _vn_after(character):
+    return {"key": "vn_after", "prompt": (
+        "After, in the warm nest, Vesper puts the part carefully away — they always put everything "
+        "away — and the ritual is gentler now, witnessed, less lonely. They show you, shy, the two "
+        "cards tucked in the toybox's lid: Seraphine's, |x'tried-on is still you, sweet thing. so "
+        "is put-away. — S.'|n, and under it their own unsent reply, |x'i know. thank you. stop "
+        "reading my toybox. — V.'|n They flush that you've seen it. \"...you can come back to the "
+        "fold,\" they say, not looking at you, which from Vesper is a declaration shouted from the "
+        "rooftops. \"It'll be findable. For you. I don't — do that. So. You should know that's what "
+        "this is.\" Their eyes settle, for once, on a single colour: looking at you, steady, "
+        "terrified, glad."),
+        "options": [
+            {"key": "stay", "label": "Stay a while in the nest", "effect": "devote", "params": {"amount": 2.0},
+             "end": True, "desc": "let the rare trust hold",
+             "outcome": (
+                "You stay, curled in the soft burrow with the one clerk who lets no one in, and the "
+                "quiet is the warmest thing in the post office. \"...don't tell the others how long "
+                "you stayed,\" Vesper murmurs, already half-asleep against you, unguarded in a way "
+                "you suspect almost no one has earned. \"They'll be unbearable. ...I'm glad you "
+                "stayed. I'm — bad at glad. But I am.\" The fold holds you both. You leave, "
+                "eventually, knowing the corner will be a door again whenever you need it.")},
+            {"key": "promise", "label": "Promise to come back, and mean it", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "give the shy thing something to hold",
+             "outcome": (
+                "\"I'll come back,\" you tell them, and mean it, and watch Vesper try to hold the "
+                "promise without letting it show how much it lands. \"...okay,\" they manage, the "
+                "eyes going bright. \"Okay. The fold'll be findable. I'll — leave it findable.\" It "
+                "is, you understand, the single biggest thing they have to give — a standing door "
+                "in a life built entirely of draped mirrors and anonymous mail — and they've given "
+                "it to you. You carry that out of the post office warmer than you came in.")}],
+        "default": "stay"}

@@ -1648,6 +1648,7 @@ class CmdScene(Command):
         "carry": "pg_arrival", "carried": "pg_arrival", "passenger": "pg_arrival",
         "inside": "pg_arrival",
         "adoption": "fa_arrival", "adopt": "fa_arrival", "foster": "fa_arrival",
+        "vesper": "vn_arrival", "nest": "vn_arrival", "fold": "vn_arrival",
     }
 
     def func(self):

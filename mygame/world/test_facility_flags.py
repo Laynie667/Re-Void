@@ -722,6 +722,22 @@ def test_bethany_scene():
     assert not c30.db.seraphine_owned, "balk path should not transfer ownership"
     assert c30.db.pending_choice is None and c30.db.scene_flags is None, "adoption(balk) should end clean"
 
+    # Vesper's Nest (post-office warm scene) chains end-to-end, both branches.
+    c31 = _Char(); cyoa.start_scene(c31, "vn_arrival")
+    vnbeats = []
+    for ch in ("ask_box", "watch_try", "give", "promise"):
+        p = c31.db.pending_choice
+        assert p, f"vesper: no pending before '{ch}'"
+        vnbeats.append(p["key"])
+        assert cyoa.resolve_choice(c31, ch)[0] is not None, f"vesper '{ch}' did not resolve"
+    assert vnbeats == ["vn_arrival", "vn_toybox", "vn_tryon", "vn_after"], vnbeats
+    assert c31.db.pending_choice is None and c31.db.scene_flags is None, "vesper should end clean"
+    c32 = _Char(); cyoa.start_scene(c32, "vn_arrival")
+    for ch in ("reach", "choose_for", "hold", "stay"):
+        assert c32.db.pending_choice, f"vesper(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c32, ch)[0] is not None, f"vesper(b) '{ch}' failed"
+    assert c32.db.pending_choice is None and c32.db.scene_flags is None, "vesper(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

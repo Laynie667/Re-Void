@@ -259,6 +259,16 @@ caught Vesper trying on different parts/holes" beat plus Calix's re-oiled bench,
 unsent letters, how officiating works, why the doors don't lock (an in-fiction statement
 of the floor), and the bakery watcher in the Dead Letter Cage.
 
+## Vesper's Nest — the shy clerk's scene (✅ BUILT — `scene vesper`)
+
+`vn_*` cinematic scene in the WARM post-office register (no facility dread). Vesper lets you
+into the fold (the corner that's only a corner if they haven't); pays off the gossip lore — the
+toybox of *parts*, the trying-on of cocks/holes/changes alone before the one undraped mirror,
+now shared and witnessed for the first time. arrival → toybox → try-on → after. Consent-forward
+(the fold only opens on trust); you can choose a shape FOR them (lifting the deciding off them)
+or witness them choose. Real `couch_warm` (arousal) + devote. The cards in the lid + a standing
+findable door as the payoff. §0 free always. State-aware-ready.
+
 ## Forced Adoption — Seraphine's signature (✅ BUILT — `scene adoption`)
 
 `fa_*` cinematic scene: Seraphine's thesis isn't ownership-on-paper, it's "I'm taking you
