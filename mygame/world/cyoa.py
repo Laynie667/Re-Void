@@ -3683,6 +3683,7 @@ def _dy_hook(character):
 @choice("dy_pull", root=False)
 def _dy_pull(character):
     return {"key": "dy_pull", "prompt": (
+        _kit_use_note(character) +
         "And then your body betrays you completely: the |wlet-down|n hits, a hot prickling rush "
         "from deep in the glands surging forward to meet the pull, and the milk *comes* — you can "
         "feel it leave you, drawn in time with the machine's rhythm, spilling down the lines toward "
@@ -4148,6 +4149,7 @@ def _ps_mount(character):
     belly = (" — and he ruts you belly-and-all, the swell of the facility's get squashed into the "
              "warm muck beneath you with every brutal drive, bred sow getting bred again" if st["preg"] else "")
     return {"key": "ps_mount", "prompt": (
+        _kit_use_note(character) +
         "The boar mounts. There's no ceremony and no mercy — he heaves his enormous filthy bulk up "
         "over you, trotters scrabbling and gouging in the slop, far too heavy — and his cock is "
         "nothing like the blunt stud-things you've taken: it's long, and thin, and wickedly "
@@ -4761,6 +4763,7 @@ def _ko_evening(character):
 @choice("ko_breed", root=False)
 def _ko_breed(character):
     return {"key": "ko_breed", "prompt": (
+        _kit_use_note(character) +
         "\"Now,\" she murmurs, setting your file aside, and moves you onto the wide soft bed with "
         "the easy authority of handling something she owns, \"let me take what's mine. Properly. In "
         "my own bed, in my own time, the way I like.\" The skirt comes away and the triple length "
