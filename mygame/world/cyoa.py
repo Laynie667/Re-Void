@@ -3449,6 +3449,18 @@ def _cc_set(character):
 # Flow: arrival→hook→pull→quota→handoff. Entry: `scene dairy`.
 # ═══════════════════════════════════════════════════════════════════════════
 
+
+def _state_tags(character):
+    """The reusable state hook every scene branches on: is the subject little (regressed),
+    a nugget (limbless), and/or pregnant. Safe defaults. Returns a dict of bools."""
+    db = getattr(character, "db", None)
+    return {
+        "little": float(getattr(db, "regression", 0) or 0) > 0 or bool(getattr(db, "headspace", None)),
+        "nugget": bool(getattr(db, "nugget", False)),
+        "preg":   bool(getattr(db, "pregnant", False) or getattr(db, "brood_count", 0)
+                       or getattr(db, "gestating", False)),
+    }
+
 def _dairy_state_note(character):
     """A light state-aware line for the dairy hand's assessment — the hook the rest of the
     facility's scenes will use to branch on little/pregnant/nugget/etc. Safe defaults."""
@@ -3874,4 +3886,397 @@ def _mp_set(character):
                 "marker is already heating the next iron for the next body. The mark doesn't need "
                 "your acknowledgement. It's set. It'll be answering the question of whose you are "
                 "long after you've stopped being asked.")}],
+        "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Pigsty — bestiality (the boar and the sty-pigs), filth, degradation.
+# Cinematic, STATE-AWARE throughout (nugget/preg/little change how the stock use
+# you). Actor: the custodian — sour, unbothered, hoses the place between shifts and
+# thinks of you as a thing that makes the floor dirty. Real breeding fires at the
+# mount (_gang). §0: escape/forceclear haul you out of the muck always.
+# Flow: arrival→down→root→mount→wallow→after. Entry: `scene pigsty`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ps_arrival", root=False)
+def _ps_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("You don't walk into the sty — a nugget can't, no arms, no legs — so the custodian "
+                "carries you in under one arm like a sack and drops you in the muck, and you land "
+                "where you land, because moving yourself out of it was never going to be on the "
+                "table. ")
+    elif st["preg"] and st["little"]:
+        note = ("Gravid and small-headed both, you're herded in barely understanding why, one hand "
+                "cradling the swell of you out of instinct the custodian finds funny. \"Bred little "
+                "thing in the muck. They do love a soft one.\" ")
+    elif st["preg"]:
+        note = ("Heavy-bellied with the facility's get, you're walked in carefully — not for your "
+                "sake; gravid stock is valuable and the sty is where they like to rut a pregnant "
+                "one, belly and all. ")
+    elif st["little"]:
+        note = ("Down in your headspace, you don't fully grasp where you're being taken until the "
+                "smell hits and the warm muck is already underfoot, and the not-understanding makes "
+                "it worse and softer at once. ")
+    return {"key": "ps_arrival", "prompt": (
+        "The Pigsty is the low end of the facility in every sense — a churned pit of warm wet "
+        "muck and slop kept deliberately filthy, ringed by low pens where the sty-pigs grunt and "
+        "shift, and at the back, vast in his wallow, the |wboar|n: rank, tusked, enormous, already "
+        "lifting his blunt snout at the change in the air. The stink is total — shit and slop and "
+        "rutting animal and the sour-sweet rot of a place hosed down but never clean. " + note +
+        "\n\nThe |wcustodian|n leans on a hose by the drain, sour and unbothered, a man whose whole "
+        "job is the mess you're about to become and who resents you for it in advance. \"Sty "
+        "duty,\" he says flatly, not looking at you so much as at the work you represent. \"Board "
+        "says you go in the muck and the stock has its way with you. I hose it down after. Try not "
+        "to drown in it — paperwork if you do.\" He jerks his chin at the pit. \"In. They can smell "
+        "you. They've been waiting.\""),
+        "options": [
+            {"key": "walk", "label": "Walk into the muck yourself", "set": {"sty": "walk"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "lower yourself into the filth; spare yourself being thrown",
+             "outcome": (
+                "You step down into it yourself — the muck closing warm and obscene around your "
+                "ankles, your shins, soft and stinking — and lower yourself the rest of the way "
+                "rather than be thrown. The custodian grunts. \"Walks itself in. Saves my back.\" "
+                "The pigs are already shifting toward the warmth and movement of you.")},
+            {"key": "balk", "label": "Balk at the edge of the pit", "set": {"sty": "balk"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "refuse the filth; he'll boot you in",
+             "outcome": (
+                "You balk at the reeking edge — and the custodian sighs, plants a boot between your "
+                "shoulders, and shoves you face-first into the muck, where you land in the warm "
+                "stinking wet of it with the pigs already grunting closer. \"Always one,\" he says, "
+                "wiping his boot. \"Goes in the same. Just dirtier, and madder, and that's worse "
+                "for you, not me.\"")},
+            {"key": "ask", "label": "Ask what's going to happen to you here", "set": {"sty": "ask"},
+             "desc": "make him say it",
+             "outcome": (
+                "\"What happens.\" He finally looks at you, flat. \"Boar covers you. Pigs root you "
+                "over. You get filthy and bred and you stay down in it till the board's happy, and "
+                "then I hose you off enough to walk and you go to your next thing.\" He spits to the "
+                "side. \"It's the sty. Nothing happens here but what the name says. In you go.\"")}],
+        "default": "walk",
+        "then": "ps_down"}
+
+
+@choice("ps_down", root=False)
+def _ps_down(character):
+    st = _state_tags(character)
+    pos = ("There's no arranging yourself — a nugget just lies where it was dropped, torso half-"
+           "sunk in the warm muck, holes at the mercy of whatever roots up to them. "
+           if st["nugget"] else
+           "You're put down on hands and knees in it, the muck swallowing your forearms to the "
+           "elbow, your face inches from the reeking surface, hips up where the stock can reach. ")
+    return {"key": "ps_down", "prompt": (
+        pos + "The warmth of the slop is the worst betrayal of it — it should be cold, it has no "
+        "right to be this blood-warm and enveloping, and your body registers the obscene comfort of "
+        "it even as your mind recoils from the stink. The pigs are coming. You can hear them, feel "
+        "the slop shift with their weight, the wet snuffling of snouts working closer, scenting the "
+        "heat the facility keeps banked in you under all the filth. The custodian watches from the "
+        "dry edge, hose slack, bored. \"Down you go. They'll find you.\""),
+        "options": [
+            {"key": "sink", "label": "Sink into it — let the filth be what it is", "effect": "devote",
+             "params": {"amount": 2.0}, "desc": "stop fighting the muck; let it have you",
+             "outcome": (
+                "You stop fighting the slop and let it have you — let it be warm, let it be filthy, "
+                "let yourself be a thing in the muck — and the surrender drains the last dignity out "
+                "of you and replaces it with a flat animal calm that is its own kind of broken. The "
+                "first snout reaches you, snuffling wetly along your flank, and you don't flinch.")},
+            {"key": "retch", "label": "Retch and recoil from the stink", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "desc": "your body's revolt; it changes nothing",
+             "outcome": (
+                "You retch at the stink, recoil from the warm wet of it — and there's nowhere to "
+                "recoil to, the muck on every side, and your thrashing only churns it up worse and "
+                "coats you deeper and draws the pigs faster to the disturbance. The custodian "
+                "doesn't move. \"Wears off,\" he says. \"The gagging. Give it a day on sty duty. "
+                "You stop smelling it. You stop smelling anything.\"")}],
+        "default": "sink",
+        "then": "ps_root"}
+
+
+@choice("ps_root", root=False)
+def _ps_root(character):
+    st = _state_tags(character)
+    flav = ""
+    if st["nugget"]:
+        flav = ("They root you over thoroughly — a limbless thing in the muck is all holes and no "
+                "defence, and the pigs snuffle and nose and shove your helpless weight around the "
+                "slop, working out which end is which, before the boar decides. ")
+    elif st["preg"]:
+        flav = ("A snout shoves up under the swell of your belly, lifting it, scenting the gravid "
+                "heat of you — and the boar grunts with sharper interest, because a bred sow in the "
+                "muck is exactly what the sty is for, and he'll rut you pregnant without a care for "
+                "the cargo. ")
+    elif st["little"]:
+        flav = ("You don't understand the snouts at first — soft and snuffling and almost ticklish "
+                "in your headspace — and the not-understanding lets them root you over while some "
+                "small far part of you keeps waiting for it to turn into something other than what "
+                "it is. It doesn't. ")
+    return {"key": "ps_root", "prompt": (
+        "The pigs reach you and |wroot|n — blunt wet snouts shoving under you, over you, into the "
+        "folds and seams of you, snuffling along every part with a single-minded animal thoroughness "
+        "that has nothing to do with arousal and everything to do with claiming the new warm thing "
+        "for the sty. " + flav + "They slather you in muck and snot and their own reek, marking you "
+        "theirs, and behind them the boar heaves up out of his wallow and comes, parting the lesser "
+        "pigs, and there is no question what he intends. The custodian makes a note. \"Boar's keen. "
+        "Won't be long now.\""),
+        "options": [
+            {"key": "still", "label": "Hold still and let them claim you", "effect": "devote",
+             "params": {"amount": 3.0}, "desc": "be the sty's new thing; don't fight the rooting",
+             "outcome": (
+                "You hold still and let the herd root you over and mark you theirs, and the becoming-"
+                "the-sty's-thing settles into you with the muck, deep and total. The pigs accept you "
+                "the way they'd accept any warm hole that stopped struggling. The boar shoulders "
+                "the last of them aside and looms over you, blunt and dripping and ready.")},
+            {"key": "thrash", "label": "Thrash against the rooting herd", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "desc": "fight the snouts; churn the muck; lose",
+             "outcome": (
+                "You thrash, and the pigs don't care, and the muck doesn't care, and all you do is "
+                "exhaust yourself and coat yourself deeper and present yourself more obscenely to "
+                "the boar now standing over you. \"Tires itself out,\" the custodian observes. "
+                "\"Boar prefers 'em tired. Easier to seat.\"")}],
+        "default": "still",
+        "then": "ps_mount"}
+
+
+@choice("ps_mount", root=False)
+def _ps_mount(character):
+    st = _state_tags(character)
+    belly = (" — and he ruts you belly-and-all, the swell of the facility's get squashed into the "
+             "warm muck beneath you with every brutal drive, bred sow getting bred again" if st["preg"] else "")
+    return {"key": "ps_mount", "prompt": (
+        "The boar mounts. There's no ceremony and no mercy — he heaves his enormous filthy bulk up "
+        "over you, trotters scrabbling and gouging in the slop, far too heavy, and his blunt slick "
+        "cock stabs and misses and stabs and then *finds* you and drives in, corkscrewing deep in "
+        "one brutal uncaring shove that punches the air and a scream out of you both" + belly + ". "
+        "He ruts like the animal he is — fast, frantic, jackhammer-deep, his weight grinding you "
+        "down into the muck, his reek total, the wet obscene slap of him filling the sty — and the "
+        "banked heat in you flares up traitorously to meet even this, even here, even him. The "
+        "custodian watches to be sure the boar's seated and won't injure stock. \"There. Seated. "
+        "Now it works till it ties.\""),
+        "options": [
+            {"key": "take", "label": "Take it — open to the boar in the muck", "effect": "facility",
+             "params": {"method": "_gang", "kind": "gang"}, "set": {"sty_bred": "took"},
+             "desc": "the real cover — a sty breeding logged to your line",
+             "outcome": (
+                "You open and take him, and your body does what it's kept for even buried in filth "
+                "with a boar's weight crushing you down — and the cover is real, recorded, logged "
+                "to your line as a sty breeding, sire and species and all. He corkscrews deep and "
+                "you feel him swell toward the tie, and the degradation and the heat and the warm "
+                "muck blur into one thing your nerves stop sorting.")},
+            {"key": "endure", "label": "Endure it — wait for the animal to finish", "effect": "facility",
+             "params": {"method": "_gang", "kind": "gang"}, "set": {"sty_bred": "endured"},
+             "desc": "the cover happens regardless; refuse to want it",
+             "outcome": (
+                "You endure it — hold yourself outside the brutal animal fact of being bred in the "
+                "muck — and it happens anyway, every uncaring drive, the cover as real and recorded "
+                "as if you'd begged. Your body took. The boar didn't notice your refusal and "
+                "neither did the board. \"Took fine,\" the custodian confirms, marking it. \"Wanting "
+                "it's not on the form.\"")}],
+        "default": "take",
+        "then": "ps_wallow"}
+
+
+@choice("ps_wallow", root=False)
+def _ps_wallow(character):
+    st = _state_tags(character)
+    extra = (" The lesser pigs take their turns between the boar's, an unbroken filthy relay, and "
+             "you lose count and then lose the thread." if not st["nugget"] else
+             " You can't crawl off between mounts and aren't meant to — a nugget just stays sunk in "
+             "the wallow where the stock can find you again, and again.")
+    return {"key": "ps_wallow", "prompt": (
+        "The boar ties — the knot forcing through with a blunt wet pop, locking him into you — and "
+        "then dumps, and then, eventually, drags free with an obscene wrench that leaves you gaping "
+        "and corked and filthy, and the sty is not done with you." + extra + " You are kept down in "
+        "the warm muck, rutted and marked and slopped, used by whatever roots up next, the "
+        "degradation so total and so prolonged that somewhere in it the shame burns out entirely "
+        "and leaves only the flat warm animal fact of being the thing the sty uses. The world goes "
+        "long and grey and far, and you surface later still filthy, still being mounted, the muck "
+        "and the time having swallowed whole stretches you'll never get back.\n\n"
+        "The custodian, from the dry edge: \"In and out of it. Sty does that. Easier on you than "
+        "staying present, frankly. Nothing up here you'd want to be present for.\""),
+        "options": [
+            {"key": "gone", "label": "Stay gone — let the sty have the body", "effect": "devote",
+             "params": {"amount": 4.0}, "desc": "leave; the muck and the stock do the rest",
+             "outcome": (
+                "You stay gone, somewhere far and quiet, and let the sty have the filthy used thing "
+                "your body's become. It breeds on without you. When you finally surface for good "
+                "you're caked and gaping and bred and the shame can't find purchase on the smooth "
+                "flat calm where a person used to keep it. That's the sty's whole lesson, and you've "
+                "learned it down in the muck.")},
+            {"key": "present_here", "label": "Stay present — feel all of it", "effect": "deny_hold",
+             "params": {"cond": 4.0}, "desc": "refuse to leave your own filthy body",
+             "outcome": (
+                "You refuse to leave — stay in the body and feel every filthy mount, every snout, "
+                "every brutal tie, the warm muck and the reek and the using, fully present and "
+                "wire-tight with the horror and the traitor heat braided together. \"Stays home for "
+                "the sty,\" the custodian notes, almost impressed despite himself. \"Stubborn. Those "
+                "ones break slowest. Sty's patient, though. Sty's got nothing but time and pigs.\"")}],
+        "default": "gone",
+        "then": "ps_after"}
+
+
+@choice("ps_after", root=False)
+def _ps_after(character):
+    st = _state_tags(character)
+    haul = ("He fishes your limbless filthy weight up out of the wallow by whatever he can grip"
+            if st["nugget"] else "He hauls you up out of the muck by the hair when the board's done")
+    return {"key": "ps_after", "prompt": (
+        haul + ", and turns the hose on you — cold, hard, indifferent, sluicing the worst of the "
+        "filth off you and the floor in the same bored arcs, not for your comfort but so you're "
+        "fit to be moved without dirtying the next room. The cold water on your used-raw body is "
+        "almost a kindness and isn't meant as one. \"Bred, slopped, rinsed,\" he recites, ticking "
+        "his board. \"Sty quota's logged. Your line's got a boar-cross in it now whether you wanted "
+        "one or not.\" He coils the hose. \"You'll be back when the board's short on filth. It "
+        "never stays long off the books.\" He nudges you toward the drain-side door with his boot. "
+        "\"Off you go. Drip somewhere else.\""),
+        "options": [
+            {"key": "thank", "label": "Thank him — for the hose, for the end of it",
+             "effect": "gratitude", "end": True, "desc": "the rinse was almost mercy; thank it",
+             "outcome": (
+                "\"Thank you.\" It's for the hose, the cold clean of it, the *end* — and it comes "
+                "out small and filthy and meant, and the custodian snorts. \"Thanking me for "
+                "hosing you. Sty's done its work, then.\" He's right. Gratitude for a scrap of "
+                "cold water, after that — that's the muck having gotten all the way in, past the "
+                "skin, where the hose can't reach.")},
+            {"key": "silent", "label": "Say nothing — drip out filthy", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "leave the sty mute, half-rinsed",
+             "outcome": (
+                "You say nothing. You haul your half-rinsed bred-filthy self toward the door on "
+                "shaking legs, the boar already settling back into his wallow behind you, the muck "
+                "already smoothing over the place you were used. The custodian's hose hisses off. "
+                "You'll be back when the board wants filth, and the board always, eventually, wants "
+                "filth.")}],
+        "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Sanitation Block — the relief-hole wall + the toilet frame.
+# Cinematic, state-aware. Actor: the custodian + the anonymous queue. Real use
+# fires at the wall (_scene_bukkake). §0 always frees you.
+# Flow: arrival→wall→use→after. Entry: `scene sanitation`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("sb_arrival", root=False)
+def _sb_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("A nugget doesn't kneel at the rail — you're slotted and braced into the holed "
+                "partition by the custodian, fixed at the right height, a torso and holes mounted "
+                "to the wall for the queue's convenience and unable to do anything but be a hole. ")
+    elif st["preg"]:
+        note = ("Even gravid you're put to the wall — \"a bred one's still got a mouth and an ass,\" "
+                "the custodian shrugs — your swollen belly braced clear of the rail so the queue "
+                "can use the rest of you. ")
+    elif st["little"]:
+        note = ("Down in your headspace you're guided to the rail almost gently and then left there, "
+                "the not-understanding making the anonymous use that follows land stranger and "
+                "softer and worse. ")
+    return {"key": "sb_arrival", "prompt": (
+        "The Sanitation Block is a white-tiled wet-room of drains and troughs, bleach laid thin "
+        "over the reek of piss and stale spend. One wall is a partition of waist-height |wholes|n, "
+        "a dozen of them, rims worn smooth and pale, a padded kneeling-rail bolted along the base — "
+        "cocks come through from the far side, staff, stock, whoever's queued, and there's no "
+        "telling whose. In the centre a low steel frame locks a body face-up beneath an open seat: "
+        "a toilet built around a person. The whole floor pitches to a central grated drain, a hose "
+        "coiled alongside for sluicing the unit and the room between shifts.\n\n"
+        "The |wcustodian|n runs this room too, and likes it even less. " + note + "\"Relief-hole "
+        "duty,\" he says, flat. \"You go to the wall, the queue uses you, I sluice you down after. "
+        "Or the frame, if the board wants you catching instead of milking.\" He nods at the "
+        "partition, where the first impatient shape already shifts on the far side. \"There's a "
+        "queue. There's always a queue. Pick your station or I pick it for you.\""),
+        "options": [
+            {"key": "wall", "label": "Go to the holed wall", "set": {"san": "wall"},
+             "effect": "devote", "params": {"amount": 2.0}, "desc": "kneel to the rail; be the anonymous hole",
+             "outcome": (
+                "You take the rail yourself, kneel to the worn pad, and put your mouth to the "
+                "nearest worn hole — and on the far side something grunts and shoves through, "
+                "thick and anonymous and already hard. The custodian marks it. \"Goes to the wall "
+                "itself. Good. The keen ones clear the queue faster.\"")},
+            {"key": "frame", "label": "Take the toilet frame instead", "set": {"san": "frame"},
+             "effect": "deny_hold", "params": {"cond": 2.0}, "desc": "the seat; catch whatever it's used for",
+             "outcome": (
+                "He locks you face-up into the low frame beneath the open seat, your mouth and holes "
+                "positioned under the gap to catch whatever the seat is used for, and the helpless "
+                "upturned waiting of it is its own degradation. \"Frame, then. Board'll like the "
+                "change-up.\" Footsteps approach the seat above you. You can't see whose.")},
+            {"key": "ask", "label": "Ask who's on the other side", "set": {"san": "ask"},
+             "desc": "make him say there's no knowing",
+             "outcome": (
+                "\"Who's on the far side.\" The custodian almost smiles. \"That's the whole point, "
+                "isn't it. Staff, stock, a stud handler on his break, the lad who mops — nobody "
+                "writes it down. You'll never know whose load's in you. That's not a flaw in the "
+                "system. That's the system.\" He nods at the rail. \"Go on.\"")}],
+        "default": "wall",
+        "then": "sb_use"}
+
+
+@choice("sb_use", root=False)
+def _sb_use(character):
+    san = scene_flag(character, "san", "wall")
+    body = ("Cocks come through the holes one after another and you're made to take each wherever "
+            "it's aimed — throat, then a different hole at a different rim, used and spurted in and "
+            "abandoned for the next, an anonymous relief-hole for a queue you can't see and will "
+            "never meet, the wall indifferent as a vending machine and you the thing it dispenses. "
+            if san != "frame" else
+            "From the seat above, you catch what it's used for — cocks lowered to your waiting mouth "
+            "and holes, used and emptied into you and replaced, the queue treating you as the "
+            "fixture you've been made into, the open seat framing your face for whoever steps up. ")
+    return {"key": "sb_use", "prompt": (
+        body + "There is no pacing, no person, no end you can see — just use, hole after hole, "
+        "load after anonymous load, the facility's banked heat keeping your own body obscenely "
+        "interested in its own degradation. Time smears. You stop counting. The custodian leans "
+        "on his hose, bored, occasionally telling the queue to mind the stock. \"Steady,\" he says, "
+        "to them, not you. \"It's not going anywhere.\""),
+        "options": [
+            {"key": "serve", "label": "Serve the queue — be the hole, well", "effect": "facility",
+             "params": {"method": "_scene_bukkake", "kind": "scene"}, "set": {"san_done": "served"},
+             "desc": "the real anonymous use — logged, hole after hole",
+             "outcome": (
+                "You stop holding any part of yourself back and just *serve* — be the hole, do it "
+                "well, take each anonymous cock wherever it's aimed and milk it and present for the "
+                "next — and the real use is logged, load after load, your body a public utility "
+                "performing its function. The being-good-at-it is the worst of it, and you feel it "
+                "settle in as a skill, a thing you now know how to be.")},
+            {"key": "endure", "label": "Endure the queue — give them nothing but the hole",
+             "effect": "facility", "params": {"method": "_scene_bukkake", "kind": "scene"},
+             "set": {"san_done": "endured"}, "desc": "they use you regardless; withhold everything else",
+             "outcome": (
+                "You give the queue nothing but the hole it came for — no skill, no sound, no part "
+                "of you past the wet they're using — and they use you exactly the same, because the "
+                "wall never wanted anything else from you. The loads come anonymous and indifferent "
+                "regardless. Withholding cost you effort the queue didn't even register. The use is "
+                "logged the same.")}],
+        "default": "serve",
+        "then": "sb_after"}
+
+
+@choice("sb_after", root=False)
+def _sb_after(character):
+    return {"key": "sb_after", "prompt": (
+        "Eventually the queue thins, or the board's satisfied, or the shift changes — you have no "
+        "way to tell which — and the custodian unracks or unframes you and turns the hose on you "
+        "and the unit both, cold and hard and indifferent, sluicing the spend off your face and "
+        "thighs and the tile in the same bored arcs. \"Relief-hole quota's done,\" he says, to the "
+        "board. \"You took the lot. No telling whose. That's how it's meant to read.\" He coils "
+        "the hose. You are dripping, used soft and raw, anonymous loads in you from people you "
+        "will pass in the corridors and never identify. \"Off you go. The wall'll want you again. "
+        "It always fills back up. So do you.\""),
+        "options": [
+            {"key": "thank", "label": "Thank him for the hose", "effect": "gratitude", "end": True,
+             "desc": "the cold rinse, the end of the queue; thank it",
+             "outcome": (
+                "\"Thank you.\" For the hose, the end, the cold clean of it after so much anonymous "
+                "warm — and it lands meant, and the custodian shakes his head. \"Wall takes the "
+                "fight out fast. Thanking me already.\" The gratitude files itself with everything "
+                "the room took, which was, in the end, everything you brought in but the hole.")},
+            {"key": "silent", "label": "Say nothing — drip out used", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "leave the block mute and dripping",
+             "outcome": (
+                "You say nothing. You leave the white-tiled room on unsteady legs, dripping, full "
+                "of strangers, and behind you the far side of the wall already has a fresh shape "
+                "shifting at the first hole, because the queue never empties and the wall never "
+                "closes and you are, now, one of the things it's for.")}],
         "default": "thank"}

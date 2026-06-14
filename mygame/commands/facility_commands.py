@@ -1622,6 +1622,8 @@ class CmdScene(Command):
         "dairy": "dy_arrival", "milk": "dy_arrival", "milking": "dy_arrival",
         "parlour": "mp_arrival", "parlor": "mp_arrival", "marking": "mp_arrival",
         "brand": "mp_arrival", "marker": "mp_arrival",
+        "pigsty": "ps_arrival", "sty": "ps_arrival", "pigs": "ps_arrival",
+        "sanitation": "sb_arrival", "wall": "sb_arrival", "gloryhole": "sb_arrival",
     }
 
     def func(self):

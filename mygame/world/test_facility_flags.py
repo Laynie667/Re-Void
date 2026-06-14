@@ -421,6 +421,31 @@ def test_bethany_scene():
     assert mbeats == ["mp_arrival", "mp_order", "mp_work", "mp_set"], mbeats
     assert c6.db.pending_choice is None and c6.db.scene_flags is None, "parlour should end clean"
 
+    # The Pigsty scene chains end-to-end; state hooks fire (test as a nugget).
+    c7 = _Char(); c7.db.nugget = True
+    cyoa.start_scene(c7, "ps_arrival")
+    assert "limbless" in c7.db.pending_choice["prompt"].lower() or \
+           "no arms" in c7.db.pending_choice["prompt"].lower(), "pigsty nugget hook didn't fire"
+    sbeats = []
+    for ch in ("walk", "sink", "still", "take", "gone", "thank"):
+        p = c7.db.pending_choice
+        assert p, f"pigsty: no pending before '{ch}'"
+        sbeats.append(p["key"])
+        assert cyoa.resolve_choice(c7, ch)[0] is not None, f"pigsty '{ch}' did not resolve"
+    assert sbeats == ["ps_arrival", "ps_down", "ps_root", "ps_mount", "ps_wallow", "ps_after"], sbeats
+    assert c7.db.pending_choice is None and c7.db.scene_flags is None, "pigsty should end clean"
+
+    # The Sanitation Block scene chains end-to-end (the frame branch).
+    c8 = _Char(); cyoa.start_scene(c8, "sb_arrival")
+    qbeats = []
+    for ch in ("frame", "serve", "thank"):
+        p = c8.db.pending_choice
+        assert p, f"sanitation: no pending before '{ch}'"
+        qbeats.append(p["key"])
+        assert cyoa.resolve_choice(c8, ch)[0] is not None, f"sanitation '{ch}' did not resolve"
+    assert qbeats == ["sb_arrival", "sb_use", "sb_after"], qbeats
+    assert c8.db.pending_choice is None and c8.db.scene_flags is None, "sanitation should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

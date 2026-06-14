@@ -36,8 +36,8 @@ built reference). This doc is the master list of everything to convert.
 | **Breeding Pens** | the **stockman** + named studs + animals | ✅ **BUILT** (`bp_*`, 8 beats; stud/pack/machine branches) | `_gang`/`_scene_knottrain`, lineage, quota |
 | **Conditioning Cell** | Bethany (recorded voice) + Spiral Chair | ✅ **BUILT** (`cc_*`, 8 beats; sink/resist, mantra, the descent door) | real `mantra_set` trigger, `deepen` (conditioning+regression), suggestibility |
 | **Dairy** | the dairy hand | ✅ **BUILT** (`dy_*`, 5 beats; the scene→cycle SEAM) | real `_do_milk` at quota; then hands off to the retained milking cycle; state-aware (little/pregnant/nugget hook) |
-| **The Pigsty** | the custodian | slopped, rutted face-down, kept filthy between uses | `apply_filth`, degradation, punishment |
-| **Sanitation Block** | the custodian + the queue | made the anonymous relief-hole at the wall; the toilet frame | use, holes, golden, degradation |
+| **The Pigsty** | the custodian + the boar/pigs | ✅ **BUILT** (`ps_*`, 6 beats; bestiality, STATE-AWARE nugget/preg/little) | real `_gang` sty-cover, degradation |
+| **Sanitation Block** | the custodian + the queue | ✅ **BUILT** (`sb_*`, 4 beats; wall/frame, state-aware) | real `_scene_bukkake` anonymous use |
 | **The Showroom / Buyers' Gallery** | Bethany + bidders | the appraisal, the block, the bidding, the sale/gavel | `_appraise`, `bid_up`, `bethany_buys`, ownership transfer |
 | **The Nursery** | Bethany / nurse | regression, nursing, the Little Box; your get raised here | regression, little-clauses, lineage loop |
 | **The Marking Parlour** | the **marker** | ✅ **BUILT** (`mp_*`, 5 beats; brand/rings/ink branches) | real `_proc_brand`/`_proc_cowset`/`_proc_womb_tattoo` |
@@ -49,7 +49,7 @@ built reference). This doc is the master list of everything to convert.
 
 ## B. ENCOUNTER / SYSTEM SCENES (state- or choice-triggered, not room-locked)
 
-- **Breeding variations (13)** — each `_scene_*` becomes a cinematic breeding scene (single, oral,
+- **Breeding variations (13)** *(pigsty/sanitation now demo the reusable `_state_tags` hook)* — each `_scene_*` becomes a cinematic breeding scene (single, oral,
   double, all-holes, bukkake, golden, offspring-breeds-you, spitroast, suspension, knot-train,
   fist, verbal-degradation, prolapse). Stockman/studs/Bethany drive; real `_gang`/insemination.
 - **Procedures (≈21)** — the Parlour/surgery scenes, each `_proc_*`: pierce, brand, stim-implant,
@@ -81,6 +81,6 @@ built reference). This doc is the master list of everything to convert.
 1. ✅ **Breeding Pens** (stockman + studs) — DONE. Next:
 2. ✅ **Conditioning Cell** — DONE.
 3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
-4. ✅ **Marking Parlour** — DONE. Next: **Sanitation/Pigsty** (degradation).
+4. ✅ **Marking Parlour** + ✅ **Sanitation/Pigsty** — DONE. Next:
 5. **Showroom → Office/Kept arc** (the ownership through-line).
 6. **Nursery/lineage**, **Deep Stock**, **Records/inspection**, **Events**, then the flow controller.
