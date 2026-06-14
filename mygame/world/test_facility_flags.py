@@ -46,6 +46,8 @@ _NEW_FLAGS = [
     "neutered", "sissified",
     # cross-NPC ownership (Seraphine)
     "seraphine_owned",
+    # nested-passenger carry
+    "passenger",
     # studs / lineage / fellow
     "facility_studs", "facility_fellow", "facility_fellow_ref", "fellow_cross_sires",
     "offspring_by_sire", "offspring_by_sex", "offspring_max_gen",
@@ -173,6 +175,35 @@ def test_speech_filter_order():
     assert a == b, "canonical order must be add-order independent"
     assert sf._ordered_filters(["zonk", "baby_talk"]) == ["baby_talk", "zonk"]
     return "speech-filter order is add-order independent; unknowns last"
+
+
+def test_passenger():
+    """The nested-passenger core: board into a host, transfer between hosts (deposit-on-breed),
+    cover (flood reaches the passenger), and the §0 eject (always frees, any nesting)."""
+    pg = _load("passenger_test", "passenger.py")
+
+    class _DB:
+        def __init__(self): self.passenger = None
+    class _P:
+        def __init__(self): self.db = _DB()
+
+    p = _P()
+    assert not pg.is_passenger(p)
+    pg.board(p, "Seraphine", "balls")
+    st = pg.status(p)
+    assert st["host"] == "Seraphine" and st["interior"] == "balls" and pg.is_passenger(p)
+    # transfer: fired from Seraphine's balls into Bethany's womb (deposit-on-insemination)
+    pg.transfer(p, "Bethany", "womb")
+    st = pg.status(p)
+    assert st["host"] == "Bethany" and st["interior"] == "womb" and st["covered"] is False
+    # cover: an external flood reaches the passenger (laced=False so no Evennia devotion call)
+    pg.cover(p, fluid="semen", laced=False)
+    assert pg.status(p)["covered"] is True
+    assert "Bethany" in pg.carried_line(p) and "covered" in pg.carried_line(p)
+    # §0 eject: unbirths unconditionally
+    pg.eject(p)
+    assert not pg.is_passenger(p) and pg.carried_line(p) == ""
+    return "passenger: board/transfer/cover/eject; §0 eject frees from any host"
 
 
 def test_heat_tell():
@@ -651,6 +682,26 @@ def test_bethany_scene():
     assert flbeats == ["fl_arrival", "fl_convert", "fl_dose", "fl_bred", "fl_after"], flbeats
     assert c26.db.pending_choice is None and c26.db.scene_flags is None, "fellow should end clean"
 
+    # The Carry scene: the BALLS path transfers you into Bethany for real.
+    c27 = _Char(); cyoa.start_scene(c27, "pg_arrival")
+    pgbeats = []
+    for ch in ("balls", "planted", "settle"):
+        p = c27.db.pending_choice
+        assert p, f"carry: no pending before '{ch}'"
+        pgbeats.append(p["key"])
+        assert cyoa.resolve_choice(c27, ch)[0] is not None, f"carry '{ch}' did not resolve"
+    assert pgbeats == ["pg_arrival", "pg_transfer", "pg_after"], pgbeats
+    assert (c27.db.passenger or {}).get("host") == "Bethany", "balls path should transfer you into Bethany"
+    assert c27.db.pending_choice is None and c27.db.scene_flags is None, "carry should end clean"
+    # The WOMB path covers you (laced) while you ride Seraphine.
+    c28 = _Char(); cyoa.start_scene(c28, "pg_arrival")
+    for ch in ("womb", "covered", "exit"):
+        assert c28.db.pending_choice, f"carry(womb): stall before '{ch}'"
+        assert cyoa.resolve_choice(c28, ch)[0] is not None, f"carry(womb) '{ch}' failed"
+    pst = c28.db.passenger or {}
+    assert pst.get("host") == "Seraphine" and pst.get("covered") is True, "womb path should cover you in Seraphine"
+    assert c28.db.pending_choice is None and c28.db.scene_flags is None, "carry(womb) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
@@ -666,7 +717,7 @@ _TESTS = [
     test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
     test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
     test_speech_filter_order, test_heat_tell, test_honorifics_address,
-    test_honorific_escalation, test_poste_ripen, test_bethany_scene,
+    test_honorific_escalation, test_poste_ripen, test_passenger, test_bethany_scene,
 ]
 
 

@@ -7334,3 +7334,193 @@ def _fl_after(character):
                 "like you human, for now. There'll be time enough to take that too. There's always "
                 "time.\"")}],
         "default": "keep_her"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Carry — riding inside Seraphine, brought to Bethany; the nested
+# transfer. Cinematic. Actors: Seraphine (carrying you) + Bethany (her one peer).
+# Drives the REAL passenger system (world.passenger): you ride her WOMB or BALLS,
+# and the two peers fucking MOVES or COVERS you for real, per the design rules —
+# in her balls + she breeds Bethany = deposited into Bethany; in her womb +
+# Bethany cums in her = covered in Bethany's laced load (the DEVOTION reaching you
+# THROUGH the immune host). §0: escape ejects you home from any host, always.
+# Flow: arrival→ride→transfer→after. Entry: `scene carry`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("pg_arrival", root=False)
+def _pg_arrival(character):
+    # Ensure the carry-state exists (you're riding Seraphine for this scene).
+    try:
+        from world.passenger import board, is_passenger
+        if not is_passenger(character):
+            board(character, "Seraphine", "womb")
+    except Exception:
+        pass
+    return {"key": "pg_arrival", "prompt": (
+        "You are not in a room. You are |winside Seraphine|n — carried, a passenger in the warm "
+        "wet dark of her, the world reduced to the muffled boom of her heartbeat, the sway of her "
+        "walking, the press of her interior holding you snug. And through the walls of her you "
+        "hear the other voice, warm and known: |wBethany|n. Sera's brought you to the facility, to "
+        "*her*, carried in like luggage made of person. \"There she is,\" Bethany says, somewhere "
+        "outside, delighted. \"You brought my old pick to visit. In the usual luggage, I see.\" "
+        "And Seraphine, the vibration of her voice all around you: \"Thought you'd want to feel "
+        "her again. And I thought *you* — \" the two peers, easy, conspiratorial \" — might want to "
+        "do the thing we talked about. With her riding.\" A pause, and you feel them both consider "
+        "you, the carried thing between two powers. \"Where's she riding now?\" Bethany asks. "
+        "\"Womb,\" says Sera. \"For now. Depends what we want to do to her.\""),
+        "options": [
+            {"key": "womb", "label": "Ride in her womb — feel them decide over you",
+             "set": {"ride": "womb"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "stay in Sera's womb; the cum that floods her will reach you",
+             "outcome": (
+                "You ride in the warm wet of Seraphine's womb, helpless and held, while the two of "
+                "them talk over your carried body like it's already decided — because it is. \"Leave "
+                "her in the womb, then,\" Bethany hums. \"I've a use for her there.\" You feel Sera "
+                "settle you deeper, and the dark closes warmer, and you understand you're about to "
+                "be the thing two owners do something *to each other* through.")},
+            {"key": "balls", "label": "Be moved to her balls — be made cargo to deposit",
+             "set": {"ride": "balls"}, "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "Sera tucks you down into her balls; you become a load to plant",
+             "outcome": (
+                "Seraphine works you down — out of the womb and deeper, into the heavy holding-dark "
+                "of her balls, packed in among what she'll spend — and the shift is dizzying and "
+                "total: you're not a passenger now so much as *cargo*, a load she's carrying to "
+                "plant. \"Oh, you've put her in the *chamber*,\" Bethany says, genuinely delighted. "
+                "\"You're going to breed her into me. Sera. You *spoil* me.\"")}],
+        "default": "womb",
+        "then": "pg_transfer"}
+
+
+@choice("pg_transfer", root=False)
+def _pg_transfer(character):
+    ride = scene_flag(character, "ride", "womb")
+    if ride == "balls":
+        body = ("And then Seraphine takes Bethany — the one person Bethany opens for, mounting "
+                "her peer — and you feel it from *inside the chamber*, the great working rhythm of "
+                "it building toward the spend you're packed in with, and you realize with a lurch "
+                "what you're about to be: not spectator, not even hole — |wseed|n, the load itself, "
+                "about to be pumped out of Seraphine and *into Bethany* on the crest of her "
+                "orgasm. \"Ready?\" Sera grits, somewhere far above. \"Plant her,\" Bethany breathes. "
+                "And Seraphine comes, and the chamber convulses, and you are *fired* out of her and "
+                "driven deep into Bethany on a flood of spend — deposited, transferred, rehomed mid-"
+                "orgasm from one body into the other.")
+        opts = [
+            {"key": "planted", "label": "Be planted in Bethany", "effect": "passenger_transfer",
+             "params": {"host": "Bethany", "interior": "womb"}, "set": {"out": "planted"},
+             "desc": "the REAL transfer — you're moved from Seraphine into Bethany",
+             "outcome": (
+                "You're planted — fired out of Sera and seated deep inside Bethany, the transfer "
+                "real and total, your carry-state moved from one owner's body to the other's on a "
+                "single flood. The dark you land in is different: hotter, tighter, *hers*, and her "
+                "voice comes down through the walls of her gone thick and possessive. \"...Oh. "
+                "*There* she is. Back inside me where I can keep her. Thank you, Sera. Best gift "
+                "you've brought me in years.\" You are, now, literally within your old owner.")},
+            {"key": "planted_dread", "label": "Be planted — and feel which body you're in now",
+             "effect": "passenger_transfer", "params": {"host": "Bethany", "interior": "womb"},
+             "set": {"out": "planted"}, "desc": "the transfer is real; the new host is Bethany",
+             "outcome": (
+                "The transfer takes — you're inside Bethany now, deposited like seed, rehomed by "
+                "the act of two powers using your body as the thing passed between them — and the "
+                "knowing of *which body holds you* lands cold and total. Not Sera's warm carry. "
+                "Bethany's. The one who files you, who keeps your dates, who'd never let you go and "
+                "never has to now that you're *in* her. \"Shh,\" she soothes the walls of herself. "
+                "\"You're home. The deepest home there is.\"")}]
+    else:
+        body = ("And then |wBethany|n takes |wSeraphine|n — and you, riding Sera's womb, are about "
+                "to learn the thing the design promised: that the membrane protects no one. You "
+                "feel Bethany seat into Sera, feel the great peer-rhythm of them through the walls "
+                "that hold you, and then Bethany |wcomes|n — floods Seraphine's womb with that "
+                "DEVOTION-laced load that does *nothing* to Sera's immune will — and it pours in "
+                "around *you*, the passenger, who has no immunity at all. You are *covered*. "
+                "Bethany's laced spend floods the chamber you ride in and soaks into you in full, "
+                "the devotion reaching you THROUGH the one body it can't touch.")
+        opts = [
+            {"key": "covered", "label": "Be covered in Bethany's laced load", "effect": "passenger_cover",
+             "params": {"devotion": 7.0}, "set": {"out": "covered"},
+             "desc": "the REAL cover — full DEVOTION reaches you through the immune host",
+             "outcome": (
+                "You're covered — flooded inside Seraphine by Bethany's laced load, the full "
+                "DEVOTION soaking into you while it rolls off Sera's will like water — and the "
+                "difference between a passenger and a peer is written into you in real time: it "
+                "takes you completely, closes over your head, and it does *nothing* to the woman "
+                "you're riding in. \"Feel that?\" Bethany murmurs to Sera, both of them feeling you "
+                "writhe in the flood. \"She's getting every drop of what runs off you. The "
+                "membrane's no mercy. Lovely, isn't it — she's in *your* womb and going under on "
+                "*my* devotion.\"")},
+            {"key": "covered_dread", "label": "Be covered — and understand the immunity",
+             "effect": "passenger_cover", "params": {"devotion": 7.0}, "set": {"out": "covered"},
+             "desc": "the cover is real; you take what Seraphine can't",
+             "outcome": (
+                "The cover takes — Bethany's laced flood soaking you where you ride, the devotion "
+                "seating deep — and through the haze of it you understand the whole cruel geometry: "
+                "Seraphine carries you and stays herself; you take what she's immune to; the peers "
+                "use your unprotected body as the place to deposit what can't touch either of them. "
+                "\"There's the lesson,\" Bethany says, fond. \"Two of us could bathe in each other "
+                "forever and never change. You take one wash and you're remade. That's the gap, "
+                "sweetheart. You're feeling it fill you.\"")}]
+    return {"key": "pg_transfer", "prompt": body, "options": opts, "default": opts[0]["key"],
+            "then": "pg_after"}
+
+
+@choice("pg_after", root=False)
+def _pg_after(character):
+    out = scene_flag(character, "out", "covered")
+    if out == "planted":
+        body = ("You ride inside |wBethany|n now — transferred, planted, rehomed by the act, the "
+                "deepest-kept you've ever been. She carries you the way Sera carried you, but it's "
+                "*hers* now, her heartbeat your sky, her interior your whole world. \"Sera brings "
+                "me the best presents,\" she says, a hand on the swell of herself that is you. "
+                "\"I think I'll keep you in here a while. Carried. Where I can feel you the whole "
+                "working day.\"")
+    else:
+        body = ("You ride inside |wSeraphine|n still — but covered now, flooded, soaked through "
+                "with Bethany's devotion while the woman holding you stays untouched, the proof of "
+                "what you are versus what they are wet and warm all around you. \"Keep her a while "
+                "longer,\" Bethany tells Sera, fond. \"Let it set in her while she rides you home. "
+                "She'll arrive at your post office more mine than ever, carried in your body, full "
+                "of my devotion. Our little shared thing.\"")
+    return {"key": "pg_after", "prompt": (
+        body + "\n\n|x(And through all of it, the warm dark and the transfer and the flood, the "
+        "floor stayed lit: the word takes you out of ANY body, home and free and clear, this "
+        "second, no matter whose you're riding or what you're soaked in. They can pass you "
+        "between them forever in the fiction. The one real exit is always yours.)|n"),
+        "options": [
+            {"key": "settle", "label": "Settle into being carried, owned, shared", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the deepest keeping take",
+             "outcome": (
+                "You settle into it — carried, transferred, covered, the shared currency of two "
+                "powers who pass you between their bodies like a fond secret — and the surrender of "
+                "being *that* kept, that thoroughly held, inside someone, owned by the carrying "
+                "itself, is bottomless and warm. Whichever of them holds you, you're held. You "
+                "stopped, somewhere in the dark, being a thing that travels under its own power at "
+                "all. You're luggage now. Beloved luggage. The worst and warmest thing to be.")},
+            {"key": "exit", "label": "Reach for the word in the warm dark", "effect": "deny_hold",
+             "params": {"cond": 1.0}, "end": True, "desc": "keep one hand on the floor through any wall",
+             "outcome": (
+                "Deep in whoever's carrying you, soaked and held and rehomed at their whim, you "
+                "reach — not for the word itself, not yet, but for the knowledge of it: the door "
+                "that opens through any wall, any host, any flood. Just touching that certainty "
+                "steadies you inside the warm dark. You're carried, covered, owned, passed between "
+                "two powers like a gift — and you could be home and free in a single spoken word, "
+                "and that, more than any wall, is what you hold onto as they carry you on.")}],
+        "default": "settle"}
+
+
+@effect("passenger_transfer")
+def _eff_passenger_transfer(character, p):
+    try:
+        from world.passenger import transfer
+        transfer(character, p.get("host", "Bethany"), p.get("interior", "womb"))
+    except Exception:
+        pass
+    return "transferred"
+
+
+@effect("passenger_cover")
+def _eff_passenger_cover(character, p):
+    try:
+        from world.passenger import cover
+        cover(character, fluid="semen", laced=True, devotion=float(p.get("devotion", 6.0)))
+    except Exception:
+        pass
+    return "covered"

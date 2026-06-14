@@ -1645,6 +1645,8 @@ class CmdScene(Command):
         "manumission": "mn_arrival", "manumit": "mn_arrival", "release": "mn_arrival",
         "freedom": "mn_arrival",
         "fellow": "fl_arrival", "companion": "fl_arrival",
+        "carry": "pg_arrival", "carried": "pg_arrival", "passenger": "pg_arrival",
+        "inside": "pg_arrival",
     }
 
     def func(self):

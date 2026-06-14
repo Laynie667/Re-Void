@@ -92,7 +92,21 @@ The post office (Seraphine/Calix/Vesper, the clerk menu, officiating) should get
   (`seraphine_owned` flag, floor-clearable) + devote; the §2/§3 rulings embodied in the prose; the
   deep passenger-transfer subsystem (§3) gestured at and queued.
 
-## 7. Queued
+## 7. BUILT — the nested-passenger subsystem (`world/passenger.py` + `scene carry`)
+
+- `world/passenger.py` (pure, unit-tested): board / transfer / cover / eject + status/carried_line.
+  State on `char.db.passenger` (in FACILITY_FLAGS → floor-cleared). Implements the ruled scenarios:
+  balls + inseminate → transfer into the other host; womb + external cum → cover (laced DEVOTION
+  reaches the passenger in full THROUGH the immune host). cover() fires real `bethany_deposit_effect`.
+- `scene carry` (`pg_*`): you ride inside Seraphine, brought to Bethany; ride her womb (→ Bethany
+  cums in Sera → you're covered) or be moved to her balls (→ Sera breeds Bethany → you're planted
+  INTO Bethany). Real `passenger_transfer` / `passenger_cover` effects. §0 kept lit: escape ejects
+  you home from ANY host. The cum-effect rulings (§2) embodied — full on you, nothing on Sera.
+- NOTE: the optional PHYSICAL Evennia room-move (relocating .location into a host's WombRoom
+  interior) is the live layer to add on top — the state/rules/scene are done and tested; wire the
+  WombRoom relocation + the belt-and-suspenders unbirth-on-escape in-game.
+
+## 7b. Queued
 
 - The passenger-transfer subsystem (§3) as real WombRoom mechanics.
 - The post-office cinematic upgrade (§5).

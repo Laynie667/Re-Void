@@ -74,6 +74,10 @@ built reference). This doc is the master list of everything to convert.
   Real `seraphine_takes` ownership transfer. See design/seraphine_bethany.md.
 - **Auction → Kept arc** — appraisal/block/gavel → Bethany buys → her evening/bed/morning →
   company (she sends for the fellow). Real ownership, laced devotion, the file.
+- ✅ **The Carry (`pg_*`, `scene carry`)** — BUILT. The nested-passenger transfer: ride inside
+  Seraphine, brought to Bethany; her womb (→ covered in Bethany's laced load) or her balls (→
+  planted INTO Bethany). Real `world.passenger` (board/transfer/cover/eject) + the cum-effect
+  rulings. §0 ejects from any host. See design/seraphine_bethany.md §7.
 - **Lineage loop** — your get mature into stock and are bred back to you; each delivery raises quota.
 - ✅ **The Fitting (`ft_*`, `scene fitting`)** — the most COMBINATION-aware scene: reads the full
   `_kit` (piercings / milk-port / gape-rings / latex / tail / brands / collar / clauses / body-
