@@ -1647,6 +1647,7 @@ class CmdScene(Command):
         "fellow": "fl_arrival", "companion": "fl_arrival",
         "carry": "pg_arrival", "carried": "pg_arrival", "passenger": "pg_arrival",
         "inside": "pg_arrival",
+        "adoption": "fa_arrival", "adopt": "fa_arrival", "foster": "fa_arrival",
     }
 
     def func(self):

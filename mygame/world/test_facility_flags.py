@@ -44,8 +44,8 @@ _NEW_FLAGS = [
     "heat_tell", "honorifics_required", "honorific_miss_count", "honorific_miss_at",
     # neuter / sissify
     "neutered", "sissified",
-    # cross-NPC ownership (Seraphine)
-    "seraphine_owned",
+    # cross-NPC ownership (Seraphine) + forced-adoption ward
+    "seraphine_owned", "seraphine_ward",
     # nested-passenger carry
     "passenger",
     # studs / lineage / fellow
@@ -701,6 +701,26 @@ def test_bethany_scene():
     pst = c28.db.passenger or {}
     assert pst.get("host") == "Seraphine" and pst.get("covered") is True, "womb path should cover you in Seraphine"
     assert c28.db.pending_choice is None and c28.db.scene_flags is None, "carry(womb) should end clean"
+
+    # Forced Adoption: the sign path adopts you (ownership+ward) and carries you home into Seraphine.
+    c29 = _Char(); cyoa.start_scene(c29, "fa_arrival")
+    fabeats = []
+    for ch in ("warm", "want_home", "sign_glad", "go_home"):
+        p = c29.db.pending_choice
+        assert p, f"adoption: no pending before '{ch}'"
+        fabeats.append(p["key"])
+        assert cyoa.resolve_choice(c29, ch)[0] is not None, f"adoption '{ch}' did not resolve"
+    assert fabeats == ["fa_arrival", "fa_clauses", "fa_sign", "fa_home"], fabeats
+    assert c29.db.seraphine_owned is True and c29.db.seraphine_ward is True, "adoption should set owned+ward"
+    assert (c29.db.passenger or {}).get("host") == "Seraphine", "adoption should carry you home into Seraphine"
+    assert c29.db.pending_choice is None and c29.db.scene_flags is None, "adoption should end clean"
+    # The balk path lets it lie (no signing, ends clean, not owned).
+    c30 = _Char(); cyoa.start_scene(c30, "fa_arrival")
+    for ch in ("wary", "balk_fa", "go"):
+        assert c30.db.pending_choice, f"adoption(balk): stall before '{ch}'"
+        assert cyoa.resolve_choice(c30, ch)[0] is not None, f"adoption(balk) '{ch}' failed"
+    assert not c30.db.seraphine_owned, "balk path should not transfer ownership"
+    assert c30.db.pending_choice is None and c30.db.scene_flags is None, "adoption(balk) should end clean"
 
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")

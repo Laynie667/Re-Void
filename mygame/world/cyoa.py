@@ -7524,3 +7524,226 @@ def _eff_passenger_cover(character, p):
     except Exception:
         pass
     return "covered"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Forced Adoption — Seraphine's signature, at the post office. Cinematic.
+# Her thesis isn't ownership-on-paper, it's "I'm taking you home" — a contract that
+# reads as a warm foster placement on its face and is an unbirthing/keeping in the
+# hidden clauses. Ties the post office ↔ the carry subsystem ↔ ownership. Actor:
+# Seraphine (her maternal-possessive false-tenderness register). REAL: seraphine_adopt
+# (ownership + ward flags, floor-clearable) + the carry (passenger.board into her womb).
+# §0 always frees you, ward or not, even from inside her. Flow: arrival→clauses→sign→
+# home→close. Entry: `scene adoption`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("fa_arrival", root=False)
+def _fa_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["little"]:
+        note = "You're little when she does this, which she arranged — \"so much easier to place a child who's already small,\" she'd say — and the foster-framing lands as something almost like rescue, which is the cruelest angle of all. "
+    if st["preg"]:
+        note += "And you're carrying, which only makes her want you more — \"a foster placement and a grandbaby in one, how *efficient*.\" "
+    return {"key": "fa_arrival", "prompt": (
+        "Seraphine sits you down in the Quiet Room — the post office's warm confessional nook, the "
+        "oxblood chaise, her red inkwell catching the lamplight like it's still wet — and produces "
+        "a contract with the manner of a woman doing you an enormous kindness. " + note + "Because "
+        "that's Seraphine's whole thesis, the thing that makes her different from the facility's "
+        "cold paper: she doesn't *buy* people. She |wtakes them home|n. \"I've been watching your "
+        "file cross my counter, sweet thing,\" she says, warm as a hearth. \"And I've decided "
+        "you're not stock. You're *family*. I'm going to foster you — take you in, keep you, make "
+        "you mine the way you make a stray yours: by simply not letting it leave.\" She slides the "
+        "page over, and a pen warm from her hand. \"It's a placement agreement. Read it or don't. "
+        "The reading never changes what people sign, in the end — they always want a home more "
+        "than they fear the fine print.\""),
+        "options": [
+            {"key": "warm", "label": "Let the warmth land", "set": {"fa": "warm"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the foster-tenderness gets in; being WANTED is the hook",
+             "outcome": (
+                "It lands — the awful warmth of being *chosen*, fostered, called family by someone "
+                "who means it as much as she means anything — and the wanting-a-home in you rises "
+                "to meet it before the fear can. Seraphine's smile goes soft and triumphant. "
+                "\"There. You *want* it. That's all I ever need from a placement — the wanting. The "
+                "signing's a formality once you want the home more than you fear me.\"")},
+            {"key": "wary", "label": "Be wary of the warmth", "set": {"fa": "wary"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "smell the trap under the foster-talk",
+             "outcome": (
+                "You stay wary — you can smell the trap under the hearth-warmth, the *keeping* under "
+                "the fostering — and Seraphine isn't offended in the least, just charmed. \"Clever "
+                "thing. Yes, it's a trap. It's a trap shaped like the home you've always wanted, "
+                "which is the only kind that works. You'll sign it knowing it's a trap, because "
+                "knowing doesn't make you want the home any less. That's rather the genius of "
+                "it.\"")},
+            {"key": "finefa", "label": "Read the fine print first", "set": {"fa": "fine"},
+             "desc": "make her show you the hidden clauses",
+             "outcome": (
+                "\"The fine print. Of course.\" She turns the page over, unbothered, and lets you "
+                "see what's folded under the foster-language — and it isn't a placement at all. "
+                "\"You're not being fostered *out*, sweet thing. You're being taken *in*. The home "
+                "isn't a house. It's me.\" She taps the hidden clause, fond. \"Read on. It only "
+                "gets warmer and worse from here.\"")}],
+        "default": "warm",
+        "then": "fa_clauses"}
+
+
+@choice("fa_clauses", root=False)
+def _fa_clauses(character):
+    return {"key": "fa_clauses", "prompt": (
+        "She walks you through it herself, fond and frank, the foster-warm voice never once "
+        "dropping even as the clauses get worse:\n"
+        "  |wThe visible ones|n read like a foster placement — care, keeping, a home, a name in "
+        "her household, the warm legitimate language of taking in a stray.\n"
+        "  |wThe hidden ones|n are the truth: that the 'home' is her *body*; that being 'taken in' "
+        "means literally that — unbirthed, carried, kept inside her where she can feel you; that "
+        "'family' means a ward who lives in the warm dark of her womb and is brought out only when "
+        "she wants you out; that the placement is permanent because there's nowhere to be placed "
+        "*to* — the home is a person, and she doesn't open.\n"
+        "\"I keep my family close,\" she says, with terrible tenderness. \"Closer than anyone. "
+        "Inside me, where the world can't have you and I never have to wonder where you are. That's "
+        "not cruelty, sweet thing. That's the most loved a thing can be. Now — knowing the home is "
+        "*me* — do you still want it? They always still want it.\""),
+        "options": [
+            {"key": "want_home", "label": "Still want the home — even knowing it's her",
+             "set": {"clauses": "want"}, "effect": "devote", "params": {"amount": 4.0},
+             "desc": "the wanting survives the truth; that's the whole genius",
+             "outcome": (
+                "You still want it — the home, the keeping, the being-held — even knowing the home "
+                "is *her*, even knowing 'taken in' means taken *inside* — and the wanting surviving "
+                "the truth is exactly what she counted on. \"*There* you are,\" Seraphine breathes, "
+                "delighted, maternal, ravenous. \"You want to be kept that badly. Oh, you'll be "
+                "such a good ward. Pick up the pen, baby. Come home.\"")},
+            {"key": "balk_fa", "label": "Balk at the truth of it", "set": {"clauses": "balk"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "recoil from the womb under the foster-talk; she's patient",
+             "outcome": (
+                "You balk — recoil from the womb folded under the foster-language — and Seraphine "
+                "just refolds the contract with a hearth-warm patience that's somehow worse than "
+                "pushing. \"Not today? That's all right. You'll cross my counter again, and again, "
+                "and one day the wanting-a-home will be bigger than the fearing-the-home, the way "
+                "it always gets, and you'll sign it yourself and climb in gladly. I'm patient, "
+                "sweet thing. Strays always come back to the warm.\"")}],
+        "default": "want_home",
+        "then": "fa_sign"}
+
+
+@choice("fa_sign", root=False)
+def _fa_sign(character):
+    clauses = scene_flag(character, "clauses", "want")
+    if clauses == "balk":
+        # Balked at the truth — she lets it lie (the floor + her patience both intact).
+        return {"key": "fa_sign", "prompt": (
+            "She doesn't make you sign — that's not her way; Seraphine's whole art is the *wanting*, "
+            "and a forced signature isn't worth the ink to her. \"Go on back to whatever you were,\" "
+            "she says, fond, tucking the crimson-tabbed contract into a drawer with your name "
+            "already on the tab. \"I'll keep it warm. And remember, sweet thing — the *other* door, "
+            "the free one, that's open the whole time too; I'd never be the kind of home you "
+            "couldn't leave if you truly tried. That's how I know the ones who stay, *stay*.\""),
+            "options": [
+                {"key": "go", "label": "Go — for now", "end": True, "desc": "leave the warm trap unsigned",
+                 "outcome": (
+                    "You go, unsigned — and the not-being-kept is its own ache now that she's named "
+                    "the home you didn't take. You'll think about the warm dark of her on the bad "
+                    "nights. She knows you will. The drawer with your name on it isn't going "
+                    "anywhere. Neither, she's certain, are you.")}],
+            "default": "go"}
+    return {"key": "fa_sign", "prompt": (
+        "You sign — your name under the foster-language and the womb-clauses both, your own hand "
+        "giving you to her — and Seraphine presses her warm red seal to it and *glows*, the way a "
+        "mother glows, the way a predator glows, the two indistinguishable in her. \"There. "
+        "Placed. *Mine*, properly, on paper — not bought, sweet thing, never bought. *Adopted.* "
+        "Chosen.\" She gathers up the contract and you both, fond and final. \"Now let me take my "
+        "new family *home*.\" And you understand 'home' is about to mean exactly what the hidden "
+        "clause said."),
+        "options": [
+            {"key": "sign_glad", "label": "Sign gladly — be chosen", "effect": "seraphine_adopt",
+             "params": {"devotion": 5.0}, "set": {"signed": "glad"},
+             "desc": "real adoption — ownership + ward; the foster-keeping takes",
+             "outcome": (
+                "You sign gladly — let yourself be *chosen*, fostered, made family — and it's real: "
+                "her ward now, her placement, the foster-keeping logged and the warmth of being "
+                "wanted seated deep. \"My good girl,\" Seraphine murmurs, and it's a mother's voice "
+                "and a keeper's both. \"Welcome to the family. It's a family of two, and one of you "
+                "lives inside the other, and you'll come to call that the safest you've ever "
+                "been.\"")},
+            {"key": "sign_dread", "label": "Sign with the home-ache and the dread both", "effect": "seraphine_adopt",
+             "params": {"devotion": 4.0}, "set": {"signed": "dread"},
+             "desc": "the adoption is real; you wanted it and you're afraid of it",
+             "outcome": (
+                "You sign with both in you — the ache for a home and the dread of what hers is — "
+                "and it takes regardless, real, her ward, adopted and kept. Seraphine reads the "
+                "doubled feeling and cups your face, tender. \"Wanting it and fearing it at once. "
+                "That's how everyone signs the real ones, baby. The fear fades. The home doesn't. "
+                "Come on. Let me take you in.\"")}],
+        "default": "sign_glad",
+        "then": "fa_home"}
+
+
+@choice("fa_home", root=False)
+def _fa_home(character):
+    st = _state_tags(character)
+    fit = ("A nugget she simply gathers up whole — nothing to fold, the easiest child to take in. "
+           if st["nugget"] else "She works you in folded and patient, her body opening for her new ward. ")
+    return {"key": "fa_home", "prompt": (
+        "\"Home time,\" Seraphine says, and takes you *in*. " + fit + "Her body opens — the warm "
+        "waiting room of her, the home that's a person — and she unbirths you into herself to "
+        "keep, the world reducing to wet heat and the great slow boom of her heart, and you are "
+        "*placed*: a ward in the warm dark, family living inside family, taken home in the most "
+        "literal way there is. \"There,\" comes her voice, warm through the walls of her. \"Home. "
+        "My family, where I can feel you. This is the placement, sweet thing — not a house, not a "
+        "room, *me*. You'll ride in here and come out when I want you out and go back in when I "
+        "miss you, world without end.\" The warm closes over you, and it is, horribly, exactly "
+        "what being wanted feels like."),
+        "options": [
+            {"key": "go_home", "label": "Let her carry you home inside her", "effect": "sera_carry_home",
+             "set": {"home": "in"}, "end": True, "desc": "real — boarded into Seraphine's womb, carried, kept",
+             "outcome": (
+                "You let her — let the warm dark have you, let yourself be carried home inside your "
+                "new mother, placed where the world can't reach and she never has to wonder — and "
+                "it's real: you ride in her now, her ward, her family, her stray taken in for good. "
+                "The surrender of being that *kept*, that wanted, that held, is bottomless. \"Good "
+                "girl,\" she hums, and you feel it in the bones around you. \"Welcome home. I've "
+                "got you. I've got you always.\"")},
+            {"key": "hold_door", "label": "Carry the door in with you", "effect": "sera_carry_home",
+             "params": {}, "set": {"home": "door"}, "end": True,
+             "desc": "boarded for real; keep one hand on the free word through her walls",
+             "outcome": (
+                "You let her take you in — it's real, you ride her now, adopted and carried and "
+                "kept — but you carry the *door* in with you too: the knowledge that the free word "
+                "opens through any wall, even hers, even this deep in the warm. \"Holding your "
+                "little exit even in here,\" Seraphine murmurs, fond, feeling you not-quite-settle. "
+                "\"That's fine, baby. The free door's real and it's yours and I'd never take it — "
+                "it's how you'll know, when you stop reaching for it, that you've truly come home. "
+                "I can wait inside my own body. I'm very comfortable.\"")}],
+        "default": "go_home"}
+
+
+@effect("seraphine_adopt")
+def _eff_seraphine_adopt(character, p):
+    """Seraphine's forced adoption — REAL ownership + ward (both floor-clearable flags), plus the
+    laced foster-devotion. Bethany's prior claim yields to the placement."""
+    character.db.seraphine_owned = True
+    character.db.seraphine_ward = True
+    try:
+        character.db.bethany_owned = False
+    except Exception:
+        pass
+    try:
+        from typeclasses.bethany_script import bethany_deposit_effect
+        bethany_deposit_effect(character, devotion=float(p.get("devotion", 4.0)))
+    except Exception:
+        pass
+    return "adopted"
+
+
+@effect("sera_carry_home")
+def _eff_sera_carry_home(character, p):
+    """The 'taking home' — board the ward into Seraphine's womb for real (the carry subsystem)."""
+    try:
+        from world.passenger import board
+        board(character, "Seraphine", "womb")
+    except Exception:
+        pass
+    return "carried_home"

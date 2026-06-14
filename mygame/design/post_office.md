@@ -259,6 +259,16 @@ caught Vesper trying on different parts/holes" beat plus Calix's re-oiled bench,
 unsent letters, how officiating works, why the doors don't lock (an in-fiction statement
 of the floor), and the bakery watcher in the Dead Letter Cage.
 
+## Forced Adoption — Seraphine's signature (✅ BUILT — `scene adoption`)
+
+`fa_*` cinematic scene: Seraphine's thesis isn't ownership-on-paper, it's "I'm taking you
+home." A contract that reads as a warm foster placement on its face and is an unbirthing/keeping
+in the hidden clauses — the 'home' is her body. arrival → clauses (visible foster vs hidden
+womb) → sign → home. REAL: `seraphine_adopt` (seraphine_owned + seraphine_ward, floor-clearable)
++ `sera_carry_home` (passenger.board into her womb — ties to world/passenger + the Carry scene).
+Maternal-possessive false-tenderness register. Balk path lets it lie (the drawer keeps your
+contract). §0 kept lit: the free door opens through her walls, ward or not. State-aware.
+
 ## BACKLOG — NPC & content layer (the engine is built; these are content on it)
 
 The contract authoring + officiating engine is live (`contract draft/clauses/
