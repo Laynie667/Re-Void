@@ -269,6 +269,29 @@ now shared and witnessed for the first time. arrival → toybox → try-on → a
 or witness them choose. Real `couch_warm` (arousal) + devote. The cards in the lid + a standing
 findable door as the payoff. §0 free always. State-aware-ready.
 
+## Calix's Keeping-Room — the quiet clerk's scene (✅ BUILT — `scene calix`/keeping)
+
+`ck_*` cinematic scene in the WARM post-office register, in Calix's own key: spare, dry,
+devastating, the held glance, patience as a craft. arrival → consent → bench → after. His
+signature is **certainty** — the whole craft is consent made certain (the framed twice-signed
+receipt; the shaking first answer steadied into the real second one). Pays off his lore: the one
+indulgence ("that's perfect, Calix" → three speechless seconds), the brass counting-frame, the
+un-lettered wax die that's a name (a mark you feel but can't read), the re-oiled bench for one
+recurring name, the empty STAYED slot. Kit-aware (works around existing rings/ports/collar). Real
+`devote` + `couch_warm`. §0-safe warm register. Entry: `scene calix`/`keeping`/`keepingroom`.
+
+## Seraphine's Parlour — the collector's scene (✅ BUILT — `scene parlour`)
+
+`sp_*` cinematic scene in the WARM register with her characteristic edge (the daybed's disguised
+restraint-points, the punishment-lottery referenced). arrival → read → keep → drawer. Pays off
+her lore: reading sealed letters through paper, the letter-paper blindfold ("so they can feel
+themselves being read"), the keepsake shelf tagged by name+date+small heart (**consent-gated** —
+"say yes to the shelf"; guest path is whole), and the 3 a.m. drawer where the performance comes
+off and she admits she collects people so she won't end an unclaimed letter herself. Honors her
+**peerage with Bethany** (immune to the DEVOTION — never afraid here, only fond). Kit-aware (reads
+existing hardware as margin annotations). Real `devote` + `couch_warm`. Entry: `scene parlour`/
+`parlor`/`shelf`.
+
 ## Forced Adoption — Seraphine's signature (✅ BUILT — `scene adoption`)
 
 `fa_*` cinematic scene: Seraphine's thesis isn't ownership-on-paper, it's "I'm taking you
