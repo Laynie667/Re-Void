@@ -1644,6 +1644,7 @@ class CmdScene(Command):
         "events": "ev_arrival", "event": "ev_arrival",
         "manumission": "mn_arrival", "manumit": "mn_arrival", "release": "mn_arrival",
         "freedom": "mn_arrival",
+        "fellow": "fl_arrival", "companion": "fl_arrival",
     }
 
     def func(self):

@@ -6063,6 +6063,7 @@ def _b_facility_hub(character):
     add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
     add("dosing", "→ the Dispensary", "dz_arrival", "your dose; the come-up")
     add("events", "→ whatever the klaxon calls", "ev_arrival", "a scheduled spectacle (random)")
+    add("fellow", "→ time with your fellow", "fl_arrival", "the pair; conversion + breeding")
     # The lineage room reads as available when you're little/bred or just on the rota.
     add("nursery", "→ the Nursery", "nu_arrival", "regression; the get; the Little Box")
     # The showroom — once you're graded, you can be sold.
@@ -7089,3 +7090,247 @@ def _mn_verdict(character):
                     "and doesn't take it from you. \"Good. Keep that. It's true, and it's yours, "
                     "and it's the realest thing I'll never gouge.\"")}],
             "default": "sit"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Fellow — conversion, the aphrodisiac, the breeding, the fragmenting.
+# Cinematic, state/kit-aware. Actors: Bethany (directing) + your FELLOW-RESIDENT
+# (the real continuity NPC from world.facility_fellow). The tragic-intimate core:
+# someone you've shared the line with is converted to futa at Bethany's direction,
+# dosed to a rut, and made to breed you while her mind comes apart — and the cross
+# goes permanently into both your lines. REAL: mark_fellow_futa + company_use (real
+# fellow-sired insemination + fellow_cross_record). §0 always frees you BOTH.
+# Flow: arrival→convert→dose→bred→after. Entry: `scene fellow`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _fellow_name(character):
+    try:
+        from world.facility_fellow import ensure_fellow
+        return ensure_fellow(character).get("name") or "your fellow"
+    except Exception:
+        return "your fellow"
+
+
+@effect("fellow_convert")
+def _eff_fellow_convert(character, p):
+    """Bethany's procedure takes — the fellow is marked futa for real (persists; she'll breed
+    you sired as herself from here, crossing your lines). Floor-clearable on her record."""
+    try:
+        from world.facility_fellow import mark_fellow_futa
+        mark_fellow_futa(character)
+    except Exception:
+        pass
+    return "fellow_converted"
+
+
+@choice("fl_arrival", root=False)
+def _fl_arrival(character):
+    nm = _fellow_name(character)
+    st = _state_tags(character)
+    both_little = " (and Bethany's had you both taken down little for it — \"softer subjects, sweeter results,\" she says — so neither of you fully grasps what's about to be done)" if st["little"] else ""
+    return {"key": "fl_arrival", "prompt": (
+        f"Bethany brings you together with |w{nm}|n — your fellow, the one you've shared the line "
+        f"with, traded glances with across the floor, the nearest thing to a *someone* you've had "
+        f"in here{both_little}. She's frightened in the particular way of a resident who's been "
+        "told something's coming and not what. Bethany stands between you with a clipboard and the "
+        "warm proprietary delight of a woman about to do something she's been planning. \"My two "
+        f"favourites. I've a project, and you're both in it.\" She sets a hand on {nm}'s shoulder, "
+        f"fond, like an owner with a prize animal. \"{nm}, sweetheart, you're being *improved* "
+        "today — a procedure, my direction, something added that'll change what you're for. And "
+        "you — \" the smile turns to you \" — you're going to be what she's improved *toward*. I do "
+        "love pairing my favourites. It's so much more efficient than keeping them lonely.\""),
+        "options": [
+            {"key": "fear", "label": f"Be afraid for {nm}", "set": {"fl": "fear"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "the fear is for her, not you — and Bethany savours that",
+             "outcome": (
+                f"You're afraid — *for her*, for {nm}, which Bethany notices and savours like a "
+                "fine note. \"Oh, you're frightened for her. How *sweet*. You've made a little bond "
+                "down here, haven't you — and I'm going to use it, the way I use everything. The "
+                "caring's not a problem, sweetheart. The caring's the *handle*.\"")},
+            {"key": "brace", "label": "Brace for whatever this is", "set": {"fl": "brace"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "steel yourself; she'll use the bond regardless",
+             "outcome": (
+                f"You steel yourself, give nothing away — and Bethany reads the bond between you and "
+                f"{nm} anyway, plain on both your faces. \"Bracing. As if not showing it changes "
+                "what you feel. I have a whole file on the two of you, you know — every glance "
+                "across the floor. That's why I paired you. The bond's the point of the project.\"")},
+            {"key": "reach", "label": f"Reach for {nm}'s hand", "set": {"fl": "reach"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the one comfort you can offer; Bethany allows it, fondly",
+             "outcome": (
+                f"You reach for {nm}'s hand — the one comfort either of you has — and her fingers "
+                "lace through yours, frightened and grateful, and Bethany *beams*. \"There it is. "
+                "Hold her hand, by all means. I want you holding it when I take her away to be "
+                "changed, and holding it when she comes back not-quite-her. The contrast is the "
+                "whole flavour.\"")}],
+        "default": "reach",
+        "then": "fl_convert"}
+
+
+@choice("fl_convert", root=False)
+def _fl_convert(character):
+    nm = _fellow_name(character)
+    return {"key": "fl_convert", "prompt": (
+        f"They take {nm} to be converted — and Bethany makes you *watch*, because watching is half "
+        "the procedure's purpose. Strapped to the parlour chair, your fellow is given the work at "
+        "Bethany's direction: the surgical, chemical, permanent making-over of a body into "
+        "something built to breed. You watch her change. You watch the new weight grow heavy "
+        f"between her thighs where nothing was, watch {nm} stare down at the futa cock that's hers "
+        "now in dawning uncomprehending horror, watch the person you knew get *added to* in a way "
+        "that can't be subtracted. \"There,\" Bethany murmurs, satisfied, peeling off a glove. "
+        "\"Improved. She's a breeder now, properly equipped — and the equipment came with "
+        "*urges* she's never had to manage before. We'll help her with that. You'll help her with "
+        f"that.\" {nm} looks at you across the room, and there's still enough of her left in there "
+        "to be *terrified* of what she can already feel rising."),
+        "options": [
+            {"key": "watch_steady", "label": f"Hold {nm}'s eyes through it", "effect": "fellow_convert",
+             "set": {"conv": "steady"}, "desc": "the conversion is real; be the face she holds onto",
+             "outcome": (
+                f"You hold {nm}'s eyes through the whole conversion — be the one steady thing while "
+                "she's remade — and the procedure takes, permanent and real, her line crossed with "
+                "yours from here on. \"Look at you, anchoring her,\" Bethany says, fond. \"She'll "
+                "imprint on your face through the change. That's good. That's why I had you watch. "
+                "She'll breed you all the more fiercely for it — the converted ones always go "
+                "hardest at the face that watched them turn.\"")},
+            {"key": "look_away", "label": "Look away from what's done to her", "effect": "fellow_convert",
+             "set": {"conv": "away"}, "desc": "the conversion happens regardless; you couldn't watch",
+             "outcome": (
+                f"You can't watch — you look away as they remake {nm} — and the conversion happens "
+                "regardless, real and permanent, whether you witnessed it or not. \"Couldn't "
+                "watch,\" Bethany tuts, not unkindly. \"I understand. But you'll feel what I made "
+                "her into in a few minutes regardless, and she'll resent, somewhere down in the "
+                "fragmenting, that you turned away. That'll be in how she takes you. Looking away "
+                "spares you nothing and costs you a little. Lesson noted, I hope.\"")}],
+        "default": "watch_steady",
+        "then": "fl_dose"}
+
+
+@choice("fl_dose", root=False)
+def _fl_dose(character):
+    nm = _fellow_name(character)
+    return {"key": "fl_dose", "prompt": (
+        f"And then Bethany doses her. A heavy aphrodisiac drip, run straight and fast, and you "
+        f"watch {nm}'s eyes change — the terror drowning under something hot and animal and "
+        "rising, the new cock between her thighs filling hard and urgent as the drug takes the "
+        "wheel. \"Can't have her *agonising* over her first breeding,\" Bethany says, adjusting "
+        "the flow. \"So we take the deliberating part offline. The drug's doing the thinking now, "
+        f"and the drug only knows one thing.\" {nm} is panting, shaking, her hands flexing — and "
+        "the worst of it is the way her gaze keeps snapping to *you*, the person she cared about, "
+        "now the only target in a head being scrubbed of everything but rut. \"She's fragmenting "
+        "beautifully,\" Bethany observes, clinical and warm at once. \"By the time I let her off "
+        "the table there won't be enough of her left to feel guilty. Just enough to *want*. Go on, "
+        f"{nm}. Look at what you're going to breed.\""),
+        "options": [
+            {"key": "comfort", "label": f"Tell {nm} it's alright — stay with her", "set": {"dose": "comfort"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the unbearable kindness of comforting the thing she's becoming",
+             "outcome": (
+                f"\"It's alright,\" you tell her — tell {nm}, what's left of her — \"I'm here, it's "
+                "alright\" — and it's the most unbearable kindness, comforting your friend as she's "
+                "drowned into a breeding animal aimed at you. Something in her fractured eyes "
+                "*grabs* onto your voice, the last human thread, and follows it down into the rut. "
+                "Bethany is delighted. \"Oh, *perfect*. Now she's imprinted on the comfort. She'll "
+                "breed you and feel it as *love*, poor thing, all the way down. So will you, a "
+                "little. That's the project.\"")},
+            {"key": "horror", "label": "Watch her disappear in horror", "set": {"dose": "horror"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "witness the person go under; pay for staying present to it",
+             "outcome": (
+                f"You watch in horror as {nm} *goes under* — watch the person dissolve into the "
+                "drug-driven thing, the someone you knew replaced by appetite with her face — and "
+                "staying present to it, refusing to look away from the erasure, costs you. \"Hard "
+                "to watch a friend stop being one,\" Bethany says, almost gentle. \"But you'll "
+                "remember her, and that's its own use to me — you'll grieve her every time the "
+                "thing-she-became breeds you, and the grieving keeps the bond raw, and the raw bond "
+                "is what I'm farming here. Nothing's wasted.\"")}],
+        "default": "comfort",
+        "then": "fl_bred"}
+
+
+@choice("fl_bred", root=False)
+def _fl_bred(character):
+    nm = _fellow_name(character)
+    return {"key": "fl_bred", "prompt": (
+        f"And then Bethany lets her off the table, and points her at you. \"Breed, sweetheart,\" "
+        f"she tells {nm} — though there's barely a sweetheart left to tell, just rut wearing your "
+        "friend's face — and what was your fellow *takes* you, aggressive and uncaring and "
+        "absolutely driven, the aphrodisiac making her relentless, the new cock she didn't ask for "
+        "spearing into you while her fractured mind narrows to the single animal imperative Bethany "
+        "left her. She breeds you hard, mindless, *desperate* — and through it, in flashes, you "
+        f"catch the drowning person: a moment of {nm}'s eyes focusing on yours in something like "
+        "anguish before the rut washes it under again, a broken sound that might have been your "
+        "name. Bethany watches the two of you, her project in motion, idly freeing herself to take "
+        "your mouth while her converted favourite takes the rest of you. \"There's my pair. Crossed "
+        "lines, in the file, forever. You'll carry her get. She'll carry the imprint of you. "
+        "Neither of you will ever be quite separate again. *That's* a kept thing.\""),
+        "options": [
+            {"key": "take_her", "label": f"Take {nm} — meet her rut, mourn her in it", "effect": "company_use",
+             "params": {"devotion": 6.0}, "set": {"bred": "take"},
+             "desc": "real fellow-sired breeding + cross-record; the grief folded into the heat",
+             "outcome": (
+                f"You take her — meet what {nm} has become, let her breed you, and mourn her *in* "
+                "the heat of it, the grief and the rut braided into one unbearable thing — and it's "
+                "real, her get sown in you, the cross filed in both your lines for good, sired as "
+                f"her. Bethany floods your mouth at the same moment {nm} floods the rest of you, and "
+                "the doubled laced load takes you under with the both of them. \"*There*,\" Bethany "
+                "sighs, content. \"My favourites, bred together. I'll convert you toward each other "
+                "for years. You'll be each other's family by the time I'm done — the cruelest, "
+                "closest kind.\"")},
+            {"key": "hold_her", "label": f"Hold {nm} through it — reach the person in the rut",
+             "effect": "company_use", "params": {"devotion": 5.0}, "set": {"bred": "hold"},
+             "desc": "real breeding; cling to the friend inside the animal",
+             "outcome": (
+                f"You hold her — wrap around {nm} as she breeds you, reach past the rut for the "
+                "drowning person, murmur to her, anchor her — and the real breeding happens through "
+                "the embrace, her get sown and crossed and filed, but it happens *held*, and "
+                "somewhere in the fracturing she clings back, breeds you clinging, the animal and "
+                "the friend tangled in the same desperate grip. \"Oh, you're *holding* her through "
+                "it,\" Bethany breathes, moved despite herself, taking your mouth gentler for it. "
+                "\"That's the thing I can't manufacture, that. The two of you finding each other in "
+                "the wreck I made. Keep it. I'll just build everything else around it.\"")}],
+        "default": "take_her",
+        "then": "fl_after"}
+
+
+@choice("fl_after", root=False)
+def _fl_after(character):
+    nm = _fellow_name(character)
+    dose = scene_flag(character, "dose", "comfort")
+    recap = ("the way you comforted her into it" if dose == "comfort"
+             else "the way you watched her go under")
+    return {"key": "fl_after", "prompt": (
+        f"After, {nm} comes down slow — the aphrodisiac ebbing, leaving the fractured remains of "
+        "her blinking at what she's done, at you, at the load she's left in you, with an "
+        "expression that can't quite assemble into guilt anymore because Bethany scrubbed the part "
+        "that would feel it. She's diminished. She's *changed*. And she's still, underneath, "
+        "reaching for you — the bond the one thing the conversion couldn't take. Bethany files the "
+        f"cross with enormous satisfaction. \"My two favourites, lines crossed, bonded in the "
+        f"wreck of it. I'll keep {recap} in your file — it's my favourite page now.\" She gathers "
+        "you both close, an owner with her matched pair. \"And the door, my loves — *both* of you "
+        "— is still open, always, free, this second, for either of you. I'd let you both go with a "
+        "word. I make this much because I *can't* make that, and so it stays a thing you let me "
+        "do. Don't ever forget you let me.\""),
+        "options": [
+            {"key": "keep_her", "label": f"Hold onto {nm} — onto what's left of the bond", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "the bond survives; it's both your comfort and Bethany's handle",
+             "outcome": (
+                f"You hold onto {nm} — onto what's left of her, onto the bond that survived the "
+                "conversion and the drug and the breeding — and it's the realest thing either of "
+                "you has, your comfort and Bethany's handle both at once, and you choose it anyway "
+                "because the alternative is being alone in here and the bond is worth the price she "
+                "charges for it. \"Good girls,\" Bethany murmurs over the two of you, fond and "
+                "victorious. \"Keep each other. It's the kindest thing in here, and I own it "
+                "too.\"")},
+            {"key": "grieve_her", "label": f"Grieve the {nm} who's gone", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "mourn the person under the imprint; carry it",
+             "outcome": (
+                f"You grieve her — the {nm} who walked in, the one the conversion and the drug took "
+                "pieces of and didn't give back — and you carry the grief out with you, sharp and "
+                "yours, a refusal to pretend the thing she became is the whole of who she was. "
+                "Bethany doesn't take that from you. \"Grieve her. She's worth grieving — they all "
+                "are, the ones I improve. The grief keeps you *human* a little longer, and I find I "
+                "like you human, for now. There'll be time enough to take that too. There's always "
+                "time.\"")}],
+        "default": "keep_her"}

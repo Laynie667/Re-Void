@@ -62,8 +62,13 @@ built reference). This doc is the master list of everything to convert.
 - ✅ **Punishment / correction (`pn_*`, `scene correction`)** — BUILT. Confess/deny/silent →
   sentence (sty `filth` / floor `make_example` / line `punish`) → aftermath (thank=earn-back
   `gratitude` / refuse=review resets). Real punishment + earn-back. Bethany's disappointed register.
-- **The fellow-resident arc** — the futa-conversion set-piece + shared scenes; she breeds you under
-  Bethany's direction. Real cross-sire lineage, conversion persists.
+- ✅ **The Fellow arc (`fl_*`, `scene fellow`)** — BUILT. The tragic-intimate set-piece: your
+  real continuity fellow (world.facility_fellow) is converted to futa at Bethany's direction
+  (real `mark_fellow_futa`), dosed to a rut, and made to breed you as her mind fragments —
+  real `company_use` (fellow-sired insemination + `fellow_cross_record`, lines crossed for
+  good). State-aware (both-little framing). The bond is the handle AND the one mercy; §0
+  floor kept lit for both of you. Branches: fear/brace/reach, watch/look-away, comfort/
+  horror, take-her/hold-her, keep-her/grieve-her.
 - ✅ **Seraphine's visit (`se_*`, `scene seraphine`)** — the facility↔post-office peerage; Seraphine
   as buyer; the only one Bethany opens to; the laced cum that can't own her; unbirthing carry-home.
   Real `seraphine_takes` ownership transfer. See design/seraphine_bethany.md.

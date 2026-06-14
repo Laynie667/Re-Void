@@ -640,6 +640,17 @@ def test_bethany_scene():
     assert c25.db.pending_choice is None, "manumission(earned) should end clean"
     sys.modules.pop("world.release", None)
 
+    # The Fellow arc chains end-to-end (real fellow conversion + company_use breeding).
+    c26 = _Char(); cyoa.start_scene(c26, "fl_arrival")
+    flbeats = []
+    for ch in ("reach", "watch_steady", "comfort", "take_her", "keep_her"):
+        p = c26.db.pending_choice
+        assert p, f"fellow: no pending before '{ch}'"
+        flbeats.append(p["key"])
+        assert cyoa.resolve_choice(c26, ch)[0] is not None, f"fellow '{ch}' did not resolve"
+    assert flbeats == ["fl_arrival", "fl_convert", "fl_dose", "fl_bred", "fl_after"], flbeats
+    assert c26.db.pending_choice is None and c26.db.scene_flags is None, "fellow should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
