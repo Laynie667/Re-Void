@@ -1633,6 +1633,8 @@ class CmdScene(Command):
         "terminus": "ds_arrival",
         "holding": "hd_arrival", "hold": "hd_arrival", "wait": "hd_arrival",
         "floor": "pf_arrival", "processing": "pf_arrival",
+        "records": "rh_arrival", "inspection": "rh_arrival", "grade": "rh_arrival",
+        "inspect": "rh_arrival",
     }
 
     def func(self):

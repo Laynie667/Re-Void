@@ -523,6 +523,17 @@ def test_bethany_scene():
     assert fbeats == ["pf_arrival", "pf_use", "pf_routed"], fbeats
     assert c16.db.pending_choice is None and c16.db.scene_flags is None, "floor should end clean"
 
+    # The Records Hall / inspection chains end-to-end (grade_reveal beat).
+    c17 = _Char(); cyoa.start_scene(c17, "rh_arrival")
+    rbeats = []
+    for ch in ("stand", "relax", "hear", "accept"):
+        p = c17.db.pending_choice
+        assert p, f"records: no pending before '{ch}'"
+        rbeats.append(p["key"])
+        assert cyoa.resolve_choice(c17, ch)[0] is not None, f"records '{ch}' did not resolve"
+    assert rbeats == ["rh_arrival", "rh_gauge", "rh_grade", "rh_close"], rbeats
+    assert c17.db.pending_choice is None and c17.db.scene_flags is None, "records should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

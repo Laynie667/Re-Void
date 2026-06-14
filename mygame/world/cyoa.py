@@ -5529,3 +5529,175 @@ def _pf_routed(character):
                 "floor's just where you find that out in front of everybody.\" You're walked to "
                 "what you're owed.")}],
         "default": "follow"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Records Hall — inspection day. The grade read off your real file.
+# Cinematic, state-aware. Actor: Bethany / the processor. REAL payload: the gauge
+# uses a real hole (pick_hole), and grade_reveal computes + reads your ACTUAL
+# processing tier, appraisal price, and body stats from your file — nothing
+# invented. §0 always frees you. Flow: arrival→gauge→grade→close. Entry: `scene records`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("rh_arrival", root=False)
+def _rh_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = "You're set on the gauging cradle rather than stood at it — a limbless lot is measured lying down, every reading taken to you. "
+    elif st["preg"]:
+        note = "Your gravid figures get their own column today; a bred lot is graded on what it's producing as much as what it is. "
+    elif st["little"]:
+        note = "Down in your head you don't follow the instruments, only that you're being measured, and the not-following doesn't slow the count one bit. "
+    return {"key": "rh_arrival", "prompt": (
+        "The Records Hall is where the facility keeps its truth about you. Floor-to-ceiling files "
+        "line every wall — a paper body for every body it's ever held, yours among them, thick now "
+        "— and at the centre stands the |wgauging station|n: a frame of calibrated instruments, a "
+        "lit |wgrade board|n above it cycling tiers from |wAPPLICANT|n up through the processing "
+        "ladder to |wPERFECTED|n, and a terminal where the readings feed straight into your record. "
+        "This is inspection day: where what you've become gets measured, scored, and *written "
+        "down* as a grade you'll be routed by. " + note +
+        "\n\nBethany presides at the terminal, your file open, reading-glasses on, every inch the "
+        "assessor — warm, precise, genuinely interested in your numbers. \"Inspection day, "
+        "sweetheart. My favourite paperwork. We gauge what the rooms have made of you, we run the "
+        "score, and the board tells us what you've graded to and where you go next.\" She pats the "
+        "gauging frame. \"Up you get. Let's find out your number. I do love finding out a "
+        "number.\""),
+        "options": [
+            {"key": "stand", "label": "Stand for the gauging", "set": {"insp": "stand"},
+             "effect": "devote", "params": {"amount": 2.0}, "desc": "submit to being measured; it reads as compliance",
+             "outcome": (
+                "You step up onto the frame and stand for it, and Bethany hums approval, fitting "
+                "the first instrument. \"Presents for inspection. That's a point in itself — "
+                "temperament reads into the score, you know.\" Being willingly measured is its own "
+                "data, and it's already being entered, and you can feel how the cooperating is "
+                "becoming the easier thing.")},
+            {"key": "balk_insp", "label": "Balk at the frame", "set": {"insp": "balk"},
+             "effect": "deny_hold", "params": {"cond": 2.0}, "desc": "resist being measured; you're gauged anyway",
+             "outcome": (
+                "You balk — and Bethany, unhurried, has you fitted to the frame regardless, the "
+                "instruments closing around you whether you cooperate or not. \"Resistance is also "
+                "a reading, sweetheart. It tells me your conditioning's not quite where the board "
+                "wants it yet, and *that* goes in the score too — a low note, this one. You're "
+                "grading yourself down by fighting. Hold still and grade higher. Or don't. The "
+                "number's honest either way.\"")},
+            {"key": "ask_grade", "label": "Ask what you'll grade to", "set": {"insp": "ask"},
+             "desc": "make her name the ladder before she measures you",
+             "outcome": (
+                "\"What you'll grade to?\" She brightens at the question. \"That's what we're here "
+                "to find out — I never guess, the instruments don't lie like I do.\" She gestures "
+                "up at the board, the tiers climbing. \"Applicant at the bottom, where you started. "
+                "Perfected at the top, where the road ends — Deep Stock, the pods, you've seen. "
+                "Everything in between is just *how far along*. Let's measure how far you've come. "
+                "I suspect further than you'd like.\"")}],
+        "default": "stand",
+        "then": "rh_gauge"}
+
+
+@choice("rh_gauge", root=False)
+def _rh_gauge(character):
+    return {"key": "rh_gauge", "prompt": (
+        "The |wgauging|n is thorough and clinical and strange — Bethany works the instruments over "
+        "and into you, taking readings the rooms have been building toward: your holes measured "
+        "and their training scored, your conditioning depth and suggestibility read off some "
+        "calibrated response, your yield and your brood-count and your devotion all pulled out of "
+        "you as *numbers* and fed live into the terminal, your file thickening in real time. She "
+        "narrates the readings to herself, pleased, occasionally surprised. \"Mm — conditioning's "
+        "come up nicely. Hole-training ahead of schedule. Devotion — \" a glance at you over the "
+        "glasses, fond \" — devotion's climbing faster than the model predicted. Someone's "
+        "settling in.\" One instrument seats into you to read its number directly. \"Hold for the "
+        "deep reading. This one measures what you've stopped being able to hide.\""),
+        "options": [
+            {"key": "relax", "label": "Relax and let it read true", "effect": "pick_hole",
+             "params": {"zone": "vagina"}, "set": {"gauge": "true"}, "desc": "give honest readings; grade where you are",
+             "outcome": (
+                "You relax and let the instrument take its true reading, your real responses fed "
+                "straight to the file, and Bethany watches the number resolve with frank pleasure. "
+                "\"There. An honest gauge. You've come *so* far, sweetheart — these are not "
+                "applicant numbers anymore.\" The deep reading is logged. You gave the facility an "
+                "accurate measure of how much of you it already has, and the accuracy is its own "
+                "small surrender.")},
+            {"key": "clench_insp", "label": "Clench against the deep reading", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "set": {"gauge": "clench"}, "desc": "resist the instrument; it reads the resistance",
+             "outcome": (
+                "You clench against the instrument — and it simply reads the clench, logs it as "
+                "resistance-data, the number resolving anyway with a note attached. \"Clenching "
+                "for the deep gauge,\" Bethany murmurs, entering it. \"That reads as defiance, which "
+                "the score weights — *down*, slightly, today, but it flags you for more "
+                "conditioning, which brings you *up* faster later. You can't win the gauge, "
+                "sweetheart. Every way you give it reads as something. Hold still; let's see your "
+                "real number.\"")}],
+        "default": "relax",
+        "then": "rh_grade"}
+
+
+@choice("rh_grade", root=False)
+def _rh_grade(character):
+    return {"key": "rh_grade", "prompt": (
+        "Bethany runs the score. The terminal works; the grade board cycles and *settles*; and "
+        "then she reads you your |wverdict|n — aloud, from your actual file, every figure real and "
+        "yours: your processing tier, your appraised worth, your true numbers laid out in her warm "
+        "precise voice, the sum of everything the rooms have made of you rendered as a single "
+        "grade and a single price. It is the most naked you've been — more than the block, more "
+        "than the gauge — because this is *you*, summed, scored, and filed, the facility's complete "
+        "honest accounting of how far down the road you've come, read back to you in numbers you "
+        "can't argue with."),
+        "options": [
+            {"key": "hear", "label": "Hear your number — your grade, your worth", "effect": "grade_reveal",
+             "set": {"graded": "heard"}, "desc": "the real verdict: your tier + price, off your file",
+             "outcome": (
+                "You make yourself hear it — your real grade, your real price, your real numbers — "
+                "and knowing exactly where you've graded to, exactly how far the rooms have moved "
+                "you up the ladder toward Perfected, lands and *stays*, a number you'll carry now. "
+                "Bethany files the verdict with obvious satisfaction. \"There it is. That's you, on "
+                "paper, today. We'll inspect you again when the rooms have done more — and the "
+                "number only ever goes one way. You felt that, didn't you. It only goes up.\"")},
+            {"key": "look_away", "label": "Look away from the board", "effect": "grade_reveal",
+             "set": {"graded": "unheard"}, "desc": "graded regardless; carry the number unread",
+             "outcome": (
+                "You look away from the board, refuse to take the number in — and it's computed and "
+                "filed and assigned regardless, your grade set whether you heard it or not, you "
+                "routed by a verdict you chose not to know. \"Looking away doesn't un-grade you, "
+                "sweetheart,\" Bethany says gently, filing it. \"You're a tier now whether you "
+                "looked or not. Not knowing your own number just means you'll find out where you "
+                "stand by where they send you. Which is its own kind of answer.\"")}],
+        "default": "hear",
+        "then": "rh_close"}
+
+
+@choice("rh_close", root=False)
+def _rh_close(character):
+    grade = getattr(getattr(character, "db", None), "facility_grade", None) or "your tier"
+    return {"key": "rh_close", "prompt": (
+        "She closes your file — thicker now, a fresh inspection logged, a grade assigned — and "
+        f"slots it back into the wall of paper bodies, yours among the thousands. \"Graded and "
+        f"filed. {grade}, today.\" She takes off the reading-glasses, the assessor folding back "
+        "into the owner. \"And the board routes you on that number — better grade, deeper work; "
+        "every inspection moves you up the ladder, and the top of the ladder is the pods. That's "
+        "not a threat, sweetheart, it's just the *shape* of the thing. Up is down, here. The "
+        "better you score, the closer to finished.\" She pats the file before it's gone. \"I'll "
+        "read you again soon. I do love watching a number climb. Yours is climbing beautifully.\" "
+        "And under it, where she always keeps it: \"The one number that never changes is the door. "
+        "You can leave any grade, any tier, any time, with a word. I grade you knowing you could "
+        "walk. That's what lets me grade you so honestly.\""),
+        "options": [
+            {"key": "accept", "label": "Accept the grade — let the number be you", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "become a tier; let it route you",
+             "outcome": (
+                "You accept it — let the grade be a true thing about you, let the number route you "
+                "onward — and being *scored*, being a known quantity on a ladder with a top you've "
+                "seen, settles into you as simply your condition now. You're not a person being "
+                "held anymore so much as a grade being advanced. Bethany watches you accept it and "
+                "is pleased. \"Good. The ones who accept their number climb the smoothest. I'll see "
+                "you at the next inspection, a tier higher. I always do.\"")},
+            {"key": "reject", "label": "Reject the number — you are not a grade", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "refuse to be a tier; the file disagrees",
+             "outcome": (
+                "\"I'm not a number,\" you tell her, and mean it. Bethany smiles, unbothered, "
+                "sliding your thick file home. \"Of course you're not, sweetheart. You're a whole "
+                "person. You're also, on paper, a tier and a price and a routing — both things, at "
+                "once, and the paper is the part the facility acts on.\" She taps the wall of "
+                "files. \"Reject the number all you like. The board still has it. The rooms still "
+                "route you by it. But hold onto the rejecting — it's a true thing too, and it's "
+                "yours, and the door's still open behind it. That part I'll never grade away.\"")}],
+        "default": "accept"}

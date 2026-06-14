@@ -43,7 +43,7 @@ built reference). This doc is the master list of everything to convert.
 | **The Marking Parlour** | the **marker** | ✅ **BUILT** (`mp_*`, 5 beats; brand/rings/ink branches) | real `_proc_brand`/`_proc_cowset`/`_proc_womb_tattoo` |
 | **Bethany's Office** | Bethany | ✅ **BUILT** (`ko_*`, 5 beats; the Kept payoff, state-aware) | real `bethany_breeds`, `file_read`, devotion |
 | **Deep Stock** | Bethany + machines | ✅ **BUILT** (`ds_*`, 5 beats; the sealed terminus, §0 floor heavily lit) | real `deepen`; the never-locked door kept explicit |
-| **The Records Hall** | Bethany / processor | inspection day, gauging, the grade read aloud from your real file | `processing_tier`, `_appraise`, grade reveal |
+| **The Records Hall** | Bethany / processor | ✅ **BUILT** (`rh_*`, 4 beats; inspection day, the real grade verdict) | real `grade_reveal` (processing_tier + appraisal off your file) |
 
 ---
 
@@ -83,4 +83,4 @@ built reference). This doc is the master list of everything to convert.
 3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
 4. ✅ **Marking Parlour** + ✅ **Sanitation/Pigsty** — DONE. Next:
 5. ✅ **Showroom** + ✅ **Office/Kept** — DONE (ownership through-line complete). Next:
-6. ✅ **Nursery** + ✅ **Deep Stock** + ✅ **Holding** + ✅ **Processing Floor** — DONE. Remaining: **Records/inspection**, **Events**, then the flow controller.
+6. ✅ ALL 14 ROOMS BUILT (Nursery/Deep Stock/Holding/Floor/**Records** done). Remaining: **Events**, then the flow controller.
