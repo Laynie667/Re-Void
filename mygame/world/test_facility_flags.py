@@ -321,17 +321,17 @@ def test_poste_ripen():
 
     o = _Office()
     now = time.time()
-    pob.leave_poste(o, "fresh secret", author_id=1)
+    pob.leave_poste(o, "fresh marigoldletter", author_id=1)
     o.db.poste_letters[-1]["at"] = now - 100
     assert pob.ripen_poste(o, now=now) is None and pob.poste_count(o) == 1, "fresh must not ripen"
-    pob.leave_poste(o, "old secret", author_id=2);    o.db.poste_letters[-1]["at"] = now - 4 * 86400
-    pob.leave_poste(o, "ancient secret", author_id=3); o.db.poste_letters[-1]["at"] = now - 9 * 86400
+    pob.leave_poste(o, "old marigoldletter", author_id=2);    o.db.poste_letters[-1]["at"] = now - 4 * 86400
+    pob.leave_poste(o, "ancient marigoldletter", author_id=3); o.db.poste_letters[-1]["at"] = now - 9 * 86400
     line = pob.ripen_poste(o, now=now)
     assert line, "an over-age letter should ripen"
     assert pob.poste_count(o) == 2, "exactly one should have ripened out"
     texts = [e["text"] for e in o.db.poste_letters]
-    assert "ancient secret" not in texts, "the OLDEST ripe letter should be the one delivered"
-    assert "secret" not in line.lower(), "ripening must never leak letter content"
+    assert "ancient marigoldletter" not in texts, "the OLDEST ripe letter should be the one delivered"
+    assert "marigoldletter" not in line.lower(), "ripening must never leak letter content"
     return "poste ripen: age-gated, oldest-first, content never leaked"
 
 
@@ -484,6 +484,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c12, ch)[0] is not None, f"nursery '{ch}' did not resolve"
     assert nbeats == ["nu_arrival", "nu_regress", "nu_nurse", "nu_lineage", "nu_box"], nbeats
     assert c12.db.pending_choice is None and c12.db.scene_flags is None, "nursery should end clean"
+
+    # Deep Stock: the approach branch reaches the threshold; the decline branch goes to close.
+    c13 = _Char(); cyoa.start_scene(c13, "ds_arrival")
+    dsbeats = []
+    for ch in ("look", "touch", "approach", "linger"):
+        p = c13.db.pending_choice
+        assert p, f"deepstock: no pending before '{ch}'"
+        dsbeats.append(p["key"])
+        assert cyoa.resolve_choice(c13, ch)[0] is not None, f"deepstock '{ch}' did not resolve"
+    assert dsbeats == ["ds_arrival", "ds_pod", "ds_offer", "ds_threshold"], dsbeats
+    assert c13.db.pending_choice is None and c13.db.scene_flags is None, "deepstock should end clean"
+    c14 = _Char(); cyoa.start_scene(c14, "ds_arrival")
+    for ch in ("recoil", "pull_hand", "decline", "hold_floor"):
+        assert c14.db.pending_choice, f"deepstock-decline: stall before '{ch}'"
+        assert cyoa.resolve_choice(c14, ch)[0] is not None, f"deepstock-decline '{ch}' failed"
+    assert c14.db.pending_choice is None and c14.db.scene_flags is None, "deepstock-decline should end clean"
 
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")

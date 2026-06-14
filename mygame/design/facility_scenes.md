@@ -42,7 +42,7 @@ built reference). This doc is the master list of everything to convert.
 | **The Nursery** | the nurse | ✅ **BUILT** (`nu_*`, 6 beats; regression/nursing/Little Box/lineage, state-aware) | real `go_little` regression, brood-aware lineage loop |
 | **The Marking Parlour** | the **marker** | ✅ **BUILT** (`mp_*`, 5 beats; brand/rings/ink branches) | real `_proc_brand`/`_proc_cowset`/`_proc_womb_tattoo` |
 | **Bethany's Office** | Bethany | ✅ **BUILT** (`ko_*`, 5 beats; the Kept payoff, state-aware) | real `bethany_breeds`, `file_read`, devotion |
-| **Deep Stock** | (machines) + Bethany | the sealed terminus — plumbed, kept, maintained; the descent's end | descent `deepen`, the §0 floor kept lit in-fiction |
+| **Deep Stock** | Bethany + machines | ✅ **BUILT** (`ds_*`, 5 beats; the sealed terminus, §0 floor heavily lit) | real `deepen`; the never-locked door kept explicit |
 | **The Records Hall** | Bethany / processor | inspection day, gauging, the grade read aloud from your real file | `processing_tier`, `_appraise`, grade reveal |
 
 ---
@@ -83,4 +83,4 @@ built reference). This doc is the master list of everything to convert.
 3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
 4. ✅ **Marking Parlour** + ✅ **Sanitation/Pigsty** — DONE. Next:
 5. ✅ **Showroom** + ✅ **Office/Kept** — DONE (ownership through-line complete). Next:
-6. ✅ **Nursery/lineage** — DONE. Remaining: **Holding**, **Processing Floor**, **Records/inspection**, **Deep Stock**, **Events**, then the flow controller.
+6. ✅ **Nursery/lineage** + ✅ **Deep Stock** — DONE. Remaining: **Holding**, **Processing Floor**, **Records/inspection**, **Events**, then the flow controller.

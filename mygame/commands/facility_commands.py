@@ -1629,6 +1629,8 @@ class CmdScene(Command):
         "office": "ko_arrival", "kept": "ko_arrival", "owned": "ko_arrival",
         "nursery": "nu_arrival", "little": "nu_arrival", "littlespace": "nu_arrival",
         "regress": "nu_arrival",
+        "deepstock": "ds_arrival", "deep": "ds_arrival", "stock": "ds_arrival",
+        "terminus": "ds_arrival",
     }
 
     def func(self):

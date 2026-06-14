@@ -5020,3 +5020,234 @@ def _nu_box(character):
                 "smaller still. The nurse hums on. She has so much more time than you have "
                 "thoughts.")}],
         "default": "settle"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Deep Stock — the sealed terminus. The descent's end.
+# Cinematic, state-aware. Actor: Bethany, quiet and almost reverent down here +
+# the machines. The contract's H28 (Perfected stock retired to the lines, kept
+# plumbed and bred and milked without being woken) made experiential. CRUCIAL:
+# the §0 floor is kept LIT in-fiction throughout — even sealed, escape frees you;
+# "completion, not an end; there is no clause providing for an end" — and the one
+# door that is never locked is the realest thing down here. REAL payload: deepen.
+# Flow: arrival→pod→offer→threshold→close. Entry: `scene deepstock`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ds_arrival", root=False)
+def _ds_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("The pods that hold nuggets are smaller and there are more of them — a limbless "
+                "thing needs nothing but to be plumbed and kept, and they keep so very many down "
+                "here. ")
+    if st["preg"]:
+        note += ("Some of the sealed swell visibly, bred in their sleep, the line continuing "
+                 "through bodies that will never wake to meet it. ")
+    return {"key": "ds_arrival", "prompt": (
+        "Deep Stock is the bottom of the facility, and it does not feel like the rest of it. The "
+        "noise stops here. The light is low and blue and even, and the air is cool and clean and "
+        "faintly chemical, and the dread that runs through every room above gives way to something "
+        "worse, which is |wpeace|n. Rows of them stretch into the blue dark: |wpods|n — sealed "
+        "tanks, each holding a body, plumbed at every orifice with feed-lines and waste-lines and "
+        "milk-lines and breeding-lines, suspended in something warm, eyes closed, *kept*. " + note +
+        "These are the Perfected — graded all the way through, retired to the lines, milked and "
+        "bred and maintained by machine indefinitely, and never, ever woken. They are not dead. "
+        "They are *finished*.\n\n"
+        "Bethany is quiet down here, almost reverent, the bright cruelty of the upper floors set "
+        "aside for something closer to tenderness. \"This is where it goes, sweetheart. All of it. "
+        "The processing, the conditioning, the breeding — it's all been bringing you toward here, "
+        "the whole time. Not as a punishment. As a *completion*.\" She touches the nearest pod, "
+        "fond. \"They're so peaceful. No more thinking. No more deciding. Just kept, and useful, "
+        "forever. I wanted you to see it. I wanted you to see where the road goes.\""),
+        "options": [
+            {"key": "look", "label": "Look at the pods — really look", "set": {"deep": "look"},
+             "effect": "deepen", "params": {"cond": 4.0}, "desc": "take in the peace of the finished",
+             "outcome": (
+                "You look — really look — at the kept bodies suspended in their warm blue silence, "
+                "and the part of you the facility has been growing all this time looks *back* with "
+                "something dangerously like longing. No more thinking. No more deciding. No more "
+                "ache of being a self that wants and fears. Just kept. Bethany watches your face "
+                "and sees the longing flicker and says nothing, because she doesn't need to. The "
+                "pods make her argument better than she ever could.")},
+            {"key": "recoil", "label": "Recoil from them", "set": {"deep": "recoil"},
+             "effect": "deny_hold", "params": {"cond": 3.0}, "desc": "every waking instinct refuses",
+             "outcome": (
+                "Everything still awake in you recoils — *no*, not that, never that, a body sealed "
+                "and bred in its sleep forever is the worst thing you've seen in a facility full of "
+                "worst things — and Bethany only nods, unsurprised, unbothered. \"Of course you "
+                "do. The waking ones always recoil. It's the wanting-to-stop-recoiling that brings "
+                "them down here in the end, and that comes later, on its own, the more tired you "
+                "get of being awake. I'm patient. The pods are patient. They've nothing but time.\"")},
+            {"key": "ask_end", "label": "Ask if this is the end of you", "set": {"deep": "ask"},
+             "desc": "make her say what the terminus means",
+             "outcome": (
+                "\"Is this the end?\" Bethany considers it, honestly, fondly. \"It's the "
+                "*completion*. The contract's very careful on this — there's no clause that "
+                "provides for an end, sweetheart, because there isn't one. Deep Stock isn't where "
+                "you stop. It's where you're *kept*, finished, useful, forever.\" A pause, and then "
+                "the one true thing, said quietly, because she guards it even here: \"Except the "
+                "one door. The door that's never locked. Even from in the pod — *especially* from "
+                "in the pod — that one always opens. I'd never take that from you. It's the only "
+                "reason I get to offer you all the rest.\"")}],
+        "default": "look",
+        "then": "ds_pod"}
+
+
+@choice("ds_pod", root=False)
+def _ds_pod(character):
+    return {"key": "ds_pod", "prompt": (
+        "She walks you to a pod and lets you see one up close. The body inside is serene — slack, "
+        "suspended, faintly moving with the machine's rhythm; you can see the milk-lines drawing "
+        "in slow pulls, the breeding-line working in patient mechanical cycles, the feed-line and "
+        "the lines that take away what the feed-line leaves. A resident, graded Perfected, being "
+        "milked and bred in an endless dreamless sleep, the facility's whole purpose distilled to "
+        "its quiet essence. \"She came down eighteen months ago,\" Bethany says softly. \"She "
+        "fought it longer than most. And then one day she was just... tired of fighting, tired of "
+        "wanting, tired of being a someone. So we finished her. Look how peaceful. She produces "
+        "more sealed than she ever did awake, and she'll never have another bad morning.\" The "
+        "machine pulses. The body in the pod doesn't dream. \"Put your hand on the glass. Feel how "
+        "quiet it is in there.\""),
+        "options": [
+            {"key": "touch", "label": "Put your hand on the glass", "effect": "deepen",
+             "params": {"cond": 5.0, "regress": 3.0}, "set": {"pod": "touched"},
+             "desc": "feel the quiet; let it call to the tired part of you",
+             "outcome": (
+                "You put your hand on the warm glass, and the quiet on the other side of it reaches "
+                "for the part of you that is so, so tired — tired of the rooms, the choices, the "
+                "wanting, the being-a-self the facility keeps making heavier — and for one long "
+                "moment the pod is not a horror but a *promise*, and you understand exactly how "
+                "they end up down here, and it isn't force. It's exhaustion. It's the warm blue "
+                "offer of never having to again. Bethany watches your hand on the glass and is, "
+                "for once, perfectly silent.")},
+            {"key": "pull_hand", "label": "Pull your hand back", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "set": {"pod": "pulled"},
+             "desc": "refuse the glass; keep the tired part from reaching",
+             "outcome": (
+                "You pull your hand back before it can touch the glass — before the tired part of "
+                "you can reach for the quiet — and hold onto the noise and the ache and the wanting "
+                "precisely *because* they're yours, because being a wretched wanting awake someone "
+                "is still being someone. Bethany smiles, almost proud. \"Good. Hold onto that. The "
+                "ones who fight the longest produce the best when they finally come down. I'm in no "
+                "hurry. I'll have decades of you awake first. The pod keeps.\"")}],
+        "default": "touch",
+        "then": "ds_offer"}
+
+
+@choice("ds_offer", root=False)
+def _ds_offer(character):
+    return {"key": "ds_offer", "prompt": (
+        "And then she makes the offer, quiet and serious and without a trace of the bright cruelty, "
+        "because down here she means it as mercy. \"There's an empty pod, sweetheart. There always "
+        "is; I keep one ready.\" She nods at it — open, warm, waiting, lines coiled and patient. "
+        "\"You don't have to be ready. Almost no one's ready this early; you've barely begun. But "
+        "I want you to know it's *there*, and that it's yours whenever the wanting-to-stop gets "
+        "bigger than the wanting-to-stay. You could lie down in it right now. I'd seal you so "
+        "gently. You'd never have another hard thought.\" She lets that sit in the blue quiet. "
+        "\"And — I'll say it again, because it's the one promise under all the others — even sealed, "
+        "the door opens. You say the word that wakes you and you wake, out, free, every time, no "
+        "matter how deep. That's not a loophole. That's the floor the whole place is built on. "
+        "So. Knowing that... do you want to see what it's like to lie down?\""),
+        "options": [
+            {"key": "approach", "label": "Approach the empty pod", "effect": "deepen",
+             "params": {"cond": 6.0, "regress": 4.0}, "set": {"offer": "approach"}, "then": "ds_threshold",
+             "desc": "go toward the terminus — knowing the door always opens",
+             "outcome": (
+                "You go toward it. Not all the way — not yet, maybe not for years — but toward it, "
+                "to the warm lip of the open pod, close enough to feel the heat of it and the pull "
+                "of the quiet, and Bethany lets out a slow breath like she's watching something "
+                "sacred. \"There. Just feel it. No one's sealing anything today. But you walked "
+                "toward it, and that's further than most get this early, and it tells me exactly "
+                "how tired you already are.\"")},
+            {"key": "decline", "label": "Decline — step back from the pod", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "set": {"offer": "decline"}, "then": "ds_close",
+             "desc": "not today, maybe not ever; keep being awake",
+             "outcome": (
+                "You step back. Not today. Maybe — you tell yourself — not ever. You'll keep being "
+                "an awake wanting wretched someone, keep the ache, keep the door behind you and the "
+                "noise above. Bethany accepts it with a fond nod that somehow doesn't feel like "
+                "losing. \"Of course. Not today. I only wanted you to know the road has an end I "
+                "think of as kind, and that the end is always your choice, and that the one before "
+                "it — the door — is always open too. Come up, sweetheart. There's so much more to "
+                "do with you while you're still awake to feel it.\"")}],
+        "default": "decline"}
+
+
+@choice("ds_threshold", root=False)
+def _ds_threshold(character):
+    return {"key": "ds_threshold", "prompt": (
+        "At the lip of the open pod the quiet is enormous. You can feel exactly how it would go: "
+        "the warm suspension closing over you, the lines finding their places, the machine taking "
+        "up the work of your body so you never have to again, the thinking getting further and "
+        "further away until there's no one left to think it. It would not hurt. It would be the "
+        "first thing in the whole facility that didn't, in its way, hurt. Bethany stands close, "
+        "one hand at the small of your back — not pushing, never pushing, down here she would "
+        "never push — just there. \"Whenever you like,\" she murmurs. \"Today, or in ten years, or "
+        "never. The pod doesn't mind waiting and neither do I.\" And under it, steady as bedrock: "
+        "\"And if you ever lie down and find it's wrong — the door, sweetheart. The word. You wake "
+        "and you're out. I built the whole road so that the last step is always yours to take "
+        "back. That's how I get to make the road this dark.\""),
+        "options": [
+            {"key": "linger", "label": "Linger at the lip a while", "effect": "deepen",
+             "params": {"cond": 5.0, "regress": 3.0}, "end": True,
+             "desc": "not in — just feel the pull, and carry it back up with you",
+             "outcome": (
+                "You linger — don't get in, but stay at the warm lip long enough to feel the full "
+                "weight of the pull, to let the tired part of you have its long look at the quiet "
+                "— and then you straighten, and step back, and carry the knowledge of it back up "
+                "with you like a stone in your pocket. It's there now. The option. The kind end. "
+                "You'll think about it on the bad days, and there will be bad days, and the pod will "
+                "be waiting, warm and patient, the whole time. Bethany walks you back toward the "
+                "blue dark's edge, content. She planted it. It'll grow on its own now.")},
+            {"key": "wake", "label": "Step back hard — and feel the door at your back",
+             "effect": "deny_hold", "params": {"cond": 2.0}, "end": True,
+             "desc": "refuse the pull; let the never-locked door be the realest thing here",
+             "outcome": (
+                "You step back hard — away from the lip, away from the warm quiet pull — and reach, "
+                "deliberately, for the one true thing she keeps promising: the door, the word, the "
+                "never-locked way out that even the deepest pod can't hold. Just knowing it's there "
+                "at your back steadies you enough to turn from the offer. Bethany watches you do it "
+                "and her smile is complicated and, underneath, genuinely warm. \"There it is. You "
+                "found the floor. Good. Hold onto it — it's yours, always, and it's the realest "
+                "thing in this whole building. Now come up. We've years before the pod and I intend "
+                "to use every one.\"")}],
+        "default": "linger"}
+
+
+@choice("ds_close", root=False)
+def _ds_close(character):
+    return {"key": "ds_close", "prompt": (
+        "She walks you back up out of the blue quiet, toward the noise and the ache and the rooms "
+        "that still have so much planned for you — and the contrast is its own cruelty, the racket "
+        "of being awake rushing back in after all that peace. \"That's Deep Stock,\" she says, the "
+        "bright cruelty resuming by degrees as you climb, as if the upper floors require it of her. "
+        "\"The end of the road. I show it to all my favourites early — not to frighten you, though "
+        "it does, but so you spend the rest of your processing *knowing* there's a kind quiet "
+        "waiting whenever you're done being a self. It makes the hard parts easier to bear. It "
+        "makes the wanting-to-stop a thing you can look forward to instead of fear.\" At the "
+        "threshold back to the facility proper she pauses, and the realest thing one more time: "
+        "\"And the door's still there, under all of it. Always. You can end the whole road any "
+        "second with a word. You won't, for years, because the rest of it's too interesting to "
+        "leave — but you *could*, and that's the only reason I'm allowed to make the rest of it as "
+        "dark as I'm going to.\""),
+        "options": [
+            {"key": "carry", "label": "Carry the pod's quiet back up with you", "effect": "deepen",
+             "params": {"cond": 3.0}, "end": True, "desc": "let the kind end live in you now",
+             "outcome": (
+                "You climb back into the noise carrying the blue quiet inside you like a seed, and "
+                "it changes the shape of everything above — every hard room a little more bearable "
+                "now that you know the road has a kind ending, every ache a little lighter against "
+                "the promise of eventual peace. Which is exactly what she wanted. The pod doesn't "
+                "have to take you today. It just has to be down there, warm and waiting, making the "
+                "wanting-to-stop feel like somewhere to go.")},
+            {"key": "hold_floor", "label": "Hold onto the door instead", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "let the never-locked exit be what you carry",
+             "outcome": (
+                "You climb back up holding onto the *other* thing she kept saying — not the kind "
+                "quiet of the pod but the door behind it, the word, the never-locked way out — and "
+                "you carry *that* back into the noise instead, a hard bright certainty that no "
+                "matter how deep the road goes, the last step is always yours to take back. It "
+                "steadies you. Bethany, climbing beside you, seems to know which thing you chose to "
+                "carry, and to be unbothered either way. \"Both true,\" she says. \"The kind end "
+                "and the open door. I keep them both for you. Now — back to work.\"")}],
+        "default": "carry"}
