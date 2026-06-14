@@ -2461,21 +2461,26 @@ def _bx_first(character):
     pace = ("She does not ease in. " if defied else "She eases in like she has all the time God "
             "made, because she does. ")
     return {"key": "bx_first", "prompt": (
-        "The first head — the one at your mouth — presses, and your jaw gives because there's "
-        "nothing else it can do, and the flared breadth of it spreads your lips wide and slides "
-        "back over your tongue, hot and thick and weeping that laced slick that coats the back of "
-        "your throat and goes to work the instant it lands. " + pace + "Inch by inch until your "
-        "throat has to choose between fighting it and learning the shape of it, and learning is so "
-        "much easier — the muscles unclenching one by one, your jaw aching wide, your breath "
-        "reorganising itself around the intrusion as though it were always meant to share the room "
-        "with a cock this size. The taste blooms warm and sweet and *certain* on your tongue, and "
-        "behind your eyes the first soft lap of the |wDEVOTION|n rolls in — a quiet, the edges of "
-        "you going pleasantly indistinct, the part of your mind that was keeping objections suddenly "
-        "finding them too heavy to hold.\n\n"
+        "The first head — the one at your mouth — presses, and your jaw gives because there is "
+        "nothing else it can do, hinging wide past comfort and past that into a bright cornering "
+        "ache where the seams of your lips burn and threaten to split, and the stallion-flare "
+        "forces over your tongue and *into* your throat. Your throat was not built for this and "
+        "says so — clenches, spasms, the gag tearing up through you in a wave you have no vote in. "
+        + pace + "Spit floods and sheets down your chin in ropes; tears blur the cold bright room "
+        "to smears; your hands scrabble and close on nothing that helps. You can feel the *shape* "
+        "of her lodged in your throat — an actual thick blunt presence distending the soft column "
+        "of your neck — and a hand laid to your throat from outside would feel it |wbulging|n "
+        "there, the outline of her cockhead riding up and down under the skin with every slow "
+        "rock deeper. Air comes only in the half-seconds she allows it, snatched and wet and never "
+        "enough, and in the starved seconds between, the room dims and swims and greys at its "
+        "edges. And beneath the panic the laced slick is pouring down your throat with every "
+        "forced swallow, and the first warm lap of the |wDEVOTION|n rolls in behind your eyes — "
+        "and turns the choking soft, and turns the helplessness into something your wrecked body "
+        "is beginning, horribly, to *thank her for*.\n\n"
         "\"There. *Breathe* through it — there you go — that's it.\" Her voice is honey poured over "
-        "gravel. A second head, freed up now, drags wet down your belly and settles nudging at your "
-        "cunt; the third keeps its slow circle at your ass. \"That's only the first, sweetheart. "
-        "That's barely hello.\""),
+        "gravel, delighted by your struggling. A second head, freed up now, drags a hot wet line "
+        "down your belly and settles nudging thick at your cunt; the third keeps its slow patient "
+        "circle at your ass. \"That's only the first, sweetheart. That's barely hello.\""),
         "options": [
             {"key": "suck", "label": "Suckle it — work it like you want it", "set": {"first": "eager"},
              "effect": "devote", "params": {"amount": 5.0},
@@ -2520,56 +2525,118 @@ def _bx_seat(character):
     extra = ("She gives you no quarter for the trouble you made. " if defied
              else "She talks you through every inch, fond and filthy. ")
     return {"key": "bx_seat", "prompt": (
-        "And then she seats the other two, and the world narrows to being |wfilled|n. " + extra +
-        "The head at your cunt spreads you and pushes and *keeps pushing*, the flare dragging your "
-        "rim wide before the shaft sinks in thick and hot and impossibly deep, and at the same "
-        "breath the third works into your ass — slow, relentless, the lacing slick easing a path "
-        "your body would swear it didn't have — until all three of her are in you at once, mouth "
-        "and cunt and ass, three heavy shafts moving on three separate rhythms inside one shaking "
-        "body. You have never been this *occupied*. There is no part of you left over to keep an "
-        "objection in. Every nerve is reporting cock and stretch and heat and the steady incoming "
-        "tide of the DEVOTION, and the noise you're making is not a word.\n\n"
-        "\"|wThere|n she is. There's all of you.\" Bethany's voice has gone thick, her composure "
-        "finally fraying at the edges with the pleasure of it, three shafts working you in unison "
-        "and then in counterpoint, the flares swelling wide on every outstroke and dragging your "
-        "rims out with them. \"Feel how there's no *room* left in you for anything but me? That's "
-        "not a metaphor, sweetheart. That's the floor plan from here on. Now — \" the three fat "
-        "knots arrive, kissing all three stretched holes at once, threatening, not yet through "
-        "\" — do you want me to knot you, or do you want to pretend a little longer that you "
-        "don't?\""),
+        "And then she seats the other two at once, and being |wfilled|n stops being something "
+        "happening to you and becomes the only thing you are. " + extra +
+        "The head at your cunt forces the stretch — the flare is wider than you open, a white "
+        "burn of *too-much* as your rim drags taut and trembling around it and then *gives*, "
+        "swallowing the breadth in a slick rush that punches the breath clean out of you — and on "
+        "the same stroke the third splits your ass, slow and merciless, the burn doubling, your "
+        "whole lower body one long screaming line of stretched-past-sense. They sink until they "
+        "cannot sink further, and then sink further anyway: the deep one presses somewhere that "
+        "whites out your vision, and you can *feel* the |wbulge|n of it — you can look down through "
+        "the streaming and half-see it, the faint obscene shift of her under the skin of your "
+        "belly, seated deeper than your body should have room for. Three heavy shafts. Three holes. "
+        "One shaking, impaled, overfull thing where a person used to stand.\n\n"
+        "\"|wThere.|n All the way in. Every door of you open at once.\" Bethany's voice has gone "
+        "thick and ragged at the edges, her composure finally fraying with the sheer pleasure of "
+        "how thoroughly she's got you. She holds, fully seated, letting you feel every inch of how "
+        "occupied you are — there is no part of you left over to keep an objection in — and then, "
+        "fond and unhurried and absolutely without mercy, she draws her hips back, drags all three "
+        "shafts most of the way out of you in one long obscene pull, and says, \"Now. Let me show "
+        "you what you're *for*.\" And she begins to move."),
         "options": [
-            {"key": "beg_knot", "label": "Beg her to knot you", "set": {"seat": "beg"},
+            {"key": "ridden", "label": "Go limp — let her move you however she likes",
+             "set": {"fuck": "ridden"}, "effect": "devote", "params": {"amount": 4.0},
+             "desc": "stop being a participant; become the thing she's using",
+             "outcome": (
+                "You let go of holding yourself up, holding anything up, and go limp on her three "
+                "shafts — and the relief of *not being asked to be a person* is so total it "
+                "frightens what's left of you. Bethany groans approval and takes full possession of "
+                "your weight and your rhythm both. \"Yes. Just be the hole, sweetheart. Let me do "
+                "the rest. I'm so much better at it than you were.\""),
+             "then": "bx_ride"},
+            {"key": "match", "label": "Move with it — meet her, take it like you want it",
+             "set": {"fuck": "match"}, "effect": "devote", "params": {"amount": 5.0},
+             "desc": "push back onto all three; let your body confess",
+             "outcome": (
+                "Some drowning part of you starts to *move with her* — pushing back onto all three, "
+                "chasing the depth, your hips confessing what your mouth can't around the cock in "
+                "it. Bethany sobs a delighted laugh. \"Oh, look at you *help*. Look at you want it. "
+                "I'll tell you a secret — that's the part that never washes out. The body remembers "
+                "wanting long after the mind's forgotten why.\""),
+             "then": "bx_ride"},
+            {"key": "lock", "label": "Lock up against the intrusion", "set": {"fuck": "lock"},
+             "effect": "deny_hold", "params": {"cond": 4.0},
+             "desc": "clench down, resist the motion — and feel it not matter",
+             "outcome": (
+                "You clench down, lock every muscle, try to *deny her the motion* — and it changes "
+                "nothing except that you feel every inch more sharply, your own resistance turning "
+                "the drag into a grind that lights you up against your will. Bethany hums, riding "
+                "it out. \"Fight the rhythm all you like. Your body's already keeping time with me. "
+                "Clench down — it only makes you tighter, and I do enjoy tight.\""),
+             "then": "bx_ride"}],
+        "default": "ridden"}
+
+
+@choice("bx_ride", root=False)
+def _bx_ride(character):
+    defied = scene_flag(character, "defied", False)
+    cruelty = ("She fucks you like a debt being collected. " if defied
+               else "She fucks you like she owns you, because the paperwork says she does. ")
+    return {"key": "bx_ride", "prompt": (
+        "And she *moves*, and it is not lovemaking and was never going to be — it is a body used "
+        "hard and thoroughly by someone with all afternoon and no intention of spending the time "
+        "gently. " + cruelty + "All three shafts piston in counterpoint, never all out, never all "
+        "in, so you are never once empty and never once given a half-breath to find your feet: "
+        "your cunt stuffed full as your ass drags empty, your throat plugged as your cunt pulls "
+        "out, an endless wet obscene rhythm that slaps and squelches and rings off the white tile. "
+        "You can feel them |wmoving inside you|n — the distinct travel of each blunt head, the "
+        "bulge of the deep one riding up under your belly-skin and sinking back on every thrust, "
+        "the one in your throat a shape your own racing pulse beats around. Pain and the building "
+        "pleasure fuse into one unbearable signal your nerves give up telling apart. Drool, tears, "
+        "sweat, the wet slap of her hips; the |wDEVOTION|n rising past your eyes now, the last dry "
+        "scrap of who-you-were going under —\n\n"
+        "and the world greys, and narrows to a tunnel, and *goes*.\n\n"
+        "You come back an unknowable time later, and she is |wstill fucking you|n. That is the "
+        "first fact your mind reassembles around: the rhythm never paused. You went away and your "
+        "body stayed and was used the whole while you were gone, and she is not even winded. There "
+        "is no telling how long — a minute, an hour — only that you've surfaced mid-thrust into the "
+        "exact same relentless use, your holes looser and rawer, your belly heavier, her fond "
+        "voice swimming down to you: \"Back with me? Mm. You missed some of my favourite parts. "
+        "Don't fret, sweetheart — there's so much more of you to use, and I've barely started.\"\n\n"
+        "And then the three knots, fattened gorged and hard now, begin to |wdemand entry|n — "
+        "bullying blunt at your stretched rims, each one obscenely too big, every press a battering "
+        "threat your wrecked body flinches bodily away from. \"Last thing,\" Bethany breathes, "
+        "almost reverent. \"The best thing. The thing that *keeps* you. Do you want them in?\""),
+        "options": [
+            {"key": "beg_knot", "label": "Beg her to force the knots in", "set": {"seat": "beg"},
              "effect": "devote", "params": {"amount": 6.0},
-             "desc": "ask for the lock — the clause will make you say it right",
+             "desc": "ask for the lock — the clause will shape it right",
              "outcome": (
                 "\"Please—\" and the honorific clause closes your throat around the bare word until "
-                "you give her the rest, ground out helpless and meant: \"—please knot me, "
-                "|wOwner|n.\" Bethany *sobs* a laugh of pure triumph. \"That's it. That's the word. "
-                "That's my girl.\" You begged for the lock with her title in your mouth, and you "
-                "felt how much you meant it, and that — more than any cock — is the thing that "
-                "actually took tonight."),
+                "you grind out the rest, helpless and *meant*: \"—please knot me, |wOwner|n, force "
+                "them in—\" Bethany *sobs* a laugh of pure triumph. \"That's the word. That's my "
+                "girl. You asked to be locked onto me. Remember that you asked.\" That — more than "
+                "any cock — is the thing that actually takes tonight."),
              "then": "bx_knot"},
-            {"key": "brace", "label": "Brace and take it without asking", "set": {"seat": "brace"},
+            {"key": "brace", "label": "Brace and take them without asking", "set": {"seat": "brace"},
              "effect": "devote", "params": {"amount": 3.0},
-             "desc": "don't give her the begging; take the knots anyway",
+             "desc": "give her no words; the knots come anyway",
              "outcome": (
-                "You won't give her the words. You set what's left of your jaw and brace. Bethany "
-                "hums, unoffended, almost approving. \"Proud to the last. I told you — proud breaks "
-                "*lovely*.\" And she knots you anyway, all three, because asking was never going to "
-                "be the deciding vote. \"You'll beg next time. Or the time after. I'm patient, and "
-                "you're already so much easier than you were an hour ago.\""),
+                "You won't give her the words. You set what's left of you and brace for it. Bethany "
+                "hums, unoffended, almost proud. \"Proud to the very last. I told you — proud breaks "
+                "*lovely*, in pieces small enough to keep.\" Asking was never the deciding vote. The "
+                "knots come regardless."),
              "then": "bx_knot"},
-            {"key": "deny", "label": "Tell her no — even now", "set": {"seat": "deny"},
+            {"key": "deny", "label": "Tell her no — even now, even like this", "set": {"seat": "deny"},
              "effect": "deny_hold", "params": {"cond": 5.0},
-             "desc": "the last no; spend it and learn its exchange rate",
+             "desc": "spend the last no into the one place it buys nothing",
              "outcome": (
-                "\"|wNo|n—\" you manage, around everything, the last no you've got — and Bethany "
-                "presses her forehead to yours, almost tender, and knots you mid-word. \"I know. I "
-                "know you don't. That's why it counts.\" The three knots flare and *lock*, and your "
-                "no dissolves into a sound with no language in it at all. \"Spend them all, "
-                "sweetheart. Every no you spend in here is one less you'll bother making out there. "
-                "I'm doing you a kindness, in the long run. You'll thank me. They build a whole "
-                "clause around how you'll thank me.\""),
+                "\"|wNo|n—\" you manage, around everything, the last no you have — and Bethany "
+                "presses her forehead to yours, almost tender, holding your eyes. \"I know. I know "
+                "you don't want them. That's exactly why it counts when I put them in anyway.\" "
+                "Spend it, the no; in here it buys nothing, and she's about to show you the exchange "
+                "rate."),
              "then": "bx_knot"}],
         "default": "beg_knot"}
 
@@ -2578,22 +2645,33 @@ def _bx_seat(character):
 def _bx_knot(character):
     seat = scene_flag(character, "seat", "beg")
     return {"key": "bx_knot", "prompt": (
-        "The three knots swell past the point of pulling out and *lock* — three apple-fat knots "
-        "sealed into three stretched holes, pinning you bodily onto her, and there is no leaving "
-        "now, no shifting, nothing to do but be held exactly here on the end of her until she "
-        "decides otherwise. \"|wThere.|n\" Bethany lets out a long shaking breath of total "
-        "contentment, gathering you in against her, fully seated and locked and unhurried. \"Now we "
-        "stay. This is the nice part. You can stop holding yourself up. You can stop holding "
-        "*anything* up.\"\n\n"
+        "She drives the knots home. There is no easing these in — they are built bigger than the "
+        "holes on purpose — so she simply *forces*, steady and implacable, and your rims stretch "
+        "past screaming around the gorged swell, wider, wider, impossibly wider, the burn going "
+        "incandescent — until each one gives at once. A blunt, sick, deeply internal |w*pop*|n as "
+        "the knot punches through and seats, and the rim snaps shut behind it, sealing the fist of "
+        "her inside you. Three times — throat, then cunt, then ass — three forced, swallowing "
+        "|w*pops*|n, three knots locked behind three rims that now physically *cannot* let them "
+        "back out. You can feel each one as a hard round mass lodged deep; you can press a "
+        "shaking hand low on your belly and feel the knot in your cunt as a distinct |wbulge|n "
+        "under the skin, immovable, a thing inside you that the outside of you now shows. There is "
+        "no pulling off. There is no shifting. You are pinned bodily onto her, stuffed and sealed "
+        "and locked at every end.\n\n"
+        "\"|wThere.|n\" Bethany lets out a long shaking breath of total contentment, gathering you "
+        "in against her. \"Now we *stay*. This is the nice part. You can stop holding yourself up. "
+        "You can stop holding *anything* up.\"\n\n"
         "And then she comes — all three at once, deep and sealed and inescapable — and the load is "
-        "*vast*, far more than three holes should hold, flooding you from three directions until "
-        "your belly aches full and there is nowhere for any of it to go but to stay, corked behind "
-        "three knots. But it's the |wlacing|n that ruins you: the DEVOTION rides in on the spend in "
-        "a single enormous warm wave, and it does not lap this time, it *closes over your head* — "
-        "the last of your edges going soft and indistinct, the wanting and the having and the "
-        "belonging all blurring into one bright quiet certainty, your whole flooded body singing "
-        "one note, which is *hers*. You are so full. You are so quiet. You have never in your life "
-        "felt this kept.\n\n"
+        "*vast*, and with the knots corking every exit it has nowhere to go but to stay and "
+        "*accumulate*: your belly swells against her with it, tight and round and full, drum-taut, "
+        "the visible proof of how much of her you're being made to hold. And still she pumps — the "
+        "locked shafts flexing and twitching and *throbbing* inside you, each pulse you can feel as "
+        "a fresh flood forced deeper, the cocks moving in their sealed sheaths, packing you, "
+        "filling you past full and then filling you more. But it is the |wlacing|n that finishes "
+        "you: the DEVOTION rides in on the spend in one enormous warm wave, and it does not lap "
+        "this time, it *closes over your head* — the last of your edges going soft, the wanting "
+        "and the having and the belonging blurring into one bright quiet certainty, your whole "
+        "flooded bulging body singing a single note, which is *hers*. You are so full. You are so "
+        "quiet. You have never once in your life felt this kept.\n\n"
         "\"Feel that settling in?\" she murmurs into your hair, holding you on the knots while it "
         "takes. \"That's the part that stays after everything else washes out. Now — your body's "
         "screaming for its own turn, isn't it. Wound right to the edge. Ask me, and we'll see.\""),
