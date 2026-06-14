@@ -410,6 +410,17 @@ def test_bethany_scene():
     assert dbeats == ["dy_arrival", "dy_hook", "dy_pull", "dy_quota", "dy_handoff"], dbeats
     assert c5.db.pending_choice is None and c5.db.scene_flags is None, "dairy should end clean"
 
+    # The Marking Parlour scene chains end-to-end (the rings/cowset branch).
+    c6 = _Char(); cyoa.start_scene(c6, "mp_arrival")
+    mbeats = []
+    for ch in ("still", "rings", "take_it", "thank"):
+        p = c6.db.pending_choice
+        assert p, f"parlour: no pending before '{ch}'"
+        mbeats.append(p["key"])
+        assert cyoa.resolve_choice(c6, ch)[0] is not None, f"parlour '{ch}' did not resolve"
+    assert mbeats == ["mp_arrival", "mp_order", "mp_work", "mp_set"], mbeats
+    assert c6.db.pending_choice is None and c6.db.scene_flags is None, "parlour should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

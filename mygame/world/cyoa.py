@@ -3458,9 +3458,11 @@ def _dairy_state_note(character):
     preg = bool(getattr(db, "pregnant", False) or getattr(db, "brood_count", 0)
                 or getattr(db, "gestating", False))
     if nugget:
-        return ("He has to bend right down to reach you — a nugget on the dairy line, tiny and "
-                "limbless and absurdly productive for your size — and he fits the smallest cups "
-                "the rack carries. \"Little thing, big yield. The board loves a nugget.\" ")
+        return ("A nugget can't kneel to the pad or lift anything to the cups — no arms, no legs, "
+                "nothing to you but torso and holes and yield — so he simply gathers your limbless "
+                "weight up and settles you into the cradle-rig himself, fits the cups, and lets the "
+                "machine do the whole of it. \"Pure producer, you. Can't even help me milk you, and "
+                "don't need to — we keep you heavy and the line does the rest.\" ")
     if preg and little:
         return ("He notes you're both heavy with the facility's get AND down in your headspace — "
                 "\"bred little, are we\" — and his hands gentle a fraction, the way you'd handle a "
@@ -3670,4 +3672,206 @@ def _dy_handoff(character):
                 "because the cycle doesn't need your gratitude or your consent, only your fullness, "
                 "and your fullness is no longer a thing you get a vote on. The pumps chunk-hiss "
                 "behind you. One of them will be yours again soon. It always will be, now.")}],
+        "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Marking Parlour — the marker, the permanent work.
+# Cinematic. Actor: the marker — quiet, exact, a craftsman who treats your body as
+# material and the job as non-negotiable ("doesn't come off, doesn't fade, isn't up
+# for discussion"). Branches on `mark` (brand / piercings / tattoo) set at the
+# order; the REAL procedure fires via the facility effect (_proc_brand /
+# _proc_cowset / _proc_womb_tattoo) so the marks/piercings actually land on the
+# body. §0: escape/forceclear free you off the chair always.
+# Flow: arrival→order→work→set. Entry: `scene parlour`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("mp_arrival", root=False)
+def _mp_arrival(character):
+    return {"key": "mp_arrival", "prompt": (
+        "The Marking Parlour is the cleanest room in the facility, and the most frightening for it "
+        "— part tattoo studio, part surgery, part leatherworker's bench, smelling of green soap and "
+        "hot iron and ink. A padded marking chair stands bolted under a swing-arm lamp, reclined "
+        "and spread, restraints at wrist and ankle and waist and a strap for the brow. One wall is "
+        "the trade, racked floor to ceiling: a heated bar of branding irons in every shape, tattoo "
+        "guns, trays of needles and rings and gauges, inks in facility grey and ownership black. "
+        "The far wall is the |wportfolio|n — framed photographs and peeled, cured hide-prints of "
+        "every mark the parlour has ever set, catalogued by owner. A gallery of finished work, and "
+        "you the next blank page in it.\n\n"
+        "The |wmarker|n doesn't greet you. He's a lean, unhurried man with steady hands and the "
+        "flat focus of a craftsman, and he buckles you into the chair the way you'd clamp a "
+        "workpiece — wrists, ankles, waist, and last the strap across your brow that means you "
+        "don't get to flinch the work crooked. He tests an iron against a damp cloth; it hisses. "
+        "\"Hold still, or don't,\" he says, the only thing he says. \"The strap holds you either "
+        "way. Doesn't come off, what I do. Doesn't fade. Isn't up for discussion. So.\" He waits "
+        "for the iron to come to colour."),
+        "options": [
+            {"key": "still", "label": "Go still under the strap", "set": {"chair": "still"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "let him work clean; the stillness is its own surrender",
+             "outcome": (
+                "You make yourself still — fully, deliberately, the way the chair wants — and the "
+                "marker grunts the smallest approval, the approval of a craftsman handed good "
+                "material. \"Good. Holds still. Work comes out clean on the ones that hold still.\" "
+                "Your stillness will be in the line of the mark forever, and you find you want it "
+                "clean too, which is its own small surrender.")},
+            {"key": "strain", "label": "Strain against the chair", "set": {"chair": "strain"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "fight it; the brow-strap was built for exactly this",
+             "outcome": (
+                "You strain — and the brow-strap and the waist-clamp hold you motionless with the "
+                "indifference of well-made hardware, and the marker doesn't even pause. \"They all "
+                "pull at first. Chair's built around the pulling. Just means a tighter strap and "
+                "the same mark.\" He cinches the brow another notch. \"You'll hold still in the end "
+                "because you can't do anything else. Might as well start now.\"")},
+            {"key": "ask", "label": "Ask what he's putting on you", "set": {"chair": "ask"},
+             "desc": "make him name it before the iron does",
+             "outcome": (
+                "\"What's the order.\" He glances at a card clipped to the lamp arm — Bethany's "
+                "hand, you think, or the board's. \"Says here you're getting marked as hers proper "
+                "today. Ownership work. The permanent kind, so anyone who handles you after reads "
+                "off your skin who you belong to, in the dark, by feel.\" He sets the card down. "
+                "\"Didn't need to ask. You'd have found out when the iron landed. But now you can "
+                "watch it coming. Some prefer that.\"")}],
+        "default": "still",
+        "then": "mp_order"}
+
+
+@choice("mp_order", root=False)
+def _mp_order(character):
+    chair = scene_flag(character, "chair", "still")
+    lead = ("\"Order's set. But there's a few ways to do ownership work, and the card lets the "
+            "stock pick the where, sometimes. Cruelty of choice — Bethany's idea.\" "
+            if chair != "strain" else
+            "\"No pick for the ones that fight. I choose, you wear it.\" ")
+    return {"key": "mp_order", "prompt": (
+        lead + "He lays the options out on the bench, unhurried, naming each like a tradesman "
+        "quoting a job. \"|wThe brand.|n Iron, hot, her mark burned in where it'll scar and stay — "
+        "fastest, cruellest, reads by fingertip forever. \"|wThe rings.|n Full set — septum, "
+        "nipples, clit, a ladder, a numbered tag, a bell — turns you out as hardware as well as "
+        "function, leads by the nose, rings when you're used. Or \"|wthe ink.|n A womb-tattoo, low "
+        "on the belly, her sigil over where you carry — declares what you're for to anyone who "
+        "gets you spread.\" He picks up the nearest tool and waits. \"One goes on today regardless. "
+        "Which.\""),
+        "options": [
+            {"key": "brand", "label": "The brand — take her mark burned in", "set": {"mark": "brand"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the iron; a scar you'll read by feel forever",
+             "outcome": (
+                "\"The iron. Brave, or stupid, or hers already — usually all three.\" He lifts the "
+                "branding iron off the heated bar, its mark glowing dull, and the heat of it reaches "
+                "you from a foot away. \"Don't hold your breath. Breathe out when it lands. It's "
+                "worse if you're full of air.\"")},
+            {"key": "rings", "label": "The rings — be turned out as hardware", "set": {"mark": "rings"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the full set; led by the nose, ringing when used",
+             "outcome": (
+                "\"The full set, then. Septum first — hold your head against the strap.\" He lays "
+                "out the gauged needles and the rings in a neat gleaming row, one for every place "
+                "he's going to open and hang you, and you understand you'll leave this chair "
+                "jingling. \"Heaviest hardware I do in one sitting. You'll feel each one for "
+                "weeks.\"")},
+            {"key": "ink", "label": "The ink — her sigil where you carry", "set": {"mark": "ink"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the womb-tattoo; a declaration read when you're spread",
+             "outcome": (
+                "\"The womb piece. Long sitting, that one — the needle's the least of it, it's the "
+                "*hours* of being held open and worked on.\" He swings the gun's arm down over the "
+                "low curve of your belly and inks a guideline, cold and precise. \"Anyone who "
+                "spreads you from now reads who owns the inside of you. That's the point of where "
+                "it goes.\"")}],
+        "default": "brand",
+        "then": "mp_work"}
+
+
+@choice("mp_work", root=False)
+def _mp_work(character):
+    mark = scene_flag(character, "mark", "brand")
+    method = {"brand": "_proc_brand", "rings": "_proc_cowset", "ink": "_proc_womb_tattoo"}.get(mark, "_proc_brand")
+    body = {
+        "brand": ("The iron lands. There is a moment of pure white pressure that your mind refuses "
+                  "to call pain because pain is too small a word, and then the smell — and the "
+                  "*sound*, a brief wet hiss of you — and the marker holds it the exact count it "
+                  "needs and not a fraction more, lifts it clean, and her mark is in you now, "
+                  "raised and furious and permanent, a thing you will find with your fingertips in "
+                  "the dark for the rest of your life and know whose you are."),
+        "rings": ("He works fast and exact, and each one is its own bright shock — the septum with "
+                  "a crunch you feel in your skull, the nipples drawn taut and pierced through, the "
+                  "clit a white star of sensation that whites the room out, the ladder, the tag "
+                  "punched in, the bell hung last — and when he's done you are strung with steel "
+                  "and brass through every soft place, heavy with it, and the small bright "
+                  "chime of the bell when you so much as breathe tells you and everyone what "
+                  "you've become."),
+        "ink": ("The hours go strange and long under the needle's drone — held open, worked on, the "
+                "low burn of the line laid into the soft skin over your womb again and again, the "
+                "marker absorbed and indifferent, you reduced to a surface being finished — until "
+                "her sigil sits low on your belly, raised and tender and permanent, a declaration "
+                "of what you carry and for whom that you will wear under everything, forever."),
+    }.get(mark, "")
+    return {"key": "mp_work", "prompt": (
+        body + "\n\nThe marker sits back, wipes the work clean with something that stings, and "
+        "studies it with a craftsman's flat satisfaction — not in you, in the *line of it*, the "
+        "evenness, the way it took. \"Took clean,\" he says, which from him is a benediction. "
+        "\"That's set. That's you, now, under whatever you wear, for good.\" Whatever you choose to "
+        "do with the agony still ringing through you, the mark does not care. It's already part of "
+        "you."),
+        "options": [
+            {"key": "take_it", "label": "Take it — let it become part of you", "effect": "facility",
+             "params": {"method": method, "kind": "proc"}, "set": {"marked": "owned"},
+             "desc": "the real mark lands — onto your body, your file, forever",
+             "outcome": (
+                "You stop fighting the fact of it and let it be true: it's on you, it's real, it's "
+                "recorded — the mark lands on your actual body and your file both, ownership made "
+                "legible on your skin. Something in you settles around the permanence with a "
+                "terrible relief: the question of whose you are has been answered in a way that "
+                "can't be argued with or taken back, and not having to wonder is its own dark "
+                "mercy. The marker is already photographing it for the portfolio wall.")},
+            {"key": "grieve", "label": "Grieve it — feel what's just been made permanent",
+             "effect": "facility", "params": {"method": method, "kind": "proc"},
+             "set": {"marked": "grieved"},
+             "desc": "the mark is real regardless; feel the door close",
+             "outcome": (
+                "You feel the door close. The mark is real — on your body, in your file, fired and "
+                "logged the same whether you wanted it — and you grieve the skin you had an hour "
+                "ago, the body that wasn't yet readable as someone's property in the dark by feel. "
+                "The marker doesn't look up from cleaning his tools. \"Grieving's normal,\" he "
+                "says, flat. \"Doesn't change the line. Nothing changes the line. That's why it's "
+                "the line.\"")}],
+        "default": "take_it",
+        "then": "mp_set"}
+
+
+@choice("mp_set", root=False)
+def _mp_set(character):
+    mark = scene_flag(character, "mark", "brand")
+    shown = {"brand": "the brand", "rings": "the hardware", "ink": "the sigil"}.get(mark, "the mark")
+    return {"key": "mp_set", "prompt": (
+        "He dresses the work, photographs it twice — one for your file, one for the portfolio wall "
+        f"where {shown} will hang catalogued under your owner's name with all the others — and "
+        "unbuckles you from the chair. Your legs are unsteady; the mark throbs its new permanent "
+        "throb; and already it's stopped being a wound and started being simply a fact of your "
+        "body, the way a fact of your body is something you stop arguing with. \"Done. Healed-up "
+        "instructions are nobody's problem but yours — keep it clean, it sets regardless.\" He's "
+        "already wiping down the chair for the next workpiece. \"You'll be back. They always send "
+        "the marked ones back for more. Once you can read ownership off a body, the temptation's "
+        "to write the whole story on it.\" He nods you at the door. \"Off the chair. Mind the "
+        "tender bits.\""),
+        "options": [
+            {"key": "thank", "label": "Thank him for the clean work", "effect": "gratitude",
+             "end": True, "desc": "a craftsman's pride is contagious; thank the line",
+             "outcome": (
+                "\"Thank you.\" You mean it about the work — it is clean, it is even, it is well "
+                "made — and meaning it about the work means meaning it, a little, about being "
+                "*made*, and the marker accepts it with a craftsman's nod. \"Clean work deserves "
+                "saying so. Bethany'll be pleased with it. She likes her marks worn proud.\" Being "
+                "handed up to her approval, marked and grateful, settles into you under the throb "
+                "and does not leave.")},
+            {"key": "silent", "label": "Say nothing — carry it out", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "leave wearing it, mute",
+             "outcome": (
+                "You say nothing. You carry the new permanent fact of yourself out of the parlour "
+                "in silence, every step a fresh reminder of where it sits, and behind you the "
+                "marker is already heating the next iron for the next body. The mark doesn't need "
+                "your acknowledgement. It's set. It'll be answering the question of whose you are "
+                "long after you've stopped being asked.")}],
         "default": "thank"}

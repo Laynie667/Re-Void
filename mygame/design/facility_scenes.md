@@ -40,7 +40,7 @@ built reference). This doc is the master list of everything to convert.
 | **Sanitation Block** | the custodian + the queue | made the anonymous relief-hole at the wall; the toilet frame | use, holes, golden, degradation |
 | **The Showroom / Buyers' Gallery** | Bethany + bidders | the appraisal, the block, the bidding, the sale/gavel | `_appraise`, `bid_up`, `bethany_buys`, ownership transfer |
 | **The Nursery** | Bethany / nurse | regression, nursing, the Little Box; your get raised here | regression, little-clauses, lineage loop |
-| **The Marking Parlour** | the **marker** | branding / piercing / tattoo / the permanent work | `_proc_*` (real piercings/marks/brands) |
+| **The Marking Parlour** | the **marker** | ✅ **BUILT** (`mp_*`, 5 beats; brand/rings/ink branches) | real `_proc_brand`/`_proc_cowset`/`_proc_womb_tattoo` |
 | **Bethany's Office** | Bethany | the kept/owned arc — her evening, her bed, her file on you | `bethany_breeds`, devotion, ownership, `file_read` |
 | **Deep Stock** | (machines) + Bethany | the sealed terminus — plumbed, kept, maintained; the descent's end | descent `deepen`, the §0 floor kept lit in-fiction |
 | **The Records Hall** | Bethany / processor | inspection day, gauging, the grade read aloud from your real file | `processing_tier`, `_appraise`, grade reveal |
@@ -81,6 +81,6 @@ built reference). This doc is the master list of everything to convert.
 1. ✅ **Breeding Pens** (stockman + studs) — DONE. Next:
 2. ✅ **Conditioning Cell** — DONE.
 3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
-4. **Marking Parlour** (procedures) + **Sanitation/Pigsty** (degradation).
+4. ✅ **Marking Parlour** — DONE. Next: **Sanitation/Pigsty** (degradation).
 5. **Showroom → Office/Kept arc** (the ownership through-line).
 6. **Nursery/lineage**, **Deep Stock**, **Records/inspection**, **Events**, then the flow controller.
