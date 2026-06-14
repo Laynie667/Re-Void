@@ -474,6 +474,17 @@ def test_bethany_scene():
     assert obeats == ["ko_arrival", "ko_evening", "ko_breed", "ko_file", "ko_close"], obeats
     assert c11.db.pending_choice is None and c11.db.scene_flags is None, "office should end clean"
 
+    # The Nursery scene chains end-to-end (regression + lineage + Little Box).
+    c12 = _Char(); cyoa.start_scene(c12, "nu_arrival")
+    nbeats = []
+    for ch in ("soft", "sink_little", "nurse_deep", "hold", "settle"):
+        p = c12.db.pending_choice
+        assert p, f"nursery: no pending before '{ch}'"
+        nbeats.append(p["key"])
+        assert cyoa.resolve_choice(c12, ch)[0] is not None, f"nursery '{ch}' did not resolve"
+    assert nbeats == ["nu_arrival", "nu_regress", "nu_nurse", "nu_lineage", "nu_box"], nbeats
+    assert c12.db.pending_choice is None and c12.db.scene_flags is None, "nursery should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

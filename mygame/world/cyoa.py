@@ -4787,3 +4787,236 @@ def _ko_close(character):
                 "got it all written down anyway.\" And she keeps you, all night, like the chair she "
                 "loves. And you let her. And that's the whole of what you've become.")}],
         "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Nursery — regression, nursing, the Little Box, the lineage loop.
+# Cinematic, deeply state-aware (this is THE little/nugget/preg room). Actor: the
+# nurse — sweet, sing-song, infantilizing; cooing cruelty. REAL payload: go_little
+# (real regression), references your real get/brood for the lineage loop. §0 always
+# frees you (the Little Box is self-releasing regardless).
+# Flow: arrival→regress→nurse→lineage→box→close. Entry: `scene nursery`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("nu_arrival", root=False)
+def _nu_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("A nugget is the easiest baby the Nursery keeps — nothing to wriggle off the "
+                "changing table, nothing to push the bottle away, a limbless little thing the "
+                "nurse can swaddle and arrange and tend entirely at her own pace. ")
+    if st["preg"]:
+        note += ("She coos over the swell of you — \"and baby's having a baby, aren't we, that's "
+                 "the whole point of you\" — your get a generation already growing toward this "
+                 "very room. ")
+    if st["little"]:
+        note += ("You're already soft and small in the head when you arrive, which the nurse "
+                 "treats as a head start: \"ooh, you're nearly there already, good girl, this'll "
+                 "be easy.\" ")
+    return {"key": "nu_arrival", "prompt": (
+        "The Nursery is warm and pastel and *wrong* — oversized cribs with barred sides, a padded "
+        "changing table built for an adult body, shelves of bottles and pacifiers and bulk "
+        "diapers, a deep soft rug, and, in the corner, the |wLittle Box|n: a crib-sized chest "
+        "where the truly regressed are tucked away to nap. And along one wall, smaller cribs — "
+        "the |wget|n, the facility's young, raised here on the milk of the stock that bore them, "
+        "your own line among them if you've delivered. The smell is milk and powder and that "
+        "specific clean-baby sweetness laid over the facility's animal undernote. " + note +
+        "\n\nThe |wnurse|n turns from a crib with a bright sing-song delight, all warmth and no "
+        "mercy, a woman who has infantilized a great deal of stock and adores every minute. "
+        "\"There's our big girl! Or — \" she tilts her head, fond, appraising how far down you "
+        "already are \" — our *little* girl, soon enough. We're going to take all that heavy "
+        "grown-up thinking off you, sweetheart, and give you back something so much simpler. "
+        "Doesn't that sound nice? It's going to feel nice whether it sounds it or not.\""),
+        "options": [
+            {"key": "soft", "label": "Let yourself go soft for her", "set": {"nurse": "soft"},
+             "effect": "go_little", "params": {"amount": 8.0},
+             "desc": "stop holding the grown-up thoughts; let her have them",
+             "outcome": (
+                "You let go of the heavy grown-up thinking — let it slide off the way she's "
+                "promising — and the relief of not having to hold any of it is immediate and the "
+                "headspace pulls down warm and simple and *easy*. \"Ohh, *good* girl,\" the nurse "
+                "beams, scooping you toward the changing table. \"Look how nicely you let go. We're "
+                "going to have such an easy time, you and me.\"")},
+            {"key": "fight_little", "label": "Hold onto your grown-up self", "set": {"nurse": "fight"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "keep your edges; she's patient and the room is built for this",
+             "outcome": (
+                "You hold onto your edges — your words, your years, your *self* — and the nurse "
+                "isn't troubled in the least, just coos and starts the routine anyway, the bottle "
+                "and the powder and the sing-song, the room itself wearing at you. \"Fighting it, "
+                "are we? That's all right, baby. The big thoughts get so *tiring* to hold, and I've "
+                "got nothing but time and lullabies. You'll set them down. They always do.\"")},
+            {"key": "ask_get", "label": "Ask about the get along the wall", "set": {"nurse": "ask"},
+             "desc": "make her tell you whose the small cribs are",
+             "outcome": (
+                "\"Those?\" The nurse brightens further, crossing to the smaller cribs. \"Those are "
+                "the *young*, sweetheart. Stock's get, raised right here on their own dams' milk "
+                "till they're grown. Some of them are *yours*, or will be.\" She says it like the "
+                "loveliest thing. \"And when they're grown they go to the pens, and they come back "
+                "to cover the dams that bore them, and round it goes. You're not just stock, baby. "
+                "You're a *line*. Isn't that special?\"")}],
+        "default": "soft",
+        "then": "nu_regress"}
+
+
+@choice("nu_regress", root=False)
+def _nu_regress(character):
+    nurse = scene_flag(character, "nurse", "soft")
+    lead = ("You're already sliding down, and she just guides the fall. " if nurse == "soft"
+            else "You're still gripping your grown-up self, so she takes the long fond way down. ")
+    return {"key": "nu_regress", "prompt": (
+        lead + "She lays you on the padded changing table — adult-sized, worn to a shape by other "
+        "big babies — and runs the routine that takes you down: the powder, the thick diaper "
+        "taped snug (\"so baby doesn't have to think about *that* anymore either\"), the onesie, "
+        "the pacifier pressed to your lips until you take it. And it *works* — not because you "
+        "believe it but because the body believes it, the diaper and the pacifier and the sing-"
+        "song voice all telling your nervous system the same simple thing until the heavy thoughts "
+        "genuinely get harder to hold, the room narrowing to warmth and softness and her face. "
+        "\"There's my baby,\" she murmurs, doing up the last snap. \"Feel all that grown-up worry "
+        "getting too heavy to carry? Set it down. Nobody's going to ask anything hard of you in "
+        "here. In here you just have to be little, and that's so much easier than being you.\""),
+        "options": [
+            {"key": "sink_little", "label": "Sink all the way down", "effect": "go_little",
+             "params": {"amount": 10.0}, "set": {"deep": "down"},
+             "desc": "let the regression take — real, deep, the words going first",
+             "outcome": (
+                "You go all the way down. The grown-up words go first — too heavy, too far away — "
+                "and then the worry, and then most of the shape of who you were, until there's just "
+                "warm and soft and safe and her, and the relief is total and bottomless. You suck "
+                "the pacifier without deciding to. The nurse claps softly, delighted. \"*There* she "
+                "is. All little. All simple. We'll keep you down here a good long while, baby. It's "
+                "where you're happiest, and the file agrees.\"")},
+            {"key": "claw_up", "label": "Claw back toward grown-up", "effect": "deny_hold",
+             "params": {"cond": 4.0}, "set": {"deep": "up"},
+             "desc": "fight the pull; pay for the scrap of self you keep",
+             "outcome": (
+                "You claw at the surface — force a grown-up thought, hold it up against the warm "
+                "pull — and it costs you, the effort enormous, the room and the diaper and the "
+                "voice all dragging the other way. The nurse just smiles and waits, rocking you. "
+                "\"Swim up if you like, baby. The water's so warm and you're so tired and down is "
+                "so much easier. I'll be right here when you stop swimming. I'm always right "
+                "here.\" The pacifier finds your mouth again. You're so tired.")}],
+        "default": "sink_little",
+        "then": "nu_nurse"}
+
+
+@choice("nu_nurse", root=False)
+def _nu_nurse(character):
+    st = _state_tags(character)
+    feed = (" — and because you're carrying, she's especially keen to keep you fed and watered "
+            "and docile, baby-and-baby both" if st["preg"] else "")
+    return {"key": "nu_nurse", "prompt": (
+        "And then she |wnurses|n you" + feed + ". She gathers you up — the changing table, then "
+        "her lap, then a breast freed and offered, or a warmed bottle if she's in that mood — and "
+        "puts it to your mouth, and the regressed body takes it the way a regressed body does: "
+        "instantly, gratefully, the suckling reflex bypassing whatever's left of your objections "
+        "entirely. The milk is warm and faintly laced (everything in here is laced) and with each "
+        "swallow the littleness settles deeper and the dependence sets another hook — because a "
+        "baby that nurses is a baby that *needs*, and need is the whole architecture of the room. "
+        "\"There we go,\" the nurse hums, rocking you as you feed. \"Good babies nurse. Good "
+        "babies need their nurse. And you're going to be such a good baby, aren't you. Yes you "
+        "are.\""),
+        "options": [
+            {"key": "nurse_deep", "label": "Nurse, and let the need set", "effect": "go_little",
+             "params": {"amount": 6.0}, "desc": "suckle; let the dependence become real",
+             "outcome": (
+                "You nurse, and let the need set its hook, and somewhere in the warm rhythm of it "
+                "the dependence becomes simply *true* — you need the nurse, the milk, the lap, the "
+                "being-cared-for, and the needing feels like love because the body can't tell the "
+                "difference. \"That's it. Drink it all down.\" She strokes your throat to help you "
+                "swallow. \"Now you'll fuss when I'm not here. That's how I know it's working. "
+                "That's my good little needy girl.\"")},
+            {"key": "nurse_grieve", "label": "Nurse, but grieve what it's doing", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "desc": "your body takes it; mourn the dependence forming",
+             "outcome": (
+                "Your body nurses whether you want it to or not — the reflex is older than your "
+                "objections — and you grieve it even as you swallow, feeling the dependence form "
+                "like a thing setting in concrete, knowing you'll reach for this, *need* this, hate "
+                "that you need it. The nurse reads the wet in your eyes and mistakes it, or doesn't. "
+                "\"Aw, baby's emotional. That's the littleness coming up. Let it. Big feelings, "
+                "little girl, and a nurse to hold you through them. That's all you are now.\"")}],
+        "default": "nurse_deep",
+        "then": "nu_lineage"}
+
+
+@choice("nu_lineage", root=False)
+def _nu_lineage(character):
+    db = getattr(character, "db", None)
+    brood = int(getattr(db, "brood_count", 0) or getattr(db, "offspring_count", 0) or 0)
+    line = (f"Some of these are yours — {brood} of your line on the books already" if brood
+            else "None are yours yet — but they will be; the empty cribs are labelled and waiting")
+    return {"key": "nu_lineage", "prompt": (
+        "When you've fed, she carries you down the row of smaller cribs — the |wget|n — and shows "
+        "you, sing-song, like a proud relative. " + line + ". The young here are raised on their "
+        "own dams' milk, grown fast on the facility's regimen, and the nurse walks you past them "
+        "explaining the loop in the same voice she'd use for a nursery rhyme: \"And these little "
+        "ones grow up big and strong, and then they go to the pens, and then they come back and "
+        "breed the dams that made them — that's *you*, baby — and *those* babies come here, and "
+        "round and round it goes, forever and ever.\" She bounces you gently. \"You're going to "
+        "meet your own grandget being bred into you one day, sweetheart. Won't that be something. "
+        "Your line, grown through your own body, world without end. The file calls it sustainable. "
+        "I call it family.\""),
+        "options": [
+            {"key": "hold", "label": "Reach for the get — your own line", "effect": "go_little",
+             "params": {"amount": 5.0}, "desc": "the little headspace makes them simply yours to love",
+             "outcome": (
+                "Down in the littleness, the horror of the loop can't reach you — there's just the "
+                "small warm cribs and the babies in them and the simple animal pull to *reach*, to "
+                "love what came out of you, and you do, and it's real, and that's the cruelest "
+                "engineering in the whole facility: they made you little so the lineage would feel "
+                "like love instead of a trap. The nurse beams. \"Good *mama*. See? Family. Round "
+                "and round.\"")},
+            {"key": "horror", "label": "Surface enough to feel the horror of the loop",
+             "effect": "deny_hold", "params": {"cond": 4.0},
+             "desc": "claw up to grasp what the loop actually is; it doesn't help",
+             "outcome": (
+                "You claw up enough to *understand* it — the closed loop of it, your own get grown "
+                "and bred back into you, generation on generation, your body the engine of an "
+                "endless line you'll never be free of — and the horror is total and changes "
+                "nothing, the cribs still full, the loop still turning, the nurse still cooing. "
+                "\"Oh, you went all grown-up and *sad* for a second there,\" she tuts, rocking you "
+                "back down. \"Don't. It's so much heavier up there. Come back to little. Little "
+                "doesn't have to understand the loop. Little just loves the babies.\"")}],
+        "default": "hold",
+        "then": "nu_box"}
+
+
+@choice("nu_box", root=False)
+def _nu_box(character):
+    return {"key": "nu_box", "prompt": (
+        "\"And now,\" the nurse says, \"it's nap time for baby.\" She carries you to the corner — "
+        "to the |wLittle Box|n, the crib-sized padded chest where the truly little are tucked away "
+        "to settle — and lays you down inside it among the soft things, snug and swaddled and "
+        "enclosed, the lid easing down to leave you in warm padded dark with just the sound of her "
+        "lullaby through the wood. It is the deepest the room takes you: boxed away, no light, no "
+        "task, no self to speak of, just warm and held and *put away* like a treasure that's done "
+        "being played with for now. The regression closes over the last of your edges in the dark. "
+        "(Some far part of you knows the box always opens — it lets every baby out, on its own, "
+        "no matter what; nothing in here is ever truly stuck. But that part is very far away "
+        "now.)"),
+        "options": [
+            {"key": "settle", "label": "Settle into the box and let go entirely", "effect": "go_little",
+             "params": {"amount": 8.0}, "end": True,
+             "desc": "the deepest little; warm dark, put away, kept",
+             "outcome": (
+                "You settle into the warm dark and let go of the very last of it, and there's "
+                "nothing left to hold, nothing asked, nothing to be but small and safe and put "
+                "away, and it is the most peaceful you have been since you arrived, and the peace "
+                "is the whole trap. The nurse's lullaby comes soft through the wood. When the box "
+                "lets you out — it always does — you'll come up reaching for her, for the bottle, "
+                "for *down*, a little less able each time to be anything but little. That's the "
+                "Nursery. That's what it's for. Sleep, baby.")},
+            {"key": "lid", "label": "Press at the lid — keep one waking thought", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "end": True,
+             "desc": "hold one grown-up thought in the dark; the box still keeps you",
+             "outcome": (
+                "You press one small palm to the lid and hold one grown-up thought in the warm "
+                "dark — *I am not a baby, this is a box, I am being kept* — and you hold it, fierce "
+                "and tiny, while the lullaby works and the swaddling works and the dark works. The "
+                "box doesn't trap you; it never does; it'll open when you've settled. But you'll "
+                "have spent the whole nap holding one thought against the warm, and that's "
+                "exhausting, and tomorrow the thought will be a little smaller, and the day after "
+                "smaller still. The nurse hums on. She has so much more time than you have "
+                "thoughts.")}],
+        "default": "settle"}
