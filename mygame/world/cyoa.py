@@ -7939,3 +7939,196 @@ def _vn_after(character):
                 "in a life built entirely of draped mirrors and anonymous mail — and they've given "
                 "it to you. You carry that out of the post office warmer than you came in.")}],
         "default": "stay"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Calix's Keeping-Room — the post office's quietest clerk, in his own
+# register: spare, dry, devastating, the held glance, patience as a craft.
+# WARM post-office key (no facility dread), but Calix's particular warmth is
+# *certainty* — his whole craft is consent made certain (the framed receipt:
+# someone who needed two tries and made the second one sure). Pays off his lore:
+# the one indulgence (told plainly he did it right), the re-oiled bench for one
+# name, the counting-frame, the un-lettered wax die that's a name, the empty
+# STAYED slot. Real `devote` + `couch_warm`. Kit-aware (restraints/seal/count).
+# Flow: arrival→consent→bench→after. Entry: `scene calix`/keeping.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ck_arrival", root=False)
+def _ck_arrival(character):
+    return {"key": "ck_arrival", "prompt": (
+        "The strong door off the Sorting Hall lets you into the tidiest erotic space in the known "
+        "world. Restraints graded by width on brass pegs; gags arranged by silence achieved, the "
+        "labels measured in decibels; one immaculate bench, its wear sanded and re-oiled until it "
+        "reads as design. The repurposed sorting-grid on the wall holds one item and one card per "
+        "slot in his draftsman capitals — |x3RD BELL TUESDAY|n, |xTHE QUIET ONE|n, |xASKED TWICE, "
+        "ANSWERED ONCE|n — and one slot, near the top, that holds nothing at all and is labelled "
+        "|wSTAYED|n. It smells of saddle soap and patience.\n\n"
+        "|wCalix|n is at the bench, oiling a hinge that does not squeak, because he keeps it that "
+        "way. Deep charcoal, ram-horned, built to last. He doesn't startle. He sets the cloth down, "
+        "squares it to the edge, and looks up — and the glance holds a beat longer than necessary, "
+        "the way it always does, the way that is the most he says out loud about anything. \"You "
+        "found the door,\" he says, low and even. \"It's a strong door. It only opens from the "
+        "inside, for the people I've decided to keep the inside open for.\" A pause, weighed. "
+        "\"You're one. I filed it a while ago. I didn't tell you because telling isn't the same as "
+        "doing, and I prefer doing.\""),
+        "options": [
+            {"key": "praise", "label": "Tell him, plainly, that he did something right",
+             "set": {"ck": "praise"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "his one indulgence — no teasing, just true",
+             "outcome": (
+                "You look at the squared cloth, the silent hinge, the bench he's kept perfect for "
+                "people he doesn't name, and you say it the way it should be said — plainly, no "
+                "teasing, true: \"That's perfect, Calix.\" And the unhurried solidity *falters* — "
+                "the charcoal goes a beautiful shade darker, the throat clears once, and for a full "
+                "three seconds the man who has an answer for everything has none. \"...\" He squares "
+                "the cloth again, which it did not need. \"You shouldn't know that works on me,\" he "
+                "says, finally, not quite level. \"Seraphine. I'll deal with her.\" The corner of "
+                "his mouth does the thing and is gone. He heard you. It landed. It's filed.")},
+            {"key": "bench_ask", "label": "Ask, simply, to be put on the bench",
+             "set": {"ck": "bench"}, "desc": "say what you came for; let him take the time he takes",
+             "outcome": (
+                "\"Put me on the bench,\" you say — simple, no flourish, because flourish is wasted "
+                "on Calix and you've learned that much. He considers you for a moment, the way he "
+                "considers a parcel's weight, reading what you're actually asking under the words. "
+                "\"In a moment,\" he says. \"There's a thing I do first. I do it for everyone, every "
+                "time, and I don't skip it, and I'll tell you why before I do it.\" He gestures you "
+                "toward the bench with one broad, certain hand. \"Patience is a craft. So is the "
+                "other thing. We'll get to both.\"")},
+            {"key": "quiet", "label": "Be quiet and let him lead", "set": {"ck": "quiet"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "match his register; trust the slow hands",
+             "outcome": (
+                "You don't fill the quiet. You let it sit, the way he lets it sit, and you watch "
+                "something in him approve of that without a word — the slow nod of a man who has met "
+                "very few people who understand that the quiet is the point. \"Good,\" he says, and "
+                "the single syllable is worth a paragraph from anyone else. \"Most people talk to "
+                "cover the wanting. You don't have to, here. I'll keep the shape of it. That's what "
+                "I'm for.\" He turns down the lamp by a careful notch.")}],
+        "default": "quiet",
+        "then": "ck_consent"}
+
+
+@choice("ck_consent", root=False)
+def _ck_consent(character):
+    return {"key": "ck_consent", "prompt": (
+        "He brings something flat from under the bench's felt: a framed delivery receipt, the "
+        "signature line signed twice — the second time steadier than the first. \"This is the thing "
+        "I do,\" Calix says, and there's no performance in it, only craft. \"Somebody, once, signed "
+        "for what they wanted and I could see the hand shake. So I asked again. Made them sit with "
+        "it and answer it certain. The second signature is the real one. I kept the proof.\" He "
+        "sets it down, squared. He looks at you, level, and does not look away. \"So. I'll ask you "
+        "once, and you'll answer, and then I'll ask you again — and the second answer is the one I "
+        "act on. Do you want this. The bench. My hands. The time I'll take.\""),
+        "options": [
+            {"key": "certain", "label": "Answer it certain — both times, steady",
+             "set": {"sig": "certain"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "give him the steady second signature",
+             "outcome": (
+                "\"Yes,\" you say, the first time. He nods once, unhurried, and lets the quiet hold "
+                "long enough that you feel the weight of it settle. Then: \"Again.\" And you say it "
+                "again, steadier, meaning it down to the floor — \"Yes. I want it.\" — and Calix "
+                "takes that the way he takes a parcel signed twice: as *settled*, as real, as a "
+                "thing now safe to do properly. \"That's the one,\" he says, quiet. \"That's the "
+                "signature. Now I can take all the time it deserves, because neither of us has to "
+                "wonder.\"")},
+            {"key": "shaky", "label": "Let the first answer shake — let him steady you",
+             "set": {"sig": "steadied"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "be the hand that shakes; let his craft make it certain",
+             "outcome": (
+                "The first \"...yes\" comes out unsteady, the want bigger than your voice, and Calix "
+                "doesn't frown at it — he *gentles*, broad hand coming to rest over yours, patient "
+                "as the bench. \"That's all right,\" he says. \"That's why there's a second one. "
+                "Breathe. Sit in it. Then tell me certain.\" And held there in the saddle-soap quiet "
+                "you find the floor of the wanting and answer from it: \"Yes. Calix. I'm sure.\" His "
+                "thumb presses your knuckles once, approving. \"Now it's true. Now I'll keep it.\" "
+                "He has, you understand, just made the shaking hand into the steady second "
+                "signature — that is the whole man, right there.")}],
+        "default": "certain",
+        "then": "ck_bench"}
+
+
+@choice("ck_bench", root=False)
+def _ck_bench(character):
+    k = _kit(character)
+    bound = ("|xHe reads the hardware you already wear — the rings, the ports — without comment and "
+             "without surprise, and works *around* the existing fittings with the patience of a man "
+             "who files everything, threading his graded cord through what's already there.|n\n\n"
+             if (k.get("pierced") or k.get("milk_port") or k.get("collared")) else "")
+    return {"key": "ck_bench", "prompt": (
+        bound +
+        "He puts you on the bench he keeps perfect, and the restraints come off the brass pegs in "
+        "the order he's decided — width-graded, every buckle seated with a precise, load-bearing "
+        "certainty, snug to the exact degree and not a hair past. Nothing is rushed. Nothing is "
+        "wasted. He sets the small brass counting-frame where you can see it, beads worn bright. "
+        "\"I count,\" he says, low, by way of explanation and warning both. \"It's the indulgence "
+        "under the indulgence. You'll give me a number tonight. I'll move one bead a time, and "
+        "you'll watch them go across, and you'll know exactly how thoroughly you were attended "
+        "to.\" Then the slow hands begin — unhurried, devastatingly exact, every touch placed like "
+        "a stamp landing true — and the patience itself becomes the thing that takes you apart, "
+        "because he will not be hurried, will not skip, will not stop until the count is full."),
+        "options": [
+            {"key": "count", "label": "Give him the number — let him fill the frame",
+             "effect": "couch_warm", "params": {"amount": 35.0}, "set": {"bench": "counted"},
+             "desc": "every bead earned, slow, exact, complete",
+             "outcome": (
+                "You give him the number, and Calix sets to it like a craftsman with a full "
+                "afternoon — bead, and bead, and bead, each one slid across only when it's truly "
+                "earned, the slow exactness building into something you can't squirm ahead of and "
+                "can't talk past, because he keeps the rhythm and the rhythm keeps you. By the "
+                "time the last bead clicks home you're wrung out and shaking and *thoroughly* "
+                "attended to, and he reads it in your face and nods, satisfied as a man whose work "
+                "came out square. \"Full count,\" he says, low, almost tender. \"Done properly. I "
+                "don't do it any other way.\"")},
+            {"key": "seal", "label": "Ask about the un-lettered die in his kit",
+             "effect": "couch_warm", "params": {"amount": 30.0}, "set": {"bench": "sealed"},
+             "desc": "the wax seal worn too smooth to read — a name",
+             "outcome": (
+                "You ask, between the slow hands, about the un-lettered wax die — the one worn too "
+                "smooth to read by eye, the one touching feels like being caught at something. "
+                "Calix goes still. \"That one's a name,\" he says, and does not say whose. \"I press "
+                "it on the things I mean to keep.\" A pause that holds a question in it. Then, "
+                "warm wax dripped careful onto skin he's chosen, the smooth die pressed slow and "
+                "certain — a mark you can feel but not read, his and private and *meant* — while "
+                "the slow hands never stop. \"There,\" he murmurs. \"Now you're filed under "
+                "something I don't show anyone. Don't ask me to read it to you. The not-reading is "
+                "the point.\"")}],
+        "default": "count",
+        "then": "ck_after"}
+
+
+@choice("ck_after", root=False)
+def _ck_after(character):
+    return {"key": "ck_after", "prompt": (
+        "After, he unbuckles you in the reverse of the order he buckled you — precise even now — "
+        "and the first thing he does, before he tends to himself, is take up the cloth and the oil "
+        "and begin re-doing the bench. You've heard the gossip: he re-sands it after certain "
+        "appointments and re-oils it after one in particular, recurring, and has for two years, and "
+        "thinks no one's noticed the pattern in the calendar. He's oiling it now, for you, with you "
+        "watching, which is its own quiet confession. On the sorting-grid, he takes down a blank "
+        "card, writes on it in his capitals, and slots it. You can't read which slot. \"You're in "
+        "the calendar,\" is all he says. \"Recurring, if you want it. I keep what I file.\""),
+        "options": [
+            {"key": "stayed", "label": "Ask about the empty STAYED slot", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "the keepsake that's the shape of a gap",
+             "outcome": (
+                "You ask about the slot near the top that holds nothing and says |wSTAYED|n. Calix "
+                "is quiet long enough that the kettle would have boiled. \"Some keepsakes are the "
+                "shape of the thing not there,\" he says. \"That one's about someone who didn't.\" "
+                "He squares the card he just filed for you, and meets your eyes, and lets you see "
+                "that he didn't look away. \"I'd rather your slot have a thing in it. So come back, "
+                "and it will.\" From Calix, that is a man handing you something with both hands — "
+                "and you carry it out of the keeping-room knowing the strong door opens, now, from "
+                "your side too.")},
+            {"key": "thank", "label": "Tell him again that he did it right", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "feed his one indulgence on the way out",
+             "outcome": (
+                "On your way to the door you stop, and look back at the perfect bench and the man "
+                "re-oiling it, and you say it once more, plainly: \"You did that exactly right, "
+                "Calix.\" The charcoal goes dark again; the throat clears; the three full seconds "
+                "of a man with no answer arrive on schedule. \"...you're going to be a problem,\" "
+                "he says at last, which from him is helpless fondness wearing its only coat. \"Go "
+                "on. The door opens for you now. It'll keep opening.\" He squares the oil-cloth as "
+                "you leave — and you'd swear, just before the strong door shuts, you hear him say "
+                "the number you gave him, once, quietly, to himself, like a man checking his work "
+                "came out true.")}],
+        "default": "stayed"}

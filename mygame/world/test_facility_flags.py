@@ -738,6 +738,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c32, ch)[0] is not None, f"vesper(b) '{ch}' failed"
     assert c32.db.pending_choice is None and c32.db.scene_flags is None, "vesper(b) should end clean"
 
+    # Calix's Keeping-Room (post-office warm scene) chains end-to-end, both branches.
+    c33 = _Char(); cyoa.start_scene(c33, "ck_arrival")
+    ckbeats = []
+    for ch in ("praise", "certain", "count", "stayed"):
+        p = c33.db.pending_choice
+        assert p, f"calix: no pending before '{ch}'"
+        ckbeats.append(p["key"])
+        assert cyoa.resolve_choice(c33, ch)[0] is not None, f"calix '{ch}' did not resolve"
+    assert ckbeats == ["ck_arrival", "ck_consent", "ck_bench", "ck_after"], ckbeats
+    assert c33.db.pending_choice is None and c33.db.scene_flags is None, "calix should end clean"
+    c34 = _Char(); cyoa.start_scene(c34, "ck_arrival")
+    for ch in ("quiet", "shaky", "seal", "thank"):
+        assert c34.db.pending_choice, f"calix(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c34, ch)[0] is not None, f"calix(b) '{ch}' failed"
+    assert c34.db.pending_choice is None and c34.db.scene_flags is None, "calix(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
