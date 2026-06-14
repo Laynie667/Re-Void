@@ -501,6 +501,28 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c14, ch)[0] is not None, f"deepstock-decline '{ch}' failed"
     assert c14.db.pending_choice is None and c14.db.scene_flags is None, "deepstock-decline should end clean"
 
+    # Holding chains end-to-end.
+    c15 = _Char(); cyoa.start_scene(c15, "hd_arrival")
+    hbeats = []
+    for ch in ("wait", "still", "endure_wait", "go"):
+        p = c15.db.pending_choice
+        assert p, f"holding: no pending before '{ch}'"
+        hbeats.append(p["key"])
+        assert cyoa.resolve_choice(c15, ch)[0] is not None, f"holding '{ch}' did not resolve"
+    assert hbeats == ["hd_arrival", "hd_prep", "hd_wait", "hd_called"], hbeats
+    assert c15.db.pending_choice is None and c15.db.scene_flags is None, "holding should end clean"
+
+    # The Processing Floor chains end-to-end.
+    c16 = _Char(); cyoa.start_scene(c16, "pf_arrival")
+    fbeats = []
+    for ch in ("present", "serve", "follow"):
+        p = c16.db.pending_choice
+        assert p, f"floor: no pending before '{ch}'"
+        fbeats.append(p["key"])
+        assert cyoa.resolve_choice(c16, ch)[0] is not None, f"floor '{ch}' did not resolve"
+    assert fbeats == ["pf_arrival", "pf_use", "pf_routed"], fbeats
+    assert c16.db.pending_choice is None and c16.db.scene_flags is None, "floor should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

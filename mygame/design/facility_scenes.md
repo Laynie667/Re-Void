@@ -31,8 +31,8 @@ built reference). This doc is the master list of everything to convert.
 | Room | Actor(s) | The scene | Real systems it drives |
 |---|---|---|---|
 | **Intake** | Bethany | ✅ **BUILT** (`bx_*`, 10 beats) | contract/clause, devote, name-forfeit, first-use |
-| **Holding** | a holding handler | held & prepped before processing; the wait, the first inventory | consent open, posture, anti-clothing |
-| **Processing Floor** | floor handler / Bethany | put to use on the open floor, on display; routed onward | display/exhibition, use, routing |
+| **Holding** | a holding handler | ✅ **BUILT** (`hd_*`, 4 beats; the dread-of-waiting + first inventory) | catalogue/prep, state-aware |
+| **Processing Floor** | a floor handler | ✅ **BUILT** (`pf_*`, 4 beats; processed-in-public + routing) | real `_scene_single` use; the routing hand-off |
 | **Breeding Pens** | the **stockman** + named studs + animals | ✅ **BUILT** (`bp_*`, 8 beats; stud/pack/machine branches) | `_gang`/`_scene_knottrain`, lineage, quota |
 | **Conditioning Cell** | Bethany (recorded voice) + Spiral Chair | ✅ **BUILT** (`cc_*`, 8 beats; sink/resist, mantra, the descent door) | real `mantra_set` trigger, `deepen` (conditioning+regression), suggestibility |
 | **Dairy** | the dairy hand | ✅ **BUILT** (`dy_*`, 5 beats; the scene→cycle SEAM) | real `_do_milk` at quota; then hands off to the retained milking cycle; state-aware (little/pregnant/nugget hook) |
@@ -83,4 +83,4 @@ built reference). This doc is the master list of everything to convert.
 3. ✅ **Dairy** — DONE (the scene→cycle seam + the state-aware hook pattern).
 4. ✅ **Marking Parlour** + ✅ **Sanitation/Pigsty** — DONE. Next:
 5. ✅ **Showroom** + ✅ **Office/Kept** — DONE (ownership through-line complete). Next:
-6. ✅ **Nursery/lineage** + ✅ **Deep Stock** — DONE. Remaining: **Holding**, **Processing Floor**, **Records/inspection**, **Events**, then the flow controller.
+6. ✅ **Nursery** + ✅ **Deep Stock** + ✅ **Holding** + ✅ **Processing Floor** — DONE. Remaining: **Records/inspection**, **Events**, then the flow controller.

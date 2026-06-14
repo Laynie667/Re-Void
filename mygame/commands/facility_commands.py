@@ -1631,6 +1631,8 @@ class CmdScene(Command):
         "regress": "nu_arrival",
         "deepstock": "ds_arrival", "deep": "ds_arrival", "stock": "ds_arrival",
         "terminus": "ds_arrival",
+        "holding": "hd_arrival", "hold": "hd_arrival", "wait": "hd_arrival",
+        "floor": "pf_arrival", "processing": "pf_arrival",
     }
 
     def func(self):

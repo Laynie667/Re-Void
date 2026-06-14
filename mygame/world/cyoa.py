@@ -5251,3 +5251,281 @@ def _ds_close(character):
                 "carry, and to be unbothered either way. \"Both true,\" she says. \"The kind end "
                 "and the open door. I keep them both for you. Now — back to work.\"")}],
         "default": "carry"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Holding — the wait before processing. The dread of not-knowing.
+# Cinematic, state-aware, deliberately tighter (a connective room). Actor: a bored
+# holding handler working a clipboard. The horror here is anticipation + the first
+# inventory. §0 always frees you. Flow: arrival→prep→wait→called. Entry: `scene holding`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("hd_arrival", root=False)
+def _hd_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = "You're set on a shelf along the wall with the other limbless lots, sorted by size. "
+    elif st["preg"]:
+        note = "You're penned apart from the rest — bred stock waits separately, handled gentler, worth more. "
+    elif st["little"]:
+        note = "Down in your head, the waiting is almost worse — you don't know why you're here, only that you are, and that no one's coming for the reason you'd hope. "
+    return {"key": "hd_arrival", "prompt": (
+        "Holding is a bare warm room of numbered pens and a long bench bolted to the wall, where "
+        "stock waits between one thing and the next — fresh intake not yet processed, finished "
+        "lots awaiting transfer, anyone the board hasn't decided about yet. " + note + "A few other "
+        "residents wait with you, stripped and tagged and quiet in the particular way of bodies "
+        "that have learned waiting is the only thing on offer. An |willuminated board|n on the far "
+        "wall shows a slow queue of numbers; yours is on it, somewhere down the list, unreadable "
+        "from here.\n\n"
+        "The |wholding handler|n works a clipboard at a counter, barely looking up — a "
+        "processing-clerk who sees you as a line-item awaiting its turn. \"Number's on the board,\" "
+        "they say, before you can ask. \"You'll be called when you're called. Could be an hour, "
+        "could be a shift. Sit, don't sit, makes no difference to the queue. Only rule in here is "
+        "you don't leave the pen, and there's nowhere to leave it to anyway.\""),
+        "options": [
+            {"key": "wait", "label": "Sit and wait quietly", "set": {"hold": "wait"},
+             "effect": "devote", "params": {"amount": 1.0}, "desc": "learn the waiting; it's most of the lesson",
+             "outcome": (
+                "You sit on the bench with the others and learn the waiting — the long blank dread "
+                "of it, the not-knowing, the way the mind eats itself in the quiet. The handler "
+                "marks you *settles well*. It's a real entry. The facility values a lot that waits "
+                "without fuss, and you're already becoming one, just by sitting here.")},
+            {"key": "demand", "label": "Demand to know what's happening", "set": {"hold": "demand"},
+             "effect": "deny_hold", "params": {"cond": 2.0}, "desc": "make noise; the queue doesn't move for it",
+             "outcome": (
+                "You demand answers — what's happening, when, why — and the handler doesn't even "
+                "finish the line they're writing. \"Board'll tell you when it's your turn. Asking "
+                "moves you down, not up; the calm ones get processed first, it's just easier on "
+                "everyone.\" The other residents don't look at you. Making noise in Holding marks "
+                "you as not-yet-broken-in, which is its own entry on the clipboard.")},
+            {"key": "others", "label": "Size up the others waiting", "set": {"hold": "others"},
+             "desc": "read the room of stock you're now part of",
+             "outcome": (
+                "You take in the others — a heavily pregnant one dozing, a deeply conditioned one "
+                "staring placidly at nothing, a fresh terrified arrival like you, a finished-looking "
+                "one waiting to be transferred *down* — and you understand you're looking at your "
+                "own timeline, the stages of it laid out on a bench, and that you've already "
+                "started moving along it. The handler clocks you reading the room. \"Yeah. That's "
+                "you, give it time. All of those are you.\"")}],
+        "default": "wait",
+        "then": "hd_prep"}
+
+
+@choice("hd_prep", root=False)
+def _hd_prep(character):
+    return {"key": "hd_prep", "prompt": (
+        "While you wait, you're |wprepped|n — not processed, that's later, just made ready, the way "
+        "you'd hose and tag livestock before market. A handler works down the bench in turn: "
+        "stripping what's left to strip, hosing you clean, clipping a numbered tag where it'll "
+        "stay, running a bored gloved inventory of your holes and marks and measurements and "
+        "reading them off to a second handler who writes them down. It is thorough and impersonal "
+        "and somehow worse for being so routine — you are being *catalogued*, entered into the "
+        "system as a set of numbers and capacities, while you sit on a bench waiting for the same "
+        "thing to happen to the person beside you. \"Hold still for the count,\" the handler says, "
+        "not unkindly, parting you to look. \"Goes quicker if you don't clench.\""),
+        "options": [
+            {"key": "still", "label": "Hold still for the inventory", "effect": "devote",
+             "params": {"amount": 2.0}, "desc": "let yourself be catalogued; it's easier",
+             "outcome": (
+                "You hold still and let them count you — every hole gauged, every mark logged, your "
+                "whole body reduced to entries read aloud and written down — and the surrender of "
+                "being catalogued without resisting is its own small giving-up. \"Good count,\" the "
+                "handler says, moving on to the next body. You're in the system now, numbers and "
+                "all, before you've even been properly processed.")},
+            {"key": "clench", "label": "Clench against the gloved inventory", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "desc": "resist the count; it happens anyway",
+             "outcome": (
+                "You clench, and the handler sighs and works the count out of you anyway, patient "
+                "and bored, gauging you despite the resistance because the resistance was never a "
+                "variable. \"Clencher,\" they note to the second handler, who writes it down — "
+                "because even your resistance is just another measurement to catalogue. The "
+                "inventory finishes the same. You're entered, fighting or not.")}],
+        "default": "still",
+        "then": "hd_wait"}
+
+
+@choice("hd_wait", root=False)
+def _hd_wait(character):
+    return {"key": "hd_wait", "prompt": (
+        "And then the worst part of Holding: more waiting, but *changed* now — tagged, counted, "
+        "entered, you sit and watch the board and listen to the numbers get called. Each time one "
+        "is, a handler comes and takes someone off the bench — to processing, to the floor, to the "
+        "pens, *down* — and the one taken goes quiet or goes stiff or goes pliant, and you read in "
+        "each of them what might be coming for you, and the not-knowing-which winds tighter with "
+        "every number that isn't yours. The dread does the facility's work for free. By the time "
+        "they call you, you'll half want it just to end the waiting. That's the design. The bench "
+        "breaks more stock than some of the rooms do."),
+        "options": [
+            {"key": "endure_wait", "label": "Endure the wait — let the dread build", "effect": "devote",
+             "params": {"amount": 2.0}, "desc": "sit in it; arrive wanting it over",
+             "outcome": (
+                "You endure it, and the dread builds exactly as designed, and by the time the queue "
+                "nears your number you've passed through fear into a flat exhausted *readiness* — "
+                "wanting whatever's next simply because it will end the waiting. Which means you'll "
+                "walk into it half-cooperating, and the facility knows it, and that's why the bench "
+                "exists. The wait softened you more than a handler could have.")},
+            {"key": "steel", "label": "Use the wait to steel yourself", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "desc": "build a wall against what's coming",
+             "outcome": (
+                "You use the time to build a wall — decide what you won't give, brace for whatever "
+                "the number brings — and it helps, a little, for a little while. But the bench is "
+                "patient and the board is slow and walls get tired holding themselves up, and by "
+                "the time your number's near, the wall is heavier than the dread it was built "
+                "against. The facility doesn't mind you steeling yourself. It has more time than "
+                "your resolve does.")}],
+        "default": "endure_wait",
+        "then": "hd_called"}
+
+
+@choice("hd_called", root=False)
+def _hd_called(character):
+    return {"key": "hd_called", "prompt": (
+        "The board ticks over, and a handler reads your number off it, and the waiting is over — "
+        "which is its own awful relief, the dread you've been marinating in finally resolving into "
+        "*motion*. \"That's you,\" the handler says, unclipping you from the bench, checking your "
+        "tag against the clipboard. \"Processing's expecting you. Off you go.\" You're walked "
+        "toward the door the others went through, into whatever the board decided while you sat "
+        "and dreaded it, tagged and counted and already most of the way softened by the simple "
+        "cruelty of being made to wait. Holding did its job. It always does. It barely has to "
+        "touch you."),
+        "options": [
+            {"key": "go", "label": "Go where you're walked", "effect": "devote", "params": {"amount": 2.0},
+             "end": True, "desc": "the relief of motion; let it carry you in",
+             "outcome": (
+                "You go where you're walked, almost grateful for the motion after all that bench, "
+                "and the gratitude is the bench's parting gift to the facility — you arrive at "
+                "whatever's next already wanting it to begin. \"They always walk in easier off the "
+                "bench,\" the handler remarks to no one. \"Best room we've got, Holding, and it's "
+                "just a bench.\"")},
+            {"key": "drag", "label": "Make them drag you off the bench", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "one last refusal; the queue collects either way",
+             "outcome": (
+                "You make them drag you — one last refusal, dug in against the bench — and they "
+                "do, without drama, because a lot that has to be dragged is still a lot that gets "
+                "delivered, just with a note added. \"Marks against you for the fuss,\" the handler "
+                "says, hauling you toward the door. \"Processing'll have read it before you arrive. "
+                "You'd have done better walking. They all learn that. You'll learn it by your "
+                "second stint on the bench.\"")}],
+        "default": "go"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Processing Floor — the open-floor hub, on display, then routed on.
+# Cinematic, state-aware, tighter. Actor: a floor handler (+ Bethany passing). Real
+# use fires on the floor (_scene_single). The floor is the crossroads that routes
+# you onward. §0 always frees you. Flow: arrival→display→use→routed. Entry: `scene floor`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("pf_arrival", root=False)
+def _pf_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = "You're set on a display plinth among the stations, turned for the floor to see — a limbless lot needs showing off, not working. "
+    elif st["preg"]:
+        note = "Your swell is on open display, a bred lot worked carefully and watched closely; the floor likes proof the system produces. "
+    elif st["little"]:
+        note = "Small-headed and out under the lights, you don't grasp the floor, only that everyone can see you, and the seeing is the point. "
+    return {"key": "pf_arrival", "prompt": (
+        "The Processing Floor is the facility's crossroads — a wide bright hall ringed with "
+        "stations, where stock is worked in the open: milked at one rig, displayed at another, "
+        "used at a third, all of it visible, all of it routine, handlers moving between bodies "
+        "with clipboards while a big |wboard|n overhead tracks everyone's numbers live. There is no "
+        "privacy here by design; the floor is where you learn to be *processed in public*, one "
+        "body among many, on display whether you're being used or just waiting to be. " + note +
+        "\n\nA |wfloor handler|n collects you off intake and reads your board-line at a glance. "
+        "\"Right, you're up on the floor. Open processing — you get worked where everyone can see, "
+        "and you get *seen* being worked, that's half the point of the room.\" They steer you "
+        "toward an open station under the lights. \"Board says what you're owed and where you go "
+        "after. Floor's just the crossroads. Show the room what you are while you're passing "
+        "through.\""),
+        "options": [
+            {"key": "present", "label": "Present yourself to the floor", "set": {"floor": "present"},
+             "effect": "devote", "params": {"amount": 2.0}, "desc": "be seen willingly; the watching trains you",
+             "outcome": (
+                "You present — let the floor see you, let yourself be a body openly on display — and "
+                "the hundred incurious glances of the room land on you and *train* something: that "
+                "being watched being used is just the condition now, nothing to flinch from, the "
+                "ordinary weather of being stock. \"Shows well,\" the handler notes. \"Floor likes "
+                "one that shows. You'll route up faster for it.\"")},
+            {"key": "cover", "label": "Try to cover, find a corner", "set": {"floor": "cover"},
+             "effect": "deny_hold", "params": {"cond": 2.0}, "desc": "seek a privacy the floor doesn't have",
+             "outcome": (
+                "You reach for a privacy the floor simply doesn't contain — try to angle away, "
+                "cover, find a corner — and there are no corners, that's the architecture, the "
+                "station is open on every side and the board is overhead and the glances keep "
+                "landing. \"No hiding on the floor,\" the handler says, squaring you back to the "
+                "room. \"That's the lesson of the room. You're seen. Get used to seen. The ones "
+                "who fight seen just get watched harder.\"")}],
+        "default": "present",
+        "then": "pf_use"}
+
+
+@choice("pf_use", root=False)
+def _pf_use(character):
+    return {"key": "pf_use", "prompt": (
+        "And then you're |wused|n — at the station, in the open, on the schedule the board sets — "
+        "and it happens the way everything on the floor happens: routinely, publicly, one entry in "
+        "a hall full of the same. A handler works you, or sends someone to, and the room doesn't "
+        "stop to watch because the room is full of it, your use just one more motion in the "
+        "constant processing churn, and *that's* the degradation the floor specializes in: not "
+        "spectacle but *ordinariness*, being used as unremarkably as a machine being run, in front "
+        "of everyone, while everyone is being used unremarkably too. \"Hold your station,\" the "
+        "handler says. \"Take what the board sends. It's all logged.\""),
+        "options": [
+            {"key": "serve", "label": "Take it openly — be processed in public", "effect": "facility",
+             "params": {"method": "_scene_single", "kind": "scene"}, "set": {"used": "open"},
+             "desc": "the real use, on the floor, logged and seen",
+             "outcome": (
+                "You take it openly — real use at the open station, logged to your board-line, the "
+                "whole hall a witness that doesn't bother witnessing — and the public ordinariness "
+                "of it works on you exactly as designed: being used stops being an event and "
+                "becomes a *condition*, routine as the lights, and the part of you that used to "
+                "burn with the shame of it is quietly being processed out, one unremarked use at a "
+                "time.")},
+            {"key": "endure_floor", "label": "Endure it, eyes shut against the room", "effect": "facility",
+             "params": {"method": "_scene_single", "kind": "scene"}, "set": {"used": "shut"},
+             "desc": "the use happens regardless; shut out the watching",
+             "outcome": (
+                "You shut your eyes against the floor and endure it — the use real and logged "
+                "regardless — and shutting out the room doesn't spare you the room, only your own "
+                "witness of it, while everyone else's glances land all the same. \"Eyes open or "
+                "shut, board doesn't care,\" the handler says, marking the entry. \"You're processed "
+                "either way. Shutting them just means you don't get used to the seeing, and you'll "
+                "have to get used to it eventually. Might as well watch.\"")}],
+        "default": "serve",
+        "then": "pf_routed"}
+
+
+@choice("pf_routed", root=False)
+def _pf_routed(character):
+    return {"key": "pf_routed", "prompt": (
+        "When the station's done with you the |wboard|n decides where you go next — and you watch "
+        "it decide, your number sliding into a new column overhead, a destination assigned by some "
+        "logic of quotas and grades you don't get told: the pens, the dairy, the cell, the sty, "
+        "*down*. The floor handler reads it off and points you on. \"That's your routing. You're "
+        "owed elsewhere now.\" And this is the rhythm you understand the floor was teaching you all "
+        "along: that you don't go anywhere on your own legs for your own reasons anymore, you get "
+        "*routed* — processed at one station, sent to the next, a body moving through a system on "
+        "the system's schedule, the crossroads handing you off and already forgetting you for the "
+        "next lot stepping up."),
+        "options": [
+            {"key": "follow", "label": "Follow the routing", "effect": "devote", "params": {"amount": 2.0},
+             "end": True, "desc": "go where the board sends; become a thing that's routed",
+             "outcome": (
+                "You go where the board sends you, and the going-where-routed settles into you as "
+                "simply how things are now — no more deciding your own direction, just the next "
+                "column, the next station, the next thing you're owed for. The handler's already "
+                "reading the next body's line. You were a number that's now somewhere else's "
+                "number. That's the floor. That's the whole of what it makes you: routable.")},
+            {"key": "balk_route", "label": "Balk at the routing", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "refuse the assignment; you're walked anyway",
+             "outcome": (
+                "You balk at the assignment — plant yourself, refuse the column the board chose — "
+                "and a handler simply takes your arm and walks you toward it, because on the floor "
+                "your direction was never yours to refuse, only to be walked along. \"Routing's "
+                "routing,\" they say, steering you off. \"You don't pick. You never picked. The "
+                "floor's just where you find that out in front of everybody.\" You're walked to "
+                "what you're owed.")}],
+        "default": "follow"}
