@@ -34,7 +34,7 @@ built reference). This doc is the master list of everything to convert.
 | **Holding** | a holding handler | held & prepped before processing; the wait, the first inventory | consent open, posture, anti-clothing |
 | **Processing Floor** | floor handler / Bethany | put to use on the open floor, on display; routed onward | display/exhibition, use, routing |
 | **Breeding Pens** | the **stockman** + named studs + animals | ✅ **BUILT** (`bp_*`, 8 beats; stud/pack/machine branches) | `_gang`/`_scene_knottrain`, lineage, quota |
-| **Conditioning Cell** | Bethany (recorded voice) + Spiral Chair | the staged induction; mantra; the "below" descent | conditioning, suggestibility, installed triggers, regression |
+| **Conditioning Cell** | Bethany (recorded voice) + Spiral Chair | ✅ **BUILT** (`cc_*`, 8 beats; sink/resist, mantra, the descent door) | real `mantra_set` trigger, `deepen` (conditioning+regression), suggestibility |
 | **Dairy** | dairy handler | put on the machine the FIRST time; engorgement relief begging | milk quota, growth — *then hands off to the milking cycle* |
 | **The Pigsty** | the custodian | slopped, rutted face-down, kept filthy between uses | `apply_filth`, degradation, punishment |
 | **Sanitation Block** | the custodian + the queue | made the anonymous relief-hole at the wall; the toilet frame | use, holes, golden, degradation |
@@ -79,7 +79,7 @@ built reference). This doc is the master list of everything to convert.
 
 ## Build order (suggested, after Intake)
 1. ✅ **Breeding Pens** (stockman + studs) — DONE. Next:
-2. **Conditioning Cell** (Spiral Chair cinematic) — the mind track.
+2. ✅ **Conditioning Cell** — DONE.
 3. **Dairy** (scene → milking cycle handoff) — proves the scene/cycle seam.
 4. **Marking Parlour** (procedures) + **Sanitation/Pigsty** (degradation).
 5. **Showroom → Office/Kept arc** (the ownership through-line).

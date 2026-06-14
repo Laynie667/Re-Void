@@ -1617,6 +1617,8 @@ class CmdScene(Command):
     SCENES = {
         "intake": "bx_arrival", "bethany": "bx_arrival",
         "pens": "bp_arrival", "breeding": "bp_arrival", "stud": "bp_arrival",
+        "cell": "cc_arrival", "chair": "cc_arrival", "conditioning": "cc_arrival",
+        "hypno": "cc_arrival",
     }
 
     def func(self):

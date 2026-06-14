@@ -3158,3 +3158,281 @@ def _bp_after(character):
                 "board never empties and the stock is always ready and you will, the man was right, "
                 "be back.")}],
         "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Conditioning Cell — the Spiral Chair + Bethany's recorded voice.
+# Cinematic staged induction. Actor: Bethany's voice on the chair's recording —
+# warm, patient, hypnotic; she is not in the room and is somehow more total for it.
+# Branches on `trance` (sink/resist). REAL conditioning fires: mantra-seating
+# installs an actual recite-trigger (mantra_set); the descent deepens for real
+# (deepen = conditioning + regression). `continue` advances linear beats. §0:
+# escape/forceclear surface and clear you instantly, always.
+# Flow: arrival→settle→spiral→mantra→deep→descent→set→close. Entry: `scene cell`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("cc_arrival", root=False)
+def _cc_arrival(character):
+    return {"key": "cc_arrival", "prompt": (
+        "The Conditioning Cell is small and dim and padded for quiet, and the only thing in it "
+        "that matters is the chair. The |wSpiral Chair|n: high-backed, deeply cushioned, restraints "
+        "at every limb worn soft from use, and above it, angled down so you cannot not look at it, "
+        "a slow black-and-white |wspiral|n already beginning to turn. They sit you in it and the "
+        "padding receives your weight like it knows you, and the straps go on — wrists, ankles, a "
+        "soft band across your brow that means your head stays where the spiral wants it — and a "
+        "speaker somewhere close to your ear clicks, and warms, and *she* begins.\n\n"
+        "It is Bethany's voice. Recorded — she is not in the room, is off running her files and her "
+        "facility — and somehow that is worse, because the voice is perfect and patient and tireless "
+        "in a way no live person could sustain, and it has all the time in the world for you. "
+        "\"|MThere you are,|n\" it says, warm as a bath. \"|MComfortable. Strapped in, spiral lit. "
+        "You don't have to do anything in here, sweetheart. That's the whole gift of this room — "
+        "there's nothing to decide, nothing to hold up. You just sit, and listen to me, and let the "
+        "pretty turning thing do what it does. Shall we begin? You'll find you've already begun.|n\""),
+        "options": [
+            {"key": "sink", "label": "Let go — let the chair have you", "set": {"trance": "sink"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "stop holding up; let the voice and the spiral take the weight",
+             "outcome": (
+                "You let go. You let the cushion take your weight and the band take your head and "
+                "the voice take the rest, and the relief of having nothing to hold up is immediate "
+                "and enormous. \"|MOhh, *good* girl,|n\" the recording purrs, as if it can see you — "
+                "and maybe it can; maybe the chair tells her later. \"|MThat's it. That's the whole "
+                "trick, and you found it first try. Down you go.|n\"")},
+            {"key": "resist", "label": "Hold yourself back from it", "set": {"trance": "resist"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "keep your feet under you; the spiral is patient",
+             "outcome": (
+                "You hold yourself back — keep your thoughts sharp, refuse the cushion's pull, stare "
+                "*through* the spiral instead of into it. The voice doesn't mind at all. \"|MThat's "
+                "all right. Hold on as long as you like, sweetheart — I find the ones who hold on "
+                "make the loveliest sound when they finally let go, and you will. The spiral doesn't "
+                "get tired, and neither does my voice, and you have to blink eventually.|n\" It is "
+                "right. You do.")}],
+        "default": "sink",
+        "then": "cc_settle"}
+
+
+@choice("cc_settle", root=False)
+def _cc_settle(character):
+    trance = scene_flag(character, "trance", "sink")
+    nod = ("\"|MAlready halfway down. Look at you.|n\" " if trance == "sink"
+           else "\"|MStill up here with me. Stubborn. I like stubborn — it's just more rope to play "
+                "out.|n\" ")
+    return {"key": "cc_settle", "prompt": (
+        nod + "The voice settles into a rhythm, and the rhythm is the thing — not the words, the "
+        "*cadence*, slow and lapping and exactly the tempo of a tired heartbeat, so that your own "
+        "pulse starts, without your permission, to keep time with hers. \"|MBreathe with me. In, on "
+        "the turn of the spiral... and out. In... and out. Good. Notice your eyes want to follow "
+        "the spiral inward, to the centre, where it's quiet. Let them. There's nothing out at the "
+        "edges you need. Everything you need is at the centre, and the centre is me.|n\"\n\n"
+        "And the first real lap of it rolls through you — a warmth behind the eyes, the edges of "
+        "the room going soft and unimportant, your thoughts arriving slower and with more space "
+        "between them, each one a little harder to finish. It feels, treacherously, *wonderful*. "
+        "\"|MThat warm heaviness? That's you, letting go of weight you've carried so long you "
+        "forgot it was optional. Keep setting it down. I'll hold all of it.|n\""),
+        "options": [
+            {"key": "breathe", "label": "Breathe with her — match the cadence", "effect": "devote",
+             "params": {"amount": 2.0}, "desc": "let your pulse keep her time",
+             "outcome": (
+                "You breathe with her, and your pulse falls into her cadence, and the matching is "
+                "its own surrender — you've handed her the metronome of your own heart. \"|MThere. "
+                "Feel how we're breathing together now? That's not me matching you, sweetheart. "
+                "That's you matching me. You've been doing it for a minute. You'll keep doing it "
+                "after you leave.|n\"")},
+            {"key": "count", "label": "Cling to a thought — count, recite, stay sharp",
+             "effect": "deny_hold", "params": {"cond": 2.0}, "desc": "give yourself an anchor",
+             "outcome": (
+                "You grab a thought and hold it — count backwards, recite something, *anything* with "
+                "edges — and the voice flows around it without resistance, patient as water. "
+                "\"|MHold your little number. That's fine. I'll just talk underneath it, and the "
+                "spiral will turn underneath it, and in a while you'll notice you lost count and "
+                "didn't care. Counting is so much work, isn't it. I'm offering you the opposite of "
+                "work.|n\"")}],
+        "default": "breathe",
+        "then": "cc_spiral"}
+
+
+@choice("cc_spiral", root=False)
+def _cc_spiral(character):
+    return {"key": "cc_spiral", "prompt": (
+        "The spiral has stopped being a thing on a screen and become the shape of the inside of "
+        "your head. It turns and you turn with it, down and in, and a low |wdrone|n has come up "
+        "under the voice — felt in the teeth, in the sternum, a frequency that loosens whatever "
+        "it passes through. The dim room is gone now; there's the spiral, and the drone, and her "
+        "voice threading them together, and a vast pleasant fog where your objections used to "
+        "live. You could not say how long you've been here. Time is one of the things that went "
+        "soft.\n\n\"|MDeeper now, and it feels so good to go deeper, doesn't it — every turn of the "
+        "spiral a little further down, a little more *open*. And open is what we want. Open is "
+        "where I can set things down inside you, gently, where they'll keep. You won't even feel "
+        "me do it. You'll just find, later, that they're there, and that they feel like they were "
+        "always yours.|n\" A pause, warm, patient. \"|MThere's a little phrase I'd like to give "
+        "you. A gift. Will you say it with me?|n\""),
+        "options": [
+            {"key": "open", "label": "Sink further — go where the voice leads", "effect": "deepen",
+             "params": {"cond": 4.0}, "desc": "let her set things down in the open",
+             "outcome": (
+                "You go where it leads, down and open, and you feel — distantly, without alarm, the "
+                "alarm having gone soft with everything else — something being set down inside you, "
+                "gentle as a coin into water. \"|MThere. Just like that. You didn't fight it and it "
+                "didn't hurt and now it's in, and it's yours, and you'll thank me for it without "
+                "ever knowing it was me.|n\"")},
+            {"key": "snag", "label": "Catch yourself — claw back toward the surface",
+             "effect": "deny_hold", "params": {"cond": 3.0}, "desc": "a flicker of alarm; reach for up",
+             "outcome": (
+                "A flicker of alarm cuts the fog and you claw toward the surface — and the band "
+                "across your brow holds, and the spiral keeps turning, and the voice is right there "
+                "waiting, unbothered, almost tender. \"|MShh. I felt that. A little spark of the old "
+                "you, swimming up. It's all right. Swim up if you need to. The water's warm and I'm "
+                "patient and you're so *tired*, sweetheart. Down is so much easier than up. Down is "
+                "where I am.|n\" The fog closes back over. You stop swimming.")}],
+        "default": "open",
+        "then": "cc_mantra"}
+
+
+@choice("cc_mantra", root=False)
+def _cc_mantra(character):
+    return {"key": "cc_mantra", "prompt": (
+        "\"|MHere it is. Say it after me, in your own voice — I want to hear it in *your* voice, "
+        "that's important, that's what makes it stick.|n\" The voice gives you the phrase, slow, "
+        "each word laid down like a stone in a path: \"|M'I am happiest when I am being useful to "
+        "Bethany.'|n\" It hangs there in the fog, simple, reasonable, almost obviously true from "
+        "in here. \"|MGo on, sweetheart. Just once. Say it with me and feel how *right* it sits. "
+        "You can keep your mouth shut if you'd rather — you always can, that's the rule, I never "
+        "lie about the rule — but oh, you'll feel so much better once it's said, and we both know "
+        "you're going to say it eventually. Why carry it unsaid?|n\""),
+        "options": [
+            {"key": "say", "label": "Say it with her", "effect": "mantra_set",
+             "params": {"phrase": "i am happiest when i am being useful to bethany",
+                        "response": "recite", "mantra": "I am happiest when I am being useful to Bethany."},
+             "then": "cc_deep", "desc": "speak it in your own voice — and feel it seat for real",
+             "outcome": (
+                "You say it. In your own voice, slow and thick through the fog: \"|MI am happiest "
+                "when I am being useful to Bethany.|n\" And the saying *seats* it — you feel the "
+                "phrase catch and take hold somewhere under the spiral, a real installed groove now, "
+                "a thing that will rise on its own the next time the words are spoken near you. The "
+                "voice makes a sound of pure warm pleasure. \"|MThere. Now it's yours. Say it once "
+                "more in your head, just to feel it fit. ...Mm. It fits. I told you.|n\"")},
+            {"key": "hold", "label": "Keep your mouth shut", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "then": "cc_deep",
+             "desc": "hold the phrase off your tongue; the chair is patient",
+             "outcome": (
+                "You keep it behind your teeth. The voice doesn't push — pushing isn't its method — "
+                "it just notes the silence with fond patience and lets the spiral keep turning. "
+                "\"|MNot today. That's all right, sweetheart. The chair keeps a count, you know — "
+                "it remembers every session, and you'll be back, and back, and one day the phrase "
+                "will be easier to say than to keep holding, and you'll say it, and mean it, and "
+                "not remember choosing to. I can wait. I'm a recording. Waiting is all I do.|n\"")}],
+        "default": "say"}
+
+
+@choice("cc_deep", root=False)
+def _cc_deep(character):
+    return {"key": "cc_deep", "prompt": (
+        "You are as deep now as the chair takes most people — the place under the spiral where the "
+        "voice does its load-bearing work, where there is no edge of you left holding a shape, just "
+        "warm dark and her words and the certainty they arrive carrying. \"|MGood. This is the "
+        "bottom of where we usually go. You did so well getting here. Most need a dozen sessions to "
+        "sit this deep, and look at you.|n\" The voice is very close, very soft, almost intimate. "
+        "\"|MThere's a deeper place. Below this one. I don't take everyone there — it's where I do "
+        "the *real* work, the work that doesn't wash out — and I only take the ones I've decided to "
+        "keep.|n\" A pause that somehow smiles. \"|MI've decided to keep you. Would you like to see "
+        "what's downstairs? You can say no. You can always say no. It just won't feel like the no "
+        "you'd say up top.|n\""),
+        "options": [
+            {"key": "down", "label": "Go down — see what's below", "effect": "devote",
+             "params": {"amount": 3.0}, "then": "cc_descent",
+             "desc": "let her take you under the floor of yourself",
+             "outcome": (
+                "\"|MYes? Oh, *yes*. Good girl. Take my hand — metaphorically; your hands are "
+                "strapped — and down we go, under the floor of you, somewhere you've never let "
+                "anyone.|n\" And the bottom of the trance opens like a trapdoor and you go through "
+                "it, deeper than deep, into a dark so total and so safe-feeling that you'd agree to "
+                "anything said in it, and she knows that, and that is exactly why she brought you.")},
+            {"key": "stay", "label": "Stay here — don't go deeper", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "then": "cc_set",
+             "desc": "hold at the floor; refuse the trapdoor",
+             "outcome": (
+                "\"|MStaying up here? At the floor? That's allowed.|n\" The voice is warm, "
+                "unbothered, not even slowed. \"|MWe'll do plenty of good work right here, and "
+                "you'll go home tonight a little more mine than you came, and you won't be able to "
+                "point at why. The downstairs will keep. It's not going anywhere, and neither, "
+                "sweetheart, are you.|n\" The work it does at the floor is gentler. It is not less.")}],
+        "default": "down"}
+
+
+@choice("cc_descent", root=False)
+def _cc_descent(character):
+    return {"key": "cc_descent", "prompt": (
+        "Below the floor of yourself there are no words at first — just the dark, and the safety of "
+        "it, and her voice the only landmark in any direction. And here, where you have no edges "
+        "left to object with, she does the real work: not suggestions now but *settling* — laying "
+        "things into the foundation, under everything, where you build the rest of yourself on top "
+        "of them without ever seeing them. \"|MThis is where you keep the things you think are just "
+        "*you*,|n\" the voice murmurs, infinitely gentle, infinitely sure. \"|MAnd I'm just... "
+        "tidying. Moving a few things to where I can reach them. Setting down a few of my own, deep, "
+        "where they'll feel like bedrock by the time you wake. You're going to want me when you're "
+        "frightened. You're going to settle when you hear my voice. You're going to call this the "
+        "safest you've ever felt, and you're going to be right, and that's the cruelest true thing "
+        "in this whole building.|n\""),
+        "options": [
+            {"key": "let", "label": "Let her tidy — go boneless in the dark", "effect": "deepen",
+             "params": {"cond": 8.0, "regress": 5.0},
+             "desc": "the deepest surrender; real conditioning + regression set into bedrock",
+             "outcome": (
+                "You go boneless and let her tidy the foundations of you, and it doesn't feel like "
+                "losing anything — it feels like being *organised*, like someone finally putting "
+                "your house in an order that makes sense, and the order makes sense because every "
+                "room now opens onto her. What she sets down here will feel like bedrock by morning. "
+                "You will defend it as your own. \"|MPerfect,|n\" she breathes. \"|MThat's my "
+                "perfect thing.|n\"")},
+            {"key": "ember", "label": "Guard one ember of yourself down here", "effect": "deny_hold",
+             "params": {"cond": 5.0}, "desc": "keep one thing she can't move; pay for it",
+             "outcome": (
+                "Somewhere in the total dark you find one ember — one small thing that is *yours*, "
+                "from before, that you wrap around and refuse to let her move. The voice finds it "
+                "instantly, of course; nothing down here is hidden from her. But she doesn't take "
+                "it. \"|MOh, you've kept one. How *precious*. Keep it, sweetheart — keep it safe. "
+                "I'll build everything else around it, so snug you'll never be able to get back to "
+                "it without going through me. One ember, in a house I've rearranged. We'll call it "
+                "yours. It'll keep you warm while you stop being able to find it.|n\"")}],
+        "default": "let",
+        "then": "cc_set"}
+
+
+@choice("cc_set", root=False)
+def _cc_set(character):
+    trance = scene_flag(character, "trance", "sink")
+    return {"key": "cc_set", "prompt": (
+        "\"|MAnd now we set it.|n\" The voice begins to climb, and the spiral with it, drawing you "
+        "up out of the dark toward the surface — but slowly, deliberately, *setting* with every "
+        "step like cooling glass, so that whatever was laid down stays exactly where she put it. "
+        "\"|MComing up now. Up, and up — and as you rise you'll forget the going-down, the way you "
+        "forget a dream, but you'll keep everything we did down there, because the keeping doesn't "
+        "live in the part that remembers. Three... the room coming back... two... your hands, your "
+        "feet, the straps... one... and *awake*, sweetheart. Eyes open. How do you feel?|n\"\n\n"
+        "The cell resolves around you — dim, padded, the spiral slowing to a stop. The straps "
+        "release with a soft click. You feel rested. You feel *good*, clean and quiet and light, "
+        "the way you feel after a long sleep — and you could not, if your life depended on it, say "
+        "what just happened in here, only that you'd like to come back, and that her voice, when "
+        "you think of it, makes something in your chest settle like a dog lying down."),
+        "options": [
+            {"key": "grateful", "label": "Notice how good you feel — and want more of it",
+             "effect": "devote", "params": {"amount": 3.0}, "end": True,
+             "desc": "let the wanting-to-return set with everything else",
+             "outcome": (
+                "You sit in how good you feel, and the wanting arrives soft and certain: you'd like "
+                "to come back. Tomorrow, if they'll let you. The chair's count ticks up by one, and "
+                "the next session will start deeper than this one did, because that is how the chair "
+                "remembers, and you've just taught it you're easy to bring down. You leave lighter "
+                "than you came. That's the trick. That's always been the trick.")},
+            {"key": "unease", "label": "Feel the wrongness under the calm", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True,
+             "desc": "the calm is real and so is the thing it's sitting on",
+             "outcome": (
+                "Under the lovely calm there's a wrongness — a sense of having been *moved*, of "
+                "furniture not quite where you left it — and you can't point at what, and the not-"
+                "being-able-to-point-at-it is the worst part, because the calm is genuinely there "
+                "too, genuinely good, sitting right on top of the wrongness like nothing's amiss. "
+                "You'll be back. Partly to enjoy the calm. Partly to try to catch what moved. The "
+                "chair counts on both.")}],
+        "default": "grateful"}

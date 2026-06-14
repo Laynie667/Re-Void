@@ -387,6 +387,18 @@ def test_bethany_scene():
                       "bp_knot", "bp_breed", "bp_after"], pbeats
     assert c3.db.pending_choice is None and c3.db.scene_flags is None, "pens should end clean"
 
+    # The Conditioning Cell scene chains end-to-end (the descent branch).
+    c4 = _Char(); cyoa.start_scene(c4, "cc_arrival")
+    kbeats = []
+    for ch in ("sink", "breathe", "open", "say", "down", "let", "grateful"):
+        p = c4.db.pending_choice
+        assert p, f"cell: no pending before '{ch}'"
+        kbeats.append(p["key"])
+        assert cyoa.resolve_choice(c4, ch)[0] is not None, f"cell '{ch}' did not resolve"
+    assert kbeats == ["cc_arrival", "cc_settle", "cc_spiral", "cc_mantra", "cc_deep",
+                      "cc_descent", "cc_set"], kbeats
+    assert c4.db.pending_choice is None and c4.db.scene_flags is None, "cell should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
