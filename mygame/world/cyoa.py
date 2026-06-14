@@ -43,14 +43,17 @@ def run_effect(character, eid, params=None):
 
 
 # ── core: pose / resolve / default ───────────────────────────────────────────
-def pose_choice(character, key, prompt, options, default_key=None, room=None):
+def pose_choice(character, key, prompt, options, default_key=None, room=None, then=None):
     """Present a choice. `options` = list of {key, label, desc, effect, params}. Stored on
-    the subject and shown privately (it's hers to make). Returns the pending dict."""
+    the subject and shown privately (it's hers to make). Returns the pending dict.
+    `then` is a node-level default next-node: every option chains to it unless the option
+    sets its own `then` (perfect for linear scenes where each beat has one Continue)."""
     if not character or not options:
         return None
     pending = {
         "key": key, "prompt": prompt, "options": list(options),
         "default": default_key or options[-1].get("key"),
+        "then": then,
         "posed_at": time.time(),
     }
     character.db.pending_choice = pending
@@ -95,8 +98,9 @@ def resolve_choice(character, selection):
     outcome = opt.get("outcome")
     if outcome and getattr(character, "msg", None):
         character.msg("|y" + outcome + "|n")
-    # Chain — an option may pose the next node in the branch.
-    nxt = opt.get("then")
+    # Chain — an option's own `then` wins; else fall back to the node-level default `then`
+    # (so linear beats can declare one next-node for all their options).
+    nxt = opt.get("then") or pending.get("then")
     if nxt:
         try:
             pose_named(character, nxt, room=getattr(character, "location", None))
@@ -253,7 +257,7 @@ def pose_named(character, cid, room=None):
     if not spec or not spec.get("options"):
         return None
     return pose_choice(character, spec.get("key", cid), spec["prompt"], spec["options"],
-                       default_key=spec.get("default"), room=room)
+                       default_key=spec.get("default"), room=room, then=spec.get("then"))
 
 
 def pose_random(character, room=None):
@@ -2754,4 +2758,403 @@ def _bx_close(character):
                 "sweetheart. You'll thank me soon, and you'll mean it all the way down, and *that's* "
                 "the one I'm truly waiting for. I can wait a very long time. It's the thing I'm "
                 "best at.\"")}],
+        "default": "thank"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Breeding Pens — the stockman, the stud, the kennel, the machine.
+# Same cinematic model as Intake. Actor: the stockman (terse, agricultural, treats
+# you as a number on the board — the indifference is the horror). Branches on the
+# `beast` flag (stud / pack / machine) set at the pick. Real breeding fires once at
+# the climax via the facility effect (_gang / _scene_knottrain). `continue` advances
+# linear beats. §0: escape/forceclear end it always. Entry: `scene pens`.
+# Flow: arrival→pick→scent→mount→ride→knot→breed→after.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("bp_arrival", root=False)
+def _bp_arrival(character):
+    nm = subject_name(character)
+    return {"key": "bp_arrival", "prompt": (
+        "The Breeding Pens hit you before your eyes adjust: the smell, first — rutting animal, "
+        "thick and hot and ammoniac, hay and musk and the specific reek of stock kept ready — and "
+        "then the sound, hooves shifting on concrete, a low bovine grunt, the click-pace of claws "
+        "on the bars of the kennel run, and somewhere down the row a stallion screaming at the "
+        "change in the air. Heavy stalls line the far wall; a churned pit of warm slop steams in "
+        "one corner; a scarred greasy post stands at animal height where the stock rub and mark. "
+        "In the centre, bolted to the floor, a heavy timber breeding frame waits cut low and "
+        "spread, built to fold a body open at exactly the height the stock mount.\n\n"
+        "The |wstockman|n doesn't look up from his board at first. He's a big unhurried man with a "
+        "clipboard and a stained coat and the manner of someone who has covered a great deal of "
+        "stock and finds none of it remarkable, and when he does look at you it is the flat "
+        "assessing glance of a man checking a number against an animal. \"Right.\" He makes a mark. "
+        f"\"Board says you're owed a covering. {nm}, is it — no.\" He checks again, and what he "
+        "reads is your designation and your quota, not your name. \"Doesn't matter. You're the one "
+        "that's due.\" He jerks his chin at the frame. \"We can do this the easy way or the way "
+        "where I call two lads to hold you. Stock doesn't care which. Neither do I.\""),
+        "options": [
+            {"key": "present", "label": "Walk to the frame and present yourself",
+             "set": {"approach": "present"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "save everyone the trouble; he'll note you're broke-in",
+             "outcome": (
+                "You walk to the frame on your own and fold yourself into it. The stockman grunts, "
+                "almost approving, and cinches the straps — wrists, then the bar across the small "
+                "of your back that tips your hips up and open. \"Broke-in already. Good. Saves my "
+                "morning.\" He makes a note. The note is about you the way a note is about a cow "
+                "that loads into the crush without fuss: useful, unremarkable, logged.")},
+            {"key": "balk", "label": "Hold back from the stalls", "set": {"approach": "balk"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "make him work for it; it changes nothing but the paperwork",
+             "outcome": (
+                "You hold your ground. The stockman sighs the sigh of a man whose morning just got "
+                "five minutes longer, sets his board down, and simply *walks you* to the frame — a "
+                "fist in your hair, a practised shove, your struggling about as relevant to him as "
+                "a heifer's. He has you strapped in before you've finished deciding to fight. "
+                "\"They all do that the first few times,\" he says, not unkindly, cinching the hip "
+                "bar. \"Stops being worth it once the body works out it's getting bred either way.\"")},
+            {"key": "ask", "label": "Ask him which one it'll be", "set": {"approach": "ask"},
+             "desc": "make him say it before it happens to you",
+             "outcome": (
+                "\"Which one.\" He almost smiles — not cruel, just a man amused by a question he "
+                "gets a lot. \"Depends what the board's short on, and what's keen.\" He glances down "
+                "the row, at the bull, the boar, the stallion stamping in the last stall, the "
+                "kennel pacing. \"They can all smell you're in season from here. Listen.\" The "
+                "kennel's pacing has picked up. Something in a stall slams a stall door. \"They've "
+                "already voted. Come on.\" He walks you to the frame.")}],
+        "default": "present",
+        "then": "bp_pick"}
+
+
+@choice("bp_pick", root=False)
+def _bp_pick(character):
+    approach = scene_flag(character, "approach", "present")
+    lead = {
+        "present": "He looks you over in the frame, unhurried. ",
+        "balk":    "He checks your straps are holding — they are — and looks you over. ",
+        "ask":     "\"Since you asked nice,\" he says, dry, \"I'll let you feel like you chose.\" ",
+    }.get(approach, "")
+    return {"key": "bp_pick", "prompt": (
+        lead + "He walks the row once, reading his stock the way you read a menu. \"Board wants "
+        "another cover on your line. Got options.\" He nods at each as he passes. \"Goliath — \" "
+        "the boar, rank and tusked and enormous in his low pen, already up and interested \" — "
+        "boar's keen, boar's quick, boar knots like a bastard. Bull's proven, slow, hung like "
+        "you'd not believe. Stallion'll wreck you and he's not gentle about depth.\" He stops at "
+        "the kennel run, where a dozen heavy rangy hounds have their noses jammed to the bars, "
+        "working your scent, whining. \"Or the kennel takes the lot of you and we get your whole "
+        "quota done in one ugly afternoon.\" He clicks his pen. \"I'll pick if you won't. But "
+        "you're in the frame either way, so. What's it to be.\""),
+        "options": [
+            {"key": "stud", "label": "Take the stud he's picked", "set": {"beast": "stud"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "one animal, his choice; let the machinery decide",
+             "outcome": (
+                "\"Goliath, then. Board's short on his cross anyway.\" He unlatches the boar's pen "
+                "with the bored competence of a man fetching a tool, and the thing comes out "
+                "snorting, three hundred pounds of single-minded rut, and the stockman steers it "
+                "toward your strapped-open body with a hand on its shoulder like he's parking a "
+                "cart. \"Hold still. He's faster if you don't fight the first mount.\"")},
+            {"key": "pack", "label": "Offer yourself to the whole kennel", "set": {"beast": "pack"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "the hounds, all of them; clears quota in one ugly afternoon",
+             "outcome": (
+                "The stockman raises an eyebrow — the first genuinely interested look he's given "
+                "you. \"Keen. All right.\" He marks the board, several lines at once. \"Saves us "
+                "days, this. You'll not walk right for a week and we'll have your hound-quota done "
+                "by supper.\" He crosses to the run and unlatches it, and the kennel *boils* out — "
+                "a dozen rangy bodies, all muscle and nose and want, swarming the frame and "
+                "you in it. \"They'll sort an order out themselves. They always do.\"")},
+            {"key": "beg_off", "label": "Beg off entirely", "set": {"beast": "stud", "balked": True},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "refuse the lot; he'll pick the worst of them for it",
+             "outcome": (
+                "\"Beg off.\" He says it flatly, already not listening, the way you'd note a cow "
+                "lowing. \"Board doesn't take begging, and neither do they.\" He considers the row "
+                "a moment longer than before — and walks, deliberately, to the stallion's stall. "
+                "\"You'll take the big one, then, since you've wasted my time. He's the least "
+                "gentle thing I've got and he'll not care that you didn't want it. Frankly nor do "
+                "I.\" The stall door bangs open.")}],
+        "default": "stud",
+        "then": "bp_scent"}
+
+
+@choice("bp_scent", root=False)
+def _bp_scent(character):
+    beast = scene_flag(character, "beast", "stud")
+    body = {
+        "stud": ("The boar shoulders up behind you, and the stockman guides its blunt seeking snout "
+                 "to the greasy marking-post first and then to *you* — letting it scent the frame, "
+                 "scent your strapped-open holes, work itself into a deeper rut on the smell of you. "
+                 "Its breath is hot and wet down the backs of your thighs. Something blunt and "
+                 "already-dripping drags across your skin, hunting the right hole by feel."),
+        "pack": ("The pack swarms the frame and *marks* you — a dozen reeking sheaths dragged up "
+                 "your cheeks and across your mouth, noses jammed into every fold of you, the whole "
+                 "writhing mass slathering you in musk and slick, claiming the new hole for the herd "
+                 "before a single one has mounted. You will carry the stink of this for cycles. The "
+                 "stockman watches, bored, making sure none of them fight over you badly enough to "
+                 "damage stock."),
+        "machine": ("The stockman swings the breaking machine into place behind the frame instead — "
+                    "a locking saddle, a thick knotted shaft on a driven rail, scaled to the stock. "
+                    "He fits its blunt head to you, checks the alignment against a chart, and rests "
+                    "his thumb on the speed dial. No scent, no animal. Just the patient mechanical "
+                    "certainty of a thing that will breed you on a timer and never tire."),
+    }.get(beast, "")
+    return {"key": "bp_scent", "prompt": (
+        body + "\n\nThe stockman steps back to where he can watch and not be kicked, clipboard "
+        "ready. \"Right. It'll take you in its own time now. Best thing you can do is hold still "
+        "and let it seat. Worst thing you can do — \" he shrugs \" — doesn't change the outcome, "
+        "just how torn up you are after. Your call.\""),
+        "options": [
+            {"key": "still", "label": "Hold still and let it work up to you",
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "the path of least damage; he'll log you as easy stock",
+             "outcome": (
+                "You make yourself hold still, every instinct screaming, and let it work itself up "
+                "against you. \"Good. That's the way.\" The stockman makes his note. Your stillness "
+                "is, to him, a quality of the animal in the frame — docile, loads easy, low-fuss — "
+                "and the not-being-seen-as-a-person settles over you colder than any insult.")},
+            {"key": "strain", "label": "Strain against the straps", "effect": "deny_hold",
+             "params": {"cond": 3.0},
+             "desc": "fight the frame; the frame was built for exactly this",
+             "outcome": (
+                "You strain against the frame with everything you have — and the frame, which was "
+                "designed by people who expected exactly this, holds you folded open without "
+                "complaint, and all your fighting accomplishes is to present you more obscenely and "
+                "wind the stock up hotter on your struggling. The stockman doesn't even look up. "
+                "\"Burns your strength off quicker, that's all. They like the wriggling.\"")}],
+        "default": "still",
+        "then": "bp_mount"}
+
+
+@choice("bp_mount", root=False)
+def _bp_mount(character):
+    beast = scene_flag(character, "beast", "stud")
+    body = {
+        "stud": ("The boar mounts. There's no ceremony to it and no patience — it heaves its bulk "
+                 "up over your back, claws scrabbling, far too heavy, and its blunt slick cock "
+                 "stabs and misses and stabs again, hunting, until it jams against a hole — any "
+                 "hole, it doesn't choose, it just finds wet and *drives* — and the flared length "
+                 "of it spears into you in one brutal uncaring shove that punches a scream out of "
+                 "you. It is already rutting before it's fully seated, fast and shallow and "
+                 "frantic, an animal with one idea."),
+        "pack": ("The first hound takes you, and it is fast and total — it mounts, clamps its "
+                 "forelegs around your hips with a strength that bruises, and jackhammers into you "
+                 "with the frantic uncaring speed of a dog that smelled a bitch in heat, its slick "
+                 "pointed cock spearing deep, its haunches a blur. Before your mind has caught up "
+                 "to the first, the others are crowding, shoving, the next already dragging up your "
+                 "side, the pack working as a relay and you the thing they pass between them."),
+        "machine": ("The stockman thumbs the dial and the machine drives. The knotted shaft runs in "
+                    "on its rail — smooth, mechanical, exact — spearing into you to a depth set by a "
+                    "chart and not by mercy, and then withdraws and drives again, the same stroke, "
+                    "the same depth, the same relentless metronome rhythm, and it will do that "
+                    "exactly that way for as long as the board says you're owed."),
+    }.get(beast, "")
+    return {"key": "bp_mount", "prompt": (
+        body + " You feel the size of it map itself out inside you — the stretch, the wrong-deep "
+        "ache, the blunt animal heat of it, the way it gives you no rhythm to brace against because "
+        "it isn't *for* you, you are simply the hole it's using. The stockman watches your face "
+        "with professional detachment, checking — not for your sake — that the stock has seated "
+        "properly and isn't going to injure itself.\n\n\"There it goes,\" he says. \"Seated. Now "
+        "it just works till it ties. Could be a minute. Could be twenty. It'll tell you.\""),
+        "options": [
+            {"key": "take", "label": "Tilt and take it deeper", "effect": "devote",
+             "params": {"amount": 3.0}, "desc": "open to the animal; let your body answer it",
+             "outcome": (
+                "Some drowning animal part of you tilts to take it deeper, and your body answers the "
+                "rut with a slick helpless welcome that mortifies the last thinking sliver of you. "
+                "The stock drives harder for it. \"Hm,\" says the stockman, marking something. "
+                "\"Takes it well. That goes in the file — easy breeder. You'll be in here a lot.\"")},
+            {"key": "clench", "label": "Clench and resist it", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "desc": "fight the intrusion; feel it not matter to the animal",
+             "outcome": (
+                "You clench down and try to deny it depth — and the animal doesn't notice, doesn't "
+                "care, has no concept of your resistance as anything but a tightness it ruts harder "
+                "to overcome, and all you've done is make yourself feel every brutal inch more "
+                "sharply. The stockman doesn't bother to comment. There's nothing to note. The "
+                "outcome was never in question.")},
+            {"key": "beg_stop", "label": "Beg the stockman to stop it", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "desc": "ask the only human in the room; he's heard it before",
+             "outcome": (
+                "\"Please — please make it stop—\" The stockman looks at you the way you'd look at "
+                "a sheep that bleated. Not cruelly. Just without any sense that it requires a "
+                "response. \"It'll stop when it's done,\" he says, and makes a note that is "
+                "probably the word *vocal*, and goes back to his board. The animal does not slow. "
+                "You learn, in real time, exactly how much your voice is worth in this room.")}],
+        "default": "take",
+        "then": "bp_ride"}
+
+
+@choice("bp_ride", root=False)
+def _bp_ride(character):
+    beast = scene_flag(character, "beast", "stud")
+    relay = (" One hound spends and is hauled off by the stockman and the next mounts before "
+             "you've felt the first pull out, an unbroken relay of rut, and you lose count, and "
+             "then you lose the thread entirely." if beast == "pack" else
+             " It never varies its rhythm and never tires and there is nothing in it that knows "
+             "you are a person, and after a while that stops mattering to you too.")
+    return {"key": "bp_ride", "prompt": (
+        "And it ruts you, and it does not stop, and there is no part of it that is for you. The "
+        "rhythm is animal — fast, deep, uncaring, the wet obscene slap of it filling the pen, your "
+        "whole folded-open body rocked forward into the frame with every drive." + relay + " The "
+        "heat the facility keeps banked in you flares up to meet it whether you will it or not; "
+        "somewhere in the relentless used-hard sameness, pain and that traitor heat fuse into one "
+        "signal you stop being able to sort, and the world goes long and grey and far away —\n\n"
+        "and you surface an unmeasured time later still being bred, the rhythm never having paused, "
+        "the stockman's clipboard a few marks fuller, your holes looser and your belly heavier and "
+        "no memory at all of the minutes the stock spent using the body you'd left untended. \"In "
+        "and out of it, eh,\" the stockman observes, not unkindly, the way you'd note a cow lying "
+        "down. \"Body breeds fine whether you're home or not. Some of 'em prefer to step out for "
+        "it. No shame in that.\""),
+        "options": [
+            {"key": "under", "label": "Go under — let the animal have the body", "effect": "devote",
+             "params": {"amount": 4.0}, "desc": "stop being home for it; the body breeds without you",
+             "outcome": (
+                "You stop trying to be present for it. You let the body do what the body's being "
+                "made to do and take yourself somewhere quiet and far, and the relief of that "
+                "abdication is enormous and shameful and exactly what the room is designed to "
+                "teach. The stock ruts on. You're barely there to feel it, and being barely-there "
+                "is starting to feel like the only mercy on offer, and the facility counts that a "
+                "lesson learned.")},
+            {"key": "hold_on", "label": "Stay present — feel all of it", "effect": "deny_hold",
+             "params": {"cond": 4.0}, "desc": "refuse to leave your own body; pay for staying",
+             "outcome": (
+                "You refuse to leave. You stay in the body and feel every animal inch of what's "
+                "being done to it, because leaving feels like letting them win something — and so "
+                "you're fully present, wire-tight and aware, when the heat and the pain and the "
+                "helplessness braid into one unbearable held-back thing. The stockman notes you "
+                "didn't drift. \"Stays home for it. Stubborn. They break slower, the ones that "
+                "watch. Break harder, too, in the end.\"")}],
+        "default": "under",
+        "then": "bp_knot"}
+
+
+@choice("bp_knot", root=False)
+def _bp_knot(character):
+    beast = scene_flag(character, "beast", "stud")
+    body = {
+        "stud": ("The boar's rhythm stutters, jams deep, and the knot at its base swells — and it "
+                 "doesn't ask, it just *forces*, hauling you back onto it as the gorged knot bullies "
+                 "at your stretched rim, too big, far too big, until it gives with a blunt sick "
+                 "internal |w*pop*|n and seats, and your rim clamps shut behind it. Tied. Locked to "
+                 "three hundred pounds of spent rutting animal that immediately tries to step off "
+                 "and can't, and drags you with it, the knot wrenching inside you."),
+        "pack": ("The hound currently in you jams deep and ties — the knot forcing through your "
+                 "worn rim with a wet |w*pop*|n and locking, sealing you onto it, and unlike the "
+                 "ones before it this one *stays*, turned and tied and dripping, while the rest of "
+                 "the pack mill and whine and wait their turn at the other holes. By the time the "
+                 "afternoon's done you'll have been tied and corked at every end more times than "
+                 "the stockman bothered to count."),
+        "machine": ("The machine drives the knot. There's no animal urgency to it — just the rail "
+                    "pushing the gorged knot against your rim with patient mechanical force, more, "
+                    "and more, until your body gives with a blunt |w*pop*|n and the knot seats, and "
+                    "the machine simply *holds* it there, locked, exactly as long as the chart says, "
+                    "indifferent as a press."),
+    }.get(beast, "")
+    return {"key": "bp_knot", "prompt": (
+        body + " The knot is a hard round mass lodged deep, immovable, and the stretch of your "
+        "sealed rim around it rides the knife-edge between agony and the facility's banked heat. "
+        "There is no pulling off. There is nothing to do but be tied and take what comes next. "
+        "\"There's the tie,\" the stockman says, with the only satisfaction he's shown — the "
+        "satisfaction of a job proceeding correctly. \"Now it dumps. Hold tight. Not that you've "
+        "a choice.\""),
+        "options": [
+            {"key": "beg_seed", "label": "Beg for it — beg to be bred", "set": {"pen": "beg"},
+             "effect": "devote", "params": {"amount": 4.0},
+             "desc": "ask the room to fill you; hear yourself do it",
+             "outcome": (
+                "\"Breed me — please, just breed me—\" It comes out of you raw and unbidden, begged "
+                "to an animal and a stockman and an empty pen, and the shame of having said it is "
+                "instantly less than the want underneath it. The stockman snorts. \"Listen to "
+                "that.\" He writes it down. \"They always start asking, around the third or fourth "
+                "cover. You're quick.\"")},
+            {"key": "silent_tie", "label": "Take the tie in silence", "set": {"pen": "silent"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "give the room nothing; be bred anyway",
+             "outcome": (
+                "You give the empty pen nothing — no sound, no begging, just your jaw set and your "
+                "body tied and waiting. The stockman respects it about as much as he'd respect a "
+                "quiet cow: not at all, and not less than a loud one. \"Quiet type. Fine. Gets bred "
+                "the same.\" The knot throbs, swelling that last fraction, right at the edge of "
+                "letting go.")}],
+        "default": "beg_seed",
+        "then": "bp_breed"}
+
+
+@choice("bp_breed", root=False)
+def _bp_breed(character):
+    beast = scene_flag(character, "beast", "stud")
+    method, kind = ("_scene_knottrain", "scene") if beast == "pack" else ("_gang", "gang")
+    return {"key": "bp_breed", "prompt": (
+        "And then it dumps. The knot pulses and the load floods you — hot, vast, forced past the "
+        "tie with nowhere to go but to stay and pack you full, your belly swelling tight against "
+        "the frame with it, pulse after pulse after pulse, the animal emptying everything it has "
+        "into the hole it was given. You can feel each surge. You can feel your own body accept it, "
+        "draw it deep, do the one thing the facility keeps you here to do. Whatever the laced heat "
+        "and the conditioning have been building toward all afternoon crests now on the simple "
+        "animal fact of being bred, and the noise you make is not language.\n\n"
+        "It is, by every measure the facility keeps, a successful cover. It goes on the board. It "
+        "goes in your line."),
+        "options": [
+            {"key": "take_seed", "label": "Take it — every pulse, as deep as it'll go",
+             "effect": "facility", "params": {"method": method, "kind": kind},
+             "desc": "the real cover; it lands on the board and in your lineage",
+             "outcome": (
+                "You take it, all of it, your body milking the tied cock for every drop because "
+                "that is what it has been trained and dosed and built to do. The deposit is real "
+                "and it is recorded — species, sire, count, the lot — and somewhere a line on a "
+                "studbook grows by one. The stockman reads the result off whatever tells him and "
+                "nods. \"Took. Good.\" You are, on paper and in the body, bred.")},
+            {"key": "endure_seed", "label": "Endure it — wait for it to be over",
+             "effect": "facility", "params": {"method": method, "kind": kind},
+             "desc": "the real cover happens regardless; you just refuse to want it",
+             "outcome": (
+                "You endure it — refuse to want it, refuse to crest on it, hold yourself just "
+                "outside the animal fact of being filled — and it happens anyway, every pulse, the "
+                "cover as real and as recorded as if you'd begged for it. Your body took. Your "
+                "wanting was never a variable the board tracked. \"Same result,\" the stockman "
+                "confirms, marking it. \"Took fine. Wanting it's for your comfort, not mine.\"")}],
+        "default": "take_seed",
+        "then": "bp_after"}
+
+
+@choice("bp_after", root=False)
+def _bp_after(character):
+    beast = scene_flag(character, "beast", "stud")
+    pen = scene_flag(character, "pen", "beg")
+    tail = ("The pack is hauled off you one by one as each finishes, and you're left in the frame "
+            "wrecked and quadruply-corked and dripping despite the plugs, your quota a great deal "
+            "closer and your body a great deal looser. " if beast == "pack" else
+            "The animal is eventually dragged off you, the knot pulling free with an obscene wet "
+            "wrench that leaves the load corked behind it, plugging you, holding the breeding in. ")
+    recap = ("It noted you begging." if pen == "beg" else "It noted you took it quiet.")
+    return {"key": "bp_after", "prompt": (
+        tail + "The stockman comes round to the business end of the frame, lifts your chin to "
+        "check your eyes the way you'd check stock for shock, thumbs a smear of spend off your "
+        "thigh and rubs it between his fingers, professionally assessing the cover. Satisfied, he "
+        "updates the board: a cover logged, a sire recorded, your quota line ticked one closer to "
+        "a number you've never been told. " + recap + "\n\n\"Right. You're done here for now.\" He "
+        "unstraps you, and your legs don't hold, and he doesn't particularly catch you — just "
+        "notes it. \"You'll be back when the board says. Get used to the frame; you'll log a lot "
+        "of hours in it.\" He's already reading the next line. \"Your get'll come up through the "
+        "Nursery, raised on your own milk, and when they're grown they cover you too. That's how "
+        "the line builds. Through you. Cycle on cycle.\" He says it the way he'd explain crop "
+        "rotation. \"Off you go.\""),
+        "options": [
+            {"key": "thank", "label": "Thank him — for the plainness of it, if nothing else",
+             "effect": "gratitude", "end": True,
+             "desc": "the indifference was almost a kindness; thank it",
+             "outcome": (
+                "\"Thank you.\" It surprises you both, a little. The stockman pauses, then grunts — "
+                "and writes one more thing down. \"Polite stock. Bethany'll like that; she likes "
+                "the ones that thank the machinery.\" He doesn't smile. But it wasn't unkind, the "
+                "way he said her name, and somehow that — being handed up the chain, being a thing "
+                "the owner will *like* — settles into you deeper than any cruelty managed.")},
+            {"key": "silent", "label": "Say nothing — limp out", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True,
+             "desc": "leave the pen on whatever legs you've got",
+             "outcome": (
+                "You say nothing. You haul yourself off the frame on legs that barely answer and "
+                "limp toward the door, dripping, plugged, your line one cover longer. The stockman "
+                "doesn't watch you go. You were a number that's now a slightly better number, and "
+                "the kennel is already pacing again behind you, noses to the bars, because the "
+                "board never empties and the stock is always ready and you will, the man was right, "
+                "be back.")}],
         "default": "thank"}

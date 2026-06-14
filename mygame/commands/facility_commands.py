@@ -1613,6 +1613,12 @@ class CmdScene(Command):
     locks         = "cmd:all()"
     help_category = "Interaction"
 
+    # Named scenes -> their opening node. Cinematic, choice-driven set-pieces.
+    SCENES = {
+        "intake": "bx_arrival", "bethany": "bx_arrival",
+        "pens": "bp_arrival", "breeding": "bp_arrival", "stud": "bp_arrival",
+    }
+
     def func(self):
         caller = self.caller
         try:
@@ -1624,9 +1630,14 @@ class CmdScene(Command):
             caller.msg("|xYou're mid-choice already — answer it first (|wchoose <n>|x), or "
                        "|wescape|x to bail out entirely.|n")
             return
-        # One scene for now; this is the proof-of-concept entry point.
-        if not start_scene(caller, "bx_arrival", room=caller.location):
-            caller.msg("|xNo scene is available to you here right now.|n")
+        arg = (self.args or "").strip().lower()
+        first = self.SCENES.get(arg, "bx_arrival" if not arg else None)
+        if not first:
+            caller.msg("|xScenes: " + ", ".join(sorted(set(self.SCENES))) +
+                       ".|n\n|x  Usage: |wscene <name>|x (e.g. |wscene pens|x).|n")
+            return
+        if not start_scene(caller, first, room=caller.location):
+            caller.msg("|xThat scene isn't available to you here right now.|n")
 
 ALL_FACILITY_VERBS.append(CmdScene)
 

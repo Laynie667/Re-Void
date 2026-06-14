@@ -33,7 +33,7 @@ built reference). This doc is the master list of everything to convert.
 | **Intake** | Bethany | ✅ **BUILT** (`bx_*`, 10 beats) | contract/clause, devote, name-forfeit, first-use |
 | **Holding** | a holding handler | held & prepped before processing; the wait, the first inventory | consent open, posture, anti-clothing |
 | **Processing Floor** | floor handler / Bethany | put to use on the open floor, on display; routed onward | display/exhibition, use, routing |
-| **Breeding Pens** | the **stockman** + named studs + animals | pick/assign the stud, the mounting, the knot, the plug | `_gang`, named-sire lineage, quota, holes/capabilities |
+| **Breeding Pens** | the **stockman** + named studs + animals | ✅ **BUILT** (`bp_*`, 8 beats; stud/pack/machine branches) | `_gang`/`_scene_knottrain`, lineage, quota |
 | **Conditioning Cell** | Bethany (recorded voice) + Spiral Chair | the staged induction; mantra; the "below" descent | conditioning, suggestibility, installed triggers, regression |
 | **Dairy** | dairy handler | put on the machine the FIRST time; engorgement relief begging | milk quota, growth — *then hands off to the milking cycle* |
 | **The Pigsty** | the custodian | slopped, rutted face-down, kept filthy between uses | `apply_filth`, degradation, punishment |
@@ -78,7 +78,7 @@ built reference). This doc is the master list of everything to convert.
   still tick on their own; the narrative no longer does).
 
 ## Build order (suggested, after Intake)
-1. **Breeding Pens** (stockman + studs) — highest-traffic, showcases the breeding scenes.
+1. ✅ **Breeding Pens** (stockman + studs) — DONE. Next:
 2. **Conditioning Cell** (Spiral Chair cinematic) — the mind track.
 3. **Dairy** (scene → milking cycle handoff) — proves the scene/cycle seam.
 4. **Marking Parlour** (procedures) + **Sanitation/Pigsty** (degradation).

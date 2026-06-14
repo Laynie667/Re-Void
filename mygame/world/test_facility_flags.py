@@ -375,6 +375,18 @@ def test_bethany_scene():
     assert c.db.pending_choice is None, "scene should be over"
     assert c.db.scene_flags is None, "end should clear scene memory"
 
+    # The Breeding Pens scene chains end-to-end too (pack branch, real-breed beat).
+    c3 = _Char(); cyoa.start_scene(c3, "bp_arrival")
+    pbeats = []
+    for ch in ("present", "pack", "still", "take", "under", "beg_seed", "take_seed", "thank"):
+        p = c3.db.pending_choice
+        assert p, f"pens: no pending before '{ch}'"
+        pbeats.append(p["key"])
+        assert cyoa.resolve_choice(c3, ch)[0] is not None, f"pens '{ch}' did not resolve"
+    assert pbeats == ["bp_arrival", "bp_pick", "bp_scent", "bp_mount", "bp_ride",
+                      "bp_knot", "bp_breed", "bp_after"], pbeats
+    assert c3.db.pending_choice is None and c3.db.scene_flags is None, "pens should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
