@@ -363,13 +363,15 @@ def test_bethany_scene():
     c = _Char()
     assert cyoa.start_scene(c, "bx_arrival"), "scene failed to start"
     beats = []
-    for choice in ("bold", "honest", "present", "sign", "submit", "thank"):
+    for choice in ("bold", "honest", "present", "sign", "kneel", "take",
+                   "beg_knot", "beg_come", "thank"):
         pend = c.db.pending_choice
         assert pend, f"no pending choice before '{choice}'"
         beats.append(pend["key"])
         opt, _ = cyoa.resolve_choice(c, choice)
         assert opt is not None, f"'{choice}' did not resolve"
-    assert beats == ["bx_arrival", "bx_file", "bx_strip", "bx_contract", "bx_first", "bx_close"], beats
+    assert beats == ["bx_arrival", "bx_file", "bx_strip", "bx_contract", "bx_unveil",
+                     "bx_first", "bx_seat", "bx_knot", "bx_close"], beats
     assert c.db.pending_choice is None, "scene should be over"
     assert c.db.scene_flags is None, "end should clear scene memory"
 

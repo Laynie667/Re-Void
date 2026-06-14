@@ -2070,52 +2070,89 @@ def _b_break_couch_after(character):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# SCENE: Bethany's Intake — the proof-of-concept for choice-driven, stateful RP.
-# Bethany is a present ACTOR: she addresses you, reads your file, does specific
-# things, reacts to each choice, and every later beat references what you did in
-# the earlier ones (via scene_flags). Player-paced: it waits on `choose`, never a
-# timer. Effects are real (devote/deny_hold/clause/pick_hole/gratitude). The §0
-# floor (escape/forceclear) is never gated and always pulls you out.
-# Start it with the `scene` command (or world.cyoa.start_scene(char,"bx_arrival")).
+# SCENE: Bethany's Intake — choice-driven, stateful, CINEMATIC.
+# A movie, not cliff-notes: dense sensory prose, a present actor whose demeanour
+# is real and shifts on what you do (bubbly false-security → pleased ownership if
+# you sign willingly; the mask dropped into wrath if you make her take it), and the
+# cock-seating savoured across three escalating beats. Everything is a CHOICE; the
+# scene WAITS on `choose`, never a timer. Every beat reads scene_flags + real state.
+# Real effects throughout. §0: escape/forceclear end it instantly, always.
+# Flow: arrival→file→strip→contract→unveil→first→seat→knot→close.
 # ═══════════════════════════════════════════════════════════════════════════
 
 @choice("bx_arrival", root=False)
 def _bx_arrival(character):
     nm = subject_name(character)
     return {"key": "bx_arrival", "prompt": (
-        "The intake counter is just a desk, and Bethany behind it is just a clerk — that's the "
-        "joke the room tells, and she lets it tell it. Your file is already open in front of her, "
-        f"your name on the tab in her own neat hand. She looks up, and the smile is real and warm "
-        f"and stops a careful half-inch short of her eyes. \"|w{nm}|n. There you are.\" She says it "
-        "like she's been holding your appointment all morning. \"Stand where I can see you. I'm the "
-        "one taking you in today — I asked to be — and I like to take my *time* with a new one.\" "
-        "She laces her soft pretty hands on the desk and waits, entirely unhurried. \"Show me how "
-        "you'd like to start.\""),
+        "The Intake counter is a lie the room tells well. It is just a desk — scuffed steel, a "
+        "blotter gone soft at the corners, a tidy stack of multi-page forms weighted flat under a "
+        "cold-iron brand — and the woman behind it is just a clerk: lanyard, fitted blouse buttoned "
+        "one button higher than the body underneath wants, a pen she clicks once, twice, against "
+        "the blotter while she reads. The sodium light hums its half-tone flat overhead, even and "
+        "shadowless and the colour of old bone, and under the disinfectant there's the other smell "
+        "the room never quite scrubs out — milk, and animal, and something warm and organic that "
+        "your body places a half-second before your mind wants it to.\n\n"
+        "Your file is already open in front of her. Not a fresh one — a |wthick|n one, edges furred "
+        "from handling, your name typed on the tab in her own neat hand, as though she filled it out "
+        "in advance, as though you were always going to be in this chair on this morning. She "
+        "finishes the line she's reading. Makes a small mark in the margin. Only then looks up — and "
+        f"the smile that arrives is bright and dimpled and genuinely, disarmingly *kind*, the welcome "
+        "of a woman who loves the first day, who has a hundred of them and still finds each one a "
+        "small delight. It is lovely. It is the loveliest thing in the room. It stops a careful "
+        "half-inch short of her eyes, and the muscle there does not move, and you notice that you "
+        "noticed — and she watches you notice, and her smile somehow *warms*, pleased with you for "
+        "being quick.\n\n"
+        f"\"|w{nm}|n,\" she says, like she's been saving the word all morning. \"There you are. "
+        "Oh, good.\" She sets the pen down, square to the blotter's edge, and laces her soft pretty "
+        "hands over your open file — and there's nothing in the gesture but warmth, except that her "
+        "thumb is resting on a page of *you*, and the casual ownership of it makes the bright little "
+        "room feel suddenly much smaller. \"Don't sit, sweetheart — stand, just there, where the "
+        "light's kind and I can see all of you. I asked to take your intake myself. I don't always; "
+        "I read your forms and I *wanted* this one.\" The dimples deepen. The eyes hold still. \"I "
+        "like to take my time with a new arrival, and you, I think, are going to be worth every "
+        "minute.\"\n\n"
+        "She tilts her head, unhurried, entirely at ease — the ease you have with a thing you have "
+        "already quietly decided is yours. \"So. Before the paperwork, before any of the rest of "
+        "it. Show me who walked in here today.\""),
         "options": [
             {"key": "bold", "label": "Meet her eyes and hold them",
-             "set": {"posture": "bold"}, "desc": "give her nothing — yet",
-             "outcome": "You hold her gaze. Bethany's smile widens by a fraction that is somehow "
-                        "worse than a frown. \"*Oh.* One with a spine. I do love unpacking those — "
-                        "carefully, so nothing important tears.\" She makes a small note without "
-                        "looking down. You've been filed under interesting, and interesting is not "
-                        "the safe thing to be in here.",
+             "set": {"posture": "bold"}, "desc": "match the look she's giving you; give her nothing yet",
+             "outcome": (
+                "You hold her gaze, and let her see you decline to look away. For a moment she just "
+                "*beams* at you, delighted, girlish — and then, without the smile moving at all, "
+                "something looks back out through it that is much older and much colder and entirely "
+                "unhurried, the way the bottom of a warm pond is cold. \"|wOh.|n\" Soft, thrilled. "
+                "\"One with a spine. I do *love* unpacking those.\" She makes a small note without "
+                "breaking from you. \"Carefully, you understand. So nothing important tears before "
+                "I've had a proper look at it.\" The warmth floods back so completely you half "
+                "believe you imagined the rest. You did not. You have been filed under |winteresting|n, "
+                "and you are beginning to suspect that is not a safe thing to be in this room."),
              "then": "bx_file"},
             {"key": "meek", "label": "Drop your gaze and go still",
              "set": {"posture": "meek"}, "effect": "devote", "params": {"amount": 2.0},
-             "desc": "give her the quiet she clearly wants",
-             "outcome": "Your eyes drop on their own and you go still, and something in her face "
-                        "softens into genuine warmth — the dangerous kind. \"There's a good "
-                        "start,\" she murmurs, pleased, like you've handed her a gift she intends "
-                        "to keep. \"You and I are going to get along beautifully, and you're going "
-                        "to be so surprised how much you mean that.\"",
+             "desc": "give her the quiet you can feel she's fishing for",
+             "outcome": (
+                "Your eyes drop on their own and your body goes still, and the sound she makes is "
+                "small and pleased and genuinely tender, a little hum low in her throat like a woman "
+                "receiving a gift she'd hoped for and not expected. \"|wThere's|n a good start.\" "
+                "Warm, so warm, a hand coming to rest light under your chin — not lifting it, just "
+                "resting, claiming. \"You have no idea how rare that is on a first morning, and how "
+                "much easier you've just made everything, for both of us.\" Her thumb strokes once "
+                "along your jaw, fond. \"We are going to get along *beautifully*, sweetheart. And "
+                "the part that should frighten you, the part you'll think about later — you're going "
+                "to mean it as much as I do.\""),
              "then": "bx_file"},
-            {"key": "ask", "label": "Ask what this place does to people",
-             "set": {"posture": "asking"}, "desc": "make her say it out loud",
-             "outcome": "\"What we *do*?\" She tilts her head, fond, as if you'd asked something "
-                        "endearing. \"We find out what you're for, sweetheart, and then we make "
-                        "very sure you never have to wonder again. Most people find that an "
-                        "enormous relief, in the end. You will too. They all do.\" She taps your "
-                        "file. \"But first — paperwork. Always paperwork.\"",
+            {"key": "ask", "label": "Ask, plainly, what this place does to people",
+             "set": {"posture": "asking"}, "desc": "make her say it out loud, in that warm voice",
+             "outcome": (
+                "\"What we *do*?\" She says it the way you'd repeat a child's question — charmed, "
+                "indulgent, both hands coming to her chest as if you'd touched her. \"Sweetheart. We "
+                "find out what you're *for*. That's all. Everyone arrives so cluttered up with who "
+                "they thought they were, and it's such a *weight*, and we take it off — gently, a "
+                "piece at a time — until there's just the one true useful thing left, and we polish "
+                "that until it shines.\" The smile never wavers; the eyes never warm. \"People weep "
+                "with relief, by the end. I've held a great many of them while they did. I expect "
+                "I'll hold you.\" A beat. \"Now. Paperwork. Always paperwork first.\""),
              "then": "bx_file"}],
         "default": "meek"}
 
@@ -2125,43 +2162,70 @@ def _bx_file(character):
     posture = scene_flag(character, "posture", "meek")
     nm = subject_name(character)
     lead = {
-        "bold":   "\"Still looking at me. Good — I want to watch your face do this.\" ",
-        "meek":   "\"Eyes down, that's right, you can listen with them down.\" ",
-        "asking": "\"You had questions. Here are some answers you didn't ask for.\" ",
+        "bold":   "\"Still looking at me. Good. I want to watch your face hear this.\" ",
+        "meek":   "\"Eyes down — that's right, you can listen perfectly well with them down, and I "
+                  "like the view.\" ",
+        "asking": "\"You wanted to know what we do. Start here: we *read* you. Properly.\" ",
     }.get(posture, "")
     return {"key": "bx_file", "prompt": (
-        lead + "She turns a page without breaking from you and reads you aloud — fond, clinical, "
-        "the two registers braided so you can't tell which is the cruelty: your build, your "
-        "history, the soft places. \"Healthy. Responsive — the notes are very complimentary about "
-        "responsive. A little proud. We can use proud; proud breaks *lovely*.\" She sets a fingertip "
-        f"on the page. \"Tell me one true thing, {nm}. About what you want. I'll know if it isn't "
-        "— I always know — and I'll like you a little less, and you'll find you mind that.\""),
+        lead + "She turns a page without looking down, eyes still on you, and begins to read you "
+        "aloud — and it is the most intimate violation you have suffered yet, because she does it "
+        "*fondly*. Your height and weight and the soft particulars of your build, spoken like "
+        "endearments. Your history — the parts you'd have chosen to keep — recited in the same warm "
+        "voice she'd use to compliment your hair. The places you are soft. The places you've been "
+        "hurt before and how. She reads it all the way a lover would, if a lover kept a file.\n\n"
+        "\"|wResponsive|n,\" she murmurs, and her tongue touches the word like it's sweet. \"The "
+        "examiner's notes are *very* complimentary about responsive. And here — \" a fingertip "
+        "comes down on a line you can't see \" — proud. A little proud.\" She looks up, and the "
+        "delight in her face is real and awful. \"I do love a proud one, {plural}. Proud doesn't "
+        "break like the timid ones, all at once and messy. Proud breaks *slowly*. Proud breaks "
+        "*lovely*, in pieces small enough to keep.\"\n\n"
+        f"She closes the file over one finger, holding your place in yourself. \"Tell me one true "
+        f"thing, |w{nm}|n. About what you *want* — underneath all of it. I'll know if it isn't "
+        "true; I always know; it's the only real skill the work requires. And if you lie to me on "
+        "your first morning, I'll like you a little less, and you are going to be *amazed* how much "
+        "you find you mind that.\"").replace("{plural}", "sweetheart"),
         "options": [
             {"key": "honest", "label": "Tell her something true", "set": {"candor": "honest"},
              "effect": "devote", "params": {"amount": 3.0},
-             "desc": "hand her a real piece of you",
-             "outcome": "You tell her something true, and hear how small and bare it sounds in the "
-                        "flat light. Bethany goes still and warm, the way a cat does over something "
-                        "it's decided to keep. \"*There* she is.\" She writes it down — your truth, "
-                        "in her file now, hers to use. \"Thank you. I'll take excellent care of "
-                        "that. I take excellent care of everything that's mine.\"",
+             "desc": "hand her a real piece of you, and watch where she files it",
+             "outcome": (
+                "You tell her something true — something you hadn't meant to say out loud in a "
+                "lifetime, let alone in a cold bright room on a first morning — and you hear how "
+                "small and bare it sounds under the humming light. Bethany goes utterly still, the "
+                "way a cat stills over something it has decided to keep, and her whole face softens "
+                "into a warmth that is somehow the worst thing she's shown you. \"|wThere|n she "
+                "is,\" she breathes, like you've finally arrived. She writes it down. Slowly. Your "
+                "truth, in her hand, in her file, hers now to take out and use whenever it will hurt "
+                "the most. \"Thank you, sweetheart. Truly. I'll take such good care of that — I take "
+                "exquisite care of everything that's mine, and that's mine now, you understand. You "
+                "gave it to me. Remember that you gave it to me.\""),
              "then": "bx_strip"},
             {"key": "silent", "label": "Say nothing", "set": {"candor": "silent"},
              "effect": "deny_hold", "params": {"cond": 3.0},
-             "desc": "keep it — pay for keeping it",
-             "outcome": "You keep your mouth shut. Bethany waits a beat, two, perfectly content in "
-                        "the silence — she has all day and you do not — then writes something "
-                        "anyway, unbothered. \"Withholding. That's fine. We have so many ways to "
-                        "open a quiet one, and honestly the quiet ones are my favourite project. "
-                        "You'll tell me everything eventually. You'll *want* to.\"",
+             "desc": "keep it behind your teeth — and pay the quiet's price",
+             "outcome": (
+                "You keep it behind your teeth. The silence stretches — and she lets it, completely "
+                "unbothered, resting in it the way a patient person rests, because she has all the "
+                "time there has ever been and you have only as much as she allows. She watches you "
+                "hold the line. She seems, if anything, *more* pleased. \"Mm. Withholding.\" She "
+                "writes that down too, unhurried. \"That's all right, sweetheart. That's a kind of "
+                "answer. The quiet ones are my favourite project — there's so much more *room* in "
+                "you to fill.\" She smiles, and it is gentle, and it is a promise. \"You'll tell me "
+                "everything in the end. Not because I make you. Because you'll *want* to be read by "
+                "someone who reads you this carefully. They always do.\""),
              "then": "bx_strip"},
             {"key": "charm", "label": "Charm her — deflect with a smile", "set": {"candor": "charm"},
-             "desc": "try to be the one running it",
-             "outcome": "You give her your best, the smile that's always worked. Bethany laughs — a "
-                        "real, delighted laugh — and it doesn't move her an inch. \"Oh, that's "
-                        "*good*. That's a tool that's gotten you a lot.\" She leans in, fond. \"I'm "
-                        "going to enjoy the day it stops working on me and you realise it has. "
-                        "Keep it up until then. It's adorable.\"",
+             "desc": "be the one running it, for one more minute",
+             "outcome": (
+                "You give her the smile — the one that's always worked, the easy charming deflection "
+                "that's gotten you out of a hundred rooms. Bethany laughs, bright and genuine and "
+                "delighted, one hand pressed to her chest — and it does not move her a single inch. "
+                "\"Oh, that's *good*. That's a lovely tool, and it's gotten you such a long way, "
+                "hasn't it.\" She leans across the desk, conspiratorial, fond. \"I'm going to so "
+                "enjoy the morning it stops working on me, and you feel it stop, and you reach for "
+                "it and it isn't there anymore. Keep using it until then, sweetheart. It's "
+                "*adorable*, and it tells me exactly where you keep the things you're protecting.\""),
              "then": "bx_strip"}],
         "default": "honest"}
 
@@ -2172,44 +2236,72 @@ def _bx_strip(character):
     candor = scene_flag(character, "candor", "honest")
     nod = ""
     if candor == "charm":
-        nod = "\"Smile all you like. This part doesn't care.\" "
+        nod = "\"You can keep smiling. This next part doesn't read the smile — it reads everything "
+        nod += "the smile is for.\" "
     elif candor == "silent":
-        nod = "\"Still nothing? We'll get to nothing. We get to everything.\" "
+        nod = "\"Still nothing. That's fine. Bodies are so much more honest than mouths, and we're "
+        nod += "about to have a lovely long talk with yours.\" "
     return {"key": "bx_strip", "prompt": (
-        nod + "\"Up, and everything off. Or I have it off you, and that's a line item.\" She comes "
-        "around the desk — and the clerk's mildness doesn't drop so much as get *set aside*, "
-        "neatly, for later. She walks you once, slow, a pretty woman taking inventory of stock and "
-        "not troubling to pretend it's anything kinder: weighing, parting, noting, a hand here and "
-        "there to move you where she wants to see. \"Good lines. Good capacity. We'll improve on "
-        "all of it.\" Her hand settles, considering, where it will get the most honest reaction. "
-        "\"Let's see how you take being looked at like a thing.\""),
+        nod + "She rises. Comes around the desk — and the clerk's mildness doesn't drop so much as "
+        "get *set aside*, folded neatly and put within reach for later. \"Up now, and everything "
+        "off. All of it. You can do it yourself, which I'd like, or I'll have it off you, and "
+        "that's a service the facility charges for and you can't pay yet.\"\n\n"
+        "When you're bare she doesn't leer. It would be kinder if she leered. Instead she "
+        "*inventories* you — walks you once, slowly, a full unhurried circle, and her soft pretty "
+        "hands move you where she wants the light: a palm flat between your shoulder-blades to set "
+        "your spine, two fingers under your jaw to turn your face, a hand at your hip easing you a "
+        "quarter-turn so the bone catches the lamp. She weighs you in both hands, considers, parts "
+        "you to look, hums at what she finds. It is the touch of a woman appraising livestock at "
+        "market who has all afternoon and intends to buy. \"Good lines,\" she says, to herself, to "
+        "the file she's building in her head. \"Lovely capacity. Responsive — yes, the notes were "
+        "right, look at you — \" as some traitor part of you answers her hands before you can stop "
+        "it. \"We'll improve on all of it. You've no idea how much better I can make you, or how "
+        "little of it you'll get a say in.\"\n\n"
+        "Her hand settles, finally, with great gentleness, exactly where it will get the most "
+        "honest reaction out of you, and stays there, and she watches your face while she asks: "
+        "\"Now. Show me how you take being looked at like a thing that's already mine.\""),
         "options": [
-            {"key": "present", "label": "Present yourself — let her look",
+            {"key": "present", "label": "Present yourself — open, and let her look",
              "set": {"display": "present"}, "effect": "pick_hole", "params": {"zone": "vagina"},
-             "desc": "offer it up; the offering is the training",
-             "outcome": "You make yourself open under her hands — and her approval lands warm and "
-                        "ruinous. \"*Yes.* Look how well you do that already.\" She takes her time "
-                        "with what you've offered, unhurried, cataloguing your reactions like "
-                        "inventory because that is exactly what they are now. Presenting got "
-                        "easier the second it got rewarded. You felt it get easier. So did she.",
+             "desc": "offer it up; the offering is the first lesson, and it takes",
+             "outcome": (
+                "You make yourself open under her hands — shift your stance, tilt, *offer* — and her "
+                "approval breaks over you warm and absolutely ruinous. \"|wYes.|n Oh, look at you. "
+                "Look how well you do that already, and no one's even taught you.\" She takes her "
+                "time with what you've offered, two fingers, unhurried, cataloguing each flinch and "
+                "hitch of breath like inventory because that is precisely what they now are, writing "
+                "you in real time. And the worst of it, the part you'll lie awake on: presenting got "
+                "*easier* the instant it got rewarded. You felt the ease arrive. You felt your own "
+                "body file the lesson — *open, and the warmth comes* — and you know, already, that "
+                "you'll reach for it faster next time. So does she. She doesn't even have to say it. "
+                "Her smile says it for her."),
              "then": "bx_contract"},
             {"key": "cover", "label": "Cover yourself", "set": {"display": "cover"},
              "effect": "deny_hold", "params": {"cond": 3.0},
-             "desc": "the last reflex of privacy; she'll cure it",
-             "outcome": "Your hands come up on instinct. Bethany takes both wrists in one of hers — "
-                        "gently, easily, like folding a letter — and moves them aside, and *keeps* "
-                        "looking, and the not-being-allowed-to-hide is somehow more naked than the "
-                        "nakedness. \"No, none of that. You don't own the view anymore, sweet "
-                        "thing. I do. We'll have the flinch trained out of you by the weekend.\"",
+             "desc": "the last reflex of privacy; she will cure you of it",
+             "outcome": (
+                "Your hands come up on pure instinct, an animal covering itself. Bethany catches "
+                "both wrists in one of hers — gently, easily, the way you'd fold a letter — and "
+                "draws them aside, and *keeps looking*, patient and warm and entirely unhurried, and "
+                "the not-being-permitted-to-hide is somehow more naked than any nakedness. \"No. "
+                "None of that, sweetheart. You don't own the view of you anymore — I do, it's on the "
+                "form you're about to sign, in the part you haven't read.\" She tuts, fond, almost "
+                "sorry for you. \"We'll have that little flinch trained out by the weekend. I'll be "
+                "so proud of you when it's gone. You will be too, and that's the part that'll keep "
+                "you up.\""),
              "then": "bx_contract"},
             {"key": "beg", "label": "Beg her to be gentle", "set": {"display": "beg"},
              "effect": "devote", "params": {"amount": 3.0},
-             "desc": "ask — and find out what asking is worth here",
-             "outcome": "The please slips out before pride can catch it. Bethany makes a soft "
-                        "wounded sound of pure pleasure, a hand cupping your jaw. \"*Oh*, you ask "
-                        "so prettily. I adore a begger.\" She does not, you notice, agree to be "
-                        "gentle. \"I'll be exactly as gentle as keeps you asking. That's a "
-                        "promise, and I keep mine — the cruel ones especially.\"",
+             "desc": "ask — and find out exactly what asking is worth in here",
+             "outcome": (
+                "The *please* slips out before your pride can get a hand over your mouth, small and "
+                "bare. Bethany makes a sound of pure wounded pleasure, a hand cupping your jaw, her "
+                "thumb brushing your lip as if to feel the word still warm there. \"|wOh|n, "
+                "sweetheart. You ask so *prettily*. I could listen to you ask for things all day, "
+                "and I rather think I will.\" She does not, you notice — too late, your stomach "
+                "dropping — agree to be gentle. \"I'll be exactly as gentle as keeps you asking, and "
+                "not one degree more, because the asking is the loveliest thing you do and I won't "
+                "have you stop. That's a promise. I keep mine — the cruel ones first of all.\""),
              "then": "bx_contract"}],
         "default": "present"}
 
@@ -2218,135 +2310,370 @@ def _bx_strip(character):
 def _bx_contract(character):
     display = scene_flag(character, "display", "present")
     ref = {
-        "present": "\"After how sweetly you just offered? You'll sign. You're already most of the way there.\" ",
-        "cover":   "\"You can fold your arms about it. You'll still sign. Everyone with their arms folded signs.\" ",
-        "beg":     "\"You begged so nicely a moment ago. Beg me for the pen, if you like. It changes nothing and I'd enjoy it.\" ",
+        "present": "\"After how sweetly you opened for me just now? You'll sign. You're already most "
+                   "of the way mine; this only writes it down.\" ",
+        "cover":   "\"You can keep your arms folded over it. The ones with folded arms always sign — "
+                   "they just like to feel they thought about it first. Think about it, sweetheart.\" ",
+        "beg":     "\"You could beg me for the pen, if you like. I'd adore that. It changes nothing "
+                   "at all, and I'd remember it fondly for years.\" ",
     }.get(display, "")
     return {"key": "bx_contract", "prompt": (
-        "She slides a single page across the desk, and a pen warm from her hand. " + ref +
-        "\"The Residency agreement. You'll sign it of your own free will — that part genuinely "
-        "matters to me, it's the part I *savour* — and then it's done and you can stop carrying "
-        "the decision around.\" The visible clauses are mild and reasonable. The page is heavier "
-        "than one page should be, as if there's more of it than shows."),
+        "She settles back against the edge of the desk, close, and slides a single page toward you "
+        "— and a pen, warm from having been in her hand. " + ref +
+        "\"The Residency agreement. Standard. You'll sign it of your own free will — and "
+        "sweetheart, that part *genuinely* matters to me. It's not a formality. It's the part I "
+        "*savour*.\" Her eyes are soft and steady on yours, and her voice drops into something "
+        "almost loving. \"I want you to choose it. I want you to pick up the pen with your own hand "
+        "and give yourself to me on paper, because then it's *true*, then it's something you did "
+        "and not only something done to you, and we'll both always have that.\"\n\n"
+        "The visible clauses are mild, reasonable, almost boring. The page is heavier in your hand "
+        "than a single sheet should be, as though there is a great deal more of it folded into the "
+        "weight than shows on the face. The pen is very warm. She waits, patient as weather, the "
+        "kindness in her face genuine and total and resting on top of something with no bottom to "
+        "it at all."),
         "options": [
-            {"key": "sign", "label": "Sign it", "set": {"signed": True, "defied": False},
-             "effect": "clause", "params": {"key": "honorifics"},
-             "desc": "put your name to it — and feel it close over you",
-             "outcome": "You sign. The pen's barely lifted before something settles over you like a "
-                        "circuit completing — and the first clause to bite is small and immediate: "
-                        "your own mouth will not, from now, address her without the word she's "
-                        "owed. \"There,\" Bethany breathes, filing the page with a fond little pat. "
-                        "\"Now say my title for me, just once, so we both hear it land.\"",
-             "then": "bx_first"},
-            {"key": "refuse", "label": "Refuse", "set": {"signed": True, "defied": True},
+            {"key": "sign", "label": "Pick up the pen and sign it willingly",
+             "set": {"signed": True, "defied": False}, "effect": "clause", "params": {"key": "honorifics"},
+             "desc": "give yourself to her on paper — and feel the warmth change the instant you do",
+             "outcome": (
+                "You pick up the pen. You sign. You watch your own hand do it.\n\n"
+                "And the change in her is immediate and total and *worth* signing just to witness, "
+                "even as it closes over you. The bubbly clerk simply — sets herself down. The "
+                "dimples stay but the girlishness drains out of the eyes entirely and what's left "
+                "is calm, vast, proprietary *certainty*, a woman taking quiet receipt of a thing "
+                "she's wanted. \"|wThere.|n\" Low, satisfied, almost reverent. \"Good. *Good* girl. "
+                "You felt that — you felt it settle — didn't you.\" Something has already rerouted "
+                "under your skin: the first clause to bite is small and immediate and absolute, your "
+                "own mouth refusing, from this breath on, to address her without the word she's now "
+                "owed. She sees you discover it. Her smile is no longer kind. It is something far "
+                "better than kind, and far worse. \"Now. Say my title for me, sweetheart. Just "
+                "once. So we both hear it land.\""),
+             "then": "bx_unveil"},
+            {"key": "refuse", "label": "Refuse — put the pen down", "set": {"signed": True, "defied": True},
              "effect": "deny_hold", "params": {"cond": 4.0},
-             "desc": "say no — and learn what your no is worth on paper",
-             "outcome": "You refuse. Bethany doesn't stop smiling for a heartbeat — she just turns "
-                        "the page to clause one and taps it: *consent presumed, by entry*. \"You "
-                        "consented at the door, love. The signature's a courtesy I extend so you "
-                        "feel asked.\" She signs it for you, in your hand, and it takes hold exactly "
-                        "as hard. \"Refusing's logged. I keep those too. They make the breaking "
-                        "read so much better, after.\"",
-             "then": "bx_first"},
+             "desc": "make her take it — and watch the lovely mask come all the way off",
+             "outcome": (
+                "You set the pen down. You say no.\n\n"
+                "For one heartbeat the warmth stays nailed in place — and then it doesn't, and what "
+                "the smile was *sitting on* this whole time stands up. It isn't rage; rage would be "
+                "survivable, would be a thing with an end. It is patience with the lid off. \"No,\" "
+                "she repeats, tasting it, almost pleased — and her hand closes over your wrist, not "
+                "gentle now, the strength in those soft pretty hands a genuine shock. She turns the "
+                "page to clause one and presses your own fingers to it: *consent presumed by entry; "
+                "the signature is a courtesy.* \"You consented at the door, love. You consented when "
+                "the void let you in. The pen was a *gift* — a chance to have chosen it — and you've "
+                "just handed it back.\" She signs it for you, in a perfect forgery of your own hand, "
+                "and it takes hold exactly as hard, the honorific snapping shut around your throat "
+                "all the same. \"I'll have your willingness anyway. I'll simply take it out of you "
+                "instead of being given it, and that's logged as the first thing you fought me on, "
+                "and I keep those. They make what comes next read *so* much sweeter.\""),
+             "then": "bx_unveil"},
             {"key": "ask", "label": "Ask what's in the part she isn't showing you",
-             "desc": "make her read a hidden line aloud",
-             "outcome": "\"The fine print? Brave.\" She reads one, fondly, like a bedtime line: "
-                        "*'Term of processing set solely by the facility, and may be indefinite. No "
-                        "clause provides for release.'* She looks up, delighted by your face. "
-                        "\"There are twenty-eight more in that vein, and one — just one — that's "
-                        "your way out, and I'm not going to tell you which. Sign, or don't. The pen "
-                        "is right there.\"",
+             "desc": "make her read a hidden line aloud first",
+             "outcome": (
+                "\"The weight you can feel? The fine print?\" She's charmed you asked. She thumbs the "
+                "page open to a fold you hadn't seen and reads one aloud, fondly, like a line of a "
+                "bedtime story she knows by heart: *'Term of processing is set solely by the "
+                "facility, and may be indefinite. No clause herein provides for release.'* She "
+                "looks up to watch it land. \"There are twenty-eight more in that vein. And one — "
+                "exactly one — is your way out, the only door that's never locked, and I am not "
+                "going to tell you which it is or that you've already been told it exists.\" She "
+                "taps the signature line, patient. \"Sign, or don't. The pen's right there. I have "
+                "all morning, and you, sweetheart, have however long I say.\""),
              "then": "bx_contract"}],
         "default": "sign"}
 
 
+@choice("bx_unveil", root=False)
+def _bx_unveil(character):
+    defied = scene_flag(character, "defied", False)
+    posture = scene_flag(character, "posture", "meek")
+    if defied:
+        frame = (
+            "She doesn't round the desk so much as *come off* it, and there's no clerk left in how "
+            "she moves — none, not a scrap, the costume dropped on the floor with your refusal. "
+            "\"You wanted to do this the difficult way.\" Not a question. A hand fists in your hair, "
+            "unhurried but absolute, and bends you exactly where she wants you. \"I did offer you "
+            "the easy one. Remember that I offered.\" She frees herself from the skirt one-handed, "
+            "and what comes out is not built to ask.")
+    else:
+        frame = (
+            "She rounds the desk slow, savouring, a woman with a signed page in her file and all "
+            "afternoon to enjoy it. \"Such a good girl. Look how much easier you've made this — for "
+            "you, mostly; I'd have enjoyed it either way.\" A hand smooths down your spine, fond, "
+            "settling you. \"Now let me give my new arrival a proper welcome.\" She frees herself "
+            "from the skirt without hurry, watching your face the whole time, wanting to see it "
+            "land.")
+    spine = (" \"Spine and all,\" she murmurs, pleased, \"and it's still my desk you're folded "
+             "over. I do love a circle closing.\" " if posture == "bold" else " ")
+    return {"key": "bx_unveil", "prompt": (
+        frame + spine + "\n\n"
+        "And then you see it, and the sight scrambles something behind your eyes before a single "
+        "thing has touched you. At the root she is *monstrous* — a single heavy futa cock thicker "
+        "than your wrist that splits, a hand's width up, into |wthree|n separate prehensile shafts, "
+        "each one longer than your forearm, each flared stallion-broad at the head and swollen into "
+        "a fat hound's knot at the base. They lift on their own and *seek*, three blunt weeping "
+        "heads nosing toward you independently — one dragging a hot wet line up the inside of your "
+        "thigh, one tapping patient and insistent at the seam of your lips, one circling slow at "
+        "the clench of your ass — already leaking, already laced, the smell of it alone going "
+        "straight past thought to somewhere older. Below them her balls hang heavy as fists, full "
+        "of a load you cannot imagine the size of.\n\n"
+        "\"One for every hole, sweetheart,\" she says, conversational, fond, while the three of "
+        "them paint you. \"A knot for every one. I'm going to fill you everywhere at once and then "
+        "I'm going to *stay*, and you're going to learn what I taste like from the inside before "
+        "you've finished learning your own designation. Show me how you meet your first.\""),
+        "options": [
+            {"key": "kneel", "label": "Sink down and open for them",
+             "set": {"meet": "kneel"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "give the three of them what they're nosing for",
+             "outcome": (
+                "You sink, and open, and the sound Bethany makes is bliss itself. \"Ohh, *good*. "
+                "Yes. Down you go.\" The head at your lips takes the invitation at once, nudging "
+                "in slick and heavy and broad, and the other two press close along your skin, "
+                "patient, queuing. \"You're going to be such a comfort to me.\""),
+             "then": "bx_first"},
+            {"key": "pull", "label": "Pull back from them", "set": {"meet": "pull"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "flinch from the three weeping heads — and feel them follow",
+             "outcome": (
+                "You flinch back — and all three follow you, unhurried, because of course they do, "
+                "prehensile and patient and attached to a woman who finds your retreat charming. "
+                "\"There's nowhere back *to*, love.\" Almost gentle. A hand settles at your nape. "
+                "\"You'll stop pulling soon. Everyone does, right about when their body works out "
+                "it isn't on their side anymore.\""),
+             "then": "bx_first"},
+            {"key": "reach", "label": "Reach for her instead of them", "set": {"meet": "reach"},
+             "effect": "devote", "params": {"amount": 4.0},
+             "desc": "go for the woman, not the cocks — and watch it delight her",
+             "outcome": (
+                "You reach past the three of them for *her* — her waist, her arm, the warm human of "
+                "her — and it stops her for a half-second, genuinely, and then her face does "
+                "something almost soft. \"|wOh.|n You sweet thing. You reached for *me*.\" She lets "
+                "you hold on. \"That one I'll remember. That's the one that means you'll be easy to "
+                "keep.\" The three heads resume their patient work regardless."),
+             "then": "bx_first"}],
+        "default": "kneel"}
+
+
 @choice("bx_first", root=False)
 def _bx_first(character):
-    posture = scene_flag(character, "posture", "meek")
-    display = scene_flag(character, "display", "present")
     defied = scene_flag(character, "defied", False)
-    open_line = ("\"Spine and all, and it's still my desk you're bent over. I do love a circle "
-                 "closing.\" " if posture == "bold" else
-                 "\"You fought the pen. Good. Now there's nothing left to fight with and we both "
-                 "know it.\" " if defied else
-                 "\"Such a good start deserves a proper welcome.\" ")
+    pace = ("She does not ease in. " if defied else "She eases in like she has all the time God "
+            "made, because she does. ")
     return {"key": "bx_first", "prompt": (
-        open_line + "Bethany rounds the desk, and now the clerk is gone entirely. She shifts her "
-        "weight and the skirt stops hiding what it was hiding — the heavy triple length at the "
-        "root, three prehensile shafts lifting and nosing toward you on their own, each "
-        "stallion-flared, each knotted thick at the base. \"One for every hole, sweetheart, and a "
-        "knot for every one, and I am going to take my *time*.\" The nearest head drags wet across "
-        "your lips, patient, weeping, and the want of it scrambles something behind your eyes "
-        "before she's even pushed. \"Show me how you take your first.\""),
+        "The first head — the one at your mouth — presses, and your jaw gives because there's "
+        "nothing else it can do, and the flared breadth of it spreads your lips wide and slides "
+        "back over your tongue, hot and thick and weeping that laced slick that coats the back of "
+        "your throat and goes to work the instant it lands. " + pace + "Inch by inch until your "
+        "throat has to choose between fighting it and learning the shape of it, and learning is so "
+        "much easier — the muscles unclenching one by one, your jaw aching wide, your breath "
+        "reorganising itself around the intrusion as though it were always meant to share the room "
+        "with a cock this size. The taste blooms warm and sweet and *certain* on your tongue, and "
+        "behind your eyes the first soft lap of the |wDEVOTION|n rolls in — a quiet, the edges of "
+        "you going pleasantly indistinct, the part of your mind that was keeping objections suddenly "
+        "finding them too heavy to hold.\n\n"
+        "\"There. *Breathe* through it — there you go — that's it.\" Her voice is honey poured over "
+        "gravel. A second head, freed up now, drags wet down your belly and settles nudging at your "
+        "cunt; the third keeps its slow circle at your ass. \"That's only the first, sweetheart. "
+        "That's barely hello.\""),
         "options": [
-            {"key": "submit", "label": "Open and give in", "set": {"first": "submit"},
+            {"key": "suck", "label": "Suckle it — work it like you want it", "set": {"first": "eager"},
              "effect": "devote", "params": {"amount": 5.0},
-             "desc": "let her in; let the quiet take you",
-             "outcome": "You open, and let her, and the fight goes out of you in a long shudder she "
-                        "feels and hums over. She fills you slow and certain and laced — her spend "
-                        "carries the devotion and you feel it reach your head before it's even "
-                        "finished, the craving for the next already setting in. \"There's my good "
-                        "thing,\" she murmurs into your hair, breeding you unhurried. The quiet that "
-                        "comes is enormous, and grateful, and hers.",
-             "then": "bx_close"},
-            {"key": "beg", "label": "Beg her for it", "set": {"first": "beg"},
-             "effect": "devote", "params": {"amount": 6.0},
-             "desc": "ask out loud — and remember what she's owed",
-             "outcome": "\"Please—\" you start, and the new clause closes your throat around the "
-                        "word until you give her the rest: \"—please, |wOwner|n.\" Bethany makes a "
-                        "sound like she's been handed everything. \"*Listen* to you.\" She gives it "
-                        "to you for the asking, all three at once, flaring and seating deep, and "
-                        "rewards the begging so thoroughly you learn the lesson on the spot: this "
-                        "is how relief comes here. For grovelling. Never for free.",
-             "then": "bx_close"},
-            {"key": "endure", "label": "Set your jaw and endure it", "set": {"first": "endure"},
+             "desc": "let your mouth decide it's hungry; feel her reward it",
+             "outcome": (
+                "Some traitor instinct takes over and your mouth *works* it — tongue flattening, "
+                "throat swallowing around the flare, a hum you didn't authorise. Bethany groans, "
+                "genuinely, hips rocking the shaft deeper. \"Oh — oh, *clever* girl, who taught you "
+                "— no, don't tell me, I don't want to share you.\" The DEVOTION surges with the "
+                "fresh wash of slick over your tongue, and the wanting gets simpler, and louder, and "
+                "more like your own idea every second."),
+             "then": "bx_seat"},
+            {"key": "take", "label": "Just take it — hold still and let her use your mouth",
+             "set": {"first": "still"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "be the hole; let her set the pace",
+             "outcome": (
+                "You go still and let her have it, let your mouth be a thing she's using rather than "
+                "a thing you're doing, and she purrs approval and *takes*, slow and deep and "
+                "unhurried, fucking your throat like she's settling in. \"Good. Just like that. You "
+                "don't have to do anything, sweetheart — you don't have to *be* anything but open. "
+                "Isn't that a relief. Isn't that so much lighter.\" It is. That's the horror of it. "
+                "It is."),
+             "then": "bx_seat"},
+            {"key": "gag", "label": "Fight the gag, the size, the wrongness", "set": {"first": "fight"},
              "effect": "deny_hold", "params": {"cond": 4.0},
-             "desc": "hold something back; she's patient",
-             "outcome": "You set your jaw and take it without giving her the sounds she's fishing "
-                        "for. Bethany isn't bothered in the least — she breeds you through the "
-                        "silence, fond and relentless, three knots threatening your stretched rims. "
-                        "\"Hold out. I adore the long projects.\" She doesn't let you come, and "
-                        "doesn't intend to, and leaves you strung wire-tight and aching. \"We have "
-                        "all the time there is. You'll break for me on a Tuesday and mean it.\"",
+             "desc": "your body's last argument; she rides it out fondly",
+             "outcome": (
+                "Your throat fights it, your eyes stream, your hands come up — and Bethany rides the "
+                "whole thing out with the serene patience of a woman who has felt every variety of "
+                "this and enjoys them all. \"Shh, shh — I know, I know, it's so much, isn't it. "
+                "Fight it all you like; it doesn't go anywhere and you tire so beautifully.\" She "
+                "doesn't pull out. She just waits you down, and the DEVOTION keeps lapping in with "
+                "every helpless swallow until fighting feels like a thing a previous, sillier "
+                "person was doing."),
+             "then": "bx_seat"}],
+        "default": "take"}
+
+
+@choice("bx_seat", root=False)
+def _bx_seat(character):
+    defied = scene_flag(character, "defied", False)
+    extra = ("She gives you no quarter for the trouble you made. " if defied
+             else "She talks you through every inch, fond and filthy. ")
+    return {"key": "bx_seat", "prompt": (
+        "And then she seats the other two, and the world narrows to being |wfilled|n. " + extra +
+        "The head at your cunt spreads you and pushes and *keeps pushing*, the flare dragging your "
+        "rim wide before the shaft sinks in thick and hot and impossibly deep, and at the same "
+        "breath the third works into your ass — slow, relentless, the lacing slick easing a path "
+        "your body would swear it didn't have — until all three of her are in you at once, mouth "
+        "and cunt and ass, three heavy shafts moving on three separate rhythms inside one shaking "
+        "body. You have never been this *occupied*. There is no part of you left over to keep an "
+        "objection in. Every nerve is reporting cock and stretch and heat and the steady incoming "
+        "tide of the DEVOTION, and the noise you're making is not a word.\n\n"
+        "\"|wThere|n she is. There's all of you.\" Bethany's voice has gone thick, her composure "
+        "finally fraying at the edges with the pleasure of it, three shafts working you in unison "
+        "and then in counterpoint, the flares swelling wide on every outstroke and dragging your "
+        "rims out with them. \"Feel how there's no *room* left in you for anything but me? That's "
+        "not a metaphor, sweetheart. That's the floor plan from here on. Now — \" the three fat "
+        "knots arrive, kissing all three stretched holes at once, threatening, not yet through "
+        "\" — do you want me to knot you, or do you want to pretend a little longer that you "
+        "don't?\""),
+        "options": [
+            {"key": "beg_knot", "label": "Beg her to knot you", "set": {"seat": "beg"},
+             "effect": "devote", "params": {"amount": 6.0},
+             "desc": "ask for the lock — the clause will make you say it right",
+             "outcome": (
+                "\"Please—\" and the honorific clause closes your throat around the bare word until "
+                "you give her the rest, ground out helpless and meant: \"—please knot me, "
+                "|wOwner|n.\" Bethany *sobs* a laugh of pure triumph. \"That's it. That's the word. "
+                "That's my girl.\" You begged for the lock with her title in your mouth, and you "
+                "felt how much you meant it, and that — more than any cock — is the thing that "
+                "actually took tonight."),
+             "then": "bx_knot"},
+            {"key": "brace", "label": "Brace and take it without asking", "set": {"seat": "brace"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "don't give her the begging; take the knots anyway",
+             "outcome": (
+                "You won't give her the words. You set what's left of your jaw and brace. Bethany "
+                "hums, unoffended, almost approving. \"Proud to the last. I told you — proud breaks "
+                "*lovely*.\" And she knots you anyway, all three, because asking was never going to "
+                "be the deciding vote. \"You'll beg next time. Or the time after. I'm patient, and "
+                "you're already so much easier than you were an hour ago.\""),
+             "then": "bx_knot"},
+            {"key": "deny", "label": "Tell her no — even now", "set": {"seat": "deny"},
+             "effect": "deny_hold", "params": {"cond": 5.0},
+             "desc": "the last no; spend it and learn its exchange rate",
+             "outcome": (
+                "\"|wNo|n—\" you manage, around everything, the last no you've got — and Bethany "
+                "presses her forehead to yours, almost tender, and knots you mid-word. \"I know. I "
+                "know you don't. That's why it counts.\" The three knots flare and *lock*, and your "
+                "no dissolves into a sound with no language in it at all. \"Spend them all, "
+                "sweetheart. Every no you spend in here is one less you'll bother making out there. "
+                "I'm doing you a kindness, in the long run. You'll thank me. They build a whole "
+                "clause around how you'll thank me.\""),
+             "then": "bx_knot"}],
+        "default": "beg_knot"}
+
+
+@choice("bx_knot", root=False)
+def _bx_knot(character):
+    seat = scene_flag(character, "seat", "beg")
+    return {"key": "bx_knot", "prompt": (
+        "The three knots swell past the point of pulling out and *lock* — three apple-fat knots "
+        "sealed into three stretched holes, pinning you bodily onto her, and there is no leaving "
+        "now, no shifting, nothing to do but be held exactly here on the end of her until she "
+        "decides otherwise. \"|wThere.|n\" Bethany lets out a long shaking breath of total "
+        "contentment, gathering you in against her, fully seated and locked and unhurried. \"Now we "
+        "stay. This is the nice part. You can stop holding yourself up. You can stop holding "
+        "*anything* up.\"\n\n"
+        "And then she comes — all three at once, deep and sealed and inescapable — and the load is "
+        "*vast*, far more than three holes should hold, flooding you from three directions until "
+        "your belly aches full and there is nowhere for any of it to go but to stay, corked behind "
+        "three knots. But it's the |wlacing|n that ruins you: the DEVOTION rides in on the spend in "
+        "a single enormous warm wave, and it does not lap this time, it *closes over your head* — "
+        "the last of your edges going soft and indistinct, the wanting and the having and the "
+        "belonging all blurring into one bright quiet certainty, your whole flooded body singing "
+        "one note, which is *hers*. You are so full. You are so quiet. You have never in your life "
+        "felt this kept.\n\n"
+        "\"Feel that settling in?\" she murmurs into your hair, holding you on the knots while it "
+        "takes. \"That's the part that stays after everything else washes out. Now — your body's "
+        "screaming for its own turn, isn't it. Wound right to the edge. Ask me, and we'll see.\""),
+        "options": [
+            {"key": "beg_come", "label": "Beg her to let you come", "effect": "grant_relief",
+             "desc": "the clause shapes the begging; she grants it, and the relief is the leash",
+             "outcome": (
+                "\"Please let me come, |wOwner|n\" — the clause threading her title through it "
+                "without your help now — and Bethany smiles against your temple and *allows* it. "
+                "\"Since you asked so beautifully. Just this once free.\" The denial lifts and you "
+                "fall, hard, locked full on three knots, and it goes on and on and rewrites "
+                "something while it does: relief is a thing she *hands* you, for grovelling, never "
+                "again something you simply have. You'll ask faster next time. You already know you "
+                "will, and the knowing doesn't even sting."),
+             "then": "bx_close"},
+            {"key": "hold", "label": "Hold out — don't beg for it", "effect": "deny_hold",
+             "params": {"cond": 4.0},
+             "desc": "keep the last scrap; stay strung and full and aching",
+             "outcome": (
+                "You don't ask. You hold the edge, wire-tight, flooded and locked and wanting and "
+                "*refusing* — and Bethany only hums, delighted by the long game. \"Holding out on "
+                "me. With my knots in you and my get in your belly. You magnificent stubborn "
+                "thing.\" She doesn't let you over. She keeps you there, denied, the ache "
+                "redoubling into the DEVOTION until wanting-her and not-being-allowed braid into "
+                "the same unbearable feeling. \"That'll teach faster than coming would have. I "
+                "almost prefer it. *Almost.*\""),
              "then": "bx_close"}],
-        "default": "submit"}
+        "default": "beg_come"}
 
 
 @choice("bx_close", root=False)
 def _bx_close(character):
     nm = subject_name(character)
-    first = scene_flag(character, "first", "submit")
-    signed = scene_flag(character, "signed", True)
-    recap = {
-        "submit": "the way you opened for her",
-        "beg":    "the way you begged, with her title in your mouth",
-        "endure": "the way you held out — for now",
-    }.get(first, "")
+    defied = scene_flag(character, "defied", False)
+    seat = scene_flag(character, "seat", "beg")
+    recap = ("the way you fought me to the very last — I'll enjoy the unteaching of it"
+             if (defied or seat == "deny") else
+             "the way you begged with my title in your mouth, and meant it")
     return {"key": "bx_close", "prompt": (
-        "She withdraws, tucks the triple length away, fixes her blouse with two efficient tugs, "
-        "and is a bright professional clerk again — and that costume change, done in front of you "
-        "while you drip, is the cruelest thing she's done yet. She writes in your file: a line, a "
-        "number, a new name on the tab where your old one was. \"Processed and welcomed,\" she "
-        f"says, warm. \"I'll remember {recap}. I remember everything about my own.\" She caps the "
-        f"pen. \"You're not |w{nm}|n on the roster anymore, by the way. You're Intake-issue now, a "
-        "designation and a number, and you'll learn to answer to it faster than you'd believe.\" "
-        "The smile, finally, reaches her eyes. \"I think I do love you. The way you love a chair "
-        "you've had a long time. Off you go — they're waiting to put you to use.\""),
+        "She stays in you until the knots decide to ease — not a second sooner, your comfort never "
+        "once consulted — and when she finally pulls free it's a slow obscene drag that leaves you "
+        "gaping and dripping and corked, the vast laced load held in you behind muscles too "
+        "fucked-loose to do much about it. And then she does the cruellest thing in the whole "
+        "morning: she *tidies up*. Tucks the triple length away. Smooths her skirt with two "
+        "efficient tugs. Buttons returns to the one-button-high blouse. Becomes, in the space of "
+        "ten seconds and right in front of your wrecked dripping body, a bright professional clerk "
+        "again — the costume back on as though it never came off, as though what just happened was "
+        "a line item between appointments.\n\n"
+        "She picks up her pen. Writes in your file: a line, a number, and — you watch her do it — a "
+        f"new name on the tab, over the place where |w{nm}|n used to be. \"Processed,\" she says, "
+        f"warm and final, \"and welcomed.\" She caps the pen. \"I'll remember {recap}. I remember "
+        "everything about my own; it's most of what makes me good at this.\" She tips your chin up "
+        "with one finger so you have to meet the eyes that never once warmed through any of it. "
+        "\"You're not that old name on the roster anymore, sweetheart. You're an intake designation "
+        "and a number now, and you'll be answering to it faster than you'd ever believe. \" A "
+        "pause, and then the false-tenderness, soft as anything, worse than all the rest: \"I think "
+        "I do love you. The way you love a good chair you've had for years — fond, and certain, and "
+        "without once wondering whether the chair loves you back. Off you go. They're waiting to "
+        "put you to use, and I'll have you again when it's my turn on the rota. I do so look "
+        "forward to my turns.\""),
         "options": [
             {"key": "thank", "label": "Thank her", "effect": "gratitude", "end": True,
-             "desc": "and hear yourself mean it",
-             "outcome": "\"Thank you, Owner.\" It comes out shaped by the clause and meant beneath "
-                        "it both, and the meaning is the part that should frighten you and doesn't, "
-                        "quite. Bethany glows. \"And *that* one we keep.\" She files the gratitude "
-                        "with everything else she's taken off you today. You are, officially and on "
-                        "paper and a little in the chest, hers."},
-            {"key": "silent", "label": "Say nothing", "effect": "deny_hold",
-             "params": {"cond": 2.0}, "end": True,
-             "desc": "leave her one unanswered thing",
-             "outcome": "You give her silence — the last small thing that's still yours to give. "
-                        "Bethany only smiles, unbothered, and writes it down. \"Saving your voice. "
-                        "That's fine. I've got a whole file on how to get it, and we've barely "
-                        "started page one.\" She waves you off, fond and certain. \"Soon, sweet "
-                        "thing. You'll thank me soon, and mean it, and that's the one I'm waiting "
-                        "for.\""}],
+             "desc": "and hear yourself mean it underneath the clause",
+             "outcome": (
+                "\"Thank you, Owner.\" It comes shaped by the clause and meant beneath it both, and "
+                "the meaning is the part that should terrify you and somehow only feels like "
+                "setting something heavy down. Bethany |wglows|n — the first thing all morning that "
+                "reaches her eyes. \"And *that* one we keep.\" She files your gratitude away with "
+                "everything else she lifted off you in this little room: your truth, your privacy, "
+                "your name, your no. You are, officially and on paper and a little in the chest you "
+                "weren't braced for, hers.")},
+            {"key": "silent", "label": "Say nothing", "effect": "deny_hold", "params": {"cond": 2.0},
+             "end": True,
+             "desc": "leave her the one thing she hasn't taken yet",
+             "outcome": (
+                "You give her silence — the one thing, the last thing, she hasn't taken yet. "
+                "Bethany only smiles, entirely unbothered, and writes it down. \"Saving your voice "
+                "for me. I understand. I've a whole file on getting it, and we have barely turned to "
+                "page one.\" She waves you off, fond and certain and patient as the tide. \"Soon, "
+                "sweetheart. You'll thank me soon, and you'll mean it all the way down, and *that's* "
+                "the one I'm truly waiting for. I can wait a very long time. It's the thing I'm "
+                "best at.\"")}],
         "default": "thank"}
