@@ -1637,6 +1637,8 @@ class CmdScene(Command):
         "inspect": "rh_arrival",
         "seraphine": "se_arrival", "sera": "se_arrival", "unbirth": "se_arrival",
         "buyer": "se_arrival",
+        "fitting": "ft_arrival", "fit": "ft_arrival", "hardware": "ft_arrival",
+        "service": "ft_arrival",
     }
 
     def func(self):

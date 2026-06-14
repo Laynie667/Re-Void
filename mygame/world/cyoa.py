@@ -3466,6 +3466,59 @@ def _state_tags(character):
                        or getattr(db, "gestating", False)),
     }
 
+
+def _kit(character):
+    """The full read of what the facility has already DONE to a body — hardware, ports, clauses,
+    body-states — so scenes can branch on combinations (items + states + piercings + ports). Safe
+    defaults; merges in _state_tags. Every scene that wants to feel installed-aware reads this."""
+    db = getattr(character, "db", None)
+    def g(k, d=None): return getattr(db, k, d)
+    pier = g("piercings", None) or []
+    pcount = len(pier) if hasattr(pier, "__len__") else int(pier or 0)
+    brands = g("facility_brands", None) or []
+    filt = g("active_speech_filters", None) or []
+    k = {
+        "pierced":   pcount > 0, "pierce_count": pcount,
+        "branded":   bool(brands), "brand_count": (len(brands) if hasattr(brands, "__len__") else 0),
+        "milk_port": bool(g("lactation_locked", False)),
+        "stim":      float(g("stim_per_tick", 0) or 0) > 0,
+        "gaped":     bool(g("permanent_gape", False) or g("cum_receptacle", False)),
+        "latex":     bool(g("latex_sealed", False)),
+        "pet":       bool(g("pet_type", None)),
+        "collared":  bool(g("wears_collar", False) or g("collared", False) or g("collar_locked", False)),
+        # clauses / speech
+        "heat_tell": bool(g("heat_tell", False)),
+        "honorific": bool(g("honorifics_required", None) or g("required_honorific", "")),
+        "teat_gag":  bool(g("teat_gagged", False)) or ("suckling" in filt),
+        "stuffed":   ("stuffed" in filt),
+        "denied":    bool(g("orgasm_denial", False) or g("beg_small", False) or g("star_chart_on", False)),
+        # body alterations
+        "neutered":  bool(g("neutered", False)),
+        "sissified": bool(g("sissified", False)),
+    }
+    k.update(_state_tags(character))
+    return k
+
+
+def _kit_inventory(k):
+    """A combination-aware inventory clause from a _kit dict — the fitter reading your hardware
+    aloud. Composes from whatever's present; empty string for a bare, unmodified body."""
+    parts = []
+    if k["pierced"]:   parts.append(f"{k['pierce_count']} piercing{'s' if k['pierce_count'] != 1 else ''} hung through you")
+    if k["branded"]:   parts.append("ownership branded into your hide")
+    if k["milk_port"]: parts.append("a milk-port plumbed in and your let-down locked to it")
+    if k["gaped"]:     parts.append("a hole gauged permanently open, ringed to take a plug")
+    if k["latex"]:     parts.append("sealed glossy in your second skin")
+    if k["pet"]:       parts.append(f"set up as a {k['pet']}, tail and all")
+    if k["collared"]:  parts.append("a collar that isn't yours to take off")
+    if k["neutered"]:  parts.append("gelded")
+    if k["sissified"]: parts.append("made over sweet and soft")
+    if not parts:
+        return ""
+    if len(parts) == 1:
+        return parts[0] + ". "
+    return ", ".join(parts[:-1]) + ", and " + parts[-1] + ". "
+
 def _dairy_state_note(character):
     """A light state-aware line for the dairy hand's assessment — the hook the rest of the
     facility's scenes will use to branch on little/pregnant/nugget/etc. Safe defaults."""
@@ -5986,6 +6039,7 @@ def _b_facility_hub(character):
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
+    add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
     # The lineage room reads as available when you're little/bred or just on the rota.
     add("nursery", "→ the Nursery", "nu_arrival", "regression; the get; the Little Box")
     # The showroom — once you're graded, you can be sold.
@@ -6031,3 +6085,194 @@ def _eff_hub_random(character, p):
     except Exception:
         pass
     return "routed"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Fitting — your installed hardware checked, tested, and USED together.
+# Cinematic, and the most COMBINATION-aware scene in the build: it reads your full
+# _kit (piercings / milk-port / gape-rings / latex / tail / brands / collar /
+# clauses / body-states) and the prose + the real effect change with every piece
+# you're wearing. A bare body gets a short, almost disappointed scene; a fully
+# kitted one gets the works. Actor: the fitter. §0 always frees you.
+# Flow: arrival→check→use→close. Entry: `scene fitting`.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ft_arrival", root=False)
+def _ft_arrival(character):
+    k = _kit(character)
+    inv = _kit_inventory(k)
+    if inv:
+        body = ("The fitter walks around you once, reading your hardware off like a checklist, "
+                "and recites what the facility's already made of you: " + inv +
+                "\"Quite the kit on this one,\" they note, tugging a ring, thumbing a seal, "
+                "checking each install seats true. \"Let's make sure everything's working and "
+                "everything's *used*. No sense installing it if it sits idle.\"")
+    else:
+        body = ("The fitter walks around you once and finds, to their faint professional "
+                "disappointment, a body still mostly *blank* — no ports, no rings, no permanent "
+                "work to speak of yet. \"Fresh. Barely fitted. Well — everyone starts unfurnished. "
+                "We'll see what the rooms hang on you in time. For now there's not much to "
+                "check.\" Still, they run the inventory, noting where the hardware will go.")
+    return {"key": "ft_arrival", "prompt": (
+        "The fitting bench is where the facility's installed work gets *serviced* — checked, "
+        "tightened, tested, and put through its paces, because hardware that's been gauged and "
+        "ported and ringed into a body is only worth the trouble if it's kept in working order "
+        "and kept in *use*. " + body),
+        "options": [
+            {"key": "present", "label": "Present your hardware to be checked",
+             "set": {"ft": "present"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "offer up what they've installed; let it be serviced",
+             "outcome": (
+                "You present what you're wearing — offer up the installed work to be tugged and "
+                "tested — and there's a strange pride-by-proxy in it, your body's modifications "
+                "displayed like the facility's craftsmanship they are. The fitter hums, satisfied. "
+                "\"Presents its kit. Good. The well-fitted ones learn to show the work off.\"")},
+            {"key": "flinch", "label": "Flinch from the handling", "set": {"ft": "flinch"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the installs are still tender; the check happens anyway",
+             "outcome": (
+                "You flinch — the installs still tender, the handling sharp — and the fitter works "
+                "around the flinching with bored competence, checking each piece regardless. "
+                "\"Still sensitive where they put things. That fades. Mostly. The bits that don't "
+                "fade are the bits we keep you sensitive on purpose. Hold still for the rest.\"")},
+            {"key": "ask_ft", "label": "Ask what they're going to do", "set": {"ft": "ask"},
+             "desc": "make the fitter name the servicing",
+             "outcome": (
+                "\"Check it, test it, use it,\" the fitter says, ticking the list. \"Every piece "
+                "the facility's hung on you has a function, and functions are meant to be "
+                "*run*. A port that never drains seizes. A gape that's never plugged tightens. A "
+                "bell that never rings is just jewellery. So we run all of it. That's the fitting. "
+                "Up on the bench.\"")}],
+        "default": "present",
+        "then": "ft_check"}
+
+
+@choice("ft_check", root=False)
+def _ft_check(character):
+    k = _kit(character)
+    bits = []
+    if k["pierced"]:   bits.append("each piercing is tugged and tested for seat, the little bright sparks of it making you jump")
+    if k["milk_port"]: bits.append("the milk-port is uncapped and a line snapped on, a test-pull drawing a thread of you down the tube to prove it flows")
+    if k["gaped"]:     bits.append("the gauged hole is checked with a gloved spread, a sizing-plug pressed in and out to confirm it still takes the full width")
+    if k["latex"]:     bits.append("the latex seal is run for leaks, a palm smoothing down every glossy inch and pressing the air out")
+    if k["pet"]:       bits.append(f"the tail's set is checked, seated firm, given a tug that moves you like the {k['pet']} you've been made")
+    if k["collared"]:  bits.append("the collar's lock is tested — still fast, still not yours")
+    if k["heat_tell"] or k["honorific"]: bits.append("they make you say a few words just to hear the clauses bite — the tell betraying your arousal, the title forced out of you")
+    checklist = (" ".join(bits[:1]) + (" — and " + ", and ".join(bits[1:]) if len(bits) > 1 else "")) if bits else ""
+    if checklist:
+        body = ("Piece by piece they run it: " + checklist + ". Every install answers its test, "
+                "logged in your file as *serviceable*, and the thoroughness of being checked over "
+                "like equipment — like the inventory you've become — sits heavier than rougher "
+                "handling would.")
+    else:
+        body = ("With nothing installed to service, the check is brief and almost clinical — a "
+                "gloved inventory of where the hardware *will* go, a cold tracing of the future "
+                "work, the fitter murmuring measurements into a recorder. It is its own quiet "
+                "dread: not what's been done, but the unhurried certainty of what will be.")
+    return {"key": "ft_check", "prompt": (
+        body + "\n\nThe fitter steps back, makes a note, and gets the look of someone moving from "
+        "*checking* the equipment to *running* it. \"All seats true. Now we use it as a set — "
+        "that's the part that matters. Idle hardware's just decoration, and the facility doesn't "
+        "decorate.\""),
+        "options": [
+            {"key": "hold_check", "label": "Hold still through the servicing", "effect": "devote",
+             "params": {"amount": 2.0}, "desc": "be the equipment; let it be tested",
+             "outcome": (
+                "You hold still and let yourself be serviced, every piece tested in turn, and being "
+                "*equipment under maintenance* settles into you with a flat finality — not a person "
+                "being touched but a unit being kept in working order. The fitter's approval is for "
+                "the readings, not for you. There's no you in the readings anymore. That's rather "
+                "the point of being well-fitted.")},
+            {"key": "squirm", "label": "Squirm under the testing", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "desc": "the tugging and spreading is a lot; it's logged",
+             "outcome": (
+                "You squirm under it — the tugging, the spreading, the clauses being made to bite — "
+                "and the fitter notes the responsiveness as one more reading. \"Reactive hardware. "
+                "Good — means the nerves are still wired to the installs the way we want. A piece "
+                "that stopped reacting would need adjusting. You're in spec. Squirm all you like; "
+                "it's data.\"")}],
+        "default": "hold_check",
+        "then": "ft_use"}
+
+
+@choice("ft_use", root=False)
+def _ft_use(character):
+    k = _kit(character)
+    # Pick the realest effect available from the installed kit.
+    if k["milk_port"]:
+        method, kind, line = "_do_milk", "proc", ("the port runs hot, drawing you down the line in earnest now, not a test-pull but a full draining, the hardware doing the work your body was rebuilt to do")
+    elif k["gaped"]:
+        method, kind, line = "_gang", "gang", ("the gauged hole is put to use as exactly what it was opened to be — plug, then cock, then knot, the permanent gape taking it all without resistance because resistance was surgically removed")
+    else:
+        method, kind, line = None, None, ("with little hardware to run, they use what you came with, plainly, and log the baseline against the work still to come")
+    combo = []
+    if k["milk_port"] and k["gaped"]: combo.append("drained at one end while filled at the other, the two installs run at once like a machine with all its functions engaged")
+    if k["stim"]:    combo.append("the stim-implant kept dialed up the whole time, so the servicing rides a baseline of involuntary need you can't switch off")
+    if k["pet"]:     combo.append(f"led by the tail through it, kept in your {k['pet']} posture")
+    if k["latex"]:   combo.append("sweating inside the sealed latex, the heat of the work trapped against you")
+    if k["denied"]:  combo.append("wound to the edge by all of it and denied, the clause holding your release hostage as usual")
+    combo_line = (" — " + ", ".join(combo)) if combo else ""
+    return {"key": "ft_use", "prompt": (
+        "And then they *run the set*. " + line.capitalize() + combo_line + ". This is the fitting's "
+        "real lesson, the one that lands deeper than any single room's: you are not a person who "
+        "happens to have hardware. You are a *rig* now — a collection of installed functions meant "
+        "to be operated together, serviced and run as a unit — and the more they've hung on you, "
+        "the more there is to switch on at once, the less of you is left over between the working "
+        "parts.\n\n\"There it is,\" the fitter says, watching the readings climb. \"Full kit, "
+        "running as designed. That's a *fitted* body. Take what the set gives you.\""),
+        "options": [
+            {"key": "run", "label": "Let the whole set run", "effect": ("facility" if method else "devote"),
+             "params": ({"method": method, "kind": kind} if method else {"amount": 3.0}),
+             "set": {"ft_run": "yes"}, "desc": "every install operated at once; real output logged",
+             "outcome": (
+                "You let the whole rig run, every installed function operated at once, and whatever "
+                "real output it produces — milk drawn, hole bred, the readings climbing — is logged "
+                "as the fitting intends: proof the kit works as a system. And being operated like "
+                "a system, all your functions running together, is the most thoroughly *thing* you "
+                "have ever felt, and the part of you that minds is getting very small and very far "
+                "between the working parts.")},
+            {"key": "endure_ft", "label": "Endure the set being run", "effect": ("facility" if method else "deny_hold"),
+             "params": ({"method": method, "kind": kind} if method else {"cond": 3.0}),
+             "set": {"ft_run": "endured"}, "desc": "the rig runs regardless; refuse to be only equipment",
+             "outcome": (
+                "You endure it — hold onto being a *someone* while they operate you as a *something* "
+                "— and the rig runs regardless, the installs doing their work whether you consent "
+                "to being a unit or not, the output logged the same. \"Resisting being equipment,\" "
+                "the fitter notes, unbothered. \"Common, in the well-fitted. The hardware doesn't "
+                "care how you feel about it. That's the lovely thing about hardware.\"")}],
+        "default": "run",
+        "then": "ft_close"}
+
+
+@choice("ft_close", root=False)
+def _ft_close(character):
+    k = _kit(character)
+    tail = ("Serviced, run, and logged, your full kit confirmed in working order"
+            if _kit_inventory(k) else
+            "Baselined and logged, your blank body's future work scheduled")
+    return {"key": "ft_close", "prompt": (
+        "The fitter caps what needs capping, unsnaps the lines, smooths the seals, and notes the "
+        f"servicing complete. \"{tail}. You'll come back for fitting whenever the rooms hang "
+        "something new on you, or whenever a piece needs adjusting — which is regularly; "
+        "well-used hardware wears, and we keep it serviced.\" They pat whatever install is nearest "
+        "to hand, proprietary, the way you'd pat good equipment. \"Every fitting, there's a little "
+        "more of you that's hardware and a little less that isn't. That's not a side effect. "
+        "That's the maintenance schedule. Off you go — mind the tender bits.\""),
+        "options": [
+            {"key": "thank", "label": "Thank the fitter", "effect": "gratitude", "end": True,
+             "desc": "for keeping your installs in order; mean it a little",
+             "outcome": (
+                "\"Thank you.\" For keeping the hardware working, for the strange care of being "
+                "maintained — and it comes out meant, which is the fitting having done its quieter "
+                "work: you've started to think of your own installs as things worth keeping "
+                "serviced, your own body as a rig worth maintaining. \"Polite equipment,\" the "
+                "fitter almost-smiles. \"Bethany does like a unit that thanks its service tech.\"")},
+            {"key": "silent_ft", "label": "Say nothing — carry your serviced kit out", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "leave wearing the work, mute",
+             "outcome": (
+                "You say nothing and carry your serviced, run, logged hardware out — every piece "
+                "tested and proven and yours-but-not-yours, a body kept in working order on a "
+                "maintenance schedule you don't set. The fitter's already prepping the bench for "
+                "the next rig. You'll be back the moment the rooms add a part. They always add a "
+                "part.\"")}],
+        "default": "thank"}

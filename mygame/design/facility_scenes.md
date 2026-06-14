@@ -69,6 +69,12 @@ built reference). This doc is the master list of everything to convert.
 - **Auction → Kept arc** — appraisal/block/gavel → Bethany buys → her evening/bed/morning →
   company (she sends for the fellow). Real ownership, laced devotion, the file.
 - **Lineage loop** — your get mature into stock and are bred back to you; each delivery raises quota.
+- ✅ **The Fitting (`ft_*`, `scene fitting`)** — the most COMBINATION-aware scene: reads the full
+  `_kit` (piercings / milk-port / gape-rings / latex / tail / brands / collar / clauses / body-
+  states) and the prose AND the real effect change with every piece worn. A bare body gets a
+  short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
+  while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
+  item/piercing/port/state branching across ALL scenes from here.
 - **Events (≈10)** — facility set-piece events as cinematic interrupts with choices.
 - **Manumission / earn-back** — the in-fiction earned exit; the long compliance record paying off.
 

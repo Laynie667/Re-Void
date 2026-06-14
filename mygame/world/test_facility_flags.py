@@ -548,6 +548,27 @@ def test_bethany_scene():
     assert c18.db.seraphine_owned is True, "Seraphine should now own the player"
     assert c18.db.pending_choice is None and c18.db.scene_flags is None, "seraphine should end clean"
 
+    # The Fitting scene chains end-to-end for BOTH a bare body and a kitted one (combination-aware).
+    c19 = _Char(); cyoa.start_scene(c19, "ft_arrival")
+    ftbeats = []
+    for ch in ("present", "hold_check", "run", "thank"):
+        p = c19.db.pending_choice
+        assert p, f"fitting(bare): no pending before '{ch}'"
+        ftbeats.append(p["key"])
+        assert cyoa.resolve_choice(c19, ch)[0] is not None, f"fitting '{ch}' did not resolve"
+    assert ftbeats == ["ft_arrival", "ft_check", "ft_use", "ft_close"], ftbeats
+    assert c19.db.pending_choice is None and c19.db.scene_flags is None, "fitting should end clean"
+    # kitted body: the inventory line composes, and the scene still chains
+    c20 = _Char()
+    c20.db.lactation_locked = True; c20.db.permanent_gape = True; c20.db.piercings = ["septum", "nipple"]
+    inv = cyoa._kit_inventory(cyoa._kit(c20))
+    assert "milk-port" in inv and "piercing" in inv and "gauged" in inv, inv
+    cyoa.start_scene(c20, "ft_arrival")
+    for ch in ("present", "hold_check", "run", "thank"):
+        assert c20.db.pending_choice, f"fitting(kitted): stall before '{ch}'"
+        assert cyoa.resolve_choice(c20, ch)[0] is not None, f"fitting(kitted) '{ch}' failed"
+    assert c20.db.pending_choice is None and c20.db.scene_flags is None, "fitting(kitted) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")
