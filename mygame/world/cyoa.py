@@ -268,6 +268,34 @@ def _eff_go_pet(character, p):
     return "petted"
 
 
+@effect("go_doll")
+def _eff_go_doll(character, p):
+    """Sealed into a doll/toy — sets the REAL latex/seal flags (latex_sealed, optionally
+    sensory_hood) + a posable doll posture/body-language. All flags are in FACILITY_FLAGS, so
+    the §0 floor unseals you completely. params: hood (bool), cond (conditioning), posture."""
+    try:
+        character.db.latex_sealed = True
+    except Exception:
+        pass
+    if p.get("hood"):
+        try: character.db.sensory_hood = True
+        except Exception: pass
+    try:
+        character.db.forced_posture = p.get("posture",
+            "posed where you were last set — smooth, sealed, an object that holds the shape it's given")
+        character.db.body_language = "a sealed doll — featureless, posable, waiting to be arranged"
+    except Exception:
+        pass
+    cond = float(p.get("cond", 0) or 0)
+    if cond:
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(character, cond, source="dollification")
+        except Exception:
+            pass
+    return "dolled"
+
+
 @effect("submit_standing")
 def _eff_submit_standing(character, p):
     """She chose to submit/comply — facility standing + a compliance tick."""
@@ -8898,3 +8926,159 @@ def _kn_kept(character):
                 "and now you know it does, which means next time you go down, you'll go down "
                 "*trusting* me. That's worth more to me than any hour you'd have stayed afraid.\"")}],
         "default": "stay_pet"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Doll Cabinet — dollification (core content list). You're sealed
+# smooth into a latex/doll shell, made featureless and posable, an OBJECT kept
+# and arranged and displayed. Routes through the REAL seal flags via the new
+# `go_doll` effect (latex_sealed + optional sensory_hood + a posable posture —
+# all FACILITY_FLAGS, floor-cleared). State-aware (nugget already objectified,
+# little a kept dolly, preg a display piece) and kit-aware (already-sealed reads).
+# §0 lit hard: the seal opens on the word, instantly, never gated.
+# Flow: arrival→seal→displayed. Entry: `scene doll`/dollify/cabinet.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("dl_arrival", root=False)
+def _dl_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if st["nugget"]:
+        note = (" A nugget's halfway to a doll already — limbless, posable only by being set down "
+                "where she's wanted — so the shell just finishes the job the rig started, smoothing "
+                "you into the toy you were most of the way to being. ")
+    elif st["little"]:
+        note = (" Down little, the idea doesn't frighten you the way it should — a doll is just a "
+                "toy that gets kept and dressed and cuddled and never has to decide anything, and "
+                "some small part of you reaches for that. ")
+    elif st["preg"]:
+        note = (" They seal you swell-and-all — a bred doll is a *display* piece, the shell drawn "
+                "tight and glossy over the curve of the get, an object that happens to be growing "
+                "another. ")
+    already = (" You're already latex-sealed, so this is less a sealing than a *setting* — the "
+               "shell you wear drawn the last degree tighter, smoothed featureless, the give taken "
+               "out until you hold whatever shape you're left in. " if k["latex"] else "")
+    return {"key": "dl_arrival", "prompt": (
+        "The Doll Cabinet is a bright clean display room — glass-fronted standing cases, a posing "
+        "plinth under soft light, shelves of |wfinished work|n: people sealed smooth into glossy "
+        "doll-shells, featureless and perfect and *still*, each posed exactly where it was last "
+        "set, each waiting with an object's endless patience to be taken down and played with. It "
+        "smells of warm latex and polish. Nothing in here decides anything. That's the whole "
+        "appeal.\n\n"
+        f"|wBethany|n runs a fond hand down a case as you come in. \"{nm}. I've been wanting to try "
+        "you as a *doll*. Not a pet — a pet still wants things — a doll wants *nothing*, holds "
+        "still, keeps the pose I leave it in, and is simply lovely to own and arrange.\"" + already +
+        note + " She lifts a folded shell of poured latex, glistening. \"Shall we seal you smooth "
+        "and see how you look with nothing left to want? I think you'll be exquisite. They always "
+        "are, once the wanting's sealed under.\""),
+        "options": [
+            {"key": "still", "label": "Hold still and let her seal you", "set": {"dl": "still"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "go object; let the wanting seal under the smooth",
+             "outcome": (
+                "You hold still — go pliant and posable and let her work the shell over you — and as "
+                "the latex closes smooth there's a terrible relief in it, the way a held breath "
+                "finally let go feels, every want and worry sealing under a featureless glossy skin "
+                "that decides nothing. \"*Oh*,\" Bethany breathes, smoothing a wrinkle out of you "
+                "with a thumb. \"Look at you go quiet. That's it. A doll doesn't ache for anything. "
+                "Isn't that a mercy, after all that wanting?\"")},
+            {"key": "flinch", "label": "Flinch from the shell", "set": {"dl": "flinch"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "pull back from being made a thing; she's unhurried",
+             "outcome": (
+                "You pull back from the cold first touch of the latex — and Bethany doesn't force "
+                "it, just waits, the shell patient in her hands. \"A doll that flinches,\" she says, "
+                "amused, fond. \"We'll smooth that out. The flinch is just the person's last little "
+                "reflex; it goes quiet once the shell's on and there's nothing to flinch *with*. "
+                "Hold still or don't — the latex doesn't mind, and soon neither will you.\"")},
+            {"key": "ask_doll", "label": "Ask what a doll is for", "set": {"dl": "ask"},
+             "desc": "make her say what she'd keep you as",
+             "outcome": (
+                "\"What's a doll *for*?\" you ask, and Bethany's smile goes warm and dreadful. "
+                "\"For being *had*, sweetheart. For sitting pretty in my case where I can see you. "
+                "For being posed how I like and staying posed. For being taken down and used and set "
+                "back without a single opinion entering into it. A doll is for its owner's pleasure "
+                "and its own perfect stillness — and you'd be *so* good at both.\"")}],
+        "default": "still",
+        "then": "dl_seal"}
+
+
+@choice("dl_seal", root=False)
+def _dl_seal(character):
+    return {"key": "dl_seal", "prompt": (
+        "She seals you. It's slow and total — the poured latex worked over every inch, smoothed "
+        "featureless, the give kneaded out until your body holds whatever shape her hands leave it "
+        "in; fingers sealed together into smooth mitts or pointed toes, the face drawn glossy and "
+        "blank, the world going muffled and warm and far. She poses you on the plinth — chin here, "
+        "wrists so, hips turned just *that* way — and steps back to admire, and you find with a "
+        "lurch of vertigo that you're *holding* it, that the want to move has nowhere to go, that "
+        "you are, for this long sealed moment, an object she made and arranged. \"Perfect,\" she "
+        "murmurs, circling you. \"Not a flicker. Not a want. Just my lovely doll, holding the pose "
+        "I gave her. This is the stillest you've ever been, isn't it. The most *kept*.\""),
+        "options": [
+            {"key": "seal_in", "label": "Seal all the way — go fully doll", "effect": "go_doll",
+             "params": {"hood": True, "cond": 4.0}, "set": {"sealed": "full"},
+             "desc": "the REAL seal — latex + hood, smoothed to an object",
+             "outcome": (
+                "You let it close all the way — the hood drawn down, sight and sound sealing to a "
+                "warm muffled nothing, the last of the person smoothed under glossy latex until "
+                "there's only the pose and the patience — and you become, for true, the doll on the "
+                "plinth: featureless, posable, kept. The seal takes for real. \"There she is,\" "
+                "Bethany's voice comes warm through the muffling, infinitely pleased. \"All sealed "
+                "up smooth with nothing left to want. My best piece. I could look at you for "
+                "hours.\"")},
+            {"key": "seal_aware", "label": "Be sealed but stay awake behind the smooth", "effect": "go_doll",
+             "params": {"hood": False, "cond": 2.0}, "set": {"sealed": "aware"},
+             "desc": "the seal is real; the person watches from inside the doll",
+             "outcome": (
+                "You let her seal you but keep your eyes — stay *awake* behind the smooth blank "
+                "shell, the person trapped watching from inside the object, every pose felt and "
+                "every adjusting hand known and nothing you can do but hold. The seal's real; the "
+                "witness is the torment. \"Awake in there,\" Bethany notes, fond, tipping your "
+                "sealed chin. \"Some prefer it — the doll that *knows* it's a doll, that feels "
+                "itself being arranged and can't lift a finger about it. Crueler. I do like "
+                "crueler.\"")}],
+        "default": "seal_in",
+        "then": "dl_displayed"}
+
+
+@choice("dl_displayed", root=False)
+def _dl_displayed(character):
+    return {"key": "dl_displayed", "prompt": (
+        "And then you're *displayed* — set in the lit case among the other finished work, posed and "
+        "perfect and kept, taken down when she wants to play and set back smooth and still when "
+        "she's done. Time goes strange inside the shell, warm and pose-shaped and undemanding. You "
+        "are owned the way a lovely object is owned: completely, fondly, without your needing to do "
+        "a single thing but hold. \"My doll,\" Bethany says, every time she passes the case, like it "
+        "never stops pleasing her. \"Sitting just where I left her.\"\n\n"
+        "And then — because this is the thing she will not seal away — her voice comes clear and "
+        "warm right against the shell: \"There's a word, my smooth lovely thing, and it splits this "
+        "shell off you and stands you up a wanting person again the instant you mean it, and I will "
+        "never once stop it. A doll that *couldn't* leave would only be a prisoner. A doll that "
+        "*stays* sealed knowing the word — that's a doll that chose to be mine. That's the only "
+        "kind worth having.\""),
+        "options": [
+            {"key": "stay_doll", "label": "Stay sealed — be kept and posed", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "choose the shell, knowing the word frees you",
+             "outcome": (
+                "You stay sealed — hold the pose, keep the smooth, choose the warm undemanding "
+                "nothing of being her doll, *knowing* the word would split the shell and stand you "
+                "up this second — and that choosing is the only thing the doll is allowed to do, and "
+                "you spend it on staying. \"Good doll,\" Bethany murmurs, setting you just so. "
+                "\"Kept because you'd rather be smooth than be wanting. I'll take you down when I "
+                "want you. You'll hold until then. Isn't the stillness *lovely*.\" And it is, and "
+                "the word waits unspoken under the glossy blank, entirely yours.")},
+            {"key": "crack_seal", "label": "Use the word — split the shell, stand up a person",
+             "set": {"dl_out": "cracked"}, "end": True, "desc": "the §0-in-fiction out; honoured at once",
+             "outcome": (
+                "You find the word under the smooth and you mean it, and the shell splits and peels "
+                "and you *stand* — a wanting, breathing, fingered-and-toed person again, the doll "
+                "sloughed off like a shed skin — and Bethany helps you out of the last of it without "
+                "a flicker of grudge, because she built the cabinet on this being real. \"Up and "
+                "wanting again,\" she says, warm and easy. \"See how fast it let go? Exactly as "
+                "promised. Now you know the shell never really holds you — only your choosing to "
+                "stay in it does. Which means next time I seal you, you'll go smooth *trusting* me. "
+                "That's worth more than a hundred poses.\"")}],
+        "default": "stay_doll"}

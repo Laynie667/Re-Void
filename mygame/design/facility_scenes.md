@@ -95,6 +95,14 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Doll Cabinet / dollification (`dl_*`, `scene doll`/dollify/cabinet)** — BUILT.
+  Core-list dollification: sealed smooth into a latex/doll shell, made featureless and posable,
+  kept and displayed as an OBJECT. Routes through a new `go_doll` effect (latex_sealed + optional
+  sensory_hood + a posable posture — all FACILITY_FLAGS, floor-cleared). arrival → seal →
+  displayed. State-aware (nugget already objectified, little a kept dolly, preg a display piece),
+  kit-aware (already-sealed reads as a tighter *setting*). The seal-aware branch traps the person
+  awake behind the smooth ("crueler — I like crueler"). §0 lit hard: the word splits the shell and
+  stands you up a wanting person the instant you mean it — "a doll that chose to be mine."
 - ✅ **The Kennel / petplay (`kn_*`, `scene kennel`/pet/puppy/petplay)** — BUILT. Core-list
   petplay: you ARE the pet (collared, crawling, named to a pet, trained, kept) — distinct from
   the Pens (bred BY animals). Routes through the REAL conditioning pet-imprint via a new `go_pet`

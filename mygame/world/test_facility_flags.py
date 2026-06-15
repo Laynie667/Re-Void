@@ -819,6 +819,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c40, ch)[0] is not None, f"kennel(b) '{ch}' failed"
     assert c40.db.pending_choice is None and c40.db.scene_flags is None, "kennel(b) should end clean"
 
+    # The Doll Cabinet (dollification) — chains both branches; go_doll sets the real seal.
+    c41 = _Char(); cyoa.start_scene(c41, "dl_arrival")
+    dlbeats = []
+    for ch in ("still", "seal_in", "stay_doll"):
+        p = c41.db.pending_choice
+        assert p, f"doll: no pending before '{ch}'"
+        dlbeats.append(p["key"])
+        assert cyoa.resolve_choice(c41, ch)[0] is not None, f"doll '{ch}' did not resolve"
+    assert dlbeats == ["dl_arrival", "dl_seal", "dl_displayed"], dlbeats
+    assert c41.db.latex_sealed is True, "doll seal should set the real latex_sealed flag"
+    assert c41.db.pending_choice is None and c41.db.scene_flags is None, "doll should end clean"
+    c42 = _Char(); cyoa.start_scene(c42, "dl_arrival")
+    for ch in ("ask_doll", "seal_aware", "crack_seal"):
+        assert c42.db.pending_choice, f"doll(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c42, ch)[0] is not None, f"doll(b) '{ch}' failed"
+    assert c42.db.pending_choice is None and c42.db.scene_flags is None, "doll(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

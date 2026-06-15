@@ -1655,6 +1655,8 @@ class CmdScene(Command):
         "file": "iv_arrival",
         "kennel": "kn_arrival", "pet": "kn_arrival", "puppy": "kn_arrival",
         "petplay": "kn_arrival",
+        "doll": "dl_arrival", "dollify": "dl_arrival", "cabinet": "dl_arrival",
+        "dollification": "dl_arrival",
     }
 
     def func(self):
