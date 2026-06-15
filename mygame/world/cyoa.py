@@ -9927,21 +9927,45 @@ def _bn_seat(character):
         "then": "bn_knot"}
 
 
+# Variant leads for the knot beat (the *pop* — the signature savor-moment) so it never repeats.
+_BN_KNOT_LEADS = [
+    ("And then she gives you the |wknots|n. She's been holding them at your rims this whole time, "
+     "fat and swollen and waiting, and now — moving in you with long, deep, deliberate strokes "
+     "that drag the flares against every nerve you have — she starts to *force* them. The one in "
+     "your cunt first: she draws back, lines the swollen knot against your stretched rim, and "
+     "presses, and presses, the stretch climbing past burning to something with no name, your "
+     "body sure it won't, it can't, it's too — and then it gives, and the knot punches through "
+     "with a wet, obscene |w*pop*|n that you feel in your spine, and locks, swelling fatter the "
+     "instant it's in so it can't pull back out. Then the ass: another slow merciless press, "
+     "another impossible stretch, another *pop* and lock that bows your back off the bed. Then "
+     "she feeds the third up your throat until the knot seats behind your teeth and you're "
+     "*plugged*, all three knotted in at once, locked to her at every door, your belly already "
+     "bulging faintly with the shapes of her seated deep. "),
+    ("And then come the |wknots|n — all three at once, because tonight she's patient enough to do "
+     "the cruelest version. She grips your hips and your jaw and *holds* you down onto all three "
+     "swollen bulbs at the same moment, and bears her weight slow and inexorable, and you feel "
+     "every rim of you stretch past what rims do, the three impossible pressures climbing together "
+     "until your whole body is one held scream — and then they go, nearly together, three wet "
+     "*pops* in a ragged half-second, |wpop|n and |wpop|n and |wpop|n, and lock, and swell, three "
+     "fat knots seated and fattening in your three stretched doors at once so not one of them can "
+     "pull free. Your belly bows out tight with the shapes of all three crammed deep. "),
+    ("And then, slow, savoring it, she |wknots|n you — and she makes you feel each one arrive. The "
+     "cunt-knot first, worked against the rim in tiny merciless rocks until the stretch whites out "
+     "your vision and it forces through with a *pop* you hear as much as feel; she gives you a "
+     "moment to sob around it, then takes the ass the same patient way, another unbearable swell "
+     "and a deeper, wetter *pop* and lock; and last the throat, the knot pressed past your teeth "
+     "to seat thick and breath-stealing behind them. Three. Locked. Each one swelling fatter now "
+     "it's seated, so your stretched rims clamp helpless around them, your middle drum-tight with "
+     "the trapped shapes of her. "),
+]
+
+
 @choice("bn_knot", root=False)
 def _bn_knot(character):
+    import random as _r
     return {"key": "bn_knot", "prompt": (
-        "And then she gives you the |wknots|n. She's been holding them at your rims this whole time, "
-        "fat and swollen and waiting, and now — moving in you with long, deep, deliberate strokes "
-        "that drag the flares against every nerve you have — she starts to *force* them. The one in "
-        "your cunt first: she draws back, lines the swollen knot against your stretched rim, and "
-        "presses, and presses, the stretch climbing past burning to something with no name, your "
-        "body sure it won't, it can't, it's too — and then it gives, and the knot punches through "
-        "with a wet, obscene |w*pop*|n that you feel in your spine, and locks, swelling fatter the "
-        "instant it's in so it can't pull back out. Then the ass: another slow merciless press, "
-        "another impossible stretch, another *pop* and lock that bows your back off the bed. Then "
-        "she feeds the third up your throat until the knot seats behind your teeth and you're "
-        "*plugged*, all three knotted in at once, locked to her at every door, your belly already "
-        "bulging faintly with the shapes of her seated deep. \"Locked,\" Bethany breathes, savoring "
+        _r.choice(_BN_KNOT_LEADS) +
+        "\"Locked,\" Bethany breathes, savoring "
         "it, grinding the knots so you feel each one swell. \"Now you can't get off me even if the "
         "building burned. Not till I go down. You're mine to empty into now, over and over, all "
         "night, and there's nowhere — *nowhere* — for any of it to go but to stay and fill you.\""),
