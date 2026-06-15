@@ -3199,6 +3199,22 @@ def _bp_after(character):
 
 @choice("cc_arrival", root=False)
 def _cc_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("A nugget needs no wrist or ankle straps — there's nothing to strap — so they "
+                "simply settle your limbless weight deep into the cushion, fit the brow-band, and "
+                "angle the spiral down over a face that can't turn away, can't fidget, can't do "
+                "anything but receive. The chair was practically built for what you are. ")
+    elif st["little"]:
+        note = ("Down in your little headspace there's so much less of you holding the door — the "
+                "spiral doesn't have to work past a grown mind's defences, just a soft small one "
+                "that's already half-open — and the voice knows it, and pitches itself sweeter for "
+                "it, the way you'd talk a tired child down to a nap they'll wake from changed. ")
+    elif st["preg"]:
+        note = ("They settle the swell of you carefully into the cushion — a bred subject gets "
+                "conditioned around the cargo, the straps eased, the voice already folding what "
+                "you're carrying into the script it means to write. ")
     return {"key": "cc_arrival", "prompt": (
         "The Conditioning Cell is small and dim and padded for quiet, and the only thing in it "
         "that matters is the chair. The |wSpiral Chair|n: high-backed, deeply cushioned, restraints "
@@ -3207,6 +3223,7 @@ def _cc_arrival(character):
         "padding receives your weight like it knows you, and the straps go on — wrists, ankles, a "
         "soft band across your brow that means your head stays where the spiral wants it — and a "
         "speaker somewhere close to your ear clicks, and warms, and *she* begins.\n\n"
+        + note +
         "It is Bethany's voice. Recorded — she is not in the room, is off running her files and her "
         "facility — and somehow that is worse, because the voice is perfect and patient and tireless "
         "in a way no live person could sustain, and it has all the time in the world for you. "
@@ -3799,6 +3816,25 @@ def _dy_handoff(character):
 
 @choice("mp_arrival", root=False)
 def _mp_arrival(character):
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = ("\n\nA nugget gets clamped differently — no wrists or ankles to buckle, just the "
+                "waist and brow straps and a cradle to hold your limbless weight at the angle his "
+                "work wants. \"Easier canvas, your sort,\" the marker notes, flat. \"Can't pull "
+                "away from the needle. Can't shield a spot. Whatever I decide, wherever, you hold "
+                "for all of it.\"")
+    elif st["preg"]:
+        note = ("\n\nHe takes in the swell of you with a craftsman's eye and reaches, "
+                "unsurprised, for the finer womb-tattoo needles. \"Bred,\" he observes. \"Good "
+                "skin for it — taut canvas, and the work over a full belly reads as exactly what "
+                "it is. We'll ink what you're carrying right where it's growing.\"")
+    elif st["little"]:
+        note = ("\n\nDown in your little headspace you don't grasp the *permanent* of it — only "
+                "the big chair, the bright lamp, the strap that means hold still — and the marker "
+                "doesn't soften a thing for that. \"Won't understand it till you're big again,\" "
+                "he says, indifferent. \"Mark doesn't care what headspace took it. It'll be there "
+                "when you come up.\"")
     return {"key": "mp_arrival", "prompt": (
         "The Marking Parlour is the cleanest room in the facility, and the most frightening for it "
         "— part tattoo studio, part surgery, part leatherworker's bench, smelling of green soap and "
@@ -3815,7 +3851,7 @@ def _mp_arrival(character):
         "don't get to flinch the work crooked. He tests an iron against a damp cloth; it hisses. "
         "\"Hold still, or don't,\" he says, the only thing he says. \"The strap holds you either "
         "way. Doesn't come off, what I do. Doesn't fade. Isn't up for discussion. So.\" He waits "
-        "for the iron to come to colour."),
+        "for the iron to come to colour." + note),
         "options": [
             {"key": "still", "label": "Go still under the strap", "set": {"chair": "still"},
              "effect": "devote", "params": {"amount": 2.0},
