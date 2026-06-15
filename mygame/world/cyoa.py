@@ -244,6 +244,36 @@ def _eff_program_trigger(character, p):
     return "programmed"
 
 
+@effect("bred_by_own")
+def _eff_bred_by_own(character, p):
+    """The line folds back on itself: bred by your OWN grown get — a son/futa of yours sires into
+    you. REAL: a gang_inseminate with sire = an offspring's name (pulled from the roster if present)
+    + maybe_lineage_offspring to deepen the line a generation (bumps offspring_max_gen). Defensive:
+    synthesizes a generic own-line sire if the roster's thin."""
+    db = character.db
+    roster = list(getattr(db, "offspring_roster", None) or [])
+    counts = dict(getattr(db, "offspring_counts", None) or {})
+    species = next(iter(counts), "bethany") if counts else "bethany"
+    sire_name = None
+    for e in roster:
+        if isinstance(e, dict) and e.get("sex") in ("futa", "male") and e.get("name"):
+            sire_name = e["name"]; species = e.get("species", species); break
+    if not sire_name:
+        sire_name = "your own get"
+    parent_gen = int(getattr(db, "offspring_max_gen", 1) or 1)
+    try:
+        from world.gang_breeding import gang_inseminate, animal_holes, maybe_lineage_offspring
+        import random as _r
+        hs = [z for z in animal_holes(character).values() if z]
+        if hs:
+            gang_inseminate(character, _r.choice(hs), contributors=1, fluid_type="semen",
+                            species=species, sire=sire_name)
+        maybe_lineage_offspring(character, species, parent_gen)
+    except Exception:
+        pass
+    return "line_folded"
+
+
 @effect("give_birth")
 def _eff_give_birth(character, p):
     """She drops her litter — REAL delivery via pregnancy.deliver: births the recorded offspring
@@ -6476,6 +6506,9 @@ def _b_facility_hub(character):
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
     add("lineage", "→ the Lineage Hall", "lh_arrival", "your stud-book; the get you've thrown")
+    # The line folds back — surfaces once you've dropped get for the facility to rear and return.
+    if (getattr(db, "offspring_counts", None) or getattr(db, "offspring_max_gen", 0)):
+        add("linefolds", "→ bred back by your own get", "lf_arrival", "the line folds — your grown get sires its dam")
     add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
     add("dosing", "→ the Dispensary", "dz_arrival", "your dose; the come-up")
     add("edge", "→ the edging station", "ed_arrival", "denial training; held at the brink")
@@ -12294,3 +12327,130 @@ def _hy_after(character):
                 "work happens where you can't watch it and can't undo it. Let it go. You already "
                 "have, mostly.|n\"")}],
         "default": "surface_calm"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Line Folds — the taboo the lineage system was built for: your own
+# grown get bred back into you (the Lineage Hall's "sons and futa sire, including
+# back into you"). The facility rears your offspring and returns them grown to
+# sire on their dam — the line folding on itself, generation into generation.
+# Routes through the REAL `bred_by_own` (gang_inseminate sired by an offspring +
+# maybe_lineage_offspring deepening the generation). Clean register. Hub-gated on
+# having a brood. Flow: arrival→fold→after. Entry: `scene linefolds`/bredback.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("lf_arrival", root=False)
+def _lf_arrival(character):
+    nm = subject_name(character)
+    db = getattr(character, "db", None)
+    counts = dict(getattr(db, "offspring_counts", None) or {})
+    total = sum(int(v) for v in counts.values())
+    brood = (f" You've dropped {total} into the line already — and the facility kept them, reared "
+             "them in the pens, grew them up on schedule. " if total else
+             " The facility's been rearing what you've dropped, growing them up quick in the pens. ")
+    return {"key": "lf_arrival", "prompt": (
+        "Bethany walks you into a quiet room where one of the facility's grown stock is waiting — "
+        "and it takes you a moment to understand the resemblance, the something-familiar in the set "
+        "of the jaw, the line of the body, before she says it plainly and the floor drops out of "
+        f"you.\n\n\"Meet your get,\" she says, fond, proud, watching your face do the arithmetic. "
+        f"\"Reared, grown, and *ready to work* — and the work is you, {nm}. This is how the line "
+        "folds: I breed you, you drop them, I rear them, and when they're grown I bring them back "
+        f"to breed *you*, their own dam, and the line gets richer by curling back on itself.\"" +
+        brood + "She rests a hand on your get's shoulder, then on your belly, closing the circuit. "
+        "\"Daughters take your place at the rail; the sons and the futa I keep to sire — including "
+        "right back up into the one they came out of. There's nothing in the rules of a place like "
+        "this that says a line has to run *outward*. Yours runs in loops. Say hello to the next "
+        "generation. It's going to put the one after that in you.\""),
+        "options": [
+            {"key": "take_in", "label": "Take your own grown get in", "set": {"lf": "take"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "open for the line to fold; let your get breed its dam",
+             "outcome": (
+                "You open for it — for your own get, grown and ready, to breed the body it came out "
+                "of — and the wrongness and the heat of it tangle into one thing you can't sort, "
+                "the line folding closed as your get mounts its dam with the same blunt facility "
+                "purpose you were bred with. \"*There,*\" Bethany breathes, enormously pleased, "
+                "watching the loop seal. \"Generation into generation, right back where it started. "
+                "This is the deepest the line goes — and it goes here because you *let* it.\"")},
+            {"key": "reel", "label": "Reel at what she's circuited", "set": {"lf": "reel"},
+             "effect": "deny_hold", "params": {"cond": 3.0},
+             "desc": "the fold is too much; it happens regardless, and she savours the recoil",
+             "outcome": (
+                "You reel — the circuit of it, your own get brought back to breed you, too much to "
+                "hold — and Bethany cups your face and turns it gently toward your waiting "
+                "offspring, savouring the recoil. \"I know. It's a lot, the first fold. Most lines "
+                "run away from this and call it decency. Ours runs *into* it.\" Your get is already "
+                "moving to mount, uncaring of your horror, bred to the work. \"It happens whether "
+                "you can bear the shape of it or not, sweetheart. The line doesn't ask. It just "
+                "loops.\"")}],
+        "default": "take_in",
+        "then": "lf_fold"}
+
+
+@choice("lf_fold", root=False)
+def _lf_fold(character):
+    return {"key": "lf_fold", "prompt": (
+        "And then your own get breeds you, and it's the most knotted thing the facility has done to "
+        "you yet — the body you grew and dropped now grown itself and driving into you with the "
+        "blunt single-minded rut the facility breeds into all its stock, indifferent to the loop "
+        "it's closing, knowing you only as the hole it's aimed at. Bethany watches the generations "
+        "fold together with the rapt fondness of a woman seeing her favourite theory proven. \"Feel "
+        "that? That's your own line putting its get back in you. The record won't even know which "
+        "way is up the family tree in a few more folds — it'll just be *you*, all the way down, "
+        "bred by what you bred.\" The rut drives toward its finish, and the line draws closed around "
+        "another generation."),
+        "options": [
+            {"key": "fold_in", "label": "Let the line close — bred by what you bred", "effect": "bred_by_own",
+             "set": {"folded": "in"}, "desc": "the REAL fold — sired by your own get, the line deepened a generation",
+             "outcome": (
+                "You let it close — let your get spend in you, let the line fold shut around another "
+                "generation — and it's real, logged: sired by your own offspring, the lineage "
+                "curled back a generation deeper, the family tree knotted into a loop the records "
+                "will struggle to chart. \"*Folded,*\" Bethany sighs, sated on your behalf. \"A "
+                "generation deeper and pointed straight back at you. I do love watching a line eat "
+                "its own tail. We'll do it again with the next one you drop, and the one after. "
+                "Down and down, all of it *you*.\"")},
+            {"key": "endure_fold", "label": "Endure the fold, mourning the shape of it", "effect": "bred_by_own",
+             "set": {"folded": "endured"}, "desc": "the fold is real regardless; carry the wrongness",
+             "outcome": (
+                "You endure it — let your get finish in you while some last part of you mourns the "
+                "clean outward shape a line is supposed to have — and the fold takes regardless, "
+                "real and logged and a generation deeper, your mourning no obstacle to the loop. "
+                "\"Grieving the family tree,\" Bethany observes, fond. \"It's worth grieving. And "
+                "it's bred anyway. That's rather the whole of what this place is, sweetheart — the "
+                "grief and the breeding in the same body, and the breeding always, always wins.\"")}],
+        "default": "fold_in",
+        "then": "lf_after"}
+
+
+@choice("lf_after", root=False)
+def _lf_after(character):
+    return {"key": "lf_after", "prompt": (
+        "After, your get is led back out to the pens — work done, indifferent, already forgetting "
+        "you — and Bethany keeps you close, a hand on your belly where the folded generation now "
+        "sits, delighted with her loop. \"And when you drop *that*,\" she says, fond, \"we rear it "
+        "too, and bring it back, and fold it again, and your line just gets denser and stranger and "
+        "more *mine* with every turn. A line that runs outward leaves you. A line that folds back "
+        "stays — all of it, here, in you, forever.\" She kisses your temple. \"You're not the start "
+        "of a lineage, sweetheart. You're the knot the whole thing ties itself into.\""),
+        "options": [
+            {"key": "carry_fold", "label": "Carry the folded generation", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the loop closed, the line denser and yours",
+             "outcome": (
+                "You carry it — the folded generation, the line curled back into you, the family "
+                "tree knotted shut — and the strangeness of it settles into the same place all the "
+                "facility's work settles: a thing done to you that's now simply *true*, your "
+                "lineage a closed loop with you at its centre, bred by what you bred, carrying what "
+                "your own get put back. The line gets denser. You get more central to it. The loop "
+                "turns again, and you turn with it.")},
+            {"key": "ask_deep", "label": "Ask how deep the folds go", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "make her name the bottom of the loop",
+             "outcome": (
+                "\"How deep does it go?\" you ask. \"How many folds?\" And Bethany's smile turns "
+                "genuinely dreamy. \"There's no bottom, sweetheart. That's the beauty of a loop. "
+                "Generation into generation into generation, each one bred back, the record "
+                "thickening past anyone's ability to read it, until the line isn't a line at all "
+                "anymore — just a dense bred knot of *you*, folded into yourself so many times "
+                "there's no telling parent from child from you. That's where we're going. Slowly. "
+                "Fold by fold. Isn't it lovely, having somewhere so deep to go.\"")}],
+        "default": "carry_fold"}

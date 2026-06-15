@@ -1074,6 +1074,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Line Folds — bred by your own get; both branches chain clean (bred_by_own no-ops in stub).
+    c81 = _Char(); cyoa.start_scene(c81, "lf_arrival")
+    lfbeats = []
+    for ch in ("take_in", "fold_in", "carry_fold"):
+        p = c81.db.pending_choice
+        assert p, f"linefolds: no pending before '{ch}'"
+        lfbeats.append(p["key"])
+        assert cyoa.resolve_choice(c81, ch)[0] is not None, f"linefolds '{ch}' did not resolve"
+    assert lfbeats == ["lf_arrival", "lf_fold", "lf_after"], lfbeats
+    assert c81.db.pending_choice is None and c81.db.scene_flags is None, "linefolds should end clean"
+    c82 = _Char(); cyoa.start_scene(c82, "lf_arrival")
+    for ch in ("reel", "endure_fold", "ask_deep"):
+        assert c82.db.pending_choice, f"linefolds(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c82, ch)[0] is not None, f"linefolds(b) '{ch}' failed"
+    assert c82.db.pending_choice is None and c82.db.scene_flags is None, "linefolds(b) should end clean"
+
     # Going Under — deep staged hypnosis; both branches chain clean.
     c79 = _Char(); cyoa.start_scene(c79, "hy_arrival")
     hybeats = []

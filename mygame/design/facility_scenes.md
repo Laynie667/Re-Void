@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Line Folds (`lf_*`, `scene linefolds`/bredback)** — BUILT. The taboo the lineage system
+  was built for: your own grown get bred back into you (the Lineage Hall's "sons and futa sire,
+  including back into you"). The facility rears what you drop and returns them grown to sire on
+  their dam — the line folding on itself, generation into generation, "a line that eats its own
+  tail." Routes through a new `bred_by_own` effect (gang_inseminate sired by an offspring pulled
+  from the roster + maybe_lineage_offspring deepening the generation / bumping offspring_max_gen).
+  arrival → fold → after; take it in vs reel, fold-in vs endure. Closes the loop with Whelping +
+  Lineage Hall (drop → rear → fold). Surfaces in the hub once you've dropped a brood. Clean register.
 - ✅ **Going Under (`hy_*`, `scene goingunder`/trance/deepchair)** — BUILT. Deep staged hypnosis —
   the spiral chair's deep version (the Cell is the first sink; this descends past it). Stage by
   stage down to "the below," where the mantra drills (you *speak* it, so it seats), a PERMANENT

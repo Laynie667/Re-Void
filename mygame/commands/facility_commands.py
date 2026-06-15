@@ -1689,6 +1689,7 @@ class CmdScene(Command):
         "programming": "pr_arrival", "trigger": "pr_arrival", "program": "pr_arrival",
         "goingunder": "hy_arrival", "trance": "hy_arrival", "deepchair": "hy_arrival",
         "thebelow": "hy_arrival",
+        "linefolds": "lf_arrival", "bredback": "lf_arrival", "fold": "lf_arrival",
     }
 
     def func(self):
