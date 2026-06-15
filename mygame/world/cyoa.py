@@ -9890,28 +9890,48 @@ def _bn_arrival(character):
         "then": "bn_seat"}
 
 
+# Variant leads for the seating beat, so the marquee's slow build never reads the same twice.
+_BN_SEAT_LEADS = [
+    ("She seats them one at a time, and she takes her *time*, because tonight there's nothing "
+     "rushing her. The first shaft comes to your mouth — the broad stallion-flare nudging your "
+     "lips wide, wider, the laced pre flooding your tongue and fogging you sweet as it forces past "
+     "your teeth and sinks toward your throat, thick enough that breathing becomes a thing you "
+     "negotiate around it. The second she lines up against your cunt and *presses*, the flared "
+     "head catching at your rim and then forcing through with a slow burning stretch that pulls a "
+     "muffled sound up around the first, sinking wrong-deep, deeper than you have room for and "
+     "deeper still. And the third she works against your ass, patient and relentless, the head "
+     "popping past the tight ring with a white flash that whites out thought — and then all "
+     "|wthree|n are in you at once. "),
+    ("She doesn't rush a single inch of it. She starts low — the first flared head pressing into "
+     "your cunt slow as a tide coming in, so you feel every fraction of the stretch, the wrong-deep "
+     "ache building rung by rung until it's seated to the root and grinding. Then your ass, worked "
+     "open against the second with that patient relentless pressure that has no give in it at all, "
+     "the head popping through and sinking deep. And last she tips your chin up and feeds the third "
+     "to your mouth — the laced pre already on your lips, the flare forcing your jaw wide and "
+     "pushing toward your throat — until all |wthree|n are seated and you're stoppered at every "
+     "end. "),
+    ("She seats all three close together tonight, impatient under the patience — your mouth and "
+     "your cunt and your ass each taken in quick merciless succession, flare after flare forcing "
+     "past rim after rim, three slow brutal stretches stacked one on the next so you barely surface "
+     "from one before the next is splitting you, the laced pre fogging your head from the one in "
+     "your throat while the other two drive wrong-deep below. By the time the third pops home you're "
+     "shaking and stuffed and stretched at every door, all |wthree|n seated to the root. "),
+]
+
+
 @choice("bn_seat", root=False)
 def _bn_seat(character):
+    import random as _r
     k = _kit(character)
     ease = (" Your gauged hole takes its flare without the fight a tight one would put up — ringed "
-            "permanently open as it is, it simply *yields*, swallowing the stallion-head whole on "
-            "the first patient press, and Bethany hums at how easily that door opens for her now. "
-            if k["gaped"] else "")
+            "permanently open as it is, it simply *yields*, and Bethany hums at how easily that "
+            "door opens for her now. " if k["gaped"] else "")
     return {"key": "bn_seat", "prompt": (
-        "She seats them one at a time, and she takes her *time*, because tonight there's nothing "
-        "rushing her. The first shaft comes to your mouth — the broad stallion-flare nudging your "
-        "lips wide, wider, the laced pre flooding your tongue and fogging you sweet as it forces "
-        "past your teeth and sinks toward your throat, thick enough that breathing becomes a thing "
-        "you negotiate around it. The second she lines up against your cunt and *presses*, the "
-        "flared head catching at your rim and then forcing through with a slow burning stretch that "
-        "pulls a muffled sound up around the first, sinking wrong-deep, deeper than you have room "
-        "for and deeper still. " + ease +
-        "And the third she works against your ass, patient and relentless, the head popping past "
-        "the tight ring with a white flash that whites out thought — and then all |wthree|n are in "
-        "you at once, filling every door of you, three flared heads seated deep and three knots "
-        "still waiting fat at your stretched rims, and Bethany sighs the contented sigh of a woman "
-        "settling into a favourite chair. \"*There.* All my holes at home. Now I've got you — every "
-        "way a body can be had at once. Feel how full that is? We haven't even started.\""),
+        _r.choice(_BN_SEAT_LEADS) + ease +
+        "Three flared heads seated deep and three knots still waiting fat at your stretched rims, "
+        "and Bethany sighs the contented sigh of a woman settling into a favourite chair. \"*There.* "
+        "All my holes at home. Now I've got you — every way a body can be had at once. Feel how full "
+        "that is? We haven't even started.\""),
         "options": [
             {"key": "take_all", "label": "Take all three — let her seat them to the root",
              "set": {"seat": "all"}, "effect": "devote", "params": {"amount": 3.0},
