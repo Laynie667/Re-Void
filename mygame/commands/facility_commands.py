@@ -1676,6 +1676,7 @@ class CmdScene(Command):
         "brandme": "cl_arrival",
         "twoowners": "tw_arrival", "shared": "tw_arrival", "peers": "tw_arrival",
         "borrow": "tw_arrival",
+        "edge": "ed_arrival", "edging": "ed_arrival", "denial": "ed_arrival",
     }
 
     def func(self):

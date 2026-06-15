@@ -180,6 +180,30 @@ def _eff_grant_relief(character, p):
     return "relief"
 
 
+@effect("edge_set")
+def _eff_edge_set(character, p):
+    """Edged and held at the brink — sets the REAL denial state (orgasm_denial + a raised
+    arousal_floor) and banks edge-arousal via the arousal script. All flags are in FACILITY_FLAGS.
+    params: floor (arousal_floor minimum), arousal (banked)."""
+    try:
+        character.db.orgasm_denial = True
+        character.db.arousal_floor = max(float(getattr(character.db, "arousal_floor", 0) or 0),
+                                         float(p.get("floor", 60.0)))
+    except Exception:
+        pass
+    try:
+        from typeclasses.arousal_script import add_arousal, ensure_arousal_script
+        ensure_arousal_script(character); add_arousal(character, float(p.get("arousal", 30.0)))
+    except Exception:
+        pass
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, float(p.get("cond", 2.0)), source="edged")
+    except Exception:
+        pass
+    return "edged"
+
+
 @effect("deny_hold")
 def _eff_deny_hold(character, p):
     """She held out — a flicker of self, paid for in denial and a deeper conditioning drift."""
@@ -6408,6 +6432,7 @@ def _b_facility_hub(character):
     add("lineage", "→ the Lineage Hall", "lh_arrival", "your stud-book; the get you've thrown")
     add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
     add("dosing", "→ the Dispensary", "dz_arrival", "your dose; the come-up")
+    add("edge", "→ the edging station", "ed_arrival", "denial training; held at the brink")
     add("events", "→ whatever the klaxon calls", "ev_arrival", "a scheduled spectacle (random)")
     add("fellow", "→ time with your fellow", "fl_arrival", "the pair; conversion + breeding")
     # The lineage room reads as available when you're little/bred or just on the rota.
@@ -11011,3 +11036,150 @@ def _tw_after(character):
                 "warm. \"Want what you want, and want it sober. You gave that to me tonight. I'll "
                 "not forget it.\"")}],
         "default": "kept_between"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Edge — orgasm denial / edging, a core facility mechanic that had no
+# dedicated set-piece. Strapped to the edging station and brought to the brink
+# over and over and HELD there, denied, for as long as the chart says — the
+# slow-torment register (savorable, distinct from the breeding/use scenes).
+# Routes through real `edge_set` (orgasm_denial + arousal), `deny_hold`, and
+# `grant_relief` (a granted release that deepens the leash). State/kit-aware
+# (stim stacks, heat-tell betrays). Flow: arrival→ride→after. Entry: `scene edge`/denial.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ed_arrival", root=False)
+def _ed_arrival(character):
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if k["stim"]:
+        note = (" Your stim-implant's already running its baseline, so the station's work stacks "
+                "on a fire you can't switch off — there's no neutral to start from, only *up*. ")
+    if k["heat_tell"]:
+        note += ("The honest-body clause means you can't even hide how close you are; every tell "
+                 "shows, and the operator reads them like a gauge. ")
+    if k["denied"]:
+        note += ("You're already held under a denial — the station just formalises what your body's "
+                 "been begging out of for days. ")
+    return {"key": "ed_arrival", "prompt": (
+        "The edging station is a patient machine. A padded recline with your hips raised and your "
+        "ankles spread to stirrups, a hood of soft sensors, and the |wbusiness end|n: a cluster of "
+        "calibrated stimulators — suction, vibration, a slow-stroking sleeve, all of it metered to "
+        "a dial — aimed at every nerve you've got. There's a screen that reads your arousal as a "
+        "climbing bar and a bright red line near the top labelled |wEDGE|n, and the whole purpose "
+        "of the room, the operator explains while strapping you in, is to walk that bar up to the "
+        "red line and *hold it there*. Not over. Never over. There.\n\n"
+        f"\"Denial training, {nm},\" the operator says, seating the last strap, unhurried and "
+        "clinical. \"The machine takes you to the edge and keeps you there — minutes, hours, "
+        "however long the chart wants — and it does not let you over. You'll beg. They always beg. "
+        "The machine doesn't have ears and I'm not allowed to, so the begging just... goes into the "
+        "room.\"" + note + " The dial turns. The stimulators wake against you, gentle and exact, "
+        "and the bar on the screen begins, immediately, to climb. \"Up we go. Say goodbye to "
+        "neutral. You won't see it again for a while.\""),
+        "options": [
+            {"key": "submit_edge", "label": "Submit to the machine — let it walk you up",
+             "effect": "edge_set", "params": {"floor": 60.0, "arousal": 30.0}, "set": {"ed": "submit"},
+             "desc": "give the station your responses; let the bar climb to the line",
+             "outcome": (
+                "You submit — let the machine have your responses, let the metered stimulation walk "
+                "the bar up and up toward the red line — and it's *good*, obscenely good, right up "
+                "until the bar touches EDGE and the machine, reading you perfectly, eases off by "
+                "exactly the fraction that keeps you under it. The climb stops. The need doesn't. "
+                "\"There's the edge,\" the operator notes, making a mark. \"Now it just holds you "
+                "there. Welcome to the long part.\"")},
+            {"key": "fight_edge", "label": "Fight your own responses", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "set": {"ed": "fight"},
+             "desc": "try not to climb; the machine is more patient than you",
+             "outcome": (
+                "You try to fight it — think of anything else, refuse to climb — and the machine "
+                "simply adjusts, patient and infinite, finding the inputs that work whether you "
+                "want them to or not, and the bar climbs anyway, slower, which somehow makes it "
+                "worse. \"Fighting,\" the operator observes, unbothered. \"The machine has all day "
+                "and you have a nervous system. It'll win. It always wins. Fighting just means you "
+                "arrive at the edge exhausted as well as desperate.\"")}],
+        "default": "submit_edge",
+        "then": "ed_ride"}
+
+
+@choice("ed_ride", root=False)
+def _ed_ride(character):
+    return {"key": "ed_ride", "prompt": (
+        "And then it *holds* you there, and the holding is the whole cruelty. The bar sits pinned a "
+        "hair under the red line and the machine keeps it there with inhuman precision — easing off "
+        "the instant you climb too close, pressing back in the instant you drift too far down — so "
+        "you live, minute after minute after minute, in the exact narrow band of *almost*, the "
+        "orgasm always one stroke away and that stroke never, ever coming. Your whole body draws "
+        "tight as wire. You sweat. You shake. You make sounds you didn't decide to make. The need "
+        "stops being pleasure and becomes a kind of pain, and then stops being either and becomes "
+        "the only thing in the world, a single white note held until it's all you are. The operator "
+        "checks the chart, in no hurry at all. \"Holding nicely. We've a while yet. The longer you "
+        "sit at the edge, the more your body learns that *almost* is simply where it lives now.\""),
+        "options": [
+            {"key": "beg", "label": "Beg the machine to let you over", "effect": "grant_relief",
+             "set": {"ride": "begged"}, "desc": "break and beg — and the granted release deepens the leash",
+             "outcome": (
+                "You break — beg, plead, promise anything, sob it out into a room with no ears — and "
+                "then, unexpectedly, the dial turns *up*, and the machine takes you over at last, the "
+                "held charge crashing through you in a release so violent and so overdue it whites "
+                "the world out. And as you come down, wrecked and gasping and grateful, you feel the "
+                "trap close: the relief was *granted*, a thing they gave you for begging, and your "
+                "body files the lesson that release comes from *asking nicely* now, never from "
+                "taking. \"There. Good begging,\" the operator says. \"You'll beg sooner next time. "
+                "They always do, once they learn it works and nothing else does.\"")},
+            {"key": "hold_at_edge", "label": "Hold at the edge — don't break", "effect": "edge_set",
+             "params": {"floor": 75.0, "arousal": 40.0}, "set": {"ride": "held"},
+             "desc": "ride the almost without begging; the denial deepens and the floor rises",
+             "outcome": (
+                "You don't break — ride the almost, refuse to beg, let the white note hold and hold "
+                "and become the whole of you without once asking for the mercy that wouldn't come "
+                "anyway — and the denial deepens, the floor under your arousal rising so even *off* "
+                "the machine you'll ache now, kept permanently nearer the edge than you were. \"Held "
+                "out,\" the operator notes, almost approving. \"That's its own training — every "
+                "minute you don't beg teaches your body that the edge is just *home* now. We can "
+                "work with a producer who lives this close to the brink. Off you come — still on "
+                "it, in every way that matters.\"")}],
+        "default": "hold_at_edge",
+        "then": "ed_after"}
+
+
+@choice("ed_after", root=False)
+def _ed_after(character):
+    ride = scene_flag(character, "ride", "held")
+    if ride == "begged":
+        body = ("They unstrap you after the granted release, loose-limbed and hollow and already, "
+                "horribly, beginning to climb again under the baseline they leave running — and the "
+                "lesson sits in you warm and certain: relief is a thing that gets *given*, for "
+                "asking, for being good, and you'll come back to this chair and ask again because "
+                "now your body knows it's the only door that opens. \"You took that well,\" the "
+                "operator says, freeing the last strap. \"Begged clean, came hard, learned the "
+                "shape of it. That's a productive session.\"")
+    else:
+        body = ("They unstrap you still pinned at the brink — denied, aching, the machine's work "
+                "left deliberately *unfinished* in you so you carry the edge out of the room and "
+                "into your day, wound tight and unreleased, every step a reminder. \"We leave the "
+                "good ones hung,\" the operator says, marking the chart. \"Denied stock works "
+                "harder, presents quicker, begs prettier when we finally do let them over. You'll "
+                "spend the next while desperate. That's the product.\"")
+    return {"key": "ed_after", "prompt": (
+        body + " Either way the room has done its quiet work: it has moved where *almost* lives in "
+        "you, dragged your whole baseline up toward a brink you now sit nearer than you used to, "
+        "and taught your body that its own release was never quite yours to call."),
+        "options": [
+            {"key": "ache", "label": "Carry the ache out", "effect": "deny_hold", "params": {"cond": 2.0},
+             "end": True, "desc": "leave wound-tight; let the denial follow you",
+             "outcome": (
+                "You carry it out — wound tight, half-mad with it, every brush of your own clothes "
+                "too much — and the ache follows you through the corridors and the hours, a constant "
+                "hum under everything that keeps you exactly as desperate and exactly as biddable as "
+                "the room intended. You will think about that chair. You will, eventually, *ask* to "
+                "go back. That's the whole of what it was for.")},
+            {"key": "thank_edge", "label": "Thank them for the training", "effect": "gratitude",
+             "end": True, "desc": "the earn-back — thank them for the denial",
+             "outcome": (
+                "\"Thank you for the training.\" It comes out shaped and — worse — half-meant, the "
+                "denial having already done enough to you that gratitude for it feels like the "
+                "natural next step. The operator marks it down, pleased. \"Thanking us for being "
+                "kept on the edge. That's the session landing exactly right. The desperate ones who "
+                "are *grateful* for the desperation — those are the ones we've really got.\"")}],
+        "default": "ache"}

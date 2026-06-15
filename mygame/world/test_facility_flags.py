@@ -1043,6 +1043,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Edge (denial/edging) — both branches chain; edge_set sets the real denial state.
+    c66 = _Char(); cyoa.start_scene(c66, "ed_arrival")
+    edbeats = []
+    for ch in ("submit_edge", "hold_at_edge", "ache"):
+        p = c66.db.pending_choice
+        assert p, f"edge: no pending before '{ch}'"
+        edbeats.append(p["key"])
+        assert cyoa.resolve_choice(c66, ch)[0] is not None, f"edge '{ch}' did not resolve"
+    assert edbeats == ["ed_arrival", "ed_ride", "ed_after"], edbeats
+    assert c66.db.orgasm_denial is True, "edge should set the real orgasm_denial state"
+    assert c66.db.pending_choice is None and c66.db.scene_flags is None, "edge should end clean"
+    c67 = _Char(); cyoa.start_scene(c67, "ed_arrival")
+    for ch in ("fight_edge", "beg", "thank_edge"):
+        assert c67.db.pending_choice, f"edge(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c67, ch)[0] is not None, f"edge(b) '{ch}' failed"
+    assert c67.db.pending_choice is None and c67.db.scene_flags is None, "edge(b) should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

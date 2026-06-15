@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Edge (`ed_*`, `scene edge`/edging/denial)** — BUILT. Orgasm denial / edging as its own
+  set-piece (a core facility mechanic that had no dedicated scene): strapped to the edging station,
+  walked up to the EDGE bar and HELD there — minutes, hours — never over. The slow-torment register.
+  Routes through real `edge_set` (orgasm_denial + raised arousal_floor + banked arousal),
+  `deny_hold`, and `grant_relief` (a granted release that deepens the leash — relief becomes a thing
+  you beg for, never take). arrival → ride → after. Kit-aware (stim stacks, heat-tell betrays,
+  already-denied formalised). Begging gets you over but wires the leash; holding out deepens the
+  denial and drags your baseline toward the brink. Surfaces in the hub by the Dispensary.
 - ✅ **Between Two Owners (`tw_*`, `scene twoowners`/shared/peers)** — BUILT. The peerage live:
   Bethany and Seraphine share you for an evening, trading you like equals trade a fine bottle. The
   whole point is the CONTRAST — Bethany's laced DEVOTION breeding (real `bethany_breeds`) running
