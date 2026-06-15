@@ -1677,6 +1677,8 @@ class CmdScene(Command):
         "twoowners": "tw_arrival", "shared": "tw_arrival", "peers": "tw_arrival",
         "borrow": "tw_arrival",
         "edge": "ed_arrival", "edging": "ed_arrival", "denial": "ed_arrival",
+        "seraphinelore": "sl_arrival", "seralore": "sl_arrival", "counter": "sl_arrival",
+        "afterhours": "sl_arrival",
     }
 
     def func(self):

@@ -11203,3 +11203,161 @@ def _ed_after(character):
                 "kept on the edge. That's the session landing exactly right. The desperate ones who "
                 "are *grateful* for the desperation — those are the ones we've really got.\"")}],
         "default": "ache"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Letters at the Counter — Seraphine's lore, her side. The warm post-office
+# counterpart to Bethany's Pillow Talk: kept late after the office has shut, the
+# collector turns confiding and you can ask her about the peerage (her view of
+# Bethany), why she collects people, what it's like to be immune to the DEVOTION,
+# the 3 a.m. drawer, the unsent letters, and what she's read in you. A looping
+# menu. Warm register (no facility dread), canon to the design bible. Real
+# devote/deepen on the intimate drops. Flow: arrival→(menu loop)→close.
+# Entry: `scene seraphinelore`/sera lore/counter.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _sl_lore_options(character):
+    """Seraphine's lore menu — each drops a canon bit in her warm, oblique, collector's voice and
+    loops back; the last leaves. Reused by the arrival beat and the loop node."""
+    return [
+        {"key": "peerage", "label": "Ask what Bethany is to her", "then": "sl_menu",
+         "set": {"sl_peerage": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "the peerage, from the side that can't be owned",
+         "outcome": (
+            "\"Beth.\" Seraphine turns a sealed envelope over in her clever fingers, fond. \"She's "
+            "the only person I've never once wanted to *collect* — and do you know why? Because I "
+            "couldn't, and not wanting what you can't have is the closest thing to rest a woman "
+            "like me ever gets.\" She sets the letter down. \"She owns everything she touches; I "
+            "keep everything that comes to me. We're the same animal pointed two directions. So we "
+            "lend, and we trade, and we let each other be the one room we don't have to run. "
+            "That's worth more than either of us would admit sober. Don't tell her I said "
+            "'rest.'\"")},
+        {"key": "collect", "label": "Ask why she collects people", "then": "sl_menu",
+         "set": {"sl_collect": "y"}, "effect": "deepen", "params": {"amount": 1.0},
+         "desc": "the realest thing under the bright collector",
+         "outcome": (
+            "The bright performance drops a fraction — the 3 a.m. register, even at the counter. "
+            "\"Because a full house is the only thing that's ever quieted the part of me that's "
+            "certain I'll end up an unclaimed letter myself,\" she says, plain. \"Dead Letter Cage, "
+            "no forwarding address, nobody coming. So I keep people. Tag them, file them, make "
+            "myself a house too full to ever be empty.\" The smile snaps back, seamless. \"It's "
+            "very sad and very effective and I'd thank you not to look at it directly. Most don't "
+            "get told. You did. Mind what you do with it.\"")},
+        {"key": "immune", "label": "Ask what it's like being immune to the DEVOTION", "then": "sl_menu",
+         "set": {"sl_immune": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "the un-doseable one, on what she can't be made to feel",
+         "outcome": (
+            "\"Ah. The dose.\" She considers it, wry. \"It rolls right off me — always has. Beth "
+            "can flood me to the back teeth with that laced devotion of hers and I just... feel "
+            "*had*, and pleasantly, and entirely myself the whole time. No swimming head, no "
+            "craving, no reaching.\" She tilts her head. \"It makes me the one person who wants her "
+            "by *choice* — and the one person who can watch what she does to the rest of you with "
+            "clear eyes. That's a lonely sort of clarity, sweet thing. I see exactly what the "
+            "devotion is. I just can't feel why you'd thank her for it. So I have to take it on "
+            "faith that you mean it. Do you?\"")},
+        {"key": "drawer", "label": "Ask about the 3 a.m. drawer", "then": "sl_menu",
+         "set": {"sl_drawer": "y"}, "effect": "deepen", "params": {"amount": 1.0},
+         "desc": "the realest drawer in the parlour",
+         "outcome": (
+            "\"My realest drawer.\" Her voice goes quiet and true. \"Things said at 3 a.m. — the "
+            "ones nobody meant to send. Vesper confessing they don't want to be unreadable, only "
+            "to be read *gently*. Calix admitting the empty STAYED slot is about someone who "
+            "didn't.\" She doesn't open it; she just rests her hand on its front. \"And mine, in my "
+            "own looping hand, that I already told you and won't write twice. The drawer's where I "
+            "keep the things too true for daylight. You're getting the daylight version of a "
+            "midnight woman tonight, sweet thing. Count yourself trusted.\"")},
+        {"key": "letters", "label": "Ask about the letters nobody sent", "then": "sl_menu",
+         "set": {"sl_letters": "y"}, "desc": "the unsent things she keeps",
+         "outcome": (
+            "\"I keep everything,\" she says, fond, gesturing at the wall of pigeonholes. \"But the "
+            "*unsent* ones are the collection I love. The hatbox upstairs — the siblings' letters "
+            "to each other that none of them ever delivered. Calix's, telling Vesper not to stop "
+            "laughing at him at the counter. Vesper's, threatening me with a small dinner if they "
+            "ever fill in the form. Mine, sealed, about which of us falls in love with a customer "
+            "first.\" A wink that doesn't quite hide the warmth. \"The truest letters are the ones "
+            "people write and can't send. I give them a home anyway. Someone should.\"")},
+        {"key": "read_me", "label": "Ask what she's read in you", "then": "sl_menu",
+         "set": {"sl_read": "y"}, "effect": "deepen", "params": {"amount": 2.0},
+         "desc": "the collector reads the customer back",
+         "outcome": (
+            "She looks at you the way she looks at a sealed letter — reading what's inside through "
+            "the paper — and is quiet a beat too long. \"You,\" she says, \"are someone who keeps "
+            "choosing the thing that's ruining you, and *knows* it, and chooses it anyway, and is "
+            "trying very hard not to ask why.\" She lets that sit. \"I read a lot of letters, sweet "
+            "thing. Yours is the kind that's addressed to no one and posted anyway, hoping someone "
+            "warm finds it. I find them. I keep them.\" The bright smile, gentler than usual. "
+            "\"That's the closest I'll come to telling you I'd have collected you myself, if Beth "
+            "hadn't gotten the file first.\"")},
+        {"key": "sl_enough", "label": "That's enough — just sit with her a while", "then": "sl_close",
+         "desc": "stop asking; let the late-office quiet hold",
+         "outcome": (
+            "\"Mm. Enough questions.\" She sets the letters aside and the counter-lamp seems to dim "
+            "itself toward intimacy. \"You're better company than the post, and that's high praise "
+            "from me — the post never leaves and never disappoints.\" She pats the stool beside "
+            "her. \"Sit. The office is shut. Let an old collector enjoy a kept thing that wandered "
+            "in on its own feet for once.\"")},
+    ]
+
+
+@choice("sl_arrival", root=False)
+def _sl_arrival(character):
+    nm = subject_name(character)
+    return {"key": "sl_arrival", "prompt": (
+        "The post office has shut for the night — the OPEN sign turned, the tubes gone quiet, the "
+        "pigeonholes dim — and |wSeraphine|n is still at the counter, a glass of something dark at "
+        "her elbow, sorting the day's confessions by lamplight with no particular hurry. She looks "
+        f"up when you linger, and her smile is the after-hours one, warmer and more tired and more "
+        f"*true* than the daytime article. \"Still here, {nm}? Good. I keep my best company after "
+        "the OPEN sign's turned.\" She slides a sealed letter into a slot without looking. \"I'm "
+        "feeling confiding, which is rare and doesn't last, so. Ask me something while the office "
+        "is dark and I'm being honest. I'll tell you almost anything tonight — the trade with "
+        "Beth, why I collect, what it's like to be the one she can't dose, the realest drawer in "
+        "the place. Go on, sweet thing. Read the reader for once.\""),
+        "options": _sl_lore_options(character),
+        "default": "peerage"}
+
+
+@choice("sl_menu", root=False)
+def _sl_menu(character):
+    asked = [k for k in ("sl_peerage", "sl_collect", "sl_immune", "sl_drawer", "sl_letters",
+                         "sl_read") if scene_flag(character, k)]
+    more = ("\"What else?\"" if len(asked) < 3 else
+            "\"Still reading me. I'd be flattered if I weren't the one who's supposed to do the "
+            "reading.\" She refills her glass. \"What else?\"")
+    return {"key": "sl_menu", "prompt": (
+        more + " The lamp's low, the office is dark and shut, and for as long as you keep asking "
+        "she'll keep answering — the collector, after hours, letting herself be read."),
+        "options": _sl_lore_options(character),
+        "default": "sl_enough"}
+
+
+@choice("sl_close", root=False)
+def _sl_close(character):
+    return {"key": "sl_close", "prompt": (
+        "You sit with her a while in the shut, lamp-warm office, the wall of kept letters breathing "
+        "its papery quiet around you, and Seraphine lets the confiding mood wind down into "
+        "something easy and unguarded. \"Good talk,\" she says, and means it. \"Now you know what's "
+        "under the bright bit. Not many do. I'll deny all of it in daylight, naturally — a collector "
+        "has to keep her mystery — but the drawer remembers, and so will you.\" She lifts her glass "
+        "to you, fond. \"Off you go before I tag you out of sheer sentiment. The fold's findable, "
+        "the counter's always lit for you, and the post — the post never leaves. Neither, it turns "
+        "out, do the people worth keeping.\""),
+        "options": [
+            {"key": "stay_late", "label": "Stay in the lamp-warm quiet", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "let the after-hours warmth hold",
+             "outcome": (
+                "You stay, and the two of you sit in the lamp-warm hush while she sorts the last of "
+                "the confessions, and it's the gentlest hour the town has to offer — kept, but "
+                "warmly, by the one collector who'll tell you exactly what she is. \"Stayers,\" "
+                "Seraphine murmurs, content. \"My favourite kind of mail. The kind that delivers "
+                "itself and then doesn't leave.\"")},
+            {"key": "carry_lore", "label": "Take her confidences with you", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "leave warmer for knowing the woman under the bright",
+             "outcome": (
+                "You go, carrying the after-hours version of her out into the dark — the unclaimed-"
+                "letter fear, the immune clarity, the full house she builds against the quiet — and "
+                "you understand the post office a little better, and her a great deal better, and "
+                "yourself, uncomfortably, most of all. \"Mind how you go,\" she calls, soft. \"And "
+                "sweet thing — the letter you keep not sending? Post it. Or don't. But know that I "
+                "noticed you carrying it.\"")}],
+        "default": "stay_late"}

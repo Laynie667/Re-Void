@@ -85,6 +85,12 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **Letters at the Counter (`sl_*`, `scene seraphinelore`/seralore/counter)** — BUILT.
+  Seraphine's-side lore, the warm post-office counterpart to Bethany's Pillow Talk: after the OPEN
+  sign's turned, the collector turns confiding and you can ask her about the peerage (the one person
+  she can't collect and doesn't want to), why she collects (the unclaimed-letter fear), what it's
+  like to be immune to the DEVOTION (the lonely clarity of the un-doseable), the 3 a.m. drawer, the
+  unsent letters, and what she's read in you. Looping menu, warm register, canon. Real devote/deepen.
 - ✅ **The Edge (`ed_*`, `scene edge`/edging/denial)** — BUILT. Orgasm denial / edging as its own
   set-piece (a core facility mechanic that had no dedicated scene): strapped to the edging station,
   walked up to the EDGE bar and HELD there — minutes, hours — never over. The slow-torment register.

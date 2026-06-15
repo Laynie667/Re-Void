@@ -1043,6 +1043,18 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # Letters at the Counter (Seraphine's lore) — looping menu re-poses; clean close.
+    c68 = _Char(); cyoa.start_scene(c68, "sl_arrival")
+    cyoa.resolve_choice(c68, "peerage")     # arrival → menu
+    assert c68.db.pending_choice and c68.db.pending_choice["key"] == "sl_menu", "sera-lore should loop to the menu"
+    cyoa.resolve_choice(c68, "immune")      # menu → menu
+    assert c68.db.pending_choice["key"] == "sl_menu", "sera-lore menu should re-pose"
+    cyoa.resolve_choice(c68, "read_me")
+    cyoa.resolve_choice(c68, "sl_enough")   # menu → close
+    assert c68.db.pending_choice and c68.db.pending_choice["key"] == "sl_close", "enough should go to close"
+    cyoa.resolve_choice(c68, "carry_lore")
+    assert c68.db.pending_choice is None and c68.db.scene_flags is None, "sera-lore should end clean"
+
     # The Edge (denial/edging) — both branches chain; edge_set sets the real denial state.
     c66 = _Char(); cyoa.start_scene(c66, "ed_arrival")
     edbeats = []
