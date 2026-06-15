@@ -9415,3 +9415,157 @@ def _ws_after(character):
                 "already hosing the tile for the next fixture. \"Works the second you say it. The "
                 "trough holds for us. Never for you.\"")}],
         "default": "stay_fixture"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Take — CNC (core content list). A pre-framed consensual-non-consent
+# set-piece: in-fiction the "no" is ignored on purpose (that's the negotiated
+# game), and the §0 OOC word is the ONE thing that always, instantly stops it.
+# This scene is where the floor stops being mere safety and becomes the literal
+# enabling beam — Bethany names both lines explicitly up front, every time. Real
+# effects (deny_hold, devote, facility _scene_single, punish). State-aware. The
+# §0 truth is the spine, not a footnote. Flow: frame→take→after.
+# Entry: `scene cnc`/take/hunt.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("cn_arrival", root=False)
+def _cn_arrival(character):
+    nm = subject_name(character)
+    return {"key": "cn_arrival", "prompt": (
+        "Bethany sets the frame before she lays a hand on you, because she always does, because "
+        "*this* is the one she's most careful with. She takes your face in both hands, warm and "
+        f"level and entirely serious for once. \"{nm}. Listen, because I only say it clear once and "
+        "then I stop being kind about it.\n\n"
+        "\"In here, in *this* game — the one you asked me for — your |wno|n is mine to ignore. Your "
+        "*stop*, your *please*, your fighting, your tears: I will take all of it as nothing but "
+        "more to push against, and I will *enjoy* doing it, and that is the whole filthy point of "
+        "the thing. You don't get to call it off from inside the scene. That's what makes it bite.\" "
+        "Her thumbs stroke your cheekbones, fond. \"But the |wword|n — the real one, the OOC one, "
+        "the one that was never part of any fiction — that one I hear instantly, every time, and "
+        "*everything* stops the second it leaves you. Not slows. Not 'are you sure'. Stops. I will "
+        "never make you prove it, never punish it, never wait. That word is the floor this whole "
+        "cruel game stands on, and I guard it more fiercely than anything I do to you on top of "
+        "it.\" She tilts her head, the warmth going hungry. \"So. Both lines clear? Then I'm going "
+        "to stop being gentle now. Run if you like. It won't help. That's the idea.\""),
+        "options": [
+            {"key": "surrender_frame", "label": "Give her the frame — let your no mean 'more'",
+             "set": {"cn": "surrender"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "consent to the non-consent; the word stays yours underneath",
+             "outcome": (
+                "\"Yes,\" you tell her — yes to the game, yes to your no meaning *more*, the real "
+                "word kept folded safe under your tongue where it'll always work — and Bethany's "
+                "smile sharpens into something that makes your stomach drop in the best and worst "
+                "way. \"*Good* girl. You understand it perfectly. Now scream all you like, "
+                "sweetheart — I've got the only word that matters held safe, and it isn't any of the "
+                "ones you're about to use.\"")},
+            {"key": "test_word", "label": "Make her prove the word works first", "set": {"cn": "tested"},
+             "desc": "say the real word now, before anything — watch her stop on a dime",
+             "outcome": (
+                "Before she begins, you use the real word — just to see — and Bethany *stops*, "
+                "instantly, completely, hands lifting away, the hunger dropping off her face into "
+                "plain attentive care between one breath and the next. \"There. See? Nothing. I "
+                "stopped on a dime and I'll do it every single time, no matter how deep we are.\" "
+                "She waits, unhurried, until you're ready again. \"Now you *know* it in your body, "
+                "not just your head. That's the only way the game's safe enough to play filthy. "
+                "Tell me when you want me to start being awful. I'll wait all day.\"")},
+            {"key": "beg_real", "label": "Beg her to make it feel real", "set": {"cn": "real"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "ask her not to hold back inside the fiction",
+             "outcome": (
+                "\"Make it *real*,\" you ask her — don't hold back, don't wink at it, take me like "
+                "you mean it — and Bethany's eyes go dark and delighted. \"Oh, you want it *true*. "
+                "No mercy, no breaking character, every no ridden right over.\" She cracks her "
+                "knuckles, fond and terrible. \"I can do that. I can make you forget there's a word "
+                "at all — right up until the second you'd ever truly need it, and then I'll hear it "
+                "through anything. That's my craft, sweetheart. The realer I make the cage, the more "
+                "carefully I hold the key.\"")}],
+        "default": "surrender_frame",
+        "then": "cn_take"}
+
+
+@choice("cn_take", root=False)
+def _cn_take(character):
+    return {"key": "cn_take", "prompt": (
+        "And then she takes you, and she does not pretend. She comes at you like something with no "
+        "interest in your permission — pins, drags, overpowers, the warmth all gone to appetite — "
+        "and every *no* and *stop* and twist of you away she rides straight over with that awful "
+        "fond focus, using your fighting as a handhold, your protests as encouragement, taking what "
+        "she wants from you exactly as if it were hers to take without asking. It's terrifying and "
+        "it's *staged* and both truths run at once: the part of you that fights means it, and the "
+        "deeper part that arranged this drinks the helplessness down like the thing it's been thirsty "
+        "for. She talks the whole time, low and merciless. \"There's no use, sweetheart. No is just "
+        "the noise you make while I take you. I told you it wouldn't help. Listen to you. *Listen.*\""),
+        "options": [
+            {"key": "fight", "label": "Fight her for real — and feel it not work", "effect": "facility",
+             "params": {"method": "_scene_single", "kind": "scene"}, "set": {"take": "fought"},
+             "desc": "struggle genuinely; the staged overpowering is the whole thrill",
+             "outcome": (
+                "You fight — really fight, thrash and twist and tell her no like you mean it — and "
+                "she simply *takes* you anyway, stronger and certain and unbothered, your struggle "
+                "folding into nothing against her grip, and the not-working is the dark electric "
+                "core of the whole thing: the helplessness real, the danger not, the word still "
+                "yours under it all. She uses you through every bit of your fighting. \"*Beautiful*. "
+                "Fight all you like. It only makes me take you harder, and it never once makes me "
+                "stop. Only the word does that. And you're not saying it, are you. You're just "
+                "saying *no*.\"")},
+            {"key": "go_limp", "label": "Go limp — let her take what she wants", "effect": "facility",
+             "params": {"method": "_scene_single", "kind": "scene"}, "set": {"take": "limp"},
+             "desc": "stop fighting; give her the surrender inside the fiction",
+             "outcome": (
+                "You stop fighting — go limp and let her take what she's taking, the surrender its "
+                "own dark relief inside the game — and Bethany croons approval, not slowing in the "
+                "least. \"There it is. The good kind of giving up. You stopped pretending you could "
+                "stop me, and didn't reach for the word, which means you want exactly this.\" She "
+                "uses your pliancy as thoroughly as she used your fight. \"Limp and taken. My "
+                "favourite way to have you. No effort and no permission both.\"")},
+            {"key": "the_word", "label": "Use the real word — end it now", "set": {"take": "worded"},
+             "end": True, "desc": "the §0 floor, mid-scene — instant, honoured, no proving",
+             "outcome": (
+                "You say the real word — the OOC one, the one that was never part of the game — and "
+                "the scene *ends*, instantly, the way she swore it would: Bethany is off you and "
+                "back in her own warmth in a single breath, hunger gone, hands gentle, eyes clear "
+                "and checking you. \"Done. All the way done. You're safe, I've got you, nothing else "
+                "happens now.\" Not a flicker of grudge, not a question, not a heartbeat's delay. "
+                "\"*That's* the floor, sweetheart. It held exactly like I promised — and now you "
+                "know, all the way down, that it always will. That knowing is what let you go as "
+                "deep as you just did.\"")}],
+        "default": "fight",
+        "then": "cn_after"}
+
+
+@choice("cn_after", root=False)
+def _cn_after(character):
+    take = scene_flag(character, "take", "fought")
+    if take == "worded":
+        return None  # worded path already ended the scene at the floor
+    return {"key": "cn_after", "prompt": (
+        "When she's taken her fill she comes down out of the appetite slowly, and the after is its "
+        "own deliberate beat — because the harder the game, the more carefully she lands you. She "
+        "gathers you up out of the wreck of it, wraps you warm, strokes the fight and the fear back "
+        "out of your body with hands gone entirely tender. \"There. *There.* All done, all real, "
+        "all yours again,\" she murmurs, and for once you can't tell and don't care whether the "
+        "tenderness is true or technique, because it lands the same either way. \"You took that "
+        "*beautifully*. Every no, and you never once reached for the word — because you didn't need "
+        "it, because the part of you that arranged this got exactly what it was starving for.\""),
+        "options": [
+            {"key": "held", "label": "Let her hold you down from it", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "take the aftercare; the contrast is the point",
+             "outcome": (
+                "You let her hold you down out of it — take the warmth, the wrapping, the murmured "
+                "*good girl*s — and the contrast between the take and the tending is its own dizzying "
+                "drop, the cruelty and the care from the same hands, the whole reason the game works. "
+                "\"Stay as long as you like,\" Bethany says, fond, not letting go. \"The awful part's "
+                "over. This part I mean — or I mean it enough, which down here is the same warm "
+                "thing. You were so brave. And the word was yours the whole time, and that's why you "
+                "could be.\"")},
+            {"key": "name_it", "label": "Say plainly what the floor let you do", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "name the thing out loud, OOC-clear",
+             "outcome": (
+                "\"I could only do that,\" you say, still shaking, \"because I knew the word would "
+                "work\" — and Bethany goes still and serious and *proud* of you, because you've "
+                "named the whole truth of it. \"*Yes.* That's it exactly, sweetheart. The cage is "
+                "only as deep as the key is sure. I make the take real so it thrills you, and I keep "
+                "the floor unbreakable so it can. They're the same gift. Don't ever let anyone tell "
+                "you the dread and the safety are enemies — down here they're *married*.\" She kisses "
+                "your forehead. \"Now rest. You earned the soft part.\"")}],
+        "default": "held"}

@@ -870,6 +870,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c46, ch)[0] is not None, f"watersports(b) '{ch}' failed"
     assert c46.db.pending_choice is None and c46.db.scene_flags is None, "watersports(b) should end clean"
 
+    # CNC (The Take) — full path chains frame→take→after; and the §0 word ENDS it mid-scene.
+    c47 = _Char(); cyoa.start_scene(c47, "cn_arrival")
+    cnbeats = []
+    for ch in ("surrender_frame", "fight", "held"):
+        p = c47.db.pending_choice
+        assert p, f"cnc: no pending before '{ch}'"
+        cnbeats.append(p["key"])
+        assert cyoa.resolve_choice(c47, ch)[0] is not None, f"cnc '{ch}' did not resolve"
+    assert cnbeats == ["cn_arrival", "cn_take", "cn_after"], cnbeats
+    assert c47.db.pending_choice is None and c47.db.scene_flags is None, "cnc should end clean"
+    # the safeword path: at the take beat, the real word ends everything at once (no cn_after).
+    c48 = _Char(); cyoa.start_scene(c48, "cn_arrival")
+    cyoa.resolve_choice(c48, "test_word")  # frame beat
+    assert c48.db.pending_choice and c48.db.pending_choice["key"] == "cn_take", "cnc should reach the take"
+    cyoa.resolve_choice(c48, "the_word")   # §0 word mid-scene
+    assert c48.db.pending_choice is None and c48.db.scene_flags is None, "the word must end the scene clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

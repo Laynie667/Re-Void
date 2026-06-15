@@ -95,6 +95,15 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Take / CNC (`cn_*`, `scene cnc`/take/hunt)** — BUILT. Core-list consensual-non-consent,
+  written as the scene where the §0 floor stops being mere safety and becomes the literal enabling
+  beam: Bethany names BOTH lines explicitly up front — in-fiction your "no" is hers to ignore (the
+  negotiated game), the OOC word is the one thing that always, instantly, un-grudgingly stops
+  everything. frame → take → after. A `test_word` branch lets you prove the word stops her on a
+  dime before anything begins; the `the_word` option at the take beat ENDS the scene mid-stream
+  (engine-verified: clears pending + flags, no cn_after). The aftercare beat names the thesis out
+  loud — "the cage is only as deep as the key is sure; the dread and the safety are married." Real
+  deny_hold / facility _scene_single / devote.
 - ✅ **The Wet Room / watersports (`ws_*`, `scene watersports`/wetroom/toilet/urinal)** — BUILT.
   Core-list watersports: kept as the facility's relief — urinal, drinking-station, golden-shower
   stock, bladder held full and ignored. Routes through REAL methods via the facility effect:
