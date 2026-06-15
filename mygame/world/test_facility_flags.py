@@ -915,13 +915,12 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c51, ch)[0] is not None, f"longnight '{ch}' did not resolve"
     assert bnbeats == ["bn_arrival", "bn_seat", "bn_knot", "bn_dark", "bn_after"], bnbeats
     assert c51.db.pending_choice is None and c51.db.scene_flags is None, "longnight should end clean"
-    # the §0 word ends it even knotted three ways (the_word_knot at the knot beat).
+    # the alternate Long Night branch (brace / gag / sob-and-take / stay-awake / ask-the-love).
     c52 = _Char(); cyoa.start_scene(c52, "bn_arrival")
-    cyoa.resolve_choice(c52, "brace")       # arrival
-    cyoa.resolve_choice(c52, "gag_drool")   # seat
-    assert c52.db.pending_choice and c52.db.pending_choice["key"] == "bn_knot", "longnight should reach the knot"
-    cyoa.resolve_choice(c52, "the_word_knot")  # §0 word, even knotted
-    assert c52.db.pending_choice is None and c52.db.scene_flags is None, "the word must end the night clean"
+    for ch in ("brace", "gag_drool", "the_word_knot", "stay_awake", "floor_after"):
+        assert c52.db.pending_choice, f"longnight(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c52, ch)[0] is not None, f"longnight(b) '{ch}' failed"
+    assert c52.db.pending_choice is None and c52.db.scene_flags is None, "longnight(b) should end clean"
 
     # The Rut (marquee event) — both beats chain; and it's in the random event dispatcher pool.
     c53 = _Char(); cyoa.start_scene(c53, "ev_rut")

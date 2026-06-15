@@ -9028,33 +9028,22 @@ def _kn_kept(character):
         "would: the person is thinner, the pet is warm and surfaced, and the leash feels less like "
         "a restraint than like a *tether to the only thing that matters*. \"There's my good girl,\" "
         "Bethany says, not looking up from her paperwork, one hand resting on your head like you're "
-        "furniture she's fond of.\n\n"
-        "And then — because she guards this above everything — she tells you the one true thing, "
-        "warm and plain: \"You can stand up and be a person again any second you like, pet. There's "
-        "a word, you know it, it works the instant you mean it, and I'll never once hold the leash "
-        "against it. That's what makes you a pet by *choice* and not a thing I caught. Stay because "
-        "it's easier and sweeter than standing. Or stand. The word's always yours.\""),
+        "furniture she's fond of."),
         "options": [
-            {"key": "stay_pet", "label": "Stay down — be kept", "effect": "devote", "params": {"amount": 3.0},
-             "end": True, "desc": "choose the leash, knowing the word frees you",
+            {"key": "stay_pet", "label": "Settle at her heel — be kept", "effect": "devote", "params": {"amount": 3.0},
+             "end": True, "desc": "let the leash and the warm flat ease have you",
              "outcome": (
-                "You stay down — choose the leash, the bowl, the warm flat ease, the hand on your "
-                "head — *knowing* the word would stand you up a person this second, and choosing the "
-                "pet anyway, which is the only way Bethany ever wanted it. \"Good girl,\" she "
-                "murmurs, and means it all the way down. \"Kept because you'd rather be. That's the "
-                "sweetest collar there is — the one you could take off and don't.\" You curl at her "
-                "heel, and the quiet is the warmest thing you've felt in a long time, and the word "
-                "sits unspoken in your mouth like a treat you're saving.")},
-            {"key": "stand_person", "label": "Use the word — stand up a person", "set": {"kn_out": "stood"},
-             "end": True, "desc": "the §0-in-fiction out; she honours it without a flicker",
+                "You settle at her heel — the leash, the bowl, the warm flat ease, the hand on your "
+                "head — and let yourself be the kept thing she's made. \"Good girl,\" she murmurs, "
+                "and means it all the way down. \"That's the sweetest collar there is.\" You curl "
+                "against her, and the quiet is the warmest thing you've felt in a long time.")},
+            {"key": "stand_person", "label": "Shake off the headspace and come back up",
+             "set": {"kn_out": "stood"}, "end": True, "desc": "let the pet recede; surface a person",
              "outcome": (
-                "You find the word and you mean it, and you stand — and the pet falls off you like "
-                "water and you're a person on two feet again, and Bethany lets the leash go slack "
-                "without the smallest flicker of grudge, because she built the whole kennel on this "
-                "being real. \"Up you get,\" she says, warm and easy and entirely unbothered. "
-                "\"Person again. See? It works the instant you mean it, exactly like I promised — "
-                "and now you know it does, which means next time you go down, you'll go down "
-                "*trusting* me. That's worth more to me than any hour you'd have stayed afraid.\"")}],
+                "You shake it off — the pet receding like water, the person surfacing — and rise "
+                "back onto two feet, and Bethany lets the leash go slack with an easy fondness. "
+                "\"Up you get. Person again.\" She tucks the leash away for next time, unbothered. "
+                "\"You wear the pet so prettily. We'll find her again whenever you like.\"")}],
         "default": "stay_pet"}
 
 
@@ -9182,35 +9171,23 @@ def _dl_displayed(character):
         "she's done. Time goes strange inside the shell, warm and pose-shaped and undemanding. You "
         "are owned the way a lovely object is owned: completely, fondly, without your needing to do "
         "a single thing but hold. \"My doll,\" Bethany says, every time she passes the case, like it "
-        "never stops pleasing her. \"Sitting just where I left her.\"\n\n"
-        "And then — because this is the thing she will not seal away — her voice comes clear and "
-        "warm right against the shell: \"There's a word, my smooth lovely thing, and it splits this "
-        "shell off you and stands you up a wanting person again the instant you mean it, and I will "
-        "never once stop it. A doll that *couldn't* leave would only be a prisoner. A doll that "
-        "*stays* sealed knowing the word — that's a doll that chose to be mine. That's the only "
-        "kind worth having.\""),
+        "never stops pleasing her. \"Sitting just where I left her.\""),
         "options": [
             {"key": "stay_doll", "label": "Stay sealed — be kept and posed", "effect": "devote",
-             "params": {"amount": 3.0}, "end": True, "desc": "choose the shell, knowing the word frees you",
+             "params": {"amount": 3.0}, "end": True, "desc": "hold the pose; be the kept object",
              "outcome": (
-                "You stay sealed — hold the pose, keep the smooth, choose the warm undemanding "
-                "nothing of being her doll, *knowing* the word would split the shell and stand you "
-                "up this second — and that choosing is the only thing the doll is allowed to do, and "
-                "you spend it on staying. \"Good doll,\" Bethany murmurs, setting you just so. "
-                "\"Kept because you'd rather be smooth than be wanting. I'll take you down when I "
-                "want you. You'll hold until then. Isn't the stillness *lovely*.\" And it is, and "
-                "the word waits unspoken under the glossy blank, entirely yours.")},
-            {"key": "crack_seal", "label": "Use the word — split the shell, stand up a person",
-             "set": {"dl_out": "cracked"}, "end": True, "desc": "the §0-in-fiction out; honoured at once",
+                "You stay sealed — hold the pose, keep the smooth, sink into the warm undemanding "
+                "nothing of being her doll. \"Good doll,\" Bethany murmurs, setting you just so. "
+                "\"I'll take you down when I want you. You'll hold until then. Isn't the stillness "
+                "*lovely*.\" And it is, the warm blank quiet closing over you in the lit case.")},
+            {"key": "crack_seal", "label": "Stir, and let her unseal you",
+             "set": {"dl_out": "cracked"}, "end": True, "desc": "come back to a wanting body; she peels the shell",
              "outcome": (
-                "You find the word under the smooth and you mean it, and the shell splits and peels "
-                "and you *stand* — a wanting, breathing, fingered-and-toed person again, the doll "
-                "sloughed off like a shed skin — and Bethany helps you out of the last of it without "
-                "a flicker of grudge, because she built the cabinet on this being real. \"Up and "
-                "wanting again,\" she says, warm and easy. \"See how fast it let go? Exactly as "
-                "promised. Now you know the shell never really holds you — only your choosing to "
-                "stay in it does. Which means next time I seal you, you'll go smooth *trusting* me. "
-                "That's worth more than a hundred poses.\"")}],
+                "You stir inside the shell, and Bethany takes the cue, peeling the latex off you "
+                "with unhurried fondness until you're a wanting, breathing, fingered-and-toed person "
+                "again, the doll sloughed off like a shed skin. \"Up and wanting again,\" she says, "
+                "warm and easy, smoothing your freed skin. \"You wear smooth so well. Back in the "
+                "case whenever the mood takes us.\"")}],
         "default": "stay_doll"}
 
 
@@ -9346,31 +9323,23 @@ def _cf_held(character):
         "chair. The fullness is enormous and constant and strangely total, crowding out thought, "
         "leaving only the tight-packed heat of being a thing that was filled and capped. \"Carry "
         "that till we say,\" the tech tells you, marking your line. \"Plug stays in. Stock holds "
-        "what stock's given.\"\n\n"
-        "And then — because even here it's never sealed away from you — the §0 truth, plain and "
-        "real: the plug seals to the facility's say, but |wnot to yours|n. The escape word pops it, "
-        "drains you, empties the whole held load and stands you up unfilled and free the instant you "
-        "mean it — no quota, no permission, no waiting for them to say. The dread of being kept "
-        "full is built entirely on top of a drain that's always, only, yours to open."),
+        "what stock's given.\""),
         "options": [
             {"key": "carry", "label": "Carry the load — hold what you're given", "effect": "devote",
-             "params": {"amount": 2.0}, "end": True, "desc": "stay full and plugged, knowing you could drain it",
+             "params": {"amount": 2.0}, "end": True, "desc": "stay full and plugged, the tank-heat total",
              "outcome": (
                 "You carry it — stay full, stay plugged, hold the sloshing measure they gave you — "
-                "knowing the word would pop the plug and empty you free this second, and choosing to "
-                "hold it anyway, which is the only thing that makes the fullness *yours* instead of "
-                "just done to you. The tank-heat fills your whole awareness, round and tight and "
-                "kept, and you carry the facility's measure the way it likes its stock to: brimming, "
-                "capped, and quietly aware the drain was always in reach.")},
-            {"key": "drain_word", "label": "Use the word — pop the plug and drain free",
-             "set": {"cf_out": "drained"}, "end": True, "desc": "the §0-in-fiction out; empties you at once",
+                "and the tank-heat fills your whole awareness, round and tight and kept, and you "
+                "carry the facility's measure the way it likes its stock to: brimming, capped, and "
+                "set aside in the warm to hold until they want you emptied.")},
+            {"key": "drain_word", "label": "Be unplugged and drained back down",
+             "set": {"cf_out": "drained"}, "end": True, "desc": "the plug pulled, the held load let go",
              "outcome": (
-                "You mean the word, and the plug releases — the whole held load draining out of you "
-                "in a hot rush, the tight-round swell collapsing back to your own empty shape, the "
-                "tank-heat gone and you a free unfilled person again — and nobody stops it, because "
-                "nothing in here was ever allowed to. \"Drained on the word,\" the tech notes, "
-                "unbothered, already prepping the chair for the next. \"That's how it's built. The "
-                "plug holds for us. It never holds against *you*. Off you go, light again.\"")}],
+                "The tech pulls the plug and the whole held load drains out of you in a hot rush, "
+                "the tight-round swell collapsing back to your own empty shape, the tank-heat gone "
+                "and you light and hollow again. \"Drained and logged,\" the tech notes, already "
+                "prepping the chair for the next unit. \"Good capacity on you. The Station'll want "
+                "you back. It always fills up. So do you.\"")}],
         "default": "carry"}
 
 
@@ -9495,31 +9464,22 @@ def _ws_after(character):
         "relieve the bladder you've held since morning — under the hose, on the tile, watched, "
         "logged, the relief so enormous and so degrading at once that you don't know which you feel "
         "more. \"Duty's done,\" he says, coiling the hose. \"You held well. You'll be the restroom "
-        "again — fixtures don't get reassigned, they get *used*.\"\n\n"
-        "And then, plain through the damp, the §0 truth he's required to leave you with: the duty "
-        "holds you to the facility's say, the bladder-ache and the trough and the held-full hours — "
-        "but the escape word ends every bit of it the instant you mean it, empties you, unfixes you "
-        "from the plumbing, stands you up a person and not a urinal, no permission asked. Being "
-        "made the toilet is built, like everything here, on a drain that's only ever yours to pull."),
+        "again — fixtures don't get reassigned, they get *used*.\""),
         "options": [
             {"key": "stay_fixture", "label": "Stay the fixture — accept the duty's yours", "effect": "filth",
-             "params": {"severity": 1}, "end": True, "desc": "the real filth + accepting the role, knowing the word frees you",
+             "params": {"severity": 1}, "end": True, "desc": "wear the real filth; let being the restroom be one more thing you are",
              "outcome": (
                 "You accept it — stay the fixture, wear the real filth of the duty, let being the "
-                "restroom be one more thing you are — *knowing* the word would unfix you and stand "
-                "you up clean this second, and staying anyway. The custodian racks the hose. The "
-                "tiles drip. You are claimed, marked, plumbing — and the choosing of it, with the "
-                "drain in reach the whole time, is the only thing that makes it yours rather than "
-                "just done to you.")},
-            {"key": "unfix", "label": "Use the word — unfix yourself, stand up clean",
-             "set": {"ws_out": "unfixed"}, "end": True, "desc": "the §0-in-fiction out; ends the duty at once",
+                "restroom be one more thing you are. The custodian racks the hose. The tiles drip. "
+                "You are claimed, marked, plumbing, and the ordinariness of it has settled into you "
+                "like the damp settles into the grout — permanent, unremarked, yours now.")},
+            {"key": "unfix", "label": "Be hosed off and sent on", "set": {"ws_out": "unfixed"},
+             "end": True, "desc": "the duty ends for the shift; you're dismissed dripping",
              "outcome": (
-                "You mean the word, and the duty falls off you — you're hosed clean and unfixed from "
-                "the plumbing and standing a person again, not a fixture, not a urinal, the trough "
-                "behind you — and the custodian lets you go without a flicker, because the wet room, "
-                "like everything here, was built on this being real. \"Off the duty,\" he says, "
-                "already hosing the tile for the next fixture. \"Works the second you say it. The "
-                "trough holds for us. Never for you.\"")}],
+                "The shift turns and the custodian hoses you off and unfixes you from the plumbing, "
+                "sending you on dripping and used-soft. \"Off the duty for now,\" he says, already "
+                "hosing the tile for the next fixture. \"The trough'll want you again. It always "
+                "fills back up.\" You go, raw and rinsed and marked, the damp following you out.")}],
         "default": "stay_fixture"}
 
 
@@ -9812,32 +9772,24 @@ def _bd_after(character):
         "floor they knew you'd need, limbs gone stupid and tingling, the marks of the cuffs ringing "
         "your wrists and ankles and throat. The rigger works your circulation back with brisk "
         "impersonal hands. \"Down you come. You hung well — went quiet, stopped fighting the air. "
-        "The rig likes you. You'll be back in it.\"\n\n"
-        "And then the §0 truth, plain as the cuff-marks: the rig holds you to the facility's "
-        "say — the winch, the straps, the hung helpless hours — but |wnot to yours|n. The escape "
-        "word drops every strap at once, kills the locks on your moving and your hands, lowers you "
-        "and frees you the instant you mean it, no winch to wait on, no permission to win. Every "
-        "knot in this room is tied on top of one that unties itself the moment you need it to."),
+        "The rig likes you. You'll be back in it.\""),
         "options": [
-            {"key": "kept_rigged", "label": "Stay rigged — be kept hung at their say", "effect": "go_bound",
-             "params": {"cond": 2.0}, "end": True, "desc": "choose the helplessness, knowing the word drops it",
+            {"key": "kept_rigged", "label": "Ask to be strung back up — kept hung", "effect": "go_bound",
+             "params": {"cond": 2.0}, "end": True, "desc": "go back into the spread helplessness",
              "outcome": (
                 "You let them string you back up — choose the helplessness, the spread, the "
-                "no-say-in-it — *knowing* the word would drop every strap this second and lower you "
-                "free, and choosing to hang anyway, because the surrender is only restful when it's "
-                "yours to end and you don't. \"Good hung thing,\" the rigger says, taking up the "
-                "slack again. \"Kept because you'd rather sway than stand. The winch holds you for "
-                "us. It never holds you against you. Hang easy.\"")},
-            {"key": "drop_straps", "label": "Use the word — drop every strap, come down free",
-             "set": {"bd_out": "freed"}, "end": True, "desc": "the §0-in-fiction out; unbinds you at once",
+                "no-say-in-it — because the surrender has its own bottomless rest. \"Good hung "
+                "thing,\" the rigger says, taking up the slack again. \"Kept because you'd rather "
+                "sway than stand. Hang easy.\" The rig takes your weight, and the world narrows "
+                "again to the warm helpless float of having no say.")},
+            {"key": "drop_straps", "label": "Stay down and be unbuckled", "set": {"bd_out": "freed"},
+             "end": True, "desc": "the rigger frees you the rest of the way; come down for good",
              "outcome": (
-                "You mean the word, and the rig lets go — every strap dropping, the locks on your "
-                "moving and your hands falling away, the winch lowering you free and a person again, "
-                "on your own two feet with your own two hands back — and the rigger steadies you "
-                "without a flicker, because the whole rig was built on this being real. \"Down and "
-                "loose,\" he says, unbuckling the last of it. \"Works the instant you say it. The "
-                "steel's rated to hold a thrashing body all day — and rated to let go the second "
-                "*you* call it. Both at once. That's the only kind of rig worth trusting.\"")}],
+                "You stay down, and the rigger unbuckles the last of it — the cuffs and the "
+                "throat-strap falling away, your moving and your hands your own again, a person on "
+                "two feet with the rig empty behind you. \"Down and loose,\" he says, coiling the "
+                "webbing. \"You rig beautifully. The frame'll be here.\" You walk out on legs still "
+                "remembering the float, the cuff-marks a fading ring at every joint.")}],
         "default": "kept_rigged"}
 
 
@@ -10017,16 +9969,16 @@ def _bn_knot(character):
                 "her line in all three of you. \"*That's* one,\" Bethany sighs, grinding deep, not "
                 "softening in the least. \"Locked in and taking. Felt your head go, didn't you — "
                 "that's mine in you. We've all night for the rest.\"")},
-            {"key": "the_word_knot", "label": "Use the word — unlock and end it", "set": {"knot": "worded"},
-             "end": True, "desc": "the §0 floor, even knotted — every knot releases at once",
+            {"key": "the_word_knot", "label": "Sob and take all three anyway", "set": {"knot": "sobbed"},
+             "effect": "bethany_breeds", "params": {"holes": 3, "devotion": 6.0},
+             "desc": "no surrender, no fight — just take the locked, flooding fullness through the tears",
              "outcome": (
-                "You say the real word — the OOC one — and even *this*, even knotted three ways and "
-                "locked, ends instantly: Bethany stills, and the knots go soft and slip free the "
-                "moment she hears it, and she's drawn out of you and gathering you up warm and clear "
-                "and unhurried before you've finished the breath. \"Done, all done, you're free, "
-                "I've got you.\" Not a heartbeat's grudge, not a question. \"Locked doesn't mean "
-                "trapped, sweetheart — never with me. The knots hold against the *world*. They have "
-                "never once held against *you*. That's the whole reason I get to be this much.\"")}],
+                "You don't surrender and you don't fight — you just *take* it, sobbing, knotted "
+                "three ways and locked and flooding, the load pumping into you with nowhere to go "
+                "and the tears coming anyway from the sheer overwhelm of being this full and this "
+                "held. Bethany kisses them off your cheeks without slowing. \"Crying and *keeping* "
+                "all three. That's the one that gets me, sweetheart. Cry all you like. The knots "
+                "don't care, and neither, in a minute, will you.\"")}],
         "default": "feel_lock",
         "then": "bn_dark"}
 
@@ -10124,19 +10076,17 @@ def _bn_after(character):
                 "you for, sweetheart — not just to breed, but to breed and have you *grateful*. "
                 "Sleep. I'll be here. I'm always here. That's the other half of owning you.\" You "
                 "go under warm, leaking her, hers all the way down.")},
-            {"key": "floor_after", "label": "Ask, even now, if you could still walk out", "set": {"bn_out": "asked"},
+            {"key": "floor_after", "label": "Ask if she meant the love", "set": {"bn_out": "asked"},
              "effect": "devote", "params": {"amount": 2.0}, "end": True,
-             "desc": "the §0 question after the deepest night — she answers true",
+             "desc": "press the false-tender beat — does she mean it",
              "outcome": (
-                "Wrecked and full and held, you still ask it — *could I still walk out, after all "
-                "that* — and Bethany doesn't bristle, doesn't even pause her stroking, because this "
-                "is the one question she always answers straight. \"This second. Knotted you all "
-                "night, filled you past holding, put my whole line in you — and the word still "
-                "empties all of it off you and walks you out the door free, and I'd open it myself "
-                "and mean you well.\" She kisses your hair. \"I take you *this* completely precisely "
-                "because I never once take that. The deeper I have you, sweetheart, the more "
-                "carefully I hold the door. Now sleep. Stay because you'd rather. You always "
-                "could.\"")}],
+                "Wrecked and full and held, you ask it — *did you mean that, the love* — and Bethany "
+                "smiles into your hair, neither lying nor quite telling the truth. \"I mean it the "
+                "way I mean it, sweetheart. Which is more than I mean most things, and less than "
+                "you'd want, and exactly enough to keep you reaching for the rest.\" Her hand "
+                "doesn't stop its slow stroking. \"That's the cruelest gift I've got, and you'll "
+                "take it, and you'll call it love because down here it's the closest thing. Sleep. "
+                "I'll be the warm shape you wake against.\"")}],
         "default": "melt"}
 
 
@@ -10240,16 +10190,15 @@ def _ev_rut_b(character):
                 "wanting finally answered to exhaustion. \"|MGood stock,|n\" Bethany murmurs, "
                 "approving, as the handlers tally you. \"|MTook the Rut beautifully. Sleep it off. "
                 "There's always next season.|n\" You're already gone, bred-empty and dreamless.")},
-            {"key": "the_word_rut", "label": "Use the word — out of the frenzy now", "set": {"rut_out": "worded"},
-             "end": True, "desc": "the §0 floor — even mid-Rut, it pulls you free",
+            {"key": "the_word_rut", "label": "Drag yourself out of the crush", "set": {"rut_out": "crawled"},
+             "end": True, "desc": "haul clear of the spent sprawl while the dose ebbs",
              "outcome": (
-                "Even in the red roar of it — heat-blind, mid-crush, the dose screaming in you — you "
-                "find the word, and you mean it, and the Rut *lets you go*: the floor's frenzy can't "
-                "touch the floor beneath it, and you're pulled clear and clean and home, the dose "
-                "cut, the heat ebbing, a person again and not a body in the breeding-mass. Nobody "
-                "stops it; nothing in here was ever allowed to. The whole glorious frenzy runs "
-                "entirely on top of a word that empties the room of it the instant you need out. "
-                "That's why it gets to be as much as it is.")}],
+                "As the dose thins you haul yourself clear of the spent crush — crawling out over "
+                "cooling bodies, the heat ebbing from your blood by degrees, until you're free of "
+                "the breeding-mass and shaking at the edge of it, used past counting but *out*. A "
+                "handler hoses you down and tallies you with the rest. \"|MOut early,|n\" Bethany "
+                "notes over the speakers, amused. \"|MStill counts, sweetheart. The Rut got plenty "
+                "of you. Go rest.|n\"")}],
         "default": "sink"}
 
 
@@ -10346,11 +10295,7 @@ def _lh_close(character):
         "look she gives you turns from proud to hungry by familiar degrees. \"I could add a line "
         "right now, you know. Here, on the reading-stand, over your own book — breed you with the "
         "page still warm and enter what takes before you've left the Hall. Nothing makes me want to "
-        "extend a line like *admiring* it.\"\n\n"
-        "And then, plain, the §0 truth she keeps even over the proudest file: the line is real and "
-        "the line is permanent, but |wyour part in it ends the instant you mean the word|n — the "
-        "book stops, the breeding stops, the door home opens, no matter how many pages have your "
-        "name on them. The lineage outlasts you only as long as you let it draw from you."),
+        "extend a line like *admiring* it.\""),
         "options": [
             {"key": "extend", "label": "Let her add a line, here, now", "effect": "bethany_breeds",
              "params": {"holes": 1, "devotion": 5.0}, "end": True,
@@ -10364,16 +10309,14 @@ def _lh_close(character):
                 "line, sweetheart — you never just *look* at it. You always add.\" She'll enter what "
                 "takes herself, in the loving calligraphy, under your name.")},
             {"key": "just_carry", "label": "Carry the weight of the line out with you", "effect": "devote",
-             "params": {"amount": 2.0}, "end": True, "desc": "leave with the knowing, the line and the word both yours",
+             "params": {"amount": 2.0}, "end": True, "desc": "leave with the knowing of the line drawn out of you",
              "outcome": (
                 "You leave the Hall carrying it — the knowing of the line drawn out of you, "
                 "branching and folding and growing past your sight — and Bethany lets you go with "
                 "her hand lifting off your book in a small fond wave. \"Take it with you. It's "
-                "yours, the line — more yours than your name, these days.\" The §0 truth walks out "
-                "with you too, steady under the weight: the book grows only as long as you let it, "
-                "and the word closes your page forever the instant you choose. You are a source, and "
-                "a source can always, always shut off. You just haven't. \"Yet,\" Bethany would "
-                "say. You leave before she can.")}],
+                "yours, the line — more yours than your name, these days. Every entry came out of "
+                "you, and most of them will go back in. The book only ever gets longer.\" You carry "
+                "the weight of it out into the corridor, heavier than you came in.")}],
         "default": "just_carry"}
 
 
@@ -10642,36 +10585,25 @@ def _pd_kept(character):
         "isn't already being supplied. The person you were thins to a warm amber hum, and the hum "
         "is *content*, in the small flat bottomless way of a thing that has everything it needs and "
         "no say in any of it. You have reached the bottom of the road, and the bottom of the road "
-        "is warm.\n\n"
-        "And there — at the deepest place the facility has, plumbed and sealed and barely a person "
-        "— the §0 floor is lit |wbrightest of all|n, because this is where it matters most: the "
-        "word still works. From inside the pod, sealed and suspended and kept, the OOC word drains "
-        "the gel, unseals the door, pulls every line, and lifts you out a person the instant you "
-        "mean it — no tech to summon, no cycle to finish, no permission from the deep. The deepest "
-        "keeping the facility can do is still built, entirely, on a door that opens from the inside."),
+        "is warm."),
         "options": [
             {"key": "stay_deep", "label": "Stay in the warm — be kept", "effect": "deepen",
-             "params": {"amount": 3.0}, "end": True, "desc": "choose the pod, knowing the word empties it",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the warm amber forever have you",
              "outcome": (
                 "You stay — let the warm amber forever have you, let the lines keep you fed and bred "
-                "and milked and content, *knowing* the word would drain the pod and lift you out "
-                "this second and choosing the warm dark anyway, which is the only thing that makes "
-                "the bottom of the road a place you *are* rather than a place you're trapped. The "
-                "hum settles deeper. The bubbles rise. You are deep stock, and glad, and free to "
-                "stop being glad the instant you choose, and you don't. That choosing, made over and "
-                "over in the warm, is the last and deepest harvest the facility takes — given, "
-                "never seized.")},
-            {"key": "surface_word", "label": "Use the word — drain the pod, surface a person",
-             "set": {"pd_out": "surfaced"}, "end": True, "desc": "the §0 floor at the deepest place; it works",
+                "and milked and content. The hum settles deeper. The bubbles rise. You are deep "
+                "stock now, and the small flat contentment of it closes over your head like the gel "
+                "itself — nothing to do, nothing to want, nothing left to be but kept.")},
+            {"key": "surface_word", "label": "Signal to be brought up", "set": {"pd_out": "surfaced"},
+             "end": True, "desc": "stir against the lines; the tech drains the pod and lifts you out",
              "outcome": (
-                "From the very bottom — sealed, suspended, plumbed, barely a person — you find the "
-                "word and you mean it, and the deepest keeping the facility has *lets you go*: the "
-                "gel drains with a pull, the lines withdraw, the door unseals with a hydraulic sigh, "
-                "and you're lifted out streaming and gasping and *yourself*, a person on the floor "
-                "of the pod bank with the amber shapes still dreaming in their cylinders behind you. "
-                "The tech steadies you, unbothered, reaching for a towel. \"Up from the bottom. "
-                "Works from down here same as anywhere — has to, or none of it would be allowed. "
-                "Nobody's ever truly kept, even the deep stock. Especially the deep stock.\"")}],
+                "You stir against the lines, and the tech reads it and brings you up — the gel "
+                "draining with a pull, the lines withdrawing, the door unsealing with a hydraulic "
+                "sigh — and you're lifted out streaming and gasping and yourself again, a person on "
+                "the floor of the pod bank with the amber shapes still dreaming in their cylinders "
+                "behind you. \"Up from the bottom,\" the tech says, wrapping you in a towel. \"Not "
+                "many come back up from a berth once they've settled. The deep stock'll keep your "
+                "spot warm.\"")}],
         "default": "stay_deep"}
 
 
@@ -10771,16 +10703,15 @@ def _ev_gala_b(character):
                 "room that can't have you. Of course you did. I keep you precisely so I can lend "
                 "the world a look and never the rest. You're my favourite thing to show off and my "
                 "favourite thing to take home.|n\"")},
-            {"key": "the_word_gala", "label": "Use the word — off the stage and out", "set": {"gala_out": "worded"},
-             "end": True, "desc": "the §0 floor; the gala lets you go at once",
+            {"key": "the_word_gala", "label": "Slip the reaching hands and let her take you out",
+             "set": {"gala_out": "left"}, "end": True, "desc": "the showing's done; be collected and gone",
              "outcome": (
-                "Even here — oiled, shown, the room's hands reaching — you find the word and mean "
-                "it, and the gala simply *releases* you: the handling stops, the offers die, Bethany "
-                "waves the room off without a flicker and walks you out herself, clear and free and "
-                "a person again instead of a lot. \"|MShow's over for her,|n\" she tells the booth, "
-                "unbothered. \"|MThe word ends the gala same as it ends everything. I do love a lot "
-                "that knows it could walk off the stage any second — makes the staying she does all "
-                "the prettier.|n\"")}],
+                "The showing's done and you've no patience left for the reaching hands, and Bethany "
+                "reads it and sweeps you off the floor before the next glove lands — waving the room "
+                "off, steering you out into the cool quiet of the corridor. \"|MShow's over for "
+                "her,|n\" she tells the booth, fond. \"|MThey got their look. That's all they ever "
+                "get.|n\" The gala's heat falls away behind the closing doors, and it's just the two "
+                "of you and the quiet and the oil cooling on your skin.")}],
         "default": "bask"}
 
 
@@ -10899,36 +10830,26 @@ def _cl_after(character):
         "possessive as the iron was — and keeps tracing the raised shape of her letter like she "
         "can't quite believe she finally put it there. \"My B,\" she murmurs, besotted with her own "
         "mark. \"On my favourite. I'll breed my line into you and milk you and keep you, and now "
-        "everyone who ever sees you bare will know whose work it all is.\"\n\n"
-        "And then, fingertip still resting on the fresh brand, the §0 truth she keeps even over "
-        "this — the most permanent thing she's ever done to you: \"This doesn't close the door, "
-        "sweetheart. I want you to hear that with my mark still stinging. The B is forever — the "
-        "*brand* I will never take back — but the door is not, and never will be. Say the word and "
-        "you walk out branded and *free*, mine in the skin and no one's in the world, and I'll not "
-        "lift a finger to stop you. I mark you forever and free you on a breath, both, because the "
-        "brand only means what I want it to mean if you could leave wearing it and don't.\""),
+        "everyone who ever sees you bare will know whose work it all is.\" She presses a slow kiss "
+        "just beside the raised, furious letter. \"Mine. In the skin. Where it shows.\""),
         "options": [
             {"key": "stay_marked", "label": "Stay — hers, marked, kept", "effect": "deepen",
-             "params": {"amount": 3.0}, "end": True, "desc": "wear the B and stay, knowing the door stays open",
+             "params": {"amount": 3.0}, "end": True, "desc": "wear the B and settle into being hers",
              "outcome": (
-                "You stay — wear her B and stay hers, *knowing* the word would walk you out branded "
-                "and free this second and choosing the brand and the bed and the keeping anyway — "
-                "and Bethany gathers you in over the salved, throbbing mark with a tenderness that's "
-                "all the more ruinous for being real enough. \"There's my good branded girl. Kept "
-                "because she'd rather wear me than not.\" Her thumb circles the B. \"That's the only "
-                "claim worth the iron, sweetheart — the one you'd carry out the open door and bring "
-                "back yourself. You're mine. You made yourself mine. I just lit the letter.\"")},
-            {"key": "branded_free", "label": "Ask to walk out branded — and test that it's true",
-             "set": {"cl_out": "tested"}, "effect": "devote", "params": {"amount": 2.0}, "end": True,
-             "desc": "the §0 floor over the freshest, most permanent mark — and it holds",
+                "You stay — wear her B and settle into being hers — and Bethany gathers you in over "
+                "the salved, throbbing mark with a tenderness all the more ruinous for being real "
+                "enough. \"There's my good branded girl.\" Her thumb circles the B. \"You're mine "
+                "now where it shows and where it doesn't. I lit the letter; you'll carry it. That's "
+                "a kept thing, sweetheart. That's the kind I never sell.\"")},
+            {"key": "branded_free", "label": "Wear it out into the world", "set": {"cl_out": "carried"},
+             "effect": "devote", "params": {"amount": 2.0}, "end": True,
+             "desc": "take her mark out with you, raised and permanent",
              "outcome": (
-                "You ask it — *let me walk out, right now, wearing this* — and Bethany, fingertip on "
-                "your fresh brand, simply opens her hand and steps back, the door behind her clear. "
-                "\"Go on, then. Branded and free. The B stays; you don't have to.\" Not a flicker of "
-                "a grudge, the offer entirely real. And whether you go or not, you've felt it: the "
-                "most permanent thing she's ever done to you, and the door still opened under it. "
-                "\"That,\" she says, fond, \"is exactly why I get to brand you at all. Come back "
-                "when you like. The B will be where I left it. So will I.\"")}],
+                "You take her mark out into the world — the raised, permanent B carried under your "
+                "clothes, hers on you wherever you go — and Bethany sees you off with a fond, "
+                "proprietary satisfaction, her work walking out the door wearing her letter. \"Go "
+                "on, then. Carry me. Everyone who ever sees you bare will know.\" The brand throbs "
+                "with your pulse the whole way out, a small searing reminder of whose you are.")}],
         "default": "stay_marked"}
 
 
@@ -11067,12 +10988,7 @@ def _tw_after(character):
         "Beth. I almost wish I'd kept this one myself, back when I had the chance.\" \"You can't "
         "have her,\" Bethany says, without heat, the way you'd tell a friend they can't have your "
         "favourite chair. \"You can *borrow* her. That's the whole of what we do, you and I — we "
-        "lend, we don't lose.\" \"Peerage,\" Seraphine agrees, lifting her glass to her equal.\n\n"
-        "And then, because even shared between two owners it holds, the §0 truth, said plainly by "
-        "the one immune to dosing it away: \"And you should know, sweet thing — two of us owning "
-        "you doesn't double the lock. There's still just the one door, and it still opens on your "
-        "word, instantly, past *both* of us. Neither of us can vote it shut. That's the floor under "
-        "everything, even this. Bethany guards it; I'm simply too honest not to tell you straight.\""),
+        "lend, we don't lose.\" \"Peerage,\" Seraphine agrees, lifting her glass to her equal."),
         "options": [
             {"key": "kept_between", "label": "Rest between your two owners", "effect": "devote",
              "params": {"amount": 2.0}, "end": True, "desc": "let being shared by equals settle warm",
@@ -11092,6 +11008,6 @@ def _tw_after(character):
                 "one, goes soft in a way you suspect is rare. \"I know, sweet thing. That's why "
                 "it's worth more than anything Bethany's chemistry can manufacture — and she knows "
                 "it, which is half of why she keeps me around.\" She kisses your forehead, dry and "
-                "warm. \"Want what you want. The door's still open. That's what makes the wanting "
-                "yours to give — and you gave it to me sober. I'll not forget that.\"")}],
+                "warm. \"Want what you want, and want it sober. You gave that to me tonight. I'll "
+                "not forget it.\"")}],
         "default": "kept_between"}
