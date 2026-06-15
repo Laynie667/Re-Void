@@ -292,6 +292,35 @@ def _eff_go_cumflate(character, p):
     return "cumflated" if filled else "cumflate_noop"
 
 
+@effect("go_pod")
+def _eff_go_pod(character, p):
+    """Sealed into a Deep Stock pod — the terminus state: total_dependence + body_processing_locked
+    + navigation_locked + lactation_locked (the pod milks you) + optional sensory_hood. All flags
+    are in FACILITY_FLAGS, so the §0 floor / the word opens the pod and clears every bit.
+    params: hood (bool), cond (conditioning)."""
+    for flag in ("total_dependence", "body_processing_locked", "navigation_locked",
+                 "lactation_locked"):
+        try: setattr(character.db, flag, True)
+        except Exception: pass
+    if p.get("hood"):
+        try: character.db.sensory_hood = True
+        except Exception: pass
+    try:
+        character.db.forced_posture = ("sealed in a pod — suspended in warm gel, plumbed to the "
+                                       "feed and breed and milk lines, kept")
+        character.db.body_language = "deep stock — podded, plumbed, indefinitely kept"
+    except Exception:
+        pass
+    cond = float(p.get("cond", 0) or 0)
+    if cond:
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(character, cond, source="deep_stock_pod")
+        except Exception:
+            pass
+    return "podded"
+
+
 @effect("go_bound")
 def _eff_go_bound(character, p):
     """Bound in the rig — sets the REAL bondage state (navigation_locked + self_cmds_locked +
@@ -6367,6 +6396,7 @@ def _b_facility_hub(character):
         add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
     # Deep Stock — the terminus is always down there to be contemplated.
     add("deep", "→ Deep Stock", "ds_arrival", "the sealed terminus; the pods")
+    add("pod", "→ the Pod bank (be podded)", "pd_arrival", "sealed in, plumbed, kept as deepest stock")
 
     # The dedicated kink set-pieces — chosen, not random. Always offerable; each is §0-lit and
     # routes through real systems. (The board lists them under their clinical room-names.)
@@ -10443,3 +10473,144 @@ def _bt_close(character):
                 "understanding exactly what has you, and not reaching for the word — which is, she'd "
                 "say, the whole harvest, brought in one more night.")}],
         "default": "rest"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Pod — Deep Stock, experienced. The terminus made real instead of
+# contemplated (ds_ contemplates it; this one seals you IN): sealed into a
+# breeding-pod in the deep bank, plumbed to the feed/breed/milk lines, suspended
+# in warm gel and kept indefinitely as the deepest stock there is. Routes through
+# a new `go_pod` effect (total_dependence + body_processing_locked +
+# navigation_locked + lactation_locked + optional hood — all FACILITY_FLAGS) plus
+# real go_cumflate / _do_milk. The deepest place, so the §0 floor is lit the
+# HARDEST here. Flow: arrival→seal→kept→(stay/word). Entry: `scene pod`/deepstock pod.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("pd_arrival", root=False)
+def _pd_arrival(character):
+    nm = subject_name(character)
+    return {"key": "pd_arrival", "prompt": (
+        "They take you down past the last door you remember and into the |wpod bank|n — the true "
+        "bottom of the facility, where the contemplating stops and the keeping begins. It's quiet "
+        "down here, and warm, and lit the dim amber of a place that doesn't expect to be looked at. "
+        "Rank on rank of |wpods|n line the walls: tall fluid-filled cylinders, each holding a "
+        "suspended shape, plumbed top and bottom with feed-lines and breed-lines and milk-lines, "
+        "each one breathing slow bubbles, each one *occupied*. The deepest stock. The ones the "
+        "facility has finished processing and simply *keeps* now — bred and milked and fed by tube, "
+        "asleep or near it, kept warm and full and producing in the dim forever.\n\n"
+        "One pod stands open, drained, waiting — a clean berth, your designation already lit on its "
+        "little brass plate. A |wtech|n in soft-soled shoes checks its lines. \"This is the bottom "
+        f"of the road, {nm},\" they say, not unkindly. \"Not a punishment. Not a scene. Just... "
+        "where stock goes when there's nothing left to process and a lot left to *produce*. You go "
+        "in the warm, you get plumbed to the lines, and you stay — fed, bred, milked, kept — for as "
+        "long as you'd let us. Most who come down here stop counting the days inside a week.\" The "
+        "open pod exhales a warm gel-scented breath. \"Step in, or be lifted in. Either way's "
+        "logged the same.\""),
+        "options": [
+            {"key": "step_in", "label": "Step into the open pod yourself", "set": {"pd": "step"},
+             "effect": "deepen", "params": {"amount": 3.0},
+             "desc": "walk yourself to the bottom of the road; let it be your choice",
+             "outcome": (
+                "You step in — walk yourself down to the bottom of the road, into the warm waiting "
+                "berth, because if it's going to happen you want it to have been a thing you *did* — "
+                "and the tech hums approval, beginning to seat the lines against you. \"Walked "
+                "herself into deep stock. That's the rarest kind down here, and the calmest. The "
+                "ones who choose the pod settle into it like a bath.\" The gel laps warm at your "
+                "ankles, your knees, rising as the pod readies to close.")},
+            {"key": "lifted", "label": "Make them lift you in", "set": {"pd": "lifted"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "don't help; be placed into the terminus like the cargo you're becoming",
+             "outcome": (
+                "You don't help — make them lift you, place you, fold you into the berth like the "
+                "cargo you're becoming — and the tech does it without complaint, practiced and "
+                "gentle, settling your weight into the warm gel and beginning to seat the lines. "
+                "\"Lifted in. That's fine. Walked or carried, the pod doesn't mind, and in a day or "
+                "two neither will you.\" The warmth closes around your settling weight, patient as "
+                "the amber light.")}],
+        "default": "step_in",
+        "then": "pd_seal"}
+
+
+@choice("pd_seal", root=False)
+def _pd_seal(character):
+    return {"key": "pd_seal", "prompt": (
+        "They plumb you in. It's unhurried and thorough and strangely tender — the |wfeed-line|n "
+        "seated and taped, warm nutrient already trickling so you'll never want for anything again; "
+        "the |wbreed-line|n, a thick plumbed shaft, worked deep and locked so the pod can keep you "
+        "bred on its own schedule; the |wmilk-lines|n cupped and sealed to your chest to draw you "
+        "down on a cycle that never tires; a soft mask easing over your face to feed you warm air "
+        "and dim the world to amber. Then the gel rises — to your hips, your chest, your throat, "
+        "warm as blood and buoyant — and the pod's curved door swings shut and seals with a deep "
+        "hydraulic *thunk* you feel in your bones, and the bubbles begin their slow rise past your "
+        "cheeks. Suspended. Plumbed. Sealed. Kept. The tech's voice comes muffled and warm through "
+        "the shell: \"There. All your lines green. Welcome to deep stock. You don't have to do "
+        "anything ever again — the pod feeds you, breeds you, milks you, and keeps you. Let go.\""),
+        "options": [
+            {"key": "plumb_in", "label": "Let every line seat — go fully deep stock", "effect": "go_pod",
+             "params": {"hood": True, "cond": 4.0}, "set": {"sealed": "full"},
+             "desc": "the REAL pod state — fed/bred/milked/kept, total dependence",
+             "outcome": (
+                "You let every line seat and let go — and the pod takes over the whole work of "
+                "keeping you alive and producing, the real deep-stock state closing over you: fed "
+                "without hunger, bred without effort, milked without cease, your body's whole "
+                "business handed to the machine and your will handed to the warm amber dark. The "
+                "dependence is total and it is, horribly, *restful* — there is nothing left to do, "
+                "nothing to decide, nothing to hold. \"Green across the board,\" the tech murmurs, "
+                "far away. \"She's deep stock now. Look how she settles. They always settle.\"")},
+            {"key": "breed_full", "label": "Feel the breed-line fill you as it seals", "effect": "go_cumflate",
+             "params": {"amount": 2000.0, "fluid": "the pod's bred-flood"}, "set": {"sealed": "filled"},
+             "desc": "the pod breeds you on seal — real fill + the deep-stock state begins",
+             "outcome": (
+                "The breed-line runs the instant it seats — the pod breeding you on its own first "
+                "cycle, a warm relentless flood pumping into you with nowhere to go, your belly "
+                "rounding tight under the buoyant gel as the pod fills you the way it'll keep "
+                "filling you for as long as you stay. The real flood swells you; the lines hold it. "
+                "\"First cycle's a big one,\" the tech notes through the shell. \"Pod likes to start "
+                "a fresh berth good and full. It'll top you up on schedule from here. You'll always "
+                "be full now. That's rather the point of down here.\"")}],
+        "default": "plumb_in",
+        "then": "pd_kept"}
+
+
+@choice("pd_kept", root=False)
+def _pd_kept(character):
+    return {"key": "pd_kept", "prompt": (
+        "And then you're simply *kept*, and the keeping is its own warm forever. Time stops meaning "
+        "anything almost at once — the amber light never changes, the bubbles never stop, the lines "
+        "feed and breed and milk you on cycles you stop being able to track, and you drift in the "
+        "warm gel somewhere between waking and sleep, full and producing and tended, one suspended "
+        "shape in a wall of suspended shapes. There is nothing to do. There is nothing to want that "
+        "isn't already being supplied. The person you were thins to a warm amber hum, and the hum "
+        "is *content*, in the small flat bottomless way of a thing that has everything it needs and "
+        "no say in any of it. You have reached the bottom of the road, and the bottom of the road "
+        "is warm.\n\n"
+        "And there — at the deepest place the facility has, plumbed and sealed and barely a person "
+        "— the §0 floor is lit |wbrightest of all|n, because this is where it matters most: the "
+        "word still works. From inside the pod, sealed and suspended and kept, the OOC word drains "
+        "the gel, unseals the door, pulls every line, and lifts you out a person the instant you "
+        "mean it — no tech to summon, no cycle to finish, no permission from the deep. The deepest "
+        "keeping the facility can do is still built, entirely, on a door that opens from the inside."),
+        "options": [
+            {"key": "stay_deep", "label": "Stay in the warm — be kept", "effect": "deepen",
+             "params": {"amount": 3.0}, "end": True, "desc": "choose the pod, knowing the word empties it",
+             "outcome": (
+                "You stay — let the warm amber forever have you, let the lines keep you fed and bred "
+                "and milked and content, *knowing* the word would drain the pod and lift you out "
+                "this second and choosing the warm dark anyway, which is the only thing that makes "
+                "the bottom of the road a place you *are* rather than a place you're trapped. The "
+                "hum settles deeper. The bubbles rise. You are deep stock, and glad, and free to "
+                "stop being glad the instant you choose, and you don't. That choosing, made over and "
+                "over in the warm, is the last and deepest harvest the facility takes — given, "
+                "never seized.")},
+            {"key": "surface_word", "label": "Use the word — drain the pod, surface a person",
+             "set": {"pd_out": "surfaced"}, "end": True, "desc": "the §0 floor at the deepest place; it works",
+             "outcome": (
+                "From the very bottom — sealed, suspended, plumbed, barely a person — you find the "
+                "word and you mean it, and the deepest keeping the facility has *lets you go*: the "
+                "gel drains with a pull, the lines withdraw, the door unseals with a hydraulic sigh, "
+                "and you're lifted out streaming and gasping and *yourself*, a person on the floor "
+                "of the pod bank with the amber shapes still dreaming in their cylinders behind you. "
+                "The tech steadies you, unbothered, reaching for a towel. \"Up from the bottom. "
+                "Works from down here same as anywhere — has to, or none of it would be allowed. "
+                "Nobody's ever truly kept, even the deep stock. Especially the deep stock.\"")}],
+        "default": "stay_deep"}

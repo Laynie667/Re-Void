@@ -974,6 +974,24 @@ def test_bethany_scene():
     cyoa.resolve_choice(c57, "rest")
     assert c57.db.pending_choice is None and c57.db.scene_flags is None, "pillow talk should end clean"
 
+    # The Pod (Deep Stock, experienced) — chains all beats; go_pod sets the real deep-stock state.
+    c58 = _Char(); cyoa.start_scene(c58, "pd_arrival")
+    pdbeats = []
+    for ch in ("step_in", "plumb_in", "stay_deep"):
+        p = c58.db.pending_choice
+        assert p, f"pod: no pending before '{ch}'"
+        pdbeats.append(p["key"])
+        assert cyoa.resolve_choice(c58, ch)[0] is not None, f"pod '{ch}' did not resolve"
+    assert pdbeats == ["pd_arrival", "pd_seal", "pd_kept"], pdbeats
+    assert c58.db.total_dependence is True and c58.db.body_processing_locked is True, \
+        "pod should set the real deep-stock dependence flags"
+    assert c58.db.pending_choice is None and c58.db.scene_flags is None, "pod should end clean"
+    c59 = _Char(); cyoa.start_scene(c59, "pd_arrival")
+    for ch in ("lifted", "breed_full", "surface_word"):
+        assert c59.db.pending_choice, f"pod(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c59, ch)[0] is not None, f"pod(b) '{ch}' failed"
+    assert c59.db.pending_choice is None and c59.db.scene_flags is None, "pod(b) should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

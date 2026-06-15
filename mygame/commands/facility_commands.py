@@ -1670,6 +1670,7 @@ class CmdScene(Command):
         "line": "lh_arrival",
         "pillowtalk": "bt_arrival", "lore": "bt_arrival", "confession": "bt_arrival",
         "askbethany": "bt_arrival",
+        "pod": "pd_arrival", "podbank": "pd_arrival", "deeppod": "pd_arrival",
     }
 
     def func(self):

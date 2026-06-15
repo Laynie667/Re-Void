@@ -85,6 +85,15 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Pod (`pd_*`, `scene pod`/podbank)** — BUILT. Deep Stock *experienced*, not merely
+  contemplated (ds_ contemplates; this seals you in): plumbed into a breeding-pod in the deep bank
+  — feed-line, breed-line, milk-lines, warm gel, sealed door — and kept indefinitely as the
+  deepest stock there is. Routes through a new `go_pod` effect (total_dependence +
+  body_processing_locked + navigation_locked + lactation_locked + optional hood — all
+  FACILITY_FLAGS) plus real go_cumflate (the breed-line floods you on seal) / deepen. arrival →
+  seal → kept. §0 lit BRIGHTEST here, by design: from the very bottom, sealed and suspended, the
+  word drains the gel and lifts you out a person at once — "nobody's ever truly kept, especially
+  the deep stock." Surfaces in the hub beside Deep Stock.
 - ✅ **The Lineage Hall (`lh_*`, `scene lineage`/studbook/brood)** — BUILT. Lore-rich + savorable:
   Bethany walks you through the facility's stud-book of YOUR get, the prose generated LIVE from the
   real offspring data (`studbook_lines`: counts / by-sire / by-sex / generational depth / fellow-
