@@ -960,6 +960,20 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c56, ch)[0] is not None, f"lineage(b) '{ch}' failed"
     assert c56.db.pending_choice is None and c56.db.scene_flags is None, "lineage(b) should end clean"
 
+    # Pillow Talk (lore) — the looping lore menu: ask several topics, the menu re-poses, then
+    # leaving closes it clean.
+    c57 = _Char(); cyoa.start_scene(c57, "bt_arrival")
+    cyoa.resolve_choice(c57, "process")     # arrival → menu
+    assert c57.db.pending_choice and c57.db.pending_choice["key"] == "bt_menu", "lore should loop to the menu"
+    cyoa.resolve_choice(c57, "devotion")    # menu → menu (loops)
+    assert c57.db.pending_choice["key"] == "bt_menu", "lore menu should re-pose on each ask"
+    cyoa.resolve_choice(c57, "floor")       # the §0 topic
+    assert c57.db.pending_choice["key"] == "bt_menu"
+    cyoa.resolve_choice(c57, "enough")      # menu → close
+    assert c57.db.pending_choice and c57.db.pending_choice["key"] == "bt_close", "enough should go to close"
+    cyoa.resolve_choice(c57, "rest")
+    assert c57.db.pending_choice is None and c57.db.scene_flags is None, "pillow talk should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

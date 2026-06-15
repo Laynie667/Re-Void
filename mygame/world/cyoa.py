@@ -6360,6 +6360,8 @@ def _b_facility_hub(character):
         add("office", "→ Bethany's quarters", "ko_arrival", "the keeping; her bed, her file")
         add("longnight", "→ a whole night in her bed", "bn_arrival",
             "no clock, no line — all three, knotted, bred till dawn")
+        add("pillowtalk", "→ ask her things", "bt_arrival",
+            "kept close; she's talkative — the Process, the dose, her story")
     # Seraphine visits to buy — surfaces once you're Bethany's (her to sell).
     if bowned or sowned:
         add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
@@ -10262,3 +10264,160 @@ def _lh_close(character):
                 "a source can always, always shut off. You just haven't. \"Yet,\" Bethany would "
                 "say. You leave before she can.")}],
         "default": "just_carry"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Pillow Talk — Bethany's lore, in her own voice. A replayable LORE scene:
+# kept close after, she's talkative, and you can ask her about the Process, the
+# DEVOTION she laces her cum with, how an intake clerk came to own the place,
+# Seraphine (her peer), and what she wants with you. A looping menu (ask as many
+# as you like, then leave). Canon per the design bible. Real devote/deepen on the
+# intimate drops. §0 lit (the one thing she'll never lace away). Flow: arrival→
+# (menu loop)→close. Entry: `scene pillowtalk`/lore/confession.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _bt_lore_options(character):
+    """The lore menu — each option drops a canon lore bit in Bethany's voice and loops back to
+    the menu; the last leaves. Reused by the arrival beat and the loop node."""
+    return [
+        {"key": "process", "label": "Ask what the Process actually is", "then": "bt_menu",
+         "set": {"asked_process": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "the facility's whole philosophy, from the woman who runs it",
+         "outcome": (
+            "\"The Process?\" She warms to it instantly — it's her favourite subject after you. "
+            "\"It's patience, sweetheart. That's the whole secret. Anyone can break a thing fast — "
+            "scream at it, hurt it, force it. Crude. *Loud.* What we do is slower and so much more "
+            "permanent: we make the cage comfortable, we make the giving-up *easier* than the "
+            "holding-on, and we wait. We let you do most of the work yourself, choosing the soft "
+            "thing over the hard thing, a hundred small times, until one day there's no person left "
+            "to break because she quietly agreed to become livestock and thanked us on the way "
+            "down.\" She strokes your hair, fond. \"Cold institution, warm Process. The cold gets "
+            "your fear. The warm gets your *gratitude*. Gratitude's what lasts.\"")},
+        {"key": "devotion", "label": "Ask about the DEVOTION she laces her cum with", "then": "bt_menu",
+         "set": {"asked_devotion": "y"}, "effect": "deepen", "params": {"amount": 1.0},
+         "desc": "what's actually in her loads, and what it does to you",
+         "outcome": (
+            "\"Ah. You felt that.\" She looks genuinely delighted you asked. \"My loads carry "
+            "something the facility cooked up and I had bred into my own line — the DEVOTION. It's "
+            "in the laced seed, every drop. Goes in anywhere I put it — cunt, throat, ass, a "
+            "passenger riding someone I breed — and it works on the *wanting*. Leaves your head "
+            "swimming, your mouth craving the next load before this one's down, and a little more "
+            "of you reaching for me each time, glad of it.\" She taps your lip. \"It's why the ones "
+            "I keep get so *sweet*. I don't take their fight with cruelty. I take it with my own "
+            "cum, and they thank me for the dose. Seraphine's immune to it, the cow — born without "
+            "the receptor, or too much herself to let anything in. The only one. That's half of why "
+            "I keep her.\"")},
+        {"key": "origin", "label": "Ask how she came to own the place", "then": "bt_menu",
+         "set": {"asked_origin": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "intake clerk to owner — the Bethany story",
+         "outcome": (
+            "\"I started at the desk, you know. *Intake.*\" She says it fondly, an old story she "
+            "loves. \"The bright girl with the clipboard and the smile that doesn't reach her eyes, "
+            "checking the new stock in, all warmth and paperwork. And I watched how the place "
+            "worked, and I understood it faster than the people running it did — that the product "
+            "wasn't the milk or the get or the bodies, the product was the *devotion*, and nobody "
+            "was harvesting it properly.\" Her smile sharpens. \"So I made myself indispensable, "
+            "and then I made myself owner, and then I started keeping a piece of the product for "
+            "*me* — my own line bred into my favourites, my own brand, my own kept things. The "
+            "facility processes livestock. I collect *pets*. There's a difference, and I'm the "
+            "difference.\"")},
+        {"key": "seraphine", "label": "Ask about Seraphine", "then": "bt_menu",
+         "set": {"asked_sera": "y"}, "desc": "the one peer; the only one she lets fuck her",
+         "outcome": (
+            "\"Seraphine.\" The word comes out different — the one name she says like an equal. "
+            "\"My peer. The postmistress, the collector, the only person in this whole arrangement "
+            "who isn't beneath me or above me but *level*. She's immune to my DEVOTION — it rolls "
+            "right off her — which means she's the one creature I can't own and don't want to, and "
+            "do you know how restful that is, having exactly one person you can just... be a person "
+            "with?\" A rare, real softness. \"She's the only one I let fuck *me*. Everyone else, I "
+            "take. Her, I trade with. We send each other things — letters, packages, sometimes a "
+            "favourite riding inside one of us. She keeps my secrets in a drawer marked 3 a.m. and "
+            "I keep hers. Don't mistake it for soft. It's just... peerage. The rarest thing I "
+            "own by not owning it.\"")},
+        {"key": "whyme", "label": "Ask what she wants with you, specifically", "then": "bt_menu",
+         "set": {"asked_why": "y"}, "effect": "deepen", "params": {"amount": 2.0},
+         "desc": "the warm-cruel answer that's worse than any threat",
+         "outcome": (
+            "\"What I want with *you*?\" She considers you with that fond, terrible attention, like "
+            "you're a file she's enjoyed. \"I want the thing I want with all my favourites, only "
+            "more, because you're better at it than most: I want you to *reach for me*. Not obey — "
+            "obedience is cheap, I can dose obedience. I want the thing the dose only points "
+            "toward — you, choosing me, glad of me, thick in my file and warm in my bed and "
+            "grateful for the collar you could take off.\" She kisses your forehead, the "
+            "false-tenderness landing soft as a verdict. \"I think I do love you, you know. The way "
+            "you love a chair you've had forever. The way you love a thing that's *yours* and holds "
+            "your shape. That's the most love I've got, and you're going to get all of it, and it's "
+            "going to ruin you sweeter than cruelty ever could.\"")},
+        {"key": "floor", "label": "Ask why she guards the word so fiercely", "then": "bt_menu",
+         "set": {"asked_floor": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "the §0 floor, explained by the one who keeps it sacred",
+         "outcome": (
+            "For once she's entirely serious. \"Because it's the thing that makes everything else "
+            "*real*, sweetheart. Listen — if I caught you, if you couldn't leave, then everything I "
+            "do to you would just be what happens to a prisoner. Forced. Meaningless. Sad.\" She "
+            "shakes her head. \"But you *can* leave. The word works, always, instantly, and I will "
+            "never once stop it or punish it or so much as frown at it. Which means every single "
+            "day you *don't* say it, you're *choosing* this. Choosing me. And that choice is the "
+            "only thing in here worth having — it's the whole harvest.\" Her eyes are clear and "
+            "certain. \"I guard the floor more fiercely than I guard anything I do on top of it, "
+            "because the floor is what turns 'done to you' into 'yours.' Take the rest. Never the "
+            "floor. The floor is how I get to be this much.\"")},
+        {"key": "enough", "label": "That's enough — just be held", "then": "bt_close",
+         "desc": "stop asking; let the quiet have you",
+         "outcome": (
+            "\"Mm. Enough talk.\" She gathers you in closer, pleased, the lecture set aside. \"You "
+            "asked good questions. Most don't ask at all — they're too busy being afraid, or too "
+            "far down to wonder. I like a kept thing that still wants to *understand* what's keeping "
+            "it. Come here. Let the quiet have you a while.\"")},
+    ]
+
+
+@choice("bt_arrival", root=False)
+def _bt_arrival(character):
+    nm = subject_name(character)
+    return {"key": "bt_arrival", "prompt": (
+        "She's in a talking mood — kept you close after, warm and unhurried and, rarest of all, "
+        "*forthcoming*, the owner gone briefly conversational over the thing she owns. \"Ask me "
+        f"something, {nm},\" Bethany says, idle fingers in your hair. \"I'm feeling generous, and a "
+        "kept thing that understands its keeping is so much more interesting than one that just "
+        "endures it. I'll tell you almost anything tonight. The Process, the dose, how I came to "
+        "own all this, my Seraphine, what I want with you.\" A fond, knowing look. \"There's only "
+        "one subject I'm always serious about, and you'll know it when you hit it. Go on. Ask.\""),
+        "options": _bt_lore_options(character),
+        "default": "process"}
+
+
+@choice("bt_menu", root=False)
+def _bt_menu(character):
+    asked = [k for k in ("asked_process", "asked_devotion", "asked_origin", "asked_sera",
+                         "asked_why", "asked_floor") if scene_flag(character, k)]
+    more = ("\"What else?\"" if len(asked) < 3 else
+            "\"Still curious. I do like that in a thing I keep.\" She settles deeper. \"What else?\"")
+    return {"key": "bt_menu", "prompt": (
+        more + " Her fingers haven't stopped moving in your hair. The lamplight's low and she's in "
+        "no hurry, and for as long as you keep asking she'll keep telling, the owner unusually "
+        "open over the warm sated quiet."),
+        "options": _bt_lore_options(character),
+        "default": "enough"}
+
+
+@choice("bt_close", root=False)
+def _bt_close(character):
+    return {"key": "bt_close", "prompt": (
+        "She lets the talk go and just keeps you a while, the lore settling into you alongside "
+        "everything else she's put there — and somehow knowing *how* the cage is built makes it no "
+        "easier to leave, only better understood, which she'd tell you is rather the point. \"Good "
+        "talk,\" Bethany murmurs, sated and fond. \"Now you know what I am, and what I want, and "
+        "the one thing I'll never take. Sleep on it. Understanding's just one more thing I get to "
+        "watch you carry — and it weighs exactly as much as the collar you could take off and "
+        "don't.\""),
+        "options": [
+            {"key": "rest", "label": "Rest against her with what you've learned", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "let the lore and the warmth settle together",
+             "outcome": (
+                "You rest against her, the lore and the warmth and the laced quiet all settling "
+                "into the same soft weight, and Bethany holds you like the favourite thing she's "
+                "told you you are. \"There. Kept *and* knowing. My favourite kind.\" You drift, "
+                "understanding exactly what has you, and not reaching for the word — which is, she'd "
+                "say, the whole harvest, brought in one more night.")}],
+        "default": "rest"}

@@ -1668,6 +1668,8 @@ class CmdScene(Command):
         "rut": "ev_rut", "frenzy": "ev_rut", "heat": "ev_rut",
         "lineage": "lh_arrival", "studbook": "lh_arrival", "brood": "lh_arrival",
         "line": "lh_arrival",
+        "pillowtalk": "bt_arrival", "lore": "bt_arrival", "confession": "bt_arrival",
+        "askbethany": "bt_arrival",
     }
 
     def func(self):
