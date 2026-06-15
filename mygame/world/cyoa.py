@@ -6549,6 +6549,8 @@ def _dz_arrival(character):
         note += "Your stim-implant's already running, so whatever they add stacks on a baseline you can't switch off. "
     if k["nugget"]:
         note += "A nugget gets the line run straight into a port — no veins to find on limbs you don't have, just the maintenance plumbing already in you. "
+    if k["little"]:
+        note += "Down little, you don't read the chart or the warnings, only that there's a needle and a cold-clean smell and a grown-up saying hold still — and a dosed little mind goes down so much faster and further than a grown one, which the tech has noted in your file in red. "
     return {"key": "dz_arrival", "prompt": (
         "The dispensary is clean and cold and softly humming — racked vials in facility grey, a "
         "tray of pre-loaded syringes, an IV stand, a chart of your tolerances and your schedule. "
