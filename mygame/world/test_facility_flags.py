@@ -1043,6 +1043,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Long Milking — both branches chain through the producer loop.
+    c69 = _Char(); cyoa.start_scene(c69, "mm_arrival")
+    mmbeats = []
+    for ch in ("settle", "give_milk", "sink_milk"):
+        p = c69.db.pending_choice
+        assert p, f"milking: no pending before '{ch}'"
+        mmbeats.append(p["key"])
+        assert cyoa.resolve_choice(c69, ch)[0] is not None, f"milking '{ch}' did not resolve"
+    assert mmbeats == ["mm_arrival", "mm_letdown", "mm_after"], mmbeats
+    assert c69.db.pending_choice is None and c69.db.scene_flags is None, "milking should end clean"
+    c70 = _Char(); cyoa.start_scene(c70, "mm_arrival")
+    for ch in ("brace_mm", "ride_loop", "feel_fill"):
+        assert c70.db.pending_choice, f"milking(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c70, ch)[0] is not None, f"milking(b) '{ch}' failed"
+    assert c70.db.pending_choice is None and c70.db.scene_flags is None, "milking(b) should end clean"
+
     # Letters at the Counter (Seraphine's lore) — looping menu re-poses; clean close.
     c68 = _Char(); cyoa.start_scene(c68, "sl_arrival")
     cyoa.resolve_choice(c68, "peerage")     # arrival → menu

@@ -85,6 +85,13 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Long Milking (`mm_*`, `scene longmilking`/dairyintensive/marathon)** — BUILT. Lactation
+  as a savor-piece — the deep version of the Dairy seam: hooked to the deep rig for a full session,
+  kept full on purpose, then drawn down slow and all the way, let to fill, drawn down again, cycle
+  after cycle. The relief-trap laid thorough — *full is pain, the machine is relief* wired in until
+  you present your chest before you're asked. Real `_do_milk`. State-aware (preg yields more / nugget
+  cradled / little), kit-aware (milk-port plumbed direct). Producer register, clean prose. Surfaces
+  in the hub by the Dairy.
 - ✅ **Letters at the Counter (`sl_*`, `scene seraphinelore`/seralore/counter)** — BUILT.
   Seraphine's-side lore, the warm post-office counterpart to Bethany's Pillow Talk: after the OPEN
   sign's turned, the collector turns confiding and you can ask her about the peerage (the one person

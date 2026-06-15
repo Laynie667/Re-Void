@@ -1679,6 +1679,7 @@ class CmdScene(Command):
         "edge": "ed_arrival", "edging": "ed_arrival", "denial": "ed_arrival",
         "seraphinelore": "sl_arrival", "seralore": "sl_arrival", "counter": "sl_arrival",
         "afterhours": "sl_arrival",
+        "longmilking": "mm_arrival", "dairyintensive": "mm_arrival", "marathon": "mm_arrival",
     }
 
     def func(self):

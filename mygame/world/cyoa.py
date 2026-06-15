@@ -6424,6 +6424,7 @@ def _b_facility_hub(character):
     add("floor", "→ the Processing Floor", "pf_arrival", "open-floor use, on display")
     add("pens",  "→ the Breeding Pens", "bp_arrival", "the stockman; covered by the stock")
     add("dairy", "→ the Dairy", "dy_arrival", "put on the machine; milked")
+    add("longmilking", "→ a full milking session", "mm_arrival", "the deep rig; drained dry across cycles")
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
@@ -11361,3 +11362,143 @@ def _sl_close(character):
                 "sweet thing — the letter you keep not sending? Post it. Or don't. But know that I "
                 "noticed you carrying it.\"")}],
         "default": "stay_late"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Long Milking — lactation as a savor-piece. The Dairy (dy_) is a
+# brief scene→cycle seam; this is the deep version: hooked to the machine for a
+# whole long session, engorged and drained and engorged again, the relief-trap
+# laid slow and thorough. Producer register (distinct from the breeding/use
+# scenes). Real `_do_milk` via the facility effect. State-aware (preg yields more,
+# nugget cradled, little). Clean. Flow: arrival→letdown→after. Entry: `scene milking`/dairy.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("mm_arrival", root=False)
+def _mm_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if st["preg"]:
+        note = (" Gravid, your yield's up and the chart knows it — bred producers run richer and "
+                "the machine's set heavier to match, a longer session for a fuller udder. ")
+    elif st["nugget"]:
+        note = (" A nugget's cradled into the rig rather than knelt at it — no limbs to position, "
+                "just your weight settled and the cups fitted and the machine left to do the whole "
+                "of it. ")
+    elif st["little"]:
+        note = (" Down little you don't follow the gauges, only that your chest is full and achy and "
+                "the machine makes the ache go, and that's a simple enough trade your small head "
+                "stops fighting it fast. ")
+    port = (" Your milk-port's clipped straight to the line — no cups needed, the let-down plumbed "
+            "direct, drawn from a fitting that was installed to make exactly this effortless. "
+            if k["milk_port"] else "")
+    return {"key": "mm_arrival", "prompt": (
+        "This isn't the quick stall-pull of an ordinary shift. The Dairy's run you a |wlong "
+        "session|n today — the deep rig in the back, the one with the contoured recline and the "
+        "heavy twin pumps and the big graduated vessel on the floor that says they mean to be here "
+        "a while. They've kept you full for it: your chest aches, heavy and tight and overdue, the "
+        "engorgement a dull insistent pressure that's been building since they skipped your last "
+        "two pulls on purpose.\n\n"
+        f"\"Settle in, {nm},\" the dairy hand says, fitting the cups with brisk unsentimental "
+        "hands, testing the seal. \"Full session. We draw you down slow and all the way, let you "
+        "fill back up, draw you down again — cycle after cycle till the chart's met. It's the "
+        "thorough kind. By the end your body won't remember being anything but a thing that "
+        "*makes milk and gives it up*.\"" + port + note + " The pumps prime with a soft mechanical "
+        "sigh, and the first slow pull begins to build, and your overfull chest *throbs* toward it "
+        "before you've decided anything at all."),
+        "options": [
+            {"key": "settle", "label": "Settle in and give it up", "set": {"mm": "settle"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "relax into the long pull; let the ache start to ease",
+             "outcome": (
+                "You settle in and give it up — let your shoulders drop, let the rig take your "
+                "weight, let the building suction find its rhythm — and the dairy hand nods at the "
+                "easy seal. \"Good producer. Relaxes for it. The ones who fight it just cramp and "
+                "yield slow.\" The first real draw catches, and your overfull chest answers with a "
+                "deep grateful pull toward the pump, and the long session has you.")},
+            {"key": "brace_mm", "label": "Brace against the pumps", "set": {"mm": "brace"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "tense against the draw; the engorgement makes you lose",
+             "outcome": (
+                "You tense against the pull — and your own overfull chest betrays you, the "
+                "engorgement so heavy and so overdue that the suction's offer of relief is almost "
+                "unbearable to refuse, your body straining toward the very thing you're bracing "
+                "against. \"Bracing on a full udder,\" the hand observes. \"Cruel to yourself, "
+                "that. The milk wants out whether you do or not. You'll give in by the second "
+                "cycle. They all do.\"")}],
+        "default": "settle",
+        "then": "mm_letdown"}
+
+
+@choice("mm_letdown", root=False)
+def _mm_letdown(character):
+    return {"key": "mm_letdown", "prompt": (
+        "And then the |wlet-down|n hits, and the long session shows you its whole cruel design. The "
+        "first hot prickling rush as the milk comes — the relief enormous, the tight ache easing as "
+        "the pumps draw you down in steady pulls, the vessel on the floor ticking upward — and just "
+        "as you're emptied soft and grateful and loose, they *stop*, and let you fill back up. The "
+        "ache rebuilds. The pressure climbs. And just when it's unbearable they start the pull "
+        "again, and the relief floods again, and your body files the lesson deeper each cycle: "
+        "*full is pain, the machine is relief, the machine is good*. Over and over, fill and drain "
+        "and fill, until the wanting of the pump is wired into you under the ache. The dairy hand "
+        "watches the vessel climb, unhurried. \"There's the loop. Full hurts, we fix it, you learn "
+        "to come to the cups *wanting*. Cycle three and you'll be presenting your chest before I've "
+        "asked.\""),
+        "options": [
+            {"key": "give_milk", "label": "Give it all down — cycle after cycle", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "set": {"milked": "all"},
+             "desc": "the real milking — drained dry across the full session",
+             "outcome": (
+                "You give it all down — cycle after cycle, full and drained and full again, the real "
+                "milking logged litre by litre against your line — and somewhere in the third or "
+                "fourth round the loop closes for good: your chest starts *aching toward* the pump "
+                "before it starts, your body presenting itself for the relief it's learned only the "
+                "machine provides. \"There it is,\" the hand says, marking the rich yield. \"Producer "
+                "proper. Comes to the cups on its own now. That's the session done its work.\"")},
+            {"key": "ride_loop", "label": "Try to stay above the loop", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "set": {"milked": "fought"},
+             "desc": "refuse to want the pump; the fill-drain cycle wires it in anyway",
+             "outcome": (
+                "You try to stay above it — refuse to *want* the machine, hold onto the idea that "
+                "the relief is something done to you — and the loop wires itself in regardless, "
+                "because no amount of will changes that a full chest hurts and the pump makes it "
+                "stop, and your body learns that equation whether your mind signs off or not. The "
+                "real milking takes you down dry the same. \"Fighting the loop,\" the hand notes, "
+                "unbothered. \"Loop doesn't care. It's just plumbing and patience. It always "
+                "wins.\"")}],
+        "default": "give_milk",
+        "then": "mm_after"}
+
+
+@choice("mm_after", root=False)
+def _mm_after(character):
+    return {"key": "mm_after", "prompt": (
+        "By the end you're wrung soft and empty in a way that's almost peaceful — drained all the "
+        "way down, the long ache finally, thoroughly answered, your chest light and tender and "
+        "humming. The vessel on the floor is heavy with your yield. The dairy hand unclips the cups "
+        "and notes the total with the only warmth he's shown all session, the warmth a man shows a "
+        "good number. \"Full chart, and then some. You milk *well*.\" He helps you sit up, your "
+        "emptied chest swaying tender. \"You'll be sore till you fill again — and you'll fill by "
+        "tonight, and the ache'll start, and you'll find yourself thinking about the cups. That's "
+        "not an accident. That's the session. We don't just take the milk. We take the part of you "
+        "that thought being full was *yours* to manage.\""),
+        "options": [
+            {"key": "sink_milk", "label": "Sink into the drained-empty peace", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "let the wrung-out producer calm settle",
+             "outcome": (
+                "You sink into it — the drained-empty peace, the long ache gone, the simple "
+                "producer-calm of a body that's done the one thing it's kept for and done it well — "
+                "and the calm is the trap's last tooth: it feels *good* to have produced, good to "
+                "have been emptied, good in the flat contented way of livestock after a yield. "
+                "You'll chase that calm back to the cups. You already know you will.")},
+            {"key": "feel_fill", "label": "Notice, already, the ache beginning again", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "feel the next cycle start before you've left",
+             "outcome": (
+                "Even now, wrung dry and tender, you feel it — the first faint deep beginning of the "
+                "refill, the glands already at work, the ache that will be insistent by nightfall "
+                "and unbearable by morning and will walk you back to this rig on your own feet. "
+                "\"Feel that already, do you,\" the hand says, reading your face, almost kind. "
+                "\"Good. Then you understand. You're never really empty. You're just between "
+                "fillings. So are we all, down here.\"")}],
+        "default": "sink_milk"}
