@@ -2990,6 +2990,21 @@ def _bp_mount(character):
                     "the same depth, the same relentless metronome rhythm, and it will do that "
                     "exactly that way for as long as the board says you're owed."),
     }.get(beast, "")
+    k = _kit(character)
+    extra = []
+    if k["milk_port"]:
+        extra.append(
+            {"key": "rut_milk", "label": "Let the rutting drag your milk down", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "set": {"bp_done": "milked"},
+             "desc": "[milk-port] the pounding triggers your let-down — bred and milked at once",
+             "outcome": (
+                "Every brutal drive of the animal jolts up through your plumbed-in chest and the "
+                "port answers it — the rut shaking your let-down loose, milk running down the line "
+                "in time with the breeding, your body emptied from both ends at once by a beast "
+                "that has no idea it's doing it. The stockman notes the second yield without "
+                "surprise. \"Ported stock often lets down under a good covering,\" he says, logging "
+                "the milk against your line. \"Two quotas off one mount. Efficient. We like "
+                "you.\"")})
     return {"key": "bp_mount", "prompt": (
         _kit_use_note(character) + body + " You feel the size of it map itself out inside you — the stretch, the wrong-deep "
         "ache, the blunt animal heat of it, the way it gives you no rhythm to brace against because "
@@ -2997,7 +3012,7 @@ def _bp_mount(character):
         "with professional detachment, checking — not for your sake — that the stock has seated "
         "properly and isn't going to injure itself.\n\n\"There it goes,\" he says. \"Seated. Now "
         "it just works till it ties. Could be a minute. Could be twenty. It'll tell you.\""),
-        "options": [
+        "options": extra + [
             {"key": "take", "label": "Tilt and take it deeper", "effect": "devote",
              "params": {"amount": 3.0}, "desc": "open to the animal; let your body answer it",
              "outcome": (
@@ -4200,6 +4215,21 @@ def _ps_root(character):
 @choice("ps_mount", root=False)
 def _ps_mount(character):
     st = _state_tags(character)
+    k = _kit(character)
+    extra = []
+    if k["milk_port"]:
+        extra.append(
+            {"key": "screwed_milk", "label": "Let the screwing shake your milk loose",
+             "effect": "facility", "params": {"method": "_do_milk", "kind": "proc"},
+             "set": {"sty_bred": "milked"},
+             "desc": "[milk-port] the boar's long churn drags your let-down down the line in the muck",
+             "outcome": (
+                "The endless boring churn of the boar shudders up through you and your port lets "
+                "down for it — milk running out the line into the filth-slick collection while the "
+                "animal screws toward your womb, the two harvests pulled out of you at once, milked "
+                "and bred in the same half-hour flood. The custodian clips the line without comment "
+                "and logs the yield. \"Ported sow milks while she's covered,\" he notes. \"Nothing "
+                "wasted down here. Not even you.\"")})
     belly = (" — and he ruts you belly-and-all, the swell of the facility's get squashed into the "
              "warm muck beneath you with every brutal drive, bred sow getting bred again" if st["preg"] else "")
     return {"key": "ps_mount", "prompt": (
@@ -4217,7 +4247,7 @@ def _ps_mount(character):
         "\"There — feel it screwing up to the neck of you? Now it locks its tip in your womb and "
         "*empties*, and a boar empties for the better part of half an hour. Settle in. You're not "
         "going anywhere for a while.\""),
-        "options": [
+        "options": extra + [
             {"key": "take", "label": "Take it — open to the boar in the muck", "effect": "facility",
              "params": {"method": "_gang", "kind": "gang"}, "set": {"sty_bred": "took"},
              "desc": "the real cover — a sty breeding logged to your line",
