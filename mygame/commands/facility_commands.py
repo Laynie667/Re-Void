@@ -1666,6 +1666,8 @@ class CmdScene(Command):
         "bound": "bd_arrival",
         "longnight": "bn_arrival", "night": "bn_arrival", "bethanynight": "bn_arrival",
         "rut": "ev_rut", "frenzy": "ev_rut", "heat": "ev_rut",
+        "lineage": "lh_arrival", "studbook": "lh_arrival", "brood": "lh_arrival",
+        "line": "lh_arrival",
     }
 
     def func(self):

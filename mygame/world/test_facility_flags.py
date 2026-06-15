@@ -940,6 +940,26 @@ def test_bethany_scene():
     cyoa.resolve_choice(c54, "the_word_rut")
     assert c54.db.pending_choice is None and c54.db.scene_flags is None, "the word must end the Rut clean"
 
+    # The Lineage Hall (lore-rich) — barren body reads a blank page; a productive one reads its
+    # real stud-book; both chain clean.
+    c55 = _Char(); cyoa.start_scene(c55, "lh_arrival")
+    blank = cyoa._BUILDERS["lh_arrival"](c55)["prompt"].lower()
+    assert "blank" in blank or "clean page" in blank or "nothing yet" in blank, "barren body should read a blank page"
+    for ch in ("look", "just_carry"):
+        assert c55.db.pending_choice, f"lineage: stall before '{ch}'"
+        assert cyoa.resolve_choice(c55, ch)[0] is not None, f"lineage '{ch}' failed"
+    assert c55.db.pending_choice is None and c55.db.scene_flags is None, "lineage should end clean"
+    c56 = _Char()
+    c56.db.offspring_counts = {"bethany": 3, "hound": 2}
+    c56.db.offspring_by_sire = {"Bethany": 3, "the kennel": 2}
+    prod = cyoa._BUILDERS["lh_arrival"](c56)["prompt"]
+    assert "STUD-BOOK" in prod and "Bethany" in prod, "productive body should read its real stud-book"
+    cyoa.start_scene(c56, "lh_arrival")
+    for ch in ("ask_depth", "extend"):
+        assert c56.db.pending_choice, f"lineage(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c56, ch)[0] is not None, f"lineage(b) '{ch}' failed"
+    assert c56.db.pending_choice is None and c56.db.scene_flags is None, "lineage(b) should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

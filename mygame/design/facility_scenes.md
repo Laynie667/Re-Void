@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Lineage Hall (`lh_*`, `scene lineage`/studbook/brood)** — BUILT. Lore-rich + savorable:
+  Bethany walks you through the facility's stud-book of YOUR get, the prose generated LIVE from the
+  real offspring data (`studbook_lines`: counts / by-sire / by-sex / generational depth / fellow-
+  crossed lines). A barren body reads a blank page she's itching to fill; a productive one is
+  paraded its whole lengthening, self-folding line (daughters → broodstock, sons/futa sire back
+  into you). Real `bethany_breeds` offered to extend the line over the open book on the spot. §0
+  lit: the line is permanent but your *part* in it ends the instant you mean the word — "a source
+  can always shut off." Surfaces in the hub beside Records.
 - ✅ **The Rut (`ev_rut`, `scene rut`/frenzy/heat)** — BUILT. A marquee savor-event in the random
   dispatcher pool (now 5): the facility's seasonal frenzy — heat-dose run through the floor's air,
   pens thrown open, the whole hall dissolving into one red-lit writhing breeding-mass with no

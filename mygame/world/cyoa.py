@@ -6345,6 +6345,7 @@ def _b_facility_hub(character):
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
+    add("lineage", "→ the Lineage Hall", "lh_arrival", "your stud-book; the get you've thrown")
     add("fitting", "→ the Fitting bench", "ft_arrival", "your installed hardware serviced + run")
     add("dosing", "→ the Dispensary", "dz_arrival", "your dose; the come-up")
     add("events", "→ whatever the klaxon calls", "ev_arrival", "a scheduled spectacle (random)")
@@ -10137,3 +10138,127 @@ def _ev_rut_b(character):
                 "entirely on top of a word that empties the room of it the instant you need out. "
                 "That's why it gets to be as much as it is.")}],
         "default": "sink"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Lineage Hall — the brood read back. Lore-rich + savorable: Bethany
+# walks you through the facility's stud-book of YOUR get, the prose generated
+# LIVE from the real offspring data (studbook_lines: counts/by-sire/by-sex/depth/
+# crossed lines). A barren body reads as a blank page she intends to fill; a
+# productive one is paraded its whole lengthening line. Real `bethany_breeds`
+# offered (extend the line on the spot). State-aware. §0 lit: the line is real,
+# but the word ends your part in it whenever you mean it. Flow: arrival→book→close.
+# Entry: `scene lineage`/studbook/brood.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _lineage_read(character):
+    """The live stud-book read for the Lineage Hall prompt — real data via studbook_lines, or a
+    blank-page line for a body that hasn't dropped yet."""
+    try:
+        from world.gang_breeding import studbook_lines
+        lines = studbook_lines(character, brief=False)
+    except Exception:
+        lines = []
+    if not lines:
+        return ("\"...and here's the loveliest part,\" Bethany says, turning to a wide blank page "
+                "with your designation already inked at the top. \"*Nothing* yet. Not one line "
+                "under your name. A clean page in the stud-book — do you know how that makes my "
+                "hands itch? All that room to write a whole lineage out of you. We'll start it "
+                "soon. I can hardly wait to see what you throw.\"")
+    return ("\"Here's your page,\" Bethany says, fond, running a finger down the entries — and the "
+            "stud-book reads back, in the facility's own ledger-hand, everything that's come out of "
+            "you:\n\n" + "\n".join(lines))
+
+
+@choice("lh_arrival", root=False)
+def _lh_arrival(character):
+    nm = subject_name(character)
+    return {"key": "lh_arrival", "prompt": (
+        "The Lineage Hall is the facility being *proud* of itself: a long gallery of the stud-books, "
+        "leather-bound and gilt-spined, one per producing line, and down the centre a lit wall of "
+        "lineage-charts — branching trees of who-threw-what, names and generations and crossings "
+        "rendered in the same loving calligraphy the place uses for nothing else. This is where the "
+        "facility keeps not what you *are* but what you've *made*, and what's been made of that, and "
+        "what'll be made of that in turn. It smells of old paper and ink and patience measured in "
+        "generations.\n\n"
+        f"Bethany has your book open on the reading-stand, reading-glasses on, and the look she "
+        f"gives you over them is the proudest she ever wears. \"{nm}. Come and see your line. This "
+        "is my favourite of all the files — not what we did to you, but what *you* did, what came "
+        "out of you and got entered and grew. A body's a body, sweetheart, but a *line* — a line is "
+        "forever. Let me show you yours.\"\n\n"
+        + _lineage_read(character)),
+        "options": [
+            {"key": "look", "label": "Look at what came out of you", "set": {"lh": "look"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "take in the real ledger of your get; let it land",
+             "outcome": (
+                "You look — really look, at the names and the tallies and the branching tree of it, "
+                "every line of it something that came out of your body — and it lands the way "
+                "Bethany meant it to: not horror, quite, but the vertiginous weight of having been "
+                "*made productive*, of being a source the facility draws a future from. \"There it "
+                "is on your face,\" she murmurs, pleased. \"That's the understanding I farm for. "
+                "You're not a thing that gets used, sweetheart — you're a thing that *yields*. The "
+                "book proves it. The book never lies.\"")},
+            {"key": "recoil", "label": "Recoil from the size of the line", "set": {"lh": "recoil"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the lineage is more than you can bear to count; she savours that",
+             "outcome": (
+                "You recoil from it — the sheer accumulating *size* of the line drawn out of you, "
+                "more than you want to count, growing past your ability to hold it — and Bethany "
+                "catches your chin and turns you gently back to the page. \"No, no. Look. Don't "
+                "flinch from your own line — it's the realest thing about you now. Every name a "
+                "door of yours opened to make. You can be appalled and it changes nothing; the get's "
+                "entered, the line grows, and you're its source whether you can bear the arithmetic "
+                "or not.\"")},
+            {"key": "ask_depth", "label": "Ask what happens to the line", "set": {"lh": "depth"},
+             "desc": "make her tell you where the lineage goes",
+             "outcome": (
+                "\"What happens to them — to the line?\" you ask, and Bethany's eyes go bright with "
+                "the long game. \"The daughters are raised broodstock — bred in your place when "
+                "you're spent, so the line never stops. The sons and the futa sire — including back "
+                "*into* you, sweetheart, your own get put back in to deepen the line through you. "
+                "That's the depth column. The book grows *down* as well as along.\" She turns a "
+                "page, fond. \"A line doesn't end. It folds back on itself and gets richer. You're a "
+                "knot in something that outlasts you.\"")}],
+        "default": "look",
+        "then": "lh_close"}
+
+
+@choice("lh_close", root=False)
+def _lh_close(character):
+    return {"key": "lh_close", "prompt": (
+        "She closes the book with a soft, satisfied weight and rests her hand flat on the cover, on "
+        "your name, on the line that runs under it. \"That's the page,\" she says. \"And the lovely "
+        "thing about a stud-book is it's never finished while the producer's still producing.\" The "
+        "look she gives you turns from proud to hungry by familiar degrees. \"I could add a line "
+        "right now, you know. Here, on the reading-stand, over your own book — breed you with the "
+        "page still warm and enter what takes before you've left the Hall. Nothing makes me want to "
+        "extend a line like *admiring* it.\"\n\n"
+        "And then, plain, the §0 truth she keeps even over the proudest file: the line is real and "
+        "the line is permanent, but |wyour part in it ends the instant you mean the word|n — the "
+        "book stops, the breeding stops, the door home opens, no matter how many pages have your "
+        "name on them. The lineage outlasts you only as long as you let it draw from you."),
+        "options": [
+            {"key": "extend", "label": "Let her add a line, here, now", "effect": "bethany_breeds",
+             "params": {"holes": 1, "devotion": 5.0}, "end": True,
+             "desc": "the real breeding — extend your own line over the open book",
+             "outcome": (
+                "You let her — bent over your own open stud-book on the reading-stand and bred with "
+                "the page still warm, her line put in you to extend the line already written there — "
+                "and it's real, the deposit logged, another entry coming whether it takes today or "
+                "not. \"*There*,\" Bethany sighs, sating herself against you, fond and proud at "
+                "once. \"Admired and extended in the same hour. That's the whole pleasure of a "
+                "line, sweetheart — you never just *look* at it. You always add.\" She'll enter what "
+                "takes herself, in the loving calligraphy, under your name.")},
+            {"key": "just_carry", "label": "Carry the weight of the line out with you", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "leave with the knowing, the line and the word both yours",
+             "outcome": (
+                "You leave the Hall carrying it — the knowing of the line drawn out of you, "
+                "branching and folding and growing past your sight — and Bethany lets you go with "
+                "her hand lifting off your book in a small fond wave. \"Take it with you. It's "
+                "yours, the line — more yours than your name, these days.\" The §0 truth walks out "
+                "with you too, steady under the weight: the book grows only as long as you let it, "
+                "and the word closes your page forever the instant you choose. You are a source, and "
+                "a source can always, always shut off. You just haven't. \"Yet,\" Bethany would "
+                "say. You leave before she can.")}],
+        "default": "just_carry"}
