@@ -6428,6 +6428,7 @@ def _b_facility_hub(character):
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
     add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
+    add("outfitting", "→ the Outfitting Bay", "ou_arrival", "equipped — ports, implants, rings, a tail")
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
@@ -11658,3 +11659,165 @@ def _fm_after(character):
                 "design will look back, and you won't even remember deciding to stop missing the "
                 "old one. That's the refinement finishing itself.\"")}],
         "default": "meet_new"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Outfitting — installing the productive livestock hardware. Distinct
+# from the Marking Parlour (marks/brands/ink) and the Fitting (services existing
+# kit): this is where a body gets EQUIPPED — milk-port, fertility/stim implants,
+# the full cow-ring set, a locked tail — the functional fittings that turn a
+# person into stock. Combination-aware: offers only what you don't already wear.
+# Routes through the REAL procedures (_proc_milk_port / _proc_fertility_implant /
+# _proc_cowset / _proc_stim_implant / _proc_tail). Clean register. State-aware.
+# Flow: arrival→fit→after. Entry: `scene outfitting`/equip/hardware-bay.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _ou_install_options(character):
+    """Combination-aware install menu — one real procedure per fitting you don't yet have. Always
+    offers at least the tail (a thing any body can be given) so the beat never empties out."""
+    k = _kit(character)
+    opts = []
+    if not k["milk_port"]:
+        opts.append(
+            {"key": "milkport", "label": "A milk-port — plumbed for the dairy", "effect": "facility",
+             "params": {"method": "_proc_milk_port", "kind": "proc"}, "set": {"fit": "milkport"},
+             "desc": "[install] let-down locked to a fitting; producer-proper",
+             "outcome": (
+                "They plumb the milk-port in for real — a fitting seated and your let-down locked to "
+                "it, your chest re-engineered into something the dairy can clip a line to and draw "
+                "on schedule. \"Ported,\" the tech notes, testing the seal. \"You produce on the "
+                "machine's say now, not yours. That's the whole point of the fitting.\"")})
+    opts.append(
+        {"key": "fertility", "label": "A fertility implant — tuned to take faster", "effect": "facility",
+         "params": {"method": "_proc_fertility_implant", "kind": "proc"}, "set": {"fit": "fertility"},
+         "desc": "[install] seated through the cervix; breeds quicker, drops sooner",
+         "outcome": (
+            "The fertility implant is pushed up through your cervix and seated for real — flooding "
+            "you with whatever makes a body take faster and drop sooner, tuning you to a single "
+            "output. \"Seated,\" the tech says. \"You'll take quicker and carry shorter from here. "
+            "Tuned for the one thing a body like yours is kept for.\"")})
+    opts.append(
+        {"key": "stim", "label": "A stim-implant — a fire that never switches off", "effect": "facility",
+         "params": {"method": "_proc_stim_implant", "kind": "proc"}, "set": {"fit": "stim"},
+         "desc": "[install] a running baseline of arousal you can't turn down",
+         "outcome": (
+            "They seat the stim-implant for real — and a low running fire comes up under everything "
+            "at once, a baseline of arousal with no off switch and no neutral, your own body kept "
+            "permanently warmed and wanting. \"Running,\" the tech confirms. \"No more neutral for "
+            "you. Keeps stock biddable and quick to present. You'll get used to the hum.\"")})
+    if not k["pierced"]:
+        opts.append(
+            {"key": "cowset", "label": "The full cow-ring set — tagged and led", "effect": "facility",
+             "params": {"method": "_proc_cowset", "kind": "proc"}, "set": {"fit": "cowset"},
+             "desc": "[install] brass and steel through nose/nipples/clit/ears + a herd tag",
+             "outcome": (
+                "They ring you out as livestock in one sitting — brass and steel through nose and "
+                "nipples and clit and ears, a numbered tag punched in, an udder-bell hung to ring "
+                "when you're used. Real piercings, real tag. \"Tagged and led by the nose now,\" the "
+                "tech says, giving the nose-ring an experimental tug you follow helplessly. "
+                "\"Hardware to match the function.\"")})
+    opts.append(
+        {"key": "tail", "label": "A locked tail and pinned ears — livestock in form", "effect": "facility",
+         "params": {"method": "_proc_tail", "kind": "proc"}, "set": {"fit": "tail"},
+         "desc": "[install] a tail-plug seated and locked, ears pinned in",
+         "outcome": (
+            "A thick tail-plug is seated deep and locked, a matching set of ears pinned into your "
+            "hair — and on the record you're livestock in *form* now, not just function, and you "
+            "find yourself moving like it before you've left the bay. \"There,\" the tech says. "
+            "\"Looks the part as well as plays it. The body follows the form. It always does.\"")})
+    return opts
+
+
+@choice("ou_arrival", root=False)
+def _ou_arrival(character):
+    k = _kit(character)
+    nm = subject_name(character)
+    have = _kit_inventory(k)
+    note = (f" The tech reads what you already carry — {have.rstrip()} — and crosses those off the "
+            "list. \"Won't double up. We fit what's missing.\" " if have else
+            " The tech runs an eye over you, unmarked and unfitted, and brightens at a blank "
+            "canvas. \"Nothing in you yet. Good. Lots to fit.\" ")
+    return {"key": "ou_arrival", "prompt": (
+        "The Outfitting Bay is a clean bright workshop that happens to work on people: a fitting "
+        "bench with stirrups and clamps, a wall of |whardware|n in sterile trays — ports and "
+        "implants and ring-sets and plugs, each in its labelled slot — and a chart of the "
+        "facility's standard livestock loadout with little boxes to tick as each piece goes in. "
+        "This isn't marking you; it's *equipping* you — installing the working fittings that turn "
+        f"a body from a person into a producing unit.\n\n"
+        f"\"Right, {nm} — outfitting,\" the |wtech|n says, brisk and unbothered, pulling on gloves. "
+        "\"We fit you out with the working kit: ports to draw from, implants to tune you, rings to "
+        "tag and lead you, a tail to finish the look. Functional, all of it — none of this is "
+        "decoration.\"" + note + "They pat the bench. \"Up you get. Let's see what we're fitting "
+        "today. The chart's got plenty of boxes left.\""),
+        "options": [
+            {"key": "present_fit", "label": "Get on the bench and present for fitting",
+             "set": {"ou": "present"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "submit to being equipped; let them fit what's missing",
+             "outcome": (
+                "You get up on the bench and present for it — submit to being equipped — and the "
+                "tech hums at the easy compliance, swabbing and prepping with unsentimental care. "
+                "\"Presents for outfitting. Good unit. The cooperative ones heal cleaner and we get "
+                "more fitted in a sitting.\" The first tray is unwrapped. \"Let's get some hardware "
+                "in you.\"")},
+            {"key": "balk_fit", "label": "Balk at the trays of hardware", "set": {"ou": "balk"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the sterile trays are a lot; you're fitted regardless",
+             "outcome": (
+                "You balk at the trays — the ports, the implants, the rings laid out in their "
+                "sterile rows — and the tech simply clamps you to the bench and works regardless, "
+                "unbothered. \"Balking's fine. Doesn't change the loadout. The kit goes in whether "
+                "you hold still or I strap you still — only difference is the bruising.\" The first "
+                "fitting is unwrapped anyway.\"")}],
+        "default": "present_fit",
+        "then": "ou_fit"}
+
+
+@choice("ou_fit", root=False)
+def _ou_fit(character):
+    return {"key": "ou_fit", "prompt": (
+        "The tech lays out what you're missing and lets you see the chart — the boxes left to tick, "
+        "each one a working fitting that goes in permanent. \"Pick where we start, or I'll work "
+        "down the list,\" they say, unwrapping trays. \"It all goes in eventually if you're kept "
+        "long enough. Some units get the lot in one sitting. Let's see what you can take today.\" "
+        "The hardware waits, sterile and patient, each piece a small permanent re-engineering of "
+        "what your body is *for*."),
+        "options": _ou_install_options(character),
+        "default": "tail",
+        "then": "ou_after"}
+
+
+@choice("ou_after", root=False)
+def _ou_after(character):
+    fit = scene_flag(character, "fit", "tail")
+    piece = {"milkport": "the milk-port plumbed into your chest",
+             "fertility": "the fertility implant seated up your cervix",
+             "stim": "the stim-implant running its baseline fire",
+             "cowset": "the cow-rings tagged through you",
+             "tail": "the locked tail and pinned ears"}.get(fit, "the new fitting")
+    return {"key": "ou_after", "prompt": (
+        f"They tick the box on the chart — {piece} logged as installed — and help you up off the "
+        "bench, the new hardware already a strange permanent weight in or on you, healing-tender "
+        "and real. \"Fitted,\" the tech says, stripping the gloves. \"That's another box ticked. "
+        "Body's a little more equipment and a little less person than it was this morning, and that "
+        "trend only goes the one way in here. You'll come back when there's a box left to tick — "
+        "and there's always a box left, until there isn't.\""),
+        "options": [
+            {"key": "feel_fitted", "label": "Feel how much more equipment you are now", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "let the outfitting settle as what you're for",
+             "outcome": (
+                "You feel it settle — the new fitting healing-tender and permanent, your body one "
+                "piece further from person and toward producing unit — and the settling has its own "
+                "cold clarity: you are, measurably, more *equipment* than you were, fitted out for "
+                "functions that aren't yours to decline. \"Wears it well,\" the tech notes, ticking "
+                "you complete for the day. \"They always do, once the kit's in. The hardware "
+                "decides what the body's for, and the body stops arguing.\"")},
+            {"key": "dread_chart", "label": "Look at the boxes still unticked", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "see the loadout you haven't been fitted with yet",
+             "outcome": (
+                "You look at the chart — the boxes still unticked, the fittings still to come, the "
+                "full standard loadout you're only partway through — and the dread of it is its own "
+                "slow weight: this wasn't the end of the outfitting, just today's installment, and "
+                "the list goes on. \"Eyeing the rest,\" the tech says, almost kindly. \"Don't "
+                "fret about the whole list. We only fit what you can heal from at a time. There's "
+                "no rush. You're not going anywhere, and the chart isn't either.\"")}],
+        "default": "feel_fitted"}

@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Outfitting (`ou_*`, `scene outfitting`/equip/outfit)** — BUILT. Installing the productive
+  livestock hardware — distinct from the Marking Parlour (marks/brands/ink) and the Fitting (services
+  existing kit): the Outfitting Bay *equips* you, fitting the working hardware that turns a person
+  into a producing unit. Combination-aware install menu offers only what you don't already wear
+  (milk-port / fertility implant / stim implant / full cow-ring set / locked tail), each routing the
+  REAL procedure (`_proc_milk_port`/`_proc_fertility_implant`/`_proc_stim_implant`/`_proc_cowset`/
+  `_proc_tail`). arrival → fit → after, with a chart of boxes "always one left to tick." Clean
+  register. Surfaces in the hub by the Refinement Suite.
 - ✅ **The Refinement (`fm_*`, `scene refinement`/sissify/geld)** — BUILT. Feminization / gelding
   as a set-piece (the real `neutered`/`sissified` procedures had no scene driving them). Bethany has
   you redesigned in the Refinement Suite: gelded and caged (retired stud → leaking locked nub) or

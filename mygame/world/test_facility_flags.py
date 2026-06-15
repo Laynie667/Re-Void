@@ -1074,6 +1074,28 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Outfitting — install menu is combination-aware; both branches chain clean.
+    c73 = _Char(); cyoa.start_scene(c73, "ou_arrival")
+    oubeats = []
+    for ch in ("present_fit", "fertility", "feel_fitted"):
+        p = c73.db.pending_choice
+        assert p, f"outfitting: no pending before '{ch}'"
+        oubeats.append(p["key"])
+        assert cyoa.resolve_choice(c73, ch)[0] is not None, f"outfitting '{ch}' did not resolve"
+    assert oubeats == ["ou_arrival", "ou_fit", "ou_after"], oubeats
+    assert c73.db.pending_choice is None and c73.db.scene_flags is None, "outfitting should end clean"
+    # combination-aware: a bare body is offered milkport + cowset; a kitted one is not.
+    bare_fit = {o["key"] for o in cyoa._BUILDERS["ou_fit"](_Char())["options"]}
+    assert "milkport" in bare_fit and "cowset" in bare_fit, "bare body should be offered the missing kit"
+    ck = _Char(); ck.db.lactation_locked = True; ck.db.piercings = ["x"]
+    kitted_fit = {o["key"] for o in cyoa._BUILDERS["ou_fit"](ck)["options"]}
+    assert "milkport" not in kitted_fit and "cowset" not in kitted_fit, "already-fitted kit shouldn't be re-offered"
+    c74 = _Char(); cyoa.start_scene(c74, "ou_arrival")
+    for ch in ("balk_fit", "tail", "dread_chart"):
+        assert c74.db.pending_choice, f"outfitting(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c74, ch)[0] is not None, f"outfitting(b) '{ch}' failed"
+    assert c74.db.pending_choice is None and c74.db.scene_flags is None, "outfitting(b) should end clean"
+
     # The Refinement — both real procedures chain and set their flags.
     c71 = _Char(); cyoa.start_scene(c71, "fm_arrival")
     fmbeats = []

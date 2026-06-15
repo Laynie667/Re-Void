@@ -1682,6 +1682,8 @@ class CmdScene(Command):
         "longmilking": "mm_arrival", "dairyintensive": "mm_arrival", "marathon": "mm_arrival",
         "refinement": "fm_arrival", "sissify": "fm_arrival", "geld": "fm_arrival",
         "feminize": "fm_arrival",
+        "outfitting": "ou_arrival", "equip": "ou_arrival", "outfit": "ou_arrival",
+        "hardwarebay": "ou_arrival",
     }
 
     def func(self):
