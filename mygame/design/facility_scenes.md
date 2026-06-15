@@ -85,6 +85,12 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Rut (`ev_rut`, `scene rut`/frenzy/heat)** — BUILT. A marquee savor-event in the random
+  dispatcher pool (now 5): the facility's seasonal frenzy — heat-dose run through the floor's air,
+  pens thrown open, the whole hall dissolving into one red-lit writhing breeding-mass with no
+  schedule, only rut. Real `_scene_allholes`. State-aware (preg/nugget/little), three opening
+  routes (give in / ride the edge / fight toward a chosen body). §0 lit: a `the_word_rut` branch
+  pulls you clean out of the frenzy at once — "the floor's frenzy can't touch the floor beneath it."
 - ✅ **Events (`ev_*`, `scene events`)** — BUILT (4 to start, random dispatcher for freshness):
   the Buyer's Tour (real `_scene_single` + market interest), Quota Day (public tally; real
   `punish` on shortfall / climbing-bar), the Breeding Festival (real `_scene_bukkake` mass

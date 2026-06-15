@@ -923,6 +923,23 @@ def test_bethany_scene():
     cyoa.resolve_choice(c52, "the_word_knot")  # §0 word, even knotted
     assert c52.db.pending_choice is None and c52.db.scene_flags is None, "the word must end the night clean"
 
+    # The Rut (marquee event) — both beats chain; and it's in the random event dispatcher pool.
+    c53 = _Char(); cyoa.start_scene(c53, "ev_rut")
+    rutbeats = []
+    for ch in ("give_in", "sink"):
+        p = c53.db.pending_choice
+        assert p, f"rut: no pending before '{ch}'"
+        rutbeats.append(p["key"])
+        assert cyoa.resolve_choice(c53, ch)[0] is not None, f"rut '{ch}' did not resolve"
+    assert rutbeats == ["ev_rut", "ev_rut_b"], rutbeats
+    assert c53.db.pending_choice is None and c53.db.scene_flags is None, "rut should end clean"
+    assert "ev_rut" in cyoa._EVENT_OPENINGS, "the Rut should be in the random event pool"
+    # the §0 word ends it even mid-frenzy.
+    c54 = _Char(); cyoa.start_scene(c54, "ev_rut")
+    cyoa.resolve_choice(c54, "find_fellow")
+    cyoa.resolve_choice(c54, "the_word_rut")
+    assert c54.db.pending_choice is None and c54.db.scene_flags is None, "the word must end the Rut clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

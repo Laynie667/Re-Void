@@ -6888,7 +6888,7 @@ def _dz_ride(character):
 # here over time — that's the freshness valve.
 # ═══════════════════════════════════════════════════════════════════════════
 
-_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv"]
+_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv", "ev_rut"]
 
 
 @choice("ev_arrival", root=False)
@@ -10024,3 +10024,116 @@ def _bn_after(character):
                 "carefully I hold the door. Now sleep. Stay because you'd rather. You always "
                 "could.\"")}],
         "default": "melt"}
+
+
+# --- Event: the Rut -----------------------------------------------------------
+# A marquee savor-event: the facility's seasonal frenzy. The heat-dosing is run
+# facility-wide, the pens thrown open, and the whole floor becomes one writhing
+# breeding-floor — stock, residents, handlers, everything in rut at once. Real
+# _gang / _scene_allholes + heat. State/kit-aware. §0 always frees you.
+@choice("ev_rut", root=False)
+def _ev_rut(character):
+    st = _state_tags(character)
+    note = ""
+    if st["preg"]:
+        note = (" Bred already, you'd think you'd be spared — you're not; the Rut doesn't read "
+                "charts, and a gravid thing in heat just draws the stock harder, the swell of you "
+                "no deterrent at all to a floor gone mindless. ")
+    elif st["nugget"]:
+        note = (" A nugget can't flee the floor and isn't meant to — you're simply set out in the "
+                "open like an offering, limbless and presented, for whatever the frenzy brings to "
+                "where you've been left. ")
+    elif st["little"]:
+        note = (" Down little, the heat-haze and the noise and the writhing crush of bodies is "
+                "enormous and overwhelming, and the dose doesn't care how small your head is — it "
+                "lights the same fire in you and sets you reaching too. ")
+    return {"key": "ev_rut", "prompt": (
+        "|WThree long klaxon-blasts, and then the lights drop to red, and a word goes through the "
+        "vents in the air itself: |wTHE RUT|n.|n It's the facility's seasonal frenzy, and it runs "
+        "*everything* at once — the heat-dose pumped through the floor's own air, thick and "
+        "instant, the pens unlatched and thrown wide, the holding-runs opened, every restraint on "
+        "appetite released at the same moment. Within a breath the floor is one writhing "
+        "breeding-mass: stock mounting whatever's nearest, residents dragged down and bred and "
+        "dragging others down in turn, handlers given the night off their discipline, the whole "
+        "processing hall dissolving into a red-lit crush of rut with no schedule and no stations "
+        "and no order, only heat and the driving need the air put in all of you at once." + note +
+        " The dose hits you too — fast, total, your own body lighting up traitor-hot, the want "
+        "rising past thought — and the crush is already turning toward you, drawn by your heat as "
+        "you're drawn toward theirs.\n\n"
+        "Somewhere over the speakers, unbothered, fond, Bethany narrates her favourite night of the "
+        "year: \"|MThere it goes. My whole floor in heat at once. No quotas tonight, my loves — "
+        "just rut, and rut, and rut till you drop. Find something. Be found. It hardly matters "
+        "which. The Rut doesn't care who breeds whom, only that everything gets bred.|n\""),
+        "options": [
+            {"key": "give_in", "label": "Give in to the heat — go down into the crush", "effect": "facility",
+             "params": {"method": "_scene_allholes", "kind": "scene"}, "set": {"rut": "gave"},
+             "desc": "let the dose drive you; real all-holes use in the frenzy",
+             "outcome": (
+                "You give in — let the dose take the wheel, let your traitor-hot body go down into "
+                "the red-lit crush and *want* it — and the floor takes you instantly, every hole "
+                "found and filled and refilled in the mindless churn, you breeding and bred and "
+                "lost in it, the real frenzy logged against you in a tangle of sires too many to "
+                "name. There's no thought left, only heat and use and the next body and the next. "
+                "It's the most and the least anyone's ever wanted you: completely, and not "
+                "personally at all.")},
+            {"key": "ride_edge", "label": "Try to ride the edge of the dose", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "set": {"rut": "fought"},
+             "desc": "fight the heat the dose put in you; lose, slower",
+             "outcome": (
+                "You try to ride the edge of it — hold some scrap of yourself back from the heat the "
+                "air put in you — and you lose, of course you lose, just slower and more agonizingly, "
+                "the denied want climbing unbearable while the crush uses you anyway, your fighting "
+                "just meaning you feel every bit of the frenzy take you with nothing dulled. The "
+                "dose always wins the Rut. Fighting only changes whether you're cursing or begging "
+                "when it does.")},
+            {"key": "find_fellow", "label": "Fight through the crush toward someone you know",
+             "effect": "facility", "params": {"method": "_scene_allholes", "kind": "scene"},
+             "set": {"rut": "fellow"}, "desc": "find a familiar body in the chaos; bred together, at least",
+             "outcome": (
+                "You fight through the red-lit churn toward someone — anyone — you *know*, and find "
+                "a familiar face heat-blind and reaching for you too, and you go down together in "
+                "the crush at least *chosen*, breeding each other amid the anonymous frenzy, one "
+                "scrap of someone-specific in a night built to erase exactly that. The real use "
+                "takes you both. It's not tenderness. But in the heat-roar it's the closest thing, "
+                "and you cling to it as you're both swept under.")}],
+        "default": "give_in",
+        "then": "ev_rut_b"}
+
+
+@choice("ev_rut_b", root=False)
+def _ev_rut_b(character):
+    rut = scene_flag(character, "rut", "gave")
+    recap = {"gave": "lost all night in the mindless crush",
+             "fought": "dragged under slower and harder for fighting the dose",
+             "fellow": "clinging to one chosen body in the anonymous roar"}.get(rut, "swept under")
+    return {"key": "ev_rut_b", "prompt": (
+        "The Rut burns itself out the way a fever breaks — hours later, or maybe a day, the red "
+        "lights coming up by slow degrees, the dose thinning out of the air, the writhing floor "
+        f"settling into a spent, dripping, exhausted sprawl of bodies. You surface from it {recap}, "
+        "wrung utterly empty and utterly full at once, bred past counting by sires you'll never "
+        "know, the floor around you a wreck of heat finally spent. Handlers move through with hoses "
+        "and tallies, sorting the spent stock, marking who took. \"|MWasn't that *glorious*,|n\" "
+        "Bethany sighs over the speakers, sated on your behalf. \"|MMy whole floor bred down to "
+        "nothing in one beautiful red night. We'll sort the lineages for weeks. Some of you are "
+        "carrying and don't know it yet. Rest, my loves. You earned the Rut.|n\""),
+        "options": [
+            {"key": "sink", "label": "Sink into the spent sprawl", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "let the wrung-out aftermath have you",
+             "outcome": (
+                "You sink into the spent, dripping sprawl with all the rest — too wrung-out to do "
+                "anything but lie in the cooling wreck of the frenzy and feel how thoroughly the "
+                "night used you — and there's a terrible peace in it, the heat finally quiet, the "
+                "wanting finally answered to exhaustion. \"|MGood stock,|n\" Bethany murmurs, "
+                "approving, as the handlers tally you. \"|MTook the Rut beautifully. Sleep it off. "
+                "There's always next season.|n\" You're already gone, bred-empty and dreamless.")},
+            {"key": "the_word_rut", "label": "Use the word — out of the frenzy now", "set": {"rut_out": "worded"},
+             "end": True, "desc": "the §0 floor — even mid-Rut, it pulls you free",
+             "outcome": (
+                "Even in the red roar of it — heat-blind, mid-crush, the dose screaming in you — you "
+                "find the word, and you mean it, and the Rut *lets you go*: the floor's frenzy can't "
+                "touch the floor beneath it, and you're pulled clear and clean and home, the dose "
+                "cut, the heat ebbing, a person again and not a body in the breeding-mass. Nobody "
+                "stops it; nothing in here was ever allowed to. The whole glorious frenzy runs "
+                "entirely on top of a word that empties the room of it the instant you need out. "
+                "That's why it gets to be as much as it is.")}],
+        "default": "sink"}
