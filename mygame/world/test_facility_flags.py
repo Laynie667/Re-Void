@@ -905,6 +905,11 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c50, ch)[0] is not None, f"bondage(b) '{ch}' failed"
     assert c50.db.pending_choice is None and c50.db.scene_flags is None, "bondage(b) should end clean"
 
+    # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
+    hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
+    for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):
+        assert need in hub_keys, f"hub should route to '{need}'"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

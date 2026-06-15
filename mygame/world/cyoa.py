@@ -6363,6 +6363,15 @@ def _b_facility_hub(character):
     # Deep Stock — the terminus is always down there to be contemplated.
     add("deep", "→ Deep Stock", "ds_arrival", "the sealed terminus; the pods")
 
+    # The dedicated kink set-pieces — chosen, not random. Always offerable; each is §0-lit and
+    # routes through real systems. (The board lists them under their clinical room-names.)
+    add("kennel", "→ the Kennel", "kn_arrival", "kept as a pet — collared, crawling, trained")
+    add("doll", "→ the Doll Cabinet", "dl_arrival", "sealed smooth, posed, displayed as an object")
+    add("filling", "→ the Filling Station", "cf_arrival", "pumped past full and plugged to hold it")
+    add("wetroom", "→ the Wet Room", "ws_arrival", "kept as the facility's relief — urinal, shower")
+    add("rig", "→ the Rig", "bd_arrival", "strung up spread and helpless, used in suspension")
+    add("cnc", "→ the Take (CNC)", "cn_arrival", "the pre-framed game — your no ridden over; the word always stops it")
+
     prompt = (
         "Between one thing and the next, the facility does the thing it now does instead of "
         "dragging you on a clock: a handler reads the board, and you're |wrouted|n — given the "
