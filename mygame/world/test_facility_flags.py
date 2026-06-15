@@ -203,7 +203,16 @@ def test_passenger():
     # §0 eject: unbirths unconditionally
     pg.eject(p)
     assert not pg.is_passenger(p) and pg.carried_line(p) == ""
-    return "passenger: board/transfer/cover/eject; §0 eject frees from any host"
+    # physical layer present + degrades gracefully with no Evennia (host can't resolve,
+    # interior is None, provisioning reports a reason instead of throwing).
+    assert pg._resolve_host("Bethany") is None and pg._interior_room(None, "balls") is None
+    room, reason = pg.provision_passenger_interior(p, "balls")
+    assert room is None and reason, "provision should report a reason without Evennia, not raise"
+    # board/transfer through the physical wrappers still produce the right state on a bare obj
+    pg.board(p, "Seraphine", "balls")
+    assert pg.status(p)["interior"] == "balls"
+    pg.eject(p); assert not pg.is_passenger(p)
+    return "passenger: board/transfer/cover/eject + physical layer no-ops cleanly; §0 frees any host"
 
 
 def test_heat_tell():

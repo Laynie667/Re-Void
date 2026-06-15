@@ -72,6 +72,22 @@ _FLOOD_STATES = [
 _DEFAULT_CAPACITY_ML = 20_000.0
 _DEFAULT_DECAY_ML    = 50.0     # ml per 15-min tick when unsealed
 
+# Default interior prose per interior kind (room_type). 'womb' is the gestation
+# space; 'balls' is the breeding-passenger holding chamber (cumflation/holding) —
+# the nested-passenger transfer rides here before being planted (see world/passenger).
+_DEFAULT_INTERIOR = {
+    "womb": (
+        "The space is warm and close — walls that yield slightly to pressure, the air thick "
+        "and still. A heartbeat is audible from somewhere in the walls."
+    ),
+    "balls": (
+        "The holding-dark of the chamber, hot and heavy and crowded — thick walls drawn taut "
+        "around you, the whole space drumming with a deep arterial pulse and the slow churn of "
+        "what's stored here. You are packed in among the load, cargo waiting to be spent, and "
+        "every shift of the body that carries you rolls the whole heavy weight of it around you."
+    ),
+}
+
 
 class WombRoom(HousingRoom):
     """
@@ -324,11 +340,8 @@ class WombRoom(HousingRoom):
             interior = (zones.get(zone_name) or {}).get("interior", "") or ""
 
         if not interior:
-            interior = (
-                "The space is warm and close — walls that yield slightly "
-                "to pressure, the air thick and still. A heartbeat is "
-                "audible from somewhere in the walls."
-            )
+            kind = getattr(self.db, "room_type", "womb") or "womb"
+            interior = _DEFAULT_INTERIOR.get(kind, _DEFAULT_INTERIOR["womb"])
 
         flood_line = self.get_flood_desc()
         if flood_line:

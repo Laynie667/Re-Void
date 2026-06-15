@@ -102,12 +102,26 @@ The post office (Seraphine/Calix/Vesper, the clerk menu, officiating) should get
   cums in Sera → you're covered) or be moved to her balls (→ Sera breeds Bethany → you're planted
   INTO Bethany). Real `passenger_transfer` / `passenger_cover` effects. §0 kept lit: escape ejects
   you home from ANY host. The cum-effect rulings (§2) embodied — full on you, nothing on Sera.
-- NOTE: the optional PHYSICAL Evennia room-move (relocating .location into a host's WombRoom
-  interior) is the live layer to add on top — the state/rules/scene are done and tested; wire the
-  WombRoom relocation + the belt-and-suspenders unbirth-on-escape in-game.
+- BUILT — the PHYSICAL Evennia layer is now wired on top of the rules layer (defensive; no-ops
+  cleanly with no Evennia so the unit tests still hold):
+  * `_resolve_host(name)` → host Character (rp_name/key); `_interior_room(host, kind)` → the
+    host's installed WombRoom matching 'womb'/'balls'.
+  * `board`/`transfer` relocate the passenger's `.location` INTO the resolved host interior;
+    `cover` floods the real interior room (`WombRoom.add_fluid`) as well as covering the passenger;
+    `eject` moves the passenger physically OUT (host's location / home) before clearing state.
+  * `provision_passenger_interior(host, kind, zone)` — creates + installs a real WombRoom of the
+    kind on a host's orifice zone (idempotent), so a build/scene can set the interiors up.
+  * `WombRoom` now supports `room_type="balls"` (a holding-chamber interior desc) alongside 'womb'.
+  * §0 belt-and-suspenders: `realm_build.escape` AND `force_clear` now call `passenger.eject(owner)`
+    — the owner is physically unbirthed from any host (even mid-transfer / nested) and the
+    carry-state cleared, on top of escape's existing move-home.
+  * LIVE-TEST TODO: confirm in-game that `provision_passenger_interior` installs on Seraphine's /
+    Bethany's actual zones, that the `.location` relocation reads right in `look`, and that
+    `escape` from inside a host lands you home clean.
 
 ## 7b. Queued
 
-- The passenger-transfer subsystem (§3) as real WombRoom mechanics.
-- The post-office cinematic upgrade (§5).
-- Facility **Events** + the **scene-flow controller** (still on the facility plan).
+- The post-office cinematic upgrade (§5) — DONE (the three clerk scenes + adoption + break room).
+- Facility **Events** + the **scene-flow controller** — DONE (ev_* dispatcher + scenemode/hub).
+- Wire `provision_passenger_interior` into the realm/post-office build so the interiors exist
+  before the Carry scene runs (currently the scene's physical move no-ops until interiors exist).

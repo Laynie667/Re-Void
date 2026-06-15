@@ -2751,6 +2751,13 @@ def reveal_return(owner):
 
 def escape(owner):
     """OOC floor — always works. Home + purge, regardless of realm state."""
+    # Unbirth first — pull the owner physically out of any host interior and clear
+    # the carry-state, so escape works even mid-transfer / nested inside someone.
+    try:
+        from world.passenger import eject as _passenger_eject
+        _passenger_eject(owner)
+    except Exception:
+        pass
     realm = owner.db.realm or {}
     from evennia import search_object
     res = search_object(realm.get("housing", "")) if realm.get("housing") else None
@@ -2786,6 +2793,12 @@ def force_clear(owner):
     try:
         from world.facility_state import apply_reset_flags
         apply_reset_flags(owner)
+    except Exception: pass
+    # Unbirth — physically pull out of any host interior + clear carry-state (the
+    # apply_reset_flags above nulls the flag, but this also relocates .location out).
+    try:
+        from world.passenger import eject as _passenger_eject
+        _passenger_eject(owner)
     except Exception: pass
     # lists -> []
     for k in ("active_speech_filters", "installed_triggers", "facility_brands",
