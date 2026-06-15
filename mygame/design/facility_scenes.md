@@ -131,6 +131,11 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **The Kennel Drain (`tp_*`, `scene toiletpet`/draindog)** — BUILT. The filthy combo: kept as a
+  pet that is ALSO the kennel's toilet — collared and crawling AND the drain the run relieves itself
+  on/in, petted and pissed on in the same passing minute. Combines real `go_pet` + `_toilet`
+  (kind=gang). The braid of affection-and-degradation from the same hands is the work — it ruins
+  being-petted for you. State/kit-aware. Hub by the Kennel.
 - ✅ **The Growth Suite (`gr_*`, `scene growth`/swell)** — BUILT. Forced body growth for yield —
   distinct from Outfitting (hardware) and Refinement (geld/sissify): a cocktail pumped into the
   glands swells you bigger, heavier, more productive on the table, permanent, up a size in one

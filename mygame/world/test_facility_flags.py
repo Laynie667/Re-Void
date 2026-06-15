@@ -1074,6 +1074,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Kennel Drain (toilet-pet) — both branches chain; go_pet sets real pet state.
+    c106 = _Char(); cyoa.start_scene(c106, "tp_arrival")
+    tpbeats = []
+    for ch in ("take_post", "serve_drain", "curl_drain"):
+        p = c106.db.pending_choice
+        assert p, f"toiletpet: no pending before '{ch}'"
+        tpbeats.append(p["key"])
+        assert cyoa.resolve_choice(c106, ch)[0] is not None, f"toiletpet '{ch}' did not resolve"
+    assert tpbeats == ["tp_arrival", "tp_duty", "tp_after"], tpbeats
+    assert c106.db.pending_choice is None and c106.db.scene_flags is None, "toiletpet should end clean"
+    c107 = _Char(); cyoa.start_scene(c107, "tp_arrival")
+    for ch in ("recoil_drain", "hold_dignity", "drain_shame"):
+        assert c107.db.pending_choice, f"toiletpet(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c107, ch)[0] is not None, f"toiletpet(b) '{ch}' failed"
+    assert c107.db.pending_choice is None and c107.db.scene_flags is None, "toiletpet(b) should end clean"
+
     # The Growth Suite — both branches chain (_proc_udder no-ops without a cycle).
     c102 = _Char(); cyoa.start_scene(c102, "gr_arrival")
     grbeats = []

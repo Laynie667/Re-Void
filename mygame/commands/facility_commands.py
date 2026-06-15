@@ -1702,6 +1702,7 @@ class CmdScene(Command):
         "census": "bc_arrival", "figures": "bc_arrival", "productionreview": "bc_arrival",
         "growth": "gr_arrival", "growthsuite": "gr_arrival", "swell": "gr_arrival",
         "lightsout": "sd_arrival", "sleepconditioning": "sd_arrival", "sleepprogramming": "sd_arrival",
+        "toiletpet": "tp_arrival", "draindog": "tp_arrival", "draindrain": "tp_arrival",
     }
 
     def func(self):

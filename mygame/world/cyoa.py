@@ -6571,6 +6571,7 @@ def _b_facility_hub(character):
     # The dedicated kink set-pieces — chosen, not random. Always offerable; each is §0-lit and
     # routes through real systems. (The board lists them under their clinical room-names.)
     add("kennel", "→ the Kennel", "kn_arrival", "kept as a pet — collared, crawling, trained")
+    add("toiletpet", "→ the Kennel Drain", "tp_arrival", "pet and plumbing both — petted and used at the drain")
     add("doll", "→ the Doll Cabinet", "dl_arrival", "sealed smooth, posed, displayed as an object")
     add("filling", "→ the Filling Station", "cf_arrival", "pumped past full and plugged to hold it")
     add("wetroom", "→ the Wet Room", "ws_arrival", "kept as the facility's relief — urinal, shower")
@@ -13553,7 +13554,7 @@ def _rf_arrival(character):
                 "chest, fed from the mouth, your own warm yield circulating through you in a circuit "
                 "with no outside. \"Good producer,\" the hand says. \"Drinks itself sweet. You'll "
                 "stop tasting it as *yours* soon — it'll just be the warm thing the gag gives when "
-                "the cups pull. That's the lesson taking.\")")},
+                "the cups pull. That's the lesson taking.\"")},
             {"key": "refuse_loop", "label": "Refuse to drink yourself", "set": {"rf": "refuse"},
              "effect": "deny_hold", "params": {"cond": 2.0},
              "desc": "clamp your mouth; the gag feeds you regardless",
@@ -13562,7 +13563,7 @@ def _rf_arrival(character):
                 "gag simply seats wider, the hose feeding past your resistance, the warm flow coming "
                 "whether you swallow willingly or just *swallow*. \"Refusing your own milk,\" the "
                 "hand observes. \"Squeamish. It passes. The gag doesn't need you to want it, only "
-                "to be open, and it'll see to the open part. Drink up. It's only you.\")")}],
+                "to be open, and it'll see to the open part. Drink up. It's only you.\"")}],
         "default": "open_loop",
         "then": "rf_fed"}
 
@@ -13590,7 +13591,7 @@ def _rf_fed(character):
                 "loop-gives, your body taught to be its own dairy and its own calf at once. \"Full "
                 "circuit,\" the hand confirms, reading the level reservoir. \"Producer and consumer "
                 "in one unit. Tidiest stock there is. You'll come to the loop *thirsty* soon — and "
-                "it's only ever you on the other end.\")")},
+                "it's only ever you on the other end.\"")},
             {"key": "feed_next", "label": "Have your yield fed to the next producer instead", "effect": "facility",
              "params": {"method": "_do_milk", "kind": "proc"}, "set": {"fed": "next"},
              "desc": "the real milking; your milk routed to the stock beside you, theirs to you",
@@ -13601,7 +13602,7 @@ def _rf_fed(character):
                 "\"Cross-fed,\" the hand notes, watching the lines run between you and the next "
                 "stall. \"Whole row of you feeding each other. None of you'll know whose you're "
                 "drinking by the end, and it won't matter. It's all dairy. It's all the same warm "
-                "thing.\")")}],
+                "thing.\"")}],
         "default": "drink_full",
         "then": "rf_after"}
 
@@ -13625,7 +13626,7 @@ def _rf_after(character):
                 "no outside, the warm self-sufficiency of stock that feeds itself — and the lesson "
                 "lands clean: what comes out of you isn't yours, it's just supply, and you've "
                 "drunk it, so even that last wall is gone. You'll come to the cups thirsty now. The "
-                "loop will give. It's only ever you, and you've stopped minding.\")")},
+                "loop will give. It's only ever you, and you've stopped minding.\"")},
             {"key": "taste_lingers", "label": "Notice your own taste won't leave your mouth", "effect": "deny_hold",
              "params": {"cond": 2.0}, "end": True, "desc": "the warm self-taste lingers as a new normal",
              "outcome": (
@@ -13635,7 +13636,7 @@ def _rf_after(character):
                 "you'll think of the gag and the warm flow and be, horribly, a little *hungry*. "
                 "\"It lingers, doesn't it,\" the hand says, not unkind. \"It's meant to. You're "
                 "seasoned to yourself now. Most producers are, by the end. Off you go, full of "
-                "you.\")")}],
+                "you.\"")}],
         "default": "loop_calm"}
 
 
@@ -13701,7 +13702,7 @@ def _bc_arrival(character):
                 "precise and bloodless and total: not cruelty, just *accounting*, your body's worth "
                 "tallied in uses and litters and litres while strangers nod over the totals. "
                 "\"Solid producer,\" an auditor murmurs, making a note. Bethany glows. \"Isn't she. "
-                "The figures don't flatter and they don't lie. That's what I love about a census.\")")},
+                "The figures don't flatter and they don't lie. That's what I love about a census.\"")},
             {"key": "shrink_figures", "label": "Shrink under the reading", "set": {"bc": "shrink"},
              "effect": "deny_hold", "params": {"cond": 2.0},
              "desc": "the data-stripping is too much; they read on regardless",
@@ -13712,7 +13713,7 @@ def _bc_arrival(character):
                 "embarrassed,\" one notes, not even unkindly, ticking a box marked *temperament*. "
                 "\"That goes in too. Responsive stock.\" Even your shame becomes a data point. "
                 "Bethany makes the note herself, fond. \"Everything's a figure here, sweetheart. "
-                "Even the blush.\")")}],
+                "Even the blush.\"")}],
         "default": "stand_figures",
         "then": "bc_after"}
 
@@ -13736,7 +13737,7 @@ def _bc_after(character):
                 "quiet horror of it is how *clarifying* it is: you are exactly this much use, this "
                 "many litters, this many litres, and the certainty sits where a person's "
                 "self-image used to. You're a producing unit with known figures. The numbers only "
-                "go up.\")")},
+                "go up.\"")},
             {"key": "projection_dread", "label": "Think about next year's projection", "effect": "deny_hold",
              "params": {"cond": 2.0}, "end": True, "desc": "the figures are expected to climb",
              "outcome": (
@@ -13746,7 +13747,7 @@ def _bc_after(character):
                 "*target*: you're not just tallied, you're *forecast*, and the forecast only ever "
                 "trends up. \"Ambitious numbers for next year,\" the statistician says, sliding the "
                 "projection into your file. \"We have every confidence in the unit.\" You leave "
-                "carrying a quota you didn't agree to and a body that's expected to beat it.\")")}],
+                "carrying a quota you didn't agree to and a body that's expected to beat it.\"")}],
         "default": "known_number"}
 
 
@@ -13823,7 +13824,7 @@ def _gr_swell(character):
                 "yield that you'll carry from here on. \"Logged,\" the tech says, snapping the after-"
                 "photo beside the before. \"Look at the difference. Bigger producer, better numbers, "
                 "and no shrinking back. We'll grow you again when the chart wants more. There's "
-                "always more chart.\")")},
+                "always more chart.\"")},
             {"key": "endure_grow", "label": "Endure the ache of growing", "effect": "facility",
              "params": {"method": "_proc_udder", "kind": "proc"}, "set": {"grown": "endured"},
              "desc": "the growth takes regardless; survive the swell",
@@ -13832,7 +13833,7 @@ def _gr_swell(character):
                 "swell takes regardless, real and permanent, your body bigger and heavier whether "
                 "you welcomed it or just survived it. \"Grown,\" the tech confirms, marking the new "
                 "numbers. \"The ache fades in a few days. The size doesn't. You'll get used to "
-                "carrying more — you'll have to, because we'll keep adding to what you carry.\")")}],
+                "carrying more — you'll have to, because we'll keep adding to what you carry.\"")}],
         "default": "grow_full",
         "then": "gr_after"}
 
@@ -13866,7 +13867,7 @@ def _gr_after(character):
                 "left,\" the tech agrees, following your eyes. \"We never grow a producer all the "
                 "way in one go — the frame needs time between jumps. But we get them to the top "
                 "eventually. You'll be astonished what a body learns to carry when there's no say "
-                "in the carrying.\")")}],
+                "in the carrying.\"")}],
         "default": "carry_bigger"}
 
 
@@ -13985,5 +13986,132 @@ def _sd_waking(character):
                 "laid in sleep leaves no scar to find, only effects you'll mistake for your own "
                 "nature. \"Trying to remember the night,\" the night-tech says, amused, logging you. "
                 "\"Can't be done, stock. We built it so the work's invisible by morning. You'll just "
-                "keep waking up easier, and calling it a good night's sleep.\")")}],
+                "keep waking up easier, and calling it a good night's sleep.\"")}],
         "default": "wake_changed"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Kennel Drain — toilet-pet, the filthy combo. Kept as a pet that is
+# ALSO the kennel's toilet: collared and crawling AND the thing the run relieves
+# itself on/in. Combines the real `go_pet` (pet state) with `_toilet` (kind=gang:
+# real urine to the bank + bladder backing + filth marks). State/kit-aware.
+# Clean register. Flow: arrival→duty→after. Entry: `scene toiletpet`/draindog.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("tp_arrival", root=False)
+def _tp_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if st["nugget"]:
+        note = (" A nugget's set in the drain-hollow itself — limbless, can't crawl off the duty, "
+                "a pet-shaped fixture sunk where the run aims. ")
+    elif st["little"]:
+        note = (" Down little the shame of it is enormous and the comprehension small — you only "
+                "know you're on the floor by the drain and the big ones keep coming over. ")
+    pet = (" You already wear the pet — collar, crawl, the tail — so they just assign the second "
+           "duty on top of it. " if k["pet"] else "")
+    return {"key": "tp_arrival", "prompt": (
+        "There's a spot in the Kennel nobody explained until now — a tiled hollow by the run with "
+        "a drain in the centre and a worn pet-cushion beside it, and a card on the bars above: "
+        "|wDRAIN.|n It's where two duties meet. \"Double posting for you,\" the kennel-keeper says, "
+        f"clipping your leash to the low ring, pressing you down onto all fours by the drain. "
+        f"\"You're a *pet* — collared, crawling, kept — and you're also where the run *goes*. The "
+        "hounds and the handlers and the other pets relieve themselves here, on you, in you, and "
+        "you stay put and take it, because that's what the drain-dog is for. Pet by day, toilet "
+        f"throughout.\"" + pet + note + " A hound's already padding over, lifting its leg with the "
+        "bored entitlement of an animal at a familiar spot. \"Hold position, drain-dog. The run "
+        "doesn't wait for you to feel ready.\""),
+        "options": [
+            {"key": "take_post", "label": "Take the post — pet and drain both", "set": {"tp": "take"},
+             "effect": "go_pet", "params": {"pet_type": "drain-dog", "cond": 2.0},
+             "desc": "the real pet-state + the drain duty; kept as both",
+             "outcome": (
+                "You take the post — settle onto the cushion in the pet you're collared into, by "
+                "the drain you're posted to — and the real pet-imprint seats while the first warm "
+                "indignity arrives, kept as a thing that's petted *and* pissed on, the two duties "
+                "folding into one low identity. \"Good drain-dog,\" the keeper says, fondly bored. "
+                "\"Knows its hollow. Stays in position. The run likes a reliable fixture.\"")},
+            {"key": "recoil_drain", "label": "Recoil from the drain-hollow", "set": {"tp": "recoil"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "balk at the double duty; the leash keeps you in the hollow",
+             "outcome": (
+                "You recoil from the hollow — the drain, the smell, the *double* of it — and the "
+                "leash snaps you back into position, the keeper unbothered. \"Drain-dog doesn't get "
+                "to be squeamish. Pets don't choose their postings and toilets don't choose their "
+                "traffic, and you're both.\" The hound's already aiming, indifferent to your "
+                "recoil. \"Hold still. It goes where it goes, and you're where it goes.\"")}],
+        "default": "take_post",
+        "then": "tp_duty"}
+
+
+@choice("tp_duty", root=False)
+def _tp_duty(character):
+    return {"key": "tp_duty", "prompt": (
+        "And then you serve the double post, and it's the lowest the Kennel goes. Petted when "
+        "someone passes — a fond scratch behind the ear, a 'good dog,' the leash given an absent "
+        "tug — and *used as plumbing* in the same breath, the run relieving itself on you and in "
+        "you at the drain, warm and acrid and constant, your held bladder aching unrelieved on top "
+        "of what you're given. The two registers braid into one unbearable thing: the affection "
+        "and the degradation from the same hands, a pet that's loved like a dog and used like a "
+        "toilet, sometimes in the same passing minute. The keeper tops up your water bowl — "
+        "\"keeps the drain-dog producing\" — and notes the traffic. \"Busy hollow today. You're "
+        "earning your cushion.\""),
+        "options": [
+            {"key": "serve_drain", "label": "Serve the drain — pet kept as plumbing", "effect": "facility",
+             "params": {"method": "_toilet", "kind": "gang"}, "set": {"drained": "served"},
+             "desc": "the real toilet use — relieved on/in, bladder backing, filth marks",
+             "outcome": (
+                "You serve it — the real use logged, relieved on and in at the drain, the run "
+                "treating you as the fixture you've been posted as while your own held bladder "
+                "climbs toward unbearable — and the petting comes mixed right through it, the "
+                "fond scratches and the warm indignity indistinguishable by the hour's end. \"Good "
+                "drain-dog,\" the keeper murmurs, scratching your ear as the next one steps up. "
+                "\"Loved and used. That's the whole posting. You're very good at both.\"")},
+            {"key": "hold_dignity", "label": "Cling to some scrap of dignity", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "set": {"drained": "endured"},
+             "desc": "the run uses you regardless; the scrap costs you",
+             "outcome": (
+                "You cling to some scrap — some last idea that you're a person at a drain and not "
+                "*the drain* — and the run uses you exactly the same, indifferent to the scrap, the "
+                "real duty logged whether you keep your dignity or spend it. \"Holding onto "
+                "something,\" the keeper observes, not unkind, topping your water. \"It'll wash out "
+                "with everything else down here. Drain-dogs that fight the posting just stay "
+                "thirsty and proud and *used*. Drink up. The run's not done.\"")}],
+        "default": "serve_drain",
+        "then": "tp_after"}
+
+
+@choice("tp_after", root=False)
+def _tp_after(character):
+    return {"key": "tp_after", "prompt": (
+        "The run thins toward evening and the keeper hoses the hollow and you in it, then lets you, "
+        "at last, relieve your own held bladder down the same drain — watched, on all fours, the "
+        "final small degradation of the day. \"Good shift, drain-dog,\" the keeper says, unclipping "
+        "you only to crate you for the night by your cushion. \"Pet and plumbing, all in one tidy "
+        "package. You'll post here again tomorrow — the run's used to its hollow now, and so, I "
+        "think, are you.\" The cushion's warm. The drain's quiet. You curl on the one and beside "
+        "the other, kept as both, and the day's two registers settle into a single low fact of "
+        "what you are here."),
+        "options": [
+            {"key": "curl_drain", "label": "Curl on the cushion, pet and drain", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "settle into the double identity",
+             "outcome": (
+                "You curl on the cushion beside the drain, collared and crated and posted, and the "
+                "double identity settles into you as simply *what you are here* — the loved dog and "
+                "the used toilet, the scratch behind the ear and the warm run at the hollow, no "
+                "longer two things but one low kept role you'll wake to tomorrow. \"Good drain-dog,\" "
+                "comes the keeper's voice from the dark, fond. \"Sleep. The hollow keeps till "
+                "morning. So do you.\"")},
+            {"key": "drain_shame", "label": "Sit in the doubled shame of it", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the affection-and-degradation braid lingers",
+             "outcome": (
+                "You sit in it — the doubled shame, the affection and the degradation that came from "
+                "the same hands and won't separate in your memory, the scratch and the stream "
+                "tangled into one thing you'll feel every time someone reaches to pet you again — "
+                "and that braid is the posting's real work: it's ruined fondness for you, made being "
+                "loved and being used the same sensation. \"Tomorrow,\" the keeper promises from the "
+                "dark, and it's both a comfort and a sentence, and you can't tell which, which is "
+                "exactly the point of the drain.\"")}],
+        "default": "curl_drain"}
