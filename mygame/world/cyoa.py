@@ -233,6 +233,41 @@ def _eff_go_little(character, p):
     return "slipped"
 
 
+@effect("go_pet")
+def _eff_go_pet(character, p):
+    """Kept as the facility's pet — routes through the REAL conditioning pet-imprint
+    (_cond_imprint sets pet_type + pet_trigger_sources) and sets a pet posture/body-language.
+    params: pet_type ('puppy' default), cond (conditioning to add), posture (override).
+    All flags are in FACILITY_FLAGS, so the §0 floor clears every bit of it."""
+    ptype = p.get("pet_type", "puppy")
+    try:
+        # set the type first so the real imprint keeps it rather than defaulting to 'puppy'
+        if not getattr(character.db, "pet_type", None):
+            character.db.pet_type = ptype
+        from world.conditioning import _cond_imprint
+        _cond_imprint(character)
+    except Exception:
+        try:
+            character.db.pet_type = character.db.pet_type or ptype
+            character.db.pet_trigger_sources = character.db.pet_trigger_sources or ["facility"]
+        except Exception:
+            pass
+    try:
+        character.db.forced_posture = p.get("posture",
+            f"down on all fours as a {character.db.pet_type or ptype} — no standing, no hands")
+        character.db.body_language = f"a kept {character.db.pet_type or ptype} — collared, crawling, waiting to be told"
+    except Exception:
+        pass
+    cond = float(p.get("cond", 0) or 0)
+    if cond:
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(character, cond, source="kennel")
+        except Exception:
+            pass
+    return "petted"
+
+
 @effect("submit_standing")
 def _eff_submit_standing(character, p):
     """She chose to submit/comply — facility standing + a compliance tick."""
@@ -8692,3 +8727,174 @@ def _iv_close(character):
                 "among the others — a body made of paper, kept warm in the dark, waiting for the "
                 "next line or the word that wipes it, entirely as you choose.")}],
         "default": "stay"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Kennel — kept as the facility's PET (petplay, core content list).
+# Distinct from the Breeding Pens (which breeds you BY animals): here you ARE the
+# animal — collared, crawling, named to a pet, trained and kept. Routes through
+# the REAL conditioning pet-imprint via the `go_pet` effect (pet_type +
+# pet_trigger_sources + forced_posture/body_language — all FACILITY_FLAGS, so the
+# §0 floor clears every bit). State-aware (nugget = limbless lap-pet, little =
+# already half-there, preg = bred bitch) and kit-aware (already-collared reads).
+# §0 lit hard: a pet is always one word from standing up a person again.
+# Flow: arrival→train→kept. Entry: `scene kennel`/pet/puppy.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("kn_arrival", root=False)
+def _kn_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if st["nugget"]:
+        note = (" A nugget can't go down on all fours — there are no fours — so they set you in the "
+                "padded basket instead, a limbless lap-pet to be carried and set down and picked up, "
+                "which is, if anything, *more* a pet and less a person. ")
+    elif st["little"]:
+        note = (" Down in your little headspace the slide from child to pet is barely a slide at all "
+                "— both are small, both are kept, both do as they're told — and you go to all fours "
+                "almost with relief, one less kind of person to try to be. ")
+    elif st["preg"]:
+        note = (" They fit the collar above the swell of you — a bred bitch is still a bitch, and the "
+                "kennel likes a pregnant pet, proof the animal's good for what animals are good "
+                "for. ")
+    collared = (" The collar buckles over the one you already wear, or replaces it — either way your "
+                "neck was never going to be bare in here. " if k["collared"] else
+                " The collar goes on — your first, snug, a weight at the throat you'll feel every "
+                "time you swallow from now on. ")
+    return {"key": "kn_arrival", "prompt": (
+        "The Kennel isn't the breeding run — it's quieter, warmer, almost domestic: low pens with "
+        "soft bedding, a row of bowls on a rubber mat, leash-hooks at crawling height, a training "
+        "ring scuffed by knees and palms, and the particular smell of a place where people are kept "
+        "as |wpets|n. Not bred here. *Kept.* There's a difference and the room is built around it.\n\n"
+        f"|wBethany|n is waiting with a leash looped over one wrist, bright and fond. \"{nm},\" she "
+        "says — and then, gently correcting herself, \"well. We'll see what you answer to by the end "
+        "of the hour. I've decided you'd make a lovely pet. Not breeding stock — a *pet*. Something I "
+        "keep because I like having you at my heel, fed from my hand, happy in the small way that "
+        "needs nothing but its owner.\"" + collared + note +
+        "\"Down you get,\" she says, easy as anything. \"Let's find your good-girl.\""),
+        "options": [
+            {"key": "drop", "label": "Go down willingly — try on the pet", "set": {"kn": "drop"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "all fours, by choice; let the small flat ease of it in",
+             "outcome": (
+                "You go down — hands and knees on the scuffed ring, the leash clipping to the "
+                "collar with a small final click — and the relief of it is the trap: there's nothing "
+                "to decide down here, nothing to hold up, only the warm narrow world at the end of a "
+                "leash. \"*Oh*, good girl,\" Bethany breathes, delighted, and the praise lands "
+                "somewhere that makes your spine want to wag. \"You felt that, didn't you. How much "
+                "easier it is to be kept than to be a person. That's the whole gift of the "
+                "kennel.\"")},
+            {"key": "resist_collar", "label": "Resist the collar and the crawling", "set": {"kn": "resist"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "stay standing, stay a person; she's patient",
+             "outcome": (
+                "You stay on your feet, stay upright, stay a *person* — and Bethany doesn't force "
+                "you down, just smiles and lets the leash hang. \"Standing. For now. That's all "
+                "right, sweetheart — pets aren't made by shoving, they're made by *waiting*. You'll "
+                "come down on your own, when the standing gets tiring and the floor starts looking "
+                "restful. They always do. I've all the patience in the world and you've only got "
+                "two legs' worth of fight.\"")},
+            {"key": "ask_pet", "label": "Ask what kind of pet she means", "set": {"kn": "ask"},
+             "desc": "make her name what she's keeping you as",
+             "outcome": (
+                "\"What kind of pet?\" you ask, and Bethany considers you with real fondness, "
+                "tilting her head. \"Whatever suits you, when I look at you long enough. A puppy, "
+                "most like — eager, leashed, desperate to be told it's good. Maybe a sweeter, "
+                "stiller sort. We'll find out together what you *are* under the person — because "
+                "there's always an animal under the person, sweetheart, and I'm very good at "
+                "coaxing it out to play.\"")}],
+        "default": "drop",
+        "then": "kn_train"}
+
+
+@choice("kn_train", root=False)
+def _kn_train(character):
+    return {"key": "kn_train", "prompt": (
+        "Then she trains you, and it's the warm relentless way she does everything — heel, and "
+        "present, and the bowl on the mat that you're fed from with no hands, and the crate you go "
+        "into when she's busy with her files, and the praise, *always* the praise, doled out in "
+        "exact measures to wire the wanting of it straight into you. She works on the simple things "
+        "until they stop being things you do and start being things you *are*: the way your knees "
+        "find the floor when she points, the way your name slides off and a pet-name slides on, the "
+        "way a 'good girl' floods you warmer than it has any right to. \"There it is,\" she murmurs, "
+        "watching the person thin and the pet surface. \"You're learning yourself. I do love this "
+        "part — the part where you find out what you'll be once I've kept you a while.\""),
+        "options": [
+            {"key": "learn_eager", "label": "Learn it eager — be the good pet", "effect": "go_pet",
+             "params": {"pet_type": "puppy", "cond": 4.0}, "set": {"trained": "eager"},
+             "desc": "the REAL pet-imprint — eager, leashed, wired to the praise",
+             "outcome": (
+                "You learn it eager — heel and present and bowl, chasing the 'good girl' like it's "
+                "the only warm thing in the world — and the imprint takes for real, the pet-type "
+                "filed into you, the posture going from performance to default. Bethany is radiant. "
+                "\"*That's* my good girl. Look how happy. You've stopped reaching for the person — "
+                "she was heavy, wasn't she, and this is so light.\" Somewhere the part of you that "
+                "had a name goes quiet and content, and the quiet feels like being finally let off "
+                "a hook you'd hung on your whole life.")},
+            {"key": "learn_resist", "label": "Take the training without breaking to it", "effect": "go_pet",
+             "params": {"pet_type": "puppy", "cond": 2.0}, "set": {"trained": "endured"},
+             "desc": "the imprint lands anyway; refuse to enjoy the leash",
+             "outcome": (
+                "You take the training and refuse to *want* it — do the heel and the present with a "
+                "person's resentment behind the pet's motions — and the imprint lands anyway, "
+                "shallower but real, because the body learns the crawl and the bowl whether the "
+                "person approves or not. \"Sulking pet,\" Bethany observes, unbothered, scratching "
+                "behind your ear in a way you hate how much you feel. \"That's fine. The body's "
+                "learning even while you pout. One day the pout will just... stop, and you won't "
+                "notice the day it does. They never do.\"")},
+            {"key": "her_pet", "label": "Ask to be *her* pet, not the kennel's", "effect": "go_pet",
+             "params": {"pet_type": "puppy", "cond": 3.0}, "set": {"trained": "hers"},
+             "desc": "the warm-ownership hook — belong to Bethany specifically",
+             "outcome": (
+                "\"Yours,\" you find yourself asking, \"not the kennel's — *yours*\" — and Bethany's "
+                "whole face softens into the warm cruel tenderness that's so much worse than the "
+                "cold. \"Oh, sweetheart. You want to be *mine* specifically. To matter to your "
+                "owner.\" She gathers your leash close, fond. \"Yes. You can be mine. My pet, my "
+                "heel, my good girl, kept apart from the run because I *chose* you. That want — to "
+                "belong to me on purpose — that's the prettiest trick you've learned all hour, and "
+                "I didn't even have to teach it.\"")}],
+        "default": "learn_eager",
+        "then": "kn_kept"}
+
+
+@choice("kn_kept", root=False)
+def _kn_kept(character):
+    trained = scene_flag(character, "trained", "eager")
+    hers = " — hers, specifically, chosen off the run and kept at her own heel" if trained == "hers" else ""
+    return {"key": "kn_kept", "prompt": (
+        "And then you're simply *kept*" + hers + " — leashed at her side while she works her files, "
+        "fed when she remembers to, crated when she doesn't, happy in the small flat way of an "
+        "animal that has everything it needs and no say in any of it. The hour did what she said it "
+        "would: the person is thinner, the pet is warm and surfaced, and the leash feels less like "
+        "a restraint than like a *tether to the only thing that matters*. \"There's my good girl,\" "
+        "Bethany says, not looking up from her paperwork, one hand resting on your head like you're "
+        "furniture she's fond of.\n\n"
+        "And then — because she guards this above everything — she tells you the one true thing, "
+        "warm and plain: \"You can stand up and be a person again any second you like, pet. There's "
+        "a word, you know it, it works the instant you mean it, and I'll never once hold the leash "
+        "against it. That's what makes you a pet by *choice* and not a thing I caught. Stay because "
+        "it's easier and sweeter than standing. Or stand. The word's always yours.\""),
+        "options": [
+            {"key": "stay_pet", "label": "Stay down — be kept", "effect": "devote", "params": {"amount": 3.0},
+             "end": True, "desc": "choose the leash, knowing the word frees you",
+             "outcome": (
+                "You stay down — choose the leash, the bowl, the warm flat ease, the hand on your "
+                "head — *knowing* the word would stand you up a person this second, and choosing the "
+                "pet anyway, which is the only way Bethany ever wanted it. \"Good girl,\" she "
+                "murmurs, and means it all the way down. \"Kept because you'd rather be. That's the "
+                "sweetest collar there is — the one you could take off and don't.\" You curl at her "
+                "heel, and the quiet is the warmest thing you've felt in a long time, and the word "
+                "sits unspoken in your mouth like a treat you're saving.")},
+            {"key": "stand_person", "label": "Use the word — stand up a person", "set": {"kn_out": "stood"},
+             "end": True, "desc": "the §0-in-fiction out; she honours it without a flicker",
+             "outcome": (
+                "You find the word and you mean it, and you stand — and the pet falls off you like "
+                "water and you're a person on two feet again, and Bethany lets the leash go slack "
+                "without the smallest flicker of grudge, because she built the whole kennel on this "
+                "being real. \"Up you get,\" she says, warm and easy and entirely unbothered. "
+                "\"Person again. See? It works the instant you mean it, exactly like I promised — "
+                "and now you know it does, which means next time you go down, you'll go down "
+                "*trusting* me. That's worth more to me than any hour you'd have stayed afraid.\"")}],
+        "default": "stay_pet"}

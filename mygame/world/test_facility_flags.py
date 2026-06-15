@@ -803,6 +803,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c38, ch)[0] is not None, f"accounting(b) '{ch}' failed"
     assert c38.db.pending_choice is None and c38.db.scene_flags is None, "accounting(b) should end clean"
 
+    # The Kennel (petplay) — chains both branches; go_pet sets the real pet state.
+    c39 = _Char(); cyoa.start_scene(c39, "kn_arrival")
+    knbeats = []
+    for ch in ("drop", "learn_eager", "stay_pet"):
+        p = c39.db.pending_choice
+        assert p, f"kennel: no pending before '{ch}'"
+        knbeats.append(p["key"])
+        assert cyoa.resolve_choice(c39, ch)[0] is not None, f"kennel '{ch}' did not resolve"
+    assert knbeats == ["kn_arrival", "kn_train", "kn_kept"], knbeats
+    assert c39.db.pending_choice is None and c39.db.scene_flags is None, "kennel should end clean"
+    c40 = _Char(); cyoa.start_scene(c40, "kn_arrival")
+    for ch in ("ask_pet", "her_pet", "stand_person"):
+        assert c40.db.pending_choice, f"kennel(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c40, ch)[0] is not None, f"kennel(b) '{ch}' failed"
+    assert c40.db.pending_choice is None and c40.db.scene_flags is None, "kennel(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

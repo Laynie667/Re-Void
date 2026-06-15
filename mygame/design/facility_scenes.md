@@ -95,6 +95,15 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Kennel / petplay (`kn_*`, `scene kennel`/pet/puppy/petplay)** — BUILT. Core-list
+  petplay: you ARE the pet (collared, crawling, named to a pet, trained, kept) — distinct from
+  the Pens (bred BY animals). Routes through the REAL conditioning pet-imprint via a new `go_pet`
+  effect (pet_type + pet_trigger_sources + forced_posture/body_language — all FACILITY_FLAGS, so
+  the floor clears every bit). arrival → train → kept. State-aware (nugget = limbless lap-pet,
+  little = already half-there, preg = bred bitch); kit-aware (already-collared reads). The
+  warm-ownership branch lets you be *hers* specifically. §0 lit hard: the kept beat has Bethany
+  state plainly the word stands you up a person any second, never held against you — "a pet by
+  choice, not a thing I caught."
 - ✅ **The Accounting (`iv_*`, `scene accounting`/inventory/stock/file)** — BUILT. The
   combination payoff: Bethany takes possessive personal stock of what she's MADE, the ledger
   GENERATED LIVE from your actual `_kit` + state (`_kit_ledger` composes every piercing / port /
