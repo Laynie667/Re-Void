@@ -1650,8 +1650,8 @@ class CmdScene(Command):
         "adoption": "fa_arrival", "adopt": "fa_arrival", "foster": "fa_arrival",
         "vesper": "vn_arrival", "nest": "vn_arrival", "fold": "vn_arrival",
         "calix": "ck_arrival", "keeping": "ck_arrival", "keepingroom": "ck_arrival",
-        "parlour": "sp_arrival", "parlor": "sp_arrival", "shelf": "sp_arrival",
-        "accounting": "iv_arrival", "inventory": "iv_arrival", "stock": "iv_arrival",
+        "seraphineparlour": "sp_arrival", "shelf": "sp_arrival", "collected": "sp_arrival",
+        "accounting": "iv_arrival", "inventory": "iv_arrival", "takestock": "iv_arrival",
         "file": "iv_arrival",
         "kennel": "kn_arrival", "pet": "kn_arrival", "puppy": "kn_arrival",
         "petplay": "kn_arrival",
@@ -1689,7 +1689,7 @@ class CmdScene(Command):
         "programming": "pr_arrival", "trigger": "pr_arrival", "program": "pr_arrival",
         "goingunder": "hy_arrival", "trance": "hy_arrival", "deepchair": "hy_arrival",
         "thebelow": "hy_arrival",
-        "linefolds": "lf_arrival", "bredback": "lf_arrival", "fold": "lf_arrival",
+        "linefolds": "lf_arrival", "bredback": "lf_arrival", "loop": "lf_arrival",
         "openhouse": "ev_openhouse", "publicuse": "ev_openhouse",
         "vesperlore": "vl_arrival", "vespertalk": "vl_arrival",
         "breedingmachine": "mx_arrival", "machine": "mx_arrival", "therig": "mx_arrival",
@@ -1716,10 +1716,20 @@ class CmdScene(Command):
                        "|wescape|x to bail out entirely.|n")
             return
         arg = (self.args or "").strip().lower()
+        # `scene list` / `scene ?` — one canonical name per scene (not the full alias dump).
+        if arg in ("list", "?", "help", "all", "scenes"):
+            seen, lines = set(), []
+            for alias, node in self.SCENES.items():
+                if node in seen:
+                    continue
+                seen.add(node)
+                lines.append("|w" + alias + "|n")
+            caller.msg("|x" + str(len(lines)) + " scenes — |wscene <name>|x to start one, "
+                       "|wwhereto|x for the routed hub:|n\n  " + ", ".join(lines))
+            return
         first = self.SCENES.get(arg, "bx_arrival" if not arg else None)
         if not first:
-            caller.msg("|xScenes: " + ", ".join(sorted(set(self.SCENES))) +
-                       ".|n\n|x  Usage: |wscene <name>|x (e.g. |wscene pens|x).|n")
+            caller.msg("|xNo scene '" + arg + "'. Try |wscene list|x for the full menu.|n")
             return
         if not start_scene(caller, first, room=caller.location):
             caller.msg("|xThat scene isn't available to you here right now.|n")
