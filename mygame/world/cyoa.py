@@ -268,6 +268,30 @@ def _eff_go_pet(character, p):
     return "petted"
 
 
+@effect("go_cumflate")
+def _eff_go_cumflate(character, p):
+    """Pumped/bred past full — bloats the body for REAL via add_inflation_volume on whatever
+    inflatable zones the character has (the facility installs these at intake), which also feeds
+    the installed WombRoom. No-ops cleanly if no inflation zone exists. Drained by tick + by the
+    §0 reset (facility_build drains all inflation), so the swell is never permanent.
+    params: amount (ml, default 1500), fluid ('cum' default), zone (override single zone)."""
+    amount = float(p.get("amount", 1500.0) or 0)
+    fluid = p.get("fluid", "cum")
+    filled = []
+    try:
+        from typeclasses.inflation_item import add_inflation_volume, get_inflation_data
+        zones = getattr(character.db, "zones", None) or {}
+        targets = [p["zone"]] if p.get("zone") else list(zones.keys())
+        for zname in targets:
+            if get_inflation_data(character, zname):
+                vol, state = add_inflation_volume(character, zname, amount, fluid)
+                if vol is not None:
+                    filled.append((zname, state))
+    except Exception:
+        pass
+    return "cumflated" if filled else "cumflate_noop"
+
+
 @effect("go_doll")
 def _eff_go_doll(character, p):
     """Sealed into a doll/toy — sets the REAL latex/seal flags (latex_sealed, optionally
@@ -9082,3 +9106,163 @@ def _dl_displayed(character):
                 "stay in it does. Which means next time I seal you, you'll go smooth *trusting* me. "
                 "That's worth more than a hundred poses.\"")}],
         "default": "stay_doll"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Filling Station — cumflation (core content list). Pumped/bred past
+# full at a dedicated station until you're round, drum-tight, sloshing, then
+# plugged to HOLD it. Routes through the REAL inflation system via `go_cumflate`
+# (add_inflation_volume bloats your inflatable zones for real + feeds the
+# installed WombRoom; drained by tick AND the §0 reset, so never permanent).
+# State-aware (preg = filled over the get, nugget, little) + kit-aware (gape
+# takes more / plugs; milk_port). §0 lit: the plug pops and you drain on the word.
+# Flow: arrival→fill→held. Entry: `scene cumflation`/filling/pump.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("cf_arrival", root=False)
+def _cf_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    note = ""
+    if st["preg"]:
+        note = (" They note you're already carrying and don't care in the slightest — a bred belly "
+                "just means less room for what they're about to pump in, which means you'll go tight "
+                "and round that much *faster*, the get and the flood crowding each other behind your "
+                "straining skin. ")
+    elif st["nugget"]:
+        note = (" A nugget gets cradled under the nozzle — no need to hold still what can't move — "
+                "just a limbless tank set in place to be filled and capped and left to slosh. ")
+    elif st["little"]:
+        note = (" Down little you don't understand the gauge or the litre-marks, only that your "
+                "tummy is getting fuller and tighter and rounder than tummies are supposed to, and "
+                "the not-understanding doesn't slow the pump. ")
+    plug = (" Your gauge takes the broad filling-plug without a fight — ringed permanently open as "
+            "you are, the station barely has to work to seat it and seal you to hold the load. "
+            if k["gaped"] else "")
+    return {"key": "cf_arrival", "prompt": (
+        "The Filling Station is industrial and frank about it: a reinforced chair with a drain pan, "
+        "a bank of warmed tanks on a gantry feeding a thick gauged hose, a pressure dial, a wall of "
+        "graduated |wplugs|n in ascending sizes, and a row of litre-marks painted up a measuring "
+        "post for stock to be filled *to*. The air is humid with it. This is where the facility "
+        "answers a simple question — how much will a body hold — and writes the number down.\n\n"
+        "The |wfilling tech|n reads your chart, unhurried. \"Cumflation quota,\" they say, threading "
+        "the hose. \"We pump you full — bred-flood, banked and warmed — past comfortable, past "
+        "*full*, up to the mark the chart sets, and then we plug you so you keep it. You'll go tight "
+        "as a drum and twice as round. Stock holds more than it thinks. That's most of what we "
+        "learn in here.\"" + plug + note + " They set the dial. \"Up to the mark. Hold what you're "
+        "given.\""),
+        "options": [
+            {"key": "open", "label": "Open up and take the hose", "set": {"cf": "open"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "let them seat it; submit to being filled to the mark",
+             "outcome": (
+                "You open and let them seat the hose, and the tech grunts approval and opens the "
+                "valve, and the first hot rush of it floods into you — banked warm flood pumped "
+                "steady and relentless, and the being-filled is immediate and total and *enormous*. "
+                "\"Good tank,\" the tech says, watching the dial climb. \"Takes it easy. We'll get a "
+                "high mark out of you today.\"")},
+            {"key": "brace", "label": "Brace against the pressure", "set": {"cf": "brace"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "tense against the fill; it goes in regardless",
+             "outcome": (
+                "You tense against it — and the pump doesn't negotiate, the warm flood forcing in on "
+                "its own steady schedule whether you brace or not, your clenching just making you "
+                "feel every rising litre more sharply. \"Bracing slows nothing,\" the tech notes, "
+                "not looking up from the dial. \"Tank fills at the rate the pump sets. You just "
+                "fight your own gut. Save it.\"")},
+            {"key": "ask_mark", "label": "Ask how full they mean to take you", "set": {"cf": "ask"},
+             "desc": "make them name the number on the post",
+             "outcome": (
+                "\"How full?\" you ask, eyeing the litre-marks climbing the post. The tech glances "
+                "at your chart, then at the post, and sets a clip at a mark that makes your stomach "
+                "drop. \"That one. Higher than you'll believe you can hold until you're holding it. "
+                "We've taken stock past it. You'll round out, you'll go tight, you'll be sure "
+                "you're at your limit a good while before we actually stop. The mark's the mark.\"")}],
+        "default": "open",
+        "then": "cf_fill"}
+
+
+@choice("cf_fill", root=False)
+def _cf_fill(character):
+    k = _kit(character)
+    extra = []
+    if k["milk_port"]:
+        extra.append(
+            {"key": "fill_milk", "label": "Let them run your port while they pump you",
+             "effect": "go_cumflate", "params": {"amount": 1500.0, "fluid": "cum"},
+             "set": {"filled": "milked"},
+             "desc": "[milk-port] filled at one end, drained at the other — a closed loop of stock",
+             "outcome": (
+                "They clip your milk-line while the hose floods you, and the two run at once — "
+                "pumped full from below while you're drawn down from the chest, a body turned into "
+                "a closed loop of facility stock, filled and milked in the same humid minute. The "
+                "real flood swells you to the mark regardless. \"Efficient unit,\" the tech says, "
+                "logging both numbers. \"Fills and yields on the one chair. We like those.\"")})
+    return {"key": "cf_fill", "prompt": (
+        "And then they fill you, for real, to the mark — and it is so much more than you thought a "
+        "body held. The warm flood pumps in steady and unhurried and *does not stop*, and you feel "
+        "yourself swell with it: the deep ache turning to pressure, the pressure to tightness, your "
+        "belly rounding out firm and then drum-taut and then *glossy*-tight, the litre-marks ticking "
+        "past on the post while your skin draws shiny over a load no body should carry. You slosh "
+        "when you shift. You can feel your own pulse in the tightness. \"There's the round,\" the "
+        "tech says, with a craftsman's satisfaction, palm flat on the straining curve of you. "
+        "\"Listen to that. Full as a tank and still taking it.\""),
+        "options": extra + [
+            {"key": "hold_it", "label": "Hold what you're given — swell to the mark", "effect": "go_cumflate",
+             "params": {"amount": 2000.0, "fluid": "cum"}, "set": {"filled": "held"},
+             "desc": "the REAL fill — bloated to the mark, the swell logged",
+             "outcome": (
+                "You hold what you're given and let them take you to the mark — the real flood "
+                "swelling you tight and round and sloshing, the volume logged against your line — "
+                "and somewhere past the panic the fullness becomes its own drowning sensation, "
+                "enormous and total, your whole world reduced to the tight-packed heat of being "
+                "filled past sense. \"Mark reached,\" the tech confirms, reading the post. \"Good "
+                "capacity on you. We'll plug you and let you carry it a while.\"")},
+            {"key": "beg_less", "label": "Beg them to stop short of the mark", "effect": "go_cumflate",
+             "params": {"amount": 1200.0, "fluid": "cum"}, "set": {"filled": "begged"},
+             "desc": "the fill is real regardless; the begging is logged, not heeded",
+             "outcome": (
+                "\"Please — it's too much, please—\" The tech glances at your rounded, straining "
+                "belly with professional disinterest and keeps the valve open. \"They always say "
+                "that a litre or two before the mark. The gut's a liar about its limit.\" The flood "
+                "keeps coming, real and swelling, your begging logged in the margin as *vocal at "
+                "capacity* and changing nothing about the number you reach.")}],
+        "default": "hold_it",
+        "then": "cf_held"}
+
+
+@choice("cf_held", root=False)
+def _cf_held(character):
+    return {"key": "cf_held", "prompt": (
+        "Then they pull the hose and seat the |wplug|n — broad and final, sealing the whole sloshing "
+        "load inside you — and you're left to *carry* it: round, drum-tight, glossy, sloshing with "
+        "every tiny shift, a filled tank set aside to hold its measure while the next unit takes the "
+        "chair. The fullness is enormous and constant and strangely total, crowding out thought, "
+        "leaving only the tight-packed heat of being a thing that was filled and capped. \"Carry "
+        "that till we say,\" the tech tells you, marking your line. \"Plug stays in. Stock holds "
+        "what stock's given.\"\n\n"
+        "And then — because even here it's never sealed away from you — the §0 truth, plain and "
+        "real: the plug seals to the facility's say, but |wnot to yours|n. The escape word pops it, "
+        "drains you, empties the whole held load and stands you up unfilled and free the instant you "
+        "mean it — no quota, no permission, no waiting for them to say. The dread of being kept "
+        "full is built entirely on top of a drain that's always, only, yours to open."),
+        "options": [
+            {"key": "carry", "label": "Carry the load — hold what you're given", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "stay full and plugged, knowing you could drain it",
+             "outcome": (
+                "You carry it — stay full, stay plugged, hold the sloshing measure they gave you — "
+                "knowing the word would pop the plug and empty you free this second, and choosing to "
+                "hold it anyway, which is the only thing that makes the fullness *yours* instead of "
+                "just done to you. The tank-heat fills your whole awareness, round and tight and "
+                "kept, and you carry the facility's measure the way it likes its stock to: brimming, "
+                "capped, and quietly aware the drain was always in reach.")},
+            {"key": "drain_word", "label": "Use the word — pop the plug and drain free",
+             "set": {"cf_out": "drained"}, "end": True, "desc": "the §0-in-fiction out; empties you at once",
+             "outcome": (
+                "You mean the word, and the plug releases — the whole held load draining out of you "
+                "in a hot rush, the tight-round swell collapsing back to your own empty shape, the "
+                "tank-heat gone and you a free unfilled person again — and nobody stops it, because "
+                "nothing in here was ever allowed to. \"Drained on the word,\" the tech notes, "
+                "unbothered, already prepping the chair for the next. \"That's how it's built. The "
+                "plug holds for us. It never holds against *you*. Off you go, light again.\"")}],
+        "default": "carry"}

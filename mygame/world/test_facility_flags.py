@@ -836,6 +836,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c42, ch)[0] is not None, f"doll(b) '{ch}' failed"
     assert c42.db.pending_choice is None and c42.db.scene_flags is None, "doll(b) should end clean"
 
+    # The Filling Station (cumflation) — chains both branches; go_cumflate no-ops cleanly
+    # without an inflation zone but the scene still flows.
+    c43 = _Char(); cyoa.start_scene(c43, "cf_arrival")
+    cfbeats = []
+    for ch in ("open", "hold_it", "carry"):
+        p = c43.db.pending_choice
+        assert p, f"cumflation: no pending before '{ch}'"
+        cfbeats.append(p["key"])
+        assert cyoa.resolve_choice(c43, ch)[0] is not None, f"cumflation '{ch}' did not resolve"
+    assert cfbeats == ["cf_arrival", "cf_fill", "cf_held"], cfbeats
+    assert c43.db.pending_choice is None and c43.db.scene_flags is None, "cumflation should end clean"
+    c44 = _Char(); cyoa.start_scene(c44, "cf_arrival")
+    for ch in ("ask_mark", "beg_less", "drain_word"):
+        assert c44.db.pending_choice, f"cumflation(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c44, ch)[0] is not None, f"cumflation(b) '{ch}' failed"
+    assert c44.db.pending_choice is None and c44.db.scene_flags is None, "cumflation(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

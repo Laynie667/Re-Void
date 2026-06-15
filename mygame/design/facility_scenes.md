@@ -95,6 +95,15 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Filling Station / cumflation (`cf_*`, `scene cumflation`/filling/pump)** — BUILT.
+  Core-list cumflation: pumped/bred past full at a dedicated station to a litre-mark, then plugged
+  to HOLD it — round, drum-tight, sloshing. Routes through the REAL inflation system via a new
+  `go_cumflate` effect (add_inflation_volume bloats the inflatable zones the facility installs at
+  intake + feeds the installed WombRoom; drained by tick AND the §0 reset, so never permanent).
+  arrival → fill → held. State-aware (preg = filled over the get and faster; nugget tank; little),
+  kit-aware (gape seats the plug easy; milk-port unlocks a "filled-and-milked closed loop" option).
+  §0 lit hard: the plug holds for the facility but never against you — the word pops it and drains
+  you free the instant you mean it.
 - ✅ **The Doll Cabinet / dollification (`dl_*`, `scene doll`/dollify/cabinet)** — BUILT.
   Core-list dollification: sealed smooth into a latex/doll shell, made featureless and posable,
   kept and displayed as an OBJECT. Routes through a new `go_doll` effect (latex_sealed + optional
