@@ -992,6 +992,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c59, ch)[0] is not None, f"pod(b) '{ch}' failed"
     assert c59.db.pending_choice is None and c59.db.scene_flags is None, "pod(b) should end clean"
 
+    # The Showing Gala (marquee event) — both beats chain; in the random event pool.
+    c60 = _Char(); cyoa.start_scene(c60, "ev_gala")
+    galabeats = []
+    for ch in ("shine", "bask"):
+        p = c60.db.pending_choice
+        assert p, f"gala: no pending before '{ch}'"
+        galabeats.append(p["key"])
+        assert cyoa.resolve_choice(c60, ch)[0] is not None, f"gala '{ch}' did not resolve"
+    assert galabeats == ["ev_gala", "ev_gala_b"], galabeats
+    assert c60.db.pending_choice is None and c60.db.scene_flags is None, "gala should end clean"
+    assert "ev_gala" in cyoa._EVENT_OPENINGS, "the Gala should be in the random event pool"
+    c61 = _Char(); cyoa.start_scene(c61, "ev_gala")
+    for ch in ("demonstrate", "the_word_gala"):
+        assert c61.db.pending_choice, f"gala(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c61, ch)[0] is not None, f"gala(b) '{ch}' failed"
+    assert c61.db.pending_choice is None and c61.db.scene_flags is None, "gala(b) should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

@@ -102,6 +102,13 @@ built reference). This doc is the master list of everything to convert.
   into you). Real `bethany_breeds` offered to extend the line over the open book on the spot. §0
   lit: the line is permanent but your *part* in it ends the instant you mean the word — "a source
   can always shut off." Surfaces in the hub beside Records.
+- ✅ **The Showing Gala (`ev_gala`, `scene gala`/showing)** — BUILT. A marquee savor-event (pool
+  now 6): the facility's black-tie collectors' gala — finest stock oiled and shown on a lit stage,
+  demonstrated for a room of moneyed collectors over champagne, then handled at the front tables
+  after. Real `_appraise` + `_scene_single`. State-aware (preg = the prize draw / nugget on a
+  plinth / little 'shows' sweet). Bethany watches from a booth and collects you at the close —
+  "shown, never sold; I keep you so I can lend the world a look and never the rest." §0 lit: the
+  word ends the gala and walks you off the stage at once.
 - ✅ **The Rut (`ev_rut`, `scene rut`/frenzy/heat)** — BUILT. A marquee savor-event in the random
   dispatcher pool (now 5): the facility's seasonal frenzy — heat-dose run through the floor's air,
   pens thrown open, the whole hall dissolving into one red-lit writhing breeding-mass with no

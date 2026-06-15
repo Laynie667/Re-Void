@@ -1671,6 +1671,7 @@ class CmdScene(Command):
         "pillowtalk": "bt_arrival", "lore": "bt_arrival", "confession": "bt_arrival",
         "askbethany": "bt_arrival",
         "pod": "pd_arrival", "podbank": "pd_arrival", "deeppod": "pd_arrival",
+        "gala": "ev_gala", "showing": "ev_gala", "showinggala": "ev_gala",
     }
 
     def func(self):

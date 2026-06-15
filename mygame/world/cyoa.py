@@ -6921,7 +6921,7 @@ def _dz_ride(character):
 # here over time — that's the freshness valve.
 # ═══════════════════════════════════════════════════════════════════════════
 
-_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv", "ev_rut"]
+_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv", "ev_rut", "ev_gala"]
 
 
 @choice("ev_arrival", root=False)
@@ -10638,3 +10638,112 @@ def _pd_kept(character):
                 "Works from down here same as anywhere — has to, or none of it would be allowed. "
                 "Nobody's ever truly kept, even the deep stock. Especially the deep stock.\"")}],
         "default": "stay_deep"}
+
+
+# --- Event: the Showing Gala --------------------------------------------------
+# A marquee savor-event: the facility's black-tie collectors' gala. The finest
+# stock is brought up, displayed on a lit stage, and DEMONSTRATED for a room of
+# moneyed collectors over champagne — appraisal as spectacle, you a featured lot
+# performing or used under the lights. Real _appraise + _scene_single. State-aware.
+@choice("ev_gala", root=False)
+def _ev_gala(character):
+    st = _state_tags(character)
+    note = ""
+    if st["preg"]:
+        note = (" Bred stock is the gala's prize draw — they bring you up *because* you're "
+                "swollen, a producing lot shown gravid to prove the line takes, and the collectors "
+                "murmur over the swell of you like a vintage. ")
+    elif st["nugget"]:
+        note = (" A nugget is wheeled up on a velvet plinth, displayed rather than walked — a "
+                "limbless curiosity the collectors lean close over, the rarest lot in the room. ")
+    elif st["little"]:
+        note = (" Down little, the lights and the crowd and the murmured appraisal are vast and "
+                "frightening, and the collectors coo at how the small headspace 'shows' — which "
+                "only makes the bidding warmer. ")
+    return {"key": "ev_gala", "prompt": (
+        "|WThe klaxon doesn't sound for this one — instead the handlers come with warm towels and "
+        "oil and a comb, and you understand before they say it: the |wShowing Gala|n.|n Once a "
+        "season the facility opens its doors to the collectors who matter — the real money, the "
+        "old names — for a black-tie evening of champagne and appraisal, and the finest stock is "
+        "brought up to be *shown*. Tonight that's you. You're oiled to a shine, walked up under a "
+        "single hot stage-light in a hush of evening dress, and presented to a room of seated "
+        "collectors who lower their glasses to look." + note +
+        " A silken-voiced |wpresenter|n works the room over you: \"Our next lot, ladies and "
+        "gentlemen — do note the conditioning, the conformation, the *documentation*. We'll "
+        "demonstrate. Lot: present.\" The light is hot. The room is patient. The glasses lift "
+        "toward you like the bid-lamps you can't see past the glare.\n\n"
+        "And from a velvet booth at the back, a fond familiar voice, unhurried over her own "
+        "champagne: \"|MGo on, sweetheart. Show them what I made. I do so love watching the room "
+        "want what's already mine.|n\""),
+        "options": [
+            {"key": "shine", "label": "Shine for the room — perform the lot", "effect": "facility",
+             "params": {"method": "_appraise", "kind": "proc"}, "set": {"gala": "shine"},
+             "desc": "give the collectors the show; real appraisal, the room bidding with its eyes",
+             "outcome": (
+                "You shine — turn and arch and present under the hot light, give the room the "
+                "trained show it dressed up to see — and the real appraisal runs, your grade and "
+                "your particulars read out to murmured approval, the collectors leaning in, glasses "
+                "forgotten. The wanting of a whole moneyed room aimed at your oiled body is its own "
+                "hot shameful spotlight. \"|MThere's my girl,|n\" Bethany purrs from the dark. "
+                "\"|MWorking the room like I trained her. Look at them want you. None of them can "
+                "have you. That's the best part.|n\"")},
+            {"key": "demonstrate", "label": "Be demonstrated for the collectors", "effect": "facility",
+             "params": {"method": "_scene_single", "kind": "scene"}, "set": {"gala": "demo"},
+             "desc": "the presenter demonstrates you live; real use, under the lights, for the room",
+             "outcome": (
+                "The presenter demonstrates you *live* — you used under the hot stage-light while a "
+                "room of collectors watches over their champagne, your responses put through their "
+                "paces as a selling point, the real use logged as a gala showing. Being worked in "
+                "front of a hushed, appraising, evening-dressed crowd is a particular and total "
+                "exposure. The murmur swells; somewhere a paddle-number is noted. \"|MFlawless,|n\" "
+                "Bethany sighs, delighted, from her booth. \"|MThey'll talk about this lot for "
+                "seasons. My lot. Shown, never sold.|n\"")},
+            {"key": "tremble", "label": "Tremble in the spotlight", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "set": {"gala": "tremble"},
+             "desc": "freeze under the lights; the presenter sells your fear as breeding",
+             "outcome": (
+                "You freeze, tremble, caught rabbit-still in the glare — and the presenter doesn't "
+                "miss a beat, folding even that into the pitch: \"Note the sensitivity, the "
+                "responsiveness — this is a lot that *feels* everything, ideal for the discerning "
+                "owner.\" Your fear is just another feature on the card, and the collectors warm to "
+                "it, and the show goes on around your stillness exactly as if you'd performed. There "
+                "was never a way to stand in that light that wasn't being shown.")}],
+        "default": "shine",
+        "then": "ev_gala_b"}
+
+
+@choice("ev_gala_b", root=False)
+def _ev_gala_b(character):
+    return {"key": "ev_gala_b", "prompt": (
+        "The showing ends; the light cuts; the applause is genteel and appalling. They walk you "
+        "down off the stage past the front tables, close enough now for the collectors to set down "
+        "their glasses and *touch* — a gloved hand testing the oil on your flank, fingers at your "
+        "jaw turning your face to the candlelight, an appraising squeeze, murmured offers you're "
+        "not meant to answer — the after-show handling where the real interest gets expressed with "
+        "hands instead of eyes. And then Bethany is there, materializing from her booth to collect "
+        "you off the floor with a possessive arm, beaming, steering you clear of the reaching "
+        "hands. \"|MShown, admired, and *mine*,|n\" she announces, warm and final, to the whole "
+        "wanting room. \"|MThank you all for coming. The lot is not for sale. The lot is never for "
+        "sale. I simply enjoy watching you covet her.|n\""),
+        "options": [
+            {"key": "bask", "label": "Bask in being the lot she shows off", "effect": "devote",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the coveted-but-kept feeling land warm",
+             "outcome": (
+                "You let it land — the whole room's covetous attention and then her arm closing you "
+                "off from all of it, *shown* to everyone and *kept* from everyone, and the "
+                "combination does something warm and ruinous in you. \"|MThere's my girl, glowing "
+                "from it,|n\" Bethany murmurs, steering you out. \"|MYou liked being wanted by a "
+                "room that can't have you. Of course you did. I keep you precisely so I can lend "
+                "the world a look and never the rest. You're my favourite thing to show off and my "
+                "favourite thing to take home.|n\"")},
+            {"key": "the_word_gala", "label": "Use the word — off the stage and out", "set": {"gala_out": "worded"},
+             "end": True, "desc": "the §0 floor; the gala lets you go at once",
+             "outcome": (
+                "Even here — oiled, shown, the room's hands reaching — you find the word and mean "
+                "it, and the gala simply *releases* you: the handling stops, the offers die, Bethany "
+                "waves the room off without a flicker and walks you out herself, clear and free and "
+                "a person again instead of a lot. \"|MShow's over for her,|n\" she tells the booth, "
+                "unbothered. \"|MThe word ends the gala same as it ends everything. I do love a lot "
+                "that knows it could walk off the stage any second — makes the staying she does all "
+                "the prettier.|n\"")}],
+        "default": "bask"}
