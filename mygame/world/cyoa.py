@@ -4402,7 +4402,42 @@ def _sb_use(character):
         "interested in its own degradation. Time smears. You stop counting. The custodian leans "
         "on his hose, bored, occasionally telling the queue to mind the stock. \"Steady,\" he says, "
         "to them, not you. \"It's not going anywhere.\""),
-        "options": [
+        "options": _sb_use_options(character),
+        "default": "serve",
+        "then": "sb_after"}
+
+
+def _sb_use_options(character):
+    """Base serve/endure plus kit-gated routes — a gape takes the back of the queue without
+    a swap; a teat-gag/stuffed mouth changes what the wall does with your face."""
+    k = _kit(character)
+    extra = []
+    if k["gaped"]:
+        extra.append(
+            {"key": "gape_queue", "label": "Offer the gauge — let the queue use the open hole hard",
+             "effect": "facility", "params": {"method": "_scene_bukkake", "kind": "scene"},
+             "set": {"san_done": "gaped"},
+             "desc": "[gape] the ringed-open hole takes them with no warm-up, no limit",
+             "outcome": (
+                "You offer the gauge — the hole ringed permanently open — and the queue doesn't "
+                "have to work for it at all: no warm-up, no resistance, just an open fitting they "
+                "drive into one after another, harder and deeper than a tight one would let them, "
+                "because the ring took the choice of *no* out of your body a long time ago. The "
+                "custodian notes the heavier traffic. \"Gauged ones clear the queue faster,\" he "
+                "says. \"Nothing slows the line. That's the point of opening you up.\"")})
+    if k["teat_gag"] or k["stuffed"]:
+        extra.append(
+            {"key": "gagged_take", "label": "Take it around what's already stopping your mouth",
+             "effect": "facility", "params": {"method": "_scene_bukkake", "kind": "scene"},
+             "set": {"san_done": "gagged"},
+             "desc": "[mouth clause] the queue works the holes that aren't already plugged",
+             "outcome": (
+                "Your mouth's already stopped — gagged, plugged, busy with what the clause keeps in "
+                "it — so the queue simply uses every hole that *isn't*, working you below while the "
+                "stoppered mouth can do nothing but leak muffled sound around its filler. The "
+                "custodian doesn't bother clearing it. \"Mouth's spoken for,\" he tells the queue. "
+                "\"Use the rest. She's still got plenty going spare.\"")})
+    options = [
             {"key": "serve", "label": "Serve the queue — be the hole, well", "effect": "facility",
              "params": {"method": "_scene_bukkake", "kind": "scene"}, "set": {"san_done": "served"},
              "desc": "the real anonymous use — logged, hole after hole",
@@ -4420,9 +4455,8 @@ def _sb_use(character):
                 "of you past the wet they're using — and they use you exactly the same, because the "
                 "wall never wanted anything else from you. The loads come anonymous and indifferent "
                 "regardless. Withholding cost you effort the queue didn't even register. The use is "
-                "logged the same.")}],
-        "default": "serve",
-        "then": "sb_after"}
+                "logged the same.")}]
+    return extra + options
 
 
 @choice("sb_after", root=False)
