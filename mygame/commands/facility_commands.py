@@ -1651,6 +1651,8 @@ class CmdScene(Command):
         "vesper": "vn_arrival", "nest": "vn_arrival", "fold": "vn_arrival",
         "calix": "ck_arrival", "keeping": "ck_arrival", "keepingroom": "ck_arrival",
         "parlour": "sp_arrival", "parlor": "sp_arrival", "shelf": "sp_arrival",
+        "accounting": "iv_arrival", "inventory": "iv_arrival", "stock": "iv_arrival",
+        "file": "iv_arrival",
     }
 
     def func(self):

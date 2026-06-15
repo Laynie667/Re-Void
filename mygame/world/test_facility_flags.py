@@ -779,6 +779,30 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c36, ch)[0] is not None, f"sp(b) '{ch}' failed"
     assert c36.db.pending_choice is None and c36.db.scene_flags is None, "sp(b) should end clean"
 
+    # The Accounting (kit-combination payoff) — bare body reads the blank-file line; a kitted
+    # body reads its hardware back; both chain to a clean end.
+    c37 = _Char(); cyoa.start_scene(c37, "iv_arrival")
+    bare_prompt = cyoa._BUILDERS["iv_arrival"](c37)["prompt"].lower()
+    assert "blank" in bare_prompt or "barely begun" in bare_prompt, "bare body should read as a blank file"
+    ivbeats = []
+    for ch in ("ache", "add", "stay"):
+        p = c37.db.pending_choice
+        assert p, f"accounting: no pending before '{ch}'"
+        ivbeats.append(p["key"])
+        assert cyoa.resolve_choice(c37, ch)[0] is not None, f"accounting '{ch}' did not resolve"
+    assert ivbeats == ["iv_arrival", "iv_addition", "iv_close"], ivbeats
+    assert c37.db.pending_choice is None and c37.db.scene_flags is None, "accounting should end clean"
+    # kitted body: the ledger reads hardware back, and the §0 line is honoured in the floor branch.
+    c38 = _Char()
+    c38.db.piercings = ["clit_ring", "nipple_l"]; c38.db.lactation_locked = True
+    kit_prompt = cyoa._BUILDERS["iv_arrival"](c38)["prompt"].lower()
+    assert "piercing" in kit_prompt and "milk-port" in kit_prompt, "kitted body should read its hardware"
+    cyoa.start_scene(c38, "iv_arrival")
+    for ch in ("floor_ask", "not_today", "go"):
+        assert c38.db.pending_choice, f"accounting(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c38, ch)[0] is not None, f"accounting(b) '{ch}' failed"
+    assert c38.db.pending_choice is None and c38.db.scene_flags is None, "accounting(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

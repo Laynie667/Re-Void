@@ -8363,3 +8363,182 @@ def _sp_drawer(character):
                 "me at all, and you just did, and were *gentle*. Go on, sweet thing. Second cup's "
                 "always poured for you here.\" The mirror swings open, warm at your back.")}],
         "default": "claimed"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Accounting — Bethany takes personal inventory of what she's MADE of
+# you. Distinct from Records (which grades you institutionally): this is her
+# possessive, intimate stock-take of her own handiwork, the prose GENERATED LIVE
+# from your actual _kit + state (every piercing/port/gape/brand/collar/clause and
+# little/preg/nugget) read back to you as ownership. The "combinations involving
+# items, states, piercings, ports" payoff — the accumulated hardware finally pays
+# off as narrative. A bare body reads as a blank file with room to write. §0 lit:
+# every line on the ledger is reversible by the floor and she says so.
+# Flow: arrival(read your kit)→addition→close. Entry: `scene accounting`/inventory.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _kit_ledger(character):
+    """A live, possessive read of everything the facility has hung on / done to the body —
+    composed from _kit + state. Returns a paragraph Bethany 'reads off the file', or a
+    blank-file line for an unmodified body."""
+    k = _kit(character)
+    inv = _kit_inventory(k)  # hardware/body-alterations clause, '' if bare
+    clauses = []
+    if k.get("heat_tell"): clauses.append("an honest-body clause that won't let you hide what you want")
+    if k.get("honorific"): clauses.append("an address clause shaping every word out of you")
+    if k.get("teat_gag"):  clauses.append("a teat-gag that keeps the mouth busy and quiet")
+    if k.get("stuffed"):   clauses.append("a stuffed-mouth clause")
+    if k.get("denied"):    clauses.append("a denial hold on your own pleasure")
+    states = []
+    if k.get("nugget"): states.append("kept down to a limbless producer")
+    if k.get("preg"):   states.append("carrying the facility's get")
+    if k.get("little"): states.append("dropped soft into your little headspace")
+    bits = []
+    if inv:     bits.append(inv.rstrip())
+    if clauses: bits.append(("Speech and want managed — " + (clauses[0] if len(clauses) == 1 else ", ".join(clauses[:-1]) + ", and " + clauses[-1]) + "."))
+    if states:  bits.append(("And as you are right now — " + (states[0] if len(states) == 1 else ", ".join(states[:-1]) + ", and " + states[-1]) + "."))
+    if not bits:
+        return ("\"...and the remarkable thing is how *little* I've written so far. Look at you — "
+                "barely begun. No rings, no ports, nothing gauged, no clauses, nothing locked. A "
+                "near-blank file.\" She turns a fond, hungry look on you. \"Do you know how rare "
+                "that is in here? How much *room* there is to write? I could start you from clean. "
+                "I think I'd like that best of all — a fresh page and my whole pen.\"")
+    return ("\"Let's read you back to yourself,\" she says, fond, turning the file. \"Here's what "
+            "I've made so far. You're carrying: " + " ".join(bits) + " It's a *lovely* file. Thick. "
+            "Mine, in ink.\"")
+
+
+@choice("iv_arrival", root=False)
+def _iv_arrival(character):
+    nm = subject_name(character)
+    return {"key": "iv_arrival", "prompt": (
+        "Bethany has you in the soft chair by her desk — not the gauging frame, nothing clinical, "
+        "just her and your file and a pot of tea — and she's in the mood she likes best: taking "
+        "*stock*. Of you. Of what she's made. She licks a thumb, turns a page, and the look she "
+        f"gives you over the reading-glasses is pure ownership wearing fondness. \"{nm},\" she says, "
+        "warm as a hand on the back of the neck. \"My most-handled file. I do this every so often "
+        "— take inventory of my own handiwork. It keeps me grateful. Sit still and let me read you "
+        "off the page.\"\n\n"
+        + _kit_ledger(character)),
+        "options": [
+            {"key": "ache", "label": "Ache under the reading — feel it land as ownership",
+             "set": {"iv": "ache"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "let the accumulated record land; the wanting is the hook",
+             "outcome": (
+                "You ache under it — the catalogue of what's been done to you read back in her warm "
+                "fond voice, every line of it *hers*, and the ache isn't only dread, that's the "
+                "horror of it: somewhere in you the reading lands as being *known*, being kept, "
+                "being worth a thick file. Bethany watches it cross your face and softens with "
+                "pleasure. \"There it is. You felt that as *mine*, didn't you. Not done-to. "
+                "*Kept.* That's the dearest reading on the whole page.\"")},
+            {"key": "tally", "label": "Make her say it's never finished", "set": {"iv": "tally"},
+             "desc": "ask whether the file's ever closed; she answers honestly",
+             "outcome": (
+                "\"Is it ever finished?\" you ask. \"The file?\" And Bethany laughs, delighted and "
+                "honest. \"Oh, *no*, sweetheart. A file's never finished while the subject's still "
+                "breathing and I've still got pens. There's always another line. That's the whole "
+                "joy of you — you're a book I get to keep writing.\" She taps a blank page at the "
+                "back, fond. \"So much room left. We'll fill it. Slowly. I'm in no hurry; I own the "
+                "clock too.\"")},
+            {"key": "floor_ask", "label": "Ask if any of it can be undone", "set": {"iv": "floor"},
+             "desc": "the §0 question, asked plainly inside the fiction",
+             "outcome": (
+                "You ask it plainly — *can any of this be undone* — and Bethany sets the file down, "
+                "and for once the answer is straight and unperformed, because this is the one thing "
+                "she will not lie about. \"All of it,\" she says. \"Every line. There's a word that "
+                "wipes the whole file clean and puts you back the way you came, and it works the "
+                "instant you mean it, and I will never once stop it or punish it or hold it over "
+                "you. *That's* what makes the rest fair, sweetheart — that you let me write knowing "
+                "you could close the book any second.\" She smiles, and it reaches her eyes this "
+                "time. \"You haven't. That's the part I treasure. But you could. Always.\"")}],
+        "default": "ache",
+        "then": "iv_addition"}
+
+
+@choice("iv_addition", root=False)
+def _iv_addition(character):
+    k = _kit(character)
+    # She reaches for whatever's NOT yet on the file — combination-aware "next line".
+    if not k.get("pierced"):
+        nextline = ("\"You've no rings yet,\" she muses, producing a slim case of surgical gold. "
+                    "\"A blank earlobe of a body. Let's open the account with a piercing — somewhere "
+                    "that'll catch and tug and remind you it's there.\"")
+        addlabel = "Take the first ring"
+    elif not k.get("milk_port"):
+        nextline = ("\"No port plumbed in,\" she notes, fond. \"And such a waste of a chest. Let's "
+                    "fit a milk-port — lock your let-down to it, make you producer-proper.\"")
+        addlabel = "Take the milk-port"
+    elif not k.get("collared"):
+        nextline = ("\"Bare-necked still,\" she tuts, lifting a collar that isn't yours to take off. "
+                    "\"That won't do for a file this thick. Let's settle the question of whose you "
+                    "are somewhere you can feel it every time you swallow.\"")
+        addlabel = "Take the collar"
+    elif not k.get("branded"):
+        nextline = ("\"Everything but my mark,\" she says, warming the personal die — the |wB|n. "
+                    "\"The one line I save for favourites. Let's put me into your hide where it "
+                    "won't ever read as anyone else's.\"")
+        addlabel = "Take her brand"
+    else:
+        nextline = ("\"Goodness,\" she says, turning page after page, genuinely moved. \"There's "
+                    "barely a blank line left. You're nearly a *complete* edition. So instead of "
+                    "adding — let me just sit a moment and have you read, all of you, the finished "
+                    "work.\" She doesn't reach for a tool. She reaches for you.")
+        addlabel = "Be the finished work she reads"
+    return {"key": "iv_addition", "prompt": (
+        "She closes the file with a soft, satisfied pat — and then, because taking stock always "
+        "leaves her *wanting*, she reaches for the next line. " + nextline),
+        "options": [
+            {"key": "add", "label": addlabel, "set": {"add": "yes"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "let her write one more line into you, the way she's been doing all along",
+             "outcome": (
+                "You let her — let the next line go in, whatever it is this time, the way you've let "
+                "every line before it — and Bethany works with the unhurried delight of a collector "
+                "adding to a favourite set. \"There,\" she breathes, when it's done and noted in "
+                "your file in her own hand. \"One more line of me in you. The file gets thicker, "
+                "the book gets better, and you get a little more *finished*. I do adore finishing "
+                "things slowly.\"")},
+            {"key": "not_today", "label": "Not today — close the book for now", "set": {"add": "no"},
+             "desc": "the whole, unconditional out — she honours it without a flicker",
+             "outcome": (
+                "\"Not today,\" you say — and Bethany sets the tool down at once, no sulk, no "
+                "penalty, because the choosing is real and she built it that way on purpose. \"Not "
+                "today,\" she agrees, easy and warm. \"The file keeps. It's not going anywhere, and "
+                "neither, I suspect, are you — but that's your call to make, every single time, and "
+                "I'd be a poor keeper if I made it for you. Tea, then. We'll write more when you "
+                "want writing.\" And she means it, which is somehow worse and better both.")}],
+        "default": "add",
+        "then": "iv_close"}
+
+
+@choice("iv_close", root=False)
+def _iv_close(character):
+    add = scene_flag(character, "add", "no")
+    recap = ("the new line still stinging-fresh in you" if add == "yes"
+             else "the book closed for now, by your word")
+    return {"key": "iv_close", "prompt": (
+        f"She files you away — literally, the folder sliding back into its place in the run of "
+        f"them, {recap} — and pours the tea she promised, and for a moment it's almost domestic, "
+        "the owner and the owned over a pot, the thick file between you the realest thing in the "
+        "room. \"That's my favourite hour of the month, that,\" Bethany says, fond and sated. "
+        "\"Reading you. Knowing exactly what I've got, line by line.\" She passes you a cup. \"You "
+        "may go whenever you like. The file stays. So does the word that wipes it, if you ever "
+        "want it. And so, sweetheart, do I.\""),
+        "options": [
+            {"key": "stay", "label": "Stay for the tea", "effect": "devote", "params": {"amount": 2.0},
+             "end": True, "desc": "the false-domestic beat; let it be almost gentle",
+             "outcome": (
+                "You stay for the tea, and it's almost gentle, and the almost is the cruelest and "
+                "kindest part — being read cover to cover by someone who keeps you and pours you a "
+                "cup after. \"Good,\" Bethany murmurs over the rim of hers. \"Stayers read best. "
+                "Off you go when you're ready, my thick lovely file. I'll be here, adding lines, "
+                "for as long as you let me — and not one second past.\"")},
+            {"key": "go", "label": "Take your leave", "effect": "devote", "params": {"amount": 1.0},
+             "end": True, "desc": "go, knowing the file — and the out — both keep",
+             "outcome": (
+                "You take your leave, and Bethany lets you, lifting two fond fingers in a little "
+                "wave without looking up from re-shelving you. \"Mind how you go. The file keeps, "
+                "the word keeps, I keep.\" The last you hear is the soft slide of your folder home "
+                "among the others — a body made of paper, kept warm in the dark, waiting for the "
+                "next line or the word that wipes it, entirely as you choose.")}],
+        "default": "stay"}

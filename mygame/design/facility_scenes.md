@@ -95,6 +95,14 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Accounting (`iv_*`, `scene accounting`/inventory/stock/file)** — BUILT. The
+  combination payoff: Bethany takes possessive personal stock of what she's MADE, the ledger
+  GENERATED LIVE from your actual `_kit` + state (`_kit_ledger` composes every piercing / port /
+  gape / brand / collar / clause + little/preg/nugget into one read-back). Distinct from Records
+  (institutional grade) — this is intimate ownership. A bare body reads as a blank file with room
+  to write; the addition beat reaches combination-aware for the next missing line (ring → port →
+  collar → brand → "finished work"). §0 lit hard: the floor-ask branch has Bethany state plainly
+  that one word wipes the whole file, instantly, never gated — "that's what makes the rest fair."
 
 ---
 
