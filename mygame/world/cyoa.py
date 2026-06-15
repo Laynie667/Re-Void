@@ -5614,17 +5614,36 @@ def _pf_arrival(character):
 
 @choice("pf_use", root=False)
 def _pf_use(character):
-    return {"key": "pf_use", "prompt": (
-        _kit_use_note(character) +
-        "And then you're |wused|n — at the station, in the open, on the schedule the board sets — "
-        "and it happens the way everything on the floor happens: routinely, publicly, one entry in "
-        "a hall full of the same. A handler works you, or sends someone to, and the room doesn't "
-        "stop to watch because the room is full of it, your use just one more motion in the "
-        "constant processing churn, and *that's* the degradation the floor specializes in: not "
-        "spectacle but *ordinariness*, being used as unremarkably as a machine being run, in front "
-        "of everyone, while everyone is being used unremarkably too. \"Hold your station,\" the "
-        "handler says. \"Take what the board sends. It's all logged.\""),
-        "options": [
+    k = _kit(character)
+    # Kit-gated extra choices: your installed hardware unlocks routes the bare body never sees.
+    extra = []
+    if k["milk_port"]:
+        extra.append(
+            {"key": "milked_used", "label": "Hook your port up — be milked while they use you",
+             "effect": "facility", "params": {"method": "_do_milk", "kind": "proc"},
+             "set": {"used": "milked"},
+             "desc": "[milk-port] the line runs as you're worked — drained and used at once",
+             "outcome": (
+                "They clip the line to your port without breaking the rhythm of using you, and the "
+                "two processings run at once — drawn down the milk-line in steady pulls while you're "
+                "worked at the open station, drained and used in the same logged motion. The floor "
+                "doesn't even register it as two things; you're just a fitting being run on all its "
+                "ports at once, which is precisely what the port was plumbed in to make you. The "
+                "doubled draw drops you somewhere soft and far and entirely processed.")})
+    if k["gaped"]:
+        extra.append(
+            {"key": "take_heavy", "label": "Present the gauge — take the heavy fitting it was made for",
+             "effect": "facility", "params": {"method": "_scene_single", "kind": "scene"},
+             "set": {"used": "heavy"},
+             "desc": "[gape] the permanently-open hole takes the thing a tight one couldn't",
+             "outcome": (
+                "You present the gauge — the hole ringed permanently open — and the handler swaps "
+                "for the heavy fitting accordingly, the one a tight body couldn't take, and your "
+                "gape simply *accepts* it, no resistance, no stretch-shock, swallowing girth that "
+                "would have stopped you cold before they rebuilt you to take it. \"That's what the "
+                "ring's for,\" the handler notes, logging the heavier line. \"No sense gauging you "
+                "open and then handing you the small one.\" You take all of it, made to.")})
+    options = [
             {"key": "serve", "label": "Take it openly — be processed in public", "effect": "facility",
              "params": {"method": "_scene_single", "kind": "scene"}, "set": {"used": "open"},
              "desc": "the real use, on the floor, logged and seen",
@@ -5644,7 +5663,18 @@ def _pf_use(character):
                 "witness of it, while everyone else's glances land all the same. \"Eyes open or "
                 "shut, board doesn't care,\" the handler says, marking the entry. \"You're processed "
                 "either way. Shutting them just means you don't get used to the seeing, and you'll "
-                "have to get used to it eventually. Might as well watch.\"")}],
+                "have to get used to it eventually. Might as well watch.\"")}]
+    return {"key": "pf_use", "prompt": (
+        _kit_use_note(character) +
+        "And then you're |wused|n — at the station, in the open, on the schedule the board sets — "
+        "and it happens the way everything on the floor happens: routinely, publicly, one entry in "
+        "a hall full of the same. A handler works you, or sends someone to, and the room doesn't "
+        "stop to watch because the room is full of it, your use just one more motion in the "
+        "constant processing churn, and *that's* the degradation the floor specializes in: not "
+        "spectacle but *ordinariness*, being used as unremarkably as a machine being run, in front "
+        "of everyone, while everyone is being used unremarkably too. \"Hold your station,\" the "
+        "handler says. \"Take what the board sends. It's all logged.\""),
+        "options": extra + options,
         "default": "serve",
         "then": "pf_routed"}
 
