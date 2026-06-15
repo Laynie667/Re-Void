@@ -6516,6 +6516,7 @@ def _b_facility_hub(character):
     add("machine", "→ the Breeding Machine", "mx_arrival", "the automated rig; bred on a metronome, no one in the room")
     add("dairy", "→ the Dairy", "dy_arrival", "put on the machine; milked")
     add("longmilking", "→ a full milking session", "mm_arrival", "the deep rig; drained dry across cycles")
+    add("refeeding", "→ the closed-loop dairy", "rf_arrival", "milked and fed your own back at once")
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("programming", "→ the Programming Lab", "pr_arrival", "a trigger seated — a word anyone can fire")
     add("goingunder", "→ the deep chair", "hy_arrival", "staged hypnosis, all the way to the below")
@@ -6528,6 +6529,7 @@ def _b_facility_hub(character):
     add("capacity", "→ the Capacity Suite", "ct_arrival", "stretched up the chart — knot, double, fist")
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
+    add("census", "→ the Census", "bc_arrival", "your production figures read aloud to the room")
     add("lineage", "→ the Lineage Hall", "lh_arrival", "your stud-book; the get you've thrown")
     # The line folds back — surfaces once you've dropped get for the facility to rear and return.
     if (getattr(db, "offspring_counts", None) or getattr(db, "offspring_max_gen", 0)):
@@ -13510,3 +13512,237 @@ def _al_after(character):
                 "you, and loaded the next. You carry the cold of that out, a finished unit off a "
                 "line that's already forgotten you.")}],
         "default": "processed_calm"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Re-feeding — milked, then made to take it back. The dairy's loop closed
+# the cruelest way: drawn down at the rig, then the warm yield put right back
+# into you (or fed to the next producer down the line), so nothing leaves the
+# facility and you learn your own milk as food. Routes through the REAL `_do_milk`
+# facility method. State/kit-aware (milk-port plumbs the loop direct). Clean
+# register. Flow: arrival→drawn→fed. Entry: `scene refeeding`/feedback.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("rf_arrival", root=False)
+def _rf_arrival(character):
+    k = _kit(character)
+    nm = subject_name(character)
+    note = (" Your milk-port lets them close the loop without a cup in sight — a line off your "
+            "chest curving straight back up to a teat-gag fitting at your mouth, an internal "
+            "circuit of you feeding you. " if k["milk_port"] else "")
+    return {"key": "rf_arrival", "prompt": (
+        "It's a dairy station, but rigged wrong — or rigged *worse*: the milking cups feed not into "
+        "a collection vessel but into a warmed reservoir with a second line running back up to a "
+        "padded bit-gag, a nursing nipple on a hose positioned at mouth height. The dairy hand "
+        f"explains it flat as you're seated and fitted. \"Closed-loop today, {nm}. We draw you "
+        "down, and instead of binning it, you take it *back* — your own milk, warm off your own "
+        "chest, fed to you through the gag while we keep drawing. Nothing leaves the building. "
+        "Stock that drinks its own keeps the books tidy and learns a useful thing about what it's "
+        "*for*.\"" + note + " The cups seal to your tight, overfull chest; the nursing nipple "
+        "nudges at your lips. \"Open up. You'll be fed and drained at once, and by the end you "
+        "won't sort which end of you is which.\""),
+        "options": [
+            {"key": "open_loop", "label": "Open for the nipple — take your own back",
+             "set": {"rf": "open"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "accept the closed loop; nurse from yourself as you're milked",
+             "outcome": (
+                "You open for it — let the nursing nipple settle on your tongue, let the warm "
+                "first flow come as the cups begin to draw — and the loop closes: milked from the "
+                "chest, fed from the mouth, your own warm yield circulating through you in a circuit "
+                "with no outside. \"Good producer,\" the hand says. \"Drinks itself sweet. You'll "
+                "stop tasting it as *yours* soon — it'll just be the warm thing the gag gives when "
+                "the cups pull. That's the lesson taking.\")")},
+            {"key": "refuse_loop", "label": "Refuse to drink yourself", "set": {"rf": "refuse"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "clamp your mouth; the gag feeds you regardless",
+             "outcome": (
+                "You clamp your mouth against the nipple — refuse to drink your own — and the bit-"
+                "gag simply seats wider, the hose feeding past your resistance, the warm flow coming "
+                "whether you swallow willingly or just *swallow*. \"Refusing your own milk,\" the "
+                "hand observes. \"Squeamish. It passes. The gag doesn't need you to want it, only "
+                "to be open, and it'll see to the open part. Drink up. It's only you.\")")}],
+        "default": "open_loop",
+        "then": "rf_fed"}
+
+
+@choice("rf_fed", root=False)
+def _rf_fed(character):
+    return {"key": "rf_fed", "prompt": (
+        "And then the loop just *runs*. The cups draw you down in their steady pulls and the warmed "
+        "line feeds it back through the gag, milked and fed at once, a closed circuit of producer "
+        "and product with you as both ends — and the longer it runs the more the two sensations "
+        "blur, the pull at your chest and the warm flow at your mouth becoming a single loop you "
+        "live inside, fed on yourself, drained into yourself, the facility's books perfectly "
+        "balanced because nothing entered and nothing left. The dairy hand watches the reservoir "
+        "stay level. \"There's the closed loop. In equals out. You're a self-licking operation now "
+        "— we don't even have to supply you. You supply you. Endlessly, as long as the cups keep "
+        "the let-down coming.\""),
+        "options": [
+            {"key": "drink_full", "label": "Drink yourself down — run the loop", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "set": {"fed": "loop"},
+             "desc": "the real milking, fed back — drained and self-fed at once",
+             "outcome": (
+                "You run the loop — the real milking logged as the cups draw you down, the warm "
+                "yield fed back through the gag in the same minute — and somewhere in the circuit "
+                "your sense of milk-as-yours dissolves entirely into milk-as-the-warm-thing-the-"
+                "loop-gives, your body taught to be its own dairy and its own calf at once. \"Full "
+                "circuit,\" the hand confirms, reading the level reservoir. \"Producer and consumer "
+                "in one unit. Tidiest stock there is. You'll come to the loop *thirsty* soon — and "
+                "it's only ever you on the other end.\")")},
+            {"key": "feed_next", "label": "Have your yield fed to the next producer instead", "effect": "facility",
+             "params": {"method": "_do_milk", "kind": "proc"}, "set": {"fed": "next"},
+             "desc": "the real milking; your milk routed to the stock beside you, theirs to you",
+             "outcome": (
+                "They reroute it — your drawn milk fed not back to you but to the producer in the "
+                "next stall, and theirs to you, the dairy a web of stock nursing stock, everyone "
+                "fed on everyone, no outside supply and no waste. The real milking logs the same. "
+                "\"Cross-fed,\" the hand notes, watching the lines run between you and the next "
+                "stall. \"Whole row of you feeding each other. None of you'll know whose you're "
+                "drinking by the end, and it won't matter. It's all dairy. It's all the same warm "
+                "thing.\")")}],
+        "default": "drink_full",
+        "then": "rf_after"}
+
+
+@choice("rf_after", root=False)
+def _rf_after(character):
+    return {"key": "rf_after", "prompt": (
+        "When the session ends they unseal the cups and ease the gag out, and you're left full in a "
+        "way that has nowhere to go — milked empty and fed full at once, your own warmth still on "
+        "your tongue, the loop's lesson sitting in you heavier than the milk did. \"Good loop,\" "
+        "the dairy hand says, wiping you down. \"Balanced books, sweet stock. You're learning your "
+        "own milk as food, which is the last little wall most producers have — the idea that what "
+        "comes out of them is *theirs* and not just more supply. You drank past it today.\" The "
+        "reservoir, level as it started, gets logged as a closed cycle. \"You'll be thirsty by next "
+        "milking. That's the loop. In equals out, and you're both.\""),
+        "options": [
+            {"key": "loop_calm", "label": "Settle into being your own supply", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the closed-loop lesson settles in",
+             "outcome": (
+                "You settle into it — being your own dairy and your own calf, the loop that needs "
+                "no outside, the warm self-sufficiency of stock that feeds itself — and the lesson "
+                "lands clean: what comes out of you isn't yours, it's just supply, and you've "
+                "drunk it, so even that last wall is gone. You'll come to the cups thirsty now. The "
+                "loop will give. It's only ever you, and you've stopped minding.\")")},
+            {"key": "taste_lingers", "label": "Notice your own taste won't leave your mouth", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the warm self-taste lingers as a new normal",
+             "outcome": (
+                "Your own taste won't leave your mouth — warm, faintly sweet, *yours*, and now "
+                "permanently associated with being fed — and you understand the loop didn't just "
+                "balance the books, it rewired a thing in you: the next time your chest aches full "
+                "you'll think of the gag and the warm flow and be, horribly, a little *hungry*. "
+                "\"It lingers, doesn't it,\" the hand says, not unkind. \"It's meant to. You're "
+                "seasoned to yourself now. Most producers are, by the end. Off you go, full of "
+                "you.\")")}],
+        "default": "loop_calm"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Census — your production figures read aloud. A humiliation-by-data
+# inspection: the facility tallies your REAL use-stats and brood and reads them
+# to a room as your output, a body itemized into numbers. Reads live from the
+# real holes/offspring data (studbook_lines). Clean register. State-aware.
+# Flow: arrival→figures→after. Entry: `scene census`/figures/production-review.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _census_figures(character):
+    """Live production read from the real data — holes' use counts + the stud-book — or a
+    'fresh intake, no figures yet' line for an un-used body."""
+    db = getattr(character, "db", None)
+    holes = dict(getattr(db, "holes", None) or {})
+    lines = []
+    if holes:
+        total_use = sum(int((h or {}).get("use", 0)) for h in holes.values())
+        lines.append(f"|w  {total_use}|n logged uses across {len(holes)} trained hole(s)")
+        gaped = [z for z in holes if z in (getattr(db, "permanent_gape", None) or [])]
+        if gaped:
+            lines.append(f"|w  {len(gaped)}|n hole(s) trained past closing — permanently rated")
+    try:
+        from world.gang_breeding import studbook_lines
+        sb = studbook_lines(character, brief=True)
+        if sb:
+            lines.extend(sb)
+    except Exception:
+        pass
+    if not lines:
+        return ("\"...and the figures are *blank*,\" the auditor says, almost disappointed, tapping "
+                "the empty columns. \"Fresh intake. No uses logged, no get on the books, nothing "
+                "trained. A clean sheet of a body.\" Bethany smiles. \"For now. I do love reading a "
+                "blank census — all that *potential* in the empty boxes. We'll fill every one.\"")
+    return ("The auditor reads your figures aloud to the room, flat and clerical, a body rendered "
+            "as output:\n\n" + "\n".join(lines) +
+            "\n\n\"Those are the numbers,\" the auditor finishes. \"Logged, audited, on file.\"")
+
+
+@choice("bc_arrival", root=False)
+def _bc_arrival(character):
+    nm = subject_name(character)
+    return {"key": "bc_arrival", "prompt": (
+        "The Census is held in a room with a long table and a row of clipboards — auditors, buyers' "
+        "agents, a facility statistician, and Bethany at the head, your file open. You're stood on "
+        "a low dais in the middle of it, lit, while they review your |wproduction figures|n: not "
+        "your grade, not your worth as a person, but your *output* — uses taken, holes trained, get "
+        "dropped, milk yielded — read aloud and discussed as the numbers a producing unit posts.\n\n"
+        f"\"Annual review, {nm},\" Bethany says, warm, gesturing you onto the dais. \"We tally what "
+        "you've *produced*. Out loud. In company. There's no humiliation quite like hearing yourself "
+        "read as a column of figures by people deciding whether the numbers are *good* — and there's "
+        "no clearer proof of what you've become than the figures themselves.\" She nods to the "
+        "auditor. \"Read the unit its numbers.\"\n\n"
+        + _census_figures(character)),
+        "options": [
+            {"key": "stand_figures", "label": "Stand and be read as numbers", "set": {"bc": "stand"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "let the room itemize your output; the data is the degradation",
+             "outcome": (
+                "You stand and take it — let the room read you as a column of figures, discuss your "
+                "output, compare your numbers to the unit before you — and the humiliation is "
+                "precise and bloodless and total: not cruelty, just *accounting*, your body's worth "
+                "tallied in uses and litters and litres while strangers nod over the totals. "
+                "\"Solid producer,\" an auditor murmurs, making a note. Bethany glows. \"Isn't she. "
+                "The figures don't flatter and they don't lie. That's what I love about a census.\")")},
+            {"key": "shrink_figures", "label": "Shrink under the reading", "set": {"bc": "shrink"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the data-stripping is too much; they read on regardless",
+             "outcome": (
+                "You shrink under it — the bloodless reading of your own body as output, every "
+                "number a thing that was done to you said flat into a room — and the auditors don't "
+                "pause, because your discomfort isn't a figure on the sheet. \"The unit's "
+                "embarrassed,\" one notes, not even unkindly, ticking a box marked *temperament*. "
+                "\"That goes in too. Responsive stock.\" Even your shame becomes a data point. "
+                "Bethany makes the note herself, fond. \"Everything's a figure here, sweetheart. "
+                "Even the blush.\")")}],
+        "default": "stand_figures",
+        "then": "bc_after"}
+
+
+@choice("bc_after", root=False)
+def _bc_after(character):
+    return {"key": "bc_after", "prompt": (
+        "The review wraps; the clipboards are signed; your figures are entered, audited, and filed, "
+        "and a projection's drawn up for next year's expected output. Bethany helps you down off the "
+        "dais, fond, like you did beautifully. \"There. All tallied. You're not a mystery to anyone "
+        "in this room now — they know exactly what you produce, down to the decimal, and so do you, "
+        "which is the part that stays.\" She closes the file. \"Most people go their whole lives "
+        "never knowing their own output as a *number*. You'll never not know yours again. The census "
+        "is annual. The figures only go up. That's the kind of growth we like.\""),
+        "options": [
+            {"key": "known_number", "label": "Carry your own figures", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "you know your output as a number now",
+             "outcome": (
+                "You carry it out — knowing yourself as a column of figures now, your output a set "
+                "of numbers you can't un-know, audited and filed and projected forward — and the "
+                "quiet horror of it is how *clarifying* it is: you are exactly this much use, this "
+                "many litters, this many litres, and the certainty sits where a person's "
+                "self-image used to. You're a producing unit with known figures. The numbers only "
+                "go up.\")")},
+            {"key": "projection_dread", "label": "Think about next year's projection", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the figures are expected to climb",
+             "outcome": (
+                "You think about the projection — next year's expected output, the figures the "
+                "facility's already *planning* for you, the boxes drawn up empty and waiting to be "
+                "filled past this year's — and understand the census wasn't a snapshot but a "
+                "*target*: you're not just tallied, you're *forecast*, and the forecast only ever "
+                "trends up. \"Ambitious numbers for next year,\" the statistician says, sliding the "
+                "projection into your file. \"We have every confidence in the unit.\" You leave "
+                "carrying a quota you didn't agree to and a body that's expected to beat it.\")")}],
+        "default": "known_number"}

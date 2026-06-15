@@ -1074,6 +1074,40 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # Re-feeding — both branches chain (the _do_milk no-ops without a cycle).
+    c98 = _Char(); cyoa.start_scene(c98, "rf_arrival")
+    rfbeats = []
+    for ch in ("open_loop", "drink_full", "loop_calm"):
+        p = c98.db.pending_choice
+        assert p, f"refeeding: no pending before '{ch}'"
+        rfbeats.append(p["key"])
+        assert cyoa.resolve_choice(c98, ch)[0] is not None, f"refeeding '{ch}' did not resolve"
+    assert rfbeats == ["rf_arrival", "rf_fed", "rf_after"], rfbeats
+    assert c98.db.pending_choice is None and c98.db.scene_flags is None, "refeeding should end clean"
+    c99 = _Char(); cyoa.start_scene(c99, "rf_arrival")
+    for ch in ("refuse_loop", "feed_next", "taste_lingers"):
+        assert c99.db.pending_choice, f"refeeding(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c99, ch)[0] is not None, f"refeeding(b) '{ch}' failed"
+    assert c99.db.pending_choice is None and c99.db.scene_flags is None, "refeeding(b) should end clean"
+
+    # The Census — figures read live from real data; bare body reads 'blank'; both branches chain.
+    c100 = _Char(); cyoa.start_scene(c100, "bc_arrival")
+    blank = cyoa._BUILDERS["bc_arrival"](_Char())["prompt"].lower()
+    assert "blank" in blank or "no uses" in blank, "bare body should read blank figures"
+    for ch in ("stand_figures", "known_number"):
+        assert c100.db.pending_choice, f"census: stall before '{ch}'"
+        assert cyoa.resolve_choice(c100, ch)[0] is not None, f"census '{ch}' failed"
+    assert c100.db.pending_choice is None and c100.db.scene_flags is None, "census should end clean"
+    # a used body reads real figures.
+    cu = _Char(); cu.db.holes = {"cunt": {"use": 9, "gape": 6.0}}; cu.db.offspring_counts = {"bethany": 2}
+    fig = cyoa._BUILDERS["bc_arrival"](cu)["prompt"]
+    assert "logged uses" in fig and "STUD-BOOK" in fig, "used body should read real figures"
+    c101 = _Char(); cyoa.start_scene(c101, "bc_arrival")
+    for ch in ("shrink_figures", "projection_dread"):
+        assert c101.db.pending_choice, f"census(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c101, ch)[0] is not None, f"census(b) '{ch}' failed"
+    assert c101.db.pending_choice is None and c101.db.scene_flags is None, "census(b) should end clean"
+
     # Capacity Training — both branches chain (train_hole no-ops without holes in stub).
     c94 = _Char(); cyoa.start_scene(c94, "ct_arrival")
     ctbeats = []

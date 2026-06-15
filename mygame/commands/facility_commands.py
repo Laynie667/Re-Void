@@ -1698,6 +1698,8 @@ class CmdScene(Command):
         "thegift": "gf_arrival", "giftwrap": "gf_arrival", "present": "gf_arrival",
         "capacitytraining": "ct_arrival", "stretching": "ct_arrival", "gaperig": "ct_arrival",
         "assemblyline": "al_arrival", "conveyor": "al_arrival", "productionline": "al_arrival",
+        "refeeding": "rf_arrival", "feedback": "rf_arrival", "closedloop": "rf_arrival",
+        "census": "bc_arrival", "figures": "bc_arrival", "productionreview": "bc_arrival",
     }
 
     def func(self):

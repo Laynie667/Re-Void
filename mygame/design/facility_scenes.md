@@ -131,6 +131,16 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **Re-feeding (`rf_*`, `scene refeeding`/feedback)** — BUILT. The dairy loop closed the cruelest
+  way: milked at the rig, then the warm yield fed straight back through a nursing-gag (or cross-fed
+  to the next producer), a self-licking circuit where nothing leaves the building and you learn your
+  own milk as food. Real `_do_milk`. Kit-aware (milk-port plumbs the loop direct). "In equals out,
+  and you're both." Hub by the Long Milking.
+- ✅ **The Census (`bc_*`, `scene census`/figures)** — BUILT. Humiliation-by-data: your REAL use-
+  stats, gape ratings, and brood read aloud to a room of auditors as your *production figures*
+  (`_census_figures` reads live from holes + `studbook_lines`). A bare body reads "blank — all that
+  potential"; a used one is itemized to the decimal. Even your blush gets ticked as temperament.
+  Closes with next year's *projection* — you're not tallied, you're forecast. Hub by Records.
 - ✅ **Capacity Training (`ct_*`, `scene capacitytraining`/stretching)** — BUILT. The real
   knot→double→fist→prolapse ladder made a scene: a graded stretching rig works a hole up the
   use/gape thresholds until it unlocks the next capability, read back off the file like a spec
