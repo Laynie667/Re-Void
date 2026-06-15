@@ -9266,3 +9266,152 @@ def _cf_held(character):
                 "unbothered, already prepping the chair for the next. \"That's how it's built. The "
                 "plug holds for us. It never holds against *you*. Off you go, light again.\"")}],
         "default": "carry"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Wet Room — watersports (core content list). Kept as the facility's
+# relief: urinal, drinking-station, golden-shower stock, bladder held full and
+# ignored. Routes through REAL methods via the facility effect — `_toilet`
+# (kind=gang: real urine to the fluid bank + bladder backing + filth marks) and
+# `_scene_golden` (kind=scene) — plus the real `filth` effect. State-aware
+# (nugget perfect urinal, little wet-and-ashamed, preg still used), §0 lit: the
+# word ends it and empties you free, always. Flow: arrival→use→after.
+# Entry: `scene watersports`/wetroom/toilet.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ws_arrival", root=False)
+def _ws_arrival(character):
+    st = _state_tags(character)
+    nm = subject_name(character)
+    note = ""
+    if st["nugget"]:
+        note = (" A nugget makes the perfect fixture — set in the tiled trough where it's wanted, "
+                "limbless and unmoving, a mouth and holes at convenient height that can't crawl off "
+                "the duty. ")
+    elif st["little"]:
+        note = (" Down little you don't grasp the duty, only that you're being put somewhere wet and "
+                "told to stay, and that the grown-ups are doing something shameful to you that makes "
+                "your face hot even small. ")
+    elif st["preg"]:
+        note = (" A bred belly doesn't excuse you — if anything the handler finds it funnier, a "
+                "gravid thing kept on toilet duty, full at both ends. ")
+    return {"key": "ws_arrival", "prompt": (
+        "The Wet Room is exactly what the name promises: tiled floor to ceiling and sloped to a "
+        "central drain, a hose coiled on the wall, a |wmeat-toilet frame|n bolted low over a trough, "
+        "a glory-wall of fixtures at kneeling height, and a measuring jug on a shelf with your "
+        "designation taped to it. The damp is constant. The smell is frank. This is where the "
+        "facility makes the simplest possible use of a body: as |wplumbing|n.\n\n"
+        f"The |wcustodian|n hoses down the tile and jerks his chin at the frame. \"{nm}. Relief "
+        "duty. You're the restroom today — urinal, drinking-station, whatever the floor needs to "
+        "empty itself into. You hold what you're given till I say, you drink what you're aimed, and "
+        "you stay where you're set.\"" + note + " He nods at the held-full measuring jug. \"And "
+        "you've been holding your own since this morning, I see. We'll get to that. Hold it "
+        "longer.\""),
+        "options": [
+            {"key": "accept", "label": "Take the duty — be the facility's relief", "set": {"ws": "accept"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "kneel to the trough; accept being plumbing",
+             "outcome": (
+                "You take your place at the trough and accept it — accept being plumbing, a fixture "
+                "the floor empties into — and the custodian grunts, marking you present for duty. "
+                "\"Good fixture. Knows what it is.\" There's a particular bottoming-out of dignity "
+                "in *agreeing* to be a urinal, and you feel it land and settle, one more ordinary "
+                "thing you now are.")},
+            {"key": "balk_ws", "label": "Balk at toilet duty", "set": {"ws": "balk"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "refuse the trough; you're set there regardless",
+             "outcome": (
+                "You balk — and the custodian simply sets you at the trough anyway, unhurried, the "
+                "way you'd position any fixture. \"Plumbing doesn't get a vote on being plumbing,\" "
+                "he says. \"You'll do the duty whether you agreed to it or not. The only thing your "
+                "fuss changes is how the morning feels to you. It's all the same to the floor.\"")},
+            {"key": "ws_bladder", "label": "Beg to relieve your own held bladder first", "set": {"ws": "beg"},
+             "desc": "you've been holding for hours; ask",
+             "outcome": (
+                "\"Please — I've been holding since morning, please let me—\" The custodian glances "
+                "at the jug with your name on it, unmoved. \"You hold till I say. That's the "
+                "duty too — your bladder isn't yours any more than your mouth is. You'll learn the "
+                "ache and you'll learn to ignore it, same as you learned the rest. Hold it. We'll "
+                "see to you when the floor's done seeing to itself.\"")}],
+        "default": "accept",
+        "then": "ws_use"}
+
+
+@choice("ws_use", root=False)
+def _ws_use(character):
+    return {"key": "ws_use", "prompt": (
+        "And then the floor comes to empty itself into you. It's relentless and impersonal and "
+        "*frequent* — a queue of handlers and stock treating you as the fixture you've been set as, "
+        "aiming you, using you, the warm acrid reality of it running over and into you while the "
+        "drain gurgles and the custodian hoses between users. There is no ceremony to being a "
+        "toilet. There is only use, and the held ache of your own ignored bladder, and the slow "
+        "dismantling of the part of you that thought it was for anything better than this. \"Hold "
+        "what you're given,\" the custodian reminds you, bored. \"Swallow what you're aimed. The "
+        "drain takes the rest.\""),
+        "options": [
+            {"key": "urinal", "label": "Be the urinal — held full, used, backing up", "effect": "facility",
+             "params": {"method": "_toilet", "kind": "gang"}, "set": {"used": "urinal"},
+             "desc": "the REAL toilet use — real deposits, bladder backing, filth marks",
+             "outcome": (
+                "You're used as the urinal for real — aimed into, made to hold, your own bladder "
+                "backing up unrelieved on top of what they put in you — and it's logged the way "
+                "plumbing usage is logged, the real filth marking you, the real ache climbing. The "
+                "degradation isn't dramatic; it's *maintenance*, you a fixture being run, and the "
+                "ordinariness is the whole of the cruelty.")},
+            {"key": "shower", "label": "Take the golden shower — kneel and be marked", "effect": "facility",
+             "params": {"method": "_scene_golden", "kind": "scene"}, "set": {"used": "shower"},
+             "desc": "the REAL golden-shower scene — run over you, kneeling, claimed",
+             "outcome": (
+                "You kneel and take it over you — the real golden-shower use, run warm and acrid "
+                "over your face and hair and shoulders, marking you down to claimed territory while "
+                "the floor watches the way it watches anything routine. It sheets off you to the "
+                "drain and the custodian hoses the tile and not quite you, and you are, dripping, "
+                "exactly what they made you: somewhere to put it.")},
+            {"key": "drink", "label": "Be made to drink what you're aimed", "effect": "facility",
+             "params": {"method": "_scene_golden", "kind": "scene"}, "set": {"used": "drink"},
+             "desc": "the real use, taken down — the deepest of the duty",
+             "outcome": (
+                "You're aimed at the mouth and made to take it *down* — the warm acrid reality of it "
+                "swallowed on the custodian's bored count, the worst and most intimate of the duty, "
+                "being the thing that doesn't just catch it but *consumes* it. \"Good fixture,\" he "
+                "says, the only praise plumbing gets. \"Swallows clean. Doesn't waste the floor's "
+                "time.\" Something in you files the swallowing as a skill, which is the real "
+                "damage.")}],
+        "default": "urinal",
+        "then": "ws_after"}
+
+
+@choice("ws_after", root=False)
+def _ws_after(character):
+    return {"key": "ws_after", "prompt": (
+        "Eventually the floor's emptied itself enough, or the shift turns, and the custodian hoses "
+        "you and the trough down together in the same cold indifferent arcs and lets you, at last, "
+        "relieve the bladder you've held since morning — under the hose, on the tile, watched, "
+        "logged, the relief so enormous and so degrading at once that you don't know which you feel "
+        "more. \"Duty's done,\" he says, coiling the hose. \"You held well. You'll be the restroom "
+        "again — fixtures don't get reassigned, they get *used*.\"\n\n"
+        "And then, plain through the damp, the §0 truth he's required to leave you with: the duty "
+        "holds you to the facility's say, the bladder-ache and the trough and the held-full hours — "
+        "but the escape word ends every bit of it the instant you mean it, empties you, unfixes you "
+        "from the plumbing, stands you up a person and not a urinal, no permission asked. Being "
+        "made the toilet is built, like everything here, on a drain that's only ever yours to pull."),
+        "options": [
+            {"key": "stay_fixture", "label": "Stay the fixture — accept the duty's yours", "effect": "filth",
+             "params": {"severity": 1}, "end": True, "desc": "the real filth + accepting the role, knowing the word frees you",
+             "outcome": (
+                "You accept it — stay the fixture, wear the real filth of the duty, let being the "
+                "restroom be one more thing you are — *knowing* the word would unfix you and stand "
+                "you up clean this second, and staying anyway. The custodian racks the hose. The "
+                "tiles drip. You are claimed, marked, plumbing — and the choosing of it, with the "
+                "drain in reach the whole time, is the only thing that makes it yours rather than "
+                "just done to you.")},
+            {"key": "unfix", "label": "Use the word — unfix yourself, stand up clean",
+             "set": {"ws_out": "unfixed"}, "end": True, "desc": "the §0-in-fiction out; ends the duty at once",
+             "outcome": (
+                "You mean the word, and the duty falls off you — you're hosed clean and unfixed from "
+                "the plumbing and standing a person again, not a fixture, not a urinal, the trough "
+                "behind you — and the custodian lets you go without a flicker, because the wet room, "
+                "like everything here, was built on this being real. \"Off the duty,\" he says, "
+                "already hosing the tile for the next fixture. \"Works the second you say it. The "
+                "trough holds for us. Never for you.\"")}],
+        "default": "stay_fixture"}

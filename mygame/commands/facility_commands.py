@@ -1659,6 +1659,8 @@ class CmdScene(Command):
         "dollification": "dl_arrival",
         "cumflation": "cf_arrival", "filling": "cf_arrival", "pump": "cf_arrival",
         "cumflate": "cf_arrival",
+        "watersports": "ws_arrival", "wetroom": "ws_arrival", "toilet": "ws_arrival",
+        "urinal": "ws_arrival",
     }
 
     def func(self):

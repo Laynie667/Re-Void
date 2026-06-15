@@ -853,6 +853,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c44, ch)[0] is not None, f"cumflation(b) '{ch}' failed"
     assert c44.db.pending_choice is None and c44.db.scene_flags is None, "cumflation(b) should end clean"
 
+    # The Wet Room (watersports) — chains both branches; facility methods no-op without a
+    # running cycle but the scene flows and ends clean.
+    c45 = _Char(); cyoa.start_scene(c45, "ws_arrival")
+    wsbeats = []
+    for ch in ("accept", "urinal", "stay_fixture"):
+        p = c45.db.pending_choice
+        assert p, f"watersports: no pending before '{ch}'"
+        wsbeats.append(p["key"])
+        assert cyoa.resolve_choice(c45, ch)[0] is not None, f"watersports '{ch}' did not resolve"
+    assert wsbeats == ["ws_arrival", "ws_use", "ws_after"], wsbeats
+    assert c45.db.pending_choice is None and c45.db.scene_flags is None, "watersports should end clean"
+    c46 = _Char(); cyoa.start_scene(c46, "ws_arrival")
+    for ch in ("ws_bladder", "shower", "unfix"):
+        assert c46.db.pending_choice, f"watersports(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c46, ch)[0] is not None, f"watersports(b) '{ch}' failed"
+    assert c46.db.pending_choice is None and c46.db.scene_flags is None, "watersports(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

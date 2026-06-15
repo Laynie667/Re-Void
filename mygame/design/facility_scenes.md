@@ -95,6 +95,13 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Wet Room / watersports (`ws_*`, `scene watersports`/wetroom/toilet/urinal)** — BUILT.
+  Core-list watersports: kept as the facility's relief — urinal, drinking-station, golden-shower
+  stock, bladder held full and ignored. Routes through REAL methods via the facility effect:
+  `_toilet` (kind=gang — real urine to the fluid bank + bladder backing + filth marks) and
+  `_scene_golden` (kind=scene), plus the real `filth` effect on close. arrival → use → after.
+  State-aware (nugget perfect fixture / little wet-and-ashamed / preg still used). §0 lit hard: the
+  trough holds for the facility, never against you — the word unfixes you and stands you up clean.
 - ✅ **The Filling Station / cumflation (`cf_*`, `scene cumflation`/filling/pump)** — BUILT.
   Core-list cumflation: pumped/bred past full at a dedicated station to a litre-mark, then plugged
   to HOLD it — round, drum-tight, sloshing. Routes through the REAL inflation system via a new
