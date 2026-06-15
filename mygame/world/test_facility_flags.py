@@ -1074,6 +1074,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Programming — installs a real trigger; both branches chain clean.
+    c77 = _Char(); cyoa.start_scene(c77, "pr_arrival")
+    prbeats = []
+    for ch in ("kneel_trig", "let_seat", "carry_trigger"):
+        p = c77.db.pending_choice
+        assert p, f"programming: no pending before '{ch}'"
+        prbeats.append(p["key"])
+        assert cyoa.resolve_choice(c77, ch)[0] is not None, f"programming '{ch}' did not resolve"
+    assert prbeats == ["pr_arrival", "pr_drill", "pr_after"], prbeats
+    assert c77.db.pending_choice is None and c77.db.scene_flags is None, "programming should end clean"
+    c78 = _Char(); cyoa.start_scene(c78, "pr_arrival")
+    for ch in ("leak_trig", "resist_seat", "dread_who"):
+        assert c78.db.pending_choice, f"programming(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c78, ch)[0] is not None, f"programming(b) '{ch}' failed"
+    assert c78.db.pending_choice is None and c78.db.scene_flags is None, "programming(b) should end clean"
+
     # The Whelping — labor/birth; give_birth no-ops without a real pregnancy but the scene flows.
     c75 = _Char(); cyoa.start_scene(c75, "bi_arrival")
     bibeats = []

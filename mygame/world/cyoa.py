@@ -216,6 +216,34 @@ def _eff_deny_hold(character, p):
     return "held_out"
 
 
+@effect("program_trigger")
+def _eff_program_trigger(character, p):
+    """Drill a REAL installed trigger — a phrase that, spoken by ANYONE, fires the conditioned
+    response (binding_effects.install_trigger → installed_triggers, checked on all speech). Banks
+    conditioning + suggestibility so the next one seats deeper. All flags floor-cleared.
+    params: phrase, response (kneel/present/leak/recite...), strength, mantra, cond, sug."""
+    try:
+        from world.binding_effects import install_trigger
+        install_trigger(character, p.get("phrase", "good girl"),
+                        response=p.get("response", "kneel"),
+                        strength=int(p.get("strength", 2)),
+                        permanent=bool(p.get("permanent", False)),
+                        mantra=p.get("mantra"))
+    except Exception:
+        pass
+    try:
+        from world.conditioning import add_conditioning
+        add_conditioning(character, float(p.get("cond", 3.0)), source="programming")
+    except Exception:
+        pass
+    try:
+        character.db.suggestibility = (float(getattr(character.db, "suggestibility", 0) or 0)
+                                       + float(p.get("sug", 2.0)))
+    except Exception:
+        pass
+    return "programmed"
+
+
 @effect("give_birth")
 def _eff_give_birth(character, p):
     """She drops her litter — REAL delivery via pregnancy.deliver: births the recorded offspring
@@ -6439,6 +6467,7 @@ def _b_facility_hub(character):
     add("dairy", "→ the Dairy", "dy_arrival", "put on the machine; milked")
     add("longmilking", "→ a full milking session", "mm_arrival", "the deep rig; drained dry across cycles")
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
+    add("programming", "→ the Programming Lab", "pr_arrival", "a trigger seated — a word anyone can fire")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
     add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
     add("outfitting", "→ the Outfitting Bay", "ou_arrival", "equipped — ports, implants, rings, a tail")
@@ -11966,3 +11995,139 @@ def _bi_after(character):
                 "again, in a way. The line folds back on itself. It always does.\" Then the bin's "
                 "carried off, and they're a tally now, and yours only on paper.")}],
         "default": "rest_birth"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Programming — installed-trigger conditioning, the psychological
+# register the Cell only opens. A phrase is drilled into you under the headphones
+# until it seats permanent — and then ANYONE who speaks it fires the conditioned
+# response, for the rest of your time here. Routes through the REAL
+# `program_trigger` effect (binding_effects.install_trigger → installed_triggers,
+# checked on all speech) + conditioning + suggestibility. Clean register.
+# Flow: arrival→drill→after. Entry: `scene programming`/trigger/conditioning-lab.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("pr_arrival", root=False)
+def _pr_arrival(character):
+    nm = subject_name(character)
+    return {"key": "pr_arrival", "prompt": (
+        "The Programming Lab is quieter than the Conditioning Cell and somehow worse for it — no "
+        "spiral, no theatre, just a chair, a set of heavy headphones, a soft restraint for the "
+        "head, and a technician at a console with a library of |wphrases|n on a screen. This isn't "
+        "the slow ambient erosion of the Cell. This is *targeted*: they pick a phrase, they drill "
+        "it into you under the headphones until your body answers it without you, and then they "
+        "let you go back out into the facility carrying a word that isn't yours anymore — a word "
+        "that, in anyone's mouth, will make you *do* something.\n\n"
+        f"\"Trigger installation, {nm},\" the technician says, fitting the headphones, seating the "
+        "head-strap so you face the screen. \"We seat a phrase and a response. After today, when "
+        "you hear the phrase — from me, from a handler, from another resident, from anyone who "
+        "reads it off your file — your body does the response. You don't decide to. You won't be "
+        "able to *not*. It's very tidy.\" A phrase-list glows on the screen. \"You get a little say "
+        "in which, since a willing seat takes deeper. What shall we make of you? Pick your "
+        "leash-word.\""),
+        "options": [
+            {"key": "kneel_trig", "label": "A kneeling trigger — drop where you stand", "set": {"pr": "kneel"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "the phrase that folds your knees for anyone who says it",
+             "outcome": (
+                "You pick the kneeling word — and the technician nods, queuing it. \"A dropper. "
+                "Classic. Anyone says it and your knees find the floor before your mind catches up.\" "
+                "The headphones warm against your ears. \"Good choice for a first seat. Visible, "
+                "humiliating, hard to hide in a crowded room. Let's drill it in.\"")},
+            {"key": "present_trig", "label": "A presenting trigger — offer yourself on the word",
+             "set": {"pr": "present"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "the phrase that bends you over for whoever speaks it",
+             "outcome": (
+                "You pick the presenting word — and the technician's mouth twitches. \"Oh, a useful "
+                "one. Say it and you bend, hips up, holes offered, no say in the matter. Handlers "
+                "love that seat — saves them telling you twice.\" The console hums. \"Drilling it "
+                "now. By tonight you'll present to a word the way you used to flinch at one.\"")},
+            {"key": "leak_trig", "label": "An arousal trigger — go wet and wanting on the word",
+             "set": {"pr": "leak"}, "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the phrase that floods you helplessly for anyone",
+             "outcome": (
+                "You pick the arousal word — and the technician actually approves. \"The cruelest "
+                "of the three, and you chose it. Say it and you're wet and wanting on the spot, in "
+                "a meeting, in a queue, anywhere, for anyone — your own body turned against you by "
+                "two syllables.\" The headphones fill with low sound. \"Seating it deep. You'll "
+                "dread hearing it and ache to. That's the seat doing its work.\"")}],
+        "default": "kneel_trig",
+        "then": "pr_drill"}
+
+
+@choice("pr_drill", root=False)
+def _pr_drill(character):
+    pr = scene_flag(character, "pr", "kneel")
+    word = {"kneel": "the kneeling word", "present": "the presenting word",
+            "leak": "the arousal word"}.get(pr, "the word")
+    resp = {"kneel": "kneel", "present": "present", "leak": "leak"}.get(pr, "kneel")
+    phrase = {"kneel": "good girl", "present": "show me", "leak": "such a good girl"}.get(pr, "good girl")
+    return {"key": "pr_drill", "prompt": (
+        f"And then they drill it. The headphones flood with {word} — over and over, layered under a "
+        "low pulse and a murmur of suggestion, paired each time with the response until your nervous "
+        "system stops telling the two apart. At first you can resist it, hold the phrase at arm's "
+        "length, hear it as just a sound. But the repetition is patient and infinite and tuned to "
+        "your own suggestibility, and somewhere in the hundreds of reps the gap between *hearing* "
+        "the phrase and *doing* the thing simply closes, and you feel it close, feel the word stop "
+        "being a word and become a *lever* seated somewhere under your will where you can't reach "
+        "to pull it out. The technician watches the response-meter climb. \"There it goes. Seating. "
+        "Few more passes and it's permanent — and then it's not yours anymore. It's everyone's.\""),
+        "options": [
+            {"key": "let_seat", "label": "Let the phrase seat", "effect": "program_trigger",
+             "params": {"phrase": phrase, "response": resp, "strength": 3, "sug": 3.0, "cond": 3.0},
+             "set": {"drilled": "seated"},
+             "desc": "the REAL trigger installs — anyone who speaks it fires you now",
+             "outcome": (
+                "You let it seat — stop fighting the close, let the phrase sink past your will and "
+                "lock — and it takes for real, written into you, a live trigger anyone can fire from "
+                "now on. The technician pulls the headphones. \"Seated. Permanent. Test?\" — and "
+                "they say the phrase, conversationally, and your body *does the thing* before you've "
+                "decided anything at all, helpless and immediate, the lever pulled by two words in "
+                "someone else's mouth. \"There. Installed. Mind who you let read your file.\"")},
+            {"key": "resist_seat", "label": "Resist the drilling", "effect": "program_trigger",
+             "params": {"phrase": phrase, "response": resp, "strength": 2, "sug": 2.0, "cond": 2.0},
+             "set": {"drilled": "fought"},
+             "desc": "fight the close; the repetition seats it anyway, shallower",
+             "outcome": (
+                "You resist — hold the phrase off, refuse the pairing — and the trigger seats anyway, "
+                "shallower but real, because the drilling doesn't need your cooperation, only your "
+                "nervous system and enough repetitions. \"Fought it,\" the technician notes, pulling "
+                "the headphones. \"Seated lighter. It'll still fire — just maybe a half-second slower "
+                "while the bit of you that resisted loses the argument it always loses. We'll deepen "
+                "it next session. They always deepen.\"")}],
+        "default": "let_seat",
+        "then": "pr_after"}
+
+
+@choice("pr_after", root=False)
+def _pr_after(character):
+    return {"key": "pr_after", "prompt": (
+        "They unstrap you and send you back out into the facility carrying it — the seated word, "
+        "the lever under your will — and the dread of it follows you immediately: every "
+        "conversation now a minefield, every handler and resident and passing voice a potential "
+        "finger on a trigger you can't disarm, the phrase waiting in a thousand mouths to make you "
+        "do the thing in front of anyone. \"Off you go,\" the technician says, already logging the "
+        "install to your file where anyone with access can read the phrase. \"You'll find out who "
+        "knows it the hard way — mid-sentence, in a crowd, on your knees or bent over or wet "
+        "before you've understood why. That's the beauty of a seated trigger. It's not a leash you "
+        "can see. It's one anyone can hold.\""),
+        "options": [
+            {"key": "carry_trigger", "label": "Carry the seated word out", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "live with the lever anyone can pull",
+             "outcome": (
+                "You carry it out — the seated word, the dread of it, the knowing that your own body "
+                "now answers to a phrase in anyone's mouth — and the loss of that last bit of "
+                "autonomy settles in cold: there's a thing you'll do, helplessly, whenever someone "
+                "chooses to make you, and you'll never again be entirely sure a conversation is "
+                "safe. The facility took something you can't get back by walking out — it's *in* "
+                "you now, in the wiring, waiting.")},
+            {"key": "dread_who", "label": "Wonder who's already been told", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the file's open; the phrase is already loose",
+             "outcome": (
+                "You think about the file — open, readable, the phrase logged for any handler or "
+                "favoured resident to find — and understand the trigger's already loose in the "
+                "building before you've left the lab, that people you'll pass tomorrow may already "
+                "know the word that owns your knees or your hips or your cunt. \"Wondering who's "
+                "read it,\" the technician says, not looking up. \"Everyone, eventually. That's "
+                "rather the point of writing it down. Enjoy the suspense.\"")}],
+        "default": "carry_trigger"}

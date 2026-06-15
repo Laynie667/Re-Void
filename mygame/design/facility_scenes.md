@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Programming (`pr_*`, `scene programming`/trigger)** — BUILT. Installed-trigger
+  conditioning — the psychological register the Cell only opens. A phrase is drilled in under the
+  headphones until it seats permanent, and then ANYONE who speaks it fires the conditioned response
+  (kneel / present / leak). Routes through a new `program_trigger` effect (real
+  `binding_effects.install_trigger` → `installed_triggers`, checked on all speech) + conditioning +
+  suggestibility (so the next seat bites deeper). arrival → drill → after; you pick your leash-word,
+  let it seat or resist (seats anyway, shallower). The dread is the open file — anyone who reads it
+  holds the lever. Clean register. Surfaces in the hub by the Conditioning Cell.
 - ✅ **The Whelping (`bi_*`, `scene whelping`/birth/labor)** — BUILT. Labor and birth — the breeding
   payoff the pregnancy system never dramatized. She labors and delivers her litter in the birthing
   room, and the REAL `give_birth` effect (`pregnancy.deliver`) births the recorded offspring into

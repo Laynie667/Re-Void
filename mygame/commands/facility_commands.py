@@ -1686,6 +1686,7 @@ class CmdScene(Command):
         "hardwarebay": "ou_arrival",
         "whelping": "bi_arrival", "birth": "bi_arrival", "labor": "bi_arrival",
         "deliver": "bi_arrival",
+        "programming": "pr_arrival", "trigger": "pr_arrival", "program": "pr_arrival",
     }
 
     def func(self):
