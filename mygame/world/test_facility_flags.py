@@ -1074,6 +1074,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Whelping — labor/birth; give_birth no-ops without a real pregnancy but the scene flows.
+    c75 = _Char(); cyoa.start_scene(c75, "bi_arrival")
+    bibeats = []
+    for ch in ("labor_with", "push", "rest_birth"):
+        p = c75.db.pending_choice
+        assert p, f"whelping: no pending before '{ch}'"
+        bibeats.append(p["key"])
+        assert cyoa.resolve_choice(c75, ch)[0] is not None, f"whelping '{ch}' did not resolve"
+    assert bibeats == ["bi_arrival", "bi_labor", "bi_after"], bibeats
+    assert c75.db.pending_choice is None and c75.db.scene_flags is None, "whelping should end clean"
+    c76 = _Char(); cyoa.start_scene(c76, "bi_arrival")
+    for ch in ("labor_fight", "endure_birth", "ask_litter"):
+        assert c76.db.pending_choice, f"whelping(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c76, ch)[0] is not None, f"whelping(b) '{ch}' failed"
+    assert c76.db.pending_choice is None and c76.db.scene_flags is None, "whelping(b) should end clean"
+
     # The Outfitting — install menu is combination-aware; both branches chain clean.
     c73 = _Char(); cyoa.start_scene(c73, "ou_arrival")
     oubeats = []

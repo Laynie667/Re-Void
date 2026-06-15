@@ -1684,6 +1684,8 @@ class CmdScene(Command):
         "feminize": "fm_arrival",
         "outfitting": "ou_arrival", "equip": "ou_arrival", "outfit": "ou_arrival",
         "hardwarebay": "ou_arrival",
+        "whelping": "bi_arrival", "birth": "bi_arrival", "labor": "bi_arrival",
+        "deliver": "bi_arrival",
     }
 
     def func(self):

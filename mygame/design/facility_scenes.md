@@ -85,6 +85,12 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Whelping (`bi_*`, `scene whelping`/birth/labor)** — BUILT. Labor and birth — the breeding
+  payoff the pregnancy system never dramatized. She labors and delivers her litter in the birthing
+  room, and the REAL `give_birth` effect (`pregnancy.deliver`) births the recorded offspring into
+  the lineage, raises that species' quota, and brings her milk in. arrival → labor → after
+  (work-with vs fight; bear-down vs endure). State-aware (little/nugget). Closes the loop with the
+  Lineage Hall — "the line folds back on itself." Surfaces in the hub when you're carrying.
 - ✅ **The Outfitting (`ou_*`, `scene outfitting`/equip/outfit)** — BUILT. Installing the productive
   livestock hardware — distinct from the Marking Parlour (marks/brands/ink) and the Fitting (services
   existing kit): the Outfitting Bay *equips* you, fitting the working hardware that turns a person

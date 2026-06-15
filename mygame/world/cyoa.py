@@ -216,6 +216,19 @@ def _eff_deny_hold(character, p):
     return "held_out"
 
 
+@effect("give_birth")
+def _eff_give_birth(character, p):
+    """She drops her litter — REAL delivery via pregnancy.deliver: births the recorded offspring
+    into the lineage, raises that species' quota, locks lactation (milk comes in), clears the
+    belly. No-ops cleanly if she isn't actually carrying."""
+    try:
+        from world.pregnancy import deliver
+        deliver(character)
+    except Exception:
+        pass
+    return "delivered"
+
+
 @effect("quota_deal")
 def _eff_quota_deal(character, p):
     """Took the deal: a rest now, paid back in a heavier breeding quota."""
@@ -6440,6 +6453,9 @@ def _b_facility_hub(character):
     add("fellow", "→ time with your fellow", "fl_arrival", "the pair; conversion + breeding")
     # The lineage room reads as available when you're little/bred or just on the rota.
     add("nursery", "→ the Nursery", "nu_arrival", "regression; the get; the Little Box")
+    # The birthing room surfaces when you're carrying — labor's due.
+    if st.get("preg"):
+        add("whelping", "→ the Birthing Room", "bi_arrival", "labor's come — drop your litter")
     # The showroom — once you're graded, you can be sold.
     if grade or signed:
         add("showroom", "→ the Showroom", "sw_arrival", "the block; appraised and sold")
@@ -11821,3 +11837,132 @@ def _ou_after(character):
                 "fret about the whole list. We only fit what you can heal from at a time. There's "
                 "no rush. You're not going anywhere, and the chart isn't either.\"")}],
         "default": "feel_fitted"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Whelping — labor and birth, the breeding payoff. The pregnancy
+# system was real but nothing dramatized the drop; this does. She labors and
+# delivers her litter on the floor of the birthing room — and the REAL
+# `give_birth` effect (pregnancy.deliver) births the recorded offspring into the
+# lineage, raises the quota, brings her milk in. Reads labor whether or not the
+# db says pregnant (the effect no-ops if not). Clean register. State-aware.
+# Flow: arrival→labor→after. Entry: `scene whelping`/birth/labor. (Hub-gated on preg.)
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("bi_arrival", root=False)
+def _bi_arrival(character):
+    st = _state_tags(character)
+    nm = subject_name(character)
+    little = (" Down in your little headspace you don't have the words for what's happening, only "
+              "that your belly's gone hard and gripping and *wrong*, the pressure enormous and "
+              "frightening, and the handlers' calm doesn't reach you. " if st["little"] else "")
+    nugget = (" A nugget labors where she's set — no crawling to the mat, no bracing, just a "
+              "limbless body gripped by its own contractions and a handler positioning you to "
+              "drop. " if st["nugget"] else "")
+    return {"key": "bi_arrival", "prompt": (
+        "It comes on the way the facility planned it to — early, hard, the gestation accelerated to "
+        "the facility's schedule rather than nature's. The |wbirthing room|n is warm and low-lit "
+        "and practical: a padded whelping mat, a rail to grip, a warmed bin already lined and "
+        "labelled for the litter, a hand-held tally counter. Your belly — heavy, swollen, "
+        f"facility-bred — draws suddenly tight in a long gripping wave that takes the breath out of "
+        f"you, and then eases, and then you understand: it's *time*.\n\n"
+        f"\"There she goes,\" the |wbirth attendant|n says, unhurried and unsentimental, snapping "
+        "on gloves and checking your progress with a flat professional hand. \"Right on the "
+        f"schedule we induced. You're going to drop this litter, {nm}, and we're going to count "
+        "them and bin them and write them into your line, and then your milk'll come in and the "
+        "whole thing starts over. Breathe through the waves. Push when I say. Stock that fights the "
+        "labor just tears.\"" + little + nugget +
+        " Another contraction builds, harder, and your bred body bears down whether you tell it to "
+        "or not."),
+        "options": [
+            {"key": "labor_with", "label": "Labor with it — work with your body", "set": {"bi": "with"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "ride the contractions; let the bred body do what it's for",
+             "outcome": (
+                "You labor with it — ride the waves, breathe through the peaks, let your bred body "
+                "do the thing it was rebuilt to do — and the attendant nods at the easy progress. "
+                "\"Good breeder. Works with the labor instead of against it. You'll drop clean and "
+                "be ready to take again inside the week.\" The pressure builds toward something "
+                "enormous and inevitable, your body bearing down hard and sure.")},
+            {"key": "labor_fight", "label": "Fight the contractions", "set": {"bi": "fight"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "clench against it; the body delivers regardless",
+             "outcome": (
+                "You fight it — clench against the gripping waves, try to hold what your body's "
+                "determined to expel — and it hurts more and changes nothing, the contractions "
+                "rolling through harder for the resistance, the litter coming whether you cooperate "
+                "or not. \"Fighting your own labor,\" the attendant tuts. \"Only tears you and "
+                "slows the count. The litter's coming. Your body already decided. Push.\"")}],
+        "default": "labor_with",
+        "then": "bi_labor"}
+
+
+@choice("bi_labor", root=False)
+def _bi_labor(character):
+    return {"key": "bi_labor", "prompt": (
+        "And then it's the long hard work of it — wave on wave, the pressure cresting unbearable "
+        "and the attendant's flat count of *push, and breathe, and push* — your whole body reduced "
+        "to the single enormous task of getting the litter out. It's pain and effort and a deep "
+        "animal inevitability, your bred body laboring with or without your permission toward the "
+        "drop. The warmed bin waits. The tally counter waits. \"Crowning,\" the attendant says, "
+        "with the only interest she's shown — interest in the *count*, in the yield. \"Big litter "
+        "by the feel. Bear down. Let's see what you made.\""),
+        "options": [
+            {"key": "push", "label": "Bear down and deliver the litter", "effect": "give_birth",
+             "set": {"birthed": "delivered"},
+             "desc": "the REAL delivery — drop the litter, written into your line, milk comes in",
+             "outcome": (
+                "You bear down and *deliver* — the litter coming in a rush of effort and relief, "
+                "wet and squirming and immediately counted, dropped onto the mat and lifted to the "
+                "warmed bin one after another while the tally clicks. It's real: each one written "
+                "into your line, your lineage extended in a single laboring hour, your quota raised "
+                "to match what you proved you can drop. And then the after-cramp, the empty-belly "
+                "ache, and your milk coming in hot and sudden to feed what you made. \"Clean drop,\" "
+                "the attendant says, reading the tally. \"Good count. Bin's full. Line's longer. "
+                "Milk's in. Textbook producer.\"")},
+            {"key": "endure_birth", "label": "Endure it — give nothing but the litter", "effect": "give_birth",
+             "set": {"birthed": "endured"},
+             "desc": "the delivery is real regardless; refuse it everything but the get",
+             "outcome": (
+                "You give nothing but the litter — refuse the labor your voice, your effort, "
+                "anything past what your body wrenches out on its own — and the delivery happens "
+                "regardless, real and counted and binned, your get written into the line whether "
+                "you participated or merely *contained* it. \"Quiet birther,\" the attendant notes, "
+                "lifting the last of the litter to the bin. \"Doesn't matter to the count. The "
+                "litter's the litter. Milk's coming in regardless — feel it? Your body's keener on "
+                "this than you are.\"")}],
+        "default": "push",
+        "then": "bi_after"}
+
+
+@choice("bi_after", root=False)
+def _bi_after(character):
+    return {"key": "bi_after", "prompt": (
+        "After, emptied and cramping and leaking new milk, you're let to lie on the mat a moment "
+        "while the attendant tallies the warmed bin and the squirming, counted litter in it — your "
+        "get, written into your line, already being carried off to the nursery and the rearing "
+        "pens and whatever the facility makes of what you drop. \"Logged,\" she says, marking your "
+        "record. \"Litter to the nursery, line updated, quota bumped, lactation live. You did the "
+        "whole job clean.\" She strips a glove. \"Rest while the milk settles. You'll be fertile "
+        "again before the soreness fades — perpetual heat sees to that — and then we do it all over "
+        "again. That's the cycle. Drop, milk, take, carry, drop. You're very good at it.\""),
+        "options": [
+            {"key": "rest_birth", "label": "Lie back, emptied and leaking", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "the hollow post-partum quiet; the milk coming in",
+             "outcome": (
+                "You lie back, emptied and cramping and leaking the milk that's come in to feed what "
+                "you no longer hold, and the hollow quiet after the labor is its own strange peace — "
+                "a body that did the one enormous thing it's kept for and is already, faintly, "
+                "rebuilding to do it again. The nursery has your litter. Your line is longer. Your "
+                "chest is filling. The cycle turns, and you turn with it.")},
+            {"key": "ask_litter", "label": "Ask to see what you dropped", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "look at the get before it's carried off",
+             "outcome": (
+                "You ask to see them — the litter, your get, before they're carried off — and the "
+                "attendant tilts the warmed bin your way for a moment, unsentimental, letting you "
+                "look at the wet squirming count of what your body made. \"There's your drop. "
+                "Healthy. They'll be reared in the pens and bred back into the line when they're "
+                "grown — daughters in your place, sons and futa to sire — so really you'll meet them "
+                "again, in a way. The line folds back on itself. It always does.\" Then the bin's "
+                "carried off, and they're a tally now, and yours only on paper.")}],
+        "default": "rest_birth"}
