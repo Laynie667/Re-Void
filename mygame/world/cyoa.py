@@ -6357,6 +6357,8 @@ def _b_facility_hub(character):
     # The kept arc — only once Bethany owns you.
     if bowned:
         add("office", "→ Bethany's quarters", "ko_arrival", "the keeping; her bed, her file")
+        add("longnight", "→ a whole night in her bed", "bn_arrival",
+            "no clock, no line — all three, knotted, bred till dawn")
     # Seraphine visits to buy — surfaces once you're Bethany's (her to sell).
     if bowned or sowned:
         add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
@@ -9769,3 +9771,256 @@ def _bd_after(character):
                 "steel's rated to hold a thrashing body all day — and rated to let go the second "
                 "*you* call it. Both at once. That's the only kind of rig worth trusting.\"")}],
         "default": "kept_rigged"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Bethany's Long Night — the savor-piece. The densest scene in the build:
+# her triple facility-bred cock taken slow and whole over a whole night — the
+# three stallion-flared heads seated one by one, the three hound-knots forced in
+# with a *pop* and locked, the bulging, fucked past consciousness and waking
+# still impaled and being bred, the laced DEVOTION load. Real `bethany_breeds`
+# (holes=3 + devotion) + deepen + devote. State/kit-aware. §0 lit even here: the
+# word unlocks every knot and ends it the instant she hears it. Slow burn — five
+# beats. Flow: arrival→seat→knot→dark→after. Entry: `scene longnight`/bethany night.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("bn_arrival", root=False)
+def _bn_arrival(character):
+    nm = subject_name(character)
+    st = _state_tags(character)
+    over = (" She rests a fond palm on the swell of you first — you're already carrying, and she "
+            "likes that, likes breeding a bred thing, likes the get she'll put in tonight crowding "
+            "what's already there. " if st["preg"] else "")
+    return {"key": "bn_arrival", "prompt": (
+        f"\"No quota tonight,\" Bethany tells you, drawing you into her own rooms and locking the "
+        f"door behind you with a soft, final click. \"No board, no clock, no handing you back. Just "
+        f"you, and me, and the whole long night to do this *properly* — slowly, the way I never let "
+        f"myself when there's a line behind you.\"{over} She sits you on the edge of her wide soft "
+        "bed and stands between your knees and lets you watch as she unhurriedly draws the skirt "
+        "away — and the |wtriple length|n lifts free into the warm lamplight, and even knowing it's "
+        "coming the sight of it scrambles something behind your eyes.\n\n"
+        "The monstrous facility-bred root, thicker than your wrist, splitting into |wthree|n "
+        "separate prehensile shafts — each longer than your forearm, each crowned with a heavy "
+        "stallion-flare, each thickening at the base into a hound's |wknot|n already half-swollen — "
+        "and all three of them weeping, slow and fat, the laced seed that carries her |wDEVOTION|n "
+        "beading at the tips and running in unhurried threads. The smell of it alone fogs your "
+        "head, sets your mouth watering before you've decided anything. \"There she is,\" Bethany "
+        "purrs, fond, watching your face go slack at the sight. \"Drink it in. We've all night for "
+        f"every inch. I'm going to fill all three of your doors, {nm}, and then I'm going to *lock* "
+        "them, and then we'll see how many times I can empty into you before the sun comes up.\""),
+        "options": [
+            {"key": "open_eager", "label": "Open for her, eager — let her see you want it",
+             "set": {"bn": "eager"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "no pretense; show her the wanting the laced loads have built in you",
+             "outcome": (
+                "You open — knees wider, mouth already soft, the wanting plain on you because the "
+                "loads she's put in you before built it there and you've stopped being able to hide "
+                "it — and Bethany's whole face lights with greedy fondness. \"*Oh*, look at you "
+                "asking. None of the bracing tonight — you just *want* it now, don't you, want me, "
+                "want all three. That's my good girl. That's years of my seed talking, and isn't it "
+                "a sweeter voice than the one you came in with.\" She steps in close, the three "
+                "heads nudging warm against you at once.")},
+            {"key": "brace", "label": "Brace yourself for the size of her", "set": {"bn": "brace"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "you know what's coming; steel for the stretch",
+             "outcome": (
+                "You brace — breathe, set yourself, steel for a stretch you remember in your body — "
+                "and Bethany laughs softly, delighted, cupping your jaw. \"Bracing. As if bracing "
+                "ever helped you take me. It doesn't make me smaller, sweetheart, it just makes the "
+                "first inch sharper — and you know that, and you did it anyway, which tells me part "
+                "of you wants the sharp.\" The flared heads press in, patient and enormous. \"Let's "
+                "find your limits and then move them. We have hours.\"")},
+            {"key": "beg_ruin", "label": "Beg her to ruin you with it", "set": {"bn": "ruin"},
+             "effect": "deepen", "params": {"amount": 3.0},
+             "desc": "ask for the whole night, all three, no mercy — and feel it set the hook",
+             "outcome": (
+                "\"Ruin me,\" you hear yourself beg, \"all three, all night, don't be gentle\" — and "
+                "the words land in you as you say them, the hook setting deeper for being *asked* "
+                "for, and Bethany makes a low pleased sound that you feel in your teeth. \"Ruin you. "
+                "Oh, sweetheart, you've learned exactly what to ask me for.\" She tips your chin up, "
+                "merciless and fond. \"I'll ruin you so thoroughly you'll measure every night after "
+                "this against it and find them wanting. That's the kind of ruin that *keeps*. "
+                "That's the kind I do best.\"")}],
+        "default": "open_eager",
+        "then": "bn_seat"}
+
+
+@choice("bn_seat", root=False)
+def _bn_seat(character):
+    k = _kit(character)
+    ease = (" Your gauged hole takes its flare without the fight a tight one would put up — ringed "
+            "permanently open as it is, it simply *yields*, swallowing the stallion-head whole on "
+            "the first patient press, and Bethany hums at how easily that door opens for her now. "
+            if k["gaped"] else "")
+    return {"key": "bn_seat", "prompt": (
+        "She seats them one at a time, and she takes her *time*, because tonight there's nothing "
+        "rushing her. The first shaft comes to your mouth — the broad stallion-flare nudging your "
+        "lips wide, wider, the laced pre flooding your tongue and fogging you sweet as it forces "
+        "past your teeth and sinks toward your throat, thick enough that breathing becomes a thing "
+        "you negotiate around it. The second she lines up against your cunt and *presses*, the "
+        "flared head catching at your rim and then forcing through with a slow burning stretch that "
+        "pulls a muffled sound up around the first, sinking wrong-deep, deeper than you have room "
+        "for and deeper still. " + ease +
+        "And the third she works against your ass, patient and relentless, the head popping past "
+        "the tight ring with a white flash that whites out thought — and then all |wthree|n are in "
+        "you at once, filling every door of you, three flared heads seated deep and three knots "
+        "still waiting fat at your stretched rims, and Bethany sighs the contented sigh of a woman "
+        "settling into a favourite chair. \"*There.* All my holes at home. Now I've got you — every "
+        "way a body can be had at once. Feel how full that is? We haven't even started.\""),
+        "options": [
+            {"key": "take_all", "label": "Take all three — let her seat them to the root",
+             "set": {"seat": "all"}, "effect": "devote", "params": {"amount": 3.0},
+             "desc": "open every door; let the wrong-deep fullness become the whole world",
+             "outcome": (
+                "You take all three — let your jaw and your cunt and your ass each give her the last "
+                "inch, let the wrong-deep triple fullness crowd out everything that isn't her — and "
+                "the completeness of it, every hole stoppered and stretched and *hers* at once, "
+                "drops you into a place past panic where there's only the fullness and her weight "
+                "and the slow building drag as she starts, finally, to move. \"Good girl. All the "
+                "way down on all three. Most can't. You were built to — by me, over years. Now hold "
+                "on. I'm going to *use* what I built.\"")},
+            {"key": "gag_drool", "label": "Gag and drool around the one in your throat", "set": {"seat": "gag"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the throat-one is too much; choke on it and feel her love that",
+             "outcome": (
+                "You gag around the shaft in your throat — choke, drool, eyes streaming, the flare "
+                "too thick to breathe past cleanly — and Bethany *loves* it, petting your hair while "
+                "you struggle on her. \"Ohh, there's the sound. Choke on it, sweetheart, drool all "
+                "down your chin for me — that's the prettiest noise a full mouth makes.\" She doesn't "
+                "pull back an inch; she rocks deeper, working all three while you gag, patient as "
+                "the tide. \"You'll learn to breathe around me by morning. We've time for the "
+                "lesson.\"")}],
+        "default": "take_all",
+        "then": "bn_knot"}
+
+
+@choice("bn_knot", root=False)
+def _bn_knot(character):
+    return {"key": "bn_knot", "prompt": (
+        "And then she gives you the |wknots|n. She's been holding them at your rims this whole time, "
+        "fat and swollen and waiting, and now — moving in you with long, deep, deliberate strokes "
+        "that drag the flares against every nerve you have — she starts to *force* them. The one in "
+        "your cunt first: she draws back, lines the swollen knot against your stretched rim, and "
+        "presses, and presses, the stretch climbing past burning to something with no name, your "
+        "body sure it won't, it can't, it's too — and then it gives, and the knot punches through "
+        "with a wet, obscene |w*pop*|n that you feel in your spine, and locks, swelling fatter the "
+        "instant it's in so it can't pull back out. Then the ass: another slow merciless press, "
+        "another impossible stretch, another *pop* and lock that bows your back off the bed. Then "
+        "she feeds the third up your throat until the knot seats behind your teeth and you're "
+        "*plugged*, all three knotted in at once, locked to her at every door, your belly already "
+        "bulging faintly with the shapes of her seated deep. \"Locked,\" Bethany breathes, savoring "
+        "it, grinding the knots so you feel each one swell. \"Now you can't get off me even if the "
+        "building burned. Not till I go down. You're mine to empty into now, over and over, all "
+        "night, and there's nowhere — *nowhere* — for any of it to go but to stay and fill you.\""),
+        "options": [
+            {"key": "feel_lock", "label": "Feel every knot lock — surrender to being plugged",
+             "effect": "bethany_breeds", "params": {"holes": 3, "devotion": 7.0}, "set": {"knot": "locked"},
+             "desc": "the REAL triple breeding — all three knots, the first laced load",
+             "outcome": (
+                "You surrender to the lock — feel all three knots swell and seat, feel the first "
+                "load start to come — and then she *empties*, all three at once, the laced seed "
+                "pumping into you with nowhere to escape past the knots that seal each door, and it "
+                "*floods*: cunt and ass and throat and belly, the DEVOTION sinking in with it, your "
+                "head going soft and swimming as the laced load takes. The real breeding's logged, "
+                "her line in all three of you. \"*That's* one,\" Bethany sighs, grinding deep, not "
+                "softening in the least. \"Locked in and taking. Felt your head go, didn't you — "
+                "that's mine in you. We've all night for the rest.\"")},
+            {"key": "the_word_knot", "label": "Use the word — unlock and end it", "set": {"knot": "worded"},
+             "end": True, "desc": "the §0 floor, even knotted — every knot releases at once",
+             "outcome": (
+                "You say the real word — the OOC one — and even *this*, even knotted three ways and "
+                "locked, ends instantly: Bethany stills, and the knots go soft and slip free the "
+                "moment she hears it, and she's drawn out of you and gathering you up warm and clear "
+                "and unhurried before you've finished the breath. \"Done, all done, you're free, "
+                "I've got you.\" Not a heartbeat's grudge, not a question. \"Locked doesn't mean "
+                "trapped, sweetheart — never with me. The knots hold against the *world*. They have "
+                "never once held against *you*. That's the whole reason I get to be this much.\"")}],
+        "default": "feel_lock",
+        "then": "bn_dark"}
+
+
+@choice("bn_dark", root=False)
+def _bn_dark(character):
+    return {"key": "bn_dark", "prompt": (
+        "And then the night becomes a long blur of being *bred*. Locked in at every door she keeps "
+        "you and uses you, load after laced load with nowhere to go but to pack you fuller, and you "
+        "feel it accumulate — your belly swelling tight and round against her, drum-taut, the "
+        "shapes of the three shafts moving inside you visible under your own skin if you looked, "
+        "though you've stopped being able to look. She edges you past every peak and over and "
+        "through until pleasure and use and fullness smear into one bottomless thing, and somewhere "
+        "in the small hours you simply *go* — black out, wrung past your body's ability to stay — "
+        "and when you surface, dazed and lost, you're |wstill on her|n, still knotted, still being "
+        "fucked in slow deep certain strokes, another load flooding warm into you as your eyes "
+        "flutter open. \"There you are,\" Bethany murmurs, not having paused for your absence at "
+        "all. \"You went under. I kept going — you didn't need to be awake for me to keep filling "
+        "you, and I did, three more times while you were gone. Feel how heavy you are now.\""),
+        "options": [
+            {"key": "drown", "label": "Let her breed you under — go back down full and used",
+             "effect": "bethany_breeds", "params": {"holes": 3, "devotion": 8.0}, "set": {"dark": "drowned"},
+             "desc": "the REAL breeding again — pass back under, kept full and pumping",
+             "outcome": (
+                "You let go again — let her breed you back down under, the laced loads and the "
+                "bottomless fullness and the slow relentless strokes pulling you below the surface "
+                "where there's no thought, only being her thing to fill — and she empties into you "
+                "again as you sink, and again, the real get sown deep, the DEVOTION soaking through "
+                "everything you are. You lose the count. You lose the night. There is only full, and "
+                "locked, and hers, and the warm black tide. \"Good girl,\" comes her voice from very "
+                "far away. \"Go under. I've got you. I'll still be in you when you wake.\"")},
+            {"key": "stay_awake", "label": "Fight to stay awake and feel all of it", "effect": "bethany_breeds",
+             "params": {"holes": 3, "devotion": 7.0}, "set": {"dark": "witnessed"},
+             "desc": "the real breeding; witness every load, every shift inside you",
+             "outcome": (
+                "You fight to stay present — make yourself feel all of it, every laced load flooding "
+                "in and every slow shift of the three shafts moving inside you and every fresh "
+                "swell of your own tight-packed belly — and the witnessing is its own drowning, "
+                "worse and better than the black, because you're *there* for every bit of being "
+                "bred past sense. Bethany feels you stay and croons. \"Awake for it. Brave thing. "
+                "You want to *remember* being bred this thoroughly — to know exactly what I did to "
+                "you, all night, in detail. I'll give you the detail. Watch your belly fill.\"")}],
+        "default": "drown",
+        "then": "bn_after"}
+
+
+@choice("bn_after", root=False)
+def _bn_after(character):
+    dark = scene_flag(character, "dark", "drowned")
+    recap = ("the hours you lost under her" if dark == "drowned"
+             else "every load you stayed awake to feel")
+    return {"key": "bn_after", "prompt": (
+        "Toward dawn she finally goes down — the knots softening by slow degrees, and only then can "
+        "she ease the three shafts out of you, one at a time, each leaving with a wet ache and a "
+        f"slow welling spill that the plugs held in all night. You're wrecked: holes loose and raw "
+        "and gaping, belly still round and sloshing with what she put in you, " + recap + " written "
+        "into every aching inch. And Bethany — sated, fond, terrible — gathers your ruined weight "
+        "against her and holds you, stroking the spilled seed into your skin like she's working in "
+        "a balm. \"There's my good girl. *Thoroughly* bred. I do love a whole night with you — no "
+        "clock, no line, just filling something I own until it can't hold any more and then filling "
+        "it again.\" She tips your chin up, the false-tender beat landing soft as a knife. \"I think "
+        "I love you, you know. The way I love this bed. The way I love a thing that's *mine* and "
+        "holds my shape. Sleep now. You've earned the dark — and you're still full of me, and you "
+        "will be for days.\""),
+        "options": [
+            {"key": "melt", "label": "Melt into her, kept and full", "effect": "deepen",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the devotion seat; let it feel like love",
+             "outcome": (
+                "You melt into her — let the warmth and the fullness and the laced DEVOTION be "
+                "indistinguishable from being loved, because down here, after a night like that, "
+                "they *are* — and Bethany holds you through the last of it, pleased past words. "
+                "\"There. Kept and full and mine, and glad of it. That's the whole of what I wanted "
+                "you for, sweetheart — not just to breed, but to breed and have you *grateful*. "
+                "Sleep. I'll be here. I'm always here. That's the other half of owning you.\" You "
+                "go under warm, leaking her, hers all the way down.")},
+            {"key": "floor_after", "label": "Ask, even now, if you could still walk out", "set": {"bn_out": "asked"},
+             "effect": "devote", "params": {"amount": 2.0}, "end": True,
+             "desc": "the §0 question after the deepest night — she answers true",
+             "outcome": (
+                "Wrecked and full and held, you still ask it — *could I still walk out, after all "
+                "that* — and Bethany doesn't bristle, doesn't even pause her stroking, because this "
+                "is the one question she always answers straight. \"This second. Knotted you all "
+                "night, filled you past holding, put my whole line in you — and the word still "
+                "empties all of it off you and walks you out the door free, and I'd open it myself "
+                "and mean you well.\" She kisses your hair. \"I take you *this* completely precisely "
+                "because I never once take that. The deeper I have you, sweetheart, the more "
+                "carefully I hold the door. Now sleep. Stay because you'd rather. You always "
+                "could.\"")}],
+        "default": "melt"}

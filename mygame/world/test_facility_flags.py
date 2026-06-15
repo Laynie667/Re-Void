@@ -905,6 +905,24 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c50, ch)[0] is not None, f"bondage(b) '{ch}' failed"
     assert c50.db.pending_choice is None and c50.db.scene_flags is None, "bondage(b) should end clean"
 
+    # Bethany's Long Night (the savor-piece) — five beats chain; bethany_breeds runs real.
+    c51 = _Char(); cyoa.start_scene(c51, "bn_arrival")
+    bnbeats = []
+    for ch in ("open_eager", "take_all", "feel_lock", "drown", "melt"):
+        p = c51.db.pending_choice
+        assert p, f"longnight: no pending before '{ch}'"
+        bnbeats.append(p["key"])
+        assert cyoa.resolve_choice(c51, ch)[0] is not None, f"longnight '{ch}' did not resolve"
+    assert bnbeats == ["bn_arrival", "bn_seat", "bn_knot", "bn_dark", "bn_after"], bnbeats
+    assert c51.db.pending_choice is None and c51.db.scene_flags is None, "longnight should end clean"
+    # the §0 word ends it even knotted three ways (the_word_knot at the knot beat).
+    c52 = _Char(); cyoa.start_scene(c52, "bn_arrival")
+    cyoa.resolve_choice(c52, "brace")       # arrival
+    cyoa.resolve_choice(c52, "gag_drool")   # seat
+    assert c52.db.pending_choice and c52.db.pending_choice["key"] == "bn_knot", "longnight should reach the knot"
+    cyoa.resolve_choice(c52, "the_word_knot")  # §0 word, even knotted
+    assert c52.db.pending_choice is None and c52.db.scene_flags is None, "the word must end the night clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):

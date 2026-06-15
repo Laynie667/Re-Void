@@ -1664,6 +1664,7 @@ class CmdScene(Command):
         "cnc": "cn_arrival", "take": "cn_arrival", "hunt": "cn_arrival",
         "bondage": "bd_arrival", "rig": "bd_arrival", "suspension": "bd_arrival",
         "bound": "bd_arrival",
+        "longnight": "bn_arrival", "night": "bn_arrival", "bethanynight": "bn_arrival",
     }
 
     def func(self):

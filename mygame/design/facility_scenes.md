@@ -103,6 +103,16 @@ built reference). This doc is the master list of everything to convert.
   kit-aware (pierced rings clipped into the frame; milk-port unlocks a hung-and-milked option).
   §0 lit hard: the steel is rated to hold a thrashing body all day AND to let go the instant the
   word is meant — "both at once; the only kind of rig worth trusting."
+- ✅ **Bethany's Long Night (`bn_*`, `scene longnight`/night)** — BUILT. The savor-piece, the
+  densest scene in the build: her triple facility-bred cock taken slow and whole over a whole
+  night — the three stallion-flared heads seated one by one, the three hound-knots forced in with
+  a *pop* and locked, the bulging belly, fucked past consciousness and waking still impaled and
+  being bred, the laced DEVOTION load. Five beats (arrival→seat→knot→dark→after). Real
+  `bethany_breeds` (holes=3 + devotion) fires at the knot and dark beats + deepen/devote.
+  State-aware (preg = bred-again over the swell), kit-aware (gape takes the flares easy). §0 lit
+  even here: a `the_word_knot` branch ends it instantly even knotted three ways (engine-verified
+  clean) — "the knots hold against the world, never against you; the deeper I have you, the more
+  carefully I hold the door." Surfaces in the hub once Bethany owns you.
 - ✅ **The Take / CNC (`cn_*`, `scene cnc`/take/hunt)** — BUILT. Core-list consensual-non-consent,
   written as the scene where the §0 floor stops being mere safety and becomes the literal enabling
   beam: Bethany names BOTH lines explicitly up front — in-fiction your "no" is hers to ignore (the
