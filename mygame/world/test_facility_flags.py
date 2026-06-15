@@ -1074,6 +1074,38 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # Capacity Training — both branches chain (train_hole no-ops without holes in stub).
+    c94 = _Char(); cyoa.start_scene(c94, "ct_arrival")
+    ctbeats = []
+    for ch in ("present_hole", "train_up", "rated"):
+        p = c94.db.pending_choice
+        assert p, f"capacity: no pending before '{ch}'"
+        ctbeats.append(p["key"])
+        assert cyoa.resolve_choice(c94, ch)[0] is not None, f"capacity '{ch}' did not resolve"
+    assert ctbeats == ["ct_arrival", "ct_train", "ct_after"], ctbeats
+    assert c94.db.pending_choice is None and c94.db.scene_flags is None, "capacity should end clean"
+    c95 = _Char(); cyoa.start_scene(c95, "ct_arrival")
+    for ch in ("clench_train", "endure_train", "dread_prolapse"):
+        assert c95.db.pending_choice, f"capacity(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c95, ch)[0] is not None, f"capacity(b) '{ch}' failed"
+    assert c95.db.pending_choice is None and c95.db.scene_flags is None, "capacity(b) should end clean"
+
+    # The Assembly Line — both branches chain clean.
+    c96 = _Char(); cyoa.start_scene(c96, "al_arrival")
+    albeats = []
+    for ch in ("ride_belt", "run_full", "processed_calm"):
+        p = c96.db.pending_choice
+        assert p, f"assembly: no pending before '{ch}'"
+        albeats.append(p["key"])
+        assert cyoa.resolve_choice(c96, ch)[0] is not None, f"assembly '{ch}' did not resolve"
+    assert albeats == ["al_arrival", "al_line", "al_after"], albeats
+    assert c96.db.pending_choice is None and c96.db.scene_flags is None, "assembly should end clean"
+    c97 = _Char(); cyoa.start_scene(c97, "al_arrival")
+    for ch in ("fight_belt", "endure_line", "just_a_unit"):
+        assert c97.db.pending_choice, f"assembly(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c97, ch)[0] is not None, f"assembly(b) '{ch}' failed"
+    assert c97.db.pending_choice is None and c97.db.scene_flags is None, "assembly(b) should end clean"
+
     # On the Record (manufactured consent) — both branches chain clean.
     c90 = _Char(); cyoa.start_scene(c90, "mc_arrival")
     mcbeats = []

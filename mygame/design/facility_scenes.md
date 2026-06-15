@@ -131,6 +131,17 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **Capacity Training (`ct_*`, `scene capacitytraining`/stretching)** — BUILT. The real
+  knot→double→fist→prolapse ladder made a scene: a graded stretching rig works a hole up the
+  use/gape thresholds until it unlocks the next capability, read back off the file like a spec
+  sheet. Routes through real `train_hole` (record_use + hole_capabilities; gapes permanently at
+  threshold). State/kit-aware (gaped = prolapse-rated). The chart's last rung, PROLAPSE, is the
+  destination, "everything we open, we open all the way." Hub by the Sanitation Block.
+- ✅ **The Assembly Line (`al_*`, `scene assemblyline`/conveyor)** — BUILT. Industrial processing,
+  distinct from the Floor (ordinariness) and Sanitation (the wall): a literal conveyor of use-
+  stations you're run down — mouth, breeding, milking, marking, wash — a body *manufactured* rather
+  than used, broken into timed ticked steps. Real `_scene_allholes`/`_scene_bukkake`. State-aware.
+  "Not a person we use, a unit we run; a line never stops for one unit." Hub by the Sanitation Block.
 - ✅ **On the Record (`mc_*`, `scene ontherecord`/consentdrill)** — BUILT. Manufactured consent, the
   bureaucratic horror: a camera, a consent-form template, and a drilled cue ("do you consent?") that
   pulls a bright recorded "yes, please, thank you" out of you on command — making every clause

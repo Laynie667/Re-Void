@@ -274,6 +274,25 @@ def _eff_bred_by_own(character, p):
     return "line_folded"
 
 
+@effect("train_hole")
+def _eff_train_hole(character, p):
+    """Train a hole's capacity for REAL — record_use raises its use-count + gape, which unlocks
+    capabilities (knot >=6 / double >=14 / fist >=22, prolapse at permanent gape) and can gape it
+    permanently. Returns the unlocked-capability set as a comma string. params: zone, amount."""
+    caps = ""
+    try:
+        from world.gang_breeding import animal_holes, record_use, hole_capabilities
+        import random as _r
+        hs = [z for z in (animal_holes(character) or {}).values() if z]
+        zone = p.get("zone") or (_r.choice(hs) if hs else None)
+        if zone:
+            record_use(character, zone, float(p.get("amount", 6.0)))
+            caps = ",".join(sorted(hole_capabilities(character, zone)))
+    except Exception:
+        pass
+    return "trained:" + caps
+
+
 @effect("give_birth")
 def _eff_give_birth(character, p):
     """She drops her litter — REAL delivery via pregnancy.deliver: births the recorded offspring
@@ -6505,6 +6524,8 @@ def _b_facility_hub(character):
     add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
     add("outfitting", "→ the Outfitting Bay", "ou_arrival", "equipped — ports, implants, rings, a tail")
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
+    add("assemblyline", "→ the Assembly Line", "al_arrival", "the conveyor; processed station to station")
+    add("capacity", "→ the Capacity Suite", "ct_arrival", "stretched up the chart — knot, double, fist")
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
     add("lineage", "→ the Lineage Hall", "lh_arrival", "your stud-book; the get you've thrown")
@@ -13240,3 +13261,252 @@ def _gf_after(character):
                 "returned sits in you like a fact now: owned enough to be a present, and presents "
                 "go where they're put.")}],
         "default": "be_kept_gift"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Capacity Training — the holes trained for capability, the real
+# knot>double>fist>prolapse ladder made a scene. A stretching rig works a hole up
+# the use/gape thresholds until it unlocks the next thing it can take, the stats
+# read back off your file. Routes through the REAL `train_hole` (record_use +
+# hole_capabilities; can gape permanently). Clean register. State/kit-aware.
+# Flow: arrival→train→after. Entry: `scene capacitytraining`/stretching/gape-rig.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("ct_arrival", root=False)
+def _ct_arrival(character):
+    k = _kit(character)
+    nm = subject_name(character)
+    note = (" Your gauged hole's already prolapse-rated — they'll work the *others* up to match, "
+            "or push the gaped one further past any closing. " if k["gaped"] else "")
+    return {"key": "ct_arrival", "prompt": (
+        "The Capacity Suite is graded like a workshop: a rack of dilators and plugs and inflatable "
+        "cores ascending in obscene increments, a chart on the wall mapping the facility's capacity "
+        "ladder — |wKNOT · DOUBLE · FIST · PROLAPSE|n — and a padded frame that holds a hole open "
+        "and presented at working height. This isn't use for its own sake; it's *training*, "
+        "methodical, the staff working a hole up the ladder rung by measured rung until it can take "
+        "the next thing on the chart, and logging each capability as it unlocks.\n\n"
+        f"\"Capacity work today, {nm},\" the trainer says, reading your file. \"We pick a hole and "
+        "we train it — past comfortable, past its old limit, up the ladder — until it can take what "
+        "the chart says it should, and then we write the new capability down and move the goalpost. "
+        "Stock's worth is partly *what it can take*, and we intend to raise yours.\"" + note +
+        " The first dilator comes off the rack, already a size that makes you doubt. \"Which hole "
+        "earns its next rung today? Or I'll pick the one furthest behind.\""),
+        "options": [
+            {"key": "present_hole", "label": "Present a hole for training", "set": {"ct": "present"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "offer a hole to the rig; let it be worked up a rung",
+             "outcome": (
+                "You present a hole for it — offer it to the frame, let it be held open and worked — "
+                "and the trainer nods, seating the first dilator. \"Cooperative. Good — a relaxed "
+                "hole trains faster and tears less. We'll have you up a rung by the end of the "
+                "session.\" The stretch begins, patient and relentless, the rig built to take you "
+                "past every limit you think you have.")},
+            {"key": "clench_train", "label": "Clench against the dilator", "set": {"ct": "clench"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "resist the stretch; the rig is graded for exactly that",
+             "outcome": (
+                "You clench against it — and the rig doesn't care, doesn't hurry, just holds the "
+                "dilator's pressure steady and patient against your resistance until the hole gives "
+                "because holes always give, the training built to outlast your clenching. \"Tighten "
+                "all you like,\" the trainer says, unbothered. \"The rig's rated past anything you "
+                "can hold. All fighting does is make you feel each rung. Up we go regardless.\"")}],
+        "default": "present_hole",
+        "then": "ct_train"}
+
+
+@choice("ct_train", root=False)
+def _ct_train(character):
+    return {"key": "ct_train", "prompt": (
+        "And then they train it — dilator to dilator up the rack, each one a size you were sure was "
+        "the limit until the rig proved otherwise, the hole worked past knot-width and toward "
+        "double and toward fist on the chart's relentless ladder. The trainer narrates your "
+        "thresholds like a coach: what you can take now that you couldn't an hour ago, where the "
+        "gape's climbing, which capability's about to unlock and get written to your file. It's "
+        "methodical and obscene and weirdly *clinical*, your body's limits treated as numbers to be "
+        "raised. \"Almost there,\" the trainer says, seating the next core. \"One more size and the "
+        "chart gets a new tick. Push into it. Stock that trains its own capacity grades higher.\""),
+        "options": [
+            {"key": "train_up", "label": "Train it up — earn the next rung", "effect": "train_hole",
+             "params": {"amount": 8.0}, "set": {"trained": "up"},
+             "desc": "the REAL training — record_use up the ladder, capability unlocked + logged",
+             "outcome": (
+                "You train it up — push into the rig, let it work you past the rung — and it takes "
+                "for real, the use logged, the gape climbing, a new capability unlocking on your "
+                "file: the hole can take the next thing on the chart now, knot or double or fist, "
+                "written down as an improvement and a goalpost moved. \"There's the tick,\" the "
+                "trainer says, logging it. \"Trained up a rung. It'll take that for good now — and "
+                "we'll be back for the next one. The chart doesn't end; it just gets to "
+                "prolapse.\"")},
+            {"key": "endure_train", "label": "Endure the stretch", "effect": "train_hole",
+             "params": {"amount": 6.0}, "set": {"trained": "endured"},
+             "desc": "the capacity trains regardless; survive the rung",
+             "outcome": (
+                "You endure it — give the rig nothing but the hole and the survival — and the "
+                "capacity trains regardless, real and logged, the gape climbing toward the next "
+                "threshold whether you push or merely *contain* the stretch. \"Trains either way,\" "
+                "the trainer notes, marking the file. \"The hole doesn't know if you cooperated. It "
+                "just knows it's bigger now. That's the only opinion the chart records.\"")}],
+        "default": "train_up",
+        "then": "ct_after"}
+
+
+@choice("ct_after", root=False)
+def _ct_after(character):
+    return {"key": "ct_after", "prompt": (
+        "After, they read your capacities back to you off the file like a livestock spec sheet — "
+        "what each trained hole can take now, the rungs unlocked, the gape-numbers climbing toward "
+        "the permanent column where a hole stops closing for good. It's the coldest kind of "
+        "intimate, hearing your own body itemized as a set of capacities and limits-to-be-raised. "
+        "\"Good session,\" the trainer says, racking the dilators. \"You're rated for more than you "
+        "walked in rated for, and it's on your file where every handler and buyer can read exactly "
+        "what you'll take. We'll keep training you up the chart. There's always another rung — right "
+        "up until the last one, where the hole just... stays open. We get most stock there "
+        "eventually.\""),
+        "options": [
+            {"key": "rated", "label": "Wear your new rating", "effect": "deepen", "params": {"amount": 2.0},
+             "end": True, "desc": "the trained capacity is logged and yours now",
+             "outcome": (
+                "You wear it — the new rating, the unlocked rung, the body itemized and improved on "
+                "paper — and the cold clarity settles in: you are, measurably, *more takeable* than "
+                "you were, trained up a chart toward a column where your holes stop closing, and "
+                "the number's on your file for anyone to read and use. You're rated higher. That's "
+                "what the suite is for, and it worked.")},
+            {"key": "dread_prolapse", "label": "Look at the last rung on the chart", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "PROLAPSE waits at the top of the ladder",
+             "outcome": (
+                "You look at the chart's last rung — |wPROLAPSE|n, where a hole trains past closing "
+                "and stays slack and open and ruined for good — and understand it's not a "
+                "possibility but a *destination*, the goalpost the whole ladder marches toward, the "
+                "place they get most stock eventually. \"Eyeing the top,\" the trainer says, almost "
+                "kind. \"Don't rush it. We take it a rung at a time. But yes — that's where the "
+                "training goes. Everything we open, we open all the way, in the end.\"")}],
+        "default": "rated"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Assembly Line — industrial processing, distinct from the Floor
+# (ordinariness) and Sanitation (the wall): a literal conveyor of use-stations
+# you're moved down, each a different act, station to station, a body run through
+# a production line. Routes through the REAL facility scene methods. State-aware.
+# Clean register. Flow: arrival→line→after. Entry: `scene assemblyline`/conveyor.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("al_arrival", root=False)
+def _al_arrival(character):
+    st = _state_tags(character)
+    nm = subject_name(character)
+    note = ""
+    if st["preg"]:
+        note = (" Bred stock runs the line too — a station's been added to milk the early let-down "
+                "and check the carry, the conveyor indifferent to the cargo. ")
+    elif st["nugget"]:
+        note = (" A nugget rides the belt in a moulded cradle, conveyed station to station with no "
+                "need to walk, a limbless workpiece on the line. ")
+    return {"key": "al_arrival", "prompt": (
+        "The Assembly Line is the facility at its most frankly industrial: a slow rubber conveyor "
+        "running the length of a long fluorescent hall, and *stations* down its length — a "
+        "restraint-clamp, a mouth-station, a breeding-station, a milking clip, a marking head, a "
+        "wash-down — each manned or machined, each doing one thing to the stock that passes through. "
+        "You're loaded onto the belt at one end like a workpiece, clamped to a moving cradle, and "
+        "the line starts with a lurch. \"Production line,\" the foreman says over the hum, ticking "
+        f"a clipboard. \"You ride the belt, {nm}, and each station does its bit as you pass — no "
+        "waiting, no choosing, no skipping a step. You come off the far end *processed*: used, "
+        "milked, marked, washed, logged, in that order, on a timer.\"" + note +
+        " The belt carries you toward the first station, where something mechanical is already "
+        "lowering to meet you. \"Hold still on the cradle. The line does the moving.\""),
+        "options": [
+            {"key": "ride_belt", "label": "Ride the belt — be processed station to station",
+             "set": {"al": "ride"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "go limp on the cradle; let the line run you through",
+             "outcome": (
+                "You ride it — go limp on the moving cradle, let the conveyor carry you station to "
+                "station — and the assembly-line logic takes you over: there's nothing to decide, "
+                "nowhere to go but forward, each station doing its bit and passing you to the next, "
+                "your processing broken into timed steps like any product down any line. The "
+                "foreman ticks boxes as you pass each one. \"Good workpiece. Rides clean.\"")},
+            {"key": "fight_belt", "label": "Struggle on the conveyor", "set": {"al": "fight"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "fight the cradle; the belt moves you regardless",
+             "outcome": (
+                "You struggle on the cradle — and the belt carries you forward at its set pace "
+                "regardless, the clamps holding, each station reaching you on schedule whether you "
+                "fight or not, the line as indifferent to your thrashing as any machine to its "
+                "stock. \"Belt doesn't speed up or slow down,\" the foreman notes. \"Fighting just "
+                "means you meet each station tense. They process you the same. Ride or fight, you "
+                "come off the end done.\"")}],
+        "default": "ride_belt",
+        "then": "al_line"}
+
+
+@choice("al_line", root=False)
+def _al_line(character):
+    return {"key": "al_line", "prompt": (
+        "And then the line *runs* you. Station by station, the conveyor feeds you through: the "
+        "mouth-station fits and uses your throat on a timer and passes you on mid-swallow; the "
+        "breeding-station clamps your hips and covers you in transit; the milking clip draws you "
+        "down as you roll past; the marking head stamps something fresh into your skin without the "
+        "belt pausing; the wash-down sluices you and the next station's already lowering. There's "
+        "no rhythm you set, no attention paid to you as anything but a workpiece at a step — just "
+        "the relentless forward crawl of the belt and the boxes getting ticked, your whole "
+        "processing rendered as *manufacturing*. The foreman walks alongside, clipboard filling. "
+        "\"Coming along nicely. Three more stations. You'll be a finished unit by the end of the "
+        "belt.\""),
+        "options": [
+            {"key": "run_full", "label": "Be run through the full line", "effect": "facility",
+             "params": {"method": "_scene_allholes", "kind": "scene"}, "set": {"lined": "full"},
+             "desc": "the real processing — every station, logged, conveyor-style",
+             "outcome": (
+                "You're run through the full line — every station doing its bit in sequence, the "
+                "real use and milking and marking logged in tidy production columns, a body "
+                "manufactured down a belt — and the industrial ordinariness of it works in deeper "
+                "than any single act could: you're not being *used*, you're being *produced*, "
+                "broken into steps and timed and ticked, and somewhere on the belt you stop "
+                "experiencing it as things happening to a person and start experiencing it as a "
+                "process running on a unit. \"Off the end,\" the foreman says, last box ticked. "
+                "\"Finished. Next.\"")},
+            {"key": "endure_line", "label": "Endure the conveyor", "effect": "facility",
+             "params": {"method": "_scene_bukkake", "kind": "scene"}, "set": {"lined": "endured"},
+             "desc": "the line runs regardless; survive to the far end",
+             "outcome": (
+                "You endure it — hold some scrap of self apart from the belt's logic, survive "
+                "station to station to the far end — and the line processes you exactly the same, "
+                "real and logged and indifferent, your endurance just another thing the conveyor "
+                "carries past each step. You come off the end processed, the boxes all ticked, the "
+                "self you held apart feeling faintly absurd against the sheer *manufacturing* of "
+                "what just happened. \"Done unit,\" the foreman confirms, and the belt's already "
+                "carrying the next.")}],
+        "default": "run_full",
+        "then": "al_after"}
+
+
+@choice("al_after", root=False)
+def _al_after(character):
+    return {"key": "al_after", "prompt": (
+        "You come off the far end of the belt onto a sloped chute and a waiting handler, processed "
+        "and dripping and ticked complete — used, bred, milked, marked, washed, in that order, on "
+        "the line's schedule, a finished unit. The foreman tears off your processing sheet and "
+        "files it. \"Clean run. Every station, on time, logged.\" He nods you toward the exit chute "
+        "with the same gesture you'd give a crate. \"That's the floor's whole philosophy distilled, "
+        "that line — you're not a person we use, you're a unit we *run*. And a line never stops for "
+        "one unit. There's always another loading on at the far end. You'll ride it again on "
+        "schedule.\""),
+        "options": [
+            {"key": "processed_calm", "label": "Feel the manufactured-unit calm", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the production-line logic settles into you",
+             "outcome": (
+                "You feel it settle — the manufactured-unit calm, the strange flat peace of having "
+                "been *run* rather than chosen, processed in timed steps like a product down any "
+                "line — and the industrial framing sinks past the acts themselves: you are a unit "
+                "that gets run, on a schedule, to a spec, and the line's indifference has taught "
+                "your body to expect nothing else. You ride off the chute already half-waiting for "
+                "the next loading.")},
+            {"key": "just_a_unit", "label": "Sit with being a workpiece", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the dehumanization of the conveyor lingers",
+             "outcome": (
+                "You sit with it — being a *workpiece*, a thing loaded and conveyed and processed "
+                "and chuted off the end, not used so much as *manufactured* — and the dehumanization "
+                "of the belt lingers worse than any cruelty, because cruelty at least implies "
+                "someone cared enough to be cruel. The line cared nothing. It just ran you, ticked "
+                "you, and loaded the next. You carry the cold of that out, a finished unit off a "
+                "line that's already forgotten you.")}],
+        "default": "processed_calm"}

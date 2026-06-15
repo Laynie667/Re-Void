@@ -1696,6 +1696,8 @@ class CmdScene(Command):
         "understudy": "un_arrival", "intakedesk": "un_arrival", "recruiter": "un_arrival",
         "ontherecord": "mc_arrival", "consentdrill": "mc_arrival", "documentation": "mc_arrival",
         "thegift": "gf_arrival", "giftwrap": "gf_arrival", "present": "gf_arrival",
+        "capacitytraining": "ct_arrival", "stretching": "ct_arrival", "gaperig": "ct_arrival",
+        "assemblyline": "al_arrival", "conveyor": "al_arrival", "productionline": "al_arrival",
     }
 
     def func(self):
