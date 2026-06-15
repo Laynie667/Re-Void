@@ -131,6 +131,13 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **The Understudy (`un_*`, `scene understudy`/intakedesk/recruiter)** — BUILT. The devious one:
+  the cruelest conversion isn't what's done TO you but being made the one who does it to the next
+  arrival. Bethany promotes her broken favourite to work the intake desk — the warm smiling
+  clipboard-face that signs a newcomer into the Process, the victim made the lure. The speech-clause
+  even smooths a warning out of your voice if you try to signal. Real deepen + submit_standing (the
+  broken made the breaker, on the books). "Not breaking them. Recruiting them." Hub when Bethany owns
+  you.
 - ✅ **The Breeding Machine (`mx_*`, `scene breedingmachine`/machine/therig)** — BUILT. The automated
   fucking-machine — distinct from the milking machine (Long Milking) and the edging station (The
   Edge): a knotted shaft on a motorized rail with a DEPTH·PACE·DURATION·KNOT-LOCK dial that breeds

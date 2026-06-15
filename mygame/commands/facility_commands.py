@@ -1693,6 +1693,7 @@ class CmdScene(Command):
         "openhouse": "ev_openhouse", "publicuse": "ev_openhouse",
         "vesperlore": "vl_arrival", "vespertalk": "vl_arrival",
         "breedingmachine": "mx_arrival", "machine": "mx_arrival", "therig": "mx_arrival",
+        "understudy": "un_arrival", "intakedesk": "un_arrival", "recruiter": "un_arrival",
     }
 
     def func(self):

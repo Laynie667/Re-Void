@@ -1074,6 +1074,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Understudy — the complicity scene; both branches chain clean.
+    c88 = _Char(); cyoa.start_scene(c88, "un_arrival")
+    unbeats = []
+    for ch in ("take_clipboard", "lure_warm", "become"):
+        p = c88.db.pending_choice
+        assert p, f"understudy: no pending before '{ch}'"
+        unbeats.append(p["key"])
+        assert cyoa.resolve_choice(c88, ch)[0] is not None, f"understudy '{ch}' did not resolve"
+    assert unbeats == ["un_arrival", "un_intake", "un_after"], unbeats
+    assert c88.db.pending_choice is None and c88.db.scene_flags is None, "understudy should end clean"
+    c89 = _Char(); cyoa.start_scene(c89, "un_arrival")
+    for ch in ("balk_role", "warn_caught", "submit_role"):
+        assert c89.db.pending_choice, f"understudy(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c89, ch)[0] is not None, f"understudy(b) '{ch}' failed"
+    assert c89.db.pending_choice is None and c89.db.scene_flags is None, "understudy(b) should end clean"
+
     # The Breeding Machine — both branches chain (the _scene_knottrain no-ops without a cycle).
     c86 = _Char(); cyoa.start_scene(c86, "mx_arrival")
     mxbeats = []

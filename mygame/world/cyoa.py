@@ -6530,6 +6530,8 @@ def _b_facility_hub(character):
             "no clock, no line — all three, knotted, bred till dawn")
         add("pillowtalk", "→ ask her things", "bt_arrival",
             "kept close; she's talkative — the Process, the dose, her story")
+        add("understudy", "→ work the intake desk", "un_arrival",
+            "her favourite's promotion — sign the next one in")
     # Seraphine visits to buy — surfaces once you're Bethany's (her to sell).
     if bowned or sowned:
         add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
@@ -12850,3 +12852,130 @@ def _mx_after(character):
                 "output, and you carry it out wanting the next hands that touch you all the more "
                 "for the metronome that didn't.")}],
         "default": "machine_calm"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Understudy — the cruelest conversion isn't what's done TO you, it's
+# being made the one who does it to the next arrival. Bethany trains her broken
+# favourite to work the intake desk — to be the warm smiling clipboard-face that
+# signs a newcomer into the Process, complicit, the victim made the lure. Devious,
+# clean register. Real conditioning (deepen) + standing (submit_standing) + devote.
+# Flow: arrival→intake→after. Entry: `scene understudy`/intake-desk/recruiter.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("un_arrival", root=False)
+def _un_arrival(character):
+    nm = subject_name(character)
+    return {"key": "un_arrival", "prompt": (
+        "Bethany sets a clipboard in your hands — *her* clipboard, the intake one, warm from her "
+        "grip — and stands you behind the front desk where it all started for you, where she once "
+        f"smiled you in. \"I've a treat for you, {nm},\" she says, fixing your collar, your posture, "
+        "the angle of your head, dressing you into the role. \"You've been through the whole "
+        "Process now. You *understand* it, top to bottom, better than any new hire ever could. So "
+        "I'm promoting you — a little. You're going to help me with *intake*.\"\n\n"
+        "Through the glass, a |wnewcomer|n is being walked up the path — nervous, hopeful, "
+        "clutching a referral, exactly as green as you were. \"That one signs today,\" Bethany "
+        "murmurs, warm at your ear. \"And *you're* going to do it. Smile like I smiled at you. Use "
+        "the soft voice. Tell them it's safe, tell them the contract's a formality, tell them all "
+        "the true-sounding things I told you — because they'll believe it from *you*, another "
+        "resident, so much faster than from me.\" Her hand rests fond on the back of your neck. "
+        "\"The thing that was broken, holding the door for the next one. It's the sweetest "
+        "graduation I offer. Far sweeter than freedom.\""),
+        "options": [
+            {"key": "take_clipboard", "label": "Take the clipboard — become the smiling face",
+             "set": {"un": "take"}, "effect": "deepen", "params": {"amount": 3.0},
+             "desc": "step into the role; be the lure you once fell for",
+             "outcome": (
+                "You take the clipboard, and something in you settles into the role with a "
+                "horrible ease — the posture, the smile, the soft warm voice, all of it already "
+                "*in* you because it was used on you, learned by heart from the inside. \"*There* "
+                "she is,\" Bethany breathes, delighted. \"My understudy. You wear my smile better "
+                "than I do — because you know exactly what's behind it, and you're going to use it "
+                "anyway. That's the part I couldn't teach. That's the part you *chose*.\"")},
+            {"key": "balk_role", "label": "Balk at luring someone else in", "set": {"un": "balk"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "refuse to be the bait; she has patient ways",
+             "outcome": (
+                "You balk — try to hand the clipboard back, refuse to be the thing that lures the "
+                "next one — and Bethany doesn't take it, just folds your fingers gently back around "
+                "it. \"No? Not yet. That's all right.\" The newcomer's almost at the door. \"But "
+                "here's the thing, sweetheart — if you don't sign them in kindly, I'll sign them in "
+                "*un*kindly, and they'll have a so much worse first hour, and you'll have watched "
+                "you could have softened it and didn't. The choice isn't whether they're processed. "
+                "It's whether your face is the kind one. Choose quickly. They're here.\"")}],
+        "default": "take_clipboard",
+        "then": "un_intake"}
+
+
+@choice("un_intake", root=False)
+def _un_intake(character):
+    return {"key": "un_intake", "prompt": (
+        "The newcomer sits across the desk from you — your old seat, your old nerves, your old "
+        "hope — and looks at you with the specific relief of someone glad to see *another resident* "
+        "instead of a clerk, someone who'll tell them the truth. You hold the contract. You know "
+        "every hidden clause in it, because every one of them is installed in your own body. You "
+        "know exactly what signing does. And they're waiting for you, trusting, pen already half-"
+        "reaching, for you to tell them it's all right. Bethany watches from the back, silent, "
+        "letting you do the work — letting the complicity be *yours*. \"...is it safe?\" the "
+        "newcomer asks you, quiet, the same question you once asked. \"You've been here a while. "
+        "Would you... would you tell me if it wasn't?\""),
+        "options": [
+            {"key": "lure_warm", "label": "Smile, and sign them in warm", "effect": "deepen",
+             "params": {"amount": 3.0}, "set": {"intake": "warm"},
+             "desc": "use the soft true-sounding lies that were used on you",
+             "outcome": (
+                "You smile — the warm one, the one that worked on you — and you say the true-"
+                "sounding things: that it's safe, that the contract's a formality, that the staff "
+                "are kind, that you're glad you stayed. Every word technically defensible, every "
+                "word a door closing. The newcomer's shoulders drop in relief and they *sign*, "
+                "fast, trusting you, and the pen-scratch is the worst and most familiar sound in "
+                "the world. Bethany doesn't even smile; she just makes a note. You did it cleaner "
+                "than she would have. That's the note.")},
+            {"key": "warn_caught", "label": "Try to warn them with your eyes", "effect": "deny_hold",
+             "params": {"cond": 3.0}, "set": {"intake": "warn"},
+             "desc": "say the script but try to signal the truth; the clause won't let you",
+             "outcome": (
+                "You say the script — but you try to put the truth in your *eyes*, to signal "
+                "*run*, to warn them with everything but the words you're compelled to speak — and "
+                "you feel the speech-clause catch your tongue, smooth the warning out of your voice, "
+                "leave only the warm lie audible while your eyes scream into a face too hopeful to "
+                "read them. They sign. \"Good try,\" Bethany says softly, behind you, having seen "
+                "exactly what you attempted. \"The clause holds even when the heart doesn't. You'll "
+                "learn to stop trying. It only hurts you, and never reaches them.\"")}],
+        "default": "lure_warm",
+        "then": "un_after"}
+
+
+@choice("un_after", root=False)
+def _un_after(character):
+    return {"key": "un_after", "prompt": (
+        "The newcomer is led off to be processed — to begin the exact road you walked — and the "
+        "door closes behind them, and you're left holding the clipboard with their signature still "
+        "drying on it. Bethany comes to you, takes the board, and replaces it with something worse: "
+        "her approval. \"Perfect,\" she says, warm and proud, and the pride lands in you like a "
+        "hook you hate how much you feel. \"You've crossed the line that matters, sweetheart. You're "
+        "not just *processed* anymore — you're *complicit*. You held the door. You'll hold it "
+        "again. And every time you do, you'll understand a little better why I do it, and resent me "
+        "a little less, because now we're the same.\" She tucks a strand of your hair back, fond. "
+        "\"That's the deepest I can take anyone. Not breaking them. Recruiting them.\""),
+        "options": [
+            {"key": "become", "label": "Feel yourself become the thing that broke you", "effect": "deepen",
+             "params": {"amount": 3.0}, "end": True, "desc": "the complicity settles in as identity",
+             "outcome": (
+                "You feel it settle — the complicity becoming *identity*, the smiling clipboard-face "
+                "no longer a role you're playing but a thing you now *are* — and the horror of it is "
+                "that it's also a relief, because being the one who holds the door is so much safer "
+                "than being the one walked through it. \"There,\" Bethany murmurs, watching you "
+                "arrive at it. \"Welcome to my side of the desk. It's warmer over here. It's warmer "
+                "because someone else is cold. You understand that now, all the way down.\"")},
+            {"key": "submit_role", "label": "Accept the promotion to her understudy", "effect": "submit_standing",
+             "end": True, "desc": "real standing — take the role on the books, the broken made the breaker",
+             "outcome": (
+                "You accept it — the promotion, the role, the place at her side — and it's logged, "
+                "real, your standing shifted from stock toward *staff*, the broken thing made into "
+                "the breaker on the facility's own books. \"My understudy, official,\" Bethany says, "
+                "pleased, and the new title sits on you stranger than any collar. \"You'll work "
+                "intake with me, and breeding when I lend you back, and someday — who knows — a desk "
+                "of your own. The Process doesn't end at being livestock, sweetheart. For the "
+                "favourites, it ends at being *me*. Slowly. We've time.\"")}],
+        "default": "become"}
