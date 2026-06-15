@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **Between Two Owners (`tw_*`, `scene twoowners`/shared/peers)** — BUILT. The peerage live:
+  Bethany and Seraphine share you for an evening, trading you like equals trade a fine bottle. The
+  whole point is the CONTRAST — Bethany's laced DEVOTION breeding (real `bethany_breeds`) running
+  side by side with Seraphine's immune, un-laced, *personal* warmth (`devote`/`deepen`): the dread
+  isn't the dose, it's reaching for Seraphine sober, "with nothing in your blood to blame." arrival
+  → shared → after. State/kit-aware. §0 lit by the honest one: "two of us owning you doesn't double
+  the lock — there's still just the one door, and it opens on your word past both of us." Surfaces
+  in the hub beside the Seraphine route.
 - ✅ **The Claiming (`cl_*`, `scene claiming`/claim/brandme)** — BUILT. The persona-central moment
   (§7 canon): Bethany brands you with her own |wB|n, by her own hand, over a brazier — warm-
   possessive, false-tender, watching your face as the iron goes down. Routes through a new

@@ -1674,6 +1674,8 @@ class CmdScene(Command):
         "gala": "ev_gala", "showing": "ev_gala", "showinggala": "ev_gala",
         "claiming": "cl_arrival", "claim": "cl_arrival", "herb": "cl_arrival",
         "brandme": "cl_arrival",
+        "twoowners": "tw_arrival", "shared": "tw_arrival", "peers": "tw_arrival",
+        "borrow": "tw_arrival",
     }
 
     def func(self):

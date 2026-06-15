@@ -6425,6 +6425,7 @@ def _b_facility_hub(character):
     # Seraphine visits to buy — surfaces once you're Bethany's (her to sell).
     if bowned or sowned:
         add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
+        add("twoowners", "→ shared between them", "tw_arrival", "Bethany & Seraphine both — laced and sober at once")
     # Deep Stock — the terminus is always down there to be contemplated.
     add("deep", "→ Deep Stock", "ds_arrival", "the sealed terminus; the pods")
     add("pod", "→ the Pod bank (be podded)", "pd_arrival", "sealed in, plumbed, kept as deepest stock")
@@ -10929,3 +10930,168 @@ def _cl_after(character):
                 "\"That,\" she says, fond, \"is exactly why I get to brand you at all. Come back "
                 "when you like. The B will be where I left it. So will I.\"")}],
         "default": "stay_marked"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Between Two Owners — Bethany and Seraphine share you. Pays off the
+# peerage lore LIVE: the two equals trading a favourite for an evening, the
+# contrast between Bethany's laced DEVOTION breeding and Seraphine's immune,
+# personal, un-laced warmth running side by side on the same body. Real
+# `bethany_breeds` (laced) + devote/deepen (Seraphine, who can't be dosed and
+# doesn't dose). State/kit-aware. §0 lit: two owners, one always-open door.
+# Flow: arrival→shared→after. Entry: `scene twoowners`/shared/peers.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("tw_arrival", root=False)
+def _tw_arrival(character):
+    nm = subject_name(character)
+    return {"key": "tw_arrival", "prompt": (
+        "It's rare to see them in the same room — the two powers of your life, level with each "
+        "other in a way they're with no one else — and rarer still to be the reason. |wBethany|n "
+        "lounges in the good chair; |wSeraphine|n perches on its arm, comfortable against her in "
+        "the easy way of an equal, a glass of something dark in her clever fingers. Between them, "
+        f"presented, is you. \"There she is,\" Bethany says, fond. \"My {nm}. I thought you might "
+        "like to *borrow* her tonight, Sera. You're forever admiring my work.\"\n\n"
+        "Seraphine tilts her head, considering you the way she considers a sealed letter — reading "
+        "what's inside through the paper. \"Mm. I would. You do keep them so well, Beth.\" The two "
+        "of them, warm and unhurried and *equal*, settling the loan of you over drinks. \"You "
+        "understand the arrangement, sweetheart,\" Seraphine tells you, not unkindly. \"I'm the one "
+        "person your Bethany shares anything with — the only one she doesn't simply *own*. So "
+        "tonight you get both of us, and you get to feel the difference. Her loads will swim your "
+        "head with that devotion of hers. Mine won't — it rolls right off me and I never had the "
+        "trick of lacing it back. I'll just *have* you. Plainly. You'll find that its own kind of "
+        "frightening.\""),
+        "options": [
+            {"key": "offer_both", "label": "Offer yourself to both of them", "set": {"tw": "offer"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "give yourself up to the pair; let them share you gladly",
+             "outcome": (
+                "You offer yourself up to the pair of them — and Bethany laughs warm and Seraphine's "
+                "eyes go bright, the two equals pleased with you in their two different ways. "
+                "\"*Eager.* I do train them well,\" Bethany preens. \"You did,\" Seraphine agrees, "
+                "setting down her glass and reaching for you with unhurried certainty. \"Come here, "
+                "then, sweet thing. Let's find out what Bethany's so proud of — and let her watch me "
+                "find out. She likes that. Don't you, Beth.\" \"I do,\" Bethany says, settling in to "
+                "watch her peer enjoy her favourite.")},
+            {"key": "shy_pair", "label": "Be shy between the two of them", "set": {"tw": "shy"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the two powers at once is overwhelming; they savour your nerves",
+             "outcome": (
+                "You go shy, caught between the two of them at once, and *both* of them enjoy it — "
+                "Bethany with proprietary fondness, Seraphine with a collector's interest. \"Look, "
+                "she's overwhelmed,\" Seraphine murmurs, delighted. \"Two of us is a great deal of "
+                "owning to stand under, isn't it.\" \"She'll settle,\" Bethany says, fond. \"She "
+                "always does once the wanting takes over. Watch — you'll see why I keep her.\" Your "
+                "nerves just make them more patient, more interested, more *unhurried*.")},
+            {"key": "feel_difference", "label": "Ask about the difference between them", "set": {"tw": "ask"},
+             "desc": "make them spell out the laced vs immune contrast you're about to feel",
+             "outcome": (
+                "\"The difference?\" Seraphine answers it, fond. \"Bethany breeds devotion *into* "
+                "you — every load a little more of you reaching for her, glad of the leash. It's "
+                "very effective. It's also why she can't ever be quite sure the reaching is *real* "
+                "and not just her own dose talking.\" Bethany concedes it with a tilt of her glass. "
+                "\"Whereas I,\" Seraphine goes on, \"put nothing in but myself. When you reach for "
+                "*me*, sweet thing, it'll be because you actually do — no chemistry, no help. That's "
+                "the frightening one. That's the one you can't blame on a load.\"")}],
+        "default": "offer_both",
+        "then": "tw_shared"}
+
+
+@choice("tw_shared", root=False)
+def _tw_shared(character):
+    return {"key": "tw_shared", "prompt": (
+        "And then they share you, and the contrast is the whole savage point. |wBethany|n takes "
+        "you first — the familiar triple weight, the flared heads, the laced loads flooding warm "
+        "and the DEVOTION rising with them to swim your head sweet and pliant, the breeding that "
+        "*does something to you* beyond the breeding. Then she passes you, fond, to her peer — "
+        "\"go on, she's lovely once she's warmed\" — and |wSeraphine|n has you plainly, "
+        "unhurried, no chemistry in it at all: just a powerful woman taking what she's been lent, "
+        "her pleasure entirely her own, nothing flooding your head but the bare unlaced fact of "
+        "being *had* by someone who doesn't need to dose you to want you. They pass you back and "
+        "forth between them like equals sharing a fine bottle, comparing notes over your used body "
+        "— Bethany's loads leaving you reaching, Seraphine's leaving you with the much more "
+        "frightening question of why you're reaching for *her* too, with nothing in your blood to "
+        "blame.\n\n"
+        "\"See what I mean,\" Bethany says, watching you respond to her peer with no dose at all in "
+        "play. \"She reaches for you sober, Sera. That's the real thing. I can't even make that — "
+        "I can only fake it beautifully.\" \"You sound jealous, Beth.\" \"I sound *fascinated*. "
+        "Take her again. I want to watch it happen twice.\""),
+        "options": [
+            {"key": "bethany_turn", "label": "Take Bethany's laced use — head swimming", "effect": "bethany_breeds",
+             "params": {"holes": 3, "devotion": 6.0}, "set": {"shared": "beth"},
+             "desc": "the REAL laced breeding — the devotion rising, the reaching she built",
+             "outcome": (
+                "You take Bethany — the real laced breeding, all three, the DEVOTION flooding up "
+                "with the loads to swim your head sweet and pliant and *reaching* — and she sighs "
+                "with proprietary pleasure as you go soft and wanting under her exactly as designed. "
+                "\"There — feel that? That's mine, that warmth. I put it there.\" She passes you, "
+                "loose-limbed and dosed-glad, back toward Seraphine. \"Now feel hers, sweetheart, "
+                "right on top of mine, and tell me which one's louder.\"")},
+            {"key": "seraphine_turn", "label": "Reach for Seraphine — sober, and frightened by it",
+             "effect": "deepen", "params": {"amount": 2.0}, "set": {"shared": "sera"},
+             "desc": "the immune, un-laced use — and the dread of wanting it with nothing to blame",
+             "outcome": (
+                "You reach for Seraphine — and there's nothing in your blood making you, no dose, no "
+                "laced warmth, just *you*, wanting a powerful woman who took you plainly because she "
+                "wanted to — and the wanting with nothing to blame it on is the most frightening "
+                "thing in the room. Seraphine reads it cross your face and goes still and pleased. "
+                "\"*Oh.* There it is, Beth. She's reaching for me with a clear head.\" \"I told "
+                "you,\" Bethany murmurs, fascinated. \"That's the real article. The thing all my "
+                "chemistry only ever points at.\"")},
+            {"key": "both_at_once", "label": "Be taken by both at once", "effect": "bethany_breeds",
+             "params": {"holes": 2, "devotion": 5.0}, "set": {"shared": "both"},
+             "desc": "the two owners using you together — laced and sober at the same moment",
+             "outcome": (
+                "They take you together — Bethany seating into you laced and flooding while "
+                "Seraphine has your mouth plain and unhurried, the two contrasts running through you "
+                "at the same moment, your head swimming from one end and clear-and-wanting at the "
+                "other, owned twice over by two equals who share almost nothing but, tonight, share "
+                "*you*. The real breeding takes; the sober wanting takes too. \"Perfectly "
+                "balanced,\" Seraphine observes over you, fond. \"Dosed below, honest above. We "
+                "should do this more, Beth.\" \"We should,\" Bethany agrees. \"She wears sharing "
+                "*beautifully*.\"")}],
+        "default": "both_at_once",
+        "then": "tw_after"}
+
+
+@choice("tw_after", root=False)
+def _tw_after(character):
+    shared = scene_flag(character, "shared", "both")
+    recap = {"beth": "Bethany's devotion still swimming warm in your head",
+             "sera": "the clear-headed wanting for Seraphine still frightening you",
+             "both": "laced and sober tangled together in you at once"}.get(shared, "both of them in you")
+    return {"key": "tw_after", "prompt": (
+        f"After, wrung out between two owners, {recap}, you're laid between them while they finish "
+        "their drinks over your used body — two powers at their ease, the loan winding down. \"A "
+        "good evening,\" Seraphine pronounces, fingers idle in your hair. \"You do keep them well, "
+        "Beth. I almost wish I'd kept this one myself, back when I had the chance.\" \"You can't "
+        "have her,\" Bethany says, without heat, the way you'd tell a friend they can't have your "
+        "favourite chair. \"You can *borrow* her. That's the whole of what we do, you and I — we "
+        "lend, we don't lose.\" \"Peerage,\" Seraphine agrees, lifting her glass to her equal.\n\n"
+        "And then, because even shared between two owners it holds, the §0 truth, said plainly by "
+        "the one immune to dosing it away: \"And you should know, sweet thing — two of us owning "
+        "you doesn't double the lock. There's still just the one door, and it still opens on your "
+        "word, instantly, past *both* of us. Neither of us can vote it shut. That's the floor under "
+        "everything, even this. Bethany guards it; I'm simply too honest not to tell you straight.\""),
+        "options": [
+            {"key": "kept_between", "label": "Rest between your two owners", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "let being shared by equals settle warm",
+             "outcome": (
+                "You rest between them — shared, used, kept by two powers who lend you back and "
+                "forth like the favourite thing you are to both — and the strange warmth of being "
+                "*that* prized, prized enough that even equals trade you carefully, settles over you "
+                "alongside the laced and the sober both. \"Sleep, then,\" Bethany says, fond. "
+                "\"Between your owners. Sera goes home in the morning and you go back to being only "
+                "mine, but tonight — tonight you got to be the thing two of us agreed was worth "
+                "sharing. Few are. Carry that.\"")},
+            {"key": "name_sober", "label": "Tell Seraphine the sober wanting scares you", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "name the un-laced reaching out loud",
+             "outcome": (
+                "\"It scares me,\" you tell Seraphine, honest. \"Wanting you, with nothing in my "
+                "blood. I can't blame it on anything.\" And Seraphine, the immune one, the honest "
+                "one, goes soft in a way you suspect is rare. \"I know, sweet thing. That's why "
+                "it's worth more than anything Bethany's chemistry can manufacture — and she knows "
+                "it, which is half of why she keeps me around.\" She kisses your forehead, dry and "
+                "warm. \"Want what you want. The door's still open. That's what makes the wanting "
+                "yours to give — and you gave it to me sober. I'll not forget that.\"")}],
+        "default": "kept_between"}

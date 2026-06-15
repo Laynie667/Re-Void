@@ -1028,6 +1028,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c63, ch)[0] is not None, f"claiming(b) '{ch}' failed"
     assert c63.db.pending_choice is None and c63.db.scene_flags is None, "claiming(b) should end clean"
 
+    # Between Two Owners (the peerage, live) — both branches chain; real bethany_breeds runs.
+    c64 = _Char(); cyoa.start_scene(c64, "tw_arrival")
+    twbeats = []
+    for ch in ("offer_both", "bethany_turn", "kept_between"):
+        p = c64.db.pending_choice
+        assert p, f"twoowners: no pending before '{ch}'"
+        twbeats.append(p["key"])
+        assert cyoa.resolve_choice(c64, ch)[0] is not None, f"twoowners '{ch}' did not resolve"
+    assert twbeats == ["tw_arrival", "tw_shared", "tw_after"], twbeats
+    assert c64.db.pending_choice is None and c64.db.scene_flags is None, "twoowners should end clean"
+    c65 = _Char(); cyoa.start_scene(c65, "tw_arrival")
+    for ch in ("feel_difference", "seraphine_turn", "name_sober"):
+        assert c65.db.pending_choice, f"twoowners(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
+    assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):
