@@ -6427,6 +6427,7 @@ def _b_facility_hub(character):
     add("longmilking", "→ a full milking session", "mm_arrival", "the deep rig; drained dry across cycles")
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
+    add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
     add("pigsty", "→ the Pigsty", "ps_arrival", "the muck; the boar")
     add("records", "→ the Records Hall", "rh_arrival", "inspection; your grade")
@@ -11502,3 +11503,158 @@ def _mm_after(character):
                 "\"Good. Then you understand. You're never really empty. You're just between "
                 "fillings. So are we all, down here.\"")}],
         "default": "sink_milk"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Refinement — feminization / gelding, a real-procedure set-piece with
+# no scene of its own until now. Bethany has you made over: gelded and caged
+# (retired from stud to leaking nub) or feminized into a kept sissy (renamed,
+# posed, girly-filtered, locked). Routes through the REAL `_proc_neuter` and
+# `_proc_sissify` facility procedures (real flags neutered/sissified, chastity,
+# body-mods, name drift, conditioning, marks). Warm-cruel, clean register.
+# State-aware. Flow: arrival→work→after. Entry: `scene refinement`/sissify/geld.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("fm_arrival", root=False)
+def _fm_arrival(character):
+    k = _kit(character)
+    nm = subject_name(character)
+    already = ""
+    if k["neutered"]:
+        already = (" You're already gelded and caged — she traces the locked little nub fondly. "
+                   "\"Half-done, I see. Then let's finish the thought and make the rest of you match "
+                   "what I've left you between the legs.\" ")
+    elif k["sissified"]:
+        already = (" You're already made-over — she fixes a smudge of your paint with a thumb, "
+                   "proprietary. \"My pretty thing. We'll just... refine the refinement. A girl "
+                   "this kept can always be kept a little more.\" ")
+    return {"key": "fm_arrival", "prompt": (
+        "The Refinement Suite is the prettiest cruel room in the building — part salon, part "
+        "surgery: a padded chair that reclines and spreads, a mirrored wall under flattering pink "
+        "light, a tray of cosmetics beside a tray of instruments, a rack of chastity hardware "
+        "graded by size, and a wall of |wbefore|n photographs that all became someone softer. This "
+        "is where the facility doesn't just *use* a body but *redesigns* it — decides what it ought "
+        f"to be and makes it so, permanently.\n\n"
+        f"\"Sit, {nm},\" Bethany says, warm and bright, patting the chair. \"I've been looking at "
+        "you and *thinking*. You make a perfectly serviceable breeder, but I think you'd make "
+        "something I'd treasure more — and the lovely thing about owning a body is I get to decide "
+        "what it's *for* and then make the body agree.\"" + already +
+        " She lifts a chastity cage in one hand and a cosmetics brush in the other, weighing them "
+        "like a woman choosing a wine. \"So. Shall I geld you — retire the breeding equipment, lock "
+        "you down to a sweet leaking little nub, take siring off the table forever? Or make you "
+        "*pretty* — paint the man off you, pose the girl out, give you a soft new name to giggle "
+        "to? I do love refining. Help me choose, or don't, and I'll choose for you.\""),
+        "options": [
+            {"key": "lean_geld", "label": "Bare yourself for the cage — be gelded", "set": {"fm": "geld"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "offer up the breeding equipment to be retired",
+             "outcome": (
+                "You bare yourself for it — offer up the equipment to be retired — and Bethany's "
+                "eyes gleam with the particular delight of a decision made easy. \"Gelding it is. "
+                "Offering me the very thing I'm about to take. There's my agreeable stock.\" She "
+                "sets the brush down and takes up the cage and the cool instruments, fond and "
+                "unhurried. \"Let's retire you from the bull line. You'll be so much more "
+                "*restful* once there's nothing left to sire with.\"")},
+            {"key": "lean_sissy", "label": "Turn your face up to be painted — be made pretty",
+             "set": {"fm": "sissy"}, "effect": "devote", "params": {"amount": 2.0},
+             "desc": "offer yourself to be feminized into her pretty thing",
+             "outcome": (
+                "You turn your face up to the brush — offer to be made pretty — and Bethany coos, "
+                "delighted, tipping your chin to the flattering light. \"Oh, you *want* to be my "
+                "pretty thing. That's the sweetest start. Most fight the paint; you tilted right "
+                "into it.\" She sets the cage aside for now and takes up the cosmetics and the "
+                "cinch. \"Let's scrub the man off you and pose the girl out. You're going to be "
+                "*adorable*, and locked, and so much happier giggling than you ever were "
+                "scowling.\"")},
+            {"key": "let_choose", "label": "Let her decide what you're for", "set": {"fm": "hers"},
+             "effect": "deepen", "params": {"amount": 2.0},
+             "desc": "give her the choice entirely; be remade to her taste",
+             "outcome": (
+                "You give her the choice — let her decide what you're *for* — and that, more than "
+                "either procedure, is the thing she wanted. \"Letting me choose. Letting me look at "
+                "you and decide what you ought to be and trust me to make you it.\" She sets both "
+                "trays within reach, savoring the latitude. \"I'll take my time, then. Maybe both. "
+                "Maybe one today and the other when I miss you. The point isn't which, sweetheart — "
+                "the point is that it's *mine* to pick, and you just handed me that too.\"")}],
+        "default": "let_choose",
+        "then": "fm_work"}
+
+
+@choice("fm_work", root=False)
+def _fm_work(character):
+    lean = scene_flag(character, "fm", "hers")
+    # 'hers' resolves to a default lean by what she fancies; offer both real procedures regardless.
+    geld_first = (lean == "geld")
+    intro = ("She gelds you first — the cool instruments, the clean retirement of the breeding "
+             "equipment, the cage clicking shut over what's left" if geld_first else
+             "She makes you pretty first — the paint, the cinch, the man scrubbed off you stroke "
+             "by stroke, a soft new shape posed out of the old one") + " — and then, fond and "
+    intro += ("unhurried, considers whether to do the other too. Tonight she does what suits her, "
+              "and what suits her is whichever leaves you more *hers*.")
+    return {"key": "fm_work", "prompt": (
+        intro + "\n\nThe chair reclines. The light goes pink and flattering. Bethany works on you "
+        "with a craftsman's patient pleasure, narrating as she goes — what she's taking, what she's "
+        "leaving, what you'll be when she's done — and the redesign is real and permanent and "
+        "settles into your body and your file together. \"Hold still, sweetheart,\" she murmurs, "
+        "warm. \"Refinement doesn't hurt for long, and what's left when it stops hurting is so much "
+        "easier to be than what walked in.\""),
+        "options": [
+            {"key": "geld", "label": "Be gelded and caged", "effect": "facility",
+             "params": {"method": "_proc_neuter", "kind": "proc"}, "set": {"refined": "geld"},
+             "desc": "the REAL procedure — retired from stud, locked to a leaking nub",
+             "outcome": (
+                "She retires you for real — the breeding equipment gelded and the rest shut into a "
+                "cage, the procedure logged, your body re-filed from bull to leaking little nub that "
+                "sires nothing and comes never. The loss settles in cold and total and somehow "
+                "*restful*, one whole demanding part of you simply switched off and locked away. "
+                "\"There. Retired,\" Bethany sighs, satisfied. \"No more siring, no more coming, "
+                "nothing to manage between your legs but a sweet locked ache. You'll thank me for "
+                "the quiet eventually. They always do.\"")},
+            {"key": "sissify", "label": "Be made over into her sissy", "effect": "facility",
+             "params": {"method": "_proc_sissify", "kind": "proc"}, "set": {"refined": "sissy"},
+             "desc": "the REAL procedure — feminized, renamed, posed, locked, girly-filtered",
+             "outcome": (
+                "She makes you over for real — face painted, body cinched and posed, the man "
+                "scrubbed off and a pretty locked thing left giggling in his place, a soft new name "
+                "to answer to and a girly little voice to answer in. It takes, permanent and "
+                "logged, the old you backed up and set aside. \"*There* she is,\" Bethany breathes, "
+                "turning you to the mirror to meet yourself. \"Look how pretty. Look how much "
+                "happier she looks than he ever did. Say hello to the girl, sweetheart. You're her "
+                "now, and she's mine.\"")}],
+        "default": "geld" if geld_first else "sissify",
+        "then": "fm_after"}
+
+
+@choice("fm_after", root=False)
+def _fm_after(character):
+    refined = scene_flag(character, "refined", "sissy")
+    mirror = ("a soft pretty locked thing where a man used to scowl" if refined == "sissy"
+              else "retired equipment and a sweet caged ache where a stud used to swing")
+    return {"key": "fm_after", "prompt": (
+        f"She turns you to the mirrored wall to see what she's made — {mirror} — and holds you from "
+        "behind while you take it in, her chin on your shoulder, both of you looking at the new "
+        "design. \"There. Refined.\" The satisfaction in her voice is bottomless and warm. \"Do you "
+        "see what I see? Not a thing diminished — a thing *decided*. I looked at you and chose what "
+        "you'd be and made the body agree, and now there's no arguing with the mirror. That's the "
+        "deepest kind of owning there is, sweetheart. Not what I do to you. What I make you *into*.\""),
+        "options": [
+            {"key": "meet_new", "label": "Meet the new self in the mirror", "effect": "deepen",
+             "params": {"amount": 3.0}, "end": True, "desc": "let the redesign settle as who you are now",
+             "outcome": (
+                "You meet your own eyes in the new face, the new shape, and let it settle as *who "
+                "you are now* — and the settling is its own quiet surrender, the old design "
+                "receding, the new one fitting closer by the minute because it's real and it's "
+                "permanent and arguing with it changes nothing. \"There. She's settling in,\" "
+                "Bethany murmurs, pleased, smoothing you. \"Welcome to being what I decided. It "
+                "suits you. I have such an eye.\"")},
+            {"key": "mourn_old", "label": "Mourn what she took", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "grieve the design she scrubbed off",
+             "outcome": (
+                "You grieve it — the design she scrubbed off, the self that walked in — and Bethany "
+                "lets you, unhurried, even fond of the grief. \"Mourn him, sweetheart. Or her. "
+                "Whichever I took. It's worth a mourning — I don't refine the ones I don't think "
+                "are worth the trouble.\" She kisses your new-made cheek. \"And then, in a day or a "
+                "week, you'll catch yourself in a mirror and the grief'll be gone and only the new "
+                "design will look back, and you won't even remember deciding to stop missing the "
+                "old one. That's the refinement finishing itself.\"")}],
+        "default": "meet_new"}

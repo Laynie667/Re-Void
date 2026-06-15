@@ -1680,6 +1680,8 @@ class CmdScene(Command):
         "seraphinelore": "sl_arrival", "seralore": "sl_arrival", "counter": "sl_arrival",
         "afterhours": "sl_arrival",
         "longmilking": "mm_arrival", "dairyintensive": "mm_arrival", "marathon": "mm_arrival",
+        "refinement": "fm_arrival", "sissify": "fm_arrival", "geld": "fm_arrival",
+        "feminize": "fm_arrival",
     }
 
     def func(self):

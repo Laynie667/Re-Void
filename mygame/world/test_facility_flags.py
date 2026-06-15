@@ -1043,6 +1043,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Refinement — both real procedures chain and set their flags.
+    c71 = _Char(); cyoa.start_scene(c71, "fm_arrival")
+    fmbeats = []
+    for ch in ("lean_sissy", "sissify", "meet_new"):
+        p = c71.db.pending_choice
+        assert p, f"refinement: no pending before '{ch}'"
+        fmbeats.append(p["key"])
+        assert cyoa.resolve_choice(c71, ch)[0] is not None, f"refinement '{ch}' did not resolve"
+    assert fmbeats == ["fm_arrival", "fm_work", "fm_after"], fmbeats
+    assert c71.db.pending_choice is None and c71.db.scene_flags is None, "refinement should end clean"
+    c72 = _Char(); cyoa.start_scene(c72, "fm_arrival")
+    for ch in ("lean_geld", "geld", "mourn_old"):
+        assert c72.db.pending_choice, f"refinement(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c72, ch)[0] is not None, f"refinement(b) '{ch}' failed"
+    assert c72.db.pending_choice is None and c72.db.scene_flags is None, "refinement(b) should end clean"
+
     # The Long Milking — both branches chain through the producer loop.
     c69 = _Char(); cyoa.start_scene(c69, "mm_arrival")
     mmbeats = []

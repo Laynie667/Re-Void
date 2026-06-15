@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Refinement (`fm_*`, `scene refinement`/sissify/geld)** — BUILT. Feminization / gelding
+  as a set-piece (the real `neutered`/`sissified` procedures had no scene driving them). Bethany has
+  you redesigned in the Refinement Suite: gelded and caged (retired stud → leaking locked nub) or
+  feminized into a kept sissy (renamed, posed, girly speech-filtered, chastity). Routes through the
+  REAL `_proc_neuter` and `_proc_sissify` facility procedures (real flags, chastity, body-mods, name
+  drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
+  (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
+  Surfaces in the hub by the Marking Parlour.
 - ✅ **The Long Milking (`mm_*`, `scene longmilking`/dairyintensive/marathon)** — BUILT. Lactation
   as a savor-piece — the deep version of the Dairy seam: hooked to the deep rig for a full session,
   kept full on purpose, then drawn down slow and all the way, let to fill, drawn down again, cycle
