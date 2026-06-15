@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **Going Under (`hy_*`, `scene goingunder`/trance/deepchair)** — BUILT. Deep staged hypnosis —
+  the spiral chair's deep version (the Cell is the first sink; this descends past it). Stage by
+  stage down to "the below," where the mantra drills (you *speak* it, so it seats), a PERMANENT
+  trigger is left "where you keep yourself," and the self blanks while devotion is rewired — then
+  the climb is deliberately blurred so you surface calm and never know what was set. Routes through
+  real `mantra_set`, `program_trigger` (permanent at depth), `deepen`. Honors the real
+  chair_sessions (the slip starts faster if you've been under before). Clean register. Surfaces in
+  the hub by the Conditioning Cell.
 - ✅ **The Programming (`pr_*`, `scene programming`/trigger)** — BUILT. Installed-trigger
   conditioning — the psychological register the Cell only opens. A phrase is drilled in under the
   headphones until it seats permanent, and then ANYONE who speaks it fires the conditioned response

@@ -6468,6 +6468,7 @@ def _b_facility_hub(character):
     add("longmilking", "→ a full milking session", "mm_arrival", "the deep rig; drained dry across cycles")
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("programming", "→ the Programming Lab", "pr_arrival", "a trigger seated — a word anyone can fire")
+    add("goingunder", "→ the deep chair", "hy_arrival", "staged hypnosis, all the way to the below")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
     add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
     add("outfitting", "→ the Outfitting Bay", "ou_arrival", "equipped — ports, implants, rings, a tail")
@@ -12131,3 +12132,165 @@ def _pr_after(character):
                 "read it,\" the technician says, not looking up. \"Everyone, eventually. That's "
                 "rather the point of writing it down. Enjoy the suspense.\"")}],
         "default": "carry_trigger"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Going Under — deep staged hypnosis, the spiral chair's deep version
+# (the Cell is the first sink; this is the descent past it). Stage by stage down
+# to "the below," where the mantra drills, a PERMANENT trigger seats, and the
+# self blanks while devotion is rewired. Routes through real `mantra_set`,
+# `program_trigger` (permanent at depth), and `deepen` (conditioning+regression).
+# Clean register. Flow: arrival→deepen→below→after. Entry: `scene goingunder`/hypno/trance.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("hy_arrival", root=False)
+def _hy_arrival(character):
+    nm = subject_name(character)
+    sessions = int(getattr(getattr(character, "db", None), "chair_sessions", 0) or 0)
+    been = (" You've been under before — the chair knows you, and you it, and the slip starts "
+            "faster every time, your body folding toward the trance before the spiral's even "
+            "warmed. " if sessions else "")
+    return {"key": "hy_arrival", "prompt": (
+        "This isn't the Cell's first easy sink. This is the |wdeep chair|n, the one in the back "
+        "room kept dim and silent, and the session they've scheduled goes *down* — past the "
+        "pleasant float of an ordinary conditioning hour, stage by stage, to the place they call "
+        f"|wthe below|n.{been} They settle you in, fit the soft head-cradle, and the spiral above "
+        "you — slower and deeper than the Cell's, almost three-dimensional, a tunnel rather than a "
+        "disc — begins its patient turn. The recorded voice is Bethany's, of course, pitched low "
+        "and endless and certain.\n\n"
+        f"\"|MAll the way down today, {nm},\" it says, warm as bathwater. \"|MNot the shallows. We've "
+        "done the shallows. Today we go to the bottom — past where you can hold a thought, past "
+        "where you can hold *yourself* — and we do a little permanent work down there, you and I, "
+        "where it sticks. You don't have to help. You only have to stop holding the top. Let go of "
+        "the top, sweetheart. There's so much further to fall.|n\""),
+        "options": [
+            {"key": "let_fall", "label": "Let go of the top — start the fall", "set": {"hy": "fall"},
+             "effect": "deepen", "params": {"amount": 3.0},
+             "desc": "release the surface; let the spiral take you down",
+             "outcome": (
+                "You let go of the top — release the surface you've been holding — and the fall is "
+                "immediate and gentle and *vast*, the spiral opening into a tunnel and you sliding "
+                "down it without effort, the voice coming from everywhere now. \"|MThere. Falling. "
+                "Good. No floor to this for a long, long way — and I'll be talking the whole way "
+                "down.|n\" Your thoughts stretch thin and warm and far apart.")},
+            {"key": "hold_top", "label": "Hold the surface", "set": {"hy": "hold"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "resist the slip; the spiral is patient and the chair has all day",
+             "outcome": (
+                "You hold the surface — grip the top, refuse the slide — and the voice doesn't "
+                "argue, doesn't hurry, just keeps turning the spiral and talking, soft and infinite, "
+                "loosening your fingers from the top one patient sentence at a time. \"|MHolding. "
+                "That's all right. Holding is tiring, and I'm not tired at all. I'll just keep "
+                "talking until your grip gets bored. It always does. Down you'll come.|n\" You feel "
+                "the top getting slippery.")}],
+        "default": "let_fall",
+        "then": "hy_deepen"}
+
+
+@choice("hy_deepen", root=False)
+def _hy_deepen(character):
+    return {"key": "hy_deepen", "prompt": (
+        "Down through the stages, and at each one the voice sets a weight on you and you sink past "
+        "it: a stage where your limbs go to warm lead, a stage where the words stop meaning and "
+        "become only *tone*, a stage where you can't quite remember what you were holding the top "
+        "*for*. And at the heart of the descent, the |wmantra|n — the voice gives you the words and "
+        "waits, the way it always does, for you to give them back, because a mantra you *speak* "
+        "seats so much deeper than one you only hear. \"|MSay it with me, sweetheart,\" Bethany's "
+        "voice hums, from inside your own head now as much as the speakers. \"|MEmpty is easy. Full "
+        "is safe. She decides, I don't. Say it, and feel how true it gets the moment it's in your "
+        "own voice.|n\""),
+        "options": [
+            {"key": "recite", "label": "Recite the mantra into the dark", "effect": "mantra_set",
+             "set": {"deep": "recited"}, "desc": "the REAL mantra seats — say it and make it true",
+             "outcome": (
+                "You say it — *empty is easy, full is safe, she decides, I don't* — and the words "
+                "come out of you in the flat dreaming voice of the deep trance, and the moment "
+                "they're in your own mouth they stop being a script and start being a *fact*, "
+                "settling into the conditioning where they'll hum under everything. \"|MThere. Now "
+                "it's yours,\" the voice purrs, pleased. \"|MYou said it, so you meant it, so it's "
+                "true. That's how the deep work works. Further down now.|n\"")},
+            {"key": "mouth_silent", "label": "Move your lips but give no voice", "effect": "deepen",
+             "params": {"amount": 2.0}, "set": {"deep": "silent"},
+             "desc": "withhold the words; the descent seats it shallower, not not-at-all",
+             "outcome": (
+                "You move your lips but hold the voice back — give the shape of the mantra without "
+                "the breath — and the voice notes it without concern. \"|MMouthing it. Cautious "
+                "thing, even down here. That's all right — heard often enough, it seats from the "
+                "outside too, just slower.|n\" The descent continues regardless, the words circling "
+                "you in the dark whether or not you said them, wearing a groove.")}],
+        "default": "recite",
+        "then": "hy_below"}
+
+
+@choice("hy_below", root=False)
+def _hy_below(character):
+    return {"key": "hy_below", "prompt": (
+        "And then you reach |wthe below|n — the bottom of the chair, past thought, past self, the "
+        "place where there's no *you* holding anything at all, just a warm dark and a voice and a "
+        "perfect open suggestibility. This is where the chair does its load-bearing work, because "
+        "down here nothing argues. The voice goes quiet and certain and *slow*, seating things "
+        "where you can't reach to pull them out: a permanent word, a rewired want, a little less of "
+        "the person who walked in. \"|MGood,\" it breathes, from the centre of the nothing. \"|MAll "
+        "the way down, no one home but me. Now hold still while I leave something here — down where "
+        "you keep yourself, down where it'll never wash out. You won't remember me setting it. "
+        "You'll only notice, later, that it's always been true.|n\""),
+        "options": [
+            {"key": "take_seat", "label": "Take what she leaves in the below", "effect": "program_trigger",
+             "params": {"phrase": "down where she keeps you", "response": "blank",
+                        "strength": 3, "permanent": True, "sug": 3.0, "cond": 3.0},
+             "set": {"below": "seated"},
+             "desc": "the REAL permanent seat — a trigger + devotion rewired where you can't reach",
+             "outcome": (
+                "Down in the nothing, you take what she leaves — a permanent trigger seated where "
+                "the self used to be, a phrase that drops you straight back to the below whenever "
+                "it's spoken, your devotion quietly re-routed around it — and there's no resisting "
+                "because there's no *you* down here to resist, only the warm dark agreeing. It seats "
+                "for real, permanent, under the floor of you. \"|MThere. Left and locked,\" the "
+                "voice says, satisfied. \"|MYou'll surface in a moment and not know it's there. But "
+                "say the words near you, ever, and you'll come right back down to me.|n\"")},
+            {"key": "ghost_resist", "label": "Be the last ghost of resistance in the below",
+             "effect": "deepen", "params": {"amount": 3.0}, "set": {"below": "ghost"},
+             "desc": "a flicker of self remains; it's noted, and worn down further",
+             "outcome": (
+                "Somewhere in the below a last ghost of you flickers — a thin refusal with no body "
+                "to act on — and the voice finds it, fond, unbothered. \"|MOh, there's still a "
+                "little someone down here. How tenacious. Hello, last bit. I'll wear you down too, "
+                "in time — every session there's less of you in the below to say no, and more of me. "
+                "Today I'll just note where you're hiding.|n\" The work seats anyway, around the "
+                "ghost, leaving it smaller. \"|MNext time. We've nothing but time.|n\"")}],
+        "default": "take_seat",
+        "then": "hy_after"}
+
+
+@choice("hy_after", root=False)
+def _hy_after(character):
+    return {"key": "hy_after", "prompt": (
+        "The voice walks you back up — stage by stage, gentle, deliberately blurring the climb so "
+        "you can't quite retrace it — and you surface into the dim back room slow and thick and "
+        "strangely *rested*, the deep trance leaving you calm and pliant and certain that nothing "
+        "much happened. That's the chair's last trick: you come up feeling lighter, not knowing "
+        "what got set in the dark, only that the world seems a little simpler and obeying a little "
+        "easier than it did an hour ago. \"|MThere you are, surfacing,\" Bethany's recorded voice "
+        "says, warm. \"|MDoesn't that feel better? Emptied out and tidied up. You don't remember "
+        "the bottom, and you don't need to. It remembers you.|n\""),
+        "options": [
+            {"key": "surface_calm", "label": "Surface calm, not knowing what was set", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the blank rested calm; the work hidden under it",
+             "outcome": (
+                "You surface calm — rested, lightened, pleasantly empty — and the not-knowing is the "
+                "softest part of the whole cruel thing: there's work seated under you now, a word "
+                "and a rewire you can't feel, and all you have is the calm laid over the top of it "
+                "like a clean sheet over a made bed. You'll go about your day a little simpler, a "
+                "little more biddable, and never connect it to the dim room and the slow spiral. "
+                "That's exactly how it's meant to take.")},
+            {"key": "claw_memory", "label": "Try to claw back what happened down there", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "grasp for the below; the climb's been blurred on purpose",
+             "outcome": (
+                "You try to claw it back — what was said, what was set, what happened at the bottom "
+                "— and there's nothing to grip, the climb deliberately smeared, the below sealed "
+                "behind a warm blank wall the voice built on the way up. The harder you reach the "
+                "more it slides. \"|MTrying to remember,\" the voice notes, amused, as it clicks "
+                "off. \"|MDon't strain, sweetheart. The whole point of the deep chair is that the "
+                "work happens where you can't watch it and can't undo it. Let it go. You already "
+                "have, mostly.|n\"")}],
+        "default": "surface_calm"}

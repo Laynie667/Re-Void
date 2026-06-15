@@ -1074,6 +1074,22 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # Going Under — deep staged hypnosis; both branches chain clean.
+    c79 = _Char(); cyoa.start_scene(c79, "hy_arrival")
+    hybeats = []
+    for ch in ("let_fall", "recite", "take_seat", "surface_calm"):
+        p = c79.db.pending_choice
+        assert p, f"goingunder: no pending before '{ch}'"
+        hybeats.append(p["key"])
+        assert cyoa.resolve_choice(c79, ch)[0] is not None, f"goingunder '{ch}' did not resolve"
+    assert hybeats == ["hy_arrival", "hy_deepen", "hy_below", "hy_after"], hybeats
+    assert c79.db.pending_choice is None and c79.db.scene_flags is None, "goingunder should end clean"
+    c80 = _Char(); cyoa.start_scene(c80, "hy_arrival")
+    for ch in ("hold_top", "mouth_silent", "ghost_resist", "claw_memory"):
+        assert c80.db.pending_choice, f"goingunder(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c80, ch)[0] is not None, f"goingunder(b) '{ch}' failed"
+    assert c80.db.pending_choice is None and c80.db.scene_flags is None, "goingunder(b) should end clean"
+
     # The Programming — installs a real trigger; both branches chain clean.
     c77 = _Char(); cyoa.start_scene(c77, "pr_arrival")
     prbeats = []

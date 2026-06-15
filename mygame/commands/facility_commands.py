@@ -1687,6 +1687,8 @@ class CmdScene(Command):
         "whelping": "bi_arrival", "birth": "bi_arrival", "labor": "bi_arrival",
         "deliver": "bi_arrival",
         "programming": "pr_arrival", "trigger": "pr_arrival", "program": "pr_arrival",
+        "goingunder": "hy_arrival", "trance": "hy_arrival", "deepchair": "hy_arrival",
+        "thebelow": "hy_arrival",
     }
 
     def func(self):
