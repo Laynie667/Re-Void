@@ -1672,6 +1672,8 @@ class CmdScene(Command):
         "askbethany": "bt_arrival",
         "pod": "pd_arrival", "podbank": "pd_arrival", "deeppod": "pd_arrival",
         "gala": "ev_gala", "showing": "ev_gala", "showinggala": "ev_gala",
+        "claiming": "cl_arrival", "claim": "cl_arrival", "herb": "cl_arrival",
+        "brandme": "cl_arrival",
     }
 
     def func(self):

@@ -292,6 +292,37 @@ def _eff_go_cumflate(character, p):
     return "cumflated" if filled else "cumflate_noop"
 
 
+@effect("bethany_brand")
+def _eff_bethany_brand(character, p):
+    """Bethany claims you with her personal B — REAL: ownership (bethany_owned + title claim,
+    mirroring bethany_script._mark_owned), bethany_branded, and a real freeform mark via
+    record_mark (which shows in marks/brands/look; falls back to facility_brands). All flags are
+    in FACILITY_FLAGS, so the §0 floor clears the ownership/brand state (the freeform mark is a
+    normal mark, removed by the realm teardown's mark-clear). params: devotion."""
+    d = character.db
+    try:
+        d.bethany_owned = True
+        if not getattr(d, "facility_title_backup", None):
+            d.facility_title_backup = {"faction": getattr(d, "title_faction", "") or "",
+                                       "suffix":  getattr(d, "title_suffix", "") or ""}
+        d.title_suffix = "— Bethany's"
+        d.bethany_branded = True
+    except Exception:
+        pass
+    try:
+        from world.gang_breeding import record_mark
+        record_mark(character, "a personal |wB|n branded into the skin — Bethany's own mark, raised "
+                    "and permanent, the one she saves for the favourites she keeps as her own line")
+    except Exception:
+        pass
+    try:
+        from typeclasses.bethany_script import bethany_deposit_effect
+        bethany_deposit_effect(character, devotion=float(p.get("devotion", 5.0)))
+    except Exception:
+        pass
+    return "branded_hers"
+
+
 @effect("go_pod")
 def _eff_go_pod(character, p):
     """Sealed into a Deep Stock pod — the terminus state: total_dependence + body_processing_locked
@@ -6406,6 +6437,9 @@ def _b_facility_hub(character):
     add("wetroom", "→ the Wet Room", "ws_arrival", "kept as the facility's relief — urinal, shower")
     add("rig", "→ the Rig", "bd_arrival", "strung up spread and helpless, used in suspension")
     add("cnc", "→ the Take (CNC)", "cn_arrival", "the pre-framed game — your no ridden over; the word always stops it")
+    # The Claiming — she brands the favourites she keeps; offer it until her B is on you.
+    if not bool(getattr(db, "bethany_branded", False)):
+        add("claiming", "→ the Claiming", "cl_arrival", "Bethany's own B, by her own hand — marked hers for good")
 
     prompt = (
         "Between one thing and the next, the facility does the thing it now does instead of "
@@ -10747,3 +10781,151 @@ def _ev_gala_b(character):
                 "that knows it could walk off the stage any second — makes the staying she does all "
                 "the prettier.|n\"")}],
         "default": "bask"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Claiming — Bethany brands you with her own B, by her own hand. The
+# persona-central moment the build was missing (§7 canon: she brands her
+# favourites with a personal B, breeds her own line, keeps a piece of the
+# product). Routes through the new `bethany_brand` effect (REAL ownership +
+# bethany_branded + a real freeform mark via record_mark) + devote/deepen.
+# Warm-possessive, false-tender. State-aware. §0 lit: the brand is permanent, but
+# the door is not — she'll mark you forever and free you on the word both.
+# Flow: arrival→brand→after. Entry: `scene claiming`/brand me/herB.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("cl_arrival", root=False)
+def _cl_arrival(character):
+    nm = subject_name(character)
+    already = bool(getattr(getattr(character, "db", None), "bethany_branded", False))
+    note = (" You already wear her B somewhere — she traces it fondly, finding it. \"Mm. Already "
+            "mine, I see. Then this is just... a fresh one. I do like to re-mark the ones I'm "
+            "fondest of. Keeps the brand crisp and keeps you sure.\" " if already else "")
+    return {"key": "cl_arrival", "prompt": (
+        f"\"Come here, {nm}.\" Bethany's in the warm private mood she gets when she's decided "
+        "something about you, and there's a small brazier lit on her desk, and resting in the "
+        "coals — glowing a soft sullen orange — is a single slim iron with a shape on its end you "
+        "can't quite see and absolutely can guess. \"I've been keeping you a while now,\" she says, "
+        "fond, turning the iron a quarter so it heats even. \"Bred you, kept you, filed you. But I "
+        "haven't *marked* you — not with my own, not the one I save. And I find I want my B in your "
+        "skin, sweetheart. Not the facility's. *Mine.* A little raised letter that says, to anyone "
+        "who ever sees you bare, that you're not stock — you're |wBethany's|n.\"" + note +
+        " She lifts the iron from the coals; the B at its tip glows clear now, and the heat of it "
+        "reaches you from across the desk. \"It'll hurt. It'll scar. It'll never come off. That's "
+        "rather the entire point. Where shall I put me on you?\""),
+        "options": [
+            {"key": "offer", "label": "Offer her the spot — choose where her B goes", "set": {"cl": "offer"},
+             "effect": "devote", "params": {"amount": 3.0},
+             "desc": "choose your own claiming-spot; give her the marking willingly",
+             "outcome": (
+                "You offer her a spot — bare it, choose it, *give* her the place to put herself — "
+                "and Bethany's whole face goes soft with a greedy delight that's worse than any "
+                "cruelty. \"Oh, you're *choosing* where I brand you. Picking the place you'll carry "
+                "me forever.\" She presses her cool palm flat to the spot you offered, claiming it "
+                "in advance. \"That's the sweetest thing, sweetheart — not enduring the mark, "
+                "*placing* it. We'll make it somewhere you'll see it every day and think of who you "
+                "belong to. Hold still for me now.\"")},
+            {"key": "tremble", "label": "Tremble at the heat of the iron", "set": {"cl": "tremble"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the iron is real and close; flinch from the permanence",
+             "outcome": (
+                "You tremble — the heat of the iron real and close, the *forever* of it landing — "
+                "and Bethany cups your jaw with her free hand, gentling and merciless at once. "
+                "\"Shaking. Good. You understand what this is, then — most don't until the iron's "
+                "down. It's permanent, sweetheart. It's me, in you, where the breeding washes out "
+                "and the conditioning could fade but the *brand* never does. Tremble all you like. "
+                "It doesn't move the iron. It just tells me you know what you're about to become.\"")},
+            {"key": "ask_why_b", "label": "Ask why she brands the ones she keeps", "set": {"cl": "ask"},
+             "desc": "the lore of her B — make her say what the mark means to her",
+             "outcome": (
+                "\"Why the B?\" you ask, watching it glow. \"Why brand the ones you keep?\" Bethany "
+                "considers the iron, fond. \"Because owning a thing on paper is just *paper*, "
+                "sweetheart. A title can be overwritten. A file can be lost. But a brand — a brand "
+                "is in the *skin*, it's the one claim that travels with the body, the one nobody "
+                "can argue with, including you.\" She meets your eyes. \"I brand the ones I mean to "
+                "*keep* keep. My own line, my own bed, my own B. It's the difference between stock "
+                "I sell and favourites I never will. You're about to be the second kind. Forever, "
+                "where it shows.\"")}],
+        "default": "offer",
+        "then": "cl_brand"}
+
+
+@choice("cl_brand", root=False)
+def _cl_brand(character):
+    return {"key": "cl_brand", "prompt": (
+        "And then she brands you. She does it herself — won't hand the iron to a tech, this one's "
+        "hers to set — and she does it slow and certain and *watching your face the whole time*, "
+        "because your face is the part she wants. The glowing B comes down, and there's the bright "
+        "white shock of it, the sizzle and the smell and the pain that whites out everything else "
+        "for a long bright second, your whole world narrowing to the small searing shape of her "
+        "letter going permanently into you. She holds it the exact right count — long enough to "
+        "take, not long enough to ruin the line — and lifts it away, and blows cool breath across "
+        "the raised, furious, perfect B now seared into your skin. \"*There* she is,\" Bethany "
+        "breathes, and the satisfaction in it is bottomless. \"My mark. In you. For good. Look at "
+        "it, sweetheart — that's the realest thing about you now, realer than your name, and it "
+        "says one word, and the word is *mine*.\""),
+        "options": [
+            {"key": "wear_it", "label": "Wear her mark — take the B as hers", "effect": "bethany_brand",
+             "params": {"devotion": 6.0}, "set": {"branded": "worn"},
+             "desc": "the REAL claiming — ownership + her B marked in for good",
+             "outcome": (
+                "You take it — wear the B, let it be hers, let the searing little letter mean "
+                "exactly what she says it means — and the claiming takes for real: her mark set in "
+                "your skin, her title on your name, you hers in a way the facility's paperwork never "
+                "managed. The pain settles into a fierce throb you'll feel for days and a scar "
+                "you'll carry for good. \"Mine,\" Bethany says again, like she'll never tire of it, "
+                "pressing a kiss just beside the brand. \"Branded and kept and *glad* of it. That's "
+                "my favourite. Welcome to being a thing I never sell.\"")},
+            {"key": "weep_wear", "label": "Weep and wear it anyway", "effect": "bethany_brand",
+             "params": {"devotion": 5.0}, "set": {"branded": "wept"},
+             "desc": "the claiming is real; take it through the tears",
+             "outcome": (
+                "You weep — from the pain, from the permanence, from the awful warmth of being "
+                "*chosen* this way — and you wear it anyway, the real claiming landing through the "
+                "tears, her B in your skin and her title on your name and the crying not changing "
+                "any of it. Bethany thumbs your tears away, moved and merciless. \"Crying and "
+                "keeping it. That's the one that gets me, sweetheart — not the brave ones, the ones "
+                "who weep and *stay marked*. You could've said the word. You wept instead and let me "
+                "keep you. I'll remember that every time I see my B on you.\"")}],
+        "default": "wear_it",
+        "then": "cl_after"}
+
+
+@choice("cl_after", root=False)
+def _cl_after(character):
+    return {"key": "cl_after", "prompt": (
+        "After, she dresses the brand herself — a cool salve, a careful touch, the aftercare as "
+        "possessive as the iron was — and keeps tracing the raised shape of her letter like she "
+        "can't quite believe she finally put it there. \"My B,\" she murmurs, besotted with her own "
+        "mark. \"On my favourite. I'll breed my line into you and milk you and keep you, and now "
+        "everyone who ever sees you bare will know whose work it all is.\"\n\n"
+        "And then, fingertip still resting on the fresh brand, the §0 truth she keeps even over "
+        "this — the most permanent thing she's ever done to you: \"This doesn't close the door, "
+        "sweetheart. I want you to hear that with my mark still stinging. The B is forever — the "
+        "*brand* I will never take back — but the door is not, and never will be. Say the word and "
+        "you walk out branded and *free*, mine in the skin and no one's in the world, and I'll not "
+        "lift a finger to stop you. I mark you forever and free you on a breath, both, because the "
+        "brand only means what I want it to mean if you could leave wearing it and don't.\""),
+        "options": [
+            {"key": "stay_marked", "label": "Stay — hers, marked, kept", "effect": "deepen",
+             "params": {"amount": 3.0}, "end": True, "desc": "wear the B and stay, knowing the door stays open",
+             "outcome": (
+                "You stay — wear her B and stay hers, *knowing* the word would walk you out branded "
+                "and free this second and choosing the brand and the bed and the keeping anyway — "
+                "and Bethany gathers you in over the salved, throbbing mark with a tenderness that's "
+                "all the more ruinous for being real enough. \"There's my good branded girl. Kept "
+                "because she'd rather wear me than not.\" Her thumb circles the B. \"That's the only "
+                "claim worth the iron, sweetheart — the one you'd carry out the open door and bring "
+                "back yourself. You're mine. You made yourself mine. I just lit the letter.\"")},
+            {"key": "branded_free", "label": "Ask to walk out branded — and test that it's true",
+             "set": {"cl_out": "tested"}, "effect": "devote", "params": {"amount": 2.0}, "end": True,
+             "desc": "the §0 floor over the freshest, most permanent mark — and it holds",
+             "outcome": (
+                "You ask it — *let me walk out, right now, wearing this* — and Bethany, fingertip on "
+                "your fresh brand, simply opens her hand and steps back, the door behind her clear. "
+                "\"Go on, then. Branded and free. The B stays; you don't have to.\" Not a flicker of "
+                "a grudge, the offer entirely real. And whether you go or not, you've felt it: the "
+                "most permanent thing she's ever done to you, and the door still opened under it. "
+                "\"That,\" she says, fond, \"is exactly why I get to brand you at all. Come back "
+                "when you like. The B will be where I left it. So will I.\"")}],
+        "default": "stay_marked"}

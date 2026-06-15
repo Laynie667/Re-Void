@@ -85,6 +85,14 @@ built reference). This doc is the master list of everything to convert.
   short scene; a fully-kitted one gets the works (port drained while gape filled while stim rides
   while latex sweats). New reusable `_kit(character)` + `_kit_inventory()` readers — the hook for
   item/piercing/port/state branching across ALL scenes from here.
+- ✅ **The Claiming (`cl_*`, `scene claiming`/claim/brandme)** — BUILT. The persona-central moment
+  (§7 canon): Bethany brands you with her own |wB|n, by her own hand, over a brazier — warm-
+  possessive, false-tender, watching your face as the iron goes down. Routes through a new
+  `bethany_brand` effect (REAL ownership: bethany_owned + title claim mirroring _mark_owned;
+  bethany_branded; and a real freeform mark via `record_mark` that shows in marks/brands/look).
+  arrival → brand → after. State-aware (re-marks the already-branded). §0 lit over the most
+  *permanent* thing she does: "the B is forever — the door is not; I mark you forever and free you
+  on a breath, both." Offered in the hub until her B is on you.
 - ✅ **The Pod (`pd_*`, `scene pod`/podbank)** — BUILT. Deep Stock *experienced*, not merely
   contemplated (ds_ contemplates; this seals you in): plumbed into a breeding-pod in the deep bank
   — feed-line, breed-line, milk-lines, warm gel, sealed door — and kept indefinitely as the

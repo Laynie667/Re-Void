@@ -1009,6 +1009,25 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c61, ch)[0] is not None, f"gala(b) '{ch}' failed"
     assert c61.db.pending_choice is None and c61.db.scene_flags is None, "gala(b) should end clean"
 
+    # The Claiming (Bethany's brand) — chains both branches; bethany_brand sets real ownership+mark.
+    c62 = _Char(); cyoa.start_scene(c62, "cl_arrival")
+    clbeats = []
+    for ch in ("offer", "wear_it", "stay_marked"):
+        p = c62.db.pending_choice
+        assert p, f"claiming: no pending before '{ch}'"
+        clbeats.append(p["key"])
+        assert cyoa.resolve_choice(c62, ch)[0] is not None, f"claiming '{ch}' did not resolve"
+    assert clbeats == ["cl_arrival", "cl_brand", "cl_after"], clbeats
+    assert c62.db.bethany_owned is True and c62.db.bethany_branded is True, \
+        "claiming should set real ownership + brand"
+    assert c62.db.title_suffix == "— Bethany's", "claiming should claim the title"
+    assert c62.db.pending_choice is None and c62.db.scene_flags is None, "claiming should end clean"
+    c63 = _Char(); cyoa.start_scene(c63, "cl_arrival")
+    for ch in ("ask_why_b", "weep_wear", "branded_free"):
+        assert c63.db.pending_choice, f"claiming(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c63, ch)[0] is not None, f"claiming(b) '{ch}' failed"
+    assert c63.db.pending_choice is None and c63.db.scene_flags is None, "claiming(b) should end clean"
+
     # Hub routing: the six dedicated kink set-pieces are reachable from the facility hub.
     hub_keys = {o["key"] for o in cyoa._BUILDERS["facility_hub"](_Char())["options"]}
     for need in ("kennel", "doll", "filling", "wetroom", "rig", "cnc"):
