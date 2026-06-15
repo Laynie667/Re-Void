@@ -1074,6 +1074,38 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Growth Suite — both branches chain (_proc_udder no-ops without a cycle).
+    c102 = _Char(); cyoa.start_scene(c102, "gr_arrival")
+    grbeats = []
+    for ch in ("swell_willing", "grow_full", "carry_bigger"):
+        p = c102.db.pending_choice
+        assert p, f"growth: no pending before '{ch}'"
+        grbeats.append(p["key"])
+        assert cyoa.resolve_choice(c102, ch)[0] is not None, f"growth '{ch}' did not resolve"
+    assert grbeats == ["gr_arrival", "gr_swell", "gr_after"], grbeats
+    assert c102.db.pending_choice is None and c102.db.scene_flags is None, "growth should end clean"
+    c103 = _Char(); cyoa.start_scene(c103, "gr_arrival")
+    for ch in ("alarm_size", "endure_grow", "dread_chart_gr"):
+        assert c103.db.pending_choice, f"growth(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c103, ch)[0] is not None, f"growth(b) '{ch}' failed"
+    assert c103.db.pending_choice is None and c103.db.scene_flags is None, "growth(b) should end clean"
+
+    # Lights-Out — sleep conditioning; both branches chain clean.
+    c104 = _Char(); cyoa.start_scene(c104, "sd_arrival")
+    sdbeats = []
+    for ch in ("let_sleep", "soak", "wake_changed"):
+        p = c104.db.pending_choice
+        assert p, f"lightsout: no pending before '{ch}'"
+        sdbeats.append(p["key"])
+        assert cyoa.resolve_choice(c104, ch)[0] is not None, f"lightsout '{ch}' did not resolve"
+    assert sdbeats == ["sd_arrival", "sd_night", "sd_waking"], sdbeats
+    assert c104.db.pending_choice is None and c104.db.scene_flags is None, "lightsout should end clean"
+    c105 = _Char(); cyoa.start_scene(c105, "sd_arrival")
+    for ch in ("fight_sleep", "deep_seat", "suspect_night"):
+        assert c105.db.pending_choice, f"lightsout(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c105, ch)[0] is not None, f"lightsout(b) '{ch}' failed"
+    assert c105.db.pending_choice is None and c105.db.scene_flags is None, "lightsout(b) should end clean"
+
     # Re-feeding — both branches chain (the _do_milk no-ops without a cycle).
     c98 = _Char(); cyoa.start_scene(c98, "rf_arrival")
     rfbeats = []

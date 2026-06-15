@@ -6520,10 +6520,12 @@ def _b_facility_hub(character):
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("programming", "→ the Programming Lab", "pr_arrival", "a trigger seated — a word anyone can fire")
     add("goingunder", "→ the deep chair", "hy_arrival", "staged hypnosis, all the way to the below")
+    add("lightsout", "→ sleep conditioning", "sd_arrival", "the pillow that programs you while you sleep")
     add("ontherecord", "→ Documentation", "mc_arrival", "your consent drilled and filmed for the file")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
     add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
     add("outfitting", "→ the Outfitting Bay", "ou_arrival", "equipped — ports, implants, rings, a tail")
+    add("growth", "→ the Growth Suite", "gr_arrival", "grown bigger and heavier for the yield, permanent")
     add("sanitation", "→ the Sanitation Block", "sb_arrival", "the relief-wall; anonymous use")
     add("assemblyline", "→ the Assembly Line", "al_arrival", "the conveyor; processed station to station")
     add("capacity", "→ the Capacity Suite", "ct_arrival", "stretched up the chart — knot, double, fist")
@@ -13746,3 +13748,242 @@ def _bc_after(character):
                 "projection into your file. \"We have every confidence in the unit.\" You leave "
                 "carrying a quota you didn't agree to and a body that's expected to beat it.\")")}],
         "default": "known_number"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Growth Suite — forced body growth for yield. Distinct from
+# Outfitting (hardware) and Refinement (geld/sissify): this GROWS you — a cocktail
+# pumped into the glands, swelling you bigger and heavier and more productive on
+# the table, permanent. Routes through the REAL `_proc_udder` (forced growth +
+# production ramp). State/kit-aware. Clean register. Flow: arrival→swell→after.
+# Entry: `scene growth`/growthsuite/swell.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("gr_arrival", root=False)
+def _gr_arrival(character):
+    k = _kit(character)
+    nm = subject_name(character)
+    note = (" Your milk-port reads the new volume as it comes — the suite tunes the cocktail to "
+            "the plumbing already in you, growing the gland around the fitting. "
+            if k["milk_port"] else "")
+    return {"key": "gr_arrival", "prompt": (
+        "The Growth Suite is a warm humid room of measuring tapes and before-photos and a reclined "
+        "chair rigged with gland-lines and a slow-drip rack of cocktails labelled by the size-jump "
+        "they buy. This isn't fitting hardware onto you or cutting things off — it's making the "
+        "body you have *bigger*, heavier, more productive, a hard forced swell up a size or three in "
+        f"one sitting. \"Growth session, {nm},\" the suite tech says, cinching the gland-lines into "
+        "place, snapping a before-photo. \"We pump you up. Tits, mostly — that's the yield — but "
+        "we grow what the chart wants grown. You'll swell on the table, hot and tight and aching, "
+        "and you won't shrink back. Bigger producer, better numbers, permanent.\"" + note +
+        " The first cocktail starts its drip, and a deep heat blooms in your glands almost at once, "
+        "a pressure that means *more*. \"Feel that starting? That's you getting bigger. Settle in "
+        "and grow for me.\""),
+        "options": [
+            {"key": "swell_willing", "label": "Settle in and swell", "set": {"gr": "willing"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "let the cocktail work; grow bigger for the yield",
+             "outcome": (
+                "You settle in and let it work — let the heat bloom and the pressure build, let "
+                "yourself *grow* — and the tech nods at the easy take. \"Good grower. Relaxes into "
+                "the swell. The ones who tense just ache worse; the growth comes either way.\" The "
+                "ache climbs as the glands fill and strain and *expand*, your body getting heavier "
+                "and fuller by the minute under your own watching eyes.")},
+            {"key": "alarm_size", "label": "Balk at how big they mean to make you", "set": {"gr": "alarm"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "the size-jump on the chart alarms you; it happens regardless",
+             "outcome": (
+                "You balk at the number on the chart — the size they mean to grow you to, more than "
+                "your frame seems built for — and the tech just adjusts the drip. \"Bigger than you "
+                "think you can carry. They all say that. The frame adapts; the back complains; the "
+                "yield doubles. Worth it on the books.\" The cocktail keeps dripping, the swell "
+                "keeps coming, your alarm no input the drip-rack reads.")}],
+        "default": "swell_willing",
+        "then": "gr_swell"}
+
+
+@choice("gr_swell", root=False)
+def _gr_swell(character):
+    return {"key": "gr_swell", "prompt": (
+        "And then you *grow*. The cocktail does its hard fast work and your glands swell on the "
+        "table — hot, tight, straining, heavier by the minute, the skin drawing taut over a volume "
+        "that wasn't there an hour ago — a forced size-jump you can watch happen, feel happen, the "
+        "ache of fast growth deep and constant as you fill past your old shape and keep filling. "
+        "The tech measures you at intervals, calling the numbers to a chart that climbs. \"There's "
+        "the swell. Up a size already. Another coming. Your old bras are scrap and your old "
+        "measurements are history — this is the new you, bigger and built for more, and it doesn't "
+        "go back down. Hold still while you finish growing.\""),
+        "options": [
+            {"key": "grow_full", "label": "Grow to the chart — bigger, heavier, permanent", "effect": "facility",
+             "params": {"method": "_proc_udder", "kind": "proc"}, "set": {"grown": "full"},
+             "desc": "the REAL forced growth + production ramp, logged permanent",
+             "outcome": (
+                "You grow to the chart — the real forced swell taking, your glands jumped up a size "
+                "and your production ramped, logged permanent on your file — and the new weight of "
+                "you settles in heavy and strange and *yours now*, a bigger body built for a bigger "
+                "yield that you'll carry from here on. \"Logged,\" the tech says, snapping the after-"
+                "photo beside the before. \"Look at the difference. Bigger producer, better numbers, "
+                "and no shrinking back. We'll grow you again when the chart wants more. There's "
+                "always more chart.\")")},
+            {"key": "endure_grow", "label": "Endure the ache of growing", "effect": "facility",
+             "params": {"method": "_proc_udder", "kind": "proc"}, "set": {"grown": "endured"},
+             "desc": "the growth takes regardless; survive the swell",
+             "outcome": (
+                "You endure the ache — the deep constant strain of fast forced growth — and the "
+                "swell takes regardless, real and permanent, your body bigger and heavier whether "
+                "you welcomed it or just survived it. \"Grown,\" the tech confirms, marking the new "
+                "numbers. \"The ache fades in a few days. The size doesn't. You'll get used to "
+                "carrying more — you'll have to, because we'll keep adding to what you carry.\")")}],
+        "default": "grow_full",
+        "then": "gr_after"}
+
+
+@choice("gr_after", root=False)
+def _gr_after(character):
+    return {"key": "gr_after", "prompt": (
+        "They unhook the gland-lines and stand you at the mirror, before-photo in hand, to see the "
+        "difference — bigger, heavier, fuller, a body grown past its old shape and not going back. "
+        "The new weight pulls at you when you move; the new size fills your sightline looking down. "
+        "\"There's the new you,\" the tech says, pleased with the numbers. \"Heavier on the scale, "
+        "higher on the yield chart, and permanent. You're more *producer* than you were this "
+        "morning — measurably, on file, in the mirror. Mind the back the first week; the rest is "
+        "just learning to carry what we grew.\""),
+        "options": [
+            {"key": "carry_bigger", "label": "Learn to carry the bigger body", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the new size settles in as yours",
+             "outcome": (
+                "You learn to carry it — the new weight, the new size, the heavier fuller body grown "
+                "for a yield you'll now be held to — and it settles in as simply *yours*, the old "
+                "measurements already feeling like someone else's, your sense of your own shape "
+                "rewritten to the bigger numbers. You're a larger producer now, and the body that "
+                "felt like too much this morning will feel like normal by next week, just in time "
+                "for them to grow you again.")},
+            {"key": "dread_chart_gr", "label": "Look at how much chart is left", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the size chart goes much higher",
+             "outcome": (
+                "You look at the size chart on the wall — and your new, alarming size is barely "
+                "halfway up it, the boxes above climbing to volumes you can't imagine carrying, the "
+                "suite's ambitions for you stretching far past where you are. \"Lots of chart "
+                "left,\" the tech agrees, following your eyes. \"We never grow a producer all the "
+                "way in one go — the frame needs time between jumps. But we get them to the top "
+                "eventually. You'll be astonished what a body learns to carry when there's no say "
+                "in the carrying.\")")}],
+        "default": "carry_bigger"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: Lights-Out — sleep conditioning. The passive overnight version of the
+# chair: put to bed with the headphones, programming seeping in all night while
+# you sleep, so you wake changed and never consented awake to any of it. Distinct
+# from Going Under (the active descent): this is cumulative, nightly, unwitnessed.
+# Routes through real `mantra_set` + `program_trigger` + `deepen`. Clean register.
+# Flow: arrival→night→waking. Entry: `scene lightsout`/sleepconditioning.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("sd_arrival", root=False)
+def _sd_arrival(character):
+    nm = subject_name(character)
+    return {"key": "sd_arrival", "prompt": (
+        "Lights-out in the dorm, and the facility tucks its stock in the way it does everything — "
+        "with an agenda. The pillow has a speaker sewn into it. The sleep-mask has bone-conduction "
+        "pads. The moment your head goes down, a low voice begins, under the threshold of proper "
+        "hearing, pitched for the sleeping mind rather than the waking one. \"Sleep, "
+        f"{nm},\" a night-tech murmurs, dimming the dorm. \"That's all you have to do tonight — "
+        "sleep. The work happens *while* you do. We've found the sleeping mind takes conditioning "
+        "with no argument at all, because the part of you that argues is offline. You'll wake up a "
+        "little more ours and never know which dream did it.\" The voice in the pillow settles into "
+        "its all-night murmur, mantras and cues laid down under the dark. \"Don't fight sleep. "
+        "Fighting sleep just means you're awake for the start of it. Down you go.\""),
+        "options": [
+            {"key": "let_sleep", "label": "Let yourself sleep", "set": {"sd": "sleep"},
+             "effect": "devote", "params": {"amount": 1.0},
+             "desc": "go under; let the night do its work unwitnessed",
+             "outcome": (
+                "You let yourself go — too tired to fight it, lulled by the warm dark and the low "
+                "murmur — and sleep takes you down into the place where the programming works "
+                "unopposed, the voice in the pillow speaking to the parts of you that can't talk "
+                "back. \"There she goes,\" the night-tech says softly, somewhere far off. \"Out. "
+                "Good. Now we work.\" The murmur deepens, and the night begins its quiet "
+                "rewriting.")},
+            {"key": "fight_sleep", "label": "Fight to stay awake and hear it", "set": {"sd": "fight"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "resist sleep to catch the words; lose, and seed it conscious",
+             "outcome": (
+                "You fight to stay awake — to catch the words, to know what's being said to you — "
+                "and you lose, of course, the body taking the sleep it needs, but not before the "
+                "murmur seeds itself in your half-waking mind, heard-but-not-heard, the worst of "
+                "both. \"Fighting sleep,\" the night-tech notes. \"All that buys you is hearing the "
+                "first few cues consciously before you drop. Now you'll half-remember them, which "
+                "makes them seat *faster*. Sleep, stock. You can't win a war of attrition against a "
+                "pillow.\"")}],
+        "default": "let_sleep",
+        "then": "sd_night"}
+
+
+@choice("sd_night", root=False)
+def _sd_night(character):
+    return {"key": "sd_night", "prompt": (
+        "The night runs long and the voice never stops. In the strange porous logic of sleep the "
+        "mantras don't feel installed so much as *remembered*, as though they were always true — "
+        "you dream in the facility's grammar, dream yourself smaller and softer and more owned, and "
+        "the cues lay themselves down in the unguarded dark one repetition at a time. You surface "
+        "now and then to the murmur still going, the words just under hearing, and sink again, and "
+        "each surfacing you're a fraction more steeped. There's no choice to make down here, not "
+        "really — that's the point of doing it asleep — only the long unwitnessed soak, and what "
+        "it leaves behind by morning."),
+        "options": [
+            {"key": "soak", "label": "Soak in it all night", "effect": "mantra_set",
+             "set": {"slept": "soaked"}, "desc": "the real overnight conditioning seats while you sleep",
+             "outcome": (
+                "You soak in it all night — the mantras seating for real in the unguarded dark, the "
+                "conditioning deepening without a single conscious yes — and by the small hours the "
+                "facility's grammar has worn its groove a little deeper, the cues a little more "
+                "*always-true*. It's the cleanest conditioning there is, the night-tech would say: "
+                "no resistance to work past, because you weren't there to resist. You sleep on, "
+                "steeping, becoming.")},
+            {"key": "deep_seat", "label": "Let a cue seat all the way under", "effect": "program_trigger",
+             "params": {"phrase": "sleep now, sweetheart", "response": "blank", "strength": 2,
+                        "permanent": True, "mantra": "i sleep when she says, i wake as hers", "sug": 2.0, "cond": 2.0},
+             "set": {"slept": "seated"},
+             "desc": "the real overnight trigger — a sleep-cue seated past waking objection",
+             "outcome": (
+                "Deep in the night a single cue seats all the way under — *sleep now, sweetheart* — "
+                "laid into you past any waking objection, a phrase that will drop you under on "
+                "command from here on, installed by a voice you'll never quite remember hearing. It "
+                "takes for real, permanent, seeded in sleep where nothing guards. You'll wake not "
+                "knowing it's there — until someone says it, and your eyes go heavy mid-sentence, "
+                "and you fold back down into the dark you were trained to.")}],
+        "default": "soak",
+        "then": "sd_waking"}
+
+
+@choice("sd_waking", root=False)
+def _sd_waking(character):
+    return {"key": "sd_waking", "prompt": (
+        "You wake to the dorm lights and the pillow gone silent, and you feel — *rested*. That's "
+        "the trick of it: no memory of the night's work, no soreness, no sense of anything done, "
+        "just a clean blank good-morning and a faint new ease in your own obedience you'd never "
+        "connect to a speaker in a pillow. The night-tech logs your sleep-cycle on the way past. "
+        "\"Morning. Sleep well? Course you did. Stock always sleeps well here — we make very sure "
+        "of it.\" Something settles in you that wasn't there at lights-out, and you have no idea "
+        "what, and that not-knowing is exactly the product."),
+        "options": [
+            {"key": "wake_changed", "label": "Wake a little more theirs, not knowing why", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the overnight work hides under a good morning",
+             "outcome": (
+                "You start your day a little more theirs and never feel the seam — the night's work "
+                "hidden under a clean rested morning, the new cue or the deeper groove just part of "
+                "you now, indistinguishable from things you always were. And tonight the pillow will "
+                "murmur again, and the night after, every night, the soak cumulative and "
+                "unwitnessed, until the person who lay down that first lights-out is gone by "
+                "increments too small to ever catch. You feel fine. That's the worst part. You feel "
+                "*fine*.")},
+            {"key": "suspect_night", "label": "Try to catch what was done to you", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "grasp for the night's work; it's seamless",
+             "outcome": (
+                "You try to catch it — comb the blank for what the night left, test yourself for new "
+                "edges — and find nothing to grip, because seamless is the entire design: conditioning "
+                "laid in sleep leaves no scar to find, only effects you'll mistake for your own "
+                "nature. \"Trying to remember the night,\" the night-tech says, amused, logging you. "
+                "\"Can't be done, stock. We built it so the work's invisible by morning. You'll just "
+                "keep waking up easier, and calling it a good night's sleep.\")")}],
+        "default": "wake_changed"}

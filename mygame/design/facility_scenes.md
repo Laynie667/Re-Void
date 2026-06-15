@@ -131,6 +131,18 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **The Growth Suite (`gr_*`, `scene growth`/swell)** — BUILT. Forced body growth for yield —
+  distinct from Outfitting (hardware) and Refinement (geld/sissify): a cocktail pumped into the
+  glands swells you bigger, heavier, more productive on the table, permanent, up a size in one
+  sitting. Routes through the REAL `_proc_udder` (forced growth + production ramp). Kit-aware
+  (milk-port reads the new volume). Before/after photos, a size-chart you're only halfway up. Hub by
+  the Outfitting Bay.
+- ✅ **Lights-Out (`sd_*`, `scene lightsout`/sleepconditioning)** — BUILT. Sleep conditioning — the
+  passive overnight version of the chair: a speaker in the pillow, bone-conduction in the mask,
+  programming seeping in all night while you sleep so you wake changed and never consented awake.
+  Distinct from Going Under (active descent): cumulative, nightly, unwitnessed, seamless by morning.
+  Real `mantra_set` + `program_trigger` (a sleep-cue seated past objection) + `deepen`. "You'll just
+  keep waking up easier, and calling it a good night's sleep." Hub by the deep chair.
 - ✅ **Re-feeding (`rf_*`, `scene refeeding`/feedback)** — BUILT. The dairy loop closed the cruelest
   way: milked at the rig, then the warm yield fed straight back through a nursing-gag (or cross-fed
   to the next producer), a self-licking circuit where nothing leaves the building and you learn your

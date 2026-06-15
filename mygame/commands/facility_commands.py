@@ -1700,6 +1700,8 @@ class CmdScene(Command):
         "assemblyline": "al_arrival", "conveyor": "al_arrival", "productionline": "al_arrival",
         "refeeding": "rf_arrival", "feedback": "rf_arrival", "closedloop": "rf_arrival",
         "census": "bc_arrival", "figures": "bc_arrival", "productionreview": "bc_arrival",
+        "growth": "gr_arrival", "growthsuite": "gr_arrival", "swell": "gr_arrival",
+        "lightsout": "sd_arrival", "sleepconditioning": "sd_arrival", "sleepprogramming": "sd_arrival",
     }
 
     def func(self):
