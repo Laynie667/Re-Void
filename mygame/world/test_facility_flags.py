@@ -1074,6 +1074,38 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # On the Record (manufactured consent) — both branches chain clean.
+    c90 = _Char(); cyoa.start_scene(c90, "mc_arrival")
+    mcbeats = []
+    for ch in ("give_yes", "seat_consent", "carry_yes"):
+        p = c90.db.pending_choice
+        assert p, f"ontherecord: no pending before '{ch}'"
+        mcbeats.append(p["key"])
+        assert cyoa.resolve_choice(c90, ch)[0] is not None, f"ontherecord '{ch}' did not resolve"
+    assert mcbeats == ["mc_arrival", "mc_record", "mc_after"], mcbeats
+    assert c90.db.pending_choice is None and c90.db.scene_flags is None, "ontherecord should end clean"
+    c91 = _Char(); cyoa.start_scene(c91, "mc_arrival")
+    for ch in ("withhold_yes", "resist_record", "dread_file"):
+        assert c91.db.pending_choice, f"ontherecord(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c91, ch)[0] is not None, f"ontherecord(b) '{ch}' failed"
+    assert c91.db.pending_choice is None and c91.db.scene_flags is None, "ontherecord(b) should end clean"
+
+    # The Gift — gift-wrapped and handed to Seraphine; both branches chain clean.
+    c92 = _Char(); cyoa.start_scene(c92, "gf_arrival")
+    gfbeats = []
+    for ch in ("be_gift", "unwrapped", "be_kept_gift"):
+        p = c92.db.pending_choice
+        assert p, f"thegift: no pending before '{ch}'"
+        gfbeats.append(p["key"])
+        assert cyoa.resolve_choice(c92, ch)[0] is not None, f"thegift '{ch}' did not resolve"
+    assert gfbeats == ["gf_arrival", "gf_presented", "gf_after"], gfbeats
+    assert c92.db.pending_choice is None and c92.db.scene_flags is None, "thegift should end clean"
+    c93 = _Char(); cyoa.start_scene(c93, "gf_arrival")
+    for ch in ("balk_gift", "given_dread", "wrapping_home"):
+        assert c93.db.pending_choice, f"thegift(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c93, ch)[0] is not None, f"thegift(b) '{ch}' failed"
+    assert c93.db.pending_choice is None and c93.db.scene_flags is None, "thegift(b) should end clean"
+
     # The Understudy — the complicity scene; both branches chain clean.
     c88 = _Char(); cyoa.start_scene(c88, "un_arrival")
     unbeats = []

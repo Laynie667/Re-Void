@@ -1694,6 +1694,8 @@ class CmdScene(Command):
         "vesperlore": "vl_arrival", "vespertalk": "vl_arrival",
         "breedingmachine": "mx_arrival", "machine": "mx_arrival", "therig": "mx_arrival",
         "understudy": "un_arrival", "intakedesk": "un_arrival", "recruiter": "un_arrival",
+        "ontherecord": "mc_arrival", "consentdrill": "mc_arrival", "documentation": "mc_arrival",
+        "thegift": "gf_arrival", "giftwrap": "gf_arrival", "present": "gf_arrival",
     }
 
     def func(self):

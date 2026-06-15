@@ -131,6 +131,16 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **On the Record (`mc_*`, `scene ontherecord`/consentdrill)** — BUILT. Manufactured consent, the
+  bureaucratic horror: a camera, a consent-form template, and a drilled cue ("do you consent?") that
+  pulls a bright recorded "yes, please, thank you" out of you on command — making every clause
+  "consensual," the paperwork airtight because they made your mouth fill it in. Real `program_trigger`
+  (permanent recite-yes) + documented consent. "I never have to be the villain; you keep agreeing,
+  the camera says so." The cage is the growing file. Hub by Going Under.
+- ✅ **The Gift (`gf_*`, `scene thegift`/giftwrap/present)** — BUILT. Bethany gift-wraps you in bows
+  and a tag and presents you to Seraphine as a thank-you — real ownership transfer (`seraphine_takes`),
+  the bow-on-the-collar humiliation of being a thing that can be *given*, unwrapped, used, and "sent
+  home with the wrapping." Owned enough to change hands on a whim. Hub when Bethany owns you.
 - ✅ **The Understudy (`un_*`, `scene understudy`/intakedesk/recruiter)** — BUILT. The devious one:
   the cruelest conversion isn't what's done TO you but being made the one who does it to the next
   arrival. Bethany promotes her broken favourite to work the intake desk — the warm smiling

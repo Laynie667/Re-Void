@@ -6500,6 +6500,7 @@ def _b_facility_hub(character):
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
     add("programming", "→ the Programming Lab", "pr_arrival", "a trigger seated — a word anyone can fire")
     add("goingunder", "→ the deep chair", "hy_arrival", "staged hypnosis, all the way to the below")
+    add("ontherecord", "→ Documentation", "mc_arrival", "your consent drilled and filmed for the file")
     add("parlour", "→ the Marking Parlour", "mp_arrival", "the permanent work")
     add("refinement", "→ the Refinement Suite", "fm_arrival", "redesigned — gelded/caged or made pretty")
     add("outfitting", "→ the Outfitting Bay", "ou_arrival", "equipped — ports, implants, rings, a tail")
@@ -6532,6 +6533,8 @@ def _b_facility_hub(character):
             "kept close; she's talkative — the Process, the dose, her story")
         add("understudy", "→ work the intake desk", "un_arrival",
             "her favourite's promotion — sign the next one in")
+        add("thegift", "→ be given as a gift", "gf_arrival",
+            "wrapped in bows and handed to Seraphine for the evening")
     # Seraphine visits to buy — surfaces once you're Bethany's (her to sell).
     if bowned or sowned:
         add("seraphine", "→ Seraphine collects", "se_arrival", "the peerage; the unbirthing")
@@ -12979,3 +12982,261 @@ def _un_after(character):
                 "of your own. The Process doesn't end at being livestock, sweetheart. For the "
                 "favourites, it ends at being *me*. Slowly. We've time.\"")}],
         "default": "become"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: On the Record — manufactured consent, the bureaucratic horror. Not the
+# psychological spiral (Programming) or the hypnotic descent (Going Under): this
+# is the FILE. The facility drills a consent-response so that on cue you say yes,
+# enthusiastically, on tape, for the record — making every clause "consensual,"
+# the paperwork airtight precisely because they made your mouth fill it in.
+# Routes through real `program_trigger` (a recite/beg response) + a documented
+# conditioning_consent flag + deepen. Clean register. Flow: arrival→record→after.
+# Entry: `scene ontherecord`/consent-drill.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("mc_arrival", root=False)
+def _mc_arrival(character):
+    nm = subject_name(character)
+    return {"key": "mc_arrival", "prompt": (
+        "This room has a camera. That's the first thing you notice — a small recording lens on a "
+        "stand, a microphone, a little red light, a clerk at a laptop with a consent-form template "
+        "open. It's the most *clerical* the facility ever looks, and the most chilling for it. "
+        f"\"Documentation session, {nm},\" the clerk says, not unkindly, adjusting the mic toward "
+        "you. \"We've a great deal of... activity on your file, and the auditors do like the "
+        "paperwork tidy. So today we record your *consent*. Clear, enthusiastic, on camera, for "
+        "every clause and procedure already in you and every one to come.\"\n\n"
+        "Bethany leans into frame beside you, warm. \"It's the cleverest thing we do, sweetheart, "
+        "and the quietest. We don't need to force anything if the record shows you *asked*. So "
+        "we'll seat a little response in you — a cue, and when you hear it you'll say yes, and mean "
+        "it on camera, brightly, gratefully — and then there's no clause you didn't sign, no act "
+        "you didn't beg for, no door anyone could say I shoved you through. The tape will show you "
+        "*reaching*.\" She tips your chin to the lens. \"Smile for the auditors. Let's get your yes "
+        "on file.\""),
+        "options": [
+            {"key": "give_yes", "label": "Give them the yes they're recording", "set": {"mc": "give"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "say it to the lens; let the record show you wanting it",
+             "outcome": (
+                "You give it — say yes to the lens, clear and bright, the word they want on the "
+                "tape — and the clerk nods, logging the timestamp, and Bethany beams. \"*Lovely.* "
+                "Look how willing she sounds. The auditors will be charmed.\" The red light holds "
+                "steady, capturing your consent in a tidy file, and you feel the trap of it: every "
+                "yes you give clean makes the next one easier to extract and the whole record "
+                "harder to ever call coercion. You're building the case against your own future "
+                "complaints.")},
+            {"key": "withhold_yes", "label": "Refuse to consent on camera", "set": {"mc": "withhold"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "deny them the recorded yes; they have a way to make you say it",
+             "outcome": (
+                "You refuse — give the lens silence, or a *no* — and the clerk doesn't even frown, "
+                "just makes a note and glances at Bethany, who smiles wider. \"That's all right. "
+                "That's what the *drill* is for.\" She pats your cheek. \"Refusing freely is a "
+                "problem for the paperwork. So we take the freely part out — seat a response that "
+                "says the yes for you, on cue, whether the bit of you behind it agrees or not. The "
+                "tape doesn't record what you *meant*, sweetheart. Only what you *said*. And soon "
+                "you'll say yes every time someone gives the cue.\"")}],
+        "default": "give_yes",
+        "then": "mc_record"}
+
+
+@choice("mc_record", root=False)
+def _mc_record(character):
+    return {"key": "mc_record", "prompt": (
+        "And then they drill the cue. A phrase, paired over and over with the bright recorded "
+        "*yes* — *do you consent, sweetheart?* and your voice, trained, answering *yes, please, "
+        "thank you* — until the response runs on its own, a reflex seated under your will where "
+        "the camera can always reach it. They run takes until it's clean: the cue, and your "
+        "enthusiastic yes, smiling, immediate, indistinguishable on tape from a thing freely "
+        "given. \"Perfect take,\" the clerk says, saving the file. \"Consent on record, "
+        "timestamped, enthusiastic. Anyone reviews this file, they'll see a resident who couldn't "
+        "say yes fast enough.\" Bethany watches the red light, deeply satisfied. \"That's the "
+        "airtight part. Not that you can't say no — that the *record* will never show you did.\""),
+        "options": [
+            {"key": "seat_consent", "label": "Let the yes-cue seat", "effect": "program_trigger",
+             "params": {"phrase": "do you consent", "response": "recite", "strength": 3,
+                        "permanent": True, "mantra": "yes, please, thank you", "sug": 2.0, "cond": 3.0},
+             "set": {"recorded": "seated"},
+             "desc": "the REAL cue installs — say yes on command, permanently, for the file",
+             "outcome": (
+                "You let it seat — the cue locking in, the bright yes becoming a reflex no part of "
+                "you can intercept before it's out — and it takes for real, permanent, a trigger "
+                "that pulls your documented consent out of you on command. The clerk tests it: "
+                "*do you consent?* and your mouth says *yes, please, thank you* before you've "
+                "thought, smiling for the lens, and the red light catches it clean. \"Filed,\" they "
+                "say. \"You'll consent to anything now, on cue, on camera. The paperwork's "
+                "perfect.\"")},
+            {"key": "resist_record", "label": "Fight to keep your no", "effect": "program_trigger",
+             "params": {"phrase": "do you consent", "response": "recite", "strength": 2,
+                        "mantra": "yes, please, thank you", "sug": 2.0, "cond": 2.0},
+             "set": {"recorded": "fought"},
+             "desc": "the cue seats anyway, shallower; your real no never reaches the tape",
+             "outcome": (
+                "You fight to keep your *no* — to hold one honest refusal back from the drill — and "
+                "the cue seats anyway, shallower, so that when they test it your mouth says the "
+                "bright yes a half-second after your eyes say no, and the camera, of course, only "
+                "keeps the yes. \"There's the lag,\" the clerk notes, unbothered. \"It'll close "
+                "with reinforcement. And even now — watch the playback — the tape's clean. Your no "
+                "lives in your face. Your yes lives in the file. Only one of those is admissible.\"")}],
+        "default": "seat_consent",
+        "then": "mc_after"}
+
+
+@choice("mc_after", root=False)
+def _mc_after(character):
+    return {"key": "mc_after", "prompt": (
+        "They save the file and add it to your record — a tidy, timestamped library of your "
+        "enthusiastic consent, growing each session — and send you out carrying the cue, the yes "
+        "that isn't yours waiting in your throat for anyone who knows the words. Bethany walks you "
+        "to the door, fond, arm around you. \"There. Now it's all *consensual*, sweetheart, "
+        "properly and on the record, which is so much tidier than force and so much harder to ever "
+        "undo. You'll say yes to the next clause and the next procedure and the next sale, brightly, "
+        "on cue, and the tape will back it every time.\" She kisses your temple. \"I do love a "
+        "clean file. It means I never have to be the villain. *You* keep agreeing. The camera "
+        "says so.\""),
+        "options": [
+            {"key": "carry_yes", "label": "Carry the manufactured yes", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the cue lives in you; the record builds against you",
+             "outcome": (
+                "You carry it out — the yes that fires without you, the growing file of documented "
+                "eagerness — and the devious weight of it settles in worse than any restraint: you "
+                "can still feel *no*, somewhere behind the cue, but it will never again reach a "
+                "record, never be the thing anyone sees, never be admissible against the bright "
+                "timestamped library of your consent. They made your own mouth the strongest lock "
+                "on the door.")},
+            {"key": "dread_file", "label": "Think about the growing file", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the paperwork is the real cage now",
+             "outcome": (
+                "You think about the file — growing, tidy, timestamped, every yes you'll be made to "
+                "give stacking into an unassailable record of a resident who *wanted* all of it — "
+                "and understand the cage isn't the collar or the clause anymore, it's the "
+                "*paperwork*: airtight, self-building, proof against your own future self. \"Clean "
+                "file,\" the clerk had said. It'll be the cleanest in the facility by the time "
+                "they're done, and the cleaner it gets, the more buried the truth of it. You walk "
+                "out documented, eager, and on the record entirely willing.")}],
+        "default": "carry_yes"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Gift — Bethany gift-wraps you and presents you to her peer (or a
+# buyer) as a present. Filthy ownership-humiliation + a real ownership transfer
+# (seraphine_takes). The bow-on-the-collar register: handed over, unwrapped,
+# used as a thing given. Clean register. Flow: arrival→presented→after.
+# Entry: `scene thegift`/giftwrap/present. (Hub-gated on being Bethany's.)
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("gf_arrival", root=False)
+def _gf_arrival(character):
+    nm = subject_name(character)
+    return {"key": "gf_arrival", "prompt": (
+        "\"I'm in a *generous* mood,\" Bethany announces, which is never good for you, and produces "
+        "a spool of wide satin ribbon and a gift-tag. \"Seraphine's done me a kindness, and I "
+        "believe in thank-you presents, and I happen to own the loveliest thing in the building to "
+        f"give.\" She means you. She sets to *wrapping* you, {nm} — ribbon cinched in a tight "
+        "harness of bows, wrists bound in a pretty cross at the small of your back, a fat satin bow "
+        "at your throat over the collar, a tag tied to it that reads, in her looping hand, |xFor "
+        "Sera — because you asked so nicely. Enjoy her. Send the wrapping back. — B|x. \"There,\" "
+        "she says, fluffing a bow, delighted. \"Gift-wrapped. You make such a *pretty* present — "
+        "and the prettiest part is you'll be handed over and unwrapped and used by someone else "
+        "entirely, on my say, because a thing that can be *given* is a thing that's truly owned. "
+        "Let's go deliver you.\""),
+        "options": [
+            {"key": "be_gift", "label": "Be the gift — let her wrap and give you", "set": {"gf": "gift"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "hold still for the bows; be a thing that gets given",
+             "outcome": (
+                "You hold still for the bows — let her cinch and tie and tag you, let yourself be "
+                "*wrapped*, an object dressed up to be handed over — and the particular "
+                "objectification of being made into a *present* lands warm and shameful, worse than "
+                "being used because it's so *fond*, so festive. \"Good gift,\" Bethany coos, "
+                "fluffing your bow. \"Holds still to be wrapped. Sera's going to be *thrilled*. "
+                "She does love it when I share.\"")},
+            {"key": "balk_gift", "label": "Balk at being handed over", "set": {"gf": "balk"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "object to being a present; she wraps you regardless",
+             "outcome": (
+                "You balk — being *given away*, handed to someone else like a parcel, too much — "
+                "and Bethany just ties the bow tighter, fond. \"Oh, hush. It's a loan with a "
+                "ribbon, sweetheart, not a sale. You come back to me — Sera always sends the "
+                "wrapping home.\" She tags your throat. \"And it's good for you, being reminded "
+                "you're a thing I can *give*. Owned isn't owned until it can change hands on a "
+                "whim. Hold still and be lovely.\"")}],
+        "default": "be_gift",
+        "then": "gf_presented"}
+
+
+@choice("gf_presented", root=False)
+def _gf_presented(character):
+    return {"key": "gf_presented", "prompt": (
+        "Bethany delivers you in person — walks you, bound in bows, to Seraphine, and presents you "
+        "with a flourish. \"For you, Sera. Wrapped and willing. Thank you for the kindness.\" And "
+        "Seraphine's whole face lights with a collector's delight, circling you, reading the tag, "
+        "tugging a ribbon to watch it slip. \"Oh, *Beth*. You shouldn't have. You absolutely "
+        "should have.\" Clever fingers find the bow at your throat. \"A present. Nobody gives me "
+        "*presents*. And gift-wrapped — you know I can't resist unwrapping a thing slowly.\" She "
+        "looks at you, fond and frank. \"You're being *given*, sweet thing. Handed across like a "
+        "nice bottle. Let's find out what Beth's been keeping — and what you do for someone who "
+        "didn't break you in, just... received you.\""),
+        "options": [
+            {"key": "unwrapped", "label": "Be unwrapped and enjoyed", "effect": "seraphine_takes",
+             "params": {"devotion": 4.0}, "set": {"given": "unwrapped"},
+             "desc": "the REAL handover — Seraphine takes you, ownership and all, a gift received",
+             "outcome": (
+                "Seraphine unwraps you slow — ribbon by ribbon, savoring it, the way she opens "
+                "anything she means to keep — and takes you as the gift you are, the handover real, "
+                "her name settling onto you where Bethany's was, a thing genuinely *given* from one "
+                "owner to her peer. And her use is the immune, personal, un-laced kind that "
+                "frightens worse than the dose, because you're reaching for the woman you were "
+                "handed to with nothing in your blood to blame. \"Best present I've had in years,\" "
+                "Seraphine sighs, pleased. \"Tell Beth thank you. Or — you can't, can you, you're "
+                "mine for the evening. I'll tell her.\"")},
+            {"key": "given_dread", "label": "Feel yourself handed across", "effect": "deepen",
+             "params": {"amount": 2.0}, "set": {"given": "dread"},
+             "desc": "the bottomless wrongness of being a thing that gets gifted",
+             "outcome": (
+                "You feel it land all the way — being *handed across*, gift-wrapped, from one power "
+                "to another, your ownership passing on a whim and a bow as easily as a bottle of "
+                "wine — and the wrongness of being so completely a *thing* that you can be given as "
+                "a thank-you note is bottomless. Seraphine reads it on your face, not unkind. \"It's "
+                "a lot, being a gift. It means you're owned so thoroughly that even your owner's "
+                "manners run through you.\" She tucks a slipped ribbon back. \"Don't fret. I keep my "
+                "presents beautifully. And I do send the wrapping home.\"")}],
+        "default": "unwrapped",
+        "then": "gf_after"}
+
+
+@choice("gf_after", root=False)
+def _gf_after(character):
+    given = scene_flag(character, "given", "unwrapped")
+    held = (" Your ownership sits with Seraphine now, for as long as she keeps the gift" if given == "unwrapped"
+            else " You've been handed across and enjoyed and will be sent home with the wrapping")
+    return {"key": "gf_after", "prompt": (
+        "After, Seraphine has the ribbons gathered to send back — *send the wrapping home* — and "
+        f"keeps you a fond moment longer, a present enjoyed.{held}. \"You make a lovely gift, sweet "
+        "thing,\" she says, smoothing your hair. \"Beth has such taste. And you held still to be "
+        "given, which is the whole art of being a *good* present — you don't get a say in the "
+        "giving, only in how gracefully you're received.\" She loops a single kept ribbon around "
+        "her own wrist, a souvenir. \"I'll return you in the morning, wrapping and all. Beth and I "
+        "do love passing nice things back and forth. You're the nicest we've passed in a "
+        "while.\""),
+        "options": [
+            {"key": "be_kept_gift", "label": "Be the gift, gracefully", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "settle into being a thing that gets given and returned",
+             "outcome": (
+                "You settle into it — being the nice thing passed between two owners, given and "
+                "received and sent home, wrapping and all — and the grace of accepting it is its "
+                "own surrender, deeper than struggle: you are a present, a loan with a ribbon, an "
+                "object fond enough to be shared, and there's a warm terrible ease in having so "
+                "little say that even your handlers' generosity moves you around. The kept ribbon "
+                "on Seraphine's wrist is the only part of tonight that gets to stay put.")},
+            {"key": "wrapping_home", "label": "Be sent home with the wrapping", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "returned to Bethany, the loan complete",
+             "outcome": (
+                "Come morning you're sent home with the wrapping, as promised — returned to Bethany "
+                "ribbon and tag and all, a gift enjoyed and given back, the loan closing as neatly "
+                "as it opened. \"Did Sera treat you well?\" Bethany asks, untying you fondly, "
+                "pocketing the tag for her files. \"Of course she did. We always return each "
+                "other's things in good condition.\" The ease with which you were given and "
+                "returned sits in you like a fact now: owned enough to be a present, and presents "
+                "go where they're put.")}],
+        "default": "be_kept_gift"}
