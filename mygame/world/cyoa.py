@@ -292,6 +292,33 @@ def _eff_go_cumflate(character, p):
     return "cumflated" if filled else "cumflate_noop"
 
 
+@effect("go_bound")
+def _eff_go_bound(character, p):
+    """Bound in the rig — sets the REAL bondage state (navigation_locked + self_cmds_locked +
+    a forced_posture/body_language) so movement and self-commands are genuinely held. All flags
+    are in FACILITY_FLAGS, so the §0 floor (and the safeword) frees you completely.
+    params: posture (override), cond (conditioning to add)."""
+    try:
+        character.db.navigation_locked = True
+        character.db.self_cmds_locked = True
+    except Exception:
+        pass
+    try:
+        character.db.forced_posture = p.get("posture",
+            "bound in the rig — wrists, ankles, throat, spread and fixed where you were hung")
+        character.db.body_language = "bound and helpless — strapped open, going nowhere"
+    except Exception:
+        pass
+    cond = float(p.get("cond", 0) or 0)
+    if cond:
+        try:
+            from world.conditioning import add_conditioning
+            add_conditioning(character, cond, source="bondage")
+        except Exception:
+            pass
+    return "bound"
+
+
 @effect("go_doll")
 def _eff_go_doll(character, p):
     """Sealed into a doll/toy — sets the REAL latex/seal flags (latex_sealed, optionally
@@ -9569,3 +9596,167 @@ def _cn_after(character):
                 "you the dread and the safety are enemies — down here they're *married*.\" She kisses "
                 "your forehead. \"Now rest. You earned the soft part.\"")}],
         "default": "held"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Rig — bondage (core content list). Strung up in the facility's
+# suspension rig — wrists, ankles, throat, spread and fixed — and kept there,
+# helpless and used. Routes through a new `go_bound` effect (REAL navigation_locked
+# + self_cmds_locked + forced_posture, all FACILITY_FLAGS) and the real
+# `_scene_suspension` facility method. State-aware (nugget needs no limb-cuffs,
+# little, preg hung clear of the belly), kit-aware (pierced rings clipped to the
+# rig, gaped, milk-port). §0 lit hard: the rig holds for the facility but the word
+# drops every strap at once. Flow: arrival→bound→after. Entry: `scene bondage`/rig.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("bd_arrival", root=False)
+def _bd_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if st["nugget"]:
+        note = (" A nugget needs no wrist or ankle cuffs — there's nothing to cuff — so the rig "
+                "takes you by torso and throat-strap and a sling under what's left of you, hung "
+                "spread and helpless by the few points a limbless thing offers. ")
+    elif st["preg"]:
+        note = (" They rig you with a wide sling under the swell so you hang spread without "
+                "crushing the get — a bred thing strung up is still strung up, just braced "
+                "carefully around the cargo. ")
+    elif st["little"]:
+        note = (" Down little, the straps and the height and the helplessness are enormous and "
+                "frightening, and you don't have the grown words for why being made unable to move "
+                "does the complicated thing it does to you. ")
+    rings = (" Your piercings get clipped *into* the rig — fine chains run from your rings to the "
+             "frame, so the suspension tugs you taut by the hardware hung through you, every "
+             "sway pulling at pierced flesh. " if k["pierced"] else "")
+    return {"key": "bd_arrival", "prompt": (
+        "The Rig room is vertical and purposeful: a steel suspension frame bolted floor to "
+        "ceiling, a wall of graded cuffs and spreader bars and harness webbing, winches with "
+        "hand-cranks, a padded floor that says they expect what's hung here to eventually be let "
+        "down in no state to stand. Everything is rated, rated, rated — weight limits stencilled on "
+        "the steel — the frank engineering of a place built to take a body's own ability to move "
+        "*away* from it entirely.\n\n"
+        f"\"{nm}.\" The |wrigger|n is methodical, a ropework craftsman with a coil over one "
+        "shoulder. \"Up you go. We string you — wrists, ankles, throat, spread to the frame — and "
+        "then you're simply *kept*, hung open and worked over, with nothing you can do to close, "
+        "cover, or get away. That's the whole exercise: teaching a body it doesn't get to "
+        "decide what reaches it.\"" + rings + note + " He starts buckling, unhurried and exact. "
+        "\"Hold still while I rig you. After that, holding still won't be up to you.\""),
+        "options": [
+            {"key": "give_limbs", "label": "Give him your limbs — let the rig take you", "set": {"bd": "give"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "offer up wrists and ankles; surrender the ability to move",
+             "outcome": (
+                "You give him your wrists, your ankles, your throat to the strap — offer up your own "
+                "ability to move and let the rig take it — and the rigger works fast and clean, the "
+                "cuffs closing, the winch taking up slack until you're lifted spread and helpless "
+                "off your own feet. \"Good. Compliant rigs hang prettier.\" The first moment your "
+                "weight comes off the floor and onto the straps, something in you drops too — into "
+                "the particular surrender of a body that has just lost the vote on where it is.")},
+            {"key": "struggle_rig", "label": "Struggle as he binds you", "set": {"bd": "struggle"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "fight the cuffs; he rigs you anyway, methodical",
+             "outcome": (
+                "You struggle against each cuff as it closes — and the rigger simply works around "
+                "your fighting with unbothered craft, a man who's rigged thrashing stock before, "
+                "each strap seated regardless until your struggling just makes the suspension sway. "
+                "\"Fight while you've got the slack,\" he says, cranking the winch. \"In a moment "
+                "you won't have any. Then you'll hang and find out what fighting's worth up "
+                "here.\"")},
+            {"key": "ask_rig", "label": "Ask how long he'll leave you hung", "set": {"bd": "ask"},
+             "desc": "make him say how long the helplessness lasts",
+             "outcome": (
+                "\"How long do I hang?\" you ask, watching the winch. The rigger shrugs, testing a "
+                "knot. \"Till the board's done with you, or you go limp enough that leaving you's "
+                "no fun, or the word — you've always got the word. Otherwise? As long as suits "
+                "whoever's using you. The rig doesn't tire. You will. That gap's the point.\"")}],
+        "default": "give_limbs",
+        "then": "bd_bound"}
+
+
+@choice("bd_bound", root=False)
+def _bd_bound(character):
+    k = _kit(character)
+    extra = []
+    if k["milk_port"]:
+        extra.append(
+            {"key": "hung_milked", "label": "Hang and let the rig's pump run your port",
+             "effect": "facility", "params": {"method": "_do_milk", "kind": "proc"},
+             "set": {"bound": "milked"},
+             "desc": "[milk-port] strung up and drained at once, hands-free",
+             "outcome": (
+                "They clip the milk-line to your port while you hang, and the rig becomes a milking "
+                "frame as much as a bondage one — drawn down steady while you sway helpless and "
+                "spread, drained hands-free because your hands aren't yours to use up here anyway. "
+                "The real yield logs against your line. Hung, spread, and milked, with nothing to do "
+                "about any of it but produce.")})
+    return {"key": "bd_bound", "prompt": (
+        "And then you're *hung* — lifted clear, spread wide, wrists and ankles and throat fixed to "
+        "the frame, your whole body's ability to close or cover or flee simply *removed*, winched "
+        "out of you and locked in the steel. The helplessness is total and strange and "
+        "bottomless: you twist and the twist goes nowhere, you pull and the rig drinks the pull, "
+        "and the part of you that has spent your whole life able to move *away* from things meets "
+        "the fact that, right now, it can't. They work you over hung like that — used, teased, left "
+        "to sway and ache between attentions — and there is nothing, nothing, you can do but take "
+        "what the room decides to bring to where you hang. \"There it is,\" the rigger says, circling "
+        "you. \"A body that's run out of *no*. Doesn't that quiet something in you.\""),
+        "options": extra + [
+            {"key": "hang", "label": "Hang and be used — surrender the helplessness", "effect": "go_bound",
+             "params": {"cond": 3.0}, "set": {"bound": "hung"},
+             "desc": "the REAL bind (movement + self-commands locked) + used in the rig",
+             "outcome": (
+                "You surrender to it — hang open and let the helplessness be the whole of you, let "
+                "the rig and the room do as they like to a body that's run out of options — and the "
+                "bind takes for real, movement and self-command locked out of your hands, you a "
+                "strung and spread thing worked over at the room's pace. The surrender is its own "
+                "dark floor to rest on: nothing to decide, nothing to defend, only what reaches "
+                "you. \"That's the quiet I meant,\" the rigger says. \"Hung things stop arguing "
+                "with the world. It's almost peaceful, isn't it, having no say.\"")},
+            {"key": "use_suspended", "label": "Be used while you hang", "effect": "facility",
+             "params": {"method": "_scene_suspension", "kind": "scene"}, "set": {"bound": "used"},
+             "desc": "the real suspension-use scene — worked over strung up",
+             "outcome": (
+                "They use you hung — the real suspension scene, your spread helpless body worked "
+                "over while it sways, every hole reachable and none of them yours to close, the "
+                "logged use of a thing strung up specifically so it can't do anything but receive. "
+                "You swing with each impact and the rig takes it and gives you nothing to brace "
+                "against. The helplessness and the use braid into one bottomless drop.")}],
+        "default": "hang",
+        "then": "bd_after"}
+
+
+@choice("bd_after", root=False)
+def _bd_after(character):
+    return {"key": "bd_after", "prompt": (
+        "Eventually the winch lowers you — down out of the spread helplessness onto the padded "
+        "floor they knew you'd need, limbs gone stupid and tingling, the marks of the cuffs ringing "
+        "your wrists and ankles and throat. The rigger works your circulation back with brisk "
+        "impersonal hands. \"Down you come. You hung well — went quiet, stopped fighting the air. "
+        "The rig likes you. You'll be back in it.\"\n\n"
+        "And then the §0 truth, plain as the cuff-marks: the rig holds you to the facility's "
+        "say — the winch, the straps, the hung helpless hours — but |wnot to yours|n. The escape "
+        "word drops every strap at once, kills the locks on your moving and your hands, lowers you "
+        "and frees you the instant you mean it, no winch to wait on, no permission to win. Every "
+        "knot in this room is tied on top of one that unties itself the moment you need it to."),
+        "options": [
+            {"key": "kept_rigged", "label": "Stay rigged — be kept hung at their say", "effect": "go_bound",
+             "params": {"cond": 2.0}, "end": True, "desc": "choose the helplessness, knowing the word drops it",
+             "outcome": (
+                "You let them string you back up — choose the helplessness, the spread, the "
+                "no-say-in-it — *knowing* the word would drop every strap this second and lower you "
+                "free, and choosing to hang anyway, because the surrender is only restful when it's "
+                "yours to end and you don't. \"Good hung thing,\" the rigger says, taking up the "
+                "slack again. \"Kept because you'd rather sway than stand. The winch holds you for "
+                "us. It never holds you against you. Hang easy.\"")},
+            {"key": "drop_straps", "label": "Use the word — drop every strap, come down free",
+             "set": {"bd_out": "freed"}, "end": True, "desc": "the §0-in-fiction out; unbinds you at once",
+             "outcome": (
+                "You mean the word, and the rig lets go — every strap dropping, the locks on your "
+                "moving and your hands falling away, the winch lowering you free and a person again, "
+                "on your own two feet with your own two hands back — and the rigger steadies you "
+                "without a flicker, because the whole rig was built on this being real. \"Down and "
+                "loose,\" he says, unbuckling the last of it. \"Works the instant you say it. The "
+                "steel's rated to hold a thrashing body all day — and rated to let go the second "
+                "*you* call it. Both at once. That's the only kind of rig worth trusting.\"")}],
+        "default": "kept_rigged"}

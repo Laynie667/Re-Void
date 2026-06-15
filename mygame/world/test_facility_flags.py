@@ -887,6 +887,24 @@ def test_bethany_scene():
     cyoa.resolve_choice(c48, "the_word")   # §0 word mid-scene
     assert c48.db.pending_choice is None and c48.db.scene_flags is None, "the word must end the scene clean"
 
+    # The Rig (bondage) — chains both branches; go_bound sets the real lock flags.
+    c49 = _Char(); cyoa.start_scene(c49, "bd_arrival")
+    bdbeats = []
+    for ch in ("give_limbs", "hang", "kept_rigged"):
+        p = c49.db.pending_choice
+        assert p, f"bondage: no pending before '{ch}'"
+        bdbeats.append(p["key"])
+        assert cyoa.resolve_choice(c49, ch)[0] is not None, f"bondage '{ch}' did not resolve"
+    assert bdbeats == ["bd_arrival", "bd_bound", "bd_after"], bdbeats
+    assert c49.db.navigation_locked is True and c49.db.self_cmds_locked is True, \
+        "bondage should set the real movement/self-command locks"
+    assert c49.db.pending_choice is None and c49.db.scene_flags is None, "bondage should end clean"
+    c50 = _Char(); cyoa.start_scene(c50, "bd_arrival")
+    for ch in ("ask_rig", "use_suspended", "drop_straps"):
+        assert c50.db.pending_choice, f"bondage(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c50, ch)[0] is not None, f"bondage(b) '{ch}' failed"
+    assert c50.db.pending_choice is None and c50.db.scene_flags is None, "bondage(b) should end clean"
+
     # Memory: a different path is retained and referenced by a later beat.
     c2 = _Char(); cyoa.start_scene(c2, "bx_arrival")
     cyoa.resolve_choice(c2, "meek")

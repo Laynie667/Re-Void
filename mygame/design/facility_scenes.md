@@ -95,6 +95,14 @@ built reference). This doc is the master list of everything to convert.
   scrip + standing + a LOW devotion cap ("you have to want it less than you do" — the wall
   Bethany works against). The two-doors contrast kept explicit throughout: her hard earned
   door vs the always-free §0 floor. Earned+press -> real grant (or earn-it-then-stay-freely).
+- ✅ **The Rig / bondage (`bd_*`, `scene bondage`/rig/suspension)** — BUILT. Core-list bondage:
+  strung up in the suspension rig — wrists, ankles, throat, spread and fixed — and kept helpless
+  and used. Routes through a new `go_bound` effect (REAL navigation_locked + self_cmds_locked +
+  forced_posture, all FACILITY_FLAGS) and the real `_scene_suspension` method. arrival → bound →
+  after. State-aware (nugget needs no limb-cuffs / little / preg slung clear of the belly),
+  kit-aware (pierced rings clipped into the frame; milk-port unlocks a hung-and-milked option).
+  §0 lit hard: the steel is rated to hold a thrashing body all day AND to let go the instant the
+  word is meant — "both at once; the only kind of rig worth trusting."
 - ✅ **The Take / CNC (`cn_*`, `scene cnc`/take/hunt)** — BUILT. Core-list consensual-non-consent,
   written as the scene where the §0 floor stops being mere safety and becomes the literal enabling
   beam: Bethany names BOTH lines explicitly up front — in-fiction your "no" is hers to ignore (the
