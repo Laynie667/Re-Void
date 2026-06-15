@@ -42,8 +42,8 @@ _NEW_FLAGS = [
     "nurse_first", "nursed_until", "nurse_first_fluid",
     "stuffed_mouth", "stuffed_fluid", "beg_small", "star_chart", "star_chart_on",
     "heat_tell", "honorifics_required", "honorific_miss_count", "honorific_miss_at",
-    # neuter / sissify
-    "neutered", "sissified",
+    # neuter / sissify (+ pronoun backup so the floor restores them)
+    "neutered", "sissified", "facility_pronouns_backup",
     # cross-NPC ownership (Seraphine) + forced-adoption ward
     "seraphine_owned", "seraphine_ward",
     # nested-passenger carry
@@ -68,6 +68,37 @@ def test_floor_flag_coverage():
     assert not missing, ("§0 FLOOR HOLE — these flags are written but NOT in FACILITY_FLAGS, "
                          "so the OOC floor won't clear them: " + ", ".join(missing))
     return f"floor covers all {len(_NEW_FLAGS)} new flags"
+
+
+def test_pronoun_backup_roundtrip():
+    """Sissify/geld must move pronouns AND back up the originals so the floor restores them.
+    Mirrors the FacilityScript._set_pronouns backup-then-overwrite contract + the reset restore."""
+    class _DB:
+        def __init__(self):
+            self.pronouns = {"subject": "he", "object": "him", "possessive": "his", "reflexive": "himself"}
+            self.facility_pronouns_backup = None
+
+    # _set_pronouns contract: back up ONCE, then overwrite (twice should not clobber the backup).
+    def set_pronouns(db, s, o, p, r):
+        if not db.facility_pronouns_backup:
+            db.facility_pronouns_backup = dict(db.pronouns or {})
+        db.pronouns = {"subject": s, "object": o, "possessive": p, "reflexive": r}
+
+    db = _DB()
+    set_pronouns(db, "she", "her", "her", "herself")          # sissify
+    assert db.pronouns["subject"] == "she", "sissify should set she/her"
+    assert db.facility_pronouns_backup["subject"] == "he", "original pronouns must be backed up"
+    set_pronouns(db, "it", "it", "its", "itself")             # then geld — backup must NOT be clobbered
+    assert db.pronouns["subject"] == "it", "geld should set it/its"
+    assert db.facility_pronouns_backup["subject"] == "he", "backup must survive a second procedure"
+
+    # reset restore contract (as in force_clear / run_facility_reset): restore, then clear backup.
+    if db.facility_pronouns_backup:
+        db.pronouns = dict(db.facility_pronouns_backup)
+        db.facility_pronouns_backup = None
+    assert db.pronouns == {"subject": "he", "object": "him", "possessive": "his", "reflexive": "himself"}, \
+        "floor must restore the original pronouns"
+    return "pronoun backup: sissify->she, geld->it, backup survives, floor restores original"
 
 
 def test_regression_thresholds():
@@ -1121,9 +1152,9 @@ def test_bethany_scene():
 
 
 _TESTS = [
-    test_floor_flag_coverage, test_regression_thresholds, test_star_chart,
-    test_quota_normalizer, test_maze, test_sire_temperaments, test_fellow_progression,
-    test_speech_filter_order, test_heat_tell, test_honorifics_address,
+    test_floor_flag_coverage, test_pronoun_backup_roundtrip, test_regression_thresholds,
+    test_star_chart, test_quota_normalizer, test_maze, test_sire_temperaments,
+    test_fellow_progression, test_speech_filter_order, test_heat_tell, test_honorifics_address,
     test_honorific_escalation, test_poste_ripen, test_passenger, test_bethany_scene,
 ]
 

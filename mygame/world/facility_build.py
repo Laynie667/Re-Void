@@ -738,11 +738,15 @@ def run_facility_reset(caller, purge=False):
         except Exception:
             pass
 
-    # Always: give her name back, and clear the active machinery state.
+    # Always: give her name (and pronouns) back, and clear the active machinery state.
     name_backup = getattr(caller.db, "facility_name_backup", None)
     if name_backup:
         caller.db.rp_name = name_backup
     caller.db.facility_name_backup = None
+    pronoun_backup = getattr(caller.db, "facility_pronouns_backup", None)
+    if pronoun_backup:
+        caller.db.pronouns = dict(pronoun_backup)
+    caller.db.facility_pronouns_backup = None
 
     caller.db.bred_by               = []
     caller.db.endcycle_blocked      = False

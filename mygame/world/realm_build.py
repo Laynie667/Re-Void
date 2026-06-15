@@ -2778,9 +2778,13 @@ def force_clear(owner):
     # Capture tracked body installs before the list-clear below wipes the record,
     # so we can still delete the real objects (milk glands, womb, breast mod).
     _tracked_items = list(getattr(d, "facility_items", None) or [])
-    # restore name + title FIRST (before clearing their backups)
+    # restore name + title + pronouns FIRST (before clearing their backups)
     if getattr(d, "facility_name_backup", None):
         try: d.rp_name = d.facility_name_backup
+        except Exception: pass
+    pb = getattr(d, "facility_pronouns_backup", None)
+    if pb:
+        try: d.pronouns = dict(pb)
         except Exception: pass
     tb = getattr(d, "facility_title_backup", None) or {}
     try:

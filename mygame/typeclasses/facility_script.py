@@ -3134,12 +3134,26 @@ class FacilityScript(DefaultScript):
             f"air. They've given her something that looks like wanting and never switches off. "
             f"(permanent enlargement + sensitivity)|n")
 
+    def _set_pronouns(self, target, subject, obj, possessive, reflexive):
+        """Set a target's pronouns AND back up the originals once to facility_pronouns_backup, so
+        the §0 reset (force_clear / run_facility_reset) can restore them — the same backup-then-
+        overwrite pattern used for the name. Used by sissify (she/her) and neuter (it/its)."""
+        try:
+            if not getattr(target.db, "facility_pronouns_backup", None):
+                target.db.facility_pronouns_backup = dict(getattr(target.db, "pronouns", None) or {})
+            target.db.pronouns = {"subject": subject, "object": obj,
+                                  "possessive": possessive, "reflexive": reflexive}
+        except Exception:
+            pass
+
     def _proc_neuter(self, room, target, t):
         """Geld + cage male stock: real loss of breeding capability. Removes any testicle
         body-mod (gelded), shrinks/relabels the cock to a caged clitty, locks it in chastity,
-        and flags db.neutered so the breeding system stops treating it as a stud."""
+        and flags db.neutered so the breeding system stops treating it as a stud. De-sexes the
+        pronouns to it/its (livestock, no longer a he) — backed up for the floor to restore."""
         target.db.neutered = True
         target.db.orgasm_denial = True
+        self._set_pronouns(target, "it", "it", "its", "itself")
         gelded = False
         caged = False
         try:
@@ -3176,9 +3190,11 @@ class FacilityScript(DefaultScript):
 
     def _proc_sissify(self, room, target, t):
         """Feminize male stock into a kept sissy: real designation/name drift, a girly speech
-        filter, locked chastity, a presentation posture, and conditioning. Pairs with neuter."""
+        filter, locked chastity, a presentation posture, conditioning, and she/her pronouns
+        (backed up for the floor to restore). Pairs with neuter."""
         target.db.sissified = True
         target.db.orgasm_denial = True
+        self._set_pronouns(target, "she", "her", "her", "herself")
         # Name drift — backed up to the slot both reset paths restore, like the other name loss.
         if not getattr(target.db, "facility_name_backup", None):
             target.db.facility_name_backup = target.db.rp_name or target.key
