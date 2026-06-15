@@ -2795,6 +2795,24 @@ def _bx_close(character):
 @choice("bp_arrival", root=False)
 def _bp_arrival(character):
     nm = subject_name(character)
+    st = _state_tags(character)
+    note = ""
+    if st["nugget"]:
+        note = (" The stockman takes one look at your limbless lot and doesn't reach for the "
+                "frame's wrist-cuffs — there's nothing to cuff. \"Nugget. Right.\" He fits you "
+                "into the low cradle instead, the one that holds a torso open at mount height with "
+                "no need for it to hold itself. \"Can't present, can't balk, can't do owt but take "
+                "it. Honestly my easiest stock.\"")
+    elif st["preg"]:
+        note = (" He notes the swell of you against the board without a flicker. \"Already took, I "
+                "see. Doesn't matter — bred stock still gets covered; keeps you in milk and keeps "
+                "you used to the frame. Quota's a quota.\" He sets the back-bar high to clear the "
+                "belly and tips your hips up regardless.")
+    elif st["little"]:
+        note = (" Down in your little headspace the smell and the noise and the big animals are "
+                "enormous and frightening and you don't follow what the frame is for until you're "
+                "in it. The stockman doesn't adjust a thing for it. \"Little today. Stock won't "
+                "notice and I haven't got time to. In you go.\"")
     return {"key": "bp_arrival", "prompt": (
         "The Breeding Pens hit you before your eyes adjust: the smell, first — rutting animal, "
         "thick and hot and ammoniac, hay and musk and the specific reek of stock kept ready — and "
@@ -2811,7 +2829,7 @@ def _bp_arrival(character):
         f"\"Board says you're owed a covering. {nm}, is it — no.\" He checks again, and what he "
         "reads is your designation and your quota, not your name. \"Doesn't matter. You're the one "
         "that's due.\" He jerks his chin at the frame. \"We can do this the easy way or the way "
-        "where I call two lads to hold you. Stock doesn't care which. Neither do I.\""),
+        "where I call two lads to hold you. Stock doesn't care which. Neither do I.\"" + note),
         "options": [
             {"key": "present", "label": "Walk to the frame and present yourself",
              "set": {"approach": "present"}, "effect": "devote", "params": {"amount": 2.0},
