@@ -312,4 +312,120 @@ class CmdStudy(Command):
 # Export
 # ---------------------------------------------------------------------------
 
-ALL_INTERACT_CMDS = [CmdHandle, CmdStudy]
+# Overt zone mechanics worth surfacing (friendly label). Hidden interactions
+# (triggers / reveal_item) are deliberately NOT listed — discovery shouldn't spoil them.
+_MECH_LABELS = {
+    "seat":           "somewhere to sit",
+    "restrain":       "restraints",
+    "milking_machine":"a milking machine",
+    "milkingmachine": "a milking machine",
+    "dildo_seat":     "a fucking-seat",
+    "dildoseat":      "a fucking-seat",
+    "womb_room":      "an interior you could enter",
+    "inflation":      "an inflatable fitting",
+    "barrier":        "a plug or barrier",
+}
+
+
+def _zone_affordances(holder):
+    """Introspect a zone-holder (a room OR a character) and return the interactable nouns by verb.
+    Reads the real zone schema (details/study_details/handle_details/inscribable/mechanics)."""
+    zones = getattr(getattr(holder, "db", None), "zones", None) or {}
+    look, study, handle, inscribe, mechs = [], [], [], [], []
+    for zname, z in zones.items():
+        if not hasattr(z, "get"):
+            continue
+        if z.get("desc") or z.get("summary"):
+            look.append(zname)
+        for d in (z.get("details") or {}):
+            look.append(str(d).replace("_", " "))
+        if z.get("study_details") or z.get("inscriptions"):
+            study.append(zname)
+        for d in (z.get("handle_details") or {}):
+            handle.append(str(d).replace("_", " "))
+        if z.get("inscribable"):
+            inscribe.append(zname)
+        for mk in (z.get("mechanics") or {}):
+            label = _MECH_LABELS.get(mk)
+            if label:
+                mechs.append(label)
+    # de-dup, keep order
+    def _uniq(seq):
+        out = []
+        for x in seq:
+            if x not in out:
+                out.append(x)
+        return out
+    return {"look": _uniq(look), "study": _uniq(study), "handle": _uniq(handle),
+            "inscribe": _uniq(inscribe), "mechanics": _uniq(mechs)}
+
+
+class CmdSurvey(Command):
+    """
+    Take stock of what invites a closer look — what can be looked at, studied,
+    handled, or interacted with, here or on someone.
+
+    Usage:
+      survey            — the room around you
+      survey <target>   — an NPC, another player, or an object here
+
+    A quiet in-character read of the affordances: the nouns worth a |wlook|n, the
+    things that reward a |wstudy|n, what you could |whandle|n, where you might
+    |winscribe|n, and any fixtures you could use. It won't spoil what's hidden —
+    some things you only find by reaching.
+    """
+
+    key = "survey"
+    aliases = ["scan", "discern", "takestock"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        caller = self.caller
+        arg = (self.args or "").strip()
+        if arg:
+            target = caller.search(arg)
+            if not target:
+                return  # search() already messaged the failure
+            holder = target
+            tname = (getattr(target.db, "rp_name", None) or target.key)
+            subject = tname
+        else:
+            holder = caller.location
+            if not holder:
+                caller.msg("|xYou aren't anywhere to survey.|n"); return
+            subject = "the room"
+
+        aff = _zone_affordances(holder)
+        if not any(aff.values()):
+            if arg:
+                caller.msg(f"|x{subject} holds nothing that invites a closer look — no zones, "
+                           f"details, or fixtures set on them.|n")
+            else:
+                caller.msg("|xNothing here invites a closer look — the room has no interactable "
+                           "zones or details set.|n")
+            return
+
+        def line(verb, nouns, colour="|c"):
+            if not nouns:
+                return None
+            shown = ", ".join(f"{colour}{n}|n" for n in nouns[:12])
+            more = f" |x(+{len(nouns) - 12} more)|n" if len(nouns) > 12 else ""
+            return f"  |w{verb}|n: {shown}{more}"
+
+        head = (f"|xYou take stock of {subject}, and your attention catches on what's worth a "
+                f"closer pass:|n")
+        rows = [
+            line("look",     aff["look"]),
+            line("study",    aff["study"]),
+            line("handle",   aff["handle"], "|m"),
+            line("inscribe", aff["inscribe"], "|y"),
+            line("interact", aff["mechanics"], "|G"),
+        ]
+        body = "\n".join(r for r in rows if r)
+        tail = ("\n|x  (Some things reveal themselves only when you reach for them — survey "
+                "won't show you those.)|n")
+        caller.msg(head + "\n" + body + tail)
+
+
+ALL_INTERACT_CMDS = [CmdHandle, CmdStudy, CmdSurvey]

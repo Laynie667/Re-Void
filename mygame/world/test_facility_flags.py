@@ -101,6 +101,46 @@ def test_pronoun_backup_roundtrip():
     return "pronoun backup: sissify->she, geld->it, backup survives, floor restores original"
 
 
+def test_survey_affordances():
+    """CmdSurvey's introspection reads the real zone schema (look/study/handle/inscribe/mechanics)
+    and never surfaces hidden 'triggers' (discovery must not spoil reach-to-find interactions)."""
+    import sys, types
+    ev = types.ModuleType("evennia")
+    class _Cmd:  # minimal base so the module imports
+        pass
+    ev.Command = _Cmd
+    ev.search_object = lambda *a, **k: []
+    sys.modules.setdefault("evennia", ev)
+    import importlib.util
+    _ic_path = os.path.join(os.path.dirname(_HERE), "commands", "interact_commands.py")
+    _spec = importlib.util.spec_from_file_location("interact_cmds_test", _ic_path)
+    ic = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(ic)
+
+    class _DB:
+        def __init__(self, z): self.zones = z
+    class _Holder:
+        def __init__(self, z): self.db = _DB(z)
+
+    zones = {
+        "counter": {"desc": "a counter", "summary": "the counter",
+                    "details": {"brass_bell": "a bell"}, "study_details": ["initials"],
+                    "handle_details": {"bell": "ring it"}, "inscribable": True,
+                    "mechanics": {"seat": {}, "triggers": {"hidden": {}}}},
+        "wall": {"desc": "", "details": {"poster": "a poster"},
+                 "mechanics": {"milking_machine": {}}},
+    }
+    aff = ic._zone_affordances(_Holder(zones))
+    assert "counter" in aff["look"] and "brass bell" in aff["look"] and "poster" in aff["look"]
+    assert aff["study"] == ["counter"] and aff["handle"] == ["bell"] and aff["inscribe"] == ["counter"]
+    assert "somewhere to sit" in aff["mechanics"] and "a milking machine" in aff["mechanics"]
+    # the load-bearing rule: hidden trigger interactions must NOT be revealed by survey.
+    assert not any("trigger" in m.lower() or "hidden" in m.lower() for m in aff["mechanics"]), \
+        "survey must not surface hidden 'triggers' mechanics"
+    # an empty/zone-less holder yields nothing.
+    assert not any(_z for _z in ic._zone_affordances(_Holder({})).values())
+    return "survey: reads real zone affordances; hides trigger interactions; empty holder => nothing"
+
+
 def test_regression_thresholds():
     # regression.regress only needs a stub for world.binding_effects.install_trigger.
     import sys, types
@@ -1445,7 +1485,8 @@ def test_bethany_scene():
 
 
 _TESTS = [
-    test_floor_flag_coverage, test_pronoun_backup_roundtrip, test_regression_thresholds,
+    test_floor_flag_coverage, test_pronoun_backup_roundtrip, test_survey_affordances,
+    test_regression_thresholds,
     test_star_chart, test_quota_normalizer, test_maze, test_sire_temperaments,
     test_fellow_progression, test_speech_filter_order, test_heat_tell, test_honorifics_address,
     test_honorific_escalation, test_poste_ripen, test_passenger, test_bethany_scene,
