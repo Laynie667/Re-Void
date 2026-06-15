@@ -9942,19 +9942,41 @@ def _bn_knot(character):
         "then": "bn_dark"}
 
 
+# Variant leads for the Long Night's "dark" beat, so a revisited night never reads identically.
+_BN_DARK_LEADS = [
+    ("And then the night becomes a long blur of being *bred*. Locked in at every door she keeps "
+     "you and uses you, load after laced load with nowhere to go but to pack you fuller, and you "
+     "feel it accumulate — your belly swelling tight and round against her, drum-taut, the shapes "
+     "of the three shafts moving inside you visible under your own skin if you looked, though "
+     "you've stopped being able to look. She edges you past every peak and over and through until "
+     "pleasure and use and fullness smear into one bottomless thing, and somewhere in the small "
+     "hours you simply *go* — black out, wrung past your body's ability to stay — and when you "
+     "surface, dazed and lost, you're |wstill on her|n, still knotted, still being fucked in slow "
+     "deep certain strokes, another load flooding warm into you as your eyes flutter open."),
+    ("The night stops being a sequence of things and becomes one single endless thing: kept "
+     "knotted and full and used, hour after hour, the loads losing their separateness until you "
+     "can't tell where one flood ends and the next begins, only that you are always being filled "
+     "and never once emptied. The pleasure stopped being pleasure a while ago and became a kind of "
+     "weather you live inside. You drift under without noticing the edge of it — and rise again to "
+     "find the strokes never slowed, the knots never softened, another warm pulse spilling into "
+     "your packed and aching middle as you blink back to a body that was used right through your "
+     "absence."),
+    ("Time comes apart in her bed. She works you in long unhurried waves — drives deep and grinds "
+     "the knots so you feel each one swell, draws back to the edge of the lock and sinks again — "
+     "and between the waves she just *holds* you stuffed full and lets you marinate in it, until "
+     "the difference between being fucked and being kept dissolves entirely. You pass out without "
+     "a seam. You come to without one either, surfacing mid-stroke into the slow certain rhythm "
+     "that carried on without you, a fresh load already warming its way into the tight-packed "
+     "fullness, her weight an unhurried constant you woke up still pinned beneath."),
+]
+
+
 @choice("bn_dark", root=False)
 def _bn_dark(character):
+    import random as _r
+    lead = _r.choice(_BN_DARK_LEADS)
     return {"key": "bn_dark", "prompt": (
-        "And then the night becomes a long blur of being *bred*. Locked in at every door she keeps "
-        "you and uses you, load after laced load with nowhere to go but to pack you fuller, and you "
-        "feel it accumulate — your belly swelling tight and round against her, drum-taut, the "
-        "shapes of the three shafts moving inside you visible under your own skin if you looked, "
-        "though you've stopped being able to look. She edges you past every peak and over and "
-        "through until pleasure and use and fullness smear into one bottomless thing, and somewhere "
-        "in the small hours you simply *go* — black out, wrung past your body's ability to stay — "
-        "and when you surface, dazed and lost, you're |wstill on her|n, still knotted, still being "
-        "fucked in slow deep certain strokes, another load flooding warm into you as your eyes "
-        "flutter open. \"There you are,\" Bethany murmurs, not having paused for your absence at "
+        lead + " \"There you are,\" Bethany murmurs, not having paused for your absence at "
         "all. \"You went under. I kept going — you didn't need to be awake for me to keep filling "
         "you, and I did, three more times while you were gone. Feel how heavy you are now.\""),
         "options": [
