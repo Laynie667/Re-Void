@@ -259,6 +259,16 @@ caught Vesper trying on different parts/holes" beat plus Calix's re-oiled bench,
 unsent letters, how officiating works, why the doors don't lock (an in-fiction statement
 of the floor), and the bakery watcher in the Dead Letter Cage.
 
+## What Vesper Won't Finish — Vesper's lore (✅ BUILT — `scene vesperlore`)
+
+`vl_*` looping lore scene completing the post-office sibling-lore trio (Bethany's Pillow Talk,
+Seraphine's Counter, now Vesper). In Vesper's oblique, eyes-changing-colour, trailing-off voice:
+where they came from (appeared one winter, no before), the eyes (their feelings written in a
+language people almost read), unreadable-vs-read-*gently* (the realest, from Seraphine's 3 a.m.
+drawer), the form they won't fill in, the siblings (Calix straightening their mug, Seraphine's
+cards), and what they see in you. Warm register, real devote/deepen. Close: read them gently out
+loud — the kind thing said to their face they can never stand. Entry: `scene vesperlore`/vespertalk.
+
 ## Vesper's Nest — the shy clerk's scene (✅ BUILT — `scene vesper`)
 
 `vn_*` cinematic scene in the WARM post-office register (no facility dread). Vesper lets you

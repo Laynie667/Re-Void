@@ -6494,6 +6494,7 @@ def _b_facility_hub(character):
     # The everyday work rooms — always on the rota.
     add("floor", "→ the Processing Floor", "pf_arrival", "open-floor use, on display")
     add("pens",  "→ the Breeding Pens", "bp_arrival", "the stockman; covered by the stock")
+    add("machine", "→ the Breeding Machine", "mx_arrival", "the automated rig; bred on a metronome, no one in the room")
     add("dairy", "→ the Dairy", "dy_arrival", "put on the machine; milked")
     add("longmilking", "→ a full milking session", "mm_arrival", "the deep rig; drained dry across cycles")
     add("cell",  "→ the Conditioning Cell", "cc_arrival", "the Spiral Chair; the voice")
@@ -12555,3 +12556,297 @@ def _ev_openhouse_b(character):
                 "entirely. \"In a manner of speaking. The parish has a long memory and a fond one. "
                 "You'll never quite be anonymous out there again. Isn't that something?\"")}],
         "default": "served_out"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: What Vesper Won't Finish — the shy clerk's lore, completing the post-
+# office sibling trio (Bethany's Pillow Talk, Seraphine's Counter, now Vesper).
+# In Vesper's register: opalescent, oblique, eyes changing colour, trailing off,
+# telling you most by what they won't finish. A looping lore menu — where they
+# came from, the eyes, unreadable-vs-read-gently, the form they won't fill in,
+# the siblings, what they see in you. Warm register, canon, no facility dread.
+# Real devote/deepen on the trusting drops. Flow: arrival→(menu)→close.
+# Entry: `scene vesperlore`/vesper-talk.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def _vl_lore_options(character):
+    """Vesper's lore menu — each a canon bit in their oblique, half-finished voice; loops back."""
+    return [
+        {"key": "where", "label": "Ask where they came from", "then": "vl_menu",
+         "set": {"vl_where": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "the winter they appeared",
+         "outcome": (
+            "Their eyes go from silver to something duskier. \"I... appeared. One winter. Sorting "
+            "mail like I'd always been here, and nobody could remember hiring me, and — \" a small "
+            "helpless gesture \" — neither could I. Still can't. There's no before that I — \" They "
+            "stop, start again, smaller. \"Calix says family's just a long enough habit of not "
+            "leaving. I think I was just... left. And they didn't make me go. That's the closest "
+            "thing to an origin I've got. Please don't ask me what I was before the winter. I've "
+            "looked. There isn't one.\"")},
+        {"key": "eyes", "label": "Ask about their eyes changing colour", "then": "vl_menu",
+         "set": {"vl_eyes": "y"}, "desc": "the thing everyone notices and no one asks",
+         "outcome": (
+            "Their eyes do it right then — silver to violet to a colour with no name — and they "
+            "flush, catching you noticing. \"They... do that. I don't decide it. They go with — \" "
+            "the eyes shift again \" — with whatever I'm feeling that I'm not saying, I think. Which "
+            "is why I keep them down, mostly. It's like having your insides written on your face in "
+            "a language people almost read.\" A tiny, brave look up, eyes going warm-gold. \"They're "
+            "doing something right now I'd rather you didn't translate. ...you can guess.\"")},
+        {"key": "readgently", "label": "Ask if they want to be unreadable", "then": "vl_menu",
+         "set": {"vl_read": "y"}, "effect": "deepen", "params": {"amount": 1.0},
+         "desc": "the realest thing, the 3 a.m. confession",
+         "outcome": (
+            "This is the one that's in Seraphine's 3 a.m. drawer, and they know you might know it, "
+            "and they say it anyway, eyes gone very still. \"Everyone thinks I want to be "
+            "unreadable. The draped mirrors, the oblique — they think it's that I want to not be "
+            "seen.\" A breath. \"It isn't. I want to be *read gently*. There's a — difference. I "
+            "don't hide because I want to be a mystery. I hide because nobody ever read me *kindly* "
+            "and I stopped offering. ...you read kindly. I noticed. That's most of why you're "
+            "getting any of this.\"")},
+        {"key": "form", "label": "Ask about the form they won't fill in", "then": "vl_menu",
+         "set": {"vl_form": "y"}, "desc": "the staying-form, and the letter to Seraphine",
+         "outcome": (
+            "\"The form.\" They almost laugh, oblique. \"There's a — a form. For making it official. "
+            "Staying. *Belonging* here, on paper, the way Calix and Seraphine just... do, without "
+            "needing one.\" The eyes flick. \"I wrote Seraphine a letter about it once — never sent "
+            "it, she has it anyway, she has everything — that said if I ever fill it in she's not "
+            "allowed to throw a party. A small dinner. Maybe.\" Quieter. \"I haven't filled it in. "
+            "Not because I'd leave. Because filling it in means admitting I want to stay, and "
+            "wanting things out loud is the thing I'm worst at. ...I'm doing it now, a bit. Aren't "
+            "I.\"")},
+        {"key": "siblings", "label": "Ask about Calix and Seraphine", "then": "vl_menu",
+         "set": {"vl_sib": "y"}, "effect": "devote", "params": {"amount": 1.0},
+         "desc": "the family they were left with",
+         "outcome": (
+            "The eyes go soft-gold, fond despite themselves. \"Calix straightens my mug. Did you "
+            "know that? I put it down anywhere and it's always — back in the centre of its coaster "
+            "when I pass again. He's never said. I've never said. It's the most either of us — \" "
+            "trailing, fond. \"And Seraphine leaves me cards. Reads my toybox she's not supposed to "
+            "and leaves cards in the lid saying the kind things I can't stand to hear out loud, so "
+            "I can find them alone, which is the only way I can stand to be — \" The eyes brim, "
+            "violet. \"They kept me. Without a form. I don't know what I did to deserve being kept "
+            "by people who didn't make me earn it. I'm still waiting for the bill.\"")},
+        {"key": "see_me", "label": "Ask what they see when they look at you", "then": "vl_menu",
+         "set": {"vl_see": "y"}, "effect": "deepen", "params": {"amount": 2.0},
+         "desc": "let the one who reads gently read you",
+         "outcome": (
+            "They look at you properly — rare, direct, eyes cycling slow — and read you the gentle "
+            "way they wish they were read. \"I see... someone who found the fold. Who came back. "
+            "Who asks me things instead of groping at me through the mail like I'm a — \" the eyes "
+            "shift \" — a slot. I see someone the facility's got its hands deep in, and who's "
+            "frightened, and who came *here*, to the warm building, to sit with the shy one and ask "
+            "about their eyes.\" Very quiet. \"I see someone who needs reading gently as badly as I "
+            "do. ...we could. Read each other. Gently. If you — \" The sentence doesn't survive, "
+            "and doesn't need to.")},
+        {"key": "vl_enough", "label": "Let them stop — sit in the quiet", "then": "vl_close",
+         "desc": "they've risked enough words; let the fold hold",
+         "outcome": (
+            "\"...that's — I've said a lot. More than I — \" They press their lips together, eyes "
+            "wheeling, and then let it go, and let the quiet come, which with Vesper is its own "
+            "kind of trust. \"Can we just — be quiet now? I'm better at quiet. I can be quiet *with* "
+            "someone, if they don't need me to fill it. You don't. I noticed that too.\"")},
+    ]
+
+
+@choice("vl_arrival", root=False)
+def _vl_arrival(character):
+    nm = subject_name(character)
+    return {"key": "vl_arrival", "prompt": (
+        "You find Vesper in the fold again — the corner that's only a corner if they haven't let "
+        "you in — and tonight they're not trembling on the threshold of being touched; they're just "
+        "*here*, curled in the nest with a cooling mug Calix would straighten, and when you settle "
+        "in they don't startle. The opalescent skin catches the low light; the eyes go silver, "
+        f"then violet, then a colour without a name. \"...you came back,\" they say, like it still "
+        f"surprises them every time. \"To the fold. To *me*, not — not the toybox, not the parts. "
+        f"Just to sit.\" A small brave breath. \"I'm — I think I'm in a talking mood, {nm}, which "
+        "happens to me about once a season and never lasts, so. You could ask me things. About — "
+        "me. The before, the eyes, the — \" the eyes flick \" — the things I don't finish. I might "
+        "even — finish some. No promises. Ask, while I'm brave.\""),
+        "options": _vl_lore_options(character),
+        "default": "readgently"}
+
+
+@choice("vl_menu", root=False)
+def _vl_menu(character):
+    asked = [k for k in ("vl_where", "vl_eyes", "vl_read", "vl_form", "vl_sib", "vl_see")
+             if scene_flag(character, k)]
+    more = ("\"...what else?\" Their eyes haven't settled on one colour all conversation."
+            if len(asked) < 3 else
+            "\"You keep asking. Gently. Nobody — \" The eyes brim and steady. \"...what else?\"")
+    return {"key": "vl_menu", "prompt": (
+        more + " The fold holds warm and dim around you, the draped mirrors patient, the one "
+        "undraped one turned to the wall tonight, and for as long as you ask kindly they'll keep "
+        "trying to finish the sentences they've spent a lifetime trailing off."),
+        "options": _vl_lore_options(character),
+        "default": "vl_enough"}
+
+
+@choice("vl_close", root=False)
+def _vl_close(character):
+    return {"key": "vl_close", "prompt": (
+        "You sit with them in the soft burrow, and the quiet is exactly as easy as they promised — "
+        "two people who'd both rather be read gently than read fast, not needing to fill it. After "
+        "a while Vesper tips, by slow degrees, until their head is against your shoulder, eyes "
+        "shut, the colours finally still behind the lids. \"...don't tell them how much I said,\" "
+        "they murmur, already half-asleep, unguarded in a way you suspect almost no one's earned. "
+        "\"Seraphine will *know*, she always knows, but if she doesn't hear it from you she has to "
+        "pretend she doesn't, and I can pretend back, and that's — that's how we love each other "
+        "here. In things we pretend not to know.\" The fold holds you both."),
+        "options": [
+            {"key": "stay_quiet", "label": "Stay in the quiet with them", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "let the rare unguarded trust hold",
+             "outcome": (
+                "You stay, and let them sleep against you in the warm dim with their eyes finally "
+                "quiet, and it's the gentlest reading either of you has had in a long time — being "
+                "near someone who wants nothing finished, nothing performed, just the quiet shared. "
+                "\"...mm,\" Vesper says, from the edge of sleep. \"This. This is the thing I "
+                "couldn't ask for. Thank you for not making me ask.\"")},
+            {"key": "read_back", "label": "Tell them you read them, and gently", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "say the kind thing out loud they can't",
+             "outcome": (
+                "You say it — out loud, the kind reading they can never quite stand: that you see "
+                "them, the winter-found shy thing with the telling eyes, and you read them gently, "
+                "and you're glad they let you in. Their eyes fly open, violet-bright and wet, and "
+                "for once they don't flinch from the words said *aloud* instead of left in a card. "
+                "\"...you said it. Out loud. To my face.\" A breath like a held thing released. "
+                "\"Nobody — okay. Okay. I'm going to keep that one where Seraphine can't file it. "
+                "That one's *mine*.\"")}],
+        "default": "stay_quiet"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCENE: The Breeding Machine — the automated rig. Distinct from the milking
+# machine (Long Milking) and the edging station (The Edge): this is the hands-
+# free FUCKING machine — a knotted shaft on a rail, a dial, a chart — that breeds
+# you on a mechanical metronome for as long as the timer says, no person in the
+# room, the worst kind of relentless. Routes through the REAL `_scene_knottrain`
+# facility method. State/kit-aware. Machine register, clean. Flow: arrival→ride→after.
+# Entry: `scene breedingmachine`/machine/therig.
+# ═══════════════════════════════════════════════════════════════════════════
+
+@choice("mx_arrival", root=False)
+def _mx_arrival(character):
+    st = _state_tags(character)
+    k = _kit(character)
+    nm = subject_name(character)
+    note = ""
+    if st["preg"]:
+        note = (" The frame adjusts for the swell of you without comment — a sensor reads the "
+                "belly, the bar lifts to clear it, and the machine breeds a bred thing exactly as "
+                "tirelessly as an empty one. ")
+    elif st["nugget"]:
+        note = (" A nugget's simply locked into the cradle-fitting — nothing to strap, nothing to "
+                "brace — and aligned to the rail, a limbless socket for the machine to run. ")
+    elif st["little"]:
+        note = (" Down little, the cold clean machine and its patient lights are enormous and "
+                "frightening, and there's no person to look at, only the metronome about to "
+                "start. ")
+    ported = (" The machine clips a line to your milk-port too — it'll draw you down on its own "
+              "schedule while it breeds you, two automated harvests on the one timer. "
+              if k["milk_port"] else "")
+    return {"key": "mx_arrival", "prompt": (
+        "The Breeding Machine room is the coldest kind of efficient — no handler, no stockman, no "
+        "person at all, just the |wrig|n: a reinforced frame that folds and locks a body open at "
+        "exactly mount height, a thick knotted shaft mounted on a motorized rail, a dial of "
+        "settings (|wDEPTH · PACE · DURATION · KNOT-LOCK|n), and a chart on the wall that fills "
+        "itself. This is breeding with the *person* taken entirely out of it — you fitted to a "
+        "machine that will run you on a metronome and never tire, never finish, never feel a thing "
+        "about it.\n\n"
+        f"A pre-recorded line plays flat as you're locked in, {nm}: \"|cStation ready. Subject "
+        "secured. The machine will breed you to the chart. It does not pace itself to you; you "
+        "pace yourself to it. It does not stop when you've had enough. It stops when the timer "
+        "does.|n\"" + ported + note + " The shaft on the rail withdraws to its start position with "
+        "a smooth mechanical whine, lines itself up, and the dial ticks to RUN. There is no one to "
+        "beg. There is only the metronome, beginning."),
+        "options": [
+            {"key": "yield_machine", "label": "Yield to the machine — pace yourself to it", "set": {"mx": "yield"},
+             "effect": "devote", "params": {"amount": 2.0},
+             "desc": "stop fighting the rail; let the metronome have you",
+             "outcome": (
+                "You yield — stop fighting the rail, let your body go to the machine's rhythm rather "
+                "than your own — and there's a cold relief in it, the surrender to a thing that "
+                "can't be moved, can't be begged, has no idea you're there. The shaft drives in on "
+                "its first stroke, exact and deep and utterly indifferent, and settles into the "
+                "metronome it'll hold for hours. There is nothing to do but be run.")},
+            {"key": "fight_machine", "label": "Fight the rail", "set": {"mx": "fight"},
+             "effect": "deny_hold", "params": {"cond": 2.0},
+             "desc": "strain against the locks; the machine does not notice",
+             "outcome": (
+                "You fight the rail — strain against the locks, twist off the line — and the machine "
+                "does not notice, cannot notice, has no sensor for your refusal, only for depth and "
+                "pace and time. The shaft drives in on schedule regardless, your struggle nothing "
+                "but motion the frame holds still, and the metronome begins exactly as if you'd "
+                "yielded. Fighting a thing with no eyes is the loneliest fight there is.")}],
+        "default": "yield_machine",
+        "then": "mx_ride"}
+
+
+@choice("mx_ride", root=False)
+def _mx_ride(character):
+    return {"key": "mx_ride", "prompt": (
+        "And then it just *runs* you. The shaft drives the rail on its metronome — the same depth, "
+        "the same pace, the same indifferent rhythm — and the dial, untouched by any hand, ticks "
+        "itself up by the chart: DEPTH a notch, PACE a notch, and then KNOT-LOCK engages and the "
+        "machine drives the knot in and *holds* it, locked deep, pumping its tank of facility seed "
+        "into you on a timer before withdrawing to do it all again. No person paces it. No begging "
+        "reaches it. No amount of *enough* on your part registers anywhere. The cold relentless "
+        "machinery of being bred by a thing that will never tire and never finish early wears at "
+        "something deeper than any handler could reach — because a handler, at least, is *someone*. "
+        "This is just the metronome, and the chart filling, and the hours."),
+        "options": [
+            {"key": "ride_full", "label": "Take the full run — bred to the chart", "effect": "facility",
+             "params": {"method": "_scene_knottrain", "kind": "scene"}, "set": {"ran": "full"},
+             "desc": "the real machine-breeding — knot-locked, pumped, logged on the timer",
+             "outcome": (
+                "You take the full run — the real machine-breeding, knot after mechanical knot "
+                "driven and locked and pumped on the timer, the chart filling itself with your "
+                "logged covering — and somewhere in the metronomic hours your sense of being a "
+                "person being used dissolves entirely into being a *station being run*, which is "
+                "exactly the cold thing the machine is for. When the timer finally ticks to STOP "
+                "you're so thoroughly bred and so utterly unattended that the silence of the "
+                "switched-off motor is louder than any voice.")},
+            {"key": "endure_run", "label": "Endure the metronome", "effect": "facility",
+             "params": {"method": "_scene_knottrain", "kind": "scene"}, "set": {"ran": "endured"},
+             "desc": "the machine runs regardless; survive the indifferent hours",
+             "outcome": (
+                "You endure it — hold some scrap of yourself apart from the metronome, survive the "
+                "indifferent hours rather than dissolve into them — and the machine breeds you "
+                "exactly the same, real and logged and knot-locked on its timer, your endurance as "
+                "invisible to it as your begging would be. The chart fills. The motor hums. You come "
+                "out the far side bred and intact and changed by the particular loneliness of being "
+                "run by a thing that never once knew you were there.")}],
+        "default": "ride_full",
+        "then": "mx_after"}
+
+
+@choice("mx_after", root=False)
+def _mx_after(character):
+    return {"key": "mx_after", "prompt": (
+        "The timer ticks to STOP. The shaft withdraws on its rail with the same smooth whine it "
+        "started with, the knot deflating mechanically, the locks releasing your folded-open body "
+        "by automated degrees. The chart on the wall is full — your covering logged in clean "
+        "machine columns, deposits and depth and duration, no notes, no flavour, just numbers. The "
+        "flat recorded voice returns: \"|cRun complete. Subject bred to chart. Station will reset "
+        "for the next unit. You may go when your legs return.|n\" And that's all. No one comes. No "
+        "one ever came. You unfold yourself off the cooling machine in an empty room."),
+        "options": [
+            {"key": "machine_calm", "label": "Feel the cold machine-calm of being run", "effect": "deepen",
+             "params": {"amount": 2.0}, "end": True, "desc": "the personless efficiency settles into you",
+             "outcome": (
+                "You feel it settle — the cold machine-calm, the strange flat peace of having been "
+                "*processed* rather than used, bred by a thing with no wants and no eyes — and it's "
+                "worse than cruelty because cruelty is at least attention. The machine gave you "
+                "none, and bred you anyway, and the lesson sinks in clean: you are a unit a station "
+                "runs, and the station doesn't care, and caring was never part of the spec. You "
+                "walk out into the corridor more equipment than you went in.")},
+            {"key": "miss_someone", "label": "Find yourself wishing there'd been someone", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the personless hours leave you craving even a cruel face",
+             "outcome": (
+                "And here's the cruelest trick of the cold rig: you find yourself, walking out on "
+                "unsteady legs, *missing* it — wishing there'd been someone, anyone, even a bored "
+                "stockman, even a cruel one, some face to have witnessed the hours instead of the "
+                "indifferent motor. The machine has made you crave attention so badly that a "
+                "handler's contempt would feel like warmth. That craving is the machine's real "
+                "output, and you carry it out wanting the next hands that touch you all the more "
+                "for the metronome that didn't.")}],
+        "default": "machine_calm"}

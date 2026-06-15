@@ -1691,6 +1691,8 @@ class CmdScene(Command):
         "thebelow": "hy_arrival",
         "linefolds": "lf_arrival", "bredback": "lf_arrival", "fold": "lf_arrival",
         "openhouse": "ev_openhouse", "publicuse": "ev_openhouse",
+        "vesperlore": "vl_arrival", "vespertalk": "vl_arrival",
+        "breedingmachine": "mx_arrival", "machine": "mx_arrival", "therig": "mx_arrival",
     }
 
     def func(self):

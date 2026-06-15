@@ -131,6 +131,13 @@ built reference). This doc is the master list of everything to convert.
   drift, the "good girl"→leak trigger, conditioning, marks). arrival → work → after. State/kit-aware
   (re-refines the already-done). Warm-cruel "not diminished — *decided*" register, clean prose.
   Surfaces in the hub by the Marking Parlour.
+- ✅ **The Breeding Machine (`mx_*`, `scene breedingmachine`/machine/therig)** — BUILT. The automated
+  fucking-machine — distinct from the milking machine (Long Milking) and the edging station (The
+  Edge): a knotted shaft on a motorized rail with a DEPTH·PACE·DURATION·KNOT-LOCK dial that breeds
+  you on a metronome to a self-filling chart, no person in the room. Routes through the real
+  `_scene_knottrain` method. State/kit-aware (milk-port clips in for a double automated harvest).
+  Machine register — the cruelty is the *indifference*; the after-sting is craving even a cruel face
+  after the personless hours. Surfaces in the hub by the Pens.
 - ✅ **The Long Milking (`mm_*`, `scene longmilking`/dairyintensive/marathon)** — BUILT. Lactation
   as a savor-piece — the deep version of the Dairy seam: hooked to the deep rig for a full session,
   kept full on purpose, then drawn down slow and all the way, let to fill, drawn down again, cycle

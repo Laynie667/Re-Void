@@ -1074,6 +1074,34 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Breeding Machine — both branches chain (the _scene_knottrain no-ops without a cycle).
+    c86 = _Char(); cyoa.start_scene(c86, "mx_arrival")
+    mxbeats = []
+    for ch in ("yield_machine", "ride_full", "machine_calm"):
+        p = c86.db.pending_choice
+        assert p, f"machine: no pending before '{ch}'"
+        mxbeats.append(p["key"])
+        assert cyoa.resolve_choice(c86, ch)[0] is not None, f"machine '{ch}' did not resolve"
+    assert mxbeats == ["mx_arrival", "mx_ride", "mx_after"], mxbeats
+    assert c86.db.pending_choice is None and c86.db.scene_flags is None, "machine should end clean"
+    c87 = _Char(); cyoa.start_scene(c87, "mx_arrival")
+    for ch in ("fight_machine", "endure_run", "miss_someone"):
+        assert c87.db.pending_choice, f"machine(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c87, ch)[0] is not None, f"machine(b) '{ch}' failed"
+    assert c87.db.pending_choice is None and c87.db.scene_flags is None, "machine(b) should end clean"
+
+    # What Vesper Won't Finish (lore) — looping menu re-poses; clean close.
+    c85 = _Char(); cyoa.start_scene(c85, "vl_arrival")
+    cyoa.resolve_choice(c85, "where")
+    assert c85.db.pending_choice and c85.db.pending_choice["key"] == "vl_menu", "vesper-lore should loop"
+    cyoa.resolve_choice(c85, "eyes")
+    assert c85.db.pending_choice["key"] == "vl_menu", "vesper-lore menu should re-pose"
+    cyoa.resolve_choice(c85, "see_me")
+    cyoa.resolve_choice(c85, "vl_enough")
+    assert c85.db.pending_choice and c85.db.pending_choice["key"] == "vl_close", "enough -> close"
+    cyoa.resolve_choice(c85, "read_back")
+    assert c85.db.pending_choice is None and c85.db.scene_flags is None, "vesper-lore should end clean"
+
     # The Open House (marquee event) — both beats chain; in the random event pool.
     c83 = _Char(); cyoa.start_scene(c83, "ev_openhouse")
     ohbeats = []
