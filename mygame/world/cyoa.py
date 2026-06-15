@@ -7063,7 +7063,7 @@ def _dz_ride(character):
 # here over time — that's the freshness valve.
 # ═══════════════════════════════════════════════════════════════════════════
 
-_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv", "ev_rut", "ev_gala"]
+_EVENT_OPENINGS = ["ev_tour", "ev_quota", "ev_fest", "ev_anniv", "ev_rut", "ev_gala", "ev_openhouse"]
 
 
 @choice("ev_arrival", root=False)
@@ -12454,3 +12454,104 @@ def _lf_after(character):
                 "there's no telling parent from child from you. That's where we're going. Slowly. "
                 "Fold by fold. Isn't it lovely, having somewhere so deep to go.\"")}],
         "default": "carry_fold"}
+
+
+# --- Event: the Open House ----------------------------------------------------
+# A marquee savor-event: once a season the facility opens its doors to the town
+# and the buyers for a day of FREE USE of the stock — not appraisal (the Gala),
+# not animal frenzy (the Rut), but public human use, anyone who walks in welcome
+# to use what's on the floor. Real _scene_allholes / _scene_bukkake. State-aware.
+@choice("ev_openhouse", root=False)
+def _ev_openhouse(character):
+    st = _state_tags(character)
+    note = ""
+    if st["preg"]:
+        note = (" Bred stock is a draw — visitors crowd to use a gravid one, hands on the swell, "
+                "breeding a thing already bred for the novelty of it. ")
+    elif st["nugget"]:
+        note = (" A nugget's set out on a low plinth, a limbless fixture the visitors queue at, "
+                "used where it's placed and unable to do anything but be used. ")
+    elif st["little"]:
+        note = (" Down little, the crowd and the noise and the endless strange hands are vast and "
+                "frightening, and the visitors find the small headspace 'darling' and use you no "
+                "more gently for it. ")
+    return {"key": "ev_openhouse", "prompt": (
+        "|WThe announcement goes out warm and bright over the floor: |wOPEN HOUSE|n. Today the "
+        "facility throws its doors to the town.|n Once a season they let the public in — buyers, "
+        "the curious, the regulars, anyone with the price of admission — for a day of *free use* "
+        "of the stock. Not a showing, not an auction: a come-one-come-all, hands-on, help-yourself "
+        "afternoon, the residents posed at open stations down the length of the hall with little "
+        "cards listing what each may be used for, and a cheerful staff handing out towels and "
+        "directing traffic. You're racked at your assigned station, oiled and tagged and *open for "
+        "business*, as the doors swing wide and the crowd files in — and the first stranger reads "
+        "your card, smiles, and steps up." + note + "\n\n"
+        "A staffer pats your flank, bright as a fairground barker. \"Smile for the visitors! Open "
+        "House rules — anyone may use you, however your card allows, for as long as the doors are "
+        "open. We do love showing the town what we make of a willing resident. You'll have served "
+        "half the parish by closing. Off we go!\""),
+        "options": [
+            {"key": "serve_house", "label": "Serve the Open House — be used by all comers", "effect": "facility",
+             "params": {"method": "_scene_allholes", "kind": "scene"}, "set": {"oh": "served"},
+             "desc": "the real public use — stranger after stranger, all day, logged",
+             "outcome": (
+                "You serve the house — stranger after stranger after stranger, the whole town's worth "
+                "of hands and cocks and curiosity, used at your station all the long afternoon while "
+                "a queue you can't see the end of shuffles forward — and the real use is logged, "
+                "load after anonymous load, your body a public amenity for a day. The relentless "
+                "*ordinariness* of being a thing the town drops by to use works into you exactly as "
+                "the facility intends: you stop being a person who's being used and become a service "
+                "that's open.")},
+            {"key": "endure_house", "label": "Endure the open doors", "effect": "facility",
+             "params": {"method": "_scene_bukkake", "kind": "scene"}, "set": {"oh": "endured"},
+             "desc": "the doors are open regardless; withhold what you can",
+             "outcome": (
+                "You endure it — give the endless visitors nothing but the holes their admission "
+                "bought — and the doors stay open and the queue keeps shuffling regardless, the town "
+                "using you whether you perform welcome or not. \"Quiet one at station six,\" a "
+                "staffer notes, unbothered, waving the next visitor up. \"Doesn't change the "
+                "footfall. Smile or don't, the parish gets its turn.\"")},
+            {"key": "spot_someone", "label": "Spot a face you recognize in the crowd", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "set": {"oh": "seen"},
+             "desc": "someone from your old life walked in; they use you too",
+             "outcome": (
+                "And then a face in the shuffling crowd stops you cold — someone from *before*, from "
+                "your old life, here on Open House day like any other curious townsperson, reading "
+                "your card with dawning recognition and then, after a pause that holds a whole "
+                "history in it, *stepping up anyway*. They use you like the rest, slower, looking at "
+                "your face the whole time, and the public ordinariness of it curdles into something "
+                "far worse and far more personal. The staffer doesn't notice or care. \"Friend of "
+                "yours?\" she says brightly, to neither of you. \"How nice. Next!\"")}],
+        "default": "serve_house",
+        "then": "ev_openhouse_b"}
+
+
+@choice("ev_openhouse_b", root=False)
+def _ev_openhouse_b(character):
+    return {"key": "ev_openhouse_b", "prompt": (
+        "The doors close at last on a hall full of spent, dripping, thoroughly-used stock and a "
+        "staff cheerfully tallying the day's footfall. You're unracked, hosed, and logged — served "
+        "to the town, a successful Open House — and a staffer reads your count off the station "
+        "tally with a fairground grin. \"Cracking turnout! You took the whole queue and then some. "
+        "The town does love us on Open House day, and they'll remember *you* — you'll get "
+        "recognized in the market now, points and whispers, 'that's the one from station six.' "
+        "Marvellous for our reputation. Off you go, all served out.\""),
+        "options": [
+            {"key": "served_out", "label": "Be led off, served out and public", "effect": "devote",
+             "params": {"amount": 2.0}, "end": True, "desc": "the town has used you; you wear the public ordinariness",
+             "outcome": (
+                "You're led off served-out and dripping, and the knowing settles in with the ache: "
+                "the town has *used* you now, openly, by the dozen, and will know you for it — "
+                "pointed at in the market, whispered about, a public amenity with a face people "
+                "recognize. The privacy of being merely the facility's is gone; you belong to the "
+                "parish's knowing now too, and there's no taking that back. You wear it out into "
+                "the cooling hall, a thing the whole town has had.")},
+            {"key": "dread_market", "label": "Dread the next time you're seen in the town", "effect": "deny_hold",
+             "params": {"cond": 2.0}, "end": True, "desc": "the recognition will follow you out into the world",
+             "outcome": (
+                "You think about the market, the street, the next time you're out and a stranger's "
+                "eyes catch and *recognize* — station six, Open House, the one they had — and the "
+                "dread of carrying that recognition out into the ordinary world is its own long "
+                "sentence. \"You're famous now,\" the staffer says, delighted, missing the dread "
+                "entirely. \"In a manner of speaking. The parish has a long memory and a fond one. "
+                "You'll never quite be anonymous out there again. Isn't that something?\"")}],
+        "default": "served_out"}

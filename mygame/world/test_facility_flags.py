@@ -1074,6 +1074,23 @@ def test_bethany_scene():
         assert cyoa.resolve_choice(c65, ch)[0] is not None, f"twoowners(b) '{ch}' failed"
     assert c65.db.pending_choice is None and c65.db.scene_flags is None, "twoowners(b) should end clean"
 
+    # The Open House (marquee event) — both beats chain; in the random event pool.
+    c83 = _Char(); cyoa.start_scene(c83, "ev_openhouse")
+    ohbeats = []
+    for ch in ("serve_house", "served_out"):
+        p = c83.db.pending_choice
+        assert p, f"openhouse: no pending before '{ch}'"
+        ohbeats.append(p["key"])
+        assert cyoa.resolve_choice(c83, ch)[0] is not None, f"openhouse '{ch}' did not resolve"
+    assert ohbeats == ["ev_openhouse", "ev_openhouse_b"], ohbeats
+    assert c83.db.pending_choice is None and c83.db.scene_flags is None, "openhouse should end clean"
+    assert "ev_openhouse" in cyoa._EVENT_OPENINGS, "Open House should be in the random event pool"
+    c84 = _Char(); cyoa.start_scene(c84, "ev_openhouse")
+    for ch in ("spot_someone", "dread_market"):
+        assert c84.db.pending_choice, f"openhouse(b): stall before '{ch}'"
+        assert cyoa.resolve_choice(c84, ch)[0] is not None, f"openhouse(b) '{ch}' failed"
+    assert c84.db.pending_choice is None and c84.db.scene_flags is None, "openhouse(b) should end clean"
+
     # The Line Folds — bred by your own get; both branches chain clean (bred_by_own no-ops in stub).
     c81 = _Char(); cyoa.start_scene(c81, "lf_arrival")
     lfbeats = []

@@ -185,6 +185,12 @@ built reference). This doc is the master list of everything to convert.
   into you). Real `bethany_breeds` offered to extend the line over the open book on the spot. §0
   lit: the line is permanent but your *part* in it ends the instant you mean the word — "a source
   can always shut off." Surfaces in the hub beside Records.
+- ✅ **The Open House (`ev_openhouse`, `scene openhouse`/publicuse)** — BUILT. A marquee event
+  (pool now 7): once a season the facility throws its doors to the town for a day of FREE USE of the
+  stock — not appraisal (Gala), not animal frenzy (Rut), but *public human use*, anyone with the
+  admission welcome to use what's racked at the open stations. Real `_scene_allholes`/`_scene_bukkake`.
+  State-aware; a third route has you spot a face from your old life in the crowd who steps up anyway.
+  The sting is the lasting recognition — pointed at in the market after, never anonymous again.
 - ✅ **The Showing Gala (`ev_gala`, `scene gala`/showing)** — BUILT. A marquee savor-event (pool
   now 6): the facility's black-tie collectors' gala — finest stock oiled and shown on a lit stage,
   demonstrated for a room of moneyed collectors over champagne, then handled at the front tables
