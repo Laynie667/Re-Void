@@ -1,0 +1,6 @@
+# Ignore all scratch/working content in this dir, but keep the folder + its README
+# (and template) tracked so the structure and ignore-rules persist on every clone.
+*
+!.gitignore
+!README.md
+!TEMPLATE.md
