@@ -118,7 +118,9 @@ into separate rooms.
 **Provides:** `move_to_zone`/`at_zone`, position-scoped sensory + reachability.
 **Example:** the **Common Room** ("the smell shifts as you move"); the pedestals (sandalwood at
 the window, musk at the mural, all three at the water's edge). Turns big authored set-pieces (the
-Floor, the den) into explorable *space* for almost no extra rooms. Sibling of `ThresholdMixin`.
+Floor, the den) into explorable *space* for almost no extra rooms. Also covers **vertical**
+positions — the **Barn hayloft** up its ladder, the spiral descent to the Lab — without a
+separate room. Sibling of `ThresholdMixin`.
 
 ## `ThresholdMixin` — a gradient *across* the room  [ROADMAP — pattern in the cave/forest mouths]
 **Purpose:** conditions change **by the step** across one space — winter→warm, daylight→dark,
@@ -138,7 +140,7 @@ frames them for others to watch. Pairs with `AudienceComponent` and `ReactiveDes
 audience view.
 **Example:** the **Disciplination Room** ("the room sees everything twice"); **Auria's** stage
 mirror angled to catch every angle; the **Princess' beaded curtain** redistributing rose light.
-Witnessing-as-mechanic — being made to watch yourself.
+Witnessing-as-mechanic — being made to watch yourself. **Variant — one-way observation:** a one-way mirror (the **Hidden Lab's** full-wall glass that *reads as wall*) lets a concealed audience watch in while the watched can't see out — a hidden `AudienceComponent`.
 
 ---
 
@@ -174,7 +176,7 @@ Auria's stage+couches+pole (the couches already "face the stage" — the geometr
 
 ## `InstanceComponent`  [ROADMAP — generalizes WombRoom's one-per-host]
 **Purpose:** per-occupant instanced copies of a room. **Example:** trance/dream "the below" from
-Going Under as an actual instanced mental space; private interiors.
+Going Under as an actual instanced mental space; private interiors. The **S.I.D.M.A.U.** is the extreme case — *"cramped by measurement, spatially wrong… the body accepts before the mind catches up"*: an instanced interior that's bigger/other inside than its shell.
 
 ## `ImmersionComponent`  [ROADMAP — pattern in jacuzzi / shower / bathing lounge / SIDMAU tank]
 **Purpose:** fluid-immersion: **depth, temperature (`feel`), submersion, suspension/sensory-
@@ -191,9 +193,40 @@ rooms into `loredesign/`. **Example:** the Entertainment Room's tomes and "boxes
 imagination," the Hidden Lab's notes/secrets. Worldbuilding that lives in the rooms and unfolds by
 attention.
 
+## `KitComponent` — an implement rack you draw from  [ROADMAP — pattern EVERYWHERE]
+**Purpose:** a zone that holds a **menu of implements** bound to the room, that you (or another)
+can draw and *use* — paddles/cane/crop, graded dildos/plugs, leads/halters, lube/cuffs. One
+recurring pattern that currently gets re-authored as static prose every time.
+**Provides:** an implement list per zone + a `use <implement> [on <target>]` that routes to the
+right mechanic/effect.
+**Example:** the **Hidden Lab** shelves (whips, single-tail→cane), the **Disciplination Room**
+rack + shelf, the **Barn** tack wall (graded leads/halters), **Auria's** pegboard + toy tray,
+the **Princess'** chest, the post office wax-kits. Easily the most-repeated thing in your builds —
+make it one component with a list.
+
+## `MonitorComponent` — the room shows your state back  [ROADMAP — pattern in S.I.D.M.A.U.]
+**Purpose:** diegetic **screens/readouts that display the occupant's live stats** — arousal,
+conditioning, yield, biometrics — turning hidden numbers into in-world dread you can *see*.
+**Provides:** a monitor zone whose desc renders selected live stats of whoever's hooked in.
+**Example:** the **S.I.D.M.A.U.** monitors ("continuous outputs: bio…"). Pairs with the Census
+(figures read aloud) and the Edge (the climbing arousal bar) — the body itemized on a screen.
+
 ---
 
 # FEATURES / HOOKS (small, not full capabilities)
+
+## RecordWall — an accreting mural/record  [ROADMAP — pattern in the Birthing Den + murals]
+**Purpose:** a wall/mural that is **a record, not decoration**, and can **accrete** over time —
+lineage handprints added as you breed, tally-marks, dated inscriptions — readable like a history.
+Ties `ImprintOnExit` + inscriptions + lineage. **Example:** the **Birthing Den** lineage
+handprint wall (Shadow/Whisper + the named pups — *"a record, not decoration"*); the narrative
+murals (jacuzzi, Auria's, Princess') as readable, optionally-growing records.
+
+## PortFeature — a zone that accepts fittings  [ROADMAP — pattern in S.I.D.M.A.U.]
+**Purpose:** a zone with **connection ports** that accept equipment plugged into the occupant —
+IV/electrode/tubing/feed lines. The "interface" half of Outfitting/Immersion. **Example:** the
+S.I.D.M.A.U. circular panel ports ("some accept fittings: IV-gauge tubing, electrode…"); the
+closed-loop dairy lines; the pod's feed/breed/milk lines.
 
 ## ImprintOnExit  [ROADMAP — pattern in jacuzzi (dripping), pen (muddy), pedestals (the scent)]
 **Purpose:** a room/zone applies a **temporary state on the occupant when they leave** — wet,
