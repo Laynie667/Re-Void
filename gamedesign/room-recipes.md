@@ -120,6 +120,51 @@ sensory; no maze, no audience, no atmosphere-cycle.
 
 ---
 
+## Worked example 4 — The Play Pen  *(from `world/play_pen.txt`)* — `ScaleMixin`
+A room that **sizes itself to the viewer's little/regression state**.
+```yaml
+recipe: cabin_play_pen
+  base:       Room
+  mixins:     [scale, sensory]     # ScaleMixin: the room looms when you're small
+  area:       helena_cabin
+  config:     { little_space: true }
+  exits:
+    out:      { dest: cabin_nursery }   # the wicker arch back to the nursery
+  zones:
+    floor:   { desc: "squishing foam underfoot",
+               feel: "gives with every step, made to catch a fall",
+               scale_descs: { adult: "a padded play floor",
+                              little: "a vast soft plain you could lose yourself on" } }
+    arch:    { desc: "the wicker arch frames the nursery",
+               scale_descs: { adult: "a child's wicker arch",
+                              little: "|xthe nursery beyond is gargantuan — the room didn't grow, you shrank|n" } }
+```
+*The payoff:* the same room reads ordinary to an adult and **gargantuan** to a regressed looker —
+one room, two experiences, keyed to state. The signature littlespace mechanic.
+
+## Worked example 5 — Mouth of the Cave  *(from `world/cave_mouth.txt`)* — `Threshold` + `Vista` + `Seal`
+A **liminal** room whose conditions change *by the step*, sees both worlds, and gates the way down.
+```yaml
+recipe: den_cave_mouth
+  base:       BaseRoom             # light — a threshold, not a full grid room
+  mixins:     [threshold, sensory]
+  components: [seal]               # the way deeper is reveal-gated
+  exits:
+    out:      { dest: den_forest_mouth }                       # back out to winter
+    down:     { dest: den_birthing_den,
+                reveal: { type: conditioning, min: 40 } }      # SealComponent: earn the descent
+  zones:
+    threshold: { desc: "the world changes by the step",
+                 gradient: { entry:  { light: "thin grey winter daylight", temp: "cold" },
+                             far:    { light: "warm sourceless den-light", temp: "blood-warm" } },  # ThresholdMixin
+                 feel: "the cold at your back, the warm pulling you forward" }
+    opening:   { desc: "the cave mouth, wide as a barn door",
+                 vista: { sees: den_forest_mouth, of: "the snow-locked forest behind you" } }       # VistaMixin
+```
+*The payoff:* one room interpolates winter→warm across your `PositionalMixin` position; you can
+*see* the forest you came from (vista); and the descent only opens once you're conditioned enough
+(seal, **fails open**).
+
 ## Why recipes win for the fresh build
 - **Curate by selection:** the clean copy = the set of recipes for rooms that *worked*. No
   stripping, no working-around — you just don't include the recipes you cut.

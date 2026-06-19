@@ -92,6 +92,54 @@ routes here — connects rooms ↔ the scene engine instead of `scene <name>` fl
 **Example:** the cabin's underground **Yggdrasil valley** (glowing day/night though buried);
 generalizes the planned `ValleyCycleScript`.
 
+## `ScaleMixin` — the room sizes itself to the viewer  [ROADMAP — pattern in the Play Pen]
+**Purpose:** the room's whole presentation **scales to the looker's regression/little state** —
+furniture looming, proportions ballooning — so the *same* room reads ordinary to an adult and
+*gargantuan* to a regressed one. `ReactiveDesc` taken to a spatial extreme, keyed to
+`regression`/`headspace`.
+**Provides:** a scale selector over zone descs/details (`scale_descs`), optional reach-gating
+(a little can't reach what an adult can).
+**Example:** **the Play Pen** — *"the room didn't get larger. You got smaller."* Already
+half-invented there; make it a capability so the nursery/play-pen/Auria's-playroom cluster all
+breathe with it. A signature littlespace mechanic.
+
+## `VistaMixin` — see a place you can't (yet) walk into  [ROADMAP — pattern in jacuzzi + Momo's]
+**Purpose:** a **vista zone** renders an adjacent space, lookable but not walkable, **time/weather-
+reactive**, and *optionally becomes a real exit when revealed* (the reveal/gate primitive).
+**Provides:** a vista zone kind whose desc pulls from time/weather; a `reveal`-to-exit upgrade path.
+**Example:** the **Jacuzzi window** (forest by day → aurora by night, "different every hour");
+**Momo's open southern wall** (the meadow + brook you can see across). One capability for every
+view in the game — including a window that becomes a way out.
+
+## `PositionalMixin` — positions *within* one room  [ROADMAP — pattern in the Common Room]
+**Purpose:** standing **"at" a zone** is a real, lightweight in-room position that changes your
+sensory feed (scent/sound/feel), ambient, and which mechanics you can reach — without splitting
+into separate rooms.
+**Provides:** `move_to_zone`/`at_zone`, position-scoped sensory + reachability.
+**Example:** the **Common Room** ("the smell shifts as you move"); the pedestals (sandalwood at
+the window, musk at the mural, all three at the water's edge). Turns big authored set-pieces (the
+Floor, the den) into explorable *space* for almost no extra rooms. Sibling of `ThresholdMixin`.
+
+## `ThresholdMixin` — a gradient *across* the room  [ROADMAP — pattern in the cave/forest mouths]
+**Purpose:** conditions change **by the step** across one space — winter→warm, daylight→dark,
+outside→inside — a gradient between two states that your *position* (via `PositionalMixin`)
+selects. Liminal/transition rooms.
+**Provides:** a two-pole gradient (temp/light/scent/sound) interpolated by position; entry-side vs
+far-side prose.
+**Example:** **Mouth of the Cave** ("the world changes by the step… within three paces the winter
+daylight gives out and the warm den-light takes over"); **the Forest Mouth**; Helena's door
+("her scent reaches you before your eyes adjust"); the spiral descent to the Hidden Lab. A
+recurring pattern across at least four built rooms — clearly wants to be one capability.
+
+## `MirrorMixin` — reflection & witnessing  [ROADMAP — pattern in Disciplination + Auria + Princess]
+**Purpose:** a surface that **reflects/multiplies the scene**, shows the looker themselves, or
+frames them for others to watch. Pairs with `AudienceComponent` and `ReactiveDesc`.
+**Provides:** a mirror zone that can echo occupants' states, force self-witness, or feed an
+audience view.
+**Example:** the **Disciplination Room** ("the room sees everything twice"); **Auria's** stage
+mirror angled to catch every angle; the **Princess' beaded curtain** redistributing rose light.
+Witnessing-as-mechanic — being made to watch yourself.
+
 ---
 
 # COMPONENTS (runtime-attachable capabilities)
@@ -127,6 +175,32 @@ Auria's stage+couches+pole (the couches already "face the stage" — the geometr
 ## `InstanceComponent`  [ROADMAP — generalizes WombRoom's one-per-host]
 **Purpose:** per-occupant instanced copies of a room. **Example:** trance/dream "the below" from
 Going Under as an actual instanced mental space; private interiors.
+
+## `ImmersionComponent`  [ROADMAP — pattern in jacuzzi / shower / bathing lounge / SIDMAU tank]
+**Purpose:** fluid-immersion: **depth, temperature (`feel`), submersion, suspension/sensory-
+deprivation**, and a **wet/marked state left on you when you leave** (see ImprintOnExit). A
+seat-mechanic *inside* an immersion zone is just a submerged seat.
+**Example:** the **Jacuzzi** (steam, the orifice-aware dildo-seat under the surface), the
+**Shower** (set it scalding or cold), the **Bathing Lounge**, and the **S.I.D.M.A.U. float tank**
+(*"the fluid does not displace so much as accommodate… no bottom to feel"* — submersion + sensory
+deprivation). One component for the whole water/float family.
+
+## `LibraryComponent`  [ROADMAP — pattern in the Entertainment Room + Hidden Lab]
+**Purpose:** in-room **readable texts** — lore you can `read`, some reveal-gated — the bridge from
+rooms into `loredesign/`. **Example:** the Entertainment Room's tomes and "boxes of boundless
+imagination," the Hidden Lab's notes/secrets. Worldbuilding that lives in the rooms and unfolds by
+attention.
+
+---
+
+# FEATURES / HOOKS (small, not full capabilities)
+
+## ImprintOnExit  [ROADMAP — pattern in jacuzzi (dripping), pen (muddy), pedestals (the scent)]
+**Purpose:** a room/zone applies a **temporary state on the occupant when they leave** — wet,
+scented, muddy, marked. "Zones that remember," but pointed at the *body* (cheaper than tracking
+room wear, and hotter — you carry the room out on you). A small `at_object_leave` hook + a
+timed state on the character. **Example:** leave the Jacuzzi dripping; the pen's filth on your
+knees; the pedestal-musk "in the back of the throat" for an hour after.
 
 ---
 

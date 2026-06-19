@@ -11,6 +11,20 @@ One file per system (e.g. `conditioning.md`, `cyoa-scene-engine.md`, `gang-breed
 > blueprints on your local machine. Promote a finished one into the tracked repo when you're
 > ready to build the fresh copy.
 
+## Doc set — Rooms (the first proven system, fully documented)
+Read in this order:
+1. **`rooms-and-roomzones.md`** — the blueprint: the system as-is + the universal Reveal/Gate
+   primitive + the agreed improvements (roadmap).
+2. **`rooms-appendix.md`** — reference: zone schema, `roomzone`/`rz` builder verbs, mechanics
+   table, render tokens, player verbs, permissions.
+3. **`room-types.md`** — the composed type hierarchy, the type matrix, new types, migration.
+4. **`room-mixins.md`** — the capability dictionary: every mixin + component + feature, with a
+   worked example each (from the real cabin rooms) and `[BUILT]`/`[ROADMAP]` status.
+5. **`room-recipes.md`** — assembling rooms from capabilities; worked recipes (Jacuzzi, Auria's
+   Playroom, Shower, Play Pen, Cave Mouth).
+6. **`maze-gating.md`** — the maze + the gate primitive; exact `maze` syntax; the fail-open rule.
+7. **`gate-conditions.md`** — the condition catalogue (built gate types + proposed reveal conditions).
+
 ## How this fits the workflow
 1. Cram ideas into the live game (trial by error).
 2. Note rough ideas / experiments in `../testideas/`.
