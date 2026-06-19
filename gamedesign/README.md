@@ -12,7 +12,10 @@ One file per system (e.g. `conditioning.md`, `cyoa-scene-engine.md`, `gang-breed
 > ready to build the fresh copy.
 
 ## Doc set — Rooms (the first proven system, fully documented)
-Read in this order:
+Start with the layer above, then the rooms:
+0. **`world-layer.md`** — the world *above* rooms: Realms (owned by Factions), the Clock, Weather/
+   Climate, World-State modes, Events/scheduler, the Economy (shards + Wallet + arrears + the
+   seizure ladder), and Travel (waystones). Rooms inherit from their Realm.
 1. **`rooms-and-roomzones.md`** — the blueprint: the system as-is + the universal Reveal/Gate
    primitive + the agreed improvements (roadmap).
 2. **`rooms-appendix.md`** — reference: zone schema, `roomzone`/`rz` builder verbs, mechanics
