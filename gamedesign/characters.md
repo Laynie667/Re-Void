@@ -74,3 +74,17 @@ self-service, never gated behind staff-availability or a paid service. **Non-tra
 (chastity/collar/toys) are *not* stripped by the floor — they persist as IC and come off via
 key / Durgin's paid unlock / staff (good etiquette, an economy sink). Trap vs. non-trap is the
 line: the floor always beats a trap; it leaves a consensual belt on you to resolve IC.
+
+### Hardcore mode  [ROADMAP — opt-in player perm]
+An **opt-in** account/character perm for players who want maximum immersion. Its **only** effect:
+`escape`/`force_clear` stop doing their *item teardown* (locks/marks/installed items/worn restraints
+persist as IC instead of being auto-cleared on escape). What it **never** changes:
+- `escape` **still always frees the person** — ends the scene, relocates, defeats any **trap**
+  (bound/held/can't-leave). Hardcore opts out of *cleanup*, never out of being freed.
+- It is **self-toggleable any time** (`hardcore off`), and toggling off → `escape` performs the
+  **full clean** again. Because the player can always reach the full-teardown path themselves, the
+  wipe is **never gated** — that's what keeps hardcore inside §0.
+- Staff/superuser purge (`force_clear(me)`/`facilityreset`) ignores hardcore entirely and always
+  performs the full clean — the ultimate floor is untouched.
+
+Detail belongs in `character-consent.md` when written; recorded here so it isn't lost.

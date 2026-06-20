@@ -36,7 +36,12 @@ Start with the layer above, then the rooms:
   zone *types* + the slot system; items-install-into-slots (generalizing `BodyModItem`);
   upgrades-valid-by-zone-type; covering-follows-tree; lock/key items (replacing plock/slock) +
   Durgin unlock; form-shift tiers.
-- *(planned)* `character-emotes.md`, `character-consent.md`, `character-social.md`.
+- **`character-emotes.md`** — the act framework: an act = `(verb, actor-part, target-zone)`
+  validated by slot-type + consent → pooled two-sided reactive emote + real state; per-`(verb,zone)`
+  message pools; **concurrency/multiplicity** (many parts → many holes at once, per-pairing
+  capability checks); the arousal curve; wide sex-act coverage routed through the real
+  breeding/milking systems. Hardcore mode noted in `characters.md` §0.
+- *(planned)* `character-consent.md`, `character-social.md`.
 
 ## How this fits the workflow
 1. Cram ideas into the live game (trial by error).
