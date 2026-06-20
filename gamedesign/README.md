@@ -28,6 +28,16 @@ Start with the layer above, then the rooms:
 6. **`maze-gating.md`** — the maze + the gate primitive; exact `maze` syntax; the fail-open rule.
 7. **`gate-conditions.md`** — the condition catalogue (built gate types + proposed reveal conditions).
 
+## Doc set — Characters (in progress)
+- **`characters.md`** — overview & new-player flow: the OOC/account layer (café hub, roster,
+  ograms-with-account-notify, consent defaults), the tutorial (replaces `forming`), default
+  layers, the sheet/look rework, and the still-open social/identity half.
+- **`character-zones.md`** — the spine: the typed hierarchical zone tree (base/outfit/accessories);
+  zone *types* + the slot system; items-install-into-slots (generalizing `BodyModItem`);
+  upgrades-valid-by-zone-type; covering-follows-tree; lock/key items (replacing plock/slock) +
+  Durgin unlock; form-shift tiers.
+- *(planned)* `character-emotes.md`, `character-consent.md`, `character-social.md`.
+
 ## How this fits the workflow
 1. Cram ideas into the live game (trial by error).
 2. Note rough ideas / experiments in `../testideas/`.
