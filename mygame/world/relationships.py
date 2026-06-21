@@ -209,10 +209,32 @@ def required_address(target, honorifics):
                     token = fam.get(role_toward(holder, target)) or fam.get("*")
                 else:
                     token = fam
+            elif tier == "faction":
+                token = honorifics.get("faction")
+                # Sentinel 'rank'/'auto' → derive the token from the holder's rank in
+                # a shared faction, and only when the holder OUTRANKS target (juniors
+                # address seniors). Falls open: any trouble → no requirement here.
+                if token in ("rank", "auto"):
+                    token = _faction_rank_token(holder, target)
             else:
                 token = honorifics.get(tier)
             if token:
                 return token, _name(holder), tier
+    return None
+
+
+def _faction_rank_token(holder, target):
+    """The holder's rank-title in a shared faction, but only if the holder outranks
+    `target` there. None if no shared faction, not outranked, or any error (fail open)."""
+    try:
+        from world.factions import rank_name, get_rank_index
+        shared = (set(getattr(holder.db, "faction_member", None) or [])
+                  & set(getattr(target.db, "faction_member", None) or []))
+        for fk in sorted(shared):
+            if get_rank_index(holder, fk) > get_rank_index(target, fk):
+                return rank_name(holder, fk)
+    except Exception:
+        pass
     return None
 
 

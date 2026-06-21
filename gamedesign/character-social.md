@@ -40,7 +40,9 @@ relate/force <who> = <bond>      # owner-imposed (forced; floor-reverted)
 ```
 - **Bonds:** `own` / `slave` / `pet` (the `owner` tier with a stored **flavour** that seeds the
   default honorific/title) · `lover` · family roles (`mother`…). One verb, the relationship type as
-  the argument. *(`faction` invite-at-rank is still ROADMAP — the faction system owns that path.)*
+  the argument. *(Faction membership has its own consent flow — `faction invite <player> [= <key>]`
+  + `faction invites`/`accept`/`decline` — so it stays on the `faction` command, not duplicated into
+  `relate`.)*
 - **Consensual by default:** player→player bonds require the target's `accept` — and, per
   `character-consent.md`, persist through `escape` as normal IC state (a consensual collar isn't a
   trap). They come undone by mutual `clear`, not the floor.
@@ -76,9 +78,10 @@ Three distinct things, kept simple:
    `notify` default — `honorific/clear <who>` removes it, `honorific <who>` shows what's owed; same
    authority check (`rule.set`/owner/self). Accepting a `slave`/`pet` ownership bond now suggests
    setting one. *Still ROADMAP:* fully auto-seeded per-owner defaults.
-3. **Faction-rank honorifics [ROADMAP, hooks exist].** Lower members owe rank-holders a faction
-   honorific — the `faction` tier is already in the address priority; wire a faction's rank ladder to
-   supply the token.
+3. **Faction-rank honorifics [BUILT].** Set the honorifics map's `faction` slot to the sentinel
+   `rank` (or `auto`) and `required_address` derives the token from the present holder's **rank
+   title**, but only when that holder **outranks** the target in a shared faction (juniors address
+   seniors). A static `faction` token still works as before; fails open on any trouble.
 
 **Enforcement philosophy (consistent with `character-consent.md`):** honorifics are **opt-in via the
 rule/contract** an owner sets over someone they have authority over, **default consequence is the
@@ -127,6 +130,7 @@ floor) — same line as a consensual collar in `character-consent.md`. Nothing h
   unified `relate [/temp|/perm|/force] <who> = <bond>` verb (own/slave/pet/lover/family) with expiry
   — **built**; the honorific standing-rule + speech-filter enforcement; the multi-slot title; faction
   standing/rank.
-- 🔧 Build: the `faction` bond (invite-at-rank); personal `nick`; faction-rank honorific tokens;
-  the assembled `sheet/relationships` view. *(The `honorific` front-end is now built.)*
+- 🔧 Build: personal `nick`; the present-holder honorific line in the assembled view. *(Built now:
+  the `honorific` front-end, faction-rank honorifics, faction standing in the view. Faction
+  invites already live via the `faction` command.)*
 - ✂️ Decide `db.ln`'s fate (fold into faction standing or keep) — don't carry a redundant meter blind.
