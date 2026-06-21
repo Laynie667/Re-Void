@@ -505,5 +505,22 @@ def describe(char):
             span = " |x(temp)|n" if off.get("expires_at") else ""
             lines.append(f"  {_name(fo) if fo else f'#{fid}'} offers: {what}{span}  "
                          f"|x(relate/accept · relate/reject)|n")
+    # Faction standing/rank — the assembled-view join (read-only; defensive).
+    try:
+        from world import factions as F
+        mems = list(getattr(char.db, "faction_member", None) or [])
+        if mems:
+            lines.append("|x── standing ──|n")
+            for fk in mems:
+                try:
+                    rk = F.rank_name(char, fk)
+                    st = F.get_standing(char, fk)
+                except Exception:
+                    rk, st = None, None
+                label = F._standing_key(fk) if hasattr(F, "_standing_key") else fk
+                detail = f"|w{rk}|n ({st})" if rk is not None else "member"
+                lines.append(f"  {label}: {detail}")
+    except Exception:
+        pass
     lines.append("|w" + "═" * 44 + "|n")
     return "\n".join(lines)

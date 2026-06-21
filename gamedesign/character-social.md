@@ -99,11 +99,15 @@ the Facility's title/grade). Separately, **`db.ln`** is a global social score fe
 faction standing — decide whether it earns its keep or folds into faction standing for the fresh
 build, rather than silently carrying a redundant meter.
 
-## 6. One assembled view  [ROADMAP — a display join]
-A single `sheet/relationships` (alias `rel`) that joins what's today four lookups: your bonds + who
-owns you (and whom you own) + the honorific you owe to anyone **present** right now + your faction
-rank/standing. The data exists (`describe()`, `tiers_of`, `required_address`, `rank_name`); this is a
-view, not new state.
+## 6. One assembled view  [PARTLY BUILT — `relate` / `rel`]
+The relationship view (`relate`, alias `rel`) joins bonds + ownership, and now **faction
+standing/rank** too (read-only, defensive). Still ROADMAP: the honorific you owe to anyone
+**present** right now.
+**Known gap (your call):** `set_owner` stores the link only on the *owner's* side, so the **owned
+party's `relate` view doesn't list who owns them** (ownership still works everywhere else — consent,
+honorifics, `tiers_of` — via `_is_owner_of`; only the owned-side display is blank). Fixing it means
+a two-sided owner link, which touches the floor/contract revert paths — a deliberate change, not a
+blind one.
 
 ## Real subsystems this builds on
 - `world/relationships.py` (the tier spine, offers/accept/force, `clear_forced`, honorific resolver
