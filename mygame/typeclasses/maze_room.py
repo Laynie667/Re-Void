@@ -235,6 +235,11 @@ class MazeRoom(Room):
                 if season and get_season() != season:
                     return False
                 return True
+            if gtype == "weather":
+                # gates on the global weather state (weather -> gameplay)
+                from world.weather import get_weather
+                want = (gate.get("state") or "").lower()
+                return (not want) or get_weather() == want
         except Exception:
             return True   # never trap her on a broken gate — fail open
         return True

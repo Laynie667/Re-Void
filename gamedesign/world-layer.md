@@ -54,8 +54,9 @@ sky), **snow is orphaned** (no transition produces it — winter must be faked),
 **ROADMAP:**
 - **Regional climate per realm** (cabin = snow-weighted winter, facility = climate-controlled/none,
   desert = its own table) — fixes orphaned snow, kills the faked-winter problem.
-- **Weather → gameplay:** a `weather:` reveal/gate condition, ambient-pool selector, scene input,
-  and event trigger (a storm spawns an event).
+- **Weather → gameplay:** a `weather:` reveal/gate condition **[BUILT for maze gates]** (`maze gate
+  <name> = weather <state>`), plus (ROADMAP) ambient-pool selector, scene input, and event trigger
+  (a storm spawns an event).
 - **Scheduled/forecast weather** (drive a storm for a set-piece).
 
 ## 4. World State & Modes  [BUILT, underused]

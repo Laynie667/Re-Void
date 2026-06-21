@@ -1819,7 +1819,7 @@ class CmdMaze(MuxCommand):
             return
         gtype = toks[0].lower()
         valid = ("conditioning", "regression", "devotion", "standing", "quota",
-                 "stat", "flag", "time", "none")
+                 "stat", "flag", "time", "weather", "none")
         if gtype not in valid:
             caller.msg(f"Gate type must be one of: {', '.join(valid)}.")
             return
@@ -1853,6 +1853,14 @@ class CmdMaze(MuxCommand):
                 caller.msg(f"Usage: maze gate {name} = time <period|season>  "
                            f"(periods: {', '.join(_PERIODS)}; seasons: spring/summer/autumn/winter).")
                 return
+        elif gtype == "weather":
+            from world.weather import WEATHER_STATES
+            tok = toks[1].lower() if len(toks) >= 2 else ""
+            if tok not in WEATHER_STATES:
+                caller.msg(f"Usage: maze gate {name} = weather <state>  "
+                           f"({', '.join(WEATHER_STATES)}).")
+                return
+            gate = {"type": "weather", "state": tok}
         else:
             try:
                 gate = {"type": gtype, "min": float(toks[1])}
@@ -1875,6 +1883,8 @@ class CmdMaze(MuxCommand):
         elif gtype == "time":
             when = gate.get("period") or gate.get("season")
             caller.msg(f"|w'{name}' now opens only during {when}.|n")
+        elif gtype == "weather":
+            caller.msg(f"|w'{name}' now opens only when the weather is {gate['state']}.|n")
         else:
             caller.msg(f"|w'{name}' now opens only at {gtype} ≥ {gate['min']:.0f}.|n")
 

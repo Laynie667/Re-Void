@@ -23,6 +23,7 @@ Stored as `solution["gate"] = {"type": <type>, "min": <number>}`.
 | `stat` | any `db.<attr>` (gate's `attr`) | `>= min` | yes |
 | `flag` | any `db.<flag>` (gate's `flag`) | matches `value` (default: truthy) | no |
 | `time` | `gametime` period and/or season | matches `period`/`season` | no |
+| `weather` | `weather.get_weather()` | matches `state` | no |
 | `none` | — | (clears the gate) | — |
 
 `stat` generalizes the four hardcoded meters above to **any** numeric attribute
