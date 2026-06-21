@@ -24,31 +24,32 @@ the spine ride **honorifics** (what you must call someone present who holds a cl
 auto-written on the other party, gendered by their pronouns** — core to lineage/incest play. Bonds
 are mutual via `offer / accept / reject`; `clear_forced` drops only *forced* ties (the floor hook).
 
-## 2. Ownership — player-over-player as the default, NPCs tie in  [BUILT spine → ROADMAP: unify the verb]
+## 2. Ownership — player-over-player as the default, NPCs tie in  [BUILT]
 Ownership is the `owner` tier sitting on the spine: an explicit link, the facility owner-of-record,
 or a faction owning its stock (Bethany over her line). **Multi-owner** is supported. Player-over-
 player ownership is the **default model**; NPC owners use the identical path.
 
-**The unified bond verb [ROADMAP — generalizes `offer_relation`]:** one command offers every bond,
-with a **duration switch**:
+**The unified bond verb [BUILT — `relate`, generalizing `offer_relation`]:** one command offers
+every bond, with a **duration switch**:
 ```
-offer <target> = <bond>          # default: permanent, mutual (target must accept)
-offer/temp <target> = <bond> [hours|until]   # time-limited; auto-expires
-offer/perm <target> = <bond>     # explicit permanent
-accept <offerer> / reject <offerer>           # the target's response (exists)
+relate <who> = <bond>            # default: permanent, mutual (target must accept)
+relate/temp <who> = <bond> <dur> # time-limited (30m / 2h / 3d / 90s); auto-expires
+relate/perm <who> = <bond>       # explicit permanent
+relate/accept <who> / relate/reject <who>      # the target's response
+relate/force <who> = <bond>      # owner-imposed (forced; floor-reverted)
 ```
-- **Bonds:** `own` (you become target's owner) · `slave` / `pet` (owner tier with a flavour role
-  that drives default honorific/title) · `lover` · family roles (`mother`…) · `faction` (invite into
-  your faction at a rank). One verb, the relationship type as the argument.
+- **Bonds:** `own` / `slave` / `pet` (the `owner` tier with a stored **flavour** that seeds the
+  default honorific/title) · `lover` · family roles (`mother`…). One verb, the relationship type as
+  the argument. *(`faction` invite-at-rank is still ROADMAP — the faction system owns that path.)*
 - **Consensual by default:** player→player bonds require the target's `accept` — and, per
   `character-consent.md`, persist through `escape` as normal IC state (a consensual collar isn't a
-  trap). They come undone by mutual `release`/`clear`, not the floor.
-- **Imposed path (on-theme):** an existing **owner** (player or NPC) may `force` the bonds that are
-  ownerly to impose — family roles today (`force_relation`), extendable to slave/pet — stored
-  `forced=True`. **The floor reverts every forced/imposed tie** (`clear_forced`); mutual ties stay.
-- **Temp vs perm:** a temp bond carries an expiry and auto-clears (a scene-length collar, a weekend
-  of ownership); perm persists until released or floor-reverted. (New: store an `expires_at` on the
-  relationship entry; a tick or lazy-check clears it.)
+  trap). They come undone by mutual `clear`, not the floor.
+- **Imposed path (on-theme):** an existing **owner** (player or NPC) may `relate/force` the ownerly
+  bonds — family roles **and** own/slave/pet — stored `forced=True`. **The floor reverts every
+  forced/imposed tie** (`clear_forced`); mutual ties stay.
+- **Temp vs perm:** a temp bond stores `expires_at` on the relationship entry; `tiers_of`/
+  `_is_owner_of` ignore it once expired (read-time), and `prune_expired` tidies storage lazily.
+  Perm bonds (the default) carry no `expires_at` and behave exactly as before.
 - **NPCs tie in:** Bethany/Seraphine own via the same `owner` tier and the same impose/force path —
   no parallel NPC-ownership system. This is *why* the player-over-player default matters: build it
   once, NPCs inherit it.
@@ -117,8 +118,10 @@ floor) — same line as a consensual collar in `character-consent.md`. Nothing h
 
 ## What to carry into the fresh build
 - ✅ The tier spine; player-over-player ownership as the default with NPCs on the same path; the
-  honorific standing-rule + speech-filter enforcement; the multi-slot title; faction standing/rank.
-- 🔧 Build the unified `offer [/temp|/perm] <target> = <bond>` verb (own/slave/pet/lover/family/
-  faction) with expiry; personal `nick`; the friendlier `honorific` front-end + bond-seeded defaults;
-  faction-rank honorific tokens; the assembled `sheet/relationships` view.
+  unified `relate [/temp|/perm|/force] <who> = <bond>` verb (own/slave/pet/lover/family) with expiry
+  — **built**; the honorific standing-rule + speech-filter enforcement; the multi-slot title; faction
+  standing/rank.
+- 🔧 Build: the `faction` bond (invite-at-rank); personal `nick`; the friendlier `honorific`
+  front-end + bond-seeded defaults; faction-rank honorific tokens; the assembled
+  `sheet/relationships` view.
 - ✂️ Decide `db.ln`'s fate (fold into faction standing or keep) — don't carry a redundant meter blind.
