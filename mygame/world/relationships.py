@@ -397,10 +397,16 @@ def clear_relation(a, b):
 
 def set_owner(owner, target, forced=True, flavor=None, expires_at=None):
     """Mark `owner` as an owner of `target` (an explicit owner-tier link). Supports
-    multi-owner — several characters may each hold this over one target. Stored on the
-    owner's side; `_is_owner_of` reads it. `forced` lets the floor/contract revert it.
+    multi-owner — several characters may each hold this over one target. `_is_owner_of`
+    reads the owner-side `owner` flag. `forced` lets the floor/contract revert it.
     `flavor` (owned/slave/pet) seeds the default honorific/title; `expires_at` makes a
-    temp ownership."""
+    temp ownership.
+
+    Two-sided: a matching `owned_by` marker is written on the target so (a) the owned
+    party's own view shows who owns them, and (b) the OOC floor (`clear_forced`, called
+    on the *escaping* character) drops forced ownership from EITHER side. `owned_by` is
+    a display/floor marker only — `tiers_of`/`_is_owner_of` ignore it, so it never grants
+    the owned party any authority and never changes consent resolution."""
     vr = _rels(owner)
     e = dict(vr.get(_id(target), {}))
     e["owner"] = True
@@ -413,17 +419,39 @@ def set_owner(owner, target, forced=True, flavor=None, expires_at=None):
     vr[_id(target)] = e
     owner.db.relationships = vr
 
+    tr = _rels(target)
+    te = dict(tr.get(_id(owner), {}))
+    te["owned_by"] = True
+    te["set_by"] = _id(owner)
+    te["forced"] = bool(forced) or bool(te.get("forced"))
+    if flavor:
+        te["flavor"] = flavor
+    if expires_at is not None:
+        te["expires_at"] = float(expires_at)
+    tr[_id(owner)] = te
+    target.db.relationships = tr
+
 
 def drop_owner(owner, target):
-    """Remove an owner link owner→target (used by the contract/floor revert)."""
+    """Remove an owner link owner→target, both sides (used by the contract/floor revert)."""
     vr = _rels(owner)
     e = dict(vr.get(_id(target), {}))
     if e.pop("owner", None) is not None:
-        if e:
+        # keep the entry only if a real bond remains; else drop it (no stale remnant)
+        if e.get("family") or e.get("lover"):
             vr[_id(target)] = e
         else:
             vr.pop(_id(target), None)
         owner.db.relationships = vr
+    # drop the matching back-reference on the owned party
+    tr = _rels(target)
+    te = dict(tr.get(_id(owner), {}))
+    if te.pop("owned_by", None) is not None:
+        if te.get("family") or te.get("lover"):
+            tr[_id(owner)] = te
+        else:
+            tr.pop(_id(owner), None)
+        target.db.relationships = tr
 
 
 def clear_forced(char):
@@ -486,8 +514,8 @@ def describe(char):
         if e.get("owner"):
             # char owns other (this entry is char→other with owner set)
             bits.append(f"|Yyour {e.get('flavor') or 'owned'}|n")
-        elif other and _is_owner_of(other, char):
-            bits.append("|Yowner|n")
+        elif e.get("owned_by") or (other and _is_owner_of(other, char)):
+            bits.append(f"|Yowned by them as their {e.get('flavor') or 'property'}|n")
         tag = " |x(forced)|n" if e.get("forced") else ""
         if e.get("expires_at"):
             mins = max(0, int((float(e["expires_at"]) - _now()) / 60))

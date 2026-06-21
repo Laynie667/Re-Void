@@ -99,15 +99,15 @@ the Facility's title/grade). Separately, **`db.ln`** is a global social score fe
 faction standing — decide whether it earns its keep or folds into faction standing for the fresh
 build, rather than silently carrying a redundant meter.
 
-## 6. One assembled view  [PARTLY BUILT — `relate` / `rel`]
-The relationship view (`relate`, alias `rel`) joins bonds + ownership, and now **faction
-standing/rank** too (read-only, defensive). Still ROADMAP: the honorific you owe to anyone
-**present** right now.
-**Known gap (your call):** `set_owner` stores the link only on the *owner's* side, so the **owned
-party's `relate` view doesn't list who owns them** (ownership still works everywhere else — consent,
-honorifics, `tiers_of` — via `_is_owner_of`; only the owned-side display is blank). Fixing it means
-a two-sided owner link, which touches the floor/contract revert paths — a deliberate change, not a
-blind one.
+## 6. One assembled view  [BUILT — `relate` / `rel`]
+The relationship view (`relate`, alias `rel`) joins bonds + ownership + **faction standing/rank**
+(read-only, defensive). Still ROADMAP: the honorific you owe to anyone **present** right now.
+**Ownership is now a two-sided link** (`set_owner` writes an `owned_by` marker on the owned party):
+the owned party's view shows who owns them, and — importantly — **the OOC floor now clears forced
+ownership when the *owned* party escapes**, not just the owner. `owned_by` is a display/floor marker
+only: `tiers_of`/`_is_owner_of` ignore it, so it grants the owned party no authority and never
+changes consent resolution. `drop_owner` clears both sides and preserves any coexisting family/lover
+bond. Consensual (non-forced) ownership persists through escape, as designed.
 
 ## Real subsystems this builds on
 - `world/relationships.py` (the tier spine, offers/accept/force, `clear_forced`, honorific resolver
