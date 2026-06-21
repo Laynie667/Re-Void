@@ -49,24 +49,42 @@ Resolution pipeline (every act runs the same four steps):
    fluid bookkeeping, marks, breeding hooks — the act *does the thing*, never just narrates it
    (CLAUDE.md §2.4: "told, not done" is the enemy).
 
-## 2. Message pools per zone × verb  [ROADMAP — the study-details model, applied to touch]
-Today a freeform zone can carry a single `handle`/`touch` response. **Extend it to a pool**, exactly
-like `study_details` is a *list*: each `(verb, zone)` holds **15–25+ lines** so high-frequency acts
-never loop (CLAUDE.md §5). Authored per zone-type with per-zone overrides:
+## 2. Message pools per zone × verb  [BUILT as `handle_details` → ROADMAP: extend]
+**This already exists.** Each zone carries `handle_details`: a dict keyed by **verb → a *list* of
+messages** (a pool), authored live by the player. The act framework **extends** that structure — it
+does not invent a new one. Today's shape (real):
 ```
-zone.acts:
-  caress: [ line, line, line, ... ]        # surface default pool
+zone.handle_details:
+  touch:  [ line, line, line, ... ]        # verb -> pool of lines (already a list)
+  caress: [ ... ]
   lick:   [ ... ]
-  suck:   [ ... ]                           # gland/orifice
-  penetrate: { shallow:[...], deep:[...], knot:[...], gape:[...] }   # state-keyed
+  kiss:   [ ... ]
 ```
-- **Per-zone-type defaults** ship with the body (a generic `breast` `suck` pool), and a **specific
-  zone can override or extend** its own pool (your pierced, lactating nipples read differently).
-- **State-keyed sub-pools** let one verb branch on live state — depth/pace/capability/fullness — so
-  `penetrate` reads differently at the knot than on first entry. This is where the act framework
-  earns the prose: specificity from real state (cycles served, brood count, hole use, fullness).
-- **Customizable** like everything else: owners/players can author pools for their own zones, the
-  same way zone `details`/`study_details` are authored (`character-zones.md` / `rooms-appendix.md`).
+Authored with the **real** `zone handle` command (verbs available today: touch, caress, grope,
+stroke, grab, squeeze, kiss, bite, lick, taste, pull, pinch, nuzzle, hold, pet):
+```
+zone handle/add <zone>/<verb> = <message>     # append a line to that verb's pool
+zone handle/list <zone>                        # show every verb + its pool
+zone handle/rm  <zone>/<verb> <#>              # remove line N
+```
+Tokens in a line are the **real** ones (not `{t}`): `{actor}`, `{actor_s}`, `{actor_they}`,
+`{actor_them}`, `{actor_their}`, and the matching `{target}*` set.
+Keep pools **deep** (15–25+ lines per high-frequency verb) so nothing loops (CLAUDE.md §5).
+
+**What the act framework adds [ROADMAP]:**
+- **More verbs.** Extend the verb list with the penetrative/sex set (`penetrate`, `thrust`,
+  `withdraw`, `deposit`, `suck`, `handmilk`, `grind`, `deepthroat`, `rim`) — same `handle_details`
+  dict, more keys.
+- **Per-zone-type defaults.** Ship a default pool per zone-*type* (a generic `gland`/`suck` pool any
+  breast inherits) so a fresh body is never empty; a specific zone's authored pool **overrides or
+  adds to** the default. (Default + custom, both player-authorable — see Q2 below.)
+- **State-keyed sub-pools.** Let a verb branch on live state instead of one flat list:
+  ```
+  handle_details.penetrate: { shallow:[...], deep:[...], knot:[...], gape:[...] }
+  ```
+  so `penetrate` reads differently at first entry vs. at the knot vs. once gaped. This is where the
+  prose earns its keep — specificity from real state (cycles served, brood count, hole use,
+  fullness). A flat list stays valid (treated as the default sub-pool).
 
 ## 3. Two-sided / reactive emotes  [SPLIT — formalize the existing responses]
 Every act emits **for both parties**, each line reading the *other* side's live state:
@@ -123,6 +141,11 @@ read and feed:
   §4) — sensitized nipples or a sensitized cock contribute more per act.
 - **Edging/denial** is a first-class state (held at `edge`, peak withheld) — a conditioning/devotion
   lever, not just flavour.
+- **Visibility (resolved):** the meter is **private by default** — only you read your own tier;
+  others infer it from your emotes/desc. **Owners see it** on those they own (Bethany/Seraphine/a
+  player owner) — a cold line in the file (*"arousal: peak — denied 3×"*) the property doesn't get
+  to hide. Implemented as private + an ownership-relationship override (ties to `character-social.md`
+  ownership). No partner-wide visibility unless ownership grants it.
 
 ## 6. Wide sex-act coverage  [ROADMAP — what the verbs span]
 The framework covers the genre (CLAUDE.md §0) by **verb × target-zone-type × capability**, not by a
@@ -139,28 +162,35 @@ giant flat command list:
   production state.
 - **Cumflation** — repeated/high-volume `deposit` (Bethany's 4–8 L) accrues a belly/fullness state
   on the target's `belly` zone, with its own descs/look impact.
-- **Multi-partner / multi-cock** — the concurrency model (§4): gangbangs, three-holes-at-once,
-  two-in-one-hole, a hand still free for her coffee.
+- **Multi-partner / multi-cock** — the concurrency model (§4): gangbangs, three-holes-at-once, a
+  hand still free for her coffee. (*Multiple parts into a **single** hole — two cocks in one ass —
+  is the `double` capability sub-case; noted but **not a current priority**.*)
 - **Kissing / tenderness** — `kiss` carries the false-tenderness register (`|M`/warm intent) — the
   contrast beat (CLAUDE.md §7) is a tone/intent selection, same machinery.
 
 ## Commands (shape, not final)
-- `<verb> <target> [zone]` / `<verb> <target>'s <zone> [with <my-part>]` — single act.
-- `<verb> <target> with cock[1..3]` (or `all`) — index/select actor-parts for concurrency.
-- A **scene-act builder** for simultaneity (`act add … ; act go`) or natural multi-target syntax —
-  open question (§ below). `arousal`/`mood` shows your curve; `consent`/`limits` gates it.
+- **Acting:** `<verb> <target> [zone]` / `<verb> <target>'s <zone> [with <my-part>]` — single act.
+  `<verb> <target> with cock1` (or `all`) — index/select actor-parts for concurrency.
+  `arousal`/`mood` shows your curve (own meter; owners see those they own — see §7); `consent`/
+  `limits` gates it.
+- **Authoring pools (real, exists today):** `zone handle/add <zone>/<verb> = <message>` appends a
+  line; `zone handle/list <zone>` shows pools; `zone handle/rm <zone>/<verb> <#>` removes one. Same
+  for rooms via `roomzone`. Both **default (type-level) and custom (per-zone) pools are
+  player-authored** through this command — there is no separate `acts` key; pools live in
+  `handle_details`.
 
 ## Real subsystems this builds on / replaces
 - **Builds on:** the touch/zone verbs (`CmdZoneInteract`: touch/caress/grope/kiss/lick + `CmdSmell`),
-  the penetration verbs (`penetrate/thrust/withdraw/deposit/suck/handmilk`), freeform zone
-  `handle`/`touch` responses (→ pools), `record_use`/`hole_capabilities`/`gang_inseminate`/
-  `do_inseminate` (CLAUDE.md §3), the milking mechanic, `consent.may`, the `study_details`
-  list-pool pattern, `conditioning` (the accelerating-meter model for arousal), `bethany_script`
-  three-cock anatomy.
+  the penetration verbs (`penetrate/thrust/withdraw/deposit/suck/handmilk`), the existing
+  **`handle_details` verb→pool** structure + its `zone handle/add|list|rm` authoring command (the
+  per-`(verb,zone)` pool *already exists* — this extends it), `record_use`/`hole_capabilities`/
+  `gang_inseminate`/`do_inseminate` (CLAUDE.md §3), the milking mechanic, `consent.may`, the
+  `study_details` list-pool pattern, `conditioning` (the accelerating-meter model for arousal),
+  `bethany_script` three-cock anatomy.
 - **Generalizes:** all intimate verbs into one typed-act pipeline (validate-by-type → consent →
   pooled two-sided emote → real state), with concurrency/multiplicity built in.
-- **Replaces:** single-line zone responses → per-`(verb,zone)` pools; ad-hoc one-target-only verbs →
-  the scene-act concurrency model.
+- **Extends (not replaces):** `handle_details` gains the sex verbs, state-keyed sub-pools, two-sided
+  lines, and type-level defaults; one-target verbs gain the optional scene-act concurrency binder.
 
 ## §0 OOC floor
 Acts are **consent-gated before they fire** (step 2), and `escape`/`force_clear` always end the
@@ -180,9 +210,15 @@ freeing the person from a trap.
   pools; build the scene-act binder for simultaneity; wire `deposit`→`gang_inseminate` broadcast.
 - ✂️ Retire one-line-only zone responses and one-target-only verb assumptions.
 
+## Resolved decisions
+- **Pool authoring:** **player-authored, both default and custom**, through the *existing* real
+  command — `zone handle/add <zone>/<verb> = <message>` (no invented `acts` key; pools are
+  `handle_details`). Type-level defaults seed a fresh body; per-zone pools override/extend.
+- **Arousal visibility:** **private by default + owner-visible** (see §5). No partner-wide read.
+- **Multi-part into one hole** (two cocks, one ass): the `double` capability sub-case — **noted, not
+  a current priority** (§6). Concurrency across *different* holes/partners is the live feature (§4).
+
 ## Open questions
-- **Concurrency syntax:** explicit scene-act builder (`act add …; act go`) vs. a natural multi-target
-  parser (`fuck her mouth and cunt and ass`)? The builder is unambiguous; the parser reads better.
-- **Pool authoring scale:** how much ships as type-default vs. per-zone custom — and an authoring
-  command (`zone <z>/acts/<verb> add <line>`)?
-- **Arousal visibility:** private meter, partner-visible, or owner-visible (a Bethany file detail)?
+- **Concurrency syntax:** explicit scene-act builder vs. a natural multi-target parser
+  (`fuck her mouth and cunt and ass`)? The builder is unambiguous; the parser reads better. (Low
+  priority — single acts cover the common case.)

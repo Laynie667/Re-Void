@@ -37,10 +37,11 @@ Start with the layer above, then the rooms:
   upgrades-valid-by-zone-type; covering-follows-tree; lock/key items (replacing plock/slock) +
   Durgin unlock; form-shift tiers.
 - **`character-emotes.md`** — the act framework: an act = `(verb, actor-part, target-zone)`
-  validated by slot-type + consent → pooled two-sided reactive emote + real state; per-`(verb,zone)`
-  message pools; **concurrency/multiplicity** (many parts → many holes at once, per-pairing
-  capability checks); the arousal curve; wide sex-act coverage routed through the real
-  breeding/milking systems. Hardcore mode noted in `characters.md` §0.
+  validated by slot-type + consent → pooled two-sided reactive emote + real state; message pools
+  **extend the existing `handle_details` verb→pool** (`zone handle/add` authoring); **concurrency**
+  (many parts → many holes at once, per-pairing capability checks); the arousal curve (private +
+  owner-visible); wide sex-act coverage routed through the real breeding/milking systems. Hardcore
+  mode noted in `characters.md` §0.
 - *(planned)* `character-consent.md`, `character-social.md`.
 
 ## How this fits the workflow
