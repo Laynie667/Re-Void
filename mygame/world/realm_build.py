@@ -133,7 +133,11 @@ _ROOMS = [
      "thrown away. The line is never forgotten — only added to."),
 ]
 
-# Adjacency (non-linear): which rooms connect to which.
+# Adjacency (non-linear): which rooms connect to which. Authored once for
+# readability, then MIRRORED below so every connection is walkable both ways —
+# the directional "one-way feel" is kept by naming each exit after its
+# destination, but no room is reachable only one way (previously Deep Stock,
+# Parlour and Records had no inbound foot-exit at all).
 _EXITS = {
     "lobby":        ["floor", "holding"],
     "holding":      ["lobby"],
@@ -151,6 +155,15 @@ _EXITS = {
     "parlour":      ["floor", "office"],
     "records":      ["floor", "nursery", "office"],
 }
+
+# Mirror the adjacency so it is symmetric (idempotent; safe to re-run on import).
+# Both the fresh build and `facility_upgrade` read this, so existing realms gain
+# the missing return exits on the next upgrade pass.
+for _src, _dsts in list(_EXITS.items()):
+    for _dst in _dsts:
+        _EXITS.setdefault(_dst, [])
+        if _src not in _EXITS[_dst]:
+            _EXITS[_dst].append(_src)
 
 _ENTRY_WORDS  = ["downstairs", "processing", "belowstairs", "intake", "thefarm", "downbelow"]
 _RETURN_WORDS = ["surfacing", "homeward", "released", "clockout", "upstairs", "iwasaperson"]
