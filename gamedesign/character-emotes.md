@@ -127,13 +127,15 @@ scene_act:
 This is the direct answer to "how many can you force in at once": **as many as parts × holes ×
 capability allow** — the framework counts them, checks each, and narrates the whole as one beat.
 
-## 5. The arousal system  [ROADMAP — formalize the curve]
-A per-character **arousal meter** (like `conditioning` — an accelerating staged meter) that acts
-read and feed:
-- **Curve:** `build → edge → peak → afterglow`, with **refractory/oversensitive** after peak. Acts
-  add arousal scaled by zone sensitivity, intent, capability events (knotting/flaring spikes it),
-  and conditioning/devotion (the laced load — Bethany's cum carries DEVOTION, so peaks here *raise*
-  conditioning, tying arousal into the long meters).
+## 5. The arousal system  [BUILT meter + named curve · ROADMAP: act feed]
+A per-character **arousal meter** already exists (`typeclasses/arousal_script.py`: `db.arousal`
+0–100, thresholds 75/90/95, post-climax cooldown, `arousal_floor`, orgasm-denial cap at 99).
+- **Curve [BUILT]:** `get_arousal_tier(char)` maps the value to `build → edge → peak → afterglow`
+  (cooldown = afterglow/refractory; denied-but-high = `edge`, held on the brink, not `peak`).
+  Read-only, fail-safe — the act framework / heat prose select tone by tier. **ROADMAP:** acts
+  *feed* it scaled by zone sensitivity, intent, and capability events (knotting/flaring spikes it),
+  and conditioning/devotion (Bethany's laced load — peaks *raise* conditioning, tying arousal into
+  the long meters).
 - **Gates prose & options.** Arousal tier selects message sub-pools (a teasing `caress` reads
   differently past `edge`), unlocks/locks certain acts (can't `deposit` before `peak`; oversensitive
   zones refuse more `lick`), and feeds the breeding/fluid systems.

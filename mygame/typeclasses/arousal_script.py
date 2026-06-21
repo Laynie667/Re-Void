@@ -202,3 +202,38 @@ def ensure_arousal_script(char):
                 if s.key == "arousal_decay"]
     if not existing:
         create.create_script(ArousalScript, obj=char, persistent=True)
+
+
+# Named arousal curve (character-emotes.md §5): build → edge → peak → afterglow.
+AROUSAL_TIERS = ("build", "edge", "peak", "afterglow")
+
+
+def get_arousal_tier(char):
+    """Map the 0–100 arousal value to the named curve, read-only (the meter is
+    unchanged). For the act framework / heat prose to select tone by tier:
+      * afterglow — within the post-climax cooldown window (refractory),
+      * peak      — at/near the top WITH release available,
+      * edge      — high but held (denied climax), or simply past the first threshold,
+      * build     — still rising.
+    Fail-safe: any error → 'build'."""
+    try:
+        now = time.time()
+        if now < float(getattr(char.db, "arousal_cooldown_until", 0) or 0):
+            return "afterglow"
+        a = float(getattr(char.db, "arousal", 0) or 0)
+        # Is climax currently denied/capped? Then a high value is the EDGE (held on
+        # the brink), not the peak.
+        try:
+            from world.arousal_rules import cap_for
+            denied = cap_for(char) < 100.0
+        except Exception:
+            denied = (bool(getattr(char.db, "orgasm_denial", False))
+                      and not getattr(char.db, "orgasm_denial_lifted", False))
+        if a >= AROUSAL_THRESHOLDS[2]:        # >= 95
+            return "edge" if denied else "peak"
+        if a >= AROUSAL_THRESHOLDS[0]:        # >= 75
+            return "edge"
+        return "build"
+    except Exception:
+        return "build"
+
