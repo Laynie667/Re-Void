@@ -103,8 +103,9 @@ faction standing — decide whether it earns its keep or folds into faction stan
 build, rather than silently carrying a redundant meter.
 
 ## 6. One assembled view  [BUILT — `relate` / `rel`]
-The relationship view (`relate`, alias `rel`) joins bonds + ownership + **faction standing/rank**
-(read-only, defensive). Still ROADMAP: the honorific you owe to anyone **present** right now.
+The relationship view (`relate`, alias `rel`) joins bonds + ownership + **faction standing/rank** +
+the **honorific you owe to anyone present right now** (read-only, defensive) — all four lookups in
+one place, as the blueprint intended.
 **Ownership is now a two-sided link** (`set_owner` writes an `owned_by` marker on the owned party):
 the owned party's view shows who owns them, and — importantly — **the OOC floor now clears forced
 ownership when the *owned* party escapes**, not just the owner. `owned_by` is a display/floor marker
@@ -130,7 +131,7 @@ floor) — same line as a consensual collar in `character-consent.md`. Nothing h
   unified `relate [/temp|/perm|/force] <who> = <bond>` verb (own/slave/pet/lover/family) with expiry
   — **built**; the honorific standing-rule + speech-filter enforcement; the multi-slot title; faction
   standing/rank.
-- 🔧 Build: personal `nick`; the present-holder honorific line in the assembled view. *(Built now:
-  the `honorific` front-end, faction-rank honorifics, faction standing in the view. Faction
-  invites already live via the `faction` command.)*
+- 🔧 Build: personal `nick` (a per-viewer output substitution — fresh-build, invasive to rendering).
+  *(Built now: the `honorific` front-end, faction-rank honorifics, faction standing + owed-now in the
+  assembled view, two-sided ownership. Faction invites already live via the `faction` command.)*
 - ✂️ Decide `db.ln`'s fate (fold into faction standing or keep) — don't carry a redundant meter blind.

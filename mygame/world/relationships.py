@@ -572,5 +572,14 @@ def describe(char):
                 lines.append(f"  {label}: {detail}")
     except Exception:
         pass
+    # Honorific owed to anyone present right now — the last assembled-view line.
+    try:
+        req = required_address(char, getattr(char.db, "honorific_required", None))
+        if req:
+            token, holder, _tier = req
+            lines.append("|x── owed now ──|n")
+            lines.append(f"  address |w{holder}|n as |w{token}|n")
+    except Exception:
+        pass
     lines.append("|w" + "═" * 44 + "|n")
     return "\n".join(lines)
