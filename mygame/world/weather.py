@@ -54,6 +54,30 @@ WEATHER_CHANGE_MSGS = {
 WEATHER_SCRIPT_KEY = "global_weather_script"
 
 
+def _seasonal_transitions(current, season):
+    """Return the transition candidates for `current`, adjusted for season.
+
+    Fixes the orphaned-snow bug: no base transition leads *into* `snow`, so it
+    was unreachable and winter had to be faked. Snow is now **winter-only** —
+    in winter cold/wet skies can turn to snow; out of season snow never appears
+    (and any lingering snow thaws via its own transitions). Reuses the real
+    `gametime` season rather than a parallel calendar.
+    """
+    base = list(WEATHER_TRANSITIONS.get(current, ["clear"]))
+    if season == "winter":
+        if current == "overcast":
+            base += ["snow"]
+        elif current == "fog":
+            base += ["snow"]
+        elif current in ("rain", "heavy_rain"):
+            # Precipitation tends to fall as snow when it's cold enough.
+            base += ["snow", "snow"]
+    else:
+        # Out of season: never transition into snow; existing snow thaws.
+        base = [s for s in base if s != "snow"] or ["clear"]
+    return base
+
+
 # -------------------------------------------------------------------
 # Helper functions
 # -------------------------------------------------------------------
@@ -134,7 +158,13 @@ class WeatherScript(DefaultScript):
         Potentially transitions to a new weather state.
         """
         current = self.db.current_weather or "clear"
-        transitions = WEATHER_TRANSITIONS.get(current, ["clear"])
+        season = "autumn"
+        try:
+            from world.gametime import get_season
+            season = get_season()
+        except Exception:
+            pass
+        transitions = _seasonal_transitions(current, season)
         new_weather = random.choice(transitions)
 
         if new_weather != current:
