@@ -258,6 +258,7 @@ class Room(ObjectParent, DefaultRoom):
         Handled tokens (in order):
           {time}          — current IC time period (dawn/morning/afternoon/dusk/evening/midnight)
           {weather}       — current weather state (clear/overcast/rain/heavy_rain/fog/storm/snow)
+          {moon}          — current moon phase (new/…/full/…; full lands mid-month)
           {zone:<name>}   — zone inline description with time_descs priority:
             1. zone["time_descs"][current_period]  — time-of-day specific desc (Option C)
             2. zone["summary"]                     — short one-liner
@@ -280,6 +281,13 @@ class Room(ObjectParent, DefaultRoom):
                 text = text.replace("{weather}", self.get_weather())
             except Exception:
                 text = text.replace("{weather}", "")
+
+        # Substitute {moon} token
+        if "{moon}" in text:
+            try:
+                text = text.replace("{moon}", self.get_moon_phase())
+            except Exception:
+                text = text.replace("{moon}", "")
 
         # Zone tokens with optional time_descs support
         def _replace(match):
@@ -664,6 +672,14 @@ class Room(ObjectParent, DefaultRoom):
             return get_weather()
         except (ImportError, Exception):
             return "clear"
+
+    def get_moon_phase(self):
+        """Get the current moon phase name."""
+        try:
+            from world.gametime import get_moon_phase
+            return get_moon_phase()
+        except (ImportError, Exception):
+            return ""
 
     def get_season(self):
         """Get the current IC season."""

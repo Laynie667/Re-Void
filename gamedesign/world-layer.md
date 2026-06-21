@@ -41,9 +41,11 @@ it powers climate, theming, economy scope, and the seizure rules below, all at o
 `world/gametime.py`: IC time on `TIME_FACTOR` — periods (dawn/morning/afternoon/dusk/evening/
 midnight), 4 seasons, a 360-day year (12×30). Rooms read `get_time_period`/`get_season`; the
 `{time}` token renders it; zone `time_descs` swap prose by period.
+**Moon phases [BUILT]:** `gametime.get_moon_phase()` (8 phases over one IC month — full lands
+mid-month) + `is_full_moon()`, surfaced via the `{moon}` room token (like `{time}`/`{weather}`). The
+lore/event hook is in place; wiring full-moon boons/heat-events is the scheduler's job (§5).
 **ROADMAP:** **local clocks** — a realm/room can run its *own* day/night decoupled from global
-(the underground **valley**'s glowing cycle; `DayNightMixin`). Add **moon phases** (a clean fit for
-the wolf/Kakia lore — full-moon boons/heat-events).
+(the underground **valley**'s glowing cycle; `DayNightMixin`).
 
 ## 3. Weather & Climate  [BUILT → ROADMAP: regionalize]
 `world/weather.py` + `WeatherScript`: **one global weather** (7 states, Markov transitions,

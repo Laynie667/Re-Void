@@ -137,6 +137,32 @@ def get_season():
         return "autumn"
 
 
+# ── moon phase (world-layer §2 — wolf/Kakia lore hook) ────────────────────────
+MOON_PHASES = ["new", "waxing crescent", "first quarter", "waxing gibbous",
+               "full", "waning gibbous", "last quarter", "waning crescent"]
+
+
+def get_moon_phase():
+    """Current moon phase name. The lunar cycle spans one IC month (DAYS_PER_MONTH),
+    so the full moon lands mid-month — a clean, predictable hook for full-moon
+    events/heat/boons. Defensive: returns 'new' on any error."""
+    try:
+        ic = get_ic_time()
+        frac = (ic["day_of_month"] - 1) / float(DAYS_PER_MONTH)
+        idx = int(frac * len(MOON_PHASES)) % len(MOON_PHASES)
+        return MOON_PHASES[idx]
+    except Exception:
+        return "new"
+
+
+def is_full_moon():
+    """True at the full moon (mid lunar cycle) — for heat/boon events (Kakia lore)."""
+    try:
+        return get_moon_phase() == "full"
+    except Exception:
+        return False
+
+
 def get_time_display():
     """
     Get a formatted IC time string for display.
