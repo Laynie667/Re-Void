@@ -90,9 +90,8 @@ Real **Lock + Key items** (purchasable) instead of `plock`/`slock` commands:
 - **Consent-gated at placement** (player-to-player); `check_plock_consent` is the seed.
 - **Removal:** the key, **or Durgin's paid unlock service** (stronger lock = higher cost) — *no
   casual OOC strip between players.*
-- **§0:** the floor never strips a **non-trapping** lock (chastity/collar/toy persists, comes off
-  IC) — but it always frees the **person** from anything that would **trap** them (bound-in-place,
-  can't-leave), self-service, never paywalled or staff-gated. Trap vs non-trap is the line.
+- A consensual lock is normal IC state — it comes off via key or Durgin's unlock, not via `escape`
+  (the quiet floor still frees the *person* regardless — `character-consent.md`).
 - Ties: economy sink (buy locks/keys, pay unlock), storage (locked containers), chastity/restraint.
 
 ## 7. Form-shifting — three tiers  [ROADMAP]
@@ -122,9 +121,9 @@ covering rules in §5.
   items + Durgin unlock.
 
 ## §0 OOC floor
-Form-presets, installed items, upgrades, and locks are all **backed-up and floor-reversible**;
-`escape`/`force_clear` restore the body to a clean state and always free the person from any trap.
-Non-trapping locks persist (resolved IC); nothing here may gate the self-service exit.
+Form-presets, installed items, upgrades, and locks are backed-up and reversible; `escape` restores a
+clean body and frees the person. (Consensual locks come off IC, not via `escape`.) Details:
+`character-consent.md`.
 
 ## What to carry into the fresh build
 - ✅ The typed zone tree + slot system as the body's spine; items-into-slots; upgrades-by-type;

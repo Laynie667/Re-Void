@@ -40,9 +40,9 @@ Resolution pipeline (every act runs the same four steps):
    `penetrate`→ orifice; `handmilk`→ gland). The actor_part (if any) declares *its* type
    (`penetrate` needs an `appendage` actor_part). Wrong type → refused with a clear reason. (The
    `WombRoom` orifice check is the prototype; make it the universal gate.)
-2. **Check consent.** The act's verb + zones map to consent keys (`consent.may(actor, target, key)`);
-   intimate verbs require the intimate gate, penetrative verbs the penetration gate, etc. Denied →
-   the act doesn't fire (and optionally logs to the consent log).
+2. **Check consent.** A single yes/no: *may this actor interact with this target right now?* —
+   the minimal allow/block stance + per-person exception list (`character-consent.md`). No per-verb
+   or per-zone keys. Denied → the act doesn't fire.
 3. **Emit reactive prose.** Pull from the **message pool** for `(verb × target-zone-type [× state])`
    — *two-sided*: an actor line and a target line, each reading live state (see §2–3).
 4. **Apply real state.** Arousal deltas on both sides, `record_use`/`hole_capabilities` updates,
@@ -193,13 +193,9 @@ giant flat command list:
   lines, and type-level defaults; one-target verbs gain the optional scene-act concurrency binder.
 
 ## §0 OOC floor
-Acts are **consent-gated before they fire** (step 2), and `escape`/`force_clear` always end the
-scene and free the **person** from any trap mid-act, regardless of how many pairings are live (the
-concurrency model never creates an unbreakable hold — the floor relocates and clears scene state
-unconditionally). Arousal/use/breeding state set by acts is normal reversible character state. No
-act, capability, or concurrency may gate the self-service exit. **Hardcore mode** (see
-`characters.md` §0 / `character-consent.md`) only ever opts out of *item teardown*, never out of
-freeing the person from a trap.
+Acts check consent before firing (step 2), and `escape` always frees the person from any trap, no
+matter how many pairings are live — the concurrency model never builds an unbreakable hold. Details:
+`character-consent.md`.
 
 ## What to carry into the fresh build
 - ✅ The typed-act pipeline (verb × actor-part × target-zone → validate/consent/pooled-emote/state);

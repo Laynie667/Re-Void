@@ -41,8 +41,11 @@ Start with the layer above, then the rooms:
   **extend the existing `handle_details` verb→pool** (`zone handle/add` authoring); **concurrency**
   (many parts → many holes at once, per-pairing capability checks); the arousal curve (private +
   owner-visible); wide sex-act coverage routed through the real breeding/milking systems. Hardcore
-  mode noted in `characters.md` §0.
-- *(planned)* `character-consent.md`, `character-social.md`.
+  mode noted in `character-consent.md`.
+- **`character-consent.md`** — deliberately **minimal**: consent is one allow/block toggle + a
+  per-person name list; hardcore is a single on/off switch; the OOC floor is a quiet, always-working
+  escape (never advertised in-fiction). No per-act gating, no disclaimers plastered everywhere.
+- *(planned)* `character-social.md`.
 
 ## How this fits the workflow
 1. Cram ideas into the live game (trial by error).

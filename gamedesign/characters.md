@@ -24,9 +24,9 @@ avatar is a *stripped character*:
 - **Can:** emote, a basic self-description, chat OOC channels, **listen to IC channels** (read-only
   relay), send/receive **ograms**, set **permissions/consent defaults**, interact lightly.
 - **Account features:** a **character roster** (multiple characters, fully isolated state) +
-  switching; **account-default consent** each character inherits and can tighten; a **blocklist +
-  content limits**; an **RP-status / away** flag; a **friends list**; a clear **OOC tag/colour** so
-  IC players can tell who's OOC.
+  switching; an **account-default consent stance** (the allow/block toggle a new character inherits —
+  `character-consent.md`); an **RP-status / away** flag; a **friends list**; a clear **OOC
+  tag/colour** so IC players can tell who's OOC.
 - **Ograms:** delivered **IC** (the post office is the delivery layer), with an **account-level
   notification digest** — on login the account sees *"mail pending for: <characters>"* without
   leaking content (read it IC). Cross-level *awareness*, IC *delivery*.
@@ -68,23 +68,6 @@ ownership (being owned by Bethany/Seraphine/another player) sits on top of relat
 IC-emergent, but wants a deliberate decision. → planned `character-social.md`.
 
 ## §0 OOC floor (character-level)
-`escape`/`force_clear` always free the **person**: end the scene, relocate, clear facility/realm
-state, and **defeat anything that would *trap* them** (bound-in-place, held, can't-leave) —
-self-service, never gated behind staff-availability or a paid service. **Non-trapping** locks
-(chastity/collar/toys) are *not* stripped by the floor — they persist as IC and come off via
-key / Durgin's paid unlock / staff (good etiquette, an economy sink). Trap vs. non-trap is the
-line: the floor always beats a trap; it leaves a consensual belt on you to resolve IC.
-
-### Hardcore mode  [ROADMAP — opt-in player perm]
-An **opt-in** account/character perm for players who want maximum immersion. Its **only** effect:
-`escape`/`force_clear` stop doing their *item teardown* (locks/marks/installed items/worn restraints
-persist as IC instead of being auto-cleared on escape). What it **never** changes:
-- `escape` **still always frees the person** — ends the scene, relocates, defeats any **trap**
-  (bound/held/can't-leave). Hardcore opts out of *cleanup*, never out of being freed.
-- It is **self-toggleable any time** (`hardcore off`), and toggling off → `escape` performs the
-  **full clean** again. Because the player can always reach the full-teardown path themselves, the
-  wipe is **never gated** — that's what keeps hardcore inside §0.
-- Staff/superuser purge (`force_clear(me)`/`facilityreset`) ignores hardcore entirely and always
-  performs the full clean — the ultimate floor is untouched.
-
-Detail belongs in `character-consent.md` when written; recorded here so it isn't lost.
+`escape` always frees the **person** — quietly, unconditionally, self-service. Consent is one
+allow/block toggle + a name list; hardcore is a single on/off switch. Full spec (deliberately
+minimal): `character-consent.md`.
