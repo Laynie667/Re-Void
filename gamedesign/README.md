@@ -45,7 +45,11 @@ Start with the layer above, then the rooms:
 - **`character-consent.md`** — deliberately **minimal**: consent is one allow/block toggle + a
   per-person name list; hardcore is a single on/off switch; the OOC floor is a quiet, always-working
   escape (never advertised in-fiction). No per-act gating, no disclaimers plastered everywhere.
-- *(planned)* `character-social.md`.
+- **`character-social.md`** — the social/identity half: the relationship tier spine; **player-over-
+  player ownership as the default** (NPCs tie into the same path) via a unified `offer [/temp|/perm]
+  <target> = <bond>` verb; honorifics & nicknames (the owner-set honorific standing-rule + speech-
+  filter enforcement is already built); the multi-slot title; faction standing/rank; the `db.ln`
+  redundancy flagged.
 
 ## How this fits the workflow
 1. Cram ideas into the live game (trial by error).
