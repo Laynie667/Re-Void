@@ -126,11 +126,14 @@ class WombRoom(HousingRoom):
         if zone_name not in zones:
             return False, f"No zone '{zone_name}' on {host_char.db.rp_name or host_char.name}."
 
-        zone_type = (zones[zone_name] or {}).get("zone_type", "surface")
-        if zone_type not in ("orifice", "both"):
+        zone_data = zones[zone_name] or {}
+        # Typed-zone validation (shared validator; see world/zone_types.py). Behaviour
+        # preserved: orifice or legacy 'both' only.
+        from world.zone_types import accepts, zone_type_of
+        if not accepts(zone_data, "womb_room"):
             return False, (
                 f"WombRoom can only be installed on an orifice or 'both' zone. "
-                f"'{zone_name}' is type '{zone_type}'."
+                f"'{zone_name}' is type '{zone_type_of(zone_data)}'."
             )
 
         mechanics = dict((zones[zone_name].get("mechanics") or {}))

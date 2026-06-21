@@ -39,7 +39,7 @@ accessories   ← worn extras (jewelry, collars, leashes, plugs-as-worn ...)
 Characters spawn with a sensible default set under `base`; **freeform zones remain** for custom
 spots. (`character.db.zones` + `zone_display_order` exist today; this formalizes the hierarchy.)
 
-## 2. Zone *types* — the slot system  [ROADMAP]
+## 2. Zone *types* — the slot system  [BUILT: validator foundation · ROADMAP: full wiring]
 Every zone carries a **type**, which decides its valid parent and which upgrades it accepts:
 
 | type | examples | accepts upgrades like |
@@ -49,9 +49,14 @@ Every zone carries a **type**, which decides its valid parent and which upgrades
 | `orifice` | mouth, pussy, anus | womb-room/interior, gape/capacity, inflation, sensitivity |
 | `appendage` | cock, tail, wings, ears | knot, growth, equine/draconic variants, sensitivity |
 
-The `WombRoom`'s existing "orifice/both only" install check is the prototype — **generalize it:
-every upgrade declares its valid zone-type(s),** so the system *refuses* nonsense (no lactation on
-lips). Validation, not guesswork.
+The `WombRoom`'s "orifice/both only" install check **was** the prototype — now generalized into a
+shared validator, **`world/zone_types.py`**: `ZONE_TYPES`, an `UPGRADE_VALID_TYPES` catalogue, and
+`accepts(zone_data, upgrade)` / `install_error(...)`. It's **backward-compatible** (zones default to
+`surface`; legacy `both` = orifice+appendage; unclassified upgrades are permitted; every call is
+fail-safe), and **WombRoom now uses it** (behaviour and message preserved). *Remaining (ROADMAP):*
+wire the other installs (lactation/milk → gland, knot → appendage, marks/brands → surface) to
+`accepts()` — each is a **behaviour-changing** step (it starts refusing wrong-zone installs), so do
+them deliberately, with the user's sign-off, not blind.
 
 ## 3. Items install into slots  [ROADMAP — generalize `BodyModItem`]
 `BodyModItem` (BreastItem/PenisItem/TesticleItem) already installs describable, tokened parts —
