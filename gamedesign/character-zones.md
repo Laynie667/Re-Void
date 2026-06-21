@@ -52,11 +52,15 @@ Every zone carries a **type**, which decides its valid parent and which upgrades
 The `WombRoom`'s "orifice/both only" install check **was** the prototype — now generalized into a
 shared validator, **`world/zone_types.py`**: `ZONE_TYPES`, an `UPGRADE_VALID_TYPES` catalogue, and
 `accepts(zone_data, upgrade)` / `install_error(...)`. It's **backward-compatible** (zones default to
-`surface`; legacy `both` = orifice+appendage; unclassified upgrades are permitted; every call is
-fail-safe), and **WombRoom now uses it** (behaviour and message preserved). *Remaining (ROADMAP):*
-wire the other installs (lactation/milk → gland, knot → appendage, marks/brands → surface) to
-`accepts()` — each is a **behaviour-changing** step (it starts refusing wrong-zone installs), so do
-them deliberately, with the user's sign-off, not blind.
+`surface`; legacy `both` = orifice+appendage; unclassified upgrades permitted; marks/brands/
+sensitivity are universal; every call is fail-safe). It also offers a **`lenient=True`** mode for
+retro-fitting onto un-typed live data: a `surface` zone accepts anything, so only a deliberately
+non-surface zone refuses nonsense — untyped live zones never break.
+**Wired consumers (both orifice-installs, strict / behaviour-preserving):** `WombRoom.install` and
+`InflationItem.install_into_zone`. *Remaining (ROADMAP):* the gland/appendage body upgrades
+(lactation, knot) are **emergent** in the live game (the milking machine is a room fixture; lactation
+is a zone flag set by conditioning/growth), so there's no single discrete install command to guard —
+they'll route through `accepts(..., lenient=True)` when those installs are built fresh.
 
 ## 3. Items install into slots  [ROADMAP — generalize `BodyModItem`]
 `BodyModItem` (BreastItem/PenisItem/TesticleItem) already installs describable, tokened parts —

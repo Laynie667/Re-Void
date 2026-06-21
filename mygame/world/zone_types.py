@@ -36,13 +36,12 @@ UPGRADE_VALID_TYPES = {
     # appendage work
     "knot":        {"appendage"},
     "variant":     {"appendage"},          # equine/porcine/draconic shaping
-    # surface work
-    "mark":        {"surface"},
-    "tattoo":      {"surface"},
-    "brand":       {"surface"},
-    # broad
+    # broad — skin is everywhere, so marks/brands/sensitivity accept any zone type
+    "mark":        set(ZONE_TYPES),
+    "tattoo":      set(ZONE_TYPES),
+    "brand":       set(ZONE_TYPES),
+    "sensitivity": set(ZONE_TYPES),
     "growth":      {"gland", "appendage"},
-    "sensitivity": set(ZONE_TYPES),        # anything can be sensitized
 }
 
 
@@ -60,21 +59,29 @@ def _effective_types(zone_type):
     return {zone_type}
 
 
-def accepts(zone_data, upgrade):
+def accepts(zone_data, upgrade, lenient=False):
     """True if `upgrade` may attach to this zone (by type). An upgrade the catalogue
-    doesn't list is permitted (permissive). Fail-safe: any error → True."""
+    doesn't list is permitted (permissive). Fail-safe: any error → True.
+
+    `lenient=True` (for retro-fitting validation onto live data that may not be typed
+    yet): a `surface` zone — the default for untyped zones — accepts ANYTHING; only an
+    explicitly non-surface, conflicting type refuses. So untyped live zones never break,
+    while a deliberately-typed orifice/gland/appendage still rejects nonsense."""
     try:
         valid = UPGRADE_VALID_TYPES.get(upgrade)
         if valid is None:
             return True
-        return bool(_effective_types(zone_type_of(zone_data)) & set(valid))
+        zt = zone_type_of(zone_data)
+        if lenient and zt == "surface":
+            return True
+        return bool(_effective_types(zt) & set(valid))
     except Exception:
         return True
 
 
-def install_error(zone_name, zone_data, upgrade):
+def install_error(zone_name, zone_data, upgrade, lenient=False):
     """A standard refusal message if the install is invalid, else '' (allowed)."""
-    if accepts(zone_data, upgrade):
+    if accepts(zone_data, upgrade, lenient=lenient):
         return ""
     valid = ", ".join(sorted(UPGRADE_VALID_TYPES.get(upgrade, set()))) or "?"
     return (f"'{upgrade}' can only attach to a {valid} zone; "

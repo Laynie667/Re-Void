@@ -163,9 +163,12 @@ class InflationItem(MechanicItem):
         if zone_name not in zones:
             return False, f"No zone '{zone_name}' found."
 
-        zone_type = (zones[zone_name] or {}).get("zone_type", "")
-        if zone_type not in ("orifice", "both"):
-            return False, f"Inflation can only be installed on orifice or both-type zones ('{zone_name}' is '{zone_type}')."
+        # Typed-zone validation (shared validator; world/zone_types.py). Strict —
+        # behaviour preserved (orifice or legacy 'both' only), centralised.
+        from world.zone_types import accepts, zone_type_of
+        if not accepts(zones[zone_name] or {}, "inflation"):
+            return False, (f"Inflation can only be installed on orifice or both-type zones "
+                           f"('{zone_name}' is '{zone_type_of(zones[zone_name] or {})}').")
 
         zone  = dict(zones[zone_name])
         mech  = dict(zone.get("mechanics", {}) or {})
