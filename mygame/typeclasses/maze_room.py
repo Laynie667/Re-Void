@@ -211,6 +211,30 @@ class MazeRoom(Room):
             if gtype == "quota":
                 from world.gang_breeding import quota_met
                 return bool(quota_met(caller))
+            if gtype == "stat":
+                # generalised numeric threshold on any character attribute
+                attr = gate.get("attr")
+                if not attr:
+                    return True   # misconfigured -> fail open
+                return float(getattr(db, attr, 0) or 0) >= gmin
+            if gtype == "flag":
+                # a character db flag; matches `value` (default: any truthy)
+                flag = gate.get("flag")
+                if not flag:
+                    return True   # fail open
+                cur = getattr(db, flag, None)
+                want = gate.get("value", True)
+                return bool(cur) if want is True else (cur == want)
+            if gtype == "time":
+                # night/season-gated passages (on-theme); period and/or season
+                from world.gametime import get_time_period, get_season
+                period = (gate.get("period") or "").lower()
+                season = (gate.get("season") or "").lower()
+                if period and get_time_period() != period:
+                    return False
+                if season and get_season() != season:
+                    return False
+                return True
         except Exception:
             return True   # never trap her on a broken gate — fail open
         return True

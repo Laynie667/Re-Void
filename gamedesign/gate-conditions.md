@@ -20,9 +20,16 @@ Stored as `solution["gate"] = {"type": <type>, "min": <number>}`.
 | `devotion` | `db.bethany_devotion` | `>= min` | yes |
 | `standing` | `db.facility_standing` | `>= min` | yes |
 | `quota` | `gang_breeding.quota_met(caller)` | quota met | no |
+| `stat` | any `db.<attr>` (gate's `attr`) | `>= min` | yes |
+| `flag` | any `db.<flag>` (gate's `flag`) | matches `value` (default: truthy) | no |
+| `time` | `gametime` period and/or season | matches `period`/`season` | no |
 | `none` | — | (clears the gate) | — |
 
-Denial line: per-solution `gate_denial`, else the `maze_gate_denials` pool.
+`stat` generalizes the four hardcoded meters above to **any** numeric attribute
+(`{"type":"stat","attr":"arousal","min":75}`); `flag` gates on a character db flag
+(`{"type":"flag","flag":"branded"}` or `...,"value":"pet"}`); `time` gates night/season
+passages (`{"type":"time","period":"midnight"}` / `"season":"winter"`). All fail open on
+error/misconfig. Denial line: per-solution `gate_denial`, else the `maze_gate_denials` pool.
 
 ---
 

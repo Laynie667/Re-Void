@@ -55,10 +55,14 @@ is met. Logic: `MazeRoom._gate_ok(caller, name)`.
 - `maze gate deeper = conditioning 80` → opens when `db.conditioning >= 80`.
 - `maze gate inner = devotion 60` → `db.bethany_devotion >= 60`.
 - `maze gate pit = quota` → opens when the breeding quota is met (no number).
+- `maze gate edge = stat arousal 75` → any numeric attribute `>= min`.
+- `maze gate cell = flag branded` → a character db flag is set (`flag rank pet` matches a value).
+- `maze gate vault = time midnight` → only at a gametime period (or `time winter` for a season).
 - `maze gate deeper = none` → removes the gate.
 
-Condition **types** (current): `conditioning`, `regression`, `devotion`, `standing`, `quota`.
-Full catalogue + proposed extensions in `gate-conditions.md`.
+Condition **types** (current): `conditioning`, `regression`, `devotion`, `standing`, `quota`,
+`stat <attr> <min>`, `flag <flag> [value]`, `time <period|season>`. Full catalogue in
+`gate-conditions.md`. All fail open (§0).
 
 When the gate isn't satisfied, the move is recognized as *correct-but-not-yet*: the traveller
 gets a denial line (`maze_gate_denials` pool, or a per-solution `gate_denial`), e.g. *"the way

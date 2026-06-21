@@ -1807,8 +1807,9 @@ class CmdMaze(MuxCommand):
 
     def _gate(self, caller, here, rest):
         if "=" not in rest:
-            caller.msg("Usage: maze gate <name> = <type> [<min>]   (type: conditioning|"
-                       "regression|devotion|standing|quota|none)")
+            caller.msg("Usage: maze gate <name> = <type> [args]   (type: conditioning|"
+                       "regression|devotion|standing|quota|stat <attr> <min>|flag <flag> "
+                       "[value]|time <period|season>|none)")
             return
         name, _, body = rest.partition("=")
         name = name.strip()
@@ -1817,14 +1818,41 @@ class CmdMaze(MuxCommand):
             caller.msg("Need a gate type.")
             return
         gtype = toks[0].lower()
-        valid = ("conditioning", "regression", "devotion", "standing", "quota", "none")
+        valid = ("conditioning", "regression", "devotion", "standing", "quota",
+                 "stat", "flag", "time", "none")
         if gtype not in valid:
             caller.msg(f"Gate type must be one of: {', '.join(valid)}.")
             return
+        # known gametime period/season names (matches world/gametime.py)
+        _PERIODS = ("dawn", "morning", "afternoon", "dusk", "evening", "midnight", "night")
+        _SEASONS = ("spring", "summer", "autumn", "fall", "winter")
         if gtype == "none":
             gate = None
         elif gtype == "quota":
             gate = {"type": "quota"}
+        elif gtype == "stat":
+            try:
+                gate = {"type": "stat", "attr": toks[1].lower(), "min": float(toks[2])}
+            except (IndexError, ValueError):
+                caller.msg(f"Usage: maze gate {name} = stat <attr> <min>  (e.g. 'stat arousal 75').")
+                return
+        elif gtype == "flag":
+            if len(toks) < 2:
+                caller.msg(f"Usage: maze gate {name} = flag <flag> [value]  (no value = any truthy).")
+                return
+            gate = {"type": "flag", "flag": toks[1]}
+            if len(toks) >= 3:
+                gate["value"] = toks[2]
+        elif gtype == "time":
+            tok = toks[1].lower() if len(toks) >= 2 else ""
+            if tok in _PERIODS:
+                gate = {"type": "time", "period": tok}
+            elif tok in _SEASONS:
+                gate = {"type": "time", "season": ("autumn" if tok == "fall" else tok)}
+            else:
+                caller.msg(f"Usage: maze gate {name} = time <period|season>  "
+                           f"(periods: {', '.join(_PERIODS)}; seasons: spring/summer/autumn/winter).")
+                return
         else:
             try:
                 gate = {"type": gtype, "min": float(toks[1])}
@@ -1838,6 +1866,15 @@ class CmdMaze(MuxCommand):
             caller.msg(f"|wGate cleared on '{name}'.|n")
         elif gtype == "quota":
             caller.msg(f"|w'{name}' now opens only once her breeding quota is met.|n")
+        elif gtype == "stat":
+            caller.msg(f"|w'{name}' now opens only at {gate['attr']} ≥ {gate['min']:.0f}.|n")
+        elif gtype == "flag":
+            v = gate.get("value")
+            cond = f" = {v}" if v is not None else " is set"
+            caller.msg(f"|w'{name}' now opens only when {gate['flag']}{cond}.|n")
+        elif gtype == "time":
+            when = gate.get("period") or gate.get("season")
+            caller.msg(f"|w'{name}' now opens only during {when}.|n")
         else:
             caller.msg(f"|w'{name}' now opens only at {gtype} ≥ {gate['min']:.0f}.|n")
 
