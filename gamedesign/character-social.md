@@ -72,8 +72,10 @@ Three distinct things, kept simple:
    `block` / `punish` / `notify`, with miss-escalation), and **the OOC floor wipes all rules.**
    `required_address` already picks the highest-priority present claim-holder (owner > lover > family
    > faction) and the token owed. **This is the contract-style enforcement you wanted — it's built.**
-   *Addition [ROADMAP]:* a friendlier `honorific <who> = <token>` front-end over the rule, and
-   per-owner default honorifics seeded by the bond (a `slave` bond auto-suggests "Mistress").
+   **[BUILT] front-end:** `honorific <who> = <token>` (alias `address`) wraps the rule with the soft
+   `notify` default — `honorific/clear <who>` removes it, `honorific <who>` shows what's owed; same
+   authority check (`rule.set`/owner/self). Accepting a `slave`/`pet` ownership bond now suggests
+   setting one. *Still ROADMAP:* fully auto-seeded per-owner defaults.
 3. **Faction-rank honorifics [ROADMAP, hooks exist].** Lower members owe rank-holders a faction
    honorific — the `faction` tier is already in the address priority; wire a faction's rank ladder to
    supply the token.
@@ -121,7 +123,6 @@ floor) — same line as a consensual collar in `character-consent.md`. Nothing h
   unified `relate [/temp|/perm|/force] <who> = <bond>` verb (own/slave/pet/lover/family) with expiry
   — **built**; the honorific standing-rule + speech-filter enforcement; the multi-slot title; faction
   standing/rank.
-- 🔧 Build: the `faction` bond (invite-at-rank); personal `nick`; the friendlier `honorific`
-  front-end + bond-seeded defaults; faction-rank honorific tokens; the assembled
-  `sheet/relationships` view.
+- 🔧 Build: the `faction` bond (invite-at-rank); personal `nick`; faction-rank honorific tokens;
+  the assembled `sheet/relationships` view. *(The `honorific` front-end is now built.)*
 - ✂️ Decide `db.ln`'s fate (fold into faction standing or keep) — don't carry a redundant meter blind.

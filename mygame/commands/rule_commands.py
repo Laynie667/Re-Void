@@ -122,4 +122,81 @@ class CmdRule(MuxCommand):
                            f"({R.CATALOGUE[rule['name']]['desc']}).|n")
 
 
-ALL_RULE_CMDS = [CmdRule]
+class CmdHonorific(MuxCommand):
+    """
+    Set, view, or clear the honorific someone must address you by.
+
+    A friendly front-end over the honorific standing-rule (see `rule`). The
+    default consequence is a soft *notify* nudge — they're reminded, not
+    punished; raise it with the full `rule` command if you want real bite.
+    Setting one needs authority over the target: you own them, or they allowed
+    you 'rule.set' (yourself on yourself always works).
+
+    Usage:
+      honorific <who> = <token>   — <who> should address holders as <token>
+      honorific <who>             — show the honorific(s) owed by <who>
+      honorific/clear <who>       — clear the honorific rule on <who>
+
+    Example:
+      honorific Laynie = Mistress
+    """
+    key            = "honorific"
+    aliases        = ["address"]
+    switch_options = ("clear", "remove")
+    locks          = "cmd:all()"
+    help_category  = "Interaction"
+
+    def func(self):
+        caller = self.caller
+        from world import rules as R
+        from world.consent import may
+
+        name = (self.lhs or self.args or "").strip()
+        if not name:
+            caller.msg("|xHonorific on whom? |whonorific <who> = Mistress|x.|n")
+            return
+        target = (caller.search(name, location=caller.location)
+                  or caller.search(name, global_search=True))
+        if not target:
+            return
+
+        tn = target.db.rp_name or target.key
+        existing = [r for r in (getattr(target.db, "rules", None) or [])
+                    if r.get("name") == "honorific" and r.get("active", True)]
+
+        # view
+        if not self.switches and not self.rhs:
+            if not existing:
+                caller.msg(f"|x{tn} owes no honorific.|n")
+            else:
+                toks = ", ".join(r.get("params", {}).get("honorific", "?") for r in existing)
+                caller.msg(f"|w{tn}|n is to address holders as: |w{toks}|n.")
+            return
+
+        # mutate — needs authority
+        if not may(caller, target, "rule.set") and caller is not target:
+            caller.msg(f"|xYou don't have the authority to set an honorific on {tn}. "
+                       f"(They'd need to allow you 'rule.set', or you own them.)|n")
+            return
+
+        if "clear" in self.switches or "remove" in self.switches:
+            removed = sum(1 for r in existing if R.remove_rule(target, r.get("id")))
+            caller.msg("|gHonorific cleared.|n" if removed
+                       else "|xNo honorific rule to clear.|n")
+            return
+
+        token = (self.rhs or "").strip()
+        if not token:
+            caller.msg("|xName the honorific: |whonorific <who> = Mistress|x.|n")
+            return
+        rule, err = R.add_rule(target, "honorific", caller, params={"honorific": token})
+        if err:
+            caller.msg(f"|x{err}|n")
+            return
+        caller.msg(f"|gFrom now on, {tn} should address holders as |w{token}|g "
+                   f"(a soft nudge — raise it with |wrule|g for bite).|n")
+        if target is not caller:
+            target.msg(f"|MYou're to be addressed properly now — |w{token}|M, when it's owed.|n")
+
+
+ALL_RULE_CMDS = [CmdRule, CmdHonorific]

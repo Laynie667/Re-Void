@@ -329,6 +329,9 @@ def accept_relation(target, viewer):
     if off.get("owner"):
         target.msg(f"|MYou give yourself over: {_name(viewer)} owns you as their {label}{span}.|n")
         viewer.msg(f"|M{_name(target)} accepted. They're your {label}{span} — on paper now.|n")
+        if flavor in ("slave", "pet"):
+            viewer.msg(f"|xTip: set what they call you — "
+                       f"|whonorific {_name(target)} = Mistress|x.|n")
     else:
         target.msg(f"|gBond formed: {_name(viewer)} is your "
                    f"{role_toward(viewer, target) or label}{span}.|n")
